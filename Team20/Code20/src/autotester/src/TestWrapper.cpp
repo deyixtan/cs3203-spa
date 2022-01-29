@@ -19,8 +19,10 @@ TestWrapper::TestWrapper() {
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
-	// call your parser to do the parsing
-  // ...rest of your code...
+    std::cout << "TestWrapper::parse() Start" << std::endl;
+    std::string simple_source = sourceController->RetrieveFileContent(filename);
+    std::cout << simple_source << std::endl;
+    std::cout << "TestWrapper::parse() End" << std::endl;
 }
 
 // method to evaluating a query
