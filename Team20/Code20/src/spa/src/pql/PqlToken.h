@@ -14,6 +14,11 @@ enum class TokenType {
     OPEN_PARENTHESIS,
     CLOSED_PARENTHESIS,
     UNDERSCORE,
+    PLUS,
+    MINUS,
+    MULTIPLY,
+    DIVIDE,
+    DOUBLE_QUOTE,
     NUMBER,
     STRING,
 
