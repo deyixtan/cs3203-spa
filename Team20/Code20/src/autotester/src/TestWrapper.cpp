@@ -11,8 +11,10 @@ volatile bool AbstractWrapper::GlobalStop = false;
 
 // a default constructor
 TestWrapper::TestWrapper() {
-  // create any objects here as instance variables of this class
-  // as well as any initialization required for your spa program
+    std::cout << "TestWrapper::TestWrapper() Start" << std::endl;
+    queryController = new QueryController();
+    sourceController = new SourceController();
+    std::cout << "TestWrapper::TestWrapper() End" << std::endl;
 }
 
 // method for parsing the SIMPLE source
