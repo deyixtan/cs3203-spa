@@ -35,7 +35,5 @@ std::unordered_map<std::string, TokenType> stringTokenMap = {
         {"Modifies", TokenType::MODIFIES_P},
 
         {"pattern", TokenType::PATTERN},
-        {"(", TokenType::OPEN_PARENTHESIS},
-        {")", TokenType::CLOSED_PARENTHESIS},
         {"varName", TokenType::VARNAME},
 };
