@@ -22,7 +22,7 @@ class ModifyStore {
         std::unordered_set<std::pair<int, std::string>> getAllModify();
 
     private:
-        static std::unordered_set<std::pair<int, std::string>> stmtVarPairs;
-        static std::unordered_map<int, std::unordered_set<std::string>> stmtVarTable;
-        static std::unordered_map<std::string, std::unordered_set<int>> varStmtTable;
+        static std::unordered_set<std::pair<int, std::string> > stmtVarPairs;
+        static std::unordered_map<int, std::unordered_set<std::string> > stmtVarTable;
+        static std::unordered_map<std::string, std::unordered_set<int> > varStmtTable;
 };
