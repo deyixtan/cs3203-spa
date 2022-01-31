@@ -11,7 +11,7 @@ class UsageStore {
     public:
         UsageStore();
 
-        bool addUsage(int stmt, std::string variable);
+        static bool addUsage(int stmt, std::string variable);
 
         bool usageExists(std::pair<int, std::string> pair);
 
