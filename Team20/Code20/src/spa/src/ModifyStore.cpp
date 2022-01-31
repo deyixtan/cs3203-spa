@@ -1,21 +1,33 @@
 #include "ModifyStore.h"
 
-static std::unordered_set<std::pair<int, std::string>> ModifyStore::stmtVarPairs;
-static std::unordered_map<int, std::unordered_set<std::string>> ModifyStore::stmtVarTable;
-static std::unordered_map<std::string, std::unordered_set<int>> ModifyStore::varStmtTable;
+std::unordered_set<std::pair<int, std::string>> ModifyStore::stmtVarPairs;
+std::unordered_map<int, std::unordered_set<std::string>> ModifyStore::stmtVarTable;
+std::unordered_map<std::string, std::unordered_set<int>> ModifyStore::varStmtTable;
 
-UsageStore::UsageStore() {}
+ModifyStore::ModifyStore() = default;
 
-bool UsageStore::getModify(int stmt, std::string variable) {
+bool ModifyStore::addModify(int stmt, std::string variable) {
     //code goes here
 }
 
-std::unordered_set<std::string> UsageStore::getModifyByStmt(int stmt) {
-    //code goes here
+bool ModifyStore::modifyExists(std::pair<int, std::string> pair) {
+    return stmtVarPairs.find(pair) != stmtVarPairs.end();
 }
 
-std::unordered_set<int> UsageStore::getModifyByVar(std::string variable) {
-    //code goes here
+std::unordered_set<std::string> ModifyStore::getModifyByStmt(int stmt) {
+    auto findStmt = stmtVarTable.find(stmt);
+    if (findStmt != stmtVarTable.end()) {
+		return stmtVarTable.at(stmt);
+	}
+	return {};
+}
+
+std::unordered_set<int> ModifyStore::getModifyByVar(std::string variable) {
+    auto findStmt = varStmtTable.find(variable);
+    if (findStmt != varStmtTable.end()) {
+		return varStmtTable.at(variable);
+	}
+	return {};
 }
 
 std::unordered_set<std::pair<int, std::string>> getAllModify() {

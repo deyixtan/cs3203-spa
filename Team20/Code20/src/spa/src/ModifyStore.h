@@ -11,7 +11,9 @@ class ModifyStore {
     public:
         ModifyStore();
 
-        bool getModify(int stmt, std::string variable);
+        static bool addModify(int stmt, std::string variable);
+
+        bool modifyExists(std::pair<int, std::string> pair);
 
         std::unordered_set<std::string> getModifyByStmt(int stmt);
 
