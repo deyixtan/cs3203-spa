@@ -21,6 +21,6 @@ class UsageStore {
 
     private:
         static std::unordered_set<std::pair<int, std::string>> stmtVarPairs;
-        static std::unordered_map<int, std::vector<std::string>> stmtVarTable;
-        static std::unordered_map<std::string, std::vector<int>> varStmtTable;
+        static std::unordered_map<int, std::unordered_set<std::string>> stmtVarTable;
+        static std::unordered_map<std::string, std::unordered_set<int>> varStmtTable;
 };
