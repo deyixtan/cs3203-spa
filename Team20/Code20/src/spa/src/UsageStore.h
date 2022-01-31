@@ -11,7 +11,9 @@ class UsageStore {
     public:
         UsageStore();
 
-        bool getUsage(int stmt, std::string variable);
+        bool addUsage(int stmt, std::string variable);
+
+        bool usageExists(std::pair<int, std::string> pair);
 
         std::unordered_set<std::string> getUsageByStmt(int stmt);
 

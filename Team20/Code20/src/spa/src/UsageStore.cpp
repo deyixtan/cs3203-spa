@@ -6,7 +6,11 @@ static std::unordered_map<std::string, std::unordered_set<int>> UsageStore::varS
 
 UsageStore::UsageStore() {}
 
-bool UsageStore::getUsage(int stmt, std::string variable) {
+bool UsageStore::addUsage(int stmt, std::string variable) {
+    //code goes here
+}
+
+bool UsageStore::usageExists(std::pair<int, std::string> pair) {
     //code goes here
 }
 
