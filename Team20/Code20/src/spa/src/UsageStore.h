@@ -17,18 +17,31 @@ class UsageStore {
     public:
         UsageStore();
 
-        static bool addUsage(int stmt, std::string variable);
+        bool addStmtVar(int stmt, std::string var);
 
-        bool usageExists(std::pair<int, std::string> pair);
+        bool addProcVar(std::string proc, std::string var);
 
-        std::unordered_set<std::string> getUsageByStmt(int stmt);
+        bool stmtVarExists(std::pair<int, std::string> pair);
 
-        std::unordered_set<int> getUsageByVar(std::string variable);
+        bool procVarExists(std::pair<std::string, std::string> pair);
 
-        std::unordered_set<std::pair<int, std::string>, hashFunction> getAllUsage();
+        std::unordered_set<std::string> getVarUsedByStmt(int stmt);
+
+        std::unordered_set<int> getStmtUsedByVar(std::string var);
+
+        std::unordered_set<std::string> getVarUsedByProc(std::string proc);
+
+        std::unordered_set<std::string> getProcUsedByVar(std::string var);
+
+        std::unordered_set<std::pair<int, std::string>, hashFunction> getAllStmtVar();
+
+        std::unordered_set<std::pair<std::string, std::string>, hashFunction> getAllProcVar();
 
     private:
         static std::unordered_set<std::pair<int, std::string>, hashFunction> stmtVarPairs;
-        static std::unordered_map<int, std::unordered_set<std::string> > stmtVarTable;
-        static std::unordered_map<std::string, std::unordered_set<int> > varStmtTable;
+        static std::unordered_set<std::pair<std::string, std::string>, hashFunction> procVarPairs;
+        static std::unordered_map<int, std::unordered_set<std::string> > stmtVarMap;
+        static std::unordered_map<std::string, std::unordered_set<int> > varStmtMap;
+        static std::unordered_map<std::string, std::unordered_set<std::string> > procVarMap;
+        static std::unordered_map<std::string, std::unordered_set<std::string> > varProcMap;
 };
