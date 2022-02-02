@@ -25,13 +25,13 @@ class ModifyStore {
 
         bool procVarExists(std::pair<std::string, std::string> pair);
 
-        std::unordered_set<std::string> getVarUsedByStmt(int stmt);
+        std::unordered_set<std::string> getVarModByStmt(int stmt);
 
-        std::unordered_set<int> getStmtUsedByVar(std::string var);
+        std::unordered_set<int> getStmtModByVar(std::string var);
 
-        std::unordered_set<std::string> getVarUsedByProc(std::string proc);
+        std::unordered_set<std::string> getVarModByProc(std::string proc);
 
-        std::unordered_set<std::string> getProcUsedByVar(std::string var);
+        std::unordered_set<std::string> getProcModByVar(std::string var);
 
         std::unordered_set<std::pair<int, std::string>, hashFunction> getAllStmtVar();
 

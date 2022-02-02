@@ -25,28 +25,28 @@ bool ModifyStore::procVarExists(std::pair<std::string, std::string> pair) {
     return procVarPairs.find(pair) != procVarPairs.end();
 }
 
-std::unordered_set<std::string> ModifyStore::getVarUsedByStmt(int stmt) {
+std::unordered_set<std::string> ModifyStore::getVarModByStmt(int stmt) {
     if (stmtVarMap.find(stmt) != stmtVarMap.end()) {
         return stmtVarMap.at(stmt);
     }
     return std::unordered_set<std::string>();
 }
 
-std::unordered_set<int> ModifyStore::getStmtUsedByVar(std::string var) {
+std::unordered_set<int> ModifyStore::getStmtModByVar(std::string var) {
     if (varStmtMap.find(var) != varStmtMap.end()) {
         return varStmtMap.at(var);
     }
     return std::unordered_set<int>();
 }
 
-std::unordered_set<std::string> ModifyStore::getVarUsedByProc(std::string proc) {
+std::unordered_set<std::string> ModifyStore::getVarModByProc(std::string proc) {
     if (procVarMap.find(proc) != procVarMap.end()) {
         return procVarMap.at(proc);
     }
     return std::unordered_set<std::string>();
 }
 
-std::unordered_set<std::string> ModifyStore::getProcUsedByVar(std::string var) {
+std::unordered_set<std::string> ModifyStore::getProcModByVar(std::string var) {
     if (varProcMap.find(var) != varProcMap.end()) {
         return varProcMap.at(var);
     }
