@@ -27,9 +27,9 @@ std::unordered_set<std::string> UsageStore::getVarUsedByStmt(int stmt) {
 
 std::unordered_set<int> UsageStore::getStmtUsedByVar(std::string var) {
     if (varStmtMap.find(var) != varStmtMap.end()) {
-		return varStmtMap.at(var);
-	}
-	return std::unordered_set<int>();
+        return varStmtMap.at(var);
+    }
+    return std::unordered_set<int>();
 }
 
 std::unordered_set<std::string> UsageStore::getVarUsedByProc(std::string proc) {
