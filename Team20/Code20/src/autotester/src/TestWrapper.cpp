@@ -11,21 +11,23 @@ volatile bool AbstractWrapper::GlobalStop = false;
 
 // a default constructor
 TestWrapper::TestWrapper() {
-  // create any objects here as instance variables of this class
-  // as well as any initialization required for your spa program
+    std::cout << "TestWrapper::TestWrapper() Start" << std::endl;
+    queryController = new QueryController();
+    sourceController = new SourceController();
+    std::cout << "TestWrapper::TestWrapper() End" << std::endl;
 }
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
-	// call your parser to do the parsing
-  // ...rest of your code...
+    std::cout << "TestWrapper::parse() Start" << std::endl;
+    std::string simple_source = sourceController->RetrieveFileContent(filename);
+    std::cout << simple_source << std::endl;
+    std::cout << "TestWrapper::parse() End" << std::endl;
 }
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
-// call your evaluator to evaluate the query here
-  // ...code to evaluate query...
-
-  // store the answers to the query in the results list (it is initially empty)
-  // each result must be a string.
+    std::cout << "TestWrapper::evaluate() Start" << std::endl;
+    queryController->ProcessQuery(query, results);
+    std::cout << "TestWrapper::evaluate() End" << std::endl;
 }
