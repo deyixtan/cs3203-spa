@@ -1,20 +1,13 @@
 #include "ModifyStore.h"
 
-std::unordered_set<std::pair<int, std::string>, hashFunction> ModifyStore::stmtVarPairs;
-std::unordered_set<std::pair<std::string, std::string>, hashFunction> ModifyStore::procVarPairs;
-std::unordered_map<int, std::unordered_set<std::string> > ModifyStore::stmtVarMap;
-std::unordered_map<std::string, std::unordered_set<int> > ModifyStore::varStmtMap;
-std::unordered_map<std::string, std::unordered_set<std::string> > ModifyStore::procVarMap;
-std::unordered_map<std::string, std::unordered_set<std::string> > ModifyStore::varProcMap;
-
 ModifyStore::ModifyStore() {}
 
 bool ModifyStore::addStmtVar(int stmt, std::string var) {
-    //code goes here
+    stmtVarPairs.insert(std::make_pair(stmt, var));
 }
 
 bool ModifyStore::addProcVar(std::string proc, std::string var) {
-    //code goes here
+    procVarPairs.insert(std::make_pair(proc, var));
 }
 
 bool ModifyStore::stmtVarExists(std::pair<int, std::string> pair) {
