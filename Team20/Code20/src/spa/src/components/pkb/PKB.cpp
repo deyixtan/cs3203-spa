@@ -20,104 +20,74 @@ TNode* PKB::getRootAST (PROC p){
 
 //Keywords = [procedure, while, read, print, call, if-else-then, assign] -> Need to maintain 1 list for each of these
 
-std::unordered_set<std::string> PKB::procList;
-std::unordered_set<int> PKB::whileStmtList;
-std::unordered_set<int> PKB::readStmtList;
-std::unordered_set<int> PKB::printStmtList;
-std::unordered_set<int> PKB::callStmtList;
-std::unordered_set<int> PKB::ifStmtList; //need to create separate else-then or treat this as a block?
-std::unordered_set<int> PKB::assignStmtList;
-
-std::unordered_set<std::string> PKB::varList;
-std::unordered_set<std::string> PKB::constList;
-
-//FollowStore PKB::followStore;
-//ParentStore PKB::parentStore;
-//UsageStore PKB::usageStore;
-//ModifyStore PKB::modifyStore;
-
 PKB::PKB() {}
 
 /* Adders */
 
-void PKB::addProcStmt(int stmtNo, std::string procedure) {
-    //code goes here
+void PKB::addStmt(int stmt, std::string name, stmtType type) {
+    switch (type) {
+        case PROC:
+            procList.insert(name);
+        case WHILE:
+            whileStmtList.insert(stmt);
+        case READ:
+            readStmtList.insert(stmt);
+        case PRINT:
+            printStmtList.insert(stmt);
+        case CALL:
+            callStmtList.insert(stmt);
+        case IF:
+            ifStmtList.insert(stmt);
+        case ASSIGN:
+            assignStmtList.insert(stmt);
+        case VARS:
+            varList.insert(name);
+        case CONSTS:
+            constList.insert(name);
+        default:
+            break;
+    }
 }
 
-void PKB::addWhileStmt(int stmtNo, std::string procedure) {
-    //code goes here
+bool PKB::addUsageStmtVar(int stmt, std::string var) {
+    usageStore.addStmtVar(stmt, var);
 }
 
-void PKB::addReadStmt(int stmtNo, std::string procedure) {
-    //code goes here
+bool PKB::addUsageProcVar(std::string proc, std::string var) {
+    usageStore.addProcVar(proc, var);
 }
 
-void PKB::addPrintStmt(int stmtNo, std::string procedure) {
-    //code goes here
+bool PKB::addModifyStmtVar(int stmt, std::string var) {
+    modifyStore.addStmtVar(stmt, var);
 }
 
-void PKB::addCallStmt(int stmtNo, std::string procedure) {
-    //code goes here
-}
-
-void PKB::addIfStmt(int stmtNo, std::string procedure) {
-    //code goes here
-}
-
-void PKB::addAssignStmt(int stmtNo, std::string procedure) {
-    //code goes here
-}
-
-void PKB::addVar(std::string name) {
-
-}
-
-void PKB::addConst(std::string value) {
-    //code goes here
-}
-
-bool PKB::addUsageStmt(int stmt, std::string variable) {
-    //code goes here
-}
-
-bool PKB::addModifyStmt(int stmt, std::string variable) {
-    //code goes here
+bool PKB::addModifyProcVar(std::string proc, std::string var) {
+    modifyStore.addProcVar(proc, var);
 }
 
 /* Getters */
 
-std::unordered_set<int> PKB::getProcStmts() {
-    //code goes here
-}
-
-std::unordered_set<int> PKB::getWhileStmts() {
-    //code goes here
-}
-
-std::unordered_set<int> PKB::getReadStmts() {
-    //code goes here
-}
-
-std::unordered_set<int> PKB::getPrintStmts() {
-    //code goes here
-}
-
-std::unordered_set<int> PKB::getCallStmts() {
-    //code goes here
-}
-
-std::unordered_set<int> PKB::getIfStmts() {
-    //code goes here
-}
-
-std::unordered_set<int> PKB::getAssignStmts() {
-    //code goes here
-}
-
-std::unordered_set<std::string> PKB::getVars() {
-    //code goes here
-}
-
-std::unordered_set<std::string> PKB::getConsts() {
-    //code goes here
+template <typename T> T PKB::getStmt(stmtType type) {
+    switch (type) {
+        case PROC:
+            return procList;
+        case WHILE:
+            return whileStmtList;
+        case READ:
+            return readStmtList;
+        case PRINT:
+            return printStmtList;
+        case CALL:
+            return callStmtList;
+        case IF:
+            return ifStmtList;
+        case ASSIGN:
+            return assignStmtList;
+        case VARS:
+            return varList;
+        case CONSTS:
+            return constList;
+        default:
+            break;
+    }
 }

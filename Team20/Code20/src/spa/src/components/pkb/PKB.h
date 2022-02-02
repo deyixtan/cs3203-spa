@@ -4,16 +4,33 @@
 #include <unordered_set>
 #include <vector>
 
-//#include "FollowStorage.h"
-//#include "ParentStorage.h"
-//#include "UseStorage.h"
-//#include "ModifyStorage.h"
+#include "UsageStore.h"
+#include "ModifyStore.h"
 
 //typedef short PROC;
 
 //class TNode;
 
 //class VarTable;  // no need to #include "VarTable.h" as all I need is pointer
+
+struct hashFunction {
+    size_t operator()(const std::pair<int , int> &x) const {
+        return x.first ^ x.second;
+    }
+};
+
+enum stmtType {
+    NONE,
+    PROC,
+    WHILE,
+    READ,
+    PRINT,
+    CALL,
+    IF,
+    ASSIGN,
+    VARS,
+    CONSTS
+};
 
 class PKB {
 public:
@@ -23,48 +40,38 @@ public:
     PKB();
 
     /* Adders */
+    void addStmt(int stmt = 0, std::string name = "", stmtType type = NONE);
 
-    void addProcStmt(int stmtNo, std::string procedure);
+    bool addUsageStmtVar(int stmt, std::string variable);
+    bool addUsageProcVar(std::string proc, std::string var);
 
-    void addWhileStmt(int stmtNo, std::string procedure);
-
-    void addReadStmt(int stmtNo, std::string procedure);
-
-    void addPrintStmt(int stmtNo, std::string procedure);
-
-    void addCallStmt(int stmtNo, std::string procedure);
-
-    void addIfStmt(int stmtNo, std::string procedure);
-
-    void addAssignStmt(int stmtNo, std::string procedure);
-
-    void addVar(std::string name);
-
-    void addConst(std::string value);
-
-    bool addUsageStmt(int stmt, std::string variable);
-
-    bool addModifyStmt(int stmt, std::string variable);
+    bool addModifyStmtVar(int stmt, std::string variable);
+    bool addModifyProcVar(std::string proc, std::string var);
 
     /* Getters */
 
-    std::unordered_set<int> getProcStmts();
+    template <typename T> T getStmt(stmtType type);
 
-    std::unordered_set<int> getWhileStmts();
+    std::unordered_set<std::string> getVarUsedByStmt(int stmt);
+    std::unordered_set<int> getStmtUsedByVar(std::string var);
+    std::unordered_set<std::string> getVarUsedByProc(std::string proc);
+    std::unordered_set<std::string> getProcUsedByVar(std::string var);
+    std::unordered_set<std::pair<int, std::string>, hashFunction> getAllUsageStmtVar();
+    std::unordered_set<std::pair<std::string, std::string>, hashFunction> getAllUsageProcVar();
 
-    std::unordered_set<int> getReadStmts();
+    std::unordered_set<std::string> getVarModByStmt(int stmt);
+    std::unordered_set<int> getStmtModByVar(std::string var);
+    std::unordered_set<std::string> getVarModByProc(std::string proc);
+    std::unordered_set<std::string> getProcModByVar(std::string var);
+    std::unordered_set<std::pair<int, std::string>, hashFunction> getAllModStmtVar();
+    std::unordered_set<std::pair<std::string, std::string>, hashFunction> getAllModProcVar();
 
-    std::unordered_set<int> getPrintStmts();
+    /* Checkers */
+    bool usageStmtVarExists(std::pair<int, std::string> pair);
+    bool usageProcVarExists(std::pair<std::string, std::string> pair);
 
-    std::unordered_set<int> getCallStmts();
-
-    std::unordered_set<int> getIfStmts();
-
-    std::unordered_set<int> getAssignStmts();
-
-    std::unordered_set<std::string> getVars();
-
-    std::unordered_set<std::string> getConsts();
+    bool modifyStmtVarExists(std::pair<int, std::string> pair);
+    bool modifyProcVarExists(std::pair<std::string, std::string> pair);
 
 private:
     static std::unordered_set<std::string> procList;
