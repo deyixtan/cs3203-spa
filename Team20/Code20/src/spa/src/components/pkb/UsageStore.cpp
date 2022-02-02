@@ -3,11 +3,11 @@
 UsageStore::UsageStore() {}
 
 bool UsageStore::addStmtVar(int stmt, std::string var) {
-    //code goes here
+    stmtVarPairs.insert(std::make_pair(stmt, var));
 }
 
 bool UsageStore::addProcVar(std::string proc, std::string var) {
-    //code goes here
+    procVarPairs.insert(std::make_pair(proc, var));
 }
 
 bool UsageStore::stmtVarExists(std::pair<int, std::string> pair) {
