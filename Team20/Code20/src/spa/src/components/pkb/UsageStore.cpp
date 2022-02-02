@@ -20,9 +20,9 @@ bool UsageStore::procVarExists(std::pair<std::string, std::string> pair) {
 
 std::unordered_set<std::string> UsageStore::getVarUsedByStmt(int stmt) {
     if (stmtVarMap.find(stmt) != stmtVarMap.end()) {
-		return stmtVarMap.at(stmt);
-	}
-	return std::unordered_set<std::string>();
+        return stmtVarMap.at(stmt);
+    }
+    return std::unordered_set<std::string>();
 }
 
 std::unordered_set<int> UsageStore::getStmtUsedByVar(std::string var) {
