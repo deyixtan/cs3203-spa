@@ -1,12 +1,5 @@
 #include "UsageStore.h"
 
-std::unordered_set<std::pair<int, std::string>, hashFunction> UsageStore::stmtVarPairs;
-std::unordered_set<std::pair<std::string, std::string>, hashFunction> UsageStore::procVarPairs;
-std::unordered_map<int, std::unordered_set<std::string> > UsageStore::stmtVarMap;
-std::unordered_map<std::string, std::unordered_set<int> > UsageStore::varStmtMap;
-std::unordered_map<std::string, std::unordered_set<std::string> > UsageStore::procVarMap;
-std::unordered_map<std::string, std::unordered_set<std::string> > UsageStore::varProcMap;
-
 UsageStore::UsageStore() {}
 
 bool UsageStore::addStmtVar(int stmt, std::string var) {
