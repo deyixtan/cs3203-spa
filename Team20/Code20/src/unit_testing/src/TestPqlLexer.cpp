@@ -6,17 +6,149 @@
 #include "catch.hpp"
 using namespace std;
 
-TEST_CASE("Test Procedure Declaration") {
+PqlToken comma_token = PqlToken(TokenType::COMMA, ",");
+PqlToken semicolon_token = PqlToken(TokenType::SEMICOLON, ";");
+PqlToken open_parenthesis_token = PqlToken(TokenType::OPEN_PARENTHESIS, "(");
+PqlToken closed_parenthesis_token = PqlToken(TokenType::CLOSED_PARENTHESIS, ")");
+
+PqlToken stmt_token = PqlToken(TokenType::STMT, "stmt");
+PqlToken assign_token = PqlToken(TokenType::ASSIGN, "assign");
+PqlToken while_token = PqlToken(TokenType::WHILE, "while");
+PqlToken if_token = PqlToken(TokenType::IF, "if");
+PqlToken variable_token = PqlToken(TokenType::VARIABLE, "variable");
+PqlToken procedure_token = PqlToken(TokenType::PROCEDURE, "procedure");
+PqlToken constant_token = PqlToken(TokenType::CONSTANT, "constant");
+PqlToken read_token = PqlToken(TokenType::READ, "read");
+PqlToken print_token = PqlToken(TokenType::PRINT, "print");
+PqlToken call_token = PqlToken(TokenType::CALL, "call");
+
+PqlToken s_token = PqlToken(TokenType::SYNONYM, "s");
+PqlToken s1_token = PqlToken(TokenType::SYNONYM, "s1");
+PqlToken a_token = PqlToken(TokenType::SYNONYM, "a");
+PqlToken a1_token = PqlToken(TokenType::SYNONYM, "a1");
+PqlToken w_token = PqlToken(TokenType::SYNONYM, "w");
+PqlToken ifs_token = PqlToken(TokenType::SYNONYM, "ifs");
+PqlToken v_token = PqlToken(TokenType::SYNONYM, "v");
+PqlToken v1_token = PqlToken(TokenType::SYNONYM, "v1");
+PqlToken p_token = PqlToken(TokenType::SYNONYM, "p");
+PqlToken q_token = PqlToken(TokenType::SYNONYM, "q");
+PqlToken c_token = PqlToken(TokenType::SYNONYM, "c");
+PqlToken re_token = PqlToken(TokenType::SYNONYM, "re");
+PqlToken pn_token = PqlToken(TokenType::SYNONYM, "pn");
+PqlToken cl_token = PqlToken(TokenType::SYNONYM, "cl");
+
+PqlToken number_value_token = PqlToken(TokenType::NUMBER, "1");
+
+PqlToken select_token = PqlToken(TokenType::SELECT, "Select");
+PqlToken such_token = PqlToken(TokenType::SUCH, "such");
+PqlToken that_token = PqlToken(TokenType::THAT, "that");
+
+PqlToken follow_token = PqlToken(TokenType::FOLLOWS, "Follows");
+PqlToken follow_t_token = PqlToken(TokenType::FOLLOWS_T, "Follows*");
+
+
+
+TEST_CASE("Test single declaration") {
     PqlLexer pql_lexer = PqlLexer("procedure p;");
     vector<PqlToken> test_token_vect = pql_lexer.lex();
 
     vector<PqlToken> expected_token_vect;
-    PqlToken procedure_token = PqlToken(TokenType::PROCEDURE, "procedure");
-    PqlToken p_token = PqlToken(TokenType::SYNONYM, "p");
-    PqlToken semicolon_token = PqlToken(TokenType::SEMICOLON, ";");
     expected_token_vect.push_back(procedure_token);
     expected_token_vect.push_back(p_token);
     expected_token_vect.push_back(semicolon_token);
+
+    REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test multiple declarations") {
+    PqlLexer pql_lexer = PqlLexer("stmt s, s1; assign a, a1; while w; if ifs; variable v, v1;\n"
+                                  "procedure p, q; constant c; read re; print pn; call cl;");
+    vector<PqlToken> test_token_vect = pql_lexer.lex();
+    vector<PqlToken> expected_token_vect;
+
+    // stmt
+    expected_token_vect.push_back(stmt_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(s1_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // assign
+    expected_token_vect.push_back(assign_token);
+    expected_token_vect.push_back(a_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(a1_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // while
+    expected_token_vect.push_back(while_token);
+    expected_token_vect.push_back(w_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // if
+    expected_token_vect.push_back(if_token);
+    expected_token_vect.push_back(ifs_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // variable
+    expected_token_vect.push_back(variable_token);
+    expected_token_vect.push_back(v_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(v1_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // procedure
+    expected_token_vect.push_back(procedure_token);
+    expected_token_vect.push_back(p_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(q_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // constant
+    expected_token_vect.push_back(constant_token);
+    expected_token_vect.push_back(c_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // read
+    expected_token_vect.push_back(read_token);
+    expected_token_vect.push_back(re_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // print
+    expected_token_vect.push_back(print_token);
+    expected_token_vect.push_back(pn_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // call
+    expected_token_vect.push_back(call_token);
+    expected_token_vect.push_back(cl_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with follow relationship") {
+    PqlLexer pql_lexer = PqlLexer("stmt s;\n"
+                                  "Select s such that Follows(1, s)");
+    vector<PqlToken> test_token_vect = pql_lexer.lex();
+    vector<PqlToken> expected_token_vect;
+
+    // stmt
+    expected_token_vect.push_back(stmt_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // select clause
+    expected_token_vect.push_back(select_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(such_token);
+    expected_token_vect.push_back(that_token);
+    expected_token_vect.push_back(follow_token);
+    expected_token_vect.push_back(open_parenthesis_token);
+    expected_token_vect.push_back(number_value_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(closed_parenthesis_token);
 
     REQUIRE(test_token_vect == expected_token_vect);
 }
