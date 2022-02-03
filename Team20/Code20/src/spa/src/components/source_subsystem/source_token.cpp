@@ -1,14 +1,14 @@
-#include "SourceToken.h"
+#include "source_token.h"
 
 SourceToken::SourceToken(TokenType type, std::string value) {
-    this->type = type;
-    this->value = value;
+  this->type = type;
+  this->value = value;
 }
 
 TokenType SourceToken::GetType() {
-    return type;
+  return type;
 }
 
 std::string SourceToken::GetValue() {
-    return value;
+  return value;
 }
