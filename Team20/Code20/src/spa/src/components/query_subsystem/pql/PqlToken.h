@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -12,6 +14,13 @@ enum class TokenType {
     OPEN_PARENTHESIS,
     CLOSED_PARENTHESIS,
     UNDERSCORE,
+    PLUS,
+    MINUS,
+    MULTIPLY,
+    DIVIDE,
+    DOUBLE_QUOTE,
+    NUMBER,
+    STRING,
 
     STMT,
     READ,
@@ -62,3 +71,5 @@ struct PqlToken {
     PqlToken(TokenType specifiedTokenType, std::string specifiedValue = "")
             : type{specifiedTokenType}, value{specifiedValue} {}
 };
+
+extern std::unordered_map<std::string, TokenType> stringTokenMap;

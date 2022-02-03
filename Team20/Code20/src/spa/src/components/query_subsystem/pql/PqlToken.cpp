@@ -7,6 +7,12 @@ std::unordered_map<std::string, TokenType> stringTokenMap = {
         {"(", TokenType::OPEN_PARENTHESIS},
         {")", TokenType::CLOSED_PARENTHESIS},
         {"_", TokenType::UNDERSCORE},
+        {"+", TokenType::PLUS},
+        {"-", TokenType::MINUS},
+        {"*", TokenType::MULTIPLY},
+        {"/", TokenType::DIVIDE},
+        {"\"", TokenType::DOUBLE_QUOTE},
+
 
         {"stmt", TokenType::STMT},
         {"read", TokenType::READ},
