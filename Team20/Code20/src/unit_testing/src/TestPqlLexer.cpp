@@ -10,6 +10,9 @@ PqlToken comma_token = PqlToken(TokenType::COMMA, ",");
 PqlToken semicolon_token = PqlToken(TokenType::SEMICOLON, ";");
 PqlToken open_parenthesis_token = PqlToken(TokenType::OPEN_PARENTHESIS, "(");
 PqlToken closed_parenthesis_token = PqlToken(TokenType::CLOSED_PARENTHESIS, ")");
+PqlToken double_quote_token = PqlToken(TokenType::DOUBLE_QUOTE, "\"");
+PqlToken underscore_token = PqlToken(TokenType::UNDERSCORE, "_");
+PqlToken plus_token = PqlToken(TokenType::PLUS, "+");
 
 PqlToken stmt_token = PqlToken(TokenType::STMT, "stmt");
 PqlToken assign_token = PqlToken(TokenType::ASSIGN, "assign");
@@ -38,6 +41,8 @@ PqlToken pn_token = PqlToken(TokenType::SYNONYM, "pn");
 PqlToken cl_token = PqlToken(TokenType::SYNONYM, "cl");
 
 PqlToken number_value_token = PqlToken(TokenType::NUMBER, "1");
+PqlToken x_token = PqlToken(TokenType::SYNONYM, "x");
+PqlToken y_token = PqlToken(TokenType::SYNONYM, "y");
 
 PqlToken select_token = PqlToken(TokenType::SELECT, "Select");
 PqlToken such_token = PqlToken(TokenType::SUCH, "such");
@@ -45,6 +50,12 @@ PqlToken that_token = PqlToken(TokenType::THAT, "that");
 
 PqlToken follow_token = PqlToken(TokenType::FOLLOWS, "Follows");
 PqlToken follow_t_token = PqlToken(TokenType::FOLLOWS_T, "Follows*");
+PqlToken parent_token = PqlToken(TokenType::PARENT, "Parent");
+PqlToken parent_t_token = PqlToken(TokenType::PARENT_T, "Parent*");
+PqlToken use_token = PqlToken(TokenType::USES, "Uses");
+PqlToken modify_token = PqlToken(TokenType::MODIFIES, "Modifies");
+PqlToken pattern_token = PqlToken(TokenType::PATTERN, "pattern");
+
 
 
 
@@ -127,9 +138,9 @@ TEST_CASE("Test multiple declarations") {
     REQUIRE(test_token_vect == expected_token_vect);
 }
 
-TEST_CASE("Test declarations with follow relationship") {
+TEST_CASE("Test declarations with follows relationship") {
     PqlLexer pql_lexer = PqlLexer("stmt s;\n"
-                                  "Select s such that Follows(1, s)");
+                                  "Select s such that Follows (1, s)");
     vector<PqlToken> test_token_vect = pql_lexer.lex();
     vector<PqlToken> expected_token_vect;
 
@@ -151,5 +162,198 @@ TEST_CASE("Test declarations with follow relationship") {
     expected_token_vect.push_back(closed_parenthesis_token);
 
     REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with follows* relationship") {
+    PqlLexer pql_lexer = PqlLexer("stmt s;\n"
+                                  "Select s such that Follows* (1, s)");
+    vector<PqlToken> test_token_vect = pql_lexer.lex();
+    vector<PqlToken> expected_token_vect;
+
+    // stmt
+    expected_token_vect.push_back(stmt_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // select clause
+    expected_token_vect.push_back(select_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(such_token);
+    expected_token_vect.push_back(that_token);
+    expected_token_vect.push_back(follow_t_token);
+    expected_token_vect.push_back(open_parenthesis_token);
+    expected_token_vect.push_back(number_value_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(closed_parenthesis_token);
+
+    REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with parent relationship") {
+    PqlLexer pql_lexer = PqlLexer("stmt s;\n"
+                                  "Select s such that Parent (1, s)");
+    vector<PqlToken> test_token_vect = pql_lexer.lex();
+    vector<PqlToken> expected_token_vect;
+
+    // stmt
+    expected_token_vect.push_back(stmt_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // select clause
+    expected_token_vect.push_back(select_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(such_token);
+    expected_token_vect.push_back(that_token);
+    expected_token_vect.push_back(parent_token);
+    expected_token_vect.push_back(open_parenthesis_token);
+    expected_token_vect.push_back(number_value_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(closed_parenthesis_token);
+
+    REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with parent* relationship") {
+    PqlLexer pql_lexer = PqlLexer("stmt s;\n"
+                                  "Select s such that Parent* (1, s)");
+    vector<PqlToken> test_token_vect = pql_lexer.lex();
+    vector<PqlToken> expected_token_vect;
+
+    // stmt
+    expected_token_vect.push_back(stmt_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // select clause
+    expected_token_vect.push_back(select_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(such_token);
+    expected_token_vect.push_back(that_token);
+    expected_token_vect.push_back(parent_t_token);
+    expected_token_vect.push_back(open_parenthesis_token);
+    expected_token_vect.push_back(number_value_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(closed_parenthesis_token);
+
+    REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with use relationship") {
+    PqlLexer pql_lexer = PqlLexer("stmt s;\n"
+                                  "Select s such that Uses (s, \"x\")");
+    vector<PqlToken> test_token_vect = pql_lexer.lex();
+    vector<PqlToken> expected_token_vect;
+
+    // stmt
+    expected_token_vect.push_back(stmt_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // select clause
+    expected_token_vect.push_back(select_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(such_token);
+    expected_token_vect.push_back(that_token);
+    expected_token_vect.push_back(use_token);
+    expected_token_vect.push_back(open_parenthesis_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(double_quote_token);
+    expected_token_vect.push_back(x_token);
+    expected_token_vect.push_back(double_quote_token);
+    expected_token_vect.push_back(closed_parenthesis_token);
+
+    REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with modify relationship") {
+    PqlLexer pql_lexer = PqlLexer("stmt s;\n"
+                                  "Select s such that Modifies (s, \"x\")");
+    vector<PqlToken> test_token_vect = pql_lexer.lex();
+    vector<PqlToken> expected_token_vect;
+
+    // stmt
+    expected_token_vect.push_back(stmt_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // select clause
+    expected_token_vect.push_back(select_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(such_token);
+    expected_token_vect.push_back(that_token);
+    expected_token_vect.push_back(modify_token);
+    expected_token_vect.push_back(open_parenthesis_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(double_quote_token);
+    expected_token_vect.push_back(x_token);
+    expected_token_vect.push_back(double_quote_token);
+    expected_token_vect.push_back(closed_parenthesis_token);
+
+    REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with pattern relationship") {
+    PqlLexer pql_lexer = PqlLexer("stmt s; variable v; assign a;\n"
+                                  "Select s such that Uses (s, \"x\") pattern a (v, _\"x + y\"_)");
+    vector<PqlToken> test_token_vect = pql_lexer.lex();
+    vector<PqlToken> expected_token_vect;
+
+    // stmt
+    expected_token_vect.push_back(stmt_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // variable
+    expected_token_vect.push_back(variable_token);
+    expected_token_vect.push_back(v_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // assign
+    expected_token_vect.push_back(assign_token);
+    expected_token_vect.push_back(a_token);
+    expected_token_vect.push_back(semicolon_token);
+
+    // select clause
+    expected_token_vect.push_back(select_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(such_token);
+    expected_token_vect.push_back(that_token);
+    expected_token_vect.push_back(use_token);
+    expected_token_vect.push_back(open_parenthesis_token);
+    expected_token_vect.push_back(s_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(double_quote_token);
+    expected_token_vect.push_back(x_token);
+    expected_token_vect.push_back(double_quote_token);
+    expected_token_vect.push_back(closed_parenthesis_token);
+    expected_token_vect.push_back(pattern_token);
+    expected_token_vect.push_back(a_token);
+    expected_token_vect.push_back(open_parenthesis_token);
+    expected_token_vect.push_back(v_token);
+    expected_token_vect.push_back(comma_token);
+    expected_token_vect.push_back(underscore_token);
+    expected_token_vect.push_back(double_quote_token);
+    expected_token_vect.push_back(x_token);
+    expected_token_vect.push_back(plus_token);
+    expected_token_vect.push_back(y_token);
+    expected_token_vect.push_back(double_quote_token);
+    expected_token_vect.push_back(underscore_token);
+    expected_token_vect.push_back(closed_parenthesis_token);
+
+    REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with unrecognised token") {
+    PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
+                                  "Select s such that Uses (s, \"x\") && Modifies (s, v)");
+    string expected_wrong_token = "&&";
+
+    REQUIRE_THROWS_WITH(pql_lexer.lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
 }
 

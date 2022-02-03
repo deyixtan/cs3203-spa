@@ -35,8 +35,10 @@ std::unordered_map<std::string, TokenType> stringTokenMap = {
         {"Follows*", TokenType::FOLLOWS_T},
         {"Parent", TokenType::PARENT},
         {"Parent*", TokenType::PARENT_T},
+        {"Uses", TokenType::USES},
         {"Uses", TokenType::USES_S},
         {"Uses", TokenType::USES_P},
+        {"Modifies", TokenType::MODIFIES},
         {"Modifies", TokenType::MODIFIES_S},
         {"Modifies", TokenType::MODIFIES_P},
 
