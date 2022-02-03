@@ -19,15 +19,13 @@ vector<PqlToken> PqlLexer::lex() {
             continue;
         }
         if (stringTokenMap.find(token) != stringTokenMap.end()) {
-            tokens.push_back(PqlToken{stringTokenMap[token], ""});
-        } else if (isStringToken(token)) {
-            tokens.push_back(PqlToken{TokenType::STRING, token});
+            tokens.push_back(PqlToken{stringTokenMap[token], token});
         } else if (isIdent(token)) {
             tokens.push_back(PqlToken{TokenType::SYNONYM, token});
         } else if (isDigits(token)) {
             tokens.push_back(PqlToken{TokenType::NUMBER, token});
         } else {
-            throw "ERROR: Unrecognised token" + token + "\n";
+            throw "ERROR: Unrecognised token " + token + "\n";
         }
     }
 
@@ -60,16 +58,16 @@ bool PqlLexer::isDigits(const string &s) {
     return true;
 }
 
-bool PqlLexer::isStringToken(const string &token) {
-    return token.size() >= 2 && token.at(0) == '"' && token.back() == '"';
-}
-
 bool PqlLexer::isIdent(const string &s) {
     return startsWithAlphabet(s) && isAlphaNumeric(s);
 }
 
 unordered_set<char> stickChar = {
         ';', ',', '(', ')', '"', '+', '*', '/', '-', '_'
+};
+
+unordered_set<string> relationship = {
+        "Follows", "Parent"
 };
 
 vector<string> PqlLexer::split(string s) {
@@ -80,13 +78,19 @@ vector<string> PqlLexer::split(string s) {
             raw_tokens.push_back(single_raw_token);
             single_raw_token.clear();
         } else if (stickChar.count(c)) {
-            raw_tokens.push_back(string (1, c));
-            single_raw_token.clear();
+            if (c == '*' && relationship.count(single_raw_token)) {
+                single_raw_token.push_back(c);
+            } else {
+                raw_tokens.push_back(single_raw_token);
+                raw_tokens.push_back(string(1, c));
+                single_raw_token.clear();
+            }
         } else {
             single_raw_token.push_back(c);
         }
     }
     return raw_tokens;
 }
+
 
 

@@ -48,8 +48,10 @@ enum class TokenType {
     FOLLOWS_T,
     PARENT,
     PARENT_T,
+    USES,
     USES_S,
     USES_P,
+    MODIFIES,
     MODIFIES_S,
     MODIFIES_P,
 
