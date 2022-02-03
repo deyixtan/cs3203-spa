@@ -10,9 +10,7 @@ struct hashFunction {
   }
 };
 
-/*
-	A store class that maintains all Uses APIs and relationships
-*/
+// A store class that maintains all Uses APIs and relationships
 class UsageStore {
  public:
   UsageStore();
