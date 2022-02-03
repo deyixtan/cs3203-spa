@@ -5,6 +5,7 @@
 
 enum class TokenType {
   UNKNOWN,
+  WHITE_SPACE,
   DIGIT,
   NAME,
   OPENED_BRACES,
@@ -37,6 +38,7 @@ class SourceToken {
  public:
   SourceToken(TokenType type, std::string value);
   TokenType GetType();
+  std::string GetTypeStr();
   std::string GetValue();
 };
 

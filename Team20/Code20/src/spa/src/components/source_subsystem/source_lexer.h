@@ -1,6 +1,7 @@
 #ifndef SOURCE_LEXER_H
 #define SOURCE_LEXER_H
 
+#include <regex>
 #include <string>
 #include <vector>
 
@@ -9,10 +10,16 @@
 class SourceLexer {
  private:
   std::string program_source;
+  int cursor;
+  std::vector<std::pair<std::regex, TokenType>> tokenize_specs;
 
  public:
   SourceLexer(std::string program_source);
-  std::vector<SourceToken> Tokenize();
+  void ConstructSpecs();
+  bool IsEOF();
+  bool HasMoreTokens();
+  SourceToken* GetNextToken();
+  std::vector<SourceToken*> Tokenize();
 };
 
 #endif //SOURCE_LEXER_H
