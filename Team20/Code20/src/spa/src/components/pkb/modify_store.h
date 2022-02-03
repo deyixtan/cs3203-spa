@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MODIFY_STORE_H
+#define MODIFY_STORE_H
 
 #include <string>
 #include <unordered_map>
@@ -43,3 +44,4 @@ class ModifyStore {
   static std::unordered_map<std::string, std::unordered_set<std::string> > proc_var_map;
   static std::unordered_map<std::string, std::unordered_set<std::string> > var_proc_map;
 };
+#endif //MODIFY_STORE_H
