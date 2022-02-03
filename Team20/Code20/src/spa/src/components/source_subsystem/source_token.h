@@ -3,8 +3,30 @@
 
 #include <string>
 
-enum TokenType {
-
+enum class TokenType {
+  UNKNOWN,
+  DIGIT,
+  NAME,
+  OPENED_BRACES,
+  CLOSED_BRACES,
+  OPENED_PARENTHESIS,
+  CLOSED_PARENTHESIS,
+  SEMI_COLON,
+  EQUAL,
+  NOT,
+  AND,
+  OR,
+  IS_GREATER,
+  IS_GREATER_EQUAL,
+  IS_LESSER,
+  IS_LESSER_EQUAL,
+  IS_EQUAL,
+  IS_NOT_EQUAL,
+  ADDITION,
+  SUBTRACTION,
+  MULTIPLICATION,
+  DIVISION,
+  MODULUS
 };
 
 class SourceToken {
