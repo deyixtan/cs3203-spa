@@ -40,53 +40,53 @@ public:
     PKB();
 
     /* Adders */
-    void addStmt(int stmt = 0, std::string name = "", stmtType type = NONE);
+    void add_stmt(int stmt = 0, std::string name = "", stmtType type = NONE);
 
-    bool addUsageStmtVar(int stmt, std::string variable);
-    bool addUsageProcVar(std::string proc, std::string var);
+    bool add_usage_stmt_var(int stmt, std::string variable);
+    bool add_usage_proc_var(std::string proc, std::string var);
 
-    bool addModifyStmtVar(int stmt, std::string variable);
-    bool addModifyProcVar(std::string proc, std::string var);
+    bool add_modify_stmt_var(int stmt, std::string variable);
+    bool add_modify_proc_var(std::string proc, std::string var);
 
     /* Getters */
 
-    template <typename T> T getStmt(stmtType type);
+    template <typename T> T get_stmt(stmtType type);
 
-    std::unordered_set<std::string> getVarUsedByStmt(int stmt);
-    std::unordered_set<int> getStmtUsedByVar(std::string var);
-    std::unordered_set<std::string> getVarUsedByProc(std::string proc);
-    std::unordered_set<std::string> getProcUsedByVar(std::string var);
-    std::unordered_set<std::pair<int, std::string>, hashFunction> getAllUsageStmtVar();
-    std::unordered_set<std::pair<std::string, std::string>, hashFunction> getAllUsageProcVar();
+    std::unordered_set<std::string> get_var_used_by_stmt(int stmt);
+    std::unordered_set<int> get_stmt_used_by_var(std::string var);
+    std::unordered_set<std::string> get_var_used_by_proc(std::string proc);
+    std::unordered_set<std::string> get_proc_used_by_var(std::string var);
+    std::unordered_set<std::pair<int, std::string>, hashFunction> get_all_usage_stmt_var();
+    std::unordered_set<std::pair<std::string, std::string>, hashFunction> get_all_usage_proc_var();
 
-    std::unordered_set<std::string> getVarModByStmt(int stmt);
-    std::unordered_set<int> getStmtModByVar(std::string var);
-    std::unordered_set<std::string> getVarModByProc(std::string proc);
-    std::unordered_set<std::string> getProcModByVar(std::string var);
-    std::unordered_set<std::pair<int, std::string>, hashFunction> getAllModStmtVar();
-    std::unordered_set<std::pair<std::string, std::string>, hashFunction> getAllModProcVar();
+    std::unordered_set<std::string> get_var_mod_by_stmt(int stmt);
+    std::unordered_set<int> get_stmt_mod_by_var(std::string var);
+    std::unordered_set<std::string> get_var_mod_by_proc(std::string proc);
+    std::unordered_set<std::string> get_proc_mod_by_var(std::string var);
+    std::unordered_set<std::pair<int, std::string>, hashFunction> get_all_mod_stmt_var();
+    std::unordered_set<std::pair<std::string, std::string>, hashFunction> get_all_mod_proc_var();
 
     /* Checkers */
-    bool usageStmtVarExists(std::pair<int, std::string> pair);
-    bool usageProcVarExists(std::pair<std::string, std::string> pair);
+    bool usage_stmt_var_exists(std::pair<int, std::string> pair);
+    bool usage_proc_var_exists(std::pair<std::string, std::string> pair);
 
-    bool modifyStmtVarExists(std::pair<int, std::string> pair);
-    bool modifyProcVarExists(std::pair<std::string, std::string> pair);
+    bool modify_stmt_var_exists(std::pair<int, std::string> pair);
+    bool modify_proc_var_exists(std::pair<std::string, std::string> pair);
 
 private:
-    static std::unordered_set<std::string> procList;
-    static std::unordered_set<int> whileStmtList;
-    static std::unordered_set<int> readStmtList;
-    static std::unordered_set<int> printStmtList;
-    static std::unordered_set<int> callStmtList;
-    static std::unordered_set<int> ifStmtList; //need to create separate else-then or treat this as a block?
-    static std::unordered_set<int> assignStmtList;
+    static std::unordered_set<std::string> proc_list;
+    static std::unordered_set<int> while_stmt_list;
+    static std::unordered_set<int> read_stmt_list;
+    static std::unordered_set<int> print_stmt_list;
+    static std::unordered_set<int> call_stmt_list;
+    static std::unordered_set<int> if_stmt_list; //need to create separate else-then or treat this as a block?
+    static std::unordered_set<int> assign_stmt_list;
 
-    static std::unordered_set<std::string> varList;
-    static std::unordered_set<std::string> constList;
+    static std::unordered_set<std::string> var_list;
+    static std::unordered_set<std::string> const_list;
 
     //static FollowStore fStore;
     //static ParentStore pStore;
-    static UsageStore usageStore;
-    static ModifyStore modifyStore;
+    static UsageStore usage_store;
+    static ModifyStore modify_store;
 };
