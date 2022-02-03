@@ -6,12 +6,14 @@
 #include <unordered_set>
 #include <vector>
 
-PqlLexer::PqlLexer(std::string query) { this->query = query; }
+using namespace std;
+
+PqlLexer::PqlLexer(string query) { this->query = query; }
 
 // public
-std::vector<PqlToken> PqlLexer::lex() {
-    std::vector<std::string> raw_tokens = split(query);
-    std::vector<PqlToken> tokens;
+vector<PqlToken> PqlLexer::lex() {
+    vector<string> raw_tokens = split(query);
+    vector<PqlToken> tokens;
     for (const auto token : raw_tokens) {
         if (token.size() == 0) {
             continue;
@@ -33,7 +35,7 @@ std::vector<PqlToken> PqlLexer::lex() {
 }
 
 // private
-bool PqlLexer::isAlphaNumeric(const std::string &s) {
+bool PqlLexer::isAlphaNumeric(const string &s) {
     for (const auto c : s) {
         if (!isalnum(c)) {
             return false;
@@ -42,14 +44,14 @@ bool PqlLexer::isAlphaNumeric(const std::string &s) {
     return true;
 }
 
-bool PqlLexer::startsWithAlphabet(const std::string &s) {
+bool PqlLexer::startsWithAlphabet(const string &s) {
     if (s.empty()) {
         return false;
     }
     return isalpha(s[0]);
 }
 
-bool PqlLexer::isDigits(const std::string &s) {
+bool PqlLexer::isDigits(const string &s) {
     for (const auto c : s) {
         if (!isdigit(c)) {
             return false;
@@ -58,28 +60,28 @@ bool PqlLexer::isDigits(const std::string &s) {
     return true;
 }
 
-bool PqlLexer::isStringToken(const std::string &token) {
+bool PqlLexer::isStringToken(const string &token) {
     return token.size() >= 2 && token.at(0) == '"' && token.back() == '"';
 }
 
-bool PqlLexer::isIdent(const std::string &s) {
+bool PqlLexer::isIdent(const string &s) {
     return startsWithAlphabet(s) && isAlphaNumeric(s);
 }
 
-std::unordered_set<char> stickChar = {
+unordered_set<char> stickChar = {
         ';', ',', '(', ')', '"', '+', '*', '/', '-', '_'
 };
 
-std::vector<std::string> PqlLexer::split(std::string s) {
-    std::vector<std::string> raw_tokens;
-    std::string single_raw_token;
+vector<string> PqlLexer::split(string s) {
+    vector<string> raw_tokens;
+    string single_raw_token;
     for (const char c : s) {
         if (isspace(c)) {
             raw_tokens.push_back(single_raw_token);
             single_raw_token.clear();
         } else if (stickChar.count(c)) {
             raw_tokens.push_back(single_raw_token);
-            raw_tokens.push_back(std::string (1, c));
+            raw_tokens.push_back(string (1, c));
             single_raw_token.clear();
         } else {
             single_raw_token.push_back(c);
