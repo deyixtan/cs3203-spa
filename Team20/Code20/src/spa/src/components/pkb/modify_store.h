@@ -10,9 +10,7 @@ struct hashFunction {
   }
 };
 
-/*
-	A store class that maintains all Modifies APIs and relationships
-*/
+// A store class that maintains all Modifies APIs and relationships
 class ModifyStore {
  public:
   ModifyStore();
