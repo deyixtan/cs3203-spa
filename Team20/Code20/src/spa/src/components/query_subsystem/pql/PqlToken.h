@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+using namespace std;
 
 enum class TokenType {
     SYNONYM,
@@ -64,12 +65,12 @@ enum class TokenType {
 
 struct PqlToken {
     TokenType type;
-    std::string value;
+    string value;
     bool operator==(const PqlToken &other) const {
         return type == other.type && value == other.value;
     }
-    PqlToken(TokenType specifiedTokenType, std::string specifiedValue = "")
+    PqlToken(TokenType specifiedTokenType, string specifiedValue = "")
             : type{specifiedTokenType}, value{specifiedValue} {}
 };
 
-extern std::unordered_map<std::string, TokenType> stringTokenMap;
+extern unordered_map<string, TokenType> stringTokenMap;
