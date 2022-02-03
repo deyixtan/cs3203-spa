@@ -25,69 +25,59 @@ PKB::PKB() {}
 /* Adders */
 
 void PKB::add_stmt(int stmt, std::string name, stmtType type) {
-    switch (type) {
-        case PROC:
-            proc_list.insert(name);
-        case WHILE:
-            while_stmt_list.insert(stmt);
-        case READ:
-            read_stmt_list.insert(stmt);
-        case PRINT:
-            print_stmt_list.insert(stmt);
-        case CALL:
-            call_stmt_list.insert(stmt);
-        case IF:
-            if_stmt_list.insert(stmt);
-        case ASSIGN:
-            assign_stmt_list.insert(stmt);
-        case VARS:
-            var_list.insert(name);
-        case CONSTS:
-            const_list.insert(name);
-        default:
-            break;
-    }
+  switch (type) {
+    case PROC:proc_list.insert(name);
+      break;
+    case WHILE:while_stmt_list.insert(stmt);
+      break;
+    case READ:read_stmt_list.insert(stmt);
+      break;
+    case PRINT:print_stmt_list.insert(stmt);
+      break;
+    case CALL:call_stmt_list.insert(stmt);
+      break;
+    case IF:if_stmt_list.insert(stmt);
+      break;
+    case ASSIGN:assign_stmt_list.insert(stmt);
+      break;
+    case VARS:var_list.insert(name);
+      break;
+    case CONSTS:const_list.insert(name);
+      break;
+    default:break;
+  }
 }
 
 bool PKB::add_usage_stmt_var(int stmt, std::string var) {
-    usage_store.add_stmtVar(stmt, var);
+  usage_store.add_stmtVar(stmt, var);
 }
 
 bool PKB::add_usage_proc_var(std::string proc, std::string var) {
-    usage_store.addProcVar(proc, var);
+  usage_store.addProcVar(proc, var);
 }
 
 bool PKB::add_modify_stmt_var(int stmt, std::string var) {
-    modify_store.add_stmtVar(stmt, var);
+  modify_store.add_stmtVar(stmt, var);
 }
 
 bool PKB::add_modify_proc_var(std::string proc, std::string var) {
-    modify_store.addProcVar(proc, var);
+  modify_store.addProcVar(proc, var);
 }
 
 /* Getters */
 
-template <typename T> T PKB::get_stmt(stmtType type) {
-    switch (type) {
-        case PROC:
-            return proc_list;
-        case WHILE:
-            return while_stmt_list;
-        case READ:
-            return read_stmt_list;
-        case PRINT:
-            return print_stmt_list;
-        case CALL:
-            return call_stmt_list;
-        case IF:
-            return if_stmt_list;
-        case ASSIGN:
-            return assign_stmt_list;
-        case VARS:
-            return var_list;
-        case CONSTS:
-            return const_list;
-        default:
-            break;
-    }
+template<typename T>
+T PKB::get_stmt(stmtType type) {
+  switch (type) {
+    case PROC:return proc_list;
+    case WHILE:return while_stmt_list;
+    case READ:return read_stmt_list;
+    case PRINT:return print_stmt_list;
+    case CALL:return call_stmt_list;
+    case IF:return if_stmt_list;
+    case ASSIGN:return assign_stmt_list;
+    case VARS:return var_list;
+    case CONSTS:return const_list;
+    default:break;
+  }
 }
