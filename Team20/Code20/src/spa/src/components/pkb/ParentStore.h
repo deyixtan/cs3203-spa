@@ -35,17 +35,21 @@ public:
 
     bool parentChildExists(int stmt1, int stmt2);
 
+    bool anceExists(int curr, int ance);
+
+    bool descExists(int curr, int desc);
+
     void rsInit(int numStmts);
 
     void addParentStmt(int parent, int child);
 
-    int getParent(int stmt);
+    int getParentOf(int stmt);
 
-    int getChild(int stmt);
+    int getChildOf(int stmt);
 
-    std::unordered_set<int> getAllAnce(int stmt);
+    std::unordered_set<int> getAllAnceOf(int stmt);
 
-    std::unordered_set<int> getAllDesc(int stmt);
+    std::unordered_set<int> getAllDescOf(int stmt);
 
     std::unordered_set< std::pair<int, int>, hashFunction> getParentChildPairs();
 

@@ -37,12 +37,31 @@ void ParentStore::addParentStmt(int parent, int child) {
     rsMap.at(child).ance.insert(parent);
 }
 
+// Used for Parent(s1, s2)
 bool ParentStore::parentChildExists(int stmt1, int stmt2) {
     std::pair<int, int> p = std::make_pair(stmt1, stmt2);
     return parentChildSet.find(p) != parentChildSet.end();
 }
 
-int ParentStore::getParent(int stmt) {
+// Used for Parent*(s1, s2)
+bool ParentStore::anceExists(int curr, int ance) {
+    std::unordered_set<int> allAnce = getAllAnceOf(curr);
+    if (allAnce.find(ance) != allAnce.end()) {
+        return true;
+    }
+    return false;
+}
+
+// Used for Parent*(s1, s2)
+bool ParentStore::descExists(int curr, int desc) {
+    std::unordered_set<int> allDesc = getAllDescOf(curr);
+    if (allDesc.find(desc) != allDesc.end()) {
+        return true;
+    }
+    return false;
+}
+
+int ParentStore::getParentOf(int stmt) {
     if (rsMap.find(stmt) != rsMap.end()) {
         parentChild pc = rsMap.at(stmt);
         return pc.parent;
@@ -50,7 +69,7 @@ int ParentStore::getParent(int stmt) {
     return 0;
 }
 
-int ParentStore::getChild(int stmt) {
+int ParentStore::getChildOf(int stmt) {
     if (rsMap.find(stmt) != rsMap.end()) {
         parentChild pc = rsMap.at(stmt);
         return pc.child;
@@ -58,7 +77,7 @@ int ParentStore::getChild(int stmt) {
     return 0;
 }
 
-std::unordered_set<int> ParentStore::getAllAnce(int stmt) {
+std::unordered_set<int> ParentStore::getAllAnceOf(int stmt) {
     if (rsMap.find(stmt) != rsMap.end()) {
         parentChild pc = rsMap.at(stmt);
         return pc.ance;
@@ -66,7 +85,7 @@ std::unordered_set<int> ParentStore::getAllAnce(int stmt) {
     return std::unordered_set<int>();
 }
 
-std::unordered_set<int> ParentStore::getAllDesc(int stmt) {
+std::unordered_set<int> ParentStore::getAllDescOf(int stmt) {
     if (rsMap.find(stmt) != rsMap.end()) {
         parentChild pc = rsMap.at(stmt);
         return pc.desc;
