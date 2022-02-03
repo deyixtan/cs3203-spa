@@ -17,7 +17,7 @@ std::vector<PqlToken> PqlLexer::lex() {
             continue;
         }
         if (stringTokenMap.find(token) != stringTokenMap.end()) {
-            tokens.push_back(PqlToken{stringTokenMap[token], ""});
+            tokens.push_back(PqlToken{stringTokenMap[token], token});
         } else if (isStringToken(token)) {
             tokens.push_back(PqlToken{TokenType::STRING, token});
         } else if (isIdent(token)) {
@@ -78,6 +78,7 @@ std::vector<std::string> PqlLexer::split(std::string s) {
             raw_tokens.push_back(single_raw_token);
             single_raw_token.clear();
         } else if (stickChar.count(c)) {
+            raw_tokens.push_back(single_raw_token);
             raw_tokens.push_back(std::string (1, c));
             single_raw_token.clear();
         } else {
@@ -86,5 +87,6 @@ std::vector<std::string> PqlLexer::split(std::string s) {
     }
     return raw_tokens;
 }
+
 
 

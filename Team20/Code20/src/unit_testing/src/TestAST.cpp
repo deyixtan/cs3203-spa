@@ -1,4 +1,3 @@
-
 #include "components/source_subsystem/TNode.h"
 
 #include "catch.hpp"
