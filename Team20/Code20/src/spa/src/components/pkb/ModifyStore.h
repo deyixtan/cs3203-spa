@@ -17,31 +17,31 @@ class ModifyStore {
     public:
         ModifyStore();
 
-        bool addStmtVar(int stmt, std::string var);
+        bool add_stmt_var(int stmt, std::string var);
 
-        bool addProcVar(std::string proc, std::string var);
+        bool add_proc_var(std::string proc, std::string var);
 
-        bool stmtVarExists(std::pair<int, std::string> pair);
+        bool stmt_var_exists(std::pair<int, std::string> pair);
 
-        bool procVarExists(std::pair<std::string, std::string> pair);
+        bool proc_var_exists(std::pair<std::string, std::string> pair);
 
-        std::unordered_set<std::string> getVarModByStmt(int stmt);
+        std::unordered_set<std::string> get_var_mod_by_stmt(int stmt);
 
-        std::unordered_set<int> getStmtModByVar(std::string var);
+        std::unordered_set<int> get_stmt_mod_by_var(std::string var);
 
-        std::unordered_set<std::string> getVarModByProc(std::string proc);
+        std::unordered_set<std::string> get_var_mod_by_proc(std::string proc);
 
-        std::unordered_set<std::string> getProcModByVar(std::string var);
+        std::unordered_set<std::string> get_proc_mod_by_var(std::string var);
 
-        std::unordered_set<std::pair<int, std::string>, hashFunction> getAllStmtVar();
+        std::unordered_set<std::pair<int, std::string>, hashFunction> get_all_stmt_var();
 
-        std::unordered_set<std::pair<std::string, std::string>, hashFunction> getAllProcVar();
+        std::unordered_set<std::pair<std::string, std::string>, hashFunction> get_all_proc_var();
 
     private:
-        static std::unordered_set<std::pair<int, std::string>, hashFunction> stmtVarPairs;
-        static std::unordered_set<std::pair<std::string, std::string>, hashFunction> procVarPairs;
-        static std::unordered_map<int, std::unordered_set<std::string> > stmtVarMap;
-        static std::unordered_map<std::string, std::unordered_set<int> > varStmtMap;
-        static std::unordered_map<std::string, std::unordered_set<std::string> > procVarMap;
-        static std::unordered_map<std::string, std::unordered_set<std::string> > varProcMap;
+        static std::unordered_set<std::pair<int, std::string>, hashFunction> stmt_var_pairs;
+        static std::unordered_set<std::pair<std::string, std::string>, hashFunction> proc_var_pairs;
+        static std::unordered_map<int, std::unordered_set<std::string> > stmt_var_map;
+        static std::unordered_map<std::string, std::unordered_set<int> > var_stmt_map;
+        static std::unordered_map<std::string, std::unordered_set<std::string> > proc_var_map;
+        static std::unordered_map<std::string, std::unordered_set<std::string> > var_proc_map;
 };
