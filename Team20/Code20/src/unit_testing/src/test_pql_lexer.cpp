@@ -499,3 +499,12 @@ TEST_CASE("Test declarations with unrecognised token") {
   REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
 }
 
+TEST_CASE("Test string break down") {
+  PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
+                                "Select s such that Uses (s, \"x\") && Modifies (s, v)");
+
+  std::vector<std::string> string_tokens = pql_lexer.BreakString("((x  + y)*y+");
+  std::vector<std::string> expected_string_tokens = {"(", "(", "x", "+", "y", ")", "*", "y", "+"};
+
+  REQUIRE(string_tokens == expected_string_tokens);
+}

@@ -9,6 +9,7 @@ class PqlLexer {
  public:
   PqlLexer(std::string query);
   std::vector<PqlToken> Lex();
+  std::vector<std::string> BreakString(const std::string &s);
  private:
   std::string query;
   bool IsAlphaNumeric(const std::string &s);
