@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PARENT_STORE_H
+#define PARENT_STORE_H
 
 #include <string>
 #include <unordered_map>
@@ -59,3 +60,4 @@ class ParentStore {
   static std::unordered_set<int> parent_set;
   static std::unordered_set<int> child_set;
 };
+#endif //PARENT_STORE_H
