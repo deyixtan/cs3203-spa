@@ -14,22 +14,22 @@ void SourceLexer::ConstructSpecs() {
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[}]", TokenType::CLOSED_BRACES));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[(]", TokenType::OPENED_PARENTHESIS));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[)]", TokenType::CLOSED_PARENTHESIS));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[;]", TokenType::SEMI_COLON));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[=]", TokenType::EQUAL));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[!]", TokenType::NOT));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[&&]", TokenType::AND));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[||]", TokenType::OR));
+  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[&][&]", TokenType::AND));
+  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[|][|]", TokenType::OR));
+  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[>][=]", TokenType::IS_GREATER_EQUAL));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[>]", TokenType::IS_GREATER));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[>=]", TokenType::IS_GREATER_EQUAL));
+  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[<][=]", TokenType::IS_LESSER_EQUAL));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[<]", TokenType::IS_LESSER));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[<=]", TokenType::IS_LESSER_EQUAL));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[==]", TokenType::IS_EQUAL));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[!=]", TokenType::IS_NOT_EQUAL));
+  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[=][=]", TokenType::IS_EQUAL));
+  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[!][=]", TokenType::IS_NOT_EQUAL));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[+]", TokenType::ADDITION));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[-]", TokenType::SUBTRACTION));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[*]", TokenType::MULTIPLICATION));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[/]", TokenType::DIVISION));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[%]", TokenType::MODULUS));
+  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[;]", TokenType::SEMI_COLON));
+  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[=]", TokenType::EQUAL));
+  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[!]", TokenType::NOT));
 }
 
 bool SourceLexer::IsEOF() {

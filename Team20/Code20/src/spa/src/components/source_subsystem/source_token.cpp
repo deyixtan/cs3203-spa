@@ -28,24 +28,18 @@ std::string SourceToken::GetTypeStr() {
       type_str = "OPENED_PARENTHESIS"; break;
     case TokenType::CLOSED_PARENTHESIS:
       type_str = "CLOSED_PARENTHESIS"; break;
-    case TokenType::SEMI_COLON:
-      type_str = "SEMI_COLON"; break;
-    case TokenType::EQUAL:
-      type_str = "EQUAL"; break;
-    case TokenType::NOT:
-      type_str = "NOT"; break;
     case TokenType::AND:
       type_str = "AND"; break;
     case TokenType::OR:
       type_str = "OR"; break;
-    case TokenType::IS_GREATER:
-      type_str = "IS_GREATER"; break;
     case TokenType::IS_GREATER_EQUAL:
       type_str = "IS_GREATER_EQUAL"; break;
-    case TokenType::IS_LESSER:
-      type_str = "IS_LESSER"; break;
+    case TokenType::IS_GREATER:
+      type_str = "IS_GREATER"; break;
     case TokenType::IS_LESSER_EQUAL:
       type_str = "IS_LESSER_EQUAL"; break;
+    case TokenType::IS_LESSER:
+      type_str = "IS_LESSER"; break;
     case TokenType::IS_EQUAL:
       type_str = "IS_EQUAL"; break;
     case TokenType::IS_NOT_EQUAL:
@@ -60,6 +54,12 @@ std::string SourceToken::GetTypeStr() {
       type_str = "DIVISION"; break;
     case TokenType::MODULUS:
       type_str = "MODULUS"; break;
+    case TokenType::SEMI_COLON:
+      type_str = "SEMI_COLON"; break;
+    case TokenType::EQUAL:
+      type_str = "EQUAL"; break;
+    case TokenType::NOT:
+      type_str = "NOT"; break;
   }
   return type_str;
 }
