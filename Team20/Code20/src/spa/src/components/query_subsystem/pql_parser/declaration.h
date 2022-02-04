@@ -9,6 +9,8 @@ class Declaration {
   PqlToken design_entity;
  public:
   Declaration(PqlToken, PqlToken);
+  PqlToken GetSynonym();
+  PqlToken GetDesignEntity();
 };
 
 #endif
