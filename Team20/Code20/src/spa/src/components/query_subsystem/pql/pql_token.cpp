@@ -1,7 +1,7 @@
 #include "pql_token.h"
 
 std::unordered_map<std::string, TokenType> string_token_map = {
-    {"progLine", TokenType::PROG_LINE},
+
     {";", TokenType::SEMICOLON},
     {",", TokenType::COMMA},
     {"(", TokenType::OPEN_PARENTHESIS},
@@ -35,12 +35,47 @@ std::unordered_map<std::string, TokenType> string_token_map = {
     {"Parent", TokenType::PARENT},
     {"Parent*", TokenType::PARENT_T},
     {"Uses", TokenType::USES},
-    {"Uses", TokenType::USES_S},
-    {"Uses", TokenType::USES_P},
     {"Modifies", TokenType::MODIFIES},
-    {"Modifies", TokenType::MODIFIES_S},
-    {"Modifies", TokenType::MODIFIES_P},
-
-    {"pattern", TokenType::PATTERN},
-    {"varName", TokenType::VARNAME},
+    {"pattern", TokenType::PATTERN}
 };
+
+std::unordered_set<TokenType> rel_ref = {
+    TokenType::FOLLOWS,
+    TokenType::FOLLOWS_T,
+    TokenType::PARENT,
+    TokenType::PARENT_T,
+    TokenType::USES,
+    TokenType::MODIFIES
+};
+
+std::unordered_set<TokenType> design_entities = {
+    TokenType::STMT,
+    TokenType::READ,
+    TokenType::PRINT,
+    TokenType::CALL,
+    TokenType::WHILE,
+    TokenType::IF,
+    TokenType::ASSIGN,
+    TokenType::VARIABLE,
+    TokenType::CONSTANT,
+    TokenType::PROCEDURE
+};
+
+std::unordered_set<TokenType> expression_spec = {
+    TokenType::EXPR,
+    TokenType::SUB_EXPRESSION,
+    TokenType::UNDERSCORE
+};
+
+std::unordered_set<TokenType> ent_ref = {
+    TokenType::SYNONYM,
+    TokenType::UNDERSCORE,
+    TokenType::IDENT_WITH_QUOTES,
+};
+
+std::unordered_set<TokenType> stmt_ref = {
+    TokenType::SYNONYM,
+    TokenType::UNDERSCORE,
+    TokenType::NUMBER,
+};
+

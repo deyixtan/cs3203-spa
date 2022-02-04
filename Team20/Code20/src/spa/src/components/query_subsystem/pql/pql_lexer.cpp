@@ -29,11 +29,11 @@ std::vector<PqlToken> PqlLexer::Lex() {
     }
     if (string_token_map.find(token) != string_token_map.end()) {
       tokens.push_back(PqlToken{string_token_map[token], token});
-    } else if (IsStringToken(token)) {
+    } else if (IsValidString(token)) {
       if (IsEntRef(token)) {
-        tokens.push_back(PqlToken{TokenType::ENT_REF, RemoveSpace(token)});
+        tokens.push_back(PqlToken{TokenType::IDENT_WITH_QUOTES, RemoveSpace(token)});
       } else {
-        tokens.push_back(PqlToken{TokenType::EXPRESSION_SPEC, RemoveSpace(token)});
+        tokens.push_back(PqlToken{TokenType::EXPR, RemoveSpace(token)});
       }
     } else if (IsSubExpressionToken(token)) {
       tokens.push_back(PqlToken{TokenType::SUB_EXPRESSION, RemoveSpace(token)});
@@ -90,10 +90,6 @@ bool PqlLexer::IsEntRef(const std::string &s) {
     }
   }
   return true;
-}
-
-bool PqlLexer::IsStringToken(const std::string &token) {
-  return token.size() >= 2 && token.at(0) == '"' && token.back() == '"';
 }
 
 bool PqlLexer::IsSubExpressionToken(const std::string &token) {

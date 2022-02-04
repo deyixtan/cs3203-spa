@@ -42,8 +42,8 @@ PqlToken cl_token = PqlToken(TokenType::SYNONYM, "cl");
 PqlToken number_value_token = PqlToken(TokenType::NUMBER, "1");
 PqlToken x_token = PqlToken(TokenType::SYNONYM, "x");
 PqlToken y_token = PqlToken(TokenType::SYNONYM, "y");
-PqlToken x_string_token = PqlToken(TokenType::STRING, "\"x\"");
-PqlToken x_plus_y_string_token = PqlToken(TokenType::STRING, "\"x+y\"");
+PqlToken x_string_token = PqlToken(TokenType::IDENT_WITH_QUOTES, "\"x\"");
+PqlToken x_plus_y_string_token = PqlToken(TokenType::EXPR, "\"x+y\"");
 PqlToken sub_expression_token = PqlToken(TokenType::SUB_EXPRESSION, "_\"x+y\"_");
 
 PqlToken select_token = PqlToken(TokenType::SELECT, "Select");
