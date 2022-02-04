@@ -82,7 +82,7 @@ std::unordered_set<int> ParentStore::get_all_ance_of(int stmt) {
     parent_child pc = rs_map.at(stmt);
     return pc.ance;
   }
-  return std::unordered_set<int>();
+  return {};
 }
 
 std::unordered_set<int> ParentStore::get_all_desc_of(int stmt) {
@@ -90,9 +90,9 @@ std::unordered_set<int> ParentStore::get_all_desc_of(int stmt) {
     parent_child pc = rs_map.at(stmt);
     return pc.desc;
   }
-  return std::unordered_set<int>();
+  return {};
 }
 
-std::unordered_set<std::pair<int, int>, hashFunction> ParentStore::get_parent_child_pairs() {
+std::unordered_set<std::pair<int, int>, pair_hash> ParentStore::get_parent_child_pairs() {
   return parent_child_set;
 }
