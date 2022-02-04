@@ -3,12 +3,11 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 enum class TokenType {
   SYNONYM,
-  VARNAME,
-  PROG_LINE,
   SEMICOLON,
   COMMA,
   OPEN_PARENTHESIS,
@@ -20,7 +19,6 @@ enum class TokenType {
   DIVIDE,
   DOUBLE_QUOTE,
   NUMBER,
-  STRING,
 
   STMT,
   READ,
@@ -34,46 +32,35 @@ enum class TokenType {
   CONSTANT,
   PROCEDURE,
 
-  SELECT_CL,
   SELECT,
-  DECLARATION,
-  DESIGN_ENTITY,
-  SUCHTHAT_CL,
   SUCH,
   THAT,
 
-  RELREF,
   FOLLOWS,
   FOLLOWS_T,
   PARENT,
   PARENT_T,
   USES,
-  USES_S,
-  USES_P,
   MODIFIES,
-  MODIFIES_S,
-  MODIFIES_P,
-
-  PATTERN_CL,
   PATTERN,
-  EXPRESSION_SPEC,
+
   EXPR,
-  TERM,
-  FACTOR,
-  VAR_NAME,
-  CONST_VALUE,
+  IDENT_WITH_QUOTES,
+  SUB_EXPRESSION,
 };
 
-struct PqlToken {
+class PqlToken {
+ public:
   TokenType type;
   std::string value;
-  bool operator==(const PqlToken &other) const {
-    return type == other.type && value == other.value;
-  }
-  PqlToken(TokenType specified_token_type, std::string specified_value = "")
-      : type{specified_token_type}, value{specified_value} {}
+  PqlToken(TokenType specified_token_type, std::string specified_value);
 };
 
 extern std::unordered_map<std::string, TokenType> string_token_map;
+extern std::unordered_set<TokenType> rel_ref;
+extern std::unordered_set<TokenType> design_entities;
+extern std::unordered_set<TokenType> expression_spec;
+extern std::unordered_set<TokenType> ent_ref;
+extern std::unordered_set<TokenType> stmt_ref;
 
 #endif
