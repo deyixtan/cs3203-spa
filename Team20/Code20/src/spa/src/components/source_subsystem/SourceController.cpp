@@ -7,6 +7,6 @@ void SourceController::Tokenize(std::string program_source, std::vector<SourceTo
   lexer.Tokenize(tokens_ptr);
 }
 
-std::string SourceController::RetrieveFileContent(std::string filePath) {
-    return FileUtil::ReadFileContent(filePath);
+std::string SourceController::RetrieveFileContent(std::string file_path) {
+    return FileUtil::ReadFileContent(file_path);
 }
