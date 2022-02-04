@@ -1,5 +1,5 @@
-#ifndef SOURCETOKEN_H
-#define SOURCETOKEN_H
+#ifndef SOURCE_TOKEN_H
+#define SOURCE_TOKEN_H
 
 #include <string>
 
@@ -49,4 +49,4 @@ class SourceToken {
   std::string GetValue();
 };
 
-#endif //SOURCETOKEN_H
+#endif //SOURCE_TOKEN_H

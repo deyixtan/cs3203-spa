@@ -40,7 +40,7 @@ bool SourceLexer::HasMoreTokens() {
   return cursor < program_source.length();
 }
 
-SourceToken* SourceLexer::GetNextToken() {
+SourceToken *SourceLexer::GetNextToken() {
   if (!HasMoreTokens()) {
     return nullptr;
   }
@@ -73,7 +73,7 @@ SourceToken* SourceLexer::GetNextToken() {
   return nullptr;
 }
 
-void SourceLexer::TryTranslateToKeywordToken(SourceToken* &token_ptr) {
+void SourceLexer::TryTranslateToKeywordToken(SourceToken *&token_ptr) {
   TokenType token_type = token_ptr->GetType();
   std::string token_value = token_ptr->GetValue();
 
@@ -100,9 +100,9 @@ void SourceLexer::TryTranslateToKeywordToken(SourceToken* &token_ptr) {
   // TODO: throw TokenTranslationException
 }
 
-void SourceLexer::Tokenize(std::vector<SourceToken*> &tokens_ptr) {
+void SourceLexer::Tokenize(std::vector<SourceToken *> &tokens_ptr) {
   while (!IsEOF()) {
-    SourceToken* token_ptr = GetNextToken();
+    SourceToken *token_ptr = GetNextToken();
     if (token_ptr != nullptr) {
       TryTranslateToKeywordToken(token_ptr);
       tokens_ptr.push_back(token_ptr);
