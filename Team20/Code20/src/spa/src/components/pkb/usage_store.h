@@ -43,11 +43,11 @@ class UsageStore {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_proc_var();
 
  private:
-  static std::unordered_set<std::pair<int, std::string>, pair_hash> stmt_var_pairs;
-  static std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
-  static std::unordered_map<int, std::unordered_set<std::string> > stmt_var_map;
-  static std::unordered_map<std::string, std::unordered_set<int> > var_stmt_map;
-  static std::unordered_map<std::string, std::unordered_set<std::string> > proc_var_map;
-  static std::unordered_map<std::string, std::unordered_set<std::string> > var_proc_map;
+  std::unordered_set<std::pair<int, std::string>, pair_hash> stmt_var_pairs;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
+  std::unordered_map<int, std::unordered_set<std::string> > stmt_var_map;
+  std::unordered_map<std::string, std::unordered_set<int> > var_stmt_map;
+  std::unordered_map<std::string, std::unordered_set<std::string> > proc_var_map;
+  std::unordered_map<std::string, std::unordered_set<std::string> > var_proc_map;
 };
 #endif //USAGE_STORE_H
