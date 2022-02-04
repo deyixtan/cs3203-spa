@@ -5,9 +5,15 @@
 #include <unordered_map>
 #include <unordered_set>
 
-struct hashFunction {
-  size_t operator()(const std::pair<int, int> &x) const {
-    return x.first ^ x.second;
+struct pair_hash {
+  template <class T1, class T2>
+  std::size_t operator () (const std::pair<T1,T2> &p) const {
+    auto h1 = std::hash<T1>{}(p.first);
+    auto h2 = std::hash<T2>{}(p.second);
+
+    // Mainly for demonstration purposes, i.e. works but is overly simple
+    // In the real world, use sth. like boost.hash_combine
+    return h1 ^ h2;
   }
 };
 
@@ -50,11 +56,11 @@ class ParentStore {
 
   std::unordered_set<int> get_all_desc_of(int stmt);
 
-  std::unordered_set<std::pair<int, int>, hashFunction> get_parent_child_pairs();
+  std::unordered_set<std::pair<int, int>, pair_hash> get_parent_child_pairs();
 
  private:
   static std::unordered_map<int, parent_child> rs_map;
-  static std::unordered_set<std::pair<int, int>, hashFunction> parent_child_set;
+  static std::unordered_set<std::pair<int, int>, pair_hash> parent_child_set;
   static std::unordered_set<int> ance_set;
   static std::unordered_set<int> desc_set;
   static std::unordered_set<int> parent_set;
