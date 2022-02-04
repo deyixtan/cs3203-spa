@@ -18,9 +18,7 @@ struct parent_child {
   std::unordered_set<int> desc;
 };
 
-/*
-    A store class that maintains all Parent APIs and relationships
-*/
+// A store class that maintains all Parent APIs and relationships
 class ParentStore {
  public:
   ParentStore();
