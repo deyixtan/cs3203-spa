@@ -21,7 +21,15 @@ TestWrapper::TestWrapper() {
 void TestWrapper::parse(std::string filename) {
     std::cout << "TestWrapper::parse() Start" << std::endl;
     std::string simple_source = sourceController->RetrieveFileContent(filename);
-    std::cout << simple_source << std::endl;
+
+    std::vector<SourceToken*> tokens_ptr;
+    sourceController->Tokenize(simple_source, tokens_ptr);
+
+    std::vector<SourceToken*>::iterator it;
+    for (it = tokens_ptr.begin(); it != tokens_ptr.end(); ++it) {
+      std::cout << (*it)->GetTypeStr() << " " << (*it)->GetValue() << std::endl;
+    }
+
     std::cout << "TestWrapper::parse() End" << std::endl;
 }
 
