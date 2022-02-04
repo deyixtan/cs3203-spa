@@ -7,7 +7,7 @@
 
 // include your other headers here
 #include "AbstractWrapper.h"
-#include "components/query_subsystem/QueryController.h"
+#include "components/query_subsystem/query_controller.h"
 #include "components/source_subsystem/SourceController.h"
 
 class TestWrapper : public AbstractWrapper {
