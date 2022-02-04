@@ -60,6 +60,20 @@ std::string SourceToken::GetTypeStr() {
       type_str = "EQUAL"; break;
     case TokenType::NOT:
       type_str = "NOT"; break;
+    case TokenType::PROCEDURE:
+      type_str = "PROCEDURE"; break;
+    case TokenType::READ:
+      type_str = "READ"; break;
+    case TokenType::PRINT:
+      type_str = "PRINT"; break;
+    case TokenType::WHILE:
+      type_str = "WHILE"; break;
+    case TokenType::IF:
+      type_str = "IF"; break;
+    case TokenType::THEN:
+      type_str = "THEN"; break;
+    case TokenType::ELSE:
+      type_str = "ELSE"; break;
   }
   return type_str;
 }

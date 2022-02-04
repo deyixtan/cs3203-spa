@@ -27,7 +27,14 @@ enum class TokenType {
   MODULUS,
   SEMI_COLON,
   EQUAL,
-  NOT
+  NOT,
+  PROCEDURE,
+  READ,
+  PRINT,
+  WHILE,
+  IF,
+  THEN,
+  ELSE
 };
 
 class SourceToken {

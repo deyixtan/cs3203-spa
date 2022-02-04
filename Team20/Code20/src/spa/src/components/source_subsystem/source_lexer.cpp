@@ -73,10 +73,38 @@ SourceToken* SourceLexer::GetNextToken() {
   return nullptr;
 }
 
+void SourceLexer::TryTranslateToKeywordToken(SourceToken* &token_ptr) {
+  TokenType token_type = token_ptr->GetType();
+  std::string token_value = token_ptr->GetValue();
+
+  if (token_type != TokenType::NAME) {
+    return;
+  }
+
+  if (token_value == "procedure") {
+    token_ptr = new SourceToken(TokenType::PROCEDURE, "");
+  } else if (token_value == "read") {
+    token_ptr = new SourceToken(TokenType::READ, "");
+  } else if (token_value == "print") {
+    token_ptr = new SourceToken(TokenType::PRINT, "");
+  } else if (token_value == "while") {
+    token_ptr = new SourceToken(TokenType::WHILE, "");
+  } else if (token_value == "if") {
+    token_ptr = new SourceToken(TokenType::IF, "");
+  } else if (token_value == "then") {
+    token_ptr = new SourceToken(TokenType::THEN, "");
+  } else if (token_value == "else") {
+    token_ptr = new SourceToken(TokenType::ELSE, "");
+  }
+
+  // TODO: throw TokenTranslationException
+}
+
 void SourceLexer::Tokenize(std::vector<SourceToken*> &tokens_ptr) {
   while (!IsEOF()) {
     SourceToken* token_ptr = GetNextToken();
     if (token_ptr != nullptr) {
+      TryTranslateToKeywordToken(token_ptr);
       tokens_ptr.push_back(token_ptr);
     }
   }

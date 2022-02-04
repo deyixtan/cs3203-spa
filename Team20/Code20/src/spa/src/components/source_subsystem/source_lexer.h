@@ -19,6 +19,7 @@ class SourceLexer {
   bool IsEOF();
   bool HasMoreTokens();
   SourceToken* GetNextToken();
+  void TryTranslateToKeywordToken(SourceToken* &token_ptr);
   void Tokenize(std::vector<SourceToken*> &tokens_ptr);
 };
 
