@@ -93,6 +93,6 @@ std::unordered_set<int> FollowStore::get_following_star_of(int stmt) {
   return {};
 }
 
-std::unordered_set<std::pair<int, int>, hashFunction> FollowStore::get_follow_pairs() {
+std::unordered_set<std::pair<int, int>, pair_hash> FollowStore::get_follow_pairs() {
   return follow_set;
 }
