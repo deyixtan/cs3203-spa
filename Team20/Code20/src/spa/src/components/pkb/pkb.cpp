@@ -5,7 +5,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#include "PKB.h"
+#include "pkb.h"
 #include "components/source_subsystem/TNode.h"
 
 /*
@@ -24,7 +24,7 @@ PKB::PKB() {}
 
 /* Adders */
 
-void PKB::add_stmt(int stmt, std::string name, stmtType type) {
+void PKB::add_stmt(int stmt, std::string name, StmtType type) {
   switch (type) {
     case PROC:proc_list.insert(name);
       break;
@@ -49,25 +49,25 @@ void PKB::add_stmt(int stmt, std::string name, stmtType type) {
 }
 
 bool PKB::add_usage_stmt_var(int stmt, std::string var) {
-  usage_store.add_stmtVar(stmt, var);
+  usage_store.add_stmt_var(stmt, var);
 }
 
 bool PKB::add_usage_proc_var(std::string proc, std::string var) {
-  usage_store.addProcVar(proc, var);
+  usage_store.add_proc_var(proc, var);
 }
 
 bool PKB::add_modify_stmt_var(int stmt, std::string var) {
-  modify_store.add_stmtVar(stmt, var);
+  modify_store.add_stmt_var(stmt, var);
 }
 
 bool PKB::add_modify_proc_var(std::string proc, std::string var) {
-  modify_store.addProcVar(proc, var);
+  modify_store.add_proc_var(proc, var);
 }
 
 /* Getters */
 
 template<typename T>
-T PKB::get_stmt(stmtType type) {
+T PKB::get_stmt(StmtType type) {
   switch (type) {
     case PROC:return proc_list;
     case WHILE:return while_stmt_list;

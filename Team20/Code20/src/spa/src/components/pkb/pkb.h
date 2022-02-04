@@ -1,11 +1,12 @@
-#pragma once
+#ifndef PKB_H
+#define PKB_H
 
 #include <string>
 #include <unordered_set>
 #include <vector>
 
-#include "UsageStore.h"
-#include "ModifyStore.h"
+#include "usage_store.h"
+#include "modify_store.h"
 
 //typedef short PROC;
 
@@ -13,13 +14,13 @@
 
 //class VarTable;  // no need to #include "VarTable.h" as all I need is pointer
 
-struct hashFunction {
-  size_t operator()(const std::pair<int, int> &x) const {
-    return x.first ^ x.second;
-  }
-};
+//struct hashFunction {
+//  size_t operator()(const std::pair<int, int> &x) const {
+//    return x.first ^ x.second;
+//  }
+//};
 
-enum stmtType {
+enum StmtType {
   NONE,
   PROC,
   WHILE,
@@ -40,7 +41,7 @@ class PKB {
   PKB();
 
   /* Adders */
-  void add_stmt(int stmt = 0, std::string name = "", stmtType type = NONE);
+  void add_stmt(int stmt = 0, std::string name = "", StmtType type = NONE);
 
   bool add_usage_stmt_var(int stmt, std::string variable);
   bool add_usage_proc_var(std::string proc, std::string var);
@@ -51,7 +52,7 @@ class PKB {
   /* Getters */
 
   template<typename T>
-  T get_stmt(stmtType type);
+  T get_stmt(StmtType type);
 
   std::unordered_set<std::string> get_var_used_by_stmt(int stmt);
   std::unordered_set<int> get_stmt_used_by_var(std::string var);
@@ -91,3 +92,5 @@ class PKB {
   static UsageStore usage_store;
   static ModifyStore modify_store;
 };
+
+#endif //PKB_H
