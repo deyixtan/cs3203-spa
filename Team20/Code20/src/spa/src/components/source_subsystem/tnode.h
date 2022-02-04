@@ -1,4 +1,4 @@
-class TNode
+class tnode
 {
 public:
 
