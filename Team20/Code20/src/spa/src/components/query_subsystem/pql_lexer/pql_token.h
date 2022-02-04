@@ -53,6 +53,9 @@ class PqlToken {
  public:
   TokenType type;
   std::string value;
+  bool operator==(const PqlToken &other) const {
+    return type == other.type && value == other.value;
+  }
   PqlToken(TokenType specified_token_type, std::string specified_value);
 };
 

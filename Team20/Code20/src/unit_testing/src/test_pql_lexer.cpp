@@ -1,7 +1,5 @@
-#include "components/query_subsystem/pql/pql_token.h"
-#include "components/query_subsystem/pql/pql_token.cpp"
-#include "components/query_subsystem/pql/pql_lexer.h"
-#include "components/query_subsystem/pql/pql_lexer.cpp"
+#include "components/query_subsystem/pql_lexer/pql_token.h"
+#include "components/query_subsystem/pql_lexer/pql_lexer.h"
 
 #include "catch.hpp"
 

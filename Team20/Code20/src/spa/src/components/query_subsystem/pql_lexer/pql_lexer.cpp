@@ -16,6 +16,10 @@ std::vector<PqlToken> PqlLexer::Lex() {
     }
     if (string_token_map.find(token) != string_token_map.end()) {
       tokens.push_back(PqlToken{string_token_map[token], token});
+    } else if (IsIdent(token)) {
+      tokens.push_back(PqlToken{TokenType::SYNONYM, token});
+    } else if (IsDigits(token)) {
+      tokens.push_back(PqlToken{TokenType::NUMBER, token});
     } else if (IsValidString(token)) {
       if (IsEntRef(token)) {
         tokens.push_back(PqlToken{TokenType::IDENT_WITH_QUOTES, RemoveSpace(token)});
@@ -24,10 +28,6 @@ std::vector<PqlToken> PqlLexer::Lex() {
       }
     } else if (IsSubExpressionToken(token)) {
       tokens.push_back(PqlToken{TokenType::SUB_EXPRESSION, RemoveSpace(token)});
-    } else if (IsIdent(token)) {
-      tokens.push_back(PqlToken{TokenType::SYNONYM, token});
-    } else if (IsDigits(token)) {
-      tokens.push_back(PqlToken{TokenType::NUMBER, token});
     } else {
       throw "ERROR: Unrecognised token " + token + "\n";
     }
@@ -80,6 +80,9 @@ bool PqlLexer::IsEntRef(const std::string &s) {
 }
 
 bool PqlLexer::IsSubExpressionToken(const std::string &token) {
+  if (token.size() <= 4) {
+    return false;
+  }
   std::string s = token.substr(1, token.size() - 2);
   bool is_valid_string = IsValidString(s);
   return token.size() >= 4 && token.at(0) == '_' && token.back() == '_' && is_valid_string;
@@ -126,18 +129,19 @@ bool PqlLexer::IsValidString(const std::string &s) {
   // 5. mathematical signs except for ')' cannot be followed by ')'
   // 6. '(' must be followed* by ')'
 
+  if (s.size() <= 2) {
+    return false;
+  }
   if (s.at(0) != '"' || s.back() != '"') {
     return false;
   }
   // trim the double quote
   std::string expression = s.substr(1, s.size() - 2);
-  // trim left
-  while (!isspace(expression[0])) {
-    expression = expression.substr(1, expression.size() - 1);
-  }
   std::unordered_set<char> mathematical_signs = {'*', '/', '+', '-', '%'};
   std::vector<std::string> string_tokens = BreakString(expression);
 
+  // To be removed
+  return true;
   // To be continued
 
 }
