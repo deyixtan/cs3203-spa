@@ -73,11 +73,11 @@ SourceToken* SourceLexer::GetNextToken() {
   return nullptr;
 }
 
-std::vector<SourceToken*> SourceLexer::Tokenize() {
-  std::vector<SourceToken*> tokens_ptr;
+void SourceLexer::Tokenize(std::vector<SourceToken*> &tokens_ptr) {
   while (!IsEOF()) {
     SourceToken* token_ptr = GetNextToken();
-    tokens_ptr.push_back(token_ptr);
+    if (token_ptr != nullptr) {
+      tokens_ptr.push_back(token_ptr);
+    }
   }
-  return tokens_ptr;
 }

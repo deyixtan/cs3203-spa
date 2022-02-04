@@ -8,7 +8,7 @@
 class SourceController {
 public:
     SourceController();
-    std::vector<SourceToken*> Tokenize(std::string program_source);
+    void Tokenize(std::string program_source, std::vector<SourceToken*> &tokens_ptr);
     std::string RetrieveFileContent(std::string filePath);
 };
 

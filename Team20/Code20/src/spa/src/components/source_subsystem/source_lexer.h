@@ -19,7 +19,7 @@ class SourceLexer {
   bool IsEOF();
   bool HasMoreTokens();
   SourceToken* GetNextToken();
-  std::vector<SourceToken*> Tokenize();
+  void Tokenize(std::vector<SourceToken*> &tokens_ptr);
 };
 
 #endif //SOURCE_LEXER_H

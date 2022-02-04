@@ -2,9 +2,9 @@
 
 SourceController::SourceController() {}
 
-std::vector<SourceToken*> SourceController::Tokenize(std::string program_source) {
+void SourceController::Tokenize(std::string program_source, std::vector<SourceToken*> &tokens_ptr) {
   SourceLexer lexer = SourceLexer(program_source);
-  return lexer.Tokenize();
+  lexer.Tokenize(tokens_ptr);
 }
 
 std::string SourceController::RetrieveFileContent(std::string filePath) {
