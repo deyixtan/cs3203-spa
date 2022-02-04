@@ -55,6 +55,7 @@ enum class TokenType {
   MODIFIES_S,
   MODIFIES_P,
 
+  ENT_REF,
   PATTERN_CL,
   PATTERN,
   EXPRESSION_SPEC,
@@ -72,8 +73,10 @@ class PqlToken {
   bool operator==(const PqlToken &other) const {
     return type == other.type && value == other.value;
   }
-  PqlToken(TokenType specified_token_type, std::string specified_value = "")
-      : type{specified_token_type}, value{specified_value} {}
+  PqlToken(TokenType specified_token_type, std::string specified_value = "") {
+    this->type = specified_token_type;
+    this->value = specified_value;
+  }
 };
 
 extern std::unordered_map<std::string, TokenType> string_token_map;

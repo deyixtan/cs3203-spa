@@ -30,7 +30,11 @@ std::vector<PqlToken> PqlLexer::Lex() {
     if (string_token_map.find(token) != string_token_map.end()) {
       tokens.push_back(PqlToken{string_token_map[token], token});
     } else if (IsStringToken(token)) {
-      tokens.push_back(PqlToken{TokenType::STRING, RemoveSpace(token)});
+      if (IsEntRef(token)) {
+        tokens.push_back(PqlToken{TokenType::ENT_REF, RemoveSpace(token)});
+      } else {
+        tokens.push_back(PqlToken{TokenType::EXPRESSION_SPEC, RemoveSpace(token)});
+      }
     } else if (IsSubExpressionToken(token)) {
       tokens.push_back(PqlToken{TokenType::SUB_EXPRESSION, RemoveSpace(token)});
     } else if (IsIdent(token)) {
@@ -41,7 +45,6 @@ std::vector<PqlToken> PqlLexer::Lex() {
       throw "ERROR: Unrecognised token " + token + "\n";
     }
   }
-
   return tokens;
 }
 
@@ -73,6 +76,20 @@ bool PqlLexer::IsDigits(const std::string &s) {
 
 bool PqlLexer::IsIdent(const std::string &s) {
   return StartsWithAlphabet(s) && IsAlphaNumeric(s);
+}
+
+bool PqlLexer::IsEntRef(const std::string &s) {
+  if (!isalpha(s[1])) {
+    return false;
+  }
+
+  for (int i = 2; i < s.size() - 1; i++) {
+    const char c = s[i];
+    if (!isalpha(c) || !isdigit(c)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 bool PqlLexer::IsStringToken(const std::string &token) {
