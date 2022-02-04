@@ -11,22 +11,22 @@
 #include "components/source_subsystem/source_controller.h"
 
 class TestWrapper : public AbstractWrapper {
-private:
-    QueryController *query_controller;
-    SourceController *source_controller;
+ private:
+  QueryController *query_controller;
+  SourceController *source_controller;
 
-public:
-    // default constructor
-    TestWrapper();
+ public:
+  // default constructor
+  TestWrapper();
 
-    // destructor
-    ~TestWrapper();
+  // destructor
+  ~TestWrapper();
 
-    // method for parsing the SIMPLE source
-    virtual void parse(std::string filename);
+  // method for parsing the SIMPLE source
+  virtual void parse(std::string filename);
 
-    // method for evaluating a query
-    virtual void evaluate(std::string query, std::list<std::string>& results);
+  // method for evaluating a query
+  virtual void evaluate(std::string query, std::list<std::string>& results);
 };
 
 #endif
