@@ -12,7 +12,7 @@ volatile bool AbstractWrapper::GlobalStop = false;
 // a default constructor
 TestWrapper::TestWrapper() {
     std::cout << "TestWrapper::TestWrapper() Start" << std::endl;
-    queryController = new QueryController();
+    query_controller = new QueryController();
     source_controller = new SourceController();
     std::cout << "TestWrapper::TestWrapper() End" << std::endl;
 }
@@ -36,6 +36,6 @@ void TestWrapper::parse(std::string filename) {
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
     std::cout << "TestWrapper::evaluate() Start" << std::endl;
-    queryController->ProcessQuery(query, results);
+    query_controller->ProcessQuery(query, results);
     std::cout << "TestWrapper::evaluate() End" << std::endl;
 }

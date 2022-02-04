@@ -12,7 +12,7 @@
 
 class TestWrapper : public AbstractWrapper {
 private:
-    QueryController *queryController;
+    QueryController *query_controller;
     SourceController *source_controller;
 
 public:
@@ -21,10 +21,10 @@ public:
 
     // destructor
     ~TestWrapper();
-  
+
     // method for parsing the SIMPLE source
     virtual void parse(std::string filename);
-  
+
     // method for evaluating a query
     virtual void evaluate(std::string query, std::list<std::string>& results);
 };
