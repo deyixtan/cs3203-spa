@@ -8,12 +8,12 @@
 // include your other headers here
 #include "AbstractWrapper.h"
 #include "components/query_subsystem/query_controller.h"
-#include "components/source_subsystem/SourceController.h"
+#include "components/source_subsystem/source_controller.h"
 
 class TestWrapper : public AbstractWrapper {
 private:
     QueryController *queryController;
-    SourceController *sourceController;
+    SourceController *source_controller;
 
 public:
     // default constructor

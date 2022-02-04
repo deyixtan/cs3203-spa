@@ -13,17 +13,17 @@ volatile bool AbstractWrapper::GlobalStop = false;
 TestWrapper::TestWrapper() {
     std::cout << "TestWrapper::TestWrapper() Start" << std::endl;
     queryController = new QueryController();
-    sourceController = new SourceController();
+    source_controller = new SourceController();
     std::cout << "TestWrapper::TestWrapper() End" << std::endl;
 }
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
     std::cout << "TestWrapper::parse() Start" << std::endl;
-    std::string simple_source = sourceController->RetrieveFileContent(filename);
+    std::string simple_source = source_controller->RetrieveFileContent(filename);
 
     std::vector<SourceToken*> tokens_ptr;
-    sourceController->Tokenize(simple_source, tokens_ptr);
+    source_controller->Tokenize(simple_source, tokens_ptr);
 
     std::vector<SourceToken*>::iterator it;
     for (it = tokens_ptr.begin(); it != tokens_ptr.end(); ++it) {
