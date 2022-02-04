@@ -67,13 +67,74 @@ bool PqlLexer::IsStringToken(const std::string &token) {
 }
 
 bool PqlLexer::IsSubExpressionToken(const std::string &token) {
-  return token.size() >= 4 && token.at(0) == '_' && token.back() == '_';
+  std::string s = token.substr(1, token.size() - 2);
+  bool is_valid_string = IsValidString(s);
+  return token.size() >= 4 && token.at(0) == '_' && token.back() == '_' && is_valid_string;
 }
 
 std::string PqlLexer::RemoveSpace(const std::string &token) {
   std::string token_no_space(token);
   token_no_space.erase(std::remove_if(token_no_space.begin(), token_no_space.end(), isspace), token_no_space.end());
   return token_no_space;
+}
+
+std::vector<std::string> BreakString(const std::string &s) {
+
+}
+
+bool PqlLexer::IsValidString(const std::string &s) {
+  // 1. spaces cannot be surrounded by 2 synonyms or integers or math signs
+  // 2. cannot have 2 consecutive '*', '/', '+', '-', '%', '(', ')'
+  // 3. cannot start with mathematical signs
+  // 4. '(' cannot be followed by mathematical signs except for '('
+  // 5. mathematical signs except for ')' cannot be followed by ')'
+  // 6. '(' must be followed* by ')'
+
+  if (s.at(0) != '"' || s.back() != '"') {
+    return false;
+  }
+
+  std::string expression = s.substr(1, s.size() - 2);
+  // trim left
+  while (!isspace(expression[0])) {
+    expression = expression.substr(1, expression.size() - 1);
+  }
+
+  std::unordered_set<char> mathematical_signs = {'*', '/', '+', '-', '%'};
+
+  // check rule 3
+  if (mathematical_signs.count(expression[0]) || expression[0] == ')') {
+    return false;
+  }
+
+  int index = 1;
+  while (index < expression.size() - 1) {
+    char curr = expression[index];
+    // check rule 1
+    if (isspace(curr)) {
+      int minus = 1;
+      int plus = 1;
+      while (index - minus >= 0 && isspace(expression[index - minus])) {
+        minus++;
+      }
+      while (index + plus < expression.size() && isspace(expression[index + plus])) {
+        plus++;
+      }
+      char prev = expression[index - minus];
+      char next = expression[index + plus];
+      if ((isalpha(prev) && isdigit(next)) ||
+          (isdigit(prev) && isdigit(next)) ||
+          (mathematical_signs.count(prev) && mathematical_signs.count(next))) {
+        return false;
+      }
+    }
+    if (isalpha(curr) || isdigit(curr)) {
+
+    }
+    index++;
+  }
+
+
 }
 
 std::unordered_set<char> stickChar = {

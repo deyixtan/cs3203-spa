@@ -18,6 +18,7 @@ class PqlLexer {
   bool IsSubExpressionToken(const std::string &token);
   bool IsIdent(const std::string &s);
   std::string RemoveSpace(const std::string &s);
+  bool IsValidString(const std::string &s);
   std::vector<std::string> Split(std::string s);
 };
 
