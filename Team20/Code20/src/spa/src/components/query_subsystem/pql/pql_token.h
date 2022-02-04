@@ -21,6 +21,7 @@ enum class TokenType {
   DOUBLE_QUOTE,
   NUMBER,
   STRING,
+  SUB_EXPRESSION,
 
   STMT,
   READ,
@@ -64,7 +65,8 @@ enum class TokenType {
   CONST_VALUE,
 };
 
-struct PqlToken {
+class PqlToken {
+ public:
   TokenType type;
   std::string value;
   bool operator==(const PqlToken &other) const {

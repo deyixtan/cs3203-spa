@@ -42,6 +42,9 @@ PqlToken cl_token = PqlToken(TokenType::SYNONYM, "cl");
 PqlToken number_value_token = PqlToken(TokenType::NUMBER, "1");
 PqlToken x_token = PqlToken(TokenType::SYNONYM, "x");
 PqlToken y_token = PqlToken(TokenType::SYNONYM, "y");
+PqlToken x_string_token = PqlToken(TokenType::STRING, "\"x\"");
+PqlToken x_plus_y_string_token = PqlToken(TokenType::STRING, "\"x+y\"");
+PqlToken sub_expression_token = PqlToken(TokenType::SUB_EXPRESSION, "_\"x+y\"_");
 
 PqlToken select_token = PqlToken(TokenType::SELECT, "Select");
 PqlToken such_token = PqlToken(TokenType::SUCH, "such");
@@ -258,9 +261,7 @@ TEST_CASE("Test declarations with use relationship") {
   expected_token_vect.push_back(open_parenthesis_token);
   expected_token_vect.push_back(s_token);
   expected_token_vect.push_back(comma_token);
-  expected_token_vect.push_back(double_quote_token);
-  expected_token_vect.push_back(x_token);
-  expected_token_vect.push_back(double_quote_token);
+  expected_token_vect.push_back(x_string_token);
   expected_token_vect.push_back(closed_parenthesis_token);
 
   REQUIRE(test_token_vect == expected_token_vect);
@@ -286,15 +287,99 @@ TEST_CASE("Test declarations with modify relationship") {
   expected_token_vect.push_back(open_parenthesis_token);
   expected_token_vect.push_back(s_token);
   expected_token_vect.push_back(comma_token);
-  expected_token_vect.push_back(double_quote_token);
-  expected_token_vect.push_back(x_token);
-  expected_token_vect.push_back(double_quote_token);
+  expected_token_vect.push_back(x_string_token);
   expected_token_vect.push_back(closed_parenthesis_token);
 
   REQUIRE(test_token_vect == expected_token_vect);
 }
 
 TEST_CASE("Test declarations with pattern relationship") {
+  PqlLexer pql_lexer = PqlLexer("stmt s; variable v; assign a;\n"
+                                "Select s such that Uses (s, \"x\") pattern a (v, \"x + y\")");
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  std::vector<PqlToken> expected_token_vect;
+
+  // stmt
+  expected_token_vect.push_back(stmt_token);
+  expected_token_vect.push_back(s_token);
+  expected_token_vect.push_back(semicolon_token);
+
+  // variable
+  expected_token_vect.push_back(variable_token);
+  expected_token_vect.push_back(v_token);
+  expected_token_vect.push_back(semicolon_token);
+
+  // assign
+  expected_token_vect.push_back(assign_token);
+  expected_token_vect.push_back(a_token);
+  expected_token_vect.push_back(semicolon_token);
+
+  // select clause
+  expected_token_vect.push_back(select_token);
+  expected_token_vect.push_back(s_token);
+  expected_token_vect.push_back(such_token);
+  expected_token_vect.push_back(that_token);
+  expected_token_vect.push_back(use_token);
+  expected_token_vect.push_back(open_parenthesis_token);
+  expected_token_vect.push_back(s_token);
+  expected_token_vect.push_back(comma_token);
+  expected_token_vect.push_back(x_string_token);
+  expected_token_vect.push_back(closed_parenthesis_token);
+  expected_token_vect.push_back(pattern_token);
+  expected_token_vect.push_back(a_token);
+  expected_token_vect.push_back(open_parenthesis_token);
+  expected_token_vect.push_back(v_token);
+  expected_token_vect.push_back(comma_token);
+  expected_token_vect.push_back(x_plus_y_string_token);
+  expected_token_vect.push_back(closed_parenthesis_token);
+
+  REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with pattern relationship omitting spaces") {
+PqlLexer pql_lexer = PqlLexer("stmt s; variable v; assign a;\n"
+                              "Select s such that Uses (s,\"x\") pattern a (v,\"x+ y\")");
+std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+std::vector<PqlToken> expected_token_vect;
+
+// stmt
+expected_token_vect.push_back(stmt_token);
+expected_token_vect.push_back(s_token);
+expected_token_vect.push_back(semicolon_token);
+
+// variable
+expected_token_vect.push_back(variable_token);
+expected_token_vect.push_back(v_token);
+expected_token_vect.push_back(semicolon_token);
+
+// assign
+expected_token_vect.push_back(assign_token);
+expected_token_vect.push_back(a_token);
+expected_token_vect.push_back(semicolon_token);
+
+// select clause
+expected_token_vect.push_back(select_token);
+expected_token_vect.push_back(s_token);
+expected_token_vect.push_back(such_token);
+expected_token_vect.push_back(that_token);
+expected_token_vect.push_back(use_token);
+expected_token_vect.push_back(open_parenthesis_token);
+expected_token_vect.push_back(s_token);
+expected_token_vect.push_back(comma_token);
+expected_token_vect.push_back(x_string_token);
+expected_token_vect.push_back(closed_parenthesis_token);
+expected_token_vect.push_back(pattern_token);
+expected_token_vect.push_back(a_token);
+expected_token_vect.push_back(open_parenthesis_token);
+expected_token_vect.push_back(v_token);
+expected_token_vect.push_back(comma_token);
+expected_token_vect.push_back(x_plus_y_string_token);
+expected_token_vect.push_back(closed_parenthesis_token);
+
+REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with pattern sub-expression relationship") {
   PqlLexer pql_lexer = PqlLexer("stmt s; variable v; assign a;\n"
                                 "Select s such that Uses (s, \"x\") pattern a (v, _\"x + y\"_)");
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
@@ -324,9 +409,50 @@ TEST_CASE("Test declarations with pattern relationship") {
   expected_token_vect.push_back(open_parenthesis_token);
   expected_token_vect.push_back(s_token);
   expected_token_vect.push_back(comma_token);
-  expected_token_vect.push_back(double_quote_token);
-  expected_token_vect.push_back(x_token);
-  expected_token_vect.push_back(double_quote_token);
+  expected_token_vect.push_back(x_string_token);
+  expected_token_vect.push_back(closed_parenthesis_token);
+  expected_token_vect.push_back(pattern_token);
+  expected_token_vect.push_back(a_token);
+  expected_token_vect.push_back(open_parenthesis_token);
+  expected_token_vect.push_back(v_token);
+  expected_token_vect.push_back(comma_token);
+  expected_token_vect.push_back(sub_expression_token);
+  expected_token_vect.push_back(closed_parenthesis_token);
+
+  REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with pattern underscore relationship") {
+  PqlLexer pql_lexer = PqlLexer("stmt s; variable v; assign a;\n"
+                                "Select s such that Uses (s, \"x\") pattern a (v, _)");
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  std::vector<PqlToken> expected_token_vect;
+
+  // stmt
+  expected_token_vect.push_back(stmt_token);
+  expected_token_vect.push_back(s_token);
+  expected_token_vect.push_back(semicolon_token);
+
+  // variable
+  expected_token_vect.push_back(variable_token);
+  expected_token_vect.push_back(v_token);
+  expected_token_vect.push_back(semicolon_token);
+
+  // assign
+  expected_token_vect.push_back(assign_token);
+  expected_token_vect.push_back(a_token);
+  expected_token_vect.push_back(semicolon_token);
+
+  // select clause
+  expected_token_vect.push_back(select_token);
+  expected_token_vect.push_back(s_token);
+  expected_token_vect.push_back(such_token);
+  expected_token_vect.push_back(that_token);
+  expected_token_vect.push_back(use_token);
+  expected_token_vect.push_back(open_parenthesis_token);
+  expected_token_vect.push_back(s_token);
+  expected_token_vect.push_back(comma_token);
+  expected_token_vect.push_back(x_string_token);
   expected_token_vect.push_back(closed_parenthesis_token);
   expected_token_vect.push_back(pattern_token);
   expected_token_vect.push_back(a_token);
@@ -334,15 +460,35 @@ TEST_CASE("Test declarations with pattern relationship") {
   expected_token_vect.push_back(v_token);
   expected_token_vect.push_back(comma_token);
   expected_token_vect.push_back(underscore_token);
-  expected_token_vect.push_back(double_quote_token);
-  expected_token_vect.push_back(x_token);
-  expected_token_vect.push_back(plus_token);
-  expected_token_vect.push_back(y_token);
-  expected_token_vect.push_back(double_quote_token);
-  expected_token_vect.push_back(underscore_token);
   expected_token_vect.push_back(closed_parenthesis_token);
 
   REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test declarations with incomplete double quote token") {
+  PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
+                                "Select s such that Uses (s, \"x\") pattern a (\"x\", \"y)");
+  std::string expected_wrong_token = "\"y)";
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
+}
+
+TEST_CASE("Test declarations with incomplete underscore token") {
+  PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
+                                "Select s such that Uses (s, \"x\") pattern a (_, \"y\"_)");
+  std::string expected_wrong_token = "_)";
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
+}
+
+TEST_CASE("Test invalid string") {
+  PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, \"+y\")");
+  std::string expected_wrong_token = "\"+y\"";
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
+}
+
+TEST_CASE("Test invalid sub-expression") {
+  PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, _\"y\"x_)");
+  std::string expected_wrong_token = "\"+y\"";
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
 }
 
 TEST_CASE("Test declarations with unrecognised token") {
