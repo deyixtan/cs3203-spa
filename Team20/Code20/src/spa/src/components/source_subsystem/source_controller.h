@@ -1,7 +1,7 @@
 #ifndef SOURCE_CONTROLLER_H
 #define SOURCE_CONTROLLER_H
 
-#include "source_lexer.h"
+#include "components/source_subsystem/source_lexer.h"
 #include "utils/file_util.h"
 
 class SourceController {

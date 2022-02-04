@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "source_token.h"
+#include "components/source_subsystem/source_token.h"
 
 class SourceLexer {
  private:
