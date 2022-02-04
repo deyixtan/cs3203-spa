@@ -6,19 +6,6 @@
 
 // public
 PqlLexer::PqlLexer(std::string query) { this->query = query; }
-// Select s such that Uses(s, v)
-
-// ["Select", "s", "such", "that", "Uses", "(", "s", ",", "v", ")"]
-
-// [SELECT, SYNONYM, SUCH, THAT, USES, OPEN_PARENTHESIS, SYNONYM, COMMA, SYNONYMN, CLOSE_PARENTHESIS]
-// new TokenType(SELECT, "Select")
-
-// pattern a ("x", _)
-// "x" = [DOUBLE_QUOTE, SYNONYMN, DOUBLE_QUOTE]
-// "x" => STRING value: "x"
-// "fdaffsa*" start with letter, (letter | digit)
-
-// "(x + y)"
 
 std::vector<PqlToken> PqlLexer::Lex() {
   std::vector<std::string> raw_tokens = Split(query);
@@ -139,7 +126,6 @@ bool PqlLexer::IsValidString(const std::string &s) {
   // 5. mathematical signs except for ')' cannot be followed by ')'
   // 6. '(' must be followed* by ')'
 
-
   if (s.at(0) != '"' || s.back() != '"') {
     return false;
   }
@@ -152,64 +138,9 @@ bool PqlLexer::IsValidString(const std::string &s) {
   std::unordered_set<char> mathematical_signs = {'*', '/', '+', '-', '%'};
   std::vector<std::string> string_tokens = BreakString(expression);
 
+  // To be continued
 
 }
-
-//bool PqlLexer::IsValidString(const std::string &s) {
-//  // 1. spaces cannot be surrounded by 2 synonyms or integers or math signs
-//  // 2. cannot have 2 consecutive '*', '/', '+', '-', '%', '(', ')'
-//  // 3. cannot start with mathematical signs
-//  // 4. '(' cannot be followed by mathematical signs except for '('
-//  // 5. mathematical signs except for ')' cannot be followed by ')'
-//  // 6. '(' must be followed* by ')'
-//  // 7. cannot end with mathematical signs
-//
-//  if (s.at(0) != '"' || s.back() != '"') {
-//    return false;
-//  }
-//
-//  std::string expression = s.substr(1, s.size() - 2);
-//  // trim left
-//  while (!isspace(expression[0])) {
-//    expression = expression.substr(1, expression.size() - 1);
-//  }
-//
-//  std::unordered_set<char> mathematical_signs = {'*', '/', '+', '-', '%'};
-//
-//  // check rule 3
-//  if (mathematical_signs.count(expression[0]) || expression[0] == ')') {
-//    return false;
-//  }
-//
-//  int index = 1;
-//  while (index < expression.size() - 1) {
-//    char curr = expression[index];
-//    // check rule 1
-//    if (isspace(curr)) {
-//      int minus = 1;
-//      int plus = 1;
-//      while (index - minus >= 0 && isspace(expression[index - minus])) {
-//        minus++;
-//      }
-//      while (index + plus < expression.size() && isspace(expression[index + plus])) {
-//        plus++;
-//      }
-//      char prev = expression[index - minus];
-//      char next = expression[index + plus];
-//      if ((isalpha(prev) && isdigit(next)) ||
-//          (isdigit(prev) && isdigit(next)) ||
-//          (mathematical_signs.count(prev) && mathematical_signs.count(next))) {
-//        return false;
-//      }
-//    }
-//    if (isalpha(curr) || isdigit(curr)) {
-//
-//    }
-//    index++;
-//  }
-//
-//
-//}
 
 std::unordered_set<char> stickChar = {
     ';', ',', '(', ')', '"', '+', '*', '/', '%', '-', '_'
@@ -218,8 +149,6 @@ std::unordered_set<char> stickChar = {
 std::unordered_set<std::string> relationship = {
     "Follows", "Parent"
 };
-
-
 
 std::vector<std::string> PqlLexer::Split(std::string s) {
   std::vector<std::string> raw_tokens;

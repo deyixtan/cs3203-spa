@@ -9,7 +9,7 @@ class PqlLexer {
  public:
   PqlLexer(std::string query);
   std::vector<PqlToken> Lex();
-  std::vector<std::string> BreakString(const std::string &s);
+
  private:
   std::string query;
   bool IsAlphaNumeric(const std::string &s);
@@ -19,6 +19,7 @@ class PqlLexer {
   bool IsSubExpressionToken(const std::string &token);
   bool IsIdent(const std::string &s);
   std::string RemoveSpace(const std::string &s);
+  std::vector<std::string> BreakString(const std::string &s);
   bool IsValidString(const std::string &s);
   std::vector<std::string> Split(std::string s);
 };
