@@ -75,37 +75,17 @@ TEST_CASE("Get following of a statement (Wrong)") {
 }
 
 TEST_CASE("Get follower* of a statement (Correct)") {
-  set_up_follow(10);
-  int num = 2;
-  std::unordered_set<int> actual = follow_store.get_follower_star_of(num);
-  std::unordered_set<int> expected = rs_map.at(num).follower_star;
-
-  REQUIRE(actual == expected);
+  //to be implemented
 }
 
 TEST_CASE("Get follower* of a statement (Wrong)") {
-  set_up_follow(10);
-  int num = 2;
-  int actual = follow_store.get_follower_of(num);
-  int expected = rs_map.at(8).follower;
-
-  REQUIRE(actual != expected);
+  //to be implemented
 }
 
 TEST_CASE("Get following* of a statement (Correct)") {
-  set_up_follow(10);
-  int num = 5;
-  int actual = follow_store.get_following_of(num);
-  int expected = rs_map.at(num).following;
-
-  REQUIRE(actual == expected);
+  //to be implemented
 }
 
 TEST_CASE("Get following* of a statement (Wrong)") {
-  set_up_follow(10);
-  int num = 5;
-  int actual = follow_store.get_following_of(num);
-  int expected = rs_map.at(8).following;
-
-  REQUIRE(actual != expected);
+  //to be implemented
 }

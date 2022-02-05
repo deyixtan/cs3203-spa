@@ -29,6 +29,8 @@ void FollowStore::rs_init(int num_stmts) {
 void FollowStore::add_follow(int follower, int following) {
   all_follow_pairs.emplace(std::pair<int, int>(follower, following));
   //need to handle follow_star_pairs
+  rs_map.at(follower).following = following;
+  rs_map.at(following).follower = follower;
 }
 
 // Used for follower(s1, s2)
