@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include <stack>
+#include <iostream>
 
 // public
 PqlLexer::PqlLexer(std::string query) { this->query = query; }
@@ -128,22 +130,98 @@ bool PqlLexer::IsValidString(const std::string &s) {
   // 4. '(' cannot be followed by mathematical signs except for '('
   // 5. mathematical signs except for ')' cannot be followed by ')'
   // 6. '(' must be followed* by ')'
-
-  if (s.size() <= 2) {
-    return false;
-  }
-  if (s.at(0) != '"' || s.back() != '"') {
-    return false;
-  }
+  std::stack<std::string> stack;
   // trim the double quote
   std::string expression = s.substr(1, s.size() - 2);
   std::unordered_set<char> mathematical_signs = {'*', '/', '+', '-', '%'};
+  std::cout << expression;
   std::vector<std::string> string_tokens = BreakString(expression);
-
-  // To be removed
+  // checks for 1 and 3
+  if(mathematical_signs.count(string_tokens[0][0])) {
+    return false;
+  }
+  if(mathematical_signs.count(string_tokens[string_tokens.size() - 1][0])) {
+    return false;
+  }
+  std::string prev = " ";
+  bool prev_synonym = false;
+  bool prev_number = false;
+  for (auto str : string_tokens) {
+    // check for strings with length > 1
+    if (str.size() > 1) {
+      // check that its a valid synonym
+      for (char c : str) {
+        if (!mathematical_signs.count(c) && !isalpha(c) && !isdigit(c)) {
+          return false;
+        }
+      }
+      if (IsIdent(str)) {
+        if (prev_synonym) {
+          return false;
+        } else {
+          prev_synonym = true;
+          prev = " ";
+        }
+      } else {
+        for (char n : str) {
+          if (!isdigit(n)) {
+            return false;
+          }
+        }
+        if (prev_number) {
+          return false;
+        } else {
+          prev_number = true;
+          prev = " ";
+        }
+      }
+    } else {
+      if (str == "(") {
+        stack.push("(");
+        prev = "(";
+        prev_number = false;
+        prev_synonym = false;
+      }
+      else if (str == ")") {
+        if (stack.empty() || stack.top() != "(" || mathematical_signs.count(prev[0])) {
+          return false;
+        } else {
+          stack.pop();
+          prev = ")";
+        }
+        prev_number = false;
+        prev_synonym = false;
+      } else {
+        char curr = str[0];
+        // 2 consecutive math signs
+        if (mathematical_signs.count(curr)) {
+          if (mathematical_signs.count(prev[0]) || prev == "(") {
+            return false;
+          }
+          prev = str;
+          prev_number = false;
+          prev_synonym = false;
+        } else {
+          if (isdigit(curr)) {
+            if(prev_number) {
+              return false;
+            }
+            prev = str;
+            prev_number = true;
+            prev_synonym = false;
+          } else if (isalpha(curr)) {
+            if (prev_synonym) {
+              return false;
+            }
+            prev = str;
+            prev_synonym = true;
+            prev_number = false;
+          }
+        }
+      }
+    }
+  }
   return true;
-  // To be continued
-
 }
 
 std::unordered_set<char> stickChar = {
