@@ -2,7 +2,6 @@
 #include "components/query_subsystem/pql_lexer/pql_lexer.h"
 
 #include "catch.hpp"
-#include "sample_token.h"
 
 TEST_CASE("Test single declaration") {
   PqlLexer pql_lexer = PqlLexer("procedure p;");

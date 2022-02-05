@@ -28,7 +28,7 @@ void FollowStore::rs_init(int num_stmts) {
 
 void FollowStore::add_follow(int follower, int following) {
   if (!follow_exists(follower, following)) {
-    follow_set.insert(std::make_pair(follower, following));
+    follow_set.insert({follower, following});
     rs_map.at(follower).following = following;
     rs_map.at(following).follower = follower;
   }
@@ -39,8 +39,12 @@ void FollowStore::add_follow(int follower, int following) {
 
 // Used for follower(s1, s2)
 bool FollowStore::follow_exists(int stmt1, int stmt2) {
-  std::pair<int, int> p = std::make_pair(stmt1, stmt2);
-  return follow_set.find(p) != follow_set.end();
+  if (follow_set.find(stmt1) != follow_set.end()) {
+    if (follow_set.at(stmt1) == stmt2) {
+      return true;
+    }
+  }
+  return false;
 }
 
 // Used for follower*(s1, s2)
@@ -91,8 +95,4 @@ std::unordered_set<int> FollowStore::get_following_star_of(int stmt) {
     return n.following_star;
   }
   return {};
-}
-
-std::unordered_set<std::pair<int, int>, pair_hash> FollowStore::get_follow_pairs() {
-  return follow_set;
 }

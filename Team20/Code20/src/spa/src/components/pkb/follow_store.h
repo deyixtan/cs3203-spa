@@ -17,54 +17,54 @@ struct pair_hash {
   }
 };
 
-// A struct to maintain every node's relationships
-struct node {
-  int follower;
-  int following;
-  std::unordered_set<int> follower_star;
-  std::unordered_set<int> following_star;
-};
-
 // A store class that maintains all Parent APIs and relationships
 class FollowStore {
  public:
   FollowStore();
 
-  static bool is_follower(int stmt);
+  // A struct to maintain every node's relationships
+  struct node {
+    int follower;
+    int following;
+    std::unordered_set<int> follower_star;
+    std::unordered_set<int> following_star;
+  };
 
-  static bool is_following(int stmt);
+  bool is_follower(int stmt);
 
-  static bool is_follower_star(int stmt);
+  bool is_following(int stmt);
 
-  static bool is_following_star(int stmt);
+  bool is_follower_star(int stmt);
 
-  static bool follow_exists(int stmt1, int stmt2);
+  bool is_following_star(int stmt);
 
-  static bool follower_star_exists(int curr, int ance);
+  bool follow_exists(int stmt1, int stmt2);
 
-  static bool following_star_exists(int curr, int desc);
+  bool follower_star_exists(int curr, int ance);
 
-  static void rs_init(int num_stmts);
+  bool following_star_exists(int curr, int desc);
 
-  static void add_follow(int parent, int child);
+  void rs_init(int num_stmts);
 
-  static int get_follower_of(int stmt);
+  void add_follow(int parent, int child);
 
-  static int get_following_of(int stmt);
+  int get_follower_of(int stmt);
 
-  static std::unordered_set<int> get_follower_star_of(int stmt);
+  int get_following_of(int stmt);
 
-  static std::unordered_set<int> get_following_star_of(int stmt);
+  std::unordered_set<int> get_follower_star_of(int stmt);
 
-  static std::unordered_set<std::pair<int, int>, pair_hash> get_follow_pairs();
+  std::unordered_set<int> get_following_star_of(int stmt);
+
+  std::unordered_set<std::pair<int, int>, pair_hash> get_follow_pairs();
 
  private:
-  static std::unordered_map<int, node> rs_map;
-  static std::unordered_set<std::pair<int, int>, pair_hash> follow_set;
-  static std::unordered_set<int> follower_star_set;
-  static std::unordered_set<int> following_star_set;
-  static std::unordered_set<int> follower_set;
-  static std::unordered_set<int> following_set;
+  std::unordered_map<int, node> rs_map;
+  std::unordered_map<int, int> follow_set;
+  std::unordered_set<int> follower_star_set;
+  std::unordered_set<int> following_star_set;
+  std::unordered_set<int> follower_set;
+  std::unordered_set<int> following_set;
 };
 
 #endif //FOLLOW_STORE_H
