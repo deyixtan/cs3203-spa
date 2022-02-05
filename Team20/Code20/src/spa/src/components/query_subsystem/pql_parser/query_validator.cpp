@@ -79,7 +79,7 @@ void QueryValidator::IsValidDeclaration(std::vector<PqlToken> declaration_query)
         throw "ERROR: Invalid Declaration format! \n";
       }
     } else {
-      if (!IsValidSynonym(declaration_query[j]) {
+      if (!IsValidSynonym(declaration_query[j])) {
         throw "ERROR: Invalid Declaration format! \n";
       }
     }
