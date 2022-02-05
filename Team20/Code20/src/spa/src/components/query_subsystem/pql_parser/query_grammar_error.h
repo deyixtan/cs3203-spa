@@ -7,6 +7,7 @@
 extern std::string MISSING_TOKEN_IN_DECLARATION;
 extern std::string INVALID_DESIGN_ENTITY_IN_DECLARATION;
 extern std::string INVALID_DECLARATION_FORMAT;
+extern std::string INVALID_DECLARATION_SYNONYM;
 
 // Select Clause
 extern std::string INVALID_SELECT_KEYWORD;

@@ -81,7 +81,7 @@ void QueryValidator::IsValidDeclaration(std::vector<PqlToken> declaration_query)
       }
     } else {
       if (!IsValidSynonym(declaration_query[j])) {
-        throw INVALID_DECLARATION_FORMAT;
+        throw INVALID_DECLARATION_SYNONYM;
       }
     }
   }
@@ -146,7 +146,7 @@ void QueryValidator::IsValidSelectClause(std::vector<PqlToken> select_clause) {
     throw INVALID_SELECT_SYNONYM;
   }
 
-  if (select_clause.size() >= 2) { // Select s such that Follows (s, s1)
+  if (select_clause.size() > 2) { // Select s such that Follows (s, s1)
     PqlToken such_token = select_clause[2];
     if (such_token.type != TokenType::SUCH) {
       throw INVALID_SELECT_CLAUSE_FORMAT;
@@ -168,7 +168,7 @@ void QueryValidator::IsValidSelectClause(std::vector<PqlToken> select_clause) {
     }
   }
 
-  if (select_clause.size() >= 10) { // Select s such that Follows (s, s1) pattern a (a, "x")
+  if (select_clause.size() > 10) { // Select s such that Follows (s, s1) pattern a (a, "x")
     std::vector<PqlToken> pattern_tokens;
     for (int index = 10; index < select_clause.size() - 1; index++) {
       pattern_tokens.push_back(select_clause[index]);
