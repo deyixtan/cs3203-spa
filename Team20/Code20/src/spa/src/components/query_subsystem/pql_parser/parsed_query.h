@@ -8,6 +8,7 @@
 
 
 class ParsedQuery {
+ private:
   PqlToken selected_synonym;
   std::vector<Declaration> declarations;
   Relationship relationship;
