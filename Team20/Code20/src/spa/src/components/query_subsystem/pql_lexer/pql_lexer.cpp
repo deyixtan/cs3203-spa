@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include <stack>
+#include <iostream>
 
 // public
 PqlLexer::PqlLexer(std::string query) { this->query = query; }
@@ -85,7 +87,7 @@ bool PqlLexer::IsSubExpressionToken(const std::string &token) {
   }
   std::string s = token.substr(1, token.size() - 2);
   bool is_valid_string = IsValidString(s);
-  return token.size() >= 4 && token.at(0) == '_' && token.back() == '_' && is_valid_string;
+  return token.at(0) == '_' && token.back() == '_' && is_valid_string;
 }
 
 std::string PqlLexer::RemoveSpace(const std::string &token) {
@@ -128,7 +130,7 @@ bool PqlLexer::IsValidString(const std::string &s) {
   // 4. '(' cannot be followed by mathematical signs except for '('
   // 5. mathematical signs except for ')' cannot be followed by ')'
   // 6. '(' must be followed* by ')'
-
+  std::stack<std::string> stack;
   if (s.size() <= 2) {
     return false;
   }
@@ -139,11 +141,92 @@ bool PqlLexer::IsValidString(const std::string &s) {
   std::string expression = s.substr(1, s.size() - 2);
   std::unordered_set<char> mathematical_signs = {'*', '/', '+', '-', '%'};
   std::vector<std::string> string_tokens = BreakString(expression);
-
-  // To be removed
+  // checks for 1 and 3
+  if(mathematical_signs.count(string_tokens[0][0])) {
+    return false;
+  }
+  if(mathematical_signs.count(string_tokens[string_tokens.size() - 1][0])) {
+    return false;
+  }
+  std::string prev = " ";
+  bool prev_synonym = false;
+  bool prev_number = false;
+  for (auto str : string_tokens) {
+    // check for strings with length > 1
+    if (str.size() > 1) {
+      // check that its a valid synonym
+      for (char c : str) {
+        if (!mathematical_signs.count(c) && !isalpha(c) && !isdigit(c)) {
+          return false;
+        }
+      }
+      if (IsIdent(str)) {
+        if (prev_synonym) {
+          return false;
+        } else {
+          prev_synonym = true;
+          prev = " ";
+        }
+      } else {
+        for (char n : str) {
+          if (!isdigit(n)) {
+            return false;
+          }
+        }
+        if (prev_number) {
+          return false;
+        } else {
+          prev_number = true;
+          prev = " ";
+        }
+      }
+    } else {
+      if (str == "(") {
+        stack.push("(");
+        prev = "(";
+        prev_number = false;
+        prev_synonym = false;
+      }
+      else if (str == ")") {
+        if (stack.empty() || stack.top() != "(" || mathematical_signs.count(prev[0])) {
+          return false;
+        } else {
+          stack.pop();
+          prev = ")";
+        }
+        prev_number = false;
+        prev_synonym = false;
+      } else {
+        char curr = str[0];
+        // 2 consecutive math signs
+        if (mathematical_signs.count(curr)) {
+          if (mathematical_signs.count(prev[0]) || prev == "(") {
+            return false;
+          }
+          prev = str;
+          prev_number = false;
+          prev_synonym = false;
+        } else {
+          if (isdigit(curr)) {
+            if(prev_number) {
+              return false;
+            }
+            prev = str;
+            prev_number = true;
+            prev_synonym = false;
+          } else if (isalpha(curr)) {
+            if (prev_synonym) {
+              return false;
+            }
+            prev = str;
+            prev_synonym = true;
+            prev_number = false;
+          }
+        }
+      }
+    }
+  }
   return true;
-  // To be continued
-
 }
 
 std::unordered_set<char> stickChar = {
@@ -161,10 +244,12 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
   int underscore_count = 0;
   for (int i = 0; i < s.size(); i++) {
     const char c = s[i];
-    if (i == s.size() - 1 && (underscore_count == 1 || double_quote_count == 1)) {
-      single_raw_token.push_back(c);
-      raw_tokens.push_back(single_raw_token);
-      break;
+    if (i >= 1){
+      if (i == s.size() - 1 && double_quote_count == 1) {
+        single_raw_token.push_back(c);
+        raw_tokens.push_back(single_raw_token);
+        break;
+      }
     }
     if (isspace(c)) {
       if (double_quote_count == 1) {
@@ -180,8 +265,10 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
         single_raw_token.push_back(c);
       } else if (c == '_') {
         if (underscore_count == 0) { // encountering first _
-          raw_tokens.push_back(single_raw_token);
-          single_raw_token.clear();
+          if (!single_raw_token.empty()) {
+            raw_tokens.push_back(single_raw_token);
+            single_raw_token.clear();
+          }
           single_raw_token.push_back(c);
           underscore_count += 1;
         } else { // sub_expression complete
@@ -192,12 +279,14 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
         }
       } else if (c == '"') {
         if (double_quote_count == 0) {
-          if (underscore_count == 1) { // (_, "
-            underscore_count = 0;
-          }
-          if (!single_raw_token.empty()) {
-            raw_tokens.push_back(single_raw_token);
-            single_raw_token.clear();
+          if (i >= 1) {
+            if (s[i - 1] != '_') { // (_, "
+              underscore_count = 0;
+              if (!single_raw_token.empty()) {
+                raw_tokens.push_back(single_raw_token);
+                single_raw_token.clear();
+              }
+            }
           }
           single_raw_token.push_back(c);
           double_quote_count += 1;
