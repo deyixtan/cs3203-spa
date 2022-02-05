@@ -3,9 +3,9 @@
 Declaration::Declaration(PqlToken synonym, PqlToken design_entity): synonym(synonym), design_entity(design_entity) {}
 
 PqlToken Declaration::GetDesignEntity() {
-  return synonym;
+  return design_entity;
 }
 
 PqlToken Declaration::GetSynonym() {
-  return design_entity;
+  return synonym;
 }
