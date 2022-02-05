@@ -94,6 +94,40 @@ void QueryValidator::IsValidPatternClause(std::vector<PqlToken> pattern_clause) 
   if (pattern_clause.size() != 7) {
     throw "Invalid Pattern Clause format! \n";
   }
+  PqlToken pattern_token = pattern_clause[0];
+  if (pattern_token.type != TokenType::PATTERN) {
+    throw "Invalid Pattern keyword! \n";
+  }
+
+  PqlToken assign_synonym = pattern_clause[1];
+  if (!IsValidSynonym(assign_synonym)) {
+    throw "Invalid synonym in pattern clause! \n";
+  }
+
+  PqlToken open_parenthesis = pattern_clause[2];
+  if (open_parenthesis.type != TokenType::OPEN_PARENTHESIS) {
+    throw "Invalid Pattern Clause format! \n";
+  }
+
+  PqlToken first_arg = pattern_clause[3];
+  if (!ent_ref.count(first_arg.type)) {
+    throw "Invalid Pattern Clause argument! \n";
+  }
+
+  PqlToken comma = pattern_clause[4];
+  if (comma.type != TokenType::COMMA) {
+    throw "Invalid Pattern Clause format! \n";
+  }
+
+  PqlToken second_arg = pattern_clause[5];
+  if (!expression_spec.count(second_arg.type)) {
+    throw "Invalid Pattern Clause argument! \n";
+  }
+
+  PqlToken close_parenthesis = pattern_clause[6];
+  if (close_parenthesis.type != TokenType::CLOSED_PARENTHESIS) {
+    throw "Invalid Pattern Clause format! \n";
+  }
 }
 
 void QueryValidator::IsValidSelectClause(std::vector<PqlToken> select_clause) {
@@ -137,6 +171,7 @@ void QueryValidator::IsValidSelectClause(std::vector<PqlToken> select_clause) {
     std::vector<PqlToken> pattern_tokens;
     for (int index = 10; index < select_clause.size() - 1; index++) {
       pattern_tokens.push_back(select_clause[index]);
+      IsValidPatternClause(pattern_tokens);
     }
   }
 }
@@ -178,6 +213,5 @@ std::vector<PqlToken> QueryValidator::CheckValidation() {
     std::vector<PqlToken> select_clause = token_table[token_table.size() - 1];
     IsValidSelectClause(select_clause);
   }
-
   return tokens_;
 }
