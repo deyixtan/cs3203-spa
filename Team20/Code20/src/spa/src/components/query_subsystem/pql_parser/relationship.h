@@ -10,6 +10,7 @@ class Relationship {
   PqlToken second_;
 
  public:
+  Relationship();
   Relationship(PqlToken, PqlToken, PqlToken);
   PqlToken GetRelRef();
   PqlToken GetFirst();
