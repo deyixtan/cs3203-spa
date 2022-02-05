@@ -1,4 +1,5 @@
 #include "query_validator.h"
+#include "query_grammar_error.h"
 
 QueryValidator::QueryValidator(std::vector<PqlToken> tokens) : tokens_(tokens){}
 
