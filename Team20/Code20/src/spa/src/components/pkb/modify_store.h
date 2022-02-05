@@ -4,18 +4,8 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include "hash.h"
 
-struct pair_hash {
-  template <class T1, class T2>
-  std::size_t operator () (const std::pair<T1,T2> &p) const {
-    auto h1 = std::hash<T1>{}(p.first);
-    auto h2 = std::hash<T2>{}(p.second);
-
-    // Mainly for demonstration purposes, i.e. works but is overly simple
-    // In the real world, use sth. like boost.hash_combine
-    return h1 ^ h2;
-  }
-};
 
 // A store class that maintains all Modifies APIs and relationships
 class ModifyStore {
@@ -43,11 +33,11 @@ class ModifyStore {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_proc_var();
 
  private:
-  static std::unordered_set<std::pair<int, std::string>, pair_hash> stmt_var_pairs;
-  static std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
-  static std::unordered_map<int, std::unordered_set<std::string> > stmt_var_map;
-  static std::unordered_map<std::string, std::unordered_set<int> > var_stmt_map;
-  static std::unordered_map<std::string, std::unordered_set<std::string> > proc_var_map;
-  static std::unordered_map<std::string, std::unordered_set<std::string> > var_proc_map;
+  std::unordered_set<std::pair<int, std::string>, pair_hash> stmt_var_pairs;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
+  std::unordered_map<int, std::unordered_set<std::string> > stmt_var_map;
+  std::unordered_map<std::string, std::unordered_set<int> > var_stmt_map;
+  std::unordered_map<std::string, std::unordered_set<std::string> > proc_var_map;
+  std::unordered_map<std::string, std::unordered_set<std::string> > var_proc_map;
 };
 #endif //MODIFY_STORE_H

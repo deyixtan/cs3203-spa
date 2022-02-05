@@ -1,12 +1,7 @@
-#include <cstdio>
-#include <iostream>
-#include <string>
 #include <vector>
-#include <unordered_set>
-#include <unordered_map>
 
 #include "pkb.h"
-#include "components/source_subsystem/TNode.h"
+//#include "components/source_subsystem/TNode.h"
 
 /*
 int PKB::setProcToAST(PROC p, TNode* r) {
@@ -28,6 +23,8 @@ void PKB::add_stmt(int stmt, std::string name, StmtType type) {
   switch (type) {
     case PROC:proc_list.insert(name);
       break;
+    case STMT:stmt_list.insert(stmt);
+      break;
     case WHILE:while_stmt_list.insert(stmt);
       break;
     case READ:read_stmt_list.insert(stmt);
@@ -48,19 +45,19 @@ void PKB::add_stmt(int stmt, std::string name, StmtType type) {
   }
 }
 
-bool PKB::add_usage_stmt_var(int stmt, std::string var) {
+void PKB::add_usage_stmt_var(int stmt, std::string var) {
   usage_store.add_stmt_var(stmt, var);
 }
 
-bool PKB::add_usage_proc_var(std::string proc, std::string var) {
+void PKB::add_usage_proc_var(std::string proc, std::string var) {
   usage_store.add_proc_var(proc, var);
 }
 
-bool PKB::add_modify_stmt_var(int stmt, std::string var) {
+void PKB::add_modify_stmt_var(int stmt, std::string var) {
   modify_store.add_stmt_var(stmt, var);
 }
 
-bool PKB::add_modify_proc_var(std::string proc, std::string var) {
+void PKB::add_modify_proc_var(std::string proc, std::string var) {
   modify_store.add_proc_var(proc, var);
 }
 
@@ -70,6 +67,7 @@ template<typename T>
 T PKB::get_stmt(StmtType type) {
   switch (type) {
     case PROC:return proc_list;
+    case STMT: return stmt_list;
     case WHILE:return while_stmt_list;
     case READ:return read_stmt_list;
     case PRINT:return print_stmt_list;
@@ -80,4 +78,14 @@ T PKB::get_stmt(StmtType type) {
     case CONSTS:return const_list;
     default:break;
   }
+}
+
+//to be removed
+std::unordered_set<int> PKB::temp_get_stmt() {
+  return stmt_list;
+}
+
+//to be removed
+std::unordered_set<std::string> PKB::temp_get_vars() {
+  return var_list;
 }
