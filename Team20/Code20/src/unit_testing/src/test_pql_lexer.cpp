@@ -496,11 +496,3 @@ TEST_CASE("Test declarations with unrecognised token") {
 
   REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
 }
-
-TEST_CASE("Test lexer validation") {
-  PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
-                                "Select s such that Uses (s, \"x\") && Modifies (s, v)");
-  bool result_validation = pql_lexer.IsValidString("(((1 + 2) + 4) * 3)");
-  REQUIRE(result_validation == true);
-}
-

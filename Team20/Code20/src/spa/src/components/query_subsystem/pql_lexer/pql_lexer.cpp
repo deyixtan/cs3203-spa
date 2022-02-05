@@ -131,10 +131,15 @@ bool PqlLexer::IsValidString(const std::string &s) {
   // 5. mathematical signs except for ')' cannot be followed by ')'
   // 6. '(' must be followed* by ')'
   std::stack<std::string> stack;
+  if (s.size() <= 2) {
+    return false;
+  }
+  if (s.at(0) != '"' || s.back() != '"') {
+    return false;
+  }
   // trim the double quote
   std::string expression = s.substr(1, s.size() - 2);
   std::unordered_set<char> mathematical_signs = {'*', '/', '+', '-', '%'};
-  std::cout << expression;
   std::vector<std::string> string_tokens = BreakString(expression);
   // checks for 1 and 3
   if(mathematical_signs.count(string_tokens[0][0])) {
