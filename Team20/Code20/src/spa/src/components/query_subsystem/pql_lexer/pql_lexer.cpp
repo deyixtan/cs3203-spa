@@ -87,7 +87,7 @@ bool PqlLexer::IsSubExpressionToken(const std::string &token) {
   }
   std::string s = token.substr(1, token.size() - 2);
   bool is_valid_string = IsValidString(s);
-  return token.size() >= 4 && token.at(0) == '_' && token.back() == '_' && is_valid_string;
+  return token.at(0) == '_' && token.back() == '_' && is_valid_string;
 }
 
 std::string PqlLexer::RemoveSpace(const std::string &token) {
@@ -275,12 +275,14 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
         }
       } else if (c == '"') {
         if (double_quote_count == 0) {
-          if (underscore_count == 1) { // (_, "
-            underscore_count = 0;
-          }
-          if (!single_raw_token.empty()) {
-            raw_tokens.push_back(single_raw_token);
-            single_raw_token.clear();
+          if (i >= 1) {
+            if (s[i - 1] != '_') { // (_, "
+              underscore_count = 0;
+              if (!single_raw_token.empty()) {
+                raw_tokens.push_back(single_raw_token);
+                single_raw_token.clear();
+              }
+            }
           }
           single_raw_token.push_back(c);
           double_quote_count += 1;
