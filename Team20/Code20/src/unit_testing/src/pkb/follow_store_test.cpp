@@ -22,8 +22,8 @@ TEST_CASE("Valid follow pair") {
   set_up_follow(10);
   int stmt1 = 2;
   int stmt2 = 3;
-  bool actual = follow_store.follow_exists(stmt1, stmt2);
-  bool expected = follow_set.at(stmt1) == stmt2;
+  bool actual = follow_store.follow_exists({stmt1, stmt2});
+  bool expected = follow_set.find({stmt1, stmt2}) != follow_set.end();
 
   REQUIRE(actual == expected);
 }
@@ -32,8 +32,8 @@ TEST_CASE("Invalid follow pair") {
   set_up_follow(10);
   int stmt1 = 2;
   int stmt2 = 5;
-  bool actual = follow_store.follow_exists(stmt1, stmt2);
-  bool expected = follow_set.at(stmt1) == stmt2;
+  bool actual = follow_store.follow_exists({stmt1, stmt2});
+  bool expected = follow_set.find({stmt1, stmt2}) != follow_set.end();
 
   REQUIRE(actual == expected);
 }
@@ -66,6 +66,42 @@ TEST_CASE("Get following of a statement (Correct)") {
 }
 
 TEST_CASE("Get following of a statement (Wrong)") {
+  set_up_follow(10);
+  int num = 5;
+  int actual = follow_store.get_following_of(num);
+  int expected = rs_map.at(8).following;
+
+  REQUIRE(actual != expected);
+}
+
+TEST_CASE("Get follower* of a statement (Correct)") {
+  set_up_follow(10);
+  int num = 2;
+  std::unordered_set<int> actual = follow_store.get_follower_star_of(num);
+  std::unordered_set<int> expected = rs_map.at(num).follower_star;
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get follower* of a statement (Wrong)") {
+  set_up_follow(10);
+  int num = 2;
+  int actual = follow_store.get_follower_of(num);
+  int expected = rs_map.at(8).follower;
+
+  REQUIRE(actual != expected);
+}
+
+TEST_CASE("Get following* of a statement (Correct)") {
+  set_up_follow(10);
+  int num = 5;
+  int actual = follow_store.get_following_of(num);
+  int expected = rs_map.at(num).following;
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get following* of a statement (Wrong)") {
   set_up_follow(10);
   int num = 5;
   int actual = follow_store.get_following_of(num);
