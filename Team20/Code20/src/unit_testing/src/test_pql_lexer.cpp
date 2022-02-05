@@ -470,13 +470,6 @@ TEST_CASE("Test declarations with incomplete double quote token") {
   REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
 }
 
-TEST_CASE("Test declarations with incomplete underscore token") {
-  PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
-                                "Select s such that Uses (s, \"x\") pattern a (_, \"y\"_)");
-  std::string expected_wrong_token = "_)";
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
-}
-
 TEST_CASE("Test invalid string") {
   PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, \"+y\")");
   std::string expected_wrong_token = "\"+y\"";
@@ -485,7 +478,7 @@ TEST_CASE("Test invalid string") {
 
 TEST_CASE("Test invalid sub-expression") {
   PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, _\"y\"x_)");
-  std::string expected_wrong_token = "\"+y\"";
+  std::string expected_wrong_token = "_\"y\"x_";
   REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
 }
 

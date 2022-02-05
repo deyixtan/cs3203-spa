@@ -244,10 +244,12 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
   int underscore_count = 0;
   for (int i = 0; i < s.size(); i++) {
     const char c = s[i];
-    if (i == s.size() - 1 && (underscore_count == 1 || double_quote_count == 1)) {
-      single_raw_token.push_back(c);
-      raw_tokens.push_back(single_raw_token);
-      break;
+    if (i >= 1){
+      if (i == s.size() - 1 && double_quote_count == 1) {
+        single_raw_token.push_back(c);
+        raw_tokens.push_back(single_raw_token);
+        break;
+      }
     }
     if (isspace(c)) {
       if (double_quote_count == 1) {
@@ -263,8 +265,10 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
         single_raw_token.push_back(c);
       } else if (c == '_') {
         if (underscore_count == 0) { // encountering first _
-          raw_tokens.push_back(single_raw_token);
-          single_raw_token.clear();
+          if (!single_raw_token.empty()) {
+            raw_tokens.push_back(single_raw_token);
+            single_raw_token.clear();
+          }
           single_raw_token.push_back(c);
           underscore_count += 1;
         } else { // sub_expression complete
