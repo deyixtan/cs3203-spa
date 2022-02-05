@@ -27,12 +27,9 @@ void FollowStore::rs_init(int num_stmts) {
 }
 
 void FollowStore::add_follow(int follower, int following) {
-  if (!follow_exists(follower, following)) {
-    follow_set.insert({follower, following});
-    rs_map.at(follower).following = following;
-    rs_map.at(following).follower = follower;
-  }
-
+  follow_set.insert({follower, following});
+  rs_map.at(follower).following = following;
+  rs_map.at(following).follower = follower;
   rs_map.at(follower).following_star.insert(following);
   rs_map.at(following).follower_star.insert(follower);
 }
@@ -67,8 +64,7 @@ bool FollowStore::following_star_exists(int curr, int following_star) {
 
 int FollowStore::get_follower_of(int stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
-    node n = rs_map.at(stmt);
-    return n.follower;
+    return rs_map.at(stmt).follower;
   }
   return 0;
 }

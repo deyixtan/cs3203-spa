@@ -5,6 +5,19 @@
 
 std::unordered_set<int> empty_set = {};
 
+std::unordered_map<int, int> follow_set =
+    {
+        {1, 2},
+        {2, 3},
+        {3, 4},
+        {4, 7},
+        {5, 6},
+        {6, 7},
+        {7, 8},
+        {8, 10},
+        {9, 10},
+    };
+
 std::unordered_map<int, FollowStore::node> rs_map =
     {
         {1, {0, 2, empty_set, empty_set}},
