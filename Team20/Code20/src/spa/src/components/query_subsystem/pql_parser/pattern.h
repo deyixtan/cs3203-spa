@@ -10,6 +10,7 @@ class Pattern {
   PqlToken second_;
 
  public:
+  Pattern();
   Pattern(PqlToken, PqlToken, PqlToken);
   PqlToken GetSynAssign();
   PqlToken GetFirst();

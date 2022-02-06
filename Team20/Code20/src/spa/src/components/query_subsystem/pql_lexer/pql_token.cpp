@@ -1,5 +1,6 @@
 #include "pql_token.h"
 
+PqlToken::PqlToken(){};
 PqlToken::PqlToken(TokenType specified_token_type, std::string specified_value) {
   this->type = specified_token_type;
   this->value = specified_value;

@@ -1,5 +1,6 @@
 #include "pattern.h"
 
+Pattern::Pattern() {}
 Pattern::Pattern(PqlToken syn_assign, PqlToken first, PqlToken second)
     : syn_assign_(syn_assign),
       first_(first),
