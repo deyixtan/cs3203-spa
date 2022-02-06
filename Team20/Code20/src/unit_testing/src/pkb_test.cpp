@@ -38,7 +38,6 @@ void set_up_pkb() {
   pkb->add_stmt(10, ASSIGN);
 }
 
-//to be removed
 TEST_CASE("PKB instance") {
   PKB *pkb1 = PKB::get_instance();
   PKB *pkb2 = PKB::get_instance();
@@ -46,7 +45,6 @@ TEST_CASE("PKB instance") {
   REQUIRE(pkb1 == pkb2);
 }
 
-//to be removed
 TEST_CASE("stmt s; select s;") {
   set_up_pkb();
   PKB *pkb = PKB::get_instance();
@@ -56,7 +54,6 @@ TEST_CASE("stmt s; select s;") {
   REQUIRE(actual == expected);
 }
 
-//to be removed
 TEST_CASE("variable v; select v;") {
   set_up_pkb();
   PKB *pkb = PKB::get_instance();
@@ -66,7 +63,6 @@ TEST_CASE("variable v; select v;") {
   REQUIRE(actual == expected);
 }
 
-//to be removed
 TEST_CASE("assign a; select a;") {
   set_up_pkb();
   PKB *pkb = PKB::get_instance();
