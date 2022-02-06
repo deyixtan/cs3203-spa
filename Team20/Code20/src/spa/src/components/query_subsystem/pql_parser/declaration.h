@@ -8,6 +8,7 @@ class Declaration {
   PqlToken synonym;
   PqlToken design_entity;
  public:
+  Declaration();
   Declaration(PqlToken, PqlToken);
   PqlToken GetSynonym();
   PqlToken GetDesignEntity();
