@@ -2,6 +2,10 @@
 
 #include <iostream>
 
+Node::Node(int line) {
+  this->lineNumber = line;
+}
+
 RootNode::RootNode(std::vector<std::shared_ptr<ProcedureNode>> procedureList, int lineNumber)
     :Node(lineNumber){
   this->ProcList = procedureList;
