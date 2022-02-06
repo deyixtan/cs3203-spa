@@ -3,11 +3,27 @@
 UsageStore::UsageStore() {}
 
 void UsageStore::add_stmt_var(int stmt, std::string var) {
-  stmt_var_pairs.insert(std::make_pair(stmt, var));
+  stmt_var_pairs.emplace(std::pair<int, std::string>(stmt, var));
+
+  if (!stmt_var_map.emplace(stmt, std::unordered_set<std::string>{ var }).second) {
+    stmt_var_map.at(stmt).emplace(var);
+  }
+
+  if (!var_stmt_map.emplace(var, std::unordered_set<int>{ stmt }).second) {
+    var_stmt_map.at(var).emplace(stmt);
+  }
 }
 
 void UsageStore::add_proc_var(std::string proc, std::string var) {
-  proc_var_pairs.insert(std::make_pair(proc, var));
+  proc_var_pairs.emplace(std::pair<std::string, std::string>(proc, var));
+
+  if (!proc_var_map.emplace(proc, std::unordered_set<std::string>{ var }).second) {
+    proc_var_map.at(proc).emplace(var);
+  }
+
+  if (!proc_var_map.emplace(var, std::unordered_set<std::string>{ proc }).second) {
+    proc_var_map.at(var).emplace(proc);
+  }
 }
 
 bool UsageStore::stmt_var_exists(std::pair<int, std::string> pair) {

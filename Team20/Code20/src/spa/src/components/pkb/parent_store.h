@@ -4,18 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-
-struct pair_hash {
-  template <class T1, class T2>
-  std::size_t operator () (const std::pair<T1,T2> &p) const {
-    auto h1 = std::hash<T1>{}(p.first);
-    auto h2 = std::hash<T2>{}(p.second);
-
-    // Mainly for demonstration purposes, i.e. works but is overly simple
-    // In the real world, use sth. like boost.hash_combine
-    return h1 ^ h2;
-  }
-};
+#include "hash.h"
 
 // A struct to maintain every node's relationships
 struct parent_child {
@@ -59,11 +48,11 @@ class ParentStore {
   std::unordered_set<std::pair<int, int>, pair_hash> get_parent_child_pairs();
 
  private:
-  static std::unordered_map<int, parent_child> rs_map;
-  static std::unordered_set<std::pair<int, int>, pair_hash> parent_child_set;
-  static std::unordered_set<int> ance_set;
-  static std::unordered_set<int> desc_set;
-  static std::unordered_set<int> parent_set;
-  static std::unordered_set<int> child_set;
+  std::unordered_map<int, parent_child> rs_map;
+  std::unordered_set<std::pair<int, int>, pair_hash> parent_child_set;
+  std::unordered_set<int> ance_set;
+  std::unordered_set<int> desc_set;
+  std::unordered_set<int> parent_set;
+  std::unordered_set<int> child_set;
 };
 #endif //PARENT_STORE_H

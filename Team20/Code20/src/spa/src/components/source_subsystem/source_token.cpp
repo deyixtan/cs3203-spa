@@ -14,6 +14,8 @@ std::string SourceToken::GetTypeStr() {
   switch (type) {
     case TokenType::UNKNOWN:type_str = "UNKNOWN";
       break;
+    case TokenType::NEW_LINE:type_str = "NEW_LINE";
+      break;
     case TokenType::WHITE_SPACE:type_str = "WHITE_SPACE";
       break;
     case TokenType::DIGIT:type_str = "DIGIT";
