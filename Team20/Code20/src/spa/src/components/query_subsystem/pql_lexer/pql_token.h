@@ -56,8 +56,8 @@ class PqlToken {
   bool operator==(const PqlToken &other) const {
     return type == other.type && value == other.value;
   }
-  PqlToken(TokenType specified_token_type, std::string specified_value);
   PqlToken();
+  PqlToken(TokenType specified_token_type, std::string specified_value);
 };
 
 extern std::unordered_map<std::string, TokenType> string_token_map;
