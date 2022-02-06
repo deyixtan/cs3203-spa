@@ -15,6 +15,7 @@ class SourceParser {
  public:
   SourceParser(std::vector<SourceToken *> tokens_ptr);
   SourceToken *FetchCurrentToken();
+  SourceToken *FetchNextToken();
   void IncrementCursor();
   bool AreTokensProcessed();
   SourceToken *ConsumeToken(TokenType type);
@@ -27,6 +28,16 @@ class SourceParser {
   WhileStatementNode *ParseWhileStatement();
   IfStatementNode *ParseIfStatement();
   AssignStatementNode *ParseAssignStatement();
+
+  ConditionalExpressionNode *ParseConditionalExpression();
+  BooleanExpressionNode *ParseConditionalExpression2();
+  RelationalExpressionNode *ParseRelationalExpression();
+  Expression *ParseRelationalFactor();
+  Expression *ParseExpression();
+  ExpressionNode *ParseExpression2(ExpressionNode *left);
+  ExpressionNode *ParseTerm();
+  ExpressionNode *ParseTerm2(ExpressionNode *left);
+  ExpressionNode *ParseFactor();
 };
 
 #endif //SOURCE_PARSER_H
