@@ -216,7 +216,7 @@ ExpressionNode *SourceParser::ParseExpression2(ExpressionNode *left) {
     default:return left;
   }
   ExpressionNode *right = ParseTerm();
-  return ParseExpression2(new CombinationExpressionNode(value, left, right);
+  return ParseExpression2(new CombinationExpressionNode(value, left, right));
 }
 
 ExpressionNode *SourceParser::ParseTerm() {

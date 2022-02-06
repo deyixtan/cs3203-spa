@@ -28,7 +28,6 @@ class SourceParser {
   WhileStatementNode *ParseWhileStatement();
   IfStatementNode *ParseIfStatement();
   AssignStatementNode *ParseAssignStatement();
-
   ConditionalExpressionNode *ParseConditionalExpression();
   BooleanExpressionNode *ParseConditionalExpression2();
   RelationalExpressionNode *ParseRelationalExpression();
