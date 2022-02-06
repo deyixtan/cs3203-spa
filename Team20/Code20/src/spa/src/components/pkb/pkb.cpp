@@ -15,7 +15,16 @@ TNode* PKB::getRootAST (PROC p){
 
 //Keywords = [procedure, while, read, print, call, if-else-then, assign] -> Need to maintain 1 list for each of these
 
+PKB* PKB::instance = NULL;
+
 PKB::PKB() {}
+
+PKB* PKB::get_instance() {
+  if (!instance) {
+    instance = new PKB;
+  }
+  return instance;
+}
 
 /* Adders */
 

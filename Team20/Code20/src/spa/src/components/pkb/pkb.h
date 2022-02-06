@@ -35,7 +35,7 @@ class PKB {
   //VarTable* varTable;
   //int setProcToAST(PROC p, TNode* r);
   //TNode* getRootAST (PROC p);
-  PKB();
+  static PKB *get_instance();
 
   /* Adders */
   void add_stmt(int stmt = 0, std::string name = "", StmtType type = NONE);
@@ -76,6 +76,9 @@ class PKB {
   bool modify_proc_var_exists(std::pair<std::string, std::string> pair);
 
  private:
+  PKB();
+  static PKB *instance;
+
   std::unordered_set<std::string> proc_list;
   std::unordered_set<int> stmt_list;
   std::unordered_set<int> while_stmt_list;
