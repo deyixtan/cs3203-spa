@@ -65,7 +65,7 @@ SourceToken *SourceLexer::GetNextToken() {
 
     if (token_type == TokenType::NEW_LINE) {
       token_value = "";
-    } if (token_type == TokenType::WHITE_SPACE) {
+    } else if (token_type == TokenType::WHITE_SPACE) {
       return GetNextToken();
     }
 
