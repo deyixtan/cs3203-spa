@@ -5,6 +5,7 @@
 
 enum class TokenType {
   UNKNOWN,
+  NEW_LINE,
   WHITE_SPACE,
   DIGIT,
   NAME,
