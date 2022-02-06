@@ -59,11 +59,11 @@ class ParentStore {
   std::unordered_set<std::pair<int, int>, pair_hash> get_parent_child_pairs();
 
  private:
-  static std::unordered_map<int, parent_child> rs_map;
-  static std::unordered_set<std::pair<int, int>, pair_hash> parent_child_set;
-  static std::unordered_set<int> ance_set;
-  static std::unordered_set<int> desc_set;
-  static std::unordered_set<int> parent_set;
-  static std::unordered_set<int> child_set;
+  std::unordered_map<int, parent_child> rs_map;
+  std::unordered_set<std::pair<int, int>, pair_hash> parent_child_set;
+  std::unordered_set<int> ance_set;
+  std::unordered_set<int> desc_set;
+  std::unordered_set<int> parent_set;
+  std::unordered_set<int> child_set;
 };
 #endif //PARENT_STORE_H
