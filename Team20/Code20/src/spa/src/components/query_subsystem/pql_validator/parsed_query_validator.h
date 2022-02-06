@@ -12,6 +12,7 @@ class ParsedQueryValidator {
  private:
   void ValidateNoDuplicateSynonymDeclared(ParsedQuery);
   void ValidateSelectSynonymDeclared(ParsedQuery);
+  void ValidatePatternSynonymIsAssigned(ParsedQuery);
 };
 
 };

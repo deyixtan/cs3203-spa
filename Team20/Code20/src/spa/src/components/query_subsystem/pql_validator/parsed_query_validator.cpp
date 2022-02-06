@@ -9,6 +9,7 @@ namespace pql_validator {
 void ParsedQueryValidator::ValidateQuery(ParsedQuery query) {
   ValidateSelectSynonymDeclared(query);
   ValidateNoDuplicateSynonymDeclared(query);
+  ValidatePatternSynonymIsAssigned(query);
 }
 
 void ParsedQueryValidator::ValidateSelectSynonymDeclared(ParsedQuery query) {
@@ -36,6 +37,26 @@ void ParsedQueryValidator::ValidateNoDuplicateSynonymDeclared(ParsedQuery query)
       // TODO: throw exception
     } else {
       synonym_set.insert(synonym);
+    }
+  }
+}
+
+void ParsedQueryValidator::ValidatePatternSynonymIsAssigned(ParsedQuery query) {
+  std::optional<Pattern> pattern = query.GetPattern();
+  std::unordered_set<std::string> assign_syonym_set;
+  if (pattern.has_value()) {
+    std::string synonym = pattern.value().GetSynAssign().value;
+
+    for (Declaration declaration : query.GetDeclaration()) {
+      if (declaration.GetDesignEntity().type == TokenType::ASSIGN) {
+        assign_syonym_set.insert(declaration.GetSynonym().value);
+      }
+    }
+
+    const bool is_in = assign_syonym_set.find(synonym) != assign_syonym_set.end();
+
+    if (!is_in) {
+      // TODO: throw exception if pattern synonym is not declared
     }
   }
 }
