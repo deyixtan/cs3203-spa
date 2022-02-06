@@ -27,11 +27,8 @@ PKB* PKB::get_instance() {
 }
 
 /* Adders */
-
-void PKB::add_stmt(int stmt, std::string name, StmtType type) {
+void PKB::add_stmt(int stmt, StmtType type) {
   switch (type) {
-    case PROC:proc_list.insert(name);
-      break;
     case STMT:stmt_list.insert(stmt);
       break;
     case WHILE:while_stmt_list.insert(stmt);
@@ -45,6 +42,14 @@ void PKB::add_stmt(int stmt, std::string name, StmtType type) {
     case IF:if_stmt_list.insert(stmt);
       break;
     case ASSIGN:assign_stmt_list.insert(stmt);
+      break;
+    default:break;
+  }
+}
+
+void PKB::add_stmt(std::string name, StmtType type) {
+  switch (type) {
+    case PROC:proc_list.insert(name);
       break;
     case VARS:var_list.insert(name);
       break;
@@ -72,10 +77,8 @@ void PKB::add_modify_proc_var(std::string proc, std::string var) {
 
 /* Getters */
 
-template<typename T>
-T PKB::get_stmt(StmtType type) {
+std::unordered_set<int> PKB::get_stmt_by_num(StmtType type) {
   switch (type) {
-    case PROC:return proc_list;
     case STMT: return stmt_list;
     case WHILE:return while_stmt_list;
     case READ:return read_stmt_list;
@@ -83,18 +86,15 @@ T PKB::get_stmt(StmtType type) {
     case CALL:return call_stmt_list;
     case IF:return if_stmt_list;
     case ASSIGN:return assign_stmt_list;
-    case VARS:return var_list;
-    case CONSTS:return const_list;
     default:break;
   }
 }
 
-//to be removed
-std::unordered_set<int> PKB::temp_get_stmt() {
-  return stmt_list;
-}
-
-//to be removed
-std::unordered_set<std::string> PKB::temp_get_vars() {
-  return var_list;
+std::unordered_set<std::string> PKB::get_stmt_by_name(StmtType type) {
+  switch (type) {
+    case PROC:return proc_list;
+    case VARS:return var_list;
+    case CONSTS:return const_list;
+    default:break;
+  }
 }

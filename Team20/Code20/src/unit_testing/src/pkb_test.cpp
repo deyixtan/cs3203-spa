@@ -4,27 +4,38 @@
 
 void set_up_pkb() {
   PKB *pkb = PKB::get_instance();
-  pkb->add_stmt(0, "a", VARS);
-  pkb->add_stmt(0, "b", VARS);
-  pkb->add_stmt(0, "c", VARS);
-  pkb->add_stmt(0, "d", VARS);
-  pkb->add_stmt(0, "e", VARS);
-  pkb->add_stmt(0, "f", VARS);
-  pkb->add_stmt(0, "g", VARS);
-  pkb->add_stmt(0, "h", VARS);
-  pkb->add_stmt(0, "i", VARS);
-  pkb->add_stmt(0, "j", VARS);
+  pkb->add_stmt("a", VARS);
+  pkb->add_stmt("b", VARS);
+  pkb->add_stmt("c", VARS);
+  pkb->add_stmt("d", VARS);
+  pkb->add_stmt("e", VARS);
+  pkb->add_stmt("f", VARS);
+  pkb->add_stmt("g", VARS);
+  pkb->add_stmt("h", VARS);
+  pkb->add_stmt("i", VARS);
+  pkb->add_stmt("j", VARS);
 
-  pkb->add_stmt(1, "", STMT);
-  pkb->add_stmt(2, "", STMT);
-  pkb->add_stmt(3, "", STMT);
-  pkb->add_stmt(4, "", STMT);
-  pkb->add_stmt(5, "", STMT);
-  pkb->add_stmt(6, "", STMT);
-  pkb->add_stmt(7, "", STMT);
-  pkb->add_stmt(8, "", STMT);
-  pkb->add_stmt(9, "", STMT);
-  pkb->add_stmt(10, "", STMT);
+  pkb->add_stmt(1, STMT);
+  pkb->add_stmt(2, STMT);
+  pkb->add_stmt(3, STMT);
+  pkb->add_stmt(4, STMT);
+  pkb->add_stmt(5, STMT);
+  pkb->add_stmt(6, STMT);
+  pkb->add_stmt(7, STMT);
+  pkb->add_stmt(8, STMT);
+  pkb->add_stmt(9, STMT);
+  pkb->add_stmt(10, STMT);
+
+  pkb->add_stmt(1, ASSIGN);
+  pkb->add_stmt(2, ASSIGN);
+  pkb->add_stmt(3, ASSIGN);
+  pkb->add_stmt(4, ASSIGN);
+  pkb->add_stmt(5, ASSIGN);
+  pkb->add_stmt(6, ASSIGN);
+  pkb->add_stmt(7, ASSIGN);
+  pkb->add_stmt(8, ASSIGN);
+  pkb->add_stmt(9, ASSIGN);
+  pkb->add_stmt(10, ASSIGN);
 }
 
 //to be removed
@@ -39,7 +50,7 @@ TEST_CASE("PKB instance") {
 TEST_CASE("stmt s; select s;") {
   set_up_pkb();
   PKB *pkb = PKB::get_instance();
-  auto actual = pkb->temp_get_stmt();
+  auto actual = pkb->get_stmt_by_num(STMT);
   auto expected = stmt_list;
 
   REQUIRE(actual == expected);
@@ -49,8 +60,18 @@ TEST_CASE("stmt s; select s;") {
 TEST_CASE("variable v; select v;") {
   set_up_pkb();
   PKB *pkb = PKB::get_instance();
-  auto actual = pkb->temp_get_vars();
+  auto actual = pkb->get_stmt_by_name(VARS);
   auto expected = var_list;
+
+  REQUIRE(actual == expected);
+}
+
+//to be removed
+TEST_CASE("assign a; select a;") {
+  set_up_pkb();
+  PKB *pkb = PKB::get_instance();
+  auto actual = pkb->get_stmt_by_num(ASSIGN);
+  auto expected = assign_stmt_list;
 
   REQUIRE(actual == expected);
 }

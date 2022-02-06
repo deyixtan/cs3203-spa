@@ -4,5 +4,6 @@
 
 std::unordered_set<int> stmt_list = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 std::unordered_set<std::string> var_list = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
+std::unordered_set<int> assign_stmt_list = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
 #endif //PKB_STUB_H

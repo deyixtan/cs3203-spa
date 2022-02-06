@@ -38,7 +38,8 @@ class PKB {
   static PKB *get_instance();
 
   /* Adders */
-  void add_stmt(int stmt = 0, std::string name = "", StmtType type = NONE);
+  void add_stmt(int stmt, StmtType type);
+  void add_stmt(std::string name, StmtType type);
 
   void add_usage_stmt_var(int stmt, std::string variable);
   void add_usage_proc_var(std::string proc, std::string var);
@@ -47,12 +48,8 @@ class PKB {
   void add_modify_proc_var(std::string proc, std::string var);
 
   /* Getters */
-
-  template<typename T>
-  T get_stmt(StmtType type);
-
-  std::unordered_set<int> temp_get_stmt(); //to be removed
-  std::unordered_set<std::string> temp_get_vars(); //to be removed
+  std::unordered_set<int> get_stmt_by_num(StmtType type);
+  std::unordered_set<std::string> get_stmt_by_name(StmtType type);
 
   std::unordered_set<std::string> get_var_used_by_stmt(int stmt);
   std::unordered_set<int> get_stmt_used_by_var(std::string var);
