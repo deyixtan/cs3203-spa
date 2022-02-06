@@ -6,6 +6,7 @@
 #include "declaration.h"
 #include "pattern.h"
 
+
 class ParsedQuery {
  private:
   PqlToken selected_synonym;
@@ -14,7 +15,15 @@ class ParsedQuery {
   Pattern pattern;
 
  public:
-  ParsedQuery(PqlToken, std::vector<Declaration>, Relationship, Pattern);
+  ParsedQuery();
+  void SetSynonym(PqlToken);
+  void SetPattern(Pattern);
+  void SetRelationship(Relationship);
+  void SetDeclarations(std::vector<Declaration>);
+  PqlToken GetSynonym();
+  std::vector<Declaration> GetDeclaration();
+  Relationship GetRelationship();
+  Pattern GetPattern();
 };
 
 #endif
