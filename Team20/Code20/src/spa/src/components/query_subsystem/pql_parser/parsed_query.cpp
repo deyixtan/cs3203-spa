@@ -6,8 +6,8 @@ ParsedQuery::ParsedQuery() {
   vect.push_back(Declaration());
   this->selected_synonym = PqlToken();
   this->declarations = vect;
-  this->relationship = Relationship();
-  this->pattern = Pattern();
+  this->relationship = std::nullopt;
+  this->pattern = std::nullopt;
 };
 
 void ParsedQuery::SetSynonym(PqlToken synonym) {
@@ -15,11 +15,11 @@ void ParsedQuery::SetSynonym(PqlToken synonym) {
 }
 
 void ParsedQuery::SetPattern(Pattern parsed_pattern) {
-  pattern = parsed_pattern;
+  pattern = std::make_optional(parsed_pattern);
 }
 
 void ParsedQuery::SetRelationship(Relationship parsed_relationship) {
-  relationship = parsed_relationship;
+  relationship = std::make_optional(parsed_relationship);
 }
 
 void ParsedQuery::SetDeclarations(std::vector<Declaration> parsed_declarations) {
@@ -30,11 +30,11 @@ PqlToken ParsedQuery::GetSynonym() {
   return selected_synonym;
 }
 
-Relationship ParsedQuery::GetRelationship() {
+std::optional<Relationship> ParsedQuery::GetRelationship() {
   return relationship;
 }
 
-Pattern ParsedQuery::GetPattern() {
+std::optional<Pattern> ParsedQuery::GetPattern() {
   return pattern;
 }
 

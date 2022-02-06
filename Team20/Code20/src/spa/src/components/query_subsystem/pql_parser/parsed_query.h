@@ -6,13 +6,14 @@
 #include "declaration.h"
 #include "pattern.h"
 
+#include <optional>
 
 class ParsedQuery {
  private:
   PqlToken selected_synonym;
   std::vector<Declaration> declarations;
-  Relationship relationship;
-  Pattern pattern;
+  std::optional<Relationship> relationship;
+  std::optional<Pattern> pattern;
 
  public:
   ParsedQuery();
@@ -22,8 +23,8 @@ class ParsedQuery {
   void SetDeclarations(std::vector<Declaration>);
   PqlToken GetSynonym();
   std::vector<Declaration> GetDeclaration();
-  Relationship GetRelationship();
-  Pattern GetPattern();
+  std::optional<Relationship> GetRelationship();
+  std::optional<Pattern> GetPattern();
 };
 
 #endif
