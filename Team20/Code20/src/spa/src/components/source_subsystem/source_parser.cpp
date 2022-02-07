@@ -155,13 +155,13 @@ std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpress
 }
 
 std::shared_ptr<BooleanExpressionNode> SourceParser::ParseConditionalExpression2() {
-  std::string value = "";
+  BooleanOperator value;
   switch (FetchCurrentToken()->GetType()) {
     case TokenType::AND:ConsumeToken(TokenType::AND);
-      value = "&&";
+      value = BooleanOperator::AND;
       break;
     case TokenType::OR:ConsumeToken(TokenType::OR);
-      value = "||";
+      value = BooleanOperator::OR;
       break;
     default:throw std::runtime_error("Parsing invalid conditional expression operator");
   }
@@ -173,25 +173,25 @@ std::shared_ptr<BooleanExpressionNode> SourceParser::ParseConditionalExpression2
 
 std::shared_ptr<RelationalExpressionNode> SourceParser::ParseRelationalExpression() {
   std::shared_ptr<ExpressionNode> left = ParseRelationalFactor();
-  std::string value = "";
+  RelationalOperation value;
   switch (FetchCurrentToken()->GetType()) {
     case TokenType::IS_GREATER:ConsumeToken(TokenType::IS_GREATER);
-      value = ">";
+      value = RelationalOperation::GREATER_THAN;
       break;
     case TokenType::IS_GREATER_EQUAL:ConsumeToken(TokenType::IS_GREATER_EQUAL);
-      value = ">=";
+      value = RelationalOperation::GREATER_THAN_EQUALS;
       break;
     case TokenType::IS_LESSER_EQUAL:ConsumeToken(TokenType::IS_LESSER_EQUAL);
-      value = "<=";
+      value = RelationalOperation::LESS_THAN_EQUALS;
       break;
     case TokenType::IS_LESSER:ConsumeToken(TokenType::IS_LESSER);
-      value = "<";
+      value = RelationalOperation::LESS_THAN;
       break;
     case TokenType::IS_EQUAL:ConsumeToken(TokenType::IS_EQUAL);
-      value = "==";
+      value = RelationalOperation::EQUALS;
       break;
     case TokenType::IS_NOT_EQUAL:ConsumeToken(TokenType::IS_NOT_EQUAL);
-      value = "!=";
+      value = RelationalOperation::NOT_EQUALS;
       break;
     default:throw std::runtime_error("Parsing invalid relational expression");
   }
@@ -209,13 +209,13 @@ std::shared_ptr<ExpressionNode> SourceParser::ParseExpression() {
 }
 
 std::shared_ptr<ExpressionNode> SourceParser::ParseExpression2(std::shared_ptr<ExpressionNode> left) {
-  std::string value = "";
+  Operation value;
   switch (FetchCurrentToken()->GetType()) {
     case TokenType::ADDITION:ConsumeToken(TokenType::ADDITION);
-      value = "+";
+      value = Operation::PLUS;
       break;
     case TokenType::SUBTRACTION:ConsumeToken(TokenType::SUBTRACTION);
-      value = "-";
+      value = Operation::MINUS;
       break;
     default:return left;
   }
@@ -229,16 +229,16 @@ std::shared_ptr<ExpressionNode> SourceParser::ParseTerm() {
 }
 
 std::shared_ptr<ExpressionNode> SourceParser::ParseTerm2(std::shared_ptr<ExpressionNode> left) {
-  std::string value = "";
+  Operation value;
   switch (FetchCurrentToken()->GetType()) {
     case TokenType::MULTIPLICATION:ConsumeToken(TokenType::MULTIPLICATION);
-      value = "*";
+      value = Operation::MULTIPLY;
       break;
     case TokenType::DIVISION:ConsumeToken(TokenType::DIVISION);
-      value = "/";
+      value = Operation::DIVIDE;
       break;
     case TokenType::MODULUS:ConsumeToken(TokenType::MODULUS);
-      value = "%";
+      value = Operation::MOD;
       break;
     default:return left;
   }
