@@ -40,167 +40,167 @@ std::string getRelationalOpLabel(RelationalOperation op)
   }
 }
 
-ExpressionType Expression::getExpressionType()
+ExpressionType ExpressionNode::getExpressionType()
 {
   return ExpressionType::NONE;
 }
 
-StatementType CallStatement::getStatementType()
+StatementType CallStatementNode::getStatementType()
 {
   return StatementType::CALL;
 }
 
-StatementType WhileStatement::getStatementType()
+StatementType WhileStatementNode::getStatementType()
 {
   return StatementType::WHILE;
 }
 
-StatementType PrintStatement::getStatementType()
+StatementType PrintStatementNode::getStatementType()
 {
   return StatementType::PRINT;
 }
 
-StatementType ErrorStatement::getStatementType()
+StatementType ErrorStatementNode::getStatementType()
 {
   return StatementType::ERROR;
 }
 
-StatementType IfStatement::getStatementType()
+StatementType IfStatementNode::getStatementType()
 {
   return StatementType::IF;
 }
 
-StatementType AssignStatement::getStatementType()
+StatementType AssignStatementNode::getStatementType()
 {
   return StatementType::ASSIGN;
 }
 
-StatementType ReadStatement::getStatementType()
+StatementType ReadStatementNode::getStatementType()
 {
   return StatementType::READ;
 }
 
-std::shared_ptr<Variable> ReadStatement::getId()
+std::shared_ptr<VariableNode> ReadStatementNode::getId()
 {
   return id;
 }
 
-std::string Constant::format(int _)
+std::string ConstantNode::format(int _)
 {
   return value;
 }
 
-ExpressionType Constant::getExpressionType()
+ExpressionType ConstantNode::getExpressionType()
 {
   return ExpressionType::CONSTANT;
 }
 
-std::string Constant::getValue()
+std::string ConstantNode::getValue()
 {
   return value;
 }
 
-ExpressionType CombinationExpression::getExpressionType()
+ExpressionType CombinationExpressionNode::getExpressionType()
 {
   return ExpressionType::COMBINATION;
 }
 
-void CombinationExpression::setLeftExpression(std::shared_ptr<Expression> left)
+void CombinationExpressionNode::setLeftExpression(std::shared_ptr<ExpressionNode> left)
 {
   this->lhs = left;
 }
 
-std::shared_ptr<Expression> CombinationExpression::getLHS()
+std::shared_ptr<ExpressionNode> CombinationExpressionNode::getLHS()
 {
   return lhs;
 }
 
-std::shared_ptr<Expression> CombinationExpression::getRHS()
+std::shared_ptr<ExpressionNode> CombinationExpressionNode::getRHS()
 {
   return rhs;
 }
 
-Operation CombinationExpression::getOperation()
+Operation CombinationExpressionNode::getOperation()
 {
   return op;
 }
 
-ConditionalType ConditionalExpression::getConditionalType()
+ConditionalType ConditionalExpressionNode::getConditionalType()
 {
   return ConditionalType::NONE;
 }
 
-ExpressionType Variable::getExpressionType()
+ExpressionType VariableNode::getExpressionType()
 {
   return ExpressionType::VARIABLE;
 }
 
-ConditionalType BooleanExpression::getConditionalType()
+ConditionalType BooleanExpressionNode::getConditionalType()
 {
   return ConditionalType::BOOLEAN;
 }
 
-void BooleanExpression::setLeft(std::shared_ptr<ConditionalExpression> lhs)
+void BooleanExpressionNode::setLeft(std::shared_ptr<ConditionalExpressionNode> lhs)
 {
   this->lhs = lhs;
 }
 
-std::shared_ptr<ConditionalExpression> BooleanExpression::getLHS()
+std::shared_ptr<ConditionalExpressionNode> BooleanExpressionNode::getLHS()
 {
   return lhs;
 }
 
-std::shared_ptr<ConditionalExpression> BooleanExpression::getRHS()
+std::shared_ptr<ConditionalExpressionNode> BooleanExpressionNode::getRHS()
 {
   return rhs;
 }
 
-ConditionalType NotExpression::getConditionalType()
+ConditionalType NotExpressionNode::getConditionalType()
 {
   return ConditionalType::NOT;
 }
 
-std::shared_ptr<ConditionalExpression> NotExpression::getExpr()
+std::shared_ptr<ConditionalExpressionNode> NotExpressionNode::getExpr()
 {
   return expr;
 }
 
-ConditionalType RelationalExpression::getConditionalType()
+ConditionalType RelationalExpressionNode::getConditionalType()
 {
   return ConditionalType::RELATIONAL;
 }
 
-std::shared_ptr<Expression> RelationalExpression::getLHS()
+std::shared_ptr<ExpressionNode> RelationalExpressionNode::getLHS()
 {
   return lhs;
 }
 
-std::shared_ptr<Expression> RelationalExpression::getRHS()
+std::shared_ptr<ExpressionNode> RelationalExpressionNode::getRHS()
 {
   return rhs;
 }
 
-std::string CombinationExpression::format(int level)
+std::string CombinationExpressionNode::format(int level)
 {
   return "(" + lhs->format(level) + " " + getOperationLabel(op) + " " + rhs->format(level) + ")";
 }
 
-std::string BooleanExpression::format(int level)
+std::string BooleanExpressionNode::format(int level)
 {
   return "(" + lhs->format(level) + (op == BooleanOperator::AND ? " && " : " || ") + rhs->format(level) + ")";
 }
 
-std::string NotExpression::format(int level)
+std::string NotExpressionNode::format(int level)
 {
   return "(!" + expr->format(level) + ")";
 }
 
-std::string RelationalExpression::format(int level)
+std::string RelationalExpressionNode::format(int level)
 {
   return "(" + lhs->format(level) + " " + getRelationalOpLabel(rop) + " " + rhs->format(level) + ")";
 }
 
-std::string Statement::getStatementLabel()
+std::string StatementNode::getStatementLabel()
 {
   if (line_number == 0)
   {
@@ -213,35 +213,35 @@ std::string Statement::getStatementLabel()
   }
 }
 
-std::string Statement::format(int level)
+std::string StatementNode::format(int level)
 {
   return this->getStatementLabel();
 }
 
-std::vector<std::shared_ptr<Statement>> Statement::getStatementList()
+std::vector<std::shared_ptr<StatementNode>> StatementNode::getStatementList()
 {
   return {};
 }
 
-StatementType Statement::getStatementType()
+StatementType StatementNode::getStatementType()
 {
   return StatementType::NONE;
 }
 
-int Statement::getLineNumber()
+int StatementNode::getLineNumber()
 {
   return line_number;
 }
 
-std::vector<std::shared_ptr<Statement>> StatementList::getStatements()
+std::vector<std::shared_ptr<StatementNode>> StatementListNode::getStatements()
 {
   return statements;
 }
 
-std::string StatementList::format(int level)
+std::string StatementListNode::format(int level)
 {
   std::string acc = "";
-  for (std::shared_ptr<Statement> statement : statements)
+  for (std::shared_ptr<StatementNode> statement : statements)
   {
     acc += statement->format(level);
   }
@@ -249,144 +249,144 @@ std::string StatementList::format(int level)
   return acc;
 }
 
-std::string Variable::format(int _)
+std::string VariableNode::format(int _)
 {
   return "$" + name;
 }
 
-std::string Variable::getName()
+std::string VariableNode::getName()
 {
   return name;
 }
 
-std::string ErrorStatement::format(int _)
+std::string ErrorStatementNode::format(int _)
 {
   return "ERROR;\n";
 }
 
-std::string ReadStatement::format(int level)
+std::string ReadStatementNode::format(int level)
 {
-  return Statement::format(level) + "read " + id->format(level) + ";\n";
+  return StatementNode::format(level) + "read " + id->format(level) + ";\n";
 }
 
-std::string PrintStatement::format(int level)
+std::string PrintStatementNode::format(int level)
 {
-  return Statement::format(level) + "print " + id->format(level) + ";\n";
+  return StatementNode::format(level) + "print " + id->format(level) + ";\n";
 }
 
-std::shared_ptr<Variable> PrintStatement::getId()
+std::shared_ptr<VariableNode> PrintStatementNode::getId()
 {
   return id;
 }
 
-std::string CallStatement::format(int level)
+std::string CallStatementNode::format(int level)
 {
-  return Statement::format(level) + "call " + procedureId->format(level) + ";\n";
+  return StatementNode::format(level) + "call " + procedureId->format(level) + ";\n";
 }
 
-std::shared_ptr<Variable> CallStatement::getProcId()
+std::shared_ptr<VariableNode> CallStatementNode::getProcId()
 {
   return procedureId;
 }
 
-std::string WhileStatement::format(int level)
+std::string WhileStatementNode::format(int level)
 {
-  std::string header = Statement::format(level);
+  std::string header = StatementNode::format(level);
   return header + "while (" + condition->format(level) + ") {\n" + block->format(level + 1) + header + "}\n";
 }
 
-std::vector<std::shared_ptr<Statement>> WhileStatement::getStatementList()
+std::vector<std::shared_ptr<StatementNode>> WhileStatementNode::getStatementList()
 {
   return block->getStatements();
 }
 
-std::shared_ptr<StatementList> WhileStatement::getBody()
+std::shared_ptr<StatementListNode> WhileStatementNode::getBody()
 {
   return block;
 }
 
-std::shared_ptr<ConditionalExpression> WhileStatement::getConditional()
+std::shared_ptr<ConditionalExpressionNode> WhileStatementNode::getConditional()
 {
   return condition;
 }
 
-std::string IfStatement::format(int level)
+std::string IfStatementNode::format(int level)
 {
-  std::string header = Statement::format(level);
+  std::string header = StatementNode::format(level);
   return header + "if (" + condition->format(level) + ") then {\n" + consequent->format(level + 1) + header +
       "} else {\n" + alternative->format(level + 1) + header + "}\n";
 }
 
 // return a list starting with if statements and ending with else statements
-std::vector<std::shared_ptr<Statement>> IfStatement::getStatementList()
+std::vector<std::shared_ptr<StatementNode>> IfStatementNode::getStatementList()
 {
-  std::vector<std::shared_ptr<Statement>> consequentStatements = consequent->getStatements();
-  std::vector<std::shared_ptr<Statement>> alternativeStatements = alternative->getStatements();
+  std::vector<std::shared_ptr<StatementNode>> consequentStatements = consequent->getStatements();
+  std::vector<std::shared_ptr<StatementNode>> alternativeStatements = alternative->getStatements();
   consequentStatements.insert(end(consequentStatements), begin(alternativeStatements), end(alternativeStatements));
   return consequentStatements;
 }
 
 // return a consequent statement list
-std::shared_ptr<StatementList> IfStatement::getConsequent()
+std::shared_ptr<StatementListNode> IfStatementNode::getConsequent()
 {
   return consequent;
 }
 
 // return a consequent statement list
-std::shared_ptr<StatementList> IfStatement::getAlternative()
+std::shared_ptr<StatementListNode> IfStatementNode::getAlternative()
 {
   return alternative;
 }
 
-std::shared_ptr<ConditionalExpression> IfStatement::getConditional()
+std::shared_ptr<ConditionalExpressionNode> IfStatementNode::getConditional()
 {
   return condition;
 }
 
-std::string AssignStatement::format(int level)
+std::string AssignStatementNode::format(int level)
 {
-  return Statement::format(level) + id->format(level) + " = " + expression->format(level) + ";\n";
+  return StatementNode::format(level) + id->format(level) + " = " + expression->format(level) + ";\n";
 }
 
-std::shared_ptr<Variable> AssignStatement::getId()
+std::shared_ptr<VariableNode> AssignStatementNode::getId()
 {
   return id;
 }
 
-std::shared_ptr<Expression> AssignStatement::getExpr()
+std::shared_ptr<ExpressionNode> AssignStatementNode::getExpr()
 {
   return expression;
 }
 
-std::string Procedure::format(int level)
+std::string ProcedureNode::format(int level)
 {
   return "procedure " + name + " {\n" + stmtList->format(level + 1) + "}\n";
 }
 
-std::shared_ptr<StatementList> Procedure::getStatementList()
+std::shared_ptr<StatementListNode> ProcedureNode::getStatementList()
 {
   return stmtList;
 }
 
-std::string Procedure::getName()
+std::string ProcedureNode::getName()
 {
   return name;
 }
 
-std::vector<std::shared_ptr<Procedure>> Program::getProcedures()
+std::vector<std::shared_ptr<ProcedureNode>> ProgramNode::getProcedures()
 {
   return procedures;
 }
 
-std::string Program::format()
+std::string ProgramNode::format()
 {
   return this->format(0);
 }
 
-std::string Program::format(int level)
+std::string ProgramNode::format(int level)
 {
   std::string acc = "";
-  for (std::shared_ptr<Procedure> procedure : procedures)
+  for (std::shared_ptr<ProcedureNode> procedure : procedures)
   {
     acc += procedure->format(level) + "\n";
   }

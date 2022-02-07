@@ -7,6 +7,11 @@ void SourceController::Tokenize(std::string program_source, std::vector<SourceTo
   lexer.Tokenize(tokens_ptr);
 }
 
+std::shared_ptr<ProgramNode> SourceController::ParseTokenStream(std::vector<SourceToken *> &tokens_ptr) {
+  SourceParser parser = SourceParser(tokens_ptr);
+  return parser.ParseProgram();
+}
+
 std::string SourceController::RetrieveFileContent(std::string file_path) {
   return FileUtil::ReadFileContent(file_path);
 }
