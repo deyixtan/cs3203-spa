@@ -3,6 +3,7 @@
 #include "components/query_subsystem/pql_parser/query_validator.h"
 #include "components/query_subsystem/pql_parser/query_grammar_error.h"
 #include "sample_token.h"
+#include "components/source_subsystem/node.h"
 
 
 #include "catch.hpp"
@@ -33,4 +34,3 @@ TEST_CASE("Test select keyword validation") {
 
   REQUIRE_THROWS_WITH(query_validator.CheckValidation(), error);
 }
-
