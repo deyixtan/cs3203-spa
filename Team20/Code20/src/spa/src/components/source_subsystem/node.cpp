@@ -80,7 +80,7 @@ StatementType ReadStatement::getStatementType()
   return StatementType::READ;
 }
 
-std::shared_ptr<Identifier> ReadStatement::getId()
+std::shared_ptr<Variable> ReadStatement::getId()
 {
   return id;
 }
@@ -130,9 +130,9 @@ ConditionalType ConditionalExpression::getConditionalType()
   return ConditionalType::NONE;
 }
 
-ExpressionType Identifier::getExpressionType()
+ExpressionType Variable::getExpressionType()
 {
-  return ExpressionType::IDENTIFIER;
+  return ExpressionType::VARIABLE;
 }
 
 ConditionalType BooleanExpression::getConditionalType()
@@ -249,12 +249,12 @@ std::string StatementList::format(int level)
   return acc;
 }
 
-std::string Identifier::format(int _)
+std::string Variable::format(int _)
 {
   return "$" + name;
 }
 
-std::string Identifier::getName()
+std::string Variable::getName()
 {
   return name;
 }
@@ -274,7 +274,7 @@ std::string PrintStatement::format(int level)
   return Statement::format(level) + "print " + id->format(level) + ";\n";
 }
 
-std::shared_ptr<Identifier> PrintStatement::getId()
+std::shared_ptr<Variable> PrintStatement::getId()
 {
   return id;
 }
@@ -284,7 +284,7 @@ std::string CallStatement::format(int level)
   return Statement::format(level) + "call " + procedureId->format(level) + ";\n";
 }
 
-std::shared_ptr<Identifier> CallStatement::getProcId()
+std::shared_ptr<Variable> CallStatement::getProcId()
 {
   return procedureId;
 }
@@ -348,7 +348,7 @@ std::string AssignStatement::format(int level)
   return Statement::format(level) + id->format(level) + " = " + expression->format(level) + ";\n";
 }
 
-std::shared_ptr<Identifier> AssignStatement::getId()
+std::shared_ptr<Variable> AssignStatement::getId()
 {
   return id;
 }

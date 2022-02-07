@@ -16,7 +16,7 @@ enum class ExpressionType
 {
   CONSTANT,
   COMBINATION,
-  IDENTIFIER,
+  VARIABLE,
   NONE, // Should not happen
 };
 
@@ -230,17 +230,17 @@ class StatementList : public Node
   std::string format(int level);
 };
 
-class Identifier : public Expression
+class Variable : public Expression
 {
  private:
   std::string name;
 
  public:
-  Identifier()
+  Variable()
   {
     this->name = "";
   }
-  Identifier(std::string name)
+  Variable(std::string name)
   {
     this->name = name;
   }
@@ -263,15 +263,15 @@ class ErrorStatement : public Statement
 class ReadStatement : public Statement
 {
  private:
-  std::shared_ptr<Identifier> id;
+  std::shared_ptr<Variable> id;
 
  public:
-  ReadStatement(int index, std::shared_ptr<Identifier> id) : Statement(index)
+  ReadStatement(int index, std::shared_ptr<Variable> id) : Statement(index)
   {
     this->id = id;
   }
 
-  std::shared_ptr<Identifier> getId();
+  std::shared_ptr<Variable> getId();
   std::string format(int level);
   StatementType getStatementType();
 };
@@ -279,15 +279,15 @@ class ReadStatement : public Statement
 class PrintStatement : public Statement
 {
  private:
-  std::shared_ptr<Identifier> id;
+  std::shared_ptr<Variable> id;
 
  public:
-  PrintStatement(int index, std::shared_ptr<Identifier> id) : Statement(index)
+  PrintStatement(int index, std::shared_ptr<Variable> id) : Statement(index)
   {
     this->id = id;
   }
 
-  std::shared_ptr<Identifier> getId();
+  std::shared_ptr<Variable> getId();
   std::string format(int level);
   StatementType getStatementType();
 };
@@ -295,15 +295,15 @@ class PrintStatement : public Statement
 class CallStatement : public Statement
 {
  private:
-  std::shared_ptr<Identifier> procedureId;
+  std::shared_ptr<Variable> procedureId;
 
  public:
-  CallStatement(int index, std::shared_ptr<Identifier> procId) : Statement(index)
+  CallStatement(int index, std::shared_ptr<Variable> procId) : Statement(index)
   {
     this->procedureId = procId;
   }
 
-  std::shared_ptr<Identifier> getProcId();
+  std::shared_ptr<Variable> getProcId();
   std::string format(int level);
   StatementType getStatementType();
 };
@@ -357,17 +357,17 @@ class IfStatement : public Statement
 class AssignStatement : public Statement
 {
  private:
-  std::shared_ptr<Identifier> id;
+  std::shared_ptr<Variable> id;
   std::shared_ptr<Expression> expression;
 
  public:
-  AssignStatement(int index, std::shared_ptr<Identifier> id, std::shared_ptr<Expression> expr) : Statement(index)
+  AssignStatement(int index, std::shared_ptr<Variable> id, std::shared_ptr<Expression> expr) : Statement(index)
   {
     this->id = id;
     this->expression = expr;
   }
 
-  std::shared_ptr<Identifier> getId();
+  std::shared_ptr<Variable> getId();
   std::shared_ptr<Expression> getExpr();
   std::string format(int level);
   StatementType getStatementType();
