@@ -19,7 +19,7 @@ class SourceParser {
   std::shared_ptr<SourceToken> FetchNextToken();
   void IncrementCursor();
   bool AreTokensProcessed();
-  std::shared_ptr<SourceToken> ConsumeToken(TokenType type);
+  std::shared_ptr<SourceToken> ConsumeToken(SourceTokenType type);
   std::shared_ptr<ProgramNode> ParseProgram();
   std::shared_ptr<ProcedureNode> ParseProcedure();
   std::shared_ptr<StatementListNode> ParseStatementList();
