@@ -35,7 +35,7 @@ bool SourceParser::AreTokensProcessed() {
 
 std::shared_ptr<SourceToken> SourceParser::ConsumeToken(TokenType type) {
   std::shared_ptr<SourceToken> token_ptr = FetchCurrentToken();
-  if (token_ptr->GetType() != type && token_ptr->GetType() != TokenType::NEW_LINE) {
+  if (token_ptr->GetType() != type) {
     throw std::runtime_error("Unable to consume token, mismatched type.");
   }
   IncrementCursor();
