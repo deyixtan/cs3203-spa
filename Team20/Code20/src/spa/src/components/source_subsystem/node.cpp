@@ -58,8 +58,8 @@ std::string ReadNode::to_string() {
   return "(ReadNode " + this->Var->to_string() + ")";
 }
 
-CallNode::CallNode(std::string procName, int lineNumber) : Node(lineNumber) {
-  this->ProcName = procName;
+CallNode::CallNode(std::string procedureName, int lineNumber) : Node(lineNumber) {
+  this->ProcName = procedureName;
 };
 bool CallNode::operator==(const Node& other) const {
   auto casted_other = dynamic_cast<const CallNode*>(&other);
