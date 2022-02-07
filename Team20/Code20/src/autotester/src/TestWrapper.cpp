@@ -24,14 +24,13 @@ void TestWrapper::parse(std::string filename) {
   std::vector<SourceToken *> tokens_ptr;
   source_controller->Tokenize(simple_source, tokens_ptr);
 
-  //  // Print tokens
-  //  std::vector<SourceToken *>::iterator it;
-  //  for (it = tokens_ptr.begin(); it != tokens_ptr.end(); ++it) {
-  //    std::cout << (*it)->GetTypeStr() << " " << (*it)->GetValue() << std::endl;
-  //  }
+  // // Print tokens
+  // std::vector<SourceToken *>::iterator it;
+  // for (it = tokens_ptr.begin(); it != tokens_ptr.end(); ++it) {
+  //  std::cout << (*it)->GetTypeStr() << " " << (*it)->GetValue() << std::endl;
+  // }
 
   std::shared_ptr<ProgramNode> ast = source_controller->ParseTokenStream(tokens_ptr);
-
   // TODO: DesignExtractor use 'ast'
 
   std::cout << "TestWrapper::parse() End" << std::endl;

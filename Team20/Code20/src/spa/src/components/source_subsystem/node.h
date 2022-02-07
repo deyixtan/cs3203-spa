@@ -9,7 +9,9 @@
 class Node
 {
  public:
-  Node();
+  virtual std::string format(int level) {
+    return "";
+  }
 };
 
 enum class ExpressionType
@@ -23,9 +25,7 @@ enum class ExpressionType
 class ExpressionNode : public Node
 {
  public:
-  ExpressionNode();
   virtual ExpressionType getExpressionType();
-  std::string format(int level);
 };
 
 class ConstantNode : public ExpressionNode
@@ -34,7 +34,9 @@ class ConstantNode : public ExpressionNode
   std::string value;
 
  public:
-  ConstantNode(std::string value);
+  ConstantNode(std::string value) {
+    this->value = value;
+  }
   std::string getValue();
   std::string format(int lvl);
   ExpressionType getExpressionType();
@@ -90,9 +92,7 @@ enum class ConditionalType
 class ConditionalExpressionNode : public Node
 {
  public:
-  ConditionalExpressionNode();
   virtual ConditionalType getConditionalType();
-  std::string format(int level);
 };
 
 enum class BooleanOperator

@@ -4,13 +4,15 @@ SourceParser::SourceParser(std::vector<SourceToken *> tokens_ptr) {
   this->tokens_ptr = tokens_ptr;
   this->cursor = 0;
   this->line_number = 0;
+  this->max_tokens_index = tokens_ptr.size() - 1;
 }
 
 std::shared_ptr<SourceToken> SourceParser::FetchCurrentToken() {
   if (cursor >= tokens_ptr.size()) {
     return nullptr;
   }
-  return std::shared_ptr<SourceToken>(tokens_ptr[cursor]);
+  SourceToken token = *(tokens_ptr[cursor]);
+  return std::make_shared<SourceToken>(token);
 }
 
 std::shared_ptr<SourceToken> SourceParser::FetchNextToken() {
@@ -28,19 +30,18 @@ void SourceParser::IncrementCursor() {
 }
 
 bool SourceParser::AreTokensProcessed() {
-  return cursor == tokens_ptr.size();
+  return cursor == max_tokens_index;
 }
 
 std::shared_ptr<SourceToken> SourceParser::ConsumeToken(TokenType type) {
   std::shared_ptr<SourceToken> token_ptr = FetchCurrentToken();
-  if (token_ptr->GetType() != type || token_ptr->GetType() != TokenType::NEW_LINE) {
+  if (token_ptr->GetType() != type && token_ptr->GetType() != TokenType::NEW_LINE) {
     throw std::runtime_error("Unable to consume token, mismatched type.");
   }
   IncrementCursor();
 
   if (token_ptr->GetType() == TokenType::NEW_LINE) {
     line_number++;
-    return ConsumeToken(type);
   }
   return token_ptr;
 }
@@ -65,7 +66,11 @@ std::shared_ptr<ProcedureNode> SourceParser::ParseProcedure() {
 std::shared_ptr<StatementListNode> SourceParser::ParseStatementList() {
   std::vector<std::shared_ptr<StatementNode>> statements;
   while (FetchCurrentToken()->GetType() != TokenType::CLOSED_BRACES) {
-    statements.push_back(ParseStatement());
+    std::shared_ptr<StatementNode> statement = ParseStatement();
+    if (statement == nullptr) {
+      continue;
+    }
+    statements.push_back(statement);
   }
   return std::make_shared<StatementListNode>(statements);
 }
@@ -78,8 +83,12 @@ std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
     case TokenType::WHILE:return ParseWhileStatement();
     case TokenType::IF:return ParseIfStatement();
     case TokenType::EQUAL:return ParseAssignStatement();
+    case TokenType::NEW_LINE: {
+      ConsumeToken(TokenType::NEW_LINE);
+      return nullptr;
+    }
+    default:throw std::runtime_error("Parsing invalid statement.");
   }
-  throw std::runtime_error("Parsing invalid statement.");
 }
 
 std::shared_ptr<ReadStatementNode> SourceParser::ParseReadStatement() {
@@ -250,10 +259,12 @@ std::shared_ptr<ExpressionNode> SourceParser::ParseFactor() {
   switch (FetchCurrentToken()->GetType()) {
     case TokenType::NAME:return std::make_shared<VariableNode>(ConsumeToken(TokenType::NAME)->GetValue());
     case TokenType::DIGIT:return std::make_shared<ConstantNode>(ConsumeToken(TokenType::DIGIT)->GetValue());
-    case TokenType::OPENED_PARENTHESIS:ConsumeToken(TokenType::OPENED_PARENTHESIS);
+    case TokenType::OPENED_PARENTHESIS: {
+      ConsumeToken(TokenType::OPENED_PARENTHESIS);
       std::shared_ptr<ExpressionNode> expr = ParseExpression();
       ConsumeToken(TokenType::CLOSED_PARENTHESIS);
       return expr;
+    }
+    default:throw std::runtime_error("Unable to parse factor.");
   }
-  throw std::runtime_error("Unable to parse factor.");
 }
