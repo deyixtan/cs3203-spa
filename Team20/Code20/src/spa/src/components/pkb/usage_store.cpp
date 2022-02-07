@@ -69,3 +69,35 @@ std::unordered_set<std::pair<int, std::string>, pair_hash> UsageStore::get_all_s
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> UsageStore::get_all_proc_var() {
   return proc_var_pairs;
 }
+
+// get design entities
+std::unordered_set<std::string> UsageStore::GetProcedure() {
+  return procedure_set;
+}
+std::unordered_set<int> UsageStore::GetConstant() {
+  return constant_set;
+}
+std::unordered_set<std::string> UsageStore::GetVariable() {
+  return var_set;
+}
+std::unordered_set<int> UsageStore::GetAssign() {
+  return assign_set;
+}
+std::unordered_set<int> UsageStore::GetStatement() {
+  return statement_set;
+}
+std::unordered_set<int> UsageStore::GetPrint() {
+  return print_set;
+}
+std::unordered_set<int> UsageStore::GetRead() {
+  return read_set;
+}
+std::unordered_set<int> UsageStore::GetWhile() {
+  return while_set;
+}
+std::unordered_set<int> UsageStore::GetIf() {
+  return if_set;
+}
+std::unordered_set<int> UsageStore::GetCall() {
+  return call_set;
+}

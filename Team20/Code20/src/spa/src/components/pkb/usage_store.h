@@ -31,6 +31,18 @@ class UsageStore {
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_proc_var();
 
+  // get design entities
+  std::unordered_set<std::string> GetProcedure();
+  std::unordered_set<int> GetConstant();
+  std::unordered_set<std::string> GetVariable();
+  std::unordered_set<int> GetAssign();
+  std::unordered_set<int> GetStatement();
+  std::unordered_set<int> GetPrint();
+  std::unordered_set<int> GetRead();
+  std::unordered_set<int> GetWhile();
+  std::unordered_set<int> GetIf();
+  std::unordered_set<int> GetCall();
+
  private:
   std::unordered_set<std::pair<int, std::string>, pair_hash> stmt_var_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
@@ -38,5 +50,18 @@ class UsageStore {
   std::unordered_map<std::string, std::unordered_set<int> > var_stmt_map;
   std::unordered_map<std::string, std::unordered_set<std::string> > proc_var_map;
   std::unordered_map<std::string, std::unordered_set<std::string> > var_proc_map;
+
+  // design entities
+  std::unordered_set<std::string> procedure_set;
+  std::unordered_set<int> constant_set;
+  std::unordered_set<std::string> var_set;
+  std::unordered_set<int> assign_set;
+  std::unordered_set<int> statement_set;
+  std::unordered_set<int> print_set;
+  std::unordered_set<int> read_set;
+  std::unordered_set<int> while_set;
+  std::unordered_set<int> if_set;
+  std::unordered_set<int> call_set;
+
 };
 #endif //USAGE_STORE_H

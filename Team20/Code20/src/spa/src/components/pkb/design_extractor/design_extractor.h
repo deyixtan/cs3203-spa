@@ -1,12 +1,21 @@
-//
-// Created by Danelynn Ding on 7/2/22.
-//
+#ifndef DESIGN_EXTRACTOR_H
+#define DESIGN_EXTRACTOR_H
 
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_PKB_DESIGN_EXTRACTOR_DESIGN_EXTRACTOR_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_PKB_DESIGN_EXTRACTOR_DESIGN_EXTRACTOR_H_
+#include "../src/components/source_subsystem/node.h"
+#include "../src/components/query_subsystem/pql_lexer/pql_token.h"
+#include "../src/components/pkb/usage_store.h"
+#include <unordered_set>
 
-class design_extractor {
+
+class DesignExtractor {
+ private:
+  AST ast;
+  UsageStore storage;
+  void TraverseAst();
+ public:
+  DesignExtractor();
+  DesignExtractor(const AST ast, const UsageStore storage);
 
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_DESIGN_EXTRACTOR_DESIGN_EXTRACTOR_H_
+#endif //DESIGN_EXTRACTOR_H
