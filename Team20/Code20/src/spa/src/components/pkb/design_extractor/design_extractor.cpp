@@ -11,21 +11,22 @@ DesignExtractor::DesignExtractor(Program root_node, PKB *pkb, UsageStore storage
 void DesignExtractor::traverse_ast() {
   std::vector<std::shared_ptr<Procedure>> proc_list = this->root_node.getProcedures();
   for (auto &proc : proc_list) {
-    std::string proc_name = proc->getName();
-    populate_proc(proc_name);
-    process_proc(proc);
+    std::shared_ptr<StatementList> stmtLst = proc->getStatementList();
+    std::vector<std::shared_ptr<Statement>> stmts = stmtLst->getStatements();
+    process_proc(proc, stmtLst, stmts);
   }
 }
 
-void DesignExtractor::process_proc(std::shared_ptr<Procedure> proc) {
-  std::shared_ptr<StatementList> stmtLst = proc->getStatementList();
-  std::vector<std::shared_ptr<Statement>> stmts = stmtLst->getStatements();
+void DesignExtractor::process_proc(std::shared_ptr<Procedure> proc, std::shared_ptr<StatementList> stmtLst, std::vector<std::shared_ptr<Statement>> stmts) {
   for (auto &stmt : stmts) {
     int stmt_num = stmt->getLineNumber();
     StmtType stmt_type = stmt->getStatementType();
     std::string var_name = "";
 
     switch(stmt_type) {
+      case PROC:
+        populate_proc(proc->getName());
+        break;
       case STMT:
         populate_stmt(stmt_num);
         break;
@@ -33,7 +34,7 @@ void DesignExtractor::process_proc(std::shared_ptr<Procedure> proc) {
         std::shared_ptr<ReadStatement> read_stmt = static_pointer_cast<ReadStatement>(stmt);
         var_name = read_stmt->getId()->getName();
         populate_read(stmt_num);
-        //populate_modifies(stmt_num, var_name);
+        populate_modifies(stmt_num, var_name);
         break;
       }
       case PRINT: {
@@ -46,7 +47,40 @@ void DesignExtractor::process_proc(std::shared_ptr<Procedure> proc) {
       case ASSIGN: {
         std::shared_ptr<AssignStatement> assign_stmt = static_pointer_cast<AssignStatement>(stmt);
         var_name = assign_stmt->getId()->getName();
+        std::shared_ptr<Expression> expr = assign_stmt->getExpr();
+        ExpressionType expr_type = expr->getExpressionType();
+        switch (expr_type) {
+          case ExpressionType::CONSTANT: {
+            std::shared_ptr<Constant> constant = static_pointer_cast<Constant>(expr);
+            std::string name = constant->getValue();
+            populate_const(name);
+            break;
+          }
+          case ExpressionType::COMBINATION: {
+            std::shared_ptr<CombinationExpression> comb = static_pointer_cast<CombinationExpression>(expr);
+            std::shared_ptr<Expression> lhs = comb->getLHS();
+            std::shared_ptr<Expression> rhs = comb->getRHS();
+            Operation op = comb->getOperation();
+          }
+          case ExpressionType::VARIABLE: {
+            std::shared_ptr<Variable> var = static_pointer_cast<Variable>(expr);
+            std::string name = var->getName();
+            populate_const(name);
+          }
+        }
         populate_assign(stmt_num);
+        //populate_modifies(stmt_num);
+        break;
+      }
+      case WHILE: {
+        std::shared_ptr<WhileStatement> while_stmt = static_pointer_cast<WhileStatement>(stmt);
+        populate_while(stmt_num);
+        //populate_modifies(stmt_num);
+        break;
+      }
+      case IF: {
+        std::shared_ptr<IfStatement> if_stmt = static_pointer_cast<IfStatement>(stmt);
+        populate_if(stmt_num);
         //populate_modifies(stmt_num);
         break;
       }
@@ -85,5 +119,19 @@ void DesignExtractor::populate_print(int stmt) {
 void DesignExtractor::populate_vars(std::string var) {
   this->pkb->add_stmt(var, VARS);
 }
+
+void DesignExtractor::populate_while(int stmt) {
+  this->pkb->add_stmt(stmt, WHILE);
+}
+
+void DesignExtractor::populate_if(int stmt) {
+  this->pkb->add_stmt(stmt, IF);
+}
+
+void DesignExtractor::populate_const(std::string name) {
+  this->pkb->add_stmt(name, CONSTS);
+}
+
+
 
 
