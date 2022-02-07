@@ -7,30 +7,30 @@ SourceLexer::SourceLexer(std::string program_source) {
 }
 
 void SourceLexer::ConstructSpecs() {
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^\\n", TokenType::NEW_LINE));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^\\s+", TokenType::WHITE_SPACE));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^\\d+", TokenType::DIGIT));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[a-zA-Z]+[a-zA-Z0-9]*", TokenType::NAME));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[{]", TokenType::OPENED_BRACES));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[}]", TokenType::CLOSED_BRACES));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[(]", TokenType::OPENED_PARENTHESIS));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[)]", TokenType::CLOSED_PARENTHESIS));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[&][&]", TokenType::AND));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[|][|]", TokenType::OR));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[>][=]", TokenType::IS_GREATER_EQUAL));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[>]", TokenType::IS_GREATER));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[<][=]", TokenType::IS_LESSER_EQUAL));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[<]", TokenType::IS_LESSER));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[=][=]", TokenType::IS_EQUAL));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[!][=]", TokenType::IS_NOT_EQUAL));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[+]", TokenType::ADDITION));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[-]", TokenType::SUBTRACTION));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[*]", TokenType::MULTIPLICATION));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[/]", TokenType::DIVISION));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[%]", TokenType::MODULUS));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[;]", TokenType::SEMI_COLON));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[=]", TokenType::EQUAL));
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[!]", TokenType::NOT));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^\\n", SourceTokenType::NEW_LINE));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^\\s+", SourceTokenType::WHITE_SPACE));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^\\d+", SourceTokenType::DIGIT));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[a-zA-Z]+[a-zA-Z0-9]*", SourceTokenType::NAME));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[{]", SourceTokenType::OPENED_BRACES));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[}]", SourceTokenType::CLOSED_BRACES));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[(]", SourceTokenType::OPENED_PARENTHESIS));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[)]", SourceTokenType::CLOSED_PARENTHESIS));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[&][&]", SourceTokenType::AND));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[|][|]", SourceTokenType::OR));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[>][=]", SourceTokenType::IS_GREATER_EQUAL));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[>]", SourceTokenType::IS_GREATER));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[<][=]", SourceTokenType::IS_LESSER_EQUAL));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[<]", SourceTokenType::IS_LESSER));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[=][=]", SourceTokenType::IS_EQUAL));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[!][=]", SourceTokenType::IS_NOT_EQUAL));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[+]", SourceTokenType::ADDITION));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[-]", SourceTokenType::SUBTRACTION));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[*]", SourceTokenType::MULTIPLICATION));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[/]", SourceTokenType::DIVISION));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[%]", SourceTokenType::MODULUS));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[;]", SourceTokenType::SEMI_COLON));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[=]", SourceTokenType::EQUAL));
+  tokenize_specs.emplace_back(std::pair<std::regex, SourceTokenType>("^[!]", SourceTokenType::NOT));
 }
 
 bool SourceLexer::IsEOF() {
@@ -48,10 +48,10 @@ SourceToken *SourceLexer::GetNextToken() {
 
   std::string remaining_source = program_source.substr(cursor);
 
-  std::vector<std::pair<std::regex, TokenType>>::iterator itr;
+  std::vector<std::pair<std::regex, SourceTokenType>>::iterator itr;
   for (itr = tokenize_specs.begin(); itr != tokenize_specs.end(); ++itr) {
     std::regex expression = itr->first;
-    TokenType token_type = itr->second;
+    SourceTokenType token_type = itr->second;
 
     std::smatch match;
     std::regex_search(remaining_source, match, expression);
@@ -63,9 +63,9 @@ SourceToken *SourceLexer::GetNextToken() {
     std::string token_value = match[0].str();
     cursor += match[0].str().length();
 
-    if (token_type == TokenType::NEW_LINE) {
+    if (token_type == SourceTokenType::NEW_LINE) {
       token_value = "";
-    } else if (token_type == TokenType::WHITE_SPACE) {
+    } else if (token_type == SourceTokenType::WHITE_SPACE) {
       return GetNextToken();
     }
 
@@ -77,27 +77,27 @@ SourceToken *SourceLexer::GetNextToken() {
 }
 
 void SourceLexer::TryTranslateToKeywordToken(SourceToken *&token_ptr) {
-  TokenType token_type = token_ptr->GetType();
+  SourceTokenType token_type = token_ptr->GetType();
   std::string token_value = token_ptr->GetValue();
 
-  if (token_type != TokenType::NAME) {
+  if (token_type != SourceTokenType::NAME) {
     return;
   }
 
   if (token_value == "procedure") {
-    token_ptr = new SourceToken(TokenType::PROCEDURE, "");
+    token_ptr = new SourceToken(SourceTokenType::PROCEDURE, "");
   } else if (token_value == "read") {
-    token_ptr = new SourceToken(TokenType::READ, "");
+    token_ptr = new SourceToken(SourceTokenType::READ, "");
   } else if (token_value == "print") {
-    token_ptr = new SourceToken(TokenType::PRINT, "");
+    token_ptr = new SourceToken(SourceTokenType::PRINT, "");
   } else if (token_value == "while") {
-    token_ptr = new SourceToken(TokenType::WHILE, "");
+    token_ptr = new SourceToken(SourceTokenType::WHILE, "");
   } else if (token_value == "if") {
-    token_ptr = new SourceToken(TokenType::IF, "");
+    token_ptr = new SourceToken(SourceTokenType::IF, "");
   } else if (token_value == "then") {
-    token_ptr = new SourceToken(TokenType::THEN, "");
+    token_ptr = new SourceToken(SourceTokenType::THEN, "");
   } else if (token_value == "else") {
-    token_ptr = new SourceToken(TokenType::ELSE, "");
+    token_ptr = new SourceToken(SourceTokenType::ELSE, "");
   }
 
   // TODO: throw TokenTranslationException

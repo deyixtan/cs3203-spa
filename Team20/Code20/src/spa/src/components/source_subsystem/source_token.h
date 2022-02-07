@@ -3,7 +3,7 @@
 
 #include <string>
 
-enum class TokenType {
+enum class SourceTokenType {
   UNKNOWN,
   NEW_LINE,
   WHITE_SPACE,
@@ -40,12 +40,12 @@ enum class TokenType {
 
 class SourceToken {
  private:
-  TokenType type;
+  SourceTokenType type;
   std::string value;
 
  public:
-  SourceToken(TokenType type, std::string value);
-  TokenType GetType();
+  SourceToken(SourceTokenType type, std::string value);
+  SourceTokenType GetType();
   std::string GetTypeStr();
   std::string GetValue();
 };
