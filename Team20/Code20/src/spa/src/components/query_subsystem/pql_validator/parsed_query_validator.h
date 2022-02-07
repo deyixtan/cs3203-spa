@@ -7,6 +7,7 @@ namespace pql_validator {
 
 class ParsedQueryValidator {
  public:
+  ParsedQueryValidator() {};
   void ValidateQuery(ParsedQuery);
 
  private:
