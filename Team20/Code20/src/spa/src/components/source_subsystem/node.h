@@ -3,183 +3,408 @@
 
 #include <memory>
 #include <string>
-#include <variant>
+#include <unordered_set>
 #include <vector>
 
-class Node;
-class RootNode;
-class NumberNode;
-class VariableNode;
-class BinaryOpNode;
-using Expr =
-std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<NumberNode>,
-             std::shared_ptr<BinaryOpNode>>;
-
-class CondExprNode;
-class RelExprNode;
-using RelFactor =
-std::variant<std::shared_ptr<VariableNode>, std::shared_ptr<NumberNode>,
-             std::shared_ptr<BinaryOpNode>>;
-
-class ProcedureNode;
-class AssignNode;
-class ReadNode;
-class PrintNode;
-class WhileNode;
-class IfNode;
-
-// To add call node in next iter
-
-using StmtNode =
-std::variant<std::shared_ptr<ReadNode>, std::shared_ptr<PrintNode>,
-             std::shared_ptr<WhileNode>, std::shared_ptr<IfNode>,
-             std::shared_ptr<AssignNode>>;
-
-using StmtList = std::vector<StmtNode>;
-
-using AST = std::shared_ptr<RootNode>;
-
-// Abstract base class for other AST nodes.
 class Node
 {
-public:
-  int lineNumber;
-  Node(int n);
-  virtual bool operator==(const Node& other) const = 0;
-  virtual bool operator!=(const Node& other) const {
-    return !operator==(other);
-  };
-  virtual std::string to_string() = 0;
+ public:
+  Node();
 };
 
-class RootNode : public Node {
- public:
-  std::vector<std::shared_ptr<ProcedureNode>> ProcList;
-  explicit RootNode(std::vector<std::shared_ptr<ProcedureNode>> procList, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+enum class ExpressionType
+{
+  CONSTANT,
+  COMBINATION,
+  VARIABLE,
+  NONE, // Should not happen
 };
 
-// AST Node representing a Number (const_value)
-class NumberNode : public Node {
+class Expression : public Node
+{
  public:
-  std::string Val;
-  explicit NumberNode(const std::string val, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+  Expression();
+  virtual ExpressionType getExpressionType();
+  std::string format(int level);
 };
 
-// AST Node representing a Variable
-class VariableNode : public Node {
+class Constant : public Expression
+{
+ private:
+  std::string value;
+
  public:
-  std::string Name;
-  explicit VariableNode(const std::string name, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+  Constant(std::string value);
+  std::string getValue();
+  std::string format(int lvl);
+  ExpressionType getExpressionType();
 };
 
-// AST Node representing a Read statement
-class ReadNode : public Node {
- public:
-  std::shared_ptr<VariableNode> Var;
-  explicit ReadNode(std::shared_ptr<VariableNode> var, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+enum class Operation
+{
+  PLUS,
+  MINUS,
+  DIVIDE,
+  MULTIPLY,
+  MOD,
 };
 
-// AST Node representing a Print statement
-class PrintNode : public Node {
+class CombinationExpression : public Expression
+{
+ private:
+  Operation op;
+  std::shared_ptr<Expression> lhs;
+  std::shared_ptr<Expression> rhs;
+
  public:
-  std::shared_ptr<VariableNode> Var;
-  explicit PrintNode(std::shared_ptr<VariableNode> var, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+  CombinationExpression(Operation op, std::shared_ptr<Expression> lhs, std::shared_ptr<Expression> rhs)
+  {
+    this->op = op;
+    this->lhs = lhs;
+    this->rhs = rhs;
+  }
+
+  CombinationExpression(Operation op, std::shared_ptr<Expression> right)
+  {
+    this->op = op;
+    this->rhs = right;
+    this->lhs = NULL;
+  }
+
+  void setLeftExpression(std::shared_ptr<Expression> left);
+  ExpressionType getExpressionType();
+  std::shared_ptr<Expression> getLHS();
+  std::shared_ptr<Expression> getRHS();
+  Operation getOperation();
+  std::string format(int level);
 };
 
-// AST Node representing a procedure
-class ProcedureNode : public Node {
- public:
-  std::string Name;
-  StmtList StmtList;
-  explicit ProcedureNode(const std::string name, ::StmtList stmtList, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+enum class ConditionalType
+{
+  BOOLEAN,
+  NOT,
+  RELATIONAL,
+  NONE,
 };
 
-// AST Node representing a binary operation
-class BinaryOpNode : public Node {
+class ConditionalExpression : public Node
+{
  public:
-  Expr Left;
-  Expr Right;
-  std::string Op;
-  explicit BinaryOpNode(Expr left, Expr right, std::string op, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+  ConditionalExpression();
+  virtual ConditionalType getConditionalType();
+  std::string format(int level);
 };
 
-// AST Node representing an Assign statement
-class AssignNode : public Node {
- public:
-  std::shared_ptr<VariableNode> Var;
-  Expr Exp;
-  explicit AssignNode(std::shared_ptr<VariableNode> var, Expr exp, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+enum class BooleanOperator
+{
+  AND,
+  OR
 };
 
-// AST Node representing a RelExpr
-class RelExprNode : public Node {
+class BooleanExpression : public ConditionalExpression
+{
+ private:
+  BooleanOperator op;
+  std::shared_ptr<ConditionalExpression> lhs;
+  std::shared_ptr<ConditionalExpression> rhs;
+
  public:
-  RelFactor LHS;
-  std::string Op;
-  RelFactor RHS;
-  explicit RelExprNode(RelFactor lhs, std::string op, RelFactor rhs, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+  BooleanExpression(BooleanOperator op, std::shared_ptr<ConditionalExpression> lhs, std::shared_ptr<ConditionalExpression> rhs)
+  {
+    this->op = op;
+    this->lhs = lhs;
+    this->rhs = rhs;
+  }
+
+  BooleanExpression(BooleanOperator op, std::shared_ptr<ConditionalExpression> rhs)
+  {
+    this->op = op;
+    this->rhs = rhs;
+    this->lhs = NULL;
+  }
+
+  void setLeft(std::shared_ptr<ConditionalExpression> lhs);
+  ConditionalType getConditionalType();
+  std::shared_ptr<ConditionalExpression> getLHS();
+  std::shared_ptr<ConditionalExpression> getRHS();
+  std::string format(int level);
 };
 
-// AST Node representing a CondExpr
-class CondExprNode : public Node {
- public:
-  std::shared_ptr<RelExprNode> RelExpr = nullptr;
-  std::shared_ptr<CondExprNode> CondLHS = nullptr;
-  std::string Op = "";
-  std::shared_ptr<CondExprNode> CondRHS = nullptr;
+class NotExpression : public ConditionalExpression
+{
+ private:
+  std::shared_ptr<ConditionalExpression> expr;
 
-  // rel_expr
-  explicit CondExprNode(std::shared_ptr<RelExprNode> relExpr, int lineNumber);
-  // ! ( cond_expr )
-  explicit CondExprNode(std::shared_ptr<CondExprNode> condLHS, int lineNumber);
-  // ( cond_expr ) && ( cond_expr )
-  explicit CondExprNode(std::shared_ptr<CondExprNode> condLHS, std::string op,
-                        std::shared_ptr<CondExprNode> condRHS, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+ public:
+  NotExpression(std::shared_ptr<ConditionalExpression> expr)
+  {
+    this->expr = expr;
+  }
+
+  std::shared_ptr<ConditionalExpression> getExpr();
+  std::string format(int level);
+  ConditionalType getConditionalType();
 };
 
-// AST Node representing a While statement
-class WhileNode : public Node {
- public:
-  std::shared_ptr<CondExprNode> CondExpr;
-  StmtList StmtList;
-
-  explicit WhileNode(std::shared_ptr<CondExprNode> condExpr,
-                     ::StmtList stmtList, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+enum class RelationalOperation
+{
+  LESS_THAN,
+  LESS_THAN_EQUALS,
+  GREATER_THAN,
+  GREATER_THAN_EQUALS,
+  EQUALS,
+  NOT_EQUALS
 };
 
-// AST Node representing a If statement
-class IfNode : public Node {
- public:
-  std::shared_ptr<CondExprNode> CondExpr;
-  StmtList StmtListThen;
-  StmtList StmtListElse;
+class RelationalExpression : public ConditionalExpression
+{
+ private:
+  RelationalOperation rop;
+  std::shared_ptr<Expression> lhs;
+  std::shared_ptr<Expression> rhs;
 
-  explicit IfNode(std::shared_ptr<CondExprNode> condExpr,
-                  ::StmtList stmtListThen, ::StmtList stmtListElse, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
+ public:
+  RelationalExpression(RelationalOperation op, std::shared_ptr<Expression> lhs, std::shared_ptr<Expression> rhs)
+  {
+    this->rop = op;
+    this->lhs = lhs;
+    this->rhs = rhs;
+  }
+
+  ConditionalType getConditionalType();
+  std::shared_ptr<Expression> getLHS();
+  std::shared_ptr<Expression> getRHS();
+  std::string format(int level);
+};
+
+enum class StatementType
+{
+  ERROR,
+  WHILE,
+  IF,
+  READ,
+  PRINT,
+  CALL,
+  ASSIGN,
+  STATEMENT, // Used for Next* (meant to be AllStatement)
+  NONE,      // Should not happen
+};
+
+class Statement : public Node
+{
+ private:
+  int line_number = 0;
+
+ protected:
+  std::string getStatementLabel();
+
+ public:
+  Statement(int line)
+  {
+    this->line_number = line;
+  }
+
+  virtual std::vector<std::shared_ptr<Statement>> getStatementList();
+  virtual StatementType getStatementType();
+  int getLineNumber();
+  std::string format(int level);
+};
+
+class StatementList : public Node
+{
+ private:
+  std::vector<std::shared_ptr<Statement>> statements;
+
+ public:
+  StatementList()
+  {
+    statements = std::vector<std::shared_ptr<Statement>>();
+  }
+
+  StatementList(std::vector<std::shared_ptr<Statement>> statements)
+  {
+    this->statements = statements;
+  }
+
+  std::vector<std::shared_ptr<Statement>> getStatements();
+  std::string format(int level);
+};
+
+class Variable : public Expression
+{
+ private:
+  std::string name;
+
+ public:
+  Variable()
+  {
+    this->name = "";
+  }
+  Variable(std::string name)
+  {
+    this->name = name;
+  }
+
+  std::string getName();
+  std::string format(int _);
+  ExpressionType getExpressionType();
+};
+
+class ErrorStatement : public Statement
+{
+ public:
+  ErrorStatement(int line) : Statement(line)
+  {
+  }
+  std::string format(int _);
+  StatementType getStatementType();
+};
+
+class ReadStatement : public Statement
+{
+ private:
+  std::shared_ptr<Variable> id;
+
+ public:
+  ReadStatement(int line, std::shared_ptr<Variable> id) : Statement(line)
+  {
+    this->id = id;
+  }
+
+  std::shared_ptr<Variable> getId();
+  std::string format(int level);
+  StatementType getStatementType();
+};
+
+class PrintStatement : public Statement
+{
+ private:
+  std::shared_ptr<Variable> id;
+
+ public:
+  PrintStatement(int line, std::shared_ptr<Variable> id) : Statement(line)
+  {
+    this->id = id;
+  }
+
+  std::shared_ptr<Variable> getId();
+  std::string format(int level);
+  StatementType getStatementType();
+};
+
+class CallStatement : public Statement
+{
+ private:
+  std::shared_ptr<Variable> procedureId;
+
+ public:
+  CallStatement(int line, std::shared_ptr<Variable> procId) : Statement(line)
+  {
+    this->procedureId = procId;
+  }
+
+  std::shared_ptr<Variable> getProcId();
+  std::string format(int level);
+  StatementType getStatementType();
+};
+
+class WhileStatement : public Statement
+{
+ private:
+  std::shared_ptr<ConditionalExpression> condition;
+  std::shared_ptr<StatementList> block;
+
+ public:
+  WhileStatement(int line, std::shared_ptr<ConditionalExpression> cond, std::shared_ptr<StatementList> block)
+      : Statement(line)
+  {
+    this->condition = cond;
+    this->block = block;
+  }
+
+  std::string format(int level);
+  StatementType getStatementType();
+  std::vector<std::shared_ptr<Statement>> getStatementList();
+  std::shared_ptr<StatementList> getBody();
+  std::shared_ptr<ConditionalExpression> getConditional();
+};
+
+class IfStatement : public Statement
+{
+ private:
+  std::shared_ptr<ConditionalExpression> condition;
+  std::shared_ptr<StatementList> consequent;
+  std::shared_ptr<StatementList> alternative;
+
+ public:
+  IfStatement(int line, std::shared_ptr<ConditionalExpression> condition, std::shared_ptr<StatementList> consequent,
+              std::shared_ptr<StatementList> alternative)
+      : Statement(line)
+  {
+    this->condition = condition;
+    this->consequent = consequent;
+    this->alternative = alternative;
+  }
+
+  std::string format(int level);
+  StatementType getStatementType();
+  std::vector<std::shared_ptr<Statement>> getStatementList();
+  std::shared_ptr<StatementList> getConsequent();
+  std::shared_ptr<StatementList> getAlternative();
+  std::shared_ptr<ConditionalExpression> getConditional();
+};
+
+class AssignStatement : public Statement
+{
+ private:
+  std::shared_ptr<Variable> id;
+  std::shared_ptr<Expression> expression;
+
+ public:
+  AssignStatement(int line, std::shared_ptr<Variable> id, std::shared_ptr<Expression> expr) : Statement(line)
+  {
+    this->id = id;
+    this->expression = expr;
+  }
+
+  std::shared_ptr<Variable> getId();
+  std::shared_ptr<Expression> getExpr();
+  std::string format(int level);
+  StatementType getStatementType();
+};
+
+class Procedure : public Node
+{
+ private:
+  std::string name;
+  std::shared_ptr<StatementList> stmtList;
+
+ public:
+  Procedure(std::string name, std::shared_ptr<StatementList> stmtList)
+  {
+    this->name = name;
+    this->stmtList = stmtList;
+  }
+
+  std::shared_ptr<StatementList> getStatementList();
+  std::string getName();
+  std::string format(int level);
+};
+
+class Program : public Node
+{
+ private:
+  std::vector<std::shared_ptr<Procedure>> procedures;
+
+ public:
+  Program(std::vector<std::shared_ptr<Procedure>> procedures)
+  {
+    this->procedures = procedures;
+  }
+
+  std::vector<std::shared_ptr<Procedure>> getProcedures();
+  std::string format();
+  std::string format(int level);
 };
 
 #endif //NODE_H
