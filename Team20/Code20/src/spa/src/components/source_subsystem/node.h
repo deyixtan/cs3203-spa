@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include "components/pkb/pkb.h"
 
 class Node
 {
@@ -16,7 +17,7 @@ enum class ExpressionType
 {
   CONSTANT,
   COMBINATION,
-  IDENTIFIER,
+  VARIABLE,
   NONE, // Should not happen
 };
 
@@ -177,36 +178,23 @@ class RelationalExpression : public ConditionalExpression
   std::string format(int level);
 };
 
-enum class StatementType
-{
-  ERROR,
-  WHILE,
-  IF,
-  READ,
-  PRINT,
-  CALL,
-  ASSIGN,
-  STATEMENT, // Used for Next* (meant to be AllStatement)
-  NONE,      // Should not happen
-};
-
 class Statement : public Node
 {
  private:
-  int index = 0;
+  int line_number = 0;
 
  protected:
   std::string getStatementLabel();
 
  public:
-  Statement(int index)
+  Statement(int line)
   {
-    this->index = index;
+    this->line_number = line;
   }
 
   virtual std::vector<std::shared_ptr<Statement>> getStatementList();
-  virtual StatementType getStatementType();
-  int getIndex();
+  virtual StmtType getStatementType();
+  int getLineNumber();
   std::string format(int level);
 };
 
@@ -230,17 +218,17 @@ class StatementList : public Node
   std::string format(int level);
 };
 
-class Identifier : public Expression
+class Variable : public Expression
 {
  private:
   std::string name;
 
  public:
-  Identifier()
+  Variable()
   {
     this->name = "";
   }
-  Identifier(std::string name)
+  Variable(std::string name)
   {
     this->name = name;
   }
@@ -253,43 +241,59 @@ class Identifier : public Expression
 class ErrorStatement : public Statement
 {
  public:
-  ErrorStatement(int index) : Statement(index)
+  ErrorStatement(int line) : Statement(line)
   {
   }
   std::string format(int _);
-  StatementType getStatementType();
+  StmtType getStatementType();
 };
 
 class ReadStatement : public Statement
 {
  private:
-  std::shared_ptr<Identifier> id;
+  std::shared_ptr<Variable> id;
 
  public:
-  ReadStatement(int index, std::shared_ptr<Identifier> id) : Statement(index)
+  ReadStatement(int line, std::shared_ptr<Variable> id) : Statement(line)
   {
     this->id = id;
   }
 
-  std::shared_ptr<Identifier> getId();
+  std::shared_ptr<Variable> getId();
   std::string format(int level);
-  StatementType getStatementType();
+  StmtType getStatementType();
 };
 
 class PrintStatement : public Statement
 {
  private:
-  std::shared_ptr<Identifier> id;
+  std::shared_ptr<Variable> id;
 
  public:
-  PrintStatement(int index, std::shared_ptr<Identifier> id) : Statement(index)
+  PrintStatement(int line, std::shared_ptr<Variable> id) : Statement(line)
   {
     this->id = id;
   }
 
-  std::shared_ptr<Identifier> getId();
+  std::shared_ptr<Variable> getId();
   std::string format(int level);
-  StatementType getStatementType();
+  StmtType getStatementType();
+};
+
+class CallStatement : public Statement
+{
+ private:
+  std::shared_ptr<Variable> procedureId;
+
+ public:
+  CallStatement(int line, std::shared_ptr<Variable> procId) : Statement(line)
+  {
+    this->procedureId = procId;
+  }
+
+  std::shared_ptr<Variable> getProcId();
+  std::string format(int level);
+  StmtType getStatementType();
 };
 
 class WhileStatement : public Statement
@@ -299,15 +303,15 @@ class WhileStatement : public Statement
   std::shared_ptr<StatementList> block;
 
  public:
-  WhileStatement(int index, std::shared_ptr<ConditionalExpression> cond, std::shared_ptr<StatementList> block)
-      : Statement(index)
+  WhileStatement(int line, std::shared_ptr<ConditionalExpression> cond, std::shared_ptr<StatementList> block)
+      : Statement(line)
   {
     this->condition = cond;
     this->block = block;
   }
 
   std::string format(int level);
-  StatementType getStatementType();
+  StmtType getStatementType();
   std::vector<std::shared_ptr<Statement>> getStatementList();
   std::shared_ptr<StatementList> getBody();
   std::shared_ptr<ConditionalExpression> getConditional();
@@ -321,9 +325,9 @@ class IfStatement : public Statement
   std::shared_ptr<StatementList> alternative;
 
  public:
-  IfStatement(int index, std::shared_ptr<ConditionalExpression> condition, std::shared_ptr<StatementList> consequent,
+  IfStatement(int line, std::shared_ptr<ConditionalExpression> condition, std::shared_ptr<StatementList> consequent,
               std::shared_ptr<StatementList> alternative)
-      : Statement(index)
+      : Statement(line)
   {
     this->condition = condition;
     this->consequent = consequent;
@@ -331,7 +335,7 @@ class IfStatement : public Statement
   }
 
   std::string format(int level);
-  StatementType getStatementType();
+  StmtType getStatementType();
   std::vector<std::shared_ptr<Statement>> getStatementList();
   std::shared_ptr<StatementList> getConsequent();
   std::shared_ptr<StatementList> getAlternative();
@@ -341,20 +345,20 @@ class IfStatement : public Statement
 class AssignStatement : public Statement
 {
  private:
-  std::shared_ptr<Identifier> id;
+  std::shared_ptr<Variable> id;
   std::shared_ptr<Expression> expression;
 
  public:
-  AssignStatement(int index, std::shared_ptr<Identifier> id, std::shared_ptr<Expression> expr) : Statement(index)
+  AssignStatement(int line, std::shared_ptr<Variable> id, std::shared_ptr<Expression> expr) : Statement(line)
   {
     this->id = id;
     this->expression = expr;
   }
 
-  std::shared_ptr<Identifier> getId();
+  std::shared_ptr<Variable> getId();
   std::shared_ptr<Expression> getExpr();
   std::string format(int level);
-  StatementType getStatementType();
+  StmtType getStatementType();
 };
 
 class Procedure : public Node

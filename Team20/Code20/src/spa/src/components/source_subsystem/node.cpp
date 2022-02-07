@@ -45,37 +45,42 @@ ExpressionType Expression::getExpressionType()
   return ExpressionType::NONE;
 }
 
-StatementType WhileStatement::getStatementType()
+StmtType CallStatement::getStatementType()
 {
-  return StatementType::WHILE;
+  return StmtType::CALL;
 }
 
-StatementType PrintStatement::getStatementType()
+StmtType WhileStatement::getStatementType()
 {
-  return StatementType::PRINT;
+  return StmtType::WHILE;
 }
 
-StatementType ErrorStatement::getStatementType()
+StmtType PrintStatement::getStatementType()
 {
-  return StatementType::ERROR;
+  return StmtType::PRINT;
 }
 
-StatementType IfStatement::getStatementType()
+//StmtType ErrorStatement::getStatementType()
+//{
+//  return StmtType::ERROR;
+//}
+
+StmtType IfStatement::getStatementType()
 {
-  return StatementType::IF;
+  return StmtType::IF;
 }
 
-StatementType AssignStatement::getStatementType()
+StmtType AssignStatement::getStatementType()
 {
-  return StatementType::ASSIGN;
+  return StmtType::ASSIGN;
 }
 
-StatementType ReadStatement::getStatementType()
+StmtType ReadStatement::getStatementType()
 {
-  return StatementType::READ;
+  return StmtType::READ;
 }
 
-std::shared_ptr<Identifier> ReadStatement::getId()
+std::shared_ptr<Variable> ReadStatement::getId()
 {
   return id;
 }
@@ -125,9 +130,9 @@ ConditionalType ConditionalExpression::getConditionalType()
   return ConditionalType::NONE;
 }
 
-ExpressionType Identifier::getExpressionType()
+ExpressionType Variable::getExpressionType()
 {
-  return ExpressionType::IDENTIFIER;
+  return ExpressionType::VARIABLE;
 }
 
 ConditionalType BooleanExpression::getConditionalType()
@@ -197,13 +202,13 @@ std::string RelationalExpression::format(int level)
 
 std::string Statement::getStatementLabel()
 {
-  if (index == 0)
+  if (line_number == 0)
   {
     return "   ";
   }
   else
   {
-    std::string num = std::to_string(index);
+    std::string num = std::to_string(line_number);
     return std::string(3 - num.length(), ' ') + num;
   }
 }
@@ -218,14 +223,14 @@ std::vector<std::shared_ptr<Statement>> Statement::getStatementList()
   return {};
 }
 
-StatementType Statement::getStatementType()
+StmtType Statement::getStatementType()
 {
-  return StatementType::NONE;
+  return StmtType::NONE;
 }
 
-int Statement::getIndex()
+int Statement::getLineNumber()
 {
-  return index;
+  return line_number;
 }
 
 std::vector<std::shared_ptr<Statement>> StatementList::getStatements()
@@ -244,12 +249,12 @@ std::string StatementList::format(int level)
   return acc;
 }
 
-std::string Identifier::format(int _)
+std::string Variable::format(int _)
 {
   return "$" + name;
 }
 
-std::string Identifier::getName()
+std::string Variable::getName()
 {
   return name;
 }
@@ -269,9 +274,19 @@ std::string PrintStatement::format(int level)
   return Statement::format(level) + "print " + id->format(level) + ";\n";
 }
 
-std::shared_ptr<Identifier> PrintStatement::getId()
+std::shared_ptr<Variable> PrintStatement::getId()
 {
   return id;
+}
+
+std::string CallStatement::format(int level)
+{
+  return Statement::format(level) + "call " + procedureId->format(level) + ";\n";
+}
+
+std::shared_ptr<Variable> CallStatement::getProcId()
+{
+  return procedureId;
 }
 
 std::string WhileStatement::format(int level)
@@ -333,7 +348,7 @@ std::string AssignStatement::format(int level)
   return Statement::format(level) + id->format(level) + " = " + expression->format(level) + ";\n";
 }
 
-std::shared_ptr<Identifier> AssignStatement::getId()
+std::shared_ptr<Variable> AssignStatement::getId()
 {
   return id;
 }
@@ -377,4 +392,3 @@ std::string Program::format(int level)
   }
   return acc;
 }
-
