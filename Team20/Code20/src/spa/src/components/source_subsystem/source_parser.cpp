@@ -19,7 +19,8 @@ std::shared_ptr<SourceToken> SourceParser::FetchNextToken() {
   if (cursor + 1 >= tokens_ptr.size()) {
     return nullptr;
   }
-  return std::shared_ptr<SourceToken>(tokens_ptr[cursor + 1]);
+  SourceToken token = *(tokens_ptr[cursor + 1]);
+  return std::make_shared<SourceToken>(token);
 }
 
 void SourceParser::IncrementCursor() {
@@ -76,13 +77,18 @@ std::shared_ptr<StatementListNode> SourceParser::ParseStatementList() {
 }
 
 std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
+  // handle assignment by predicting next token
+  if (FetchNextToken()->GetType() == SourceTokenType::EQUAL) {
+    return ParseAssignStatement();
+  }
+
+  // handle other type of statements
   std::shared_ptr<SourceToken> token_ptr = FetchCurrentToken();
   switch (token_ptr->GetType()) {
     case SourceTokenType::READ:return ParseReadStatement();
     case SourceTokenType::PRINT:return ParsePrintStatement();
     case SourceTokenType::WHILE:return ParseWhileStatement();
     case SourceTokenType::IF:return ParseIfStatement();
-    case SourceTokenType::EQUAL:return ParseAssignStatement();
     case SourceTokenType::NEW_LINE: {
       ConsumeToken(SourceTokenType::NEW_LINE);
       return nullptr;
