@@ -5,12 +5,6 @@ void DesignExtractor::TraverseAst() {
   // Todo
 
 }
-
-
-DesignExtractor::DesignExtractor() {}
-DesignExtractor::DesignExtractor(const AST ast, const UsageStore storage) {
-  this->ast = ast;
-  this->storage = storage;
-}
-
+DesignExtractor::DesignExtractor(Program root_node, UsageStore storage) :
+                                  root_node(root_node), storage(storage) {}
 
