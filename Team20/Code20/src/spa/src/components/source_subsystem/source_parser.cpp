@@ -31,7 +31,7 @@ void SourceParser::IncrementCursor() {
 }
 
 bool SourceParser::AreTokensProcessed() {
-  return cursor == max_tokens_index;
+  return cursor >= max_tokens_index;
 }
 
 std::shared_ptr<SourceToken> SourceParser::ConsumeToken(SourceTokenType type) {
