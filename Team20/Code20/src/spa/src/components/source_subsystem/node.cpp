@@ -58,17 +58,6 @@ std::string ReadNode::to_string() {
   return "(ReadNode " + this->Var->to_string() + ")";
 }
 
-CallNode::CallNode(std::string procedureName, int lineNumber) : Node(lineNumber) {
-  this->ProcName = procedureName;
-};
-bool CallNode::operator==(const Node& other) const {
-  auto casted_other = dynamic_cast<const CallNode*>(&other);
-  return casted_other != 0 &&
-      this->ProcName.compare(casted_other->ProcName) == 0;
-};
-
-std::string CallNode::to_string() { return "(CallNode " + this->ProcName + ")"; }
-
 PrintNode::PrintNode(std::shared_ptr<VariableNode> var, int lineNumber) : Node(lineNumber){
   this->Var = std::move(var);
 };

@@ -27,12 +27,13 @@ class ReadNode;
 class PrintNode;
 class WhileNode;
 class IfNode;
-class CallNode;
+
+// To add call node in next iter
 
 using StmtNode =
 std::variant<std::shared_ptr<ReadNode>, std::shared_ptr<PrintNode>,
              std::shared_ptr<WhileNode>, std::shared_ptr<IfNode>,
-             std::shared_ptr<AssignNode>, std::shared_ptr<CallNode>>;
+             std::shared_ptr<AssignNode>>;
 
 using StmtList = std::vector<StmtNode>;
 
@@ -82,15 +83,6 @@ class ReadNode : public Node {
  public:
   std::shared_ptr<VariableNode> Var;
   explicit ReadNode(std::shared_ptr<VariableNode> var, int lineNumber);
-  bool operator==(const Node& other) const override;
-  std::string to_string() override;
-};
-
-// AST Node representing a Call statement
-class CallNode : public Node {
- public:
-  std::string ProcName;
-  explicit CallNode(std::string procName, int lineNumber);
   bool operator==(const Node& other) const override;
   std::string to_string() override;
 };
