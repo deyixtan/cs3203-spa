@@ -14,6 +14,7 @@ TestWrapper::TestWrapper() {
   std::cout << "TestWrapper::TestWrapper() Start" << std::endl;
   query_controller = new QueryController();
   source_controller = new SourceController();
+  pkb = PKB::get_instance();
   std::cout << "TestWrapper::TestWrapper() End" << std::endl;
 }
 
@@ -31,7 +32,7 @@ void TestWrapper::parse(std::string filename) {
   // }
 
   std::shared_ptr<ProgramNode> ast = source_controller->ParseTokenStream(tokens_ptr);
-  // TODO: DesignExtractor use 'ast'
+  source_controller->PopulatePKB(pkb, ast);
 
   std::cout << "TestWrapper::parse() End" << std::endl;
 }

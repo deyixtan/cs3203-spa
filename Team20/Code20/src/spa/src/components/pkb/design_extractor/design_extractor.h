@@ -13,7 +13,6 @@ class DesignExtractor {
   ProgramNode root_node;
   PKB *pkb;
   UsageStore storage;
-  void traverse_ast();
   void process_proc(std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst, std::vector<std::shared_ptr<StatementNode>> stmts);
 
   void populate_uses(int stmt, std::string var);
@@ -29,7 +28,7 @@ class DesignExtractor {
   void populate_const(std::string name);
  public:
   DesignExtractor(ProgramNode root_node, PKB *pkb, UsageStore storage);
-
+  void traverse_ast();
 };
 
 #endif //DESIGN_EXTRACTOR_H
