@@ -48,7 +48,7 @@ void ParsedQueryValidator::ValidatePatternSynonymIsAssigned(ParsedQuery query) {
     std::string synonym = pattern.value().GetSynAssign().value;
 
     for (Declaration declaration : query.GetDeclaration()) {
-      if (declaration.GetDesignEntity().type == TokenType::ASSIGN) {
+      if (declaration.GetDesignEntity().type == PqlTokenType::ASSIGN) {
         assign_syonym_set.insert(declaration.GetSynonym().value);
       }
     }

@@ -1,87 +1,87 @@
 #include "pql_token.h"
 
 PqlToken::PqlToken(){};
-PqlToken::PqlToken(TokenType specified_token_type, std::string specified_value) {
+PqlToken::PqlToken(PqlTokenType specified_token_type, std::string specified_value) {
   this->type = specified_token_type;
   this->value = specified_value;
 }
 
-std::unordered_map<std::string, TokenType> string_token_map = {
+std::unordered_map<std::string, PqlTokenType> string_token_map = {
 
-    {";", TokenType::SEMICOLON},
-    {",", TokenType::COMMA},
-    {"(", TokenType::OPEN_PARENTHESIS},
-    {")", TokenType::CLOSED_PARENTHESIS},
-    {"_", TokenType::UNDERSCORE},
-    {"+", TokenType::PLUS},
-    {"-", TokenType::MINUS},
-    {"*", TokenType::MULTIPLY},
-    {"/", TokenType::DIVIDE},
-    {"\"", TokenType::DOUBLE_QUOTE},
+    {";", PqlTokenType::SEMICOLON},
+    {",", PqlTokenType::COMMA},
+    {"(", PqlTokenType::OPEN_PARENTHESIS},
+    {")", PqlTokenType::CLOSED_PARENTHESIS},
+    {"_", PqlTokenType::UNDERSCORE},
+    {"+", PqlTokenType::PLUS},
+    {"-", PqlTokenType::MINUS},
+    {"*", PqlTokenType::MULTIPLY},
+    {"/", PqlTokenType::DIVIDE},
+    {"\"", PqlTokenType::DOUBLE_QUOTE},
 
-    {"stmt", TokenType::STMT},
-    {"read", TokenType::READ},
-    {"print", TokenType::PRINT},
-    {"call", TokenType::CALL},
-    {"while", TokenType::WHILE},
-    {"if", TokenType::IF},
-    {"else", TokenType::ELSE},
-    {"assign", TokenType::ASSIGN},
-    {"variable", TokenType::VARIABLE},
-    {"constant", TokenType::CONSTANT},
-    {"procedure", TokenType::PROCEDURE},
-    {"assign", TokenType::ASSIGN},
+    {"stmt", PqlTokenType::STMT},
+    {"read", PqlTokenType::READ},
+    {"print", PqlTokenType::PRINT},
+    {"call", PqlTokenType::CALL},
+    {"while", PqlTokenType::WHILE},
+    {"if", PqlTokenType::IF},
+    {"else", PqlTokenType::ELSE},
+    {"assign", PqlTokenType::ASSIGN},
+    {"variable", PqlTokenType::VARIABLE},
+    {"constant", PqlTokenType::CONSTANT},
+    {"procedure", PqlTokenType::PROCEDURE},
+    {"assign", PqlTokenType::ASSIGN},
 
-    {"Select", TokenType::SELECT},
-    {"such", TokenType::SUCH},
-    {"that", TokenType::THAT},
+    {"Select", PqlTokenType::SELECT},
+    {"such", PqlTokenType::SUCH},
+    {"that", PqlTokenType::THAT},
 
-    {"Follows", TokenType::FOLLOWS},
-    {"Follows*", TokenType::FOLLOWS_T},
-    {"Parent", TokenType::PARENT},
-    {"Parent*", TokenType::PARENT_T},
-    {"Uses", TokenType::USES},
-    {"Modifies", TokenType::MODIFIES},
-    {"pattern", TokenType::PATTERN}
+    {"Follows", PqlTokenType::FOLLOWS},
+    {"Follows*", PqlTokenType::FOLLOWS_T},
+    {"Parent", PqlTokenType::PARENT},
+    {"Parent*", PqlTokenType::PARENT_T},
+    {"Uses", PqlTokenType::USES},
+    {"Modifies", PqlTokenType::MODIFIES},
+    {"pattern", PqlTokenType::PATTERN}
 };
 
-std::unordered_set<TokenType> rel_ref = {
-    TokenType::FOLLOWS,
-    TokenType::FOLLOWS_T,
-    TokenType::PARENT,
-    TokenType::PARENT_T,
-    TokenType::USES,
-    TokenType::MODIFIES
+std::unordered_set<PqlTokenType> rel_ref = {
+    PqlTokenType::FOLLOWS,
+    PqlTokenType::FOLLOWS_T,
+    PqlTokenType::PARENT,
+    PqlTokenType::PARENT_T,
+    PqlTokenType::USES,
+    PqlTokenType::MODIFIES
 };
 
-std::unordered_set<TokenType> design_entities = {
-    TokenType::STMT,
-    TokenType::READ,
-    TokenType::PRINT,
-    TokenType::CALL,
-    TokenType::WHILE,
-    TokenType::IF,
-    TokenType::ASSIGN,
-    TokenType::VARIABLE,
-    TokenType::CONSTANT,
-    TokenType::PROCEDURE
+std::unordered_set<PqlTokenType> design_entities = {
+    PqlTokenType::STMT,
+    PqlTokenType::READ,
+    PqlTokenType::PRINT,
+    PqlTokenType::CALL,
+    PqlTokenType::WHILE,
+    PqlTokenType::IF,
+    PqlTokenType::ASSIGN,
+    PqlTokenType::VARIABLE,
+    PqlTokenType::CONSTANT,
+    PqlTokenType::PROCEDURE
 };
 
-std::unordered_set<TokenType> expression_spec = {
-    TokenType::EXPR,
-    TokenType::SUB_EXPRESSION,
-    TokenType::UNDERSCORE
+std::unordered_set<PqlTokenType> expression_spec = {
+    PqlTokenType::EXPR,
+    PqlTokenType::SUB_EXPRESSION,
+    PqlTokenType::UNDERSCORE
 };
 
-std::unordered_set<TokenType> ent_ref = {
-    TokenType::SYNONYM,
-    TokenType::UNDERSCORE,
-    TokenType::IDENT_WITH_QUOTES,
+std::unordered_set<PqlTokenType> ent_ref = {
+    PqlTokenType::SYNONYM,
+    PqlTokenType::UNDERSCORE,
+    PqlTokenType::IDENT_WITH_QUOTES,
 };
 
-std::unordered_set<TokenType> stmt_ref = {
-    TokenType::SYNONYM,
-    TokenType::UNDERSCORE,
-    TokenType::NUMBER,
+std::unordered_set<PqlTokenType> stmt_ref = {
+    PqlTokenType::SYNONYM,
+    PqlTokenType::UNDERSCORE,
+    PqlTokenType::NUMBER,
 };
 
