@@ -20,21 +20,21 @@ enum class ExpressionType
   NONE, // Should not happen
 };
 
-class Expression : public Node
+class ExpressionNode : public Node
 {
  public:
-  Expression();
+  ExpressionNode();
   virtual ExpressionType getExpressionType();
   std::string format(int level);
 };
 
-class Constant : public Expression
+class ConstantNode : public ExpressionNode
 {
  private:
   std::string value;
 
  public:
-  Constant(std::string value);
+  ConstantNode(std::string value);
   std::string getValue();
   std::string format(int lvl);
   ExpressionType getExpressionType();
@@ -49,32 +49,32 @@ enum class Operation
   MOD,
 };
 
-class CombinationExpression : public Expression
+class CombinationExpressionNode : public ExpressionNode
 {
  private:
   Operation op;
-  std::shared_ptr<Expression> lhs;
-  std::shared_ptr<Expression> rhs;
+  std::shared_ptr<ExpressionNode> lhs;
+  std::shared_ptr<ExpressionNode> rhs;
 
  public:
-  CombinationExpression(Operation op, std::shared_ptr<Expression> lhs, std::shared_ptr<Expression> rhs)
+  CombinationExpressionNode(Operation op, std::shared_ptr<ExpressionNode> lhs, std::shared_ptr<ExpressionNode> rhs)
   {
     this->op = op;
     this->lhs = lhs;
     this->rhs = rhs;
   }
 
-  CombinationExpression(Operation op, std::shared_ptr<Expression> right)
+  CombinationExpressionNode(Operation op, std::shared_ptr<ExpressionNode> right)
   {
     this->op = op;
     this->rhs = right;
     this->lhs = NULL;
   }
 
-  void setLeftExpression(std::shared_ptr<Expression> left);
+  void setLeftExpression(std::shared_ptr<ExpressionNode> left);
   ExpressionType getExpressionType();
-  std::shared_ptr<Expression> getLHS();
-  std::shared_ptr<Expression> getRHS();
+  std::shared_ptr<ExpressionNode> getLHS();
+  std::shared_ptr<ExpressionNode> getRHS();
   Operation getOperation();
   std::string format(int level);
 };
@@ -87,10 +87,10 @@ enum class ConditionalType
   NONE,
 };
 
-class ConditionalExpression : public Node
+class ConditionalExpressionNode : public Node
 {
  public:
-  ConditionalExpression();
+  ConditionalExpressionNode();
   virtual ConditionalType getConditionalType();
   std::string format(int level);
 };
@@ -101,47 +101,47 @@ enum class BooleanOperator
   OR
 };
 
-class BooleanExpression : public ConditionalExpression
+class BooleanExpressionNode : public ConditionalExpressionNode
 {
  private:
   BooleanOperator op;
-  std::shared_ptr<ConditionalExpression> lhs;
-  std::shared_ptr<ConditionalExpression> rhs;
+  std::shared_ptr<ConditionalExpressionNode> lhs;
+  std::shared_ptr<ConditionalExpressionNode> rhs;
 
  public:
-  BooleanExpression(BooleanOperator op, std::shared_ptr<ConditionalExpression> lhs, std::shared_ptr<ConditionalExpression> rhs)
+  BooleanExpressionNode(BooleanOperator op, std::shared_ptr<ConditionalExpressionNode> lhs, std::shared_ptr<ConditionalExpressionNode> rhs)
   {
     this->op = op;
     this->lhs = lhs;
     this->rhs = rhs;
   }
 
-  BooleanExpression(BooleanOperator op, std::shared_ptr<ConditionalExpression> rhs)
+  BooleanExpressionNode(BooleanOperator op, std::shared_ptr<ConditionalExpressionNode> rhs)
   {
     this->op = op;
     this->rhs = rhs;
     this->lhs = NULL;
   }
 
-  void setLeft(std::shared_ptr<ConditionalExpression> lhs);
+  void setLeft(std::shared_ptr<ConditionalExpressionNode> lhs);
   ConditionalType getConditionalType();
-  std::shared_ptr<ConditionalExpression> getLHS();
-  std::shared_ptr<ConditionalExpression> getRHS();
+  std::shared_ptr<ConditionalExpressionNode> getLHS();
+  std::shared_ptr<ConditionalExpressionNode> getRHS();
   std::string format(int level);
 };
 
-class NotExpression : public ConditionalExpression
+class NotExpressionNode : public ConditionalExpressionNode
 {
  private:
-  std::shared_ptr<ConditionalExpression> expr;
+  std::shared_ptr<ConditionalExpressionNode> expr;
 
  public:
-  NotExpression(std::shared_ptr<ConditionalExpression> expr)
+  NotExpressionNode(std::shared_ptr<ConditionalExpressionNode> expr)
   {
     this->expr = expr;
   }
 
-  std::shared_ptr<ConditionalExpression> getExpr();
+  std::shared_ptr<ConditionalExpressionNode> getExpr();
   std::string format(int level);
   ConditionalType getConditionalType();
 };
@@ -156,15 +156,15 @@ enum class RelationalOperation
   NOT_EQUALS
 };
 
-class RelationalExpression : public ConditionalExpression
+class RelationalExpressionNode : public ConditionalExpressionNode
 {
  private:
   RelationalOperation rop;
-  std::shared_ptr<Expression> lhs;
-  std::shared_ptr<Expression> rhs;
+  std::shared_ptr<ExpressionNode> lhs;
+  std::shared_ptr<ExpressionNode> rhs;
 
  public:
-  RelationalExpression(RelationalOperation op, std::shared_ptr<Expression> lhs, std::shared_ptr<Expression> rhs)
+  RelationalExpressionNode(RelationalOperation op, std::shared_ptr<ExpressionNode> lhs, std::shared_ptr<ExpressionNode> rhs)
   {
     this->rop = op;
     this->lhs = lhs;
@@ -172,8 +172,8 @@ class RelationalExpression : public ConditionalExpression
   }
 
   ConditionalType getConditionalType();
-  std::shared_ptr<Expression> getLHS();
-  std::shared_ptr<Expression> getRHS();
+  std::shared_ptr<ExpressionNode> getLHS();
+  std::shared_ptr<ExpressionNode> getRHS();
   std::string format(int level);
 };
 
@@ -190,7 +190,7 @@ enum class StatementType
   NONE,      // Should not happen
 };
 
-class Statement : public Node
+class StatementNode : public Node
 {
  private:
   int line_number = 0;
@@ -199,48 +199,48 @@ class Statement : public Node
   std::string getStatementLabel();
 
  public:
-  Statement(int line)
+  StatementNode(int line)
   {
     this->line_number = line;
   }
 
-  virtual std::vector<std::shared_ptr<Statement>> getStatementList();
+  virtual std::vector<std::shared_ptr<StatementNode>> getStatementList();
   virtual StatementType getStatementType();
   int getLineNumber();
   std::string format(int level);
 };
 
-class StatementList : public Node
+class StatementListNode : public Node
 {
  private:
-  std::vector<std::shared_ptr<Statement>> statements;
+  std::vector<std::shared_ptr<StatementNode>> statements;
 
  public:
-  StatementList()
+  StatementListNode()
   {
-    statements = std::vector<std::shared_ptr<Statement>>();
+    statements = std::vector<std::shared_ptr<StatementNode>>();
   }
 
-  StatementList(std::vector<std::shared_ptr<Statement>> statements)
+  StatementListNode(std::vector<std::shared_ptr<StatementNode>> statements)
   {
     this->statements = statements;
   }
 
-  std::vector<std::shared_ptr<Statement>> getStatements();
+  std::vector<std::shared_ptr<StatementNode>> getStatements();
   std::string format(int level);
 };
 
-class Variable : public Expression
+class VariableNode : public ExpressionNode
 {
  private:
   std::string name;
 
  public:
-  Variable()
+  VariableNode()
   {
     this->name = "";
   }
-  Variable(std::string name)
+  VariableNode(std::string name)
   {
     this->name = name;
   }
@@ -250,73 +250,73 @@ class Variable : public Expression
   ExpressionType getExpressionType();
 };
 
-class ErrorStatement : public Statement
+class ErrorStatementNode : public StatementNode
 {
  public:
-  ErrorStatement(int line) : Statement(line)
+  ErrorStatementNode(int line) : StatementNode(line)
   {
   }
   std::string format(int _);
   StatementType getStatementType();
 };
 
-class ReadStatement : public Statement
+class ReadStatementNode : public StatementNode
 {
  private:
-  std::shared_ptr<Variable> id;
+  std::shared_ptr<VariableNode> id;
 
  public:
-  ReadStatement(int line, std::shared_ptr<Variable> id) : Statement(line)
+  ReadStatementNode(int line, std::shared_ptr<VariableNode> id) : StatementNode(line)
   {
     this->id = id;
   }
 
-  std::shared_ptr<Variable> getId();
+  std::shared_ptr<VariableNode> getId();
   std::string format(int level);
   StatementType getStatementType();
 };
 
-class PrintStatement : public Statement
+class PrintStatementNode : public StatementNode
 {
  private:
-  std::shared_ptr<Variable> id;
+  std::shared_ptr<VariableNode> id;
 
  public:
-  PrintStatement(int line, std::shared_ptr<Variable> id) : Statement(line)
+  PrintStatementNode(int line, std::shared_ptr<VariableNode> id) : StatementNode(line)
   {
     this->id = id;
   }
 
-  std::shared_ptr<Variable> getId();
+  std::shared_ptr<VariableNode> getId();
   std::string format(int level);
   StatementType getStatementType();
 };
 
-class CallStatement : public Statement
+class CallStatementNode : public StatementNode
 {
  private:
-  std::shared_ptr<Variable> procedureId;
+  std::shared_ptr<VariableNode> procedureId;
 
  public:
-  CallStatement(int line, std::shared_ptr<Variable> procId) : Statement(line)
+  CallStatementNode(int line, std::shared_ptr<VariableNode> procId) : StatementNode(line)
   {
     this->procedureId = procId;
   }
 
-  std::shared_ptr<Variable> getProcId();
+  std::shared_ptr<VariableNode> getProcId();
   std::string format(int level);
   StatementType getStatementType();
 };
 
-class WhileStatement : public Statement
+class WhileStatementNode : public StatementNode
 {
  private:
-  std::shared_ptr<ConditionalExpression> condition;
-  std::shared_ptr<StatementList> block;
+  std::shared_ptr<ConditionalExpressionNode> condition;
+  std::shared_ptr<StatementListNode> block;
 
  public:
-  WhileStatement(int line, std::shared_ptr<ConditionalExpression> cond, std::shared_ptr<StatementList> block)
-      : Statement(line)
+  WhileStatementNode(int line, std::shared_ptr<ConditionalExpressionNode> cond, std::shared_ptr<StatementListNode> block)
+      : StatementNode(line)
   {
     this->condition = cond;
     this->block = block;
@@ -324,22 +324,22 @@ class WhileStatement : public Statement
 
   std::string format(int level);
   StatementType getStatementType();
-  std::vector<std::shared_ptr<Statement>> getStatementList();
-  std::shared_ptr<StatementList> getBody();
-  std::shared_ptr<ConditionalExpression> getConditional();
+  std::vector<std::shared_ptr<StatementNode>> getStatementList();
+  std::shared_ptr<StatementListNode> getBody();
+  std::shared_ptr<ConditionalExpressionNode> getConditional();
 };
 
-class IfStatement : public Statement
+class IfStatementNode : public StatementNode
 {
  private:
-  std::shared_ptr<ConditionalExpression> condition;
-  std::shared_ptr<StatementList> consequent;
-  std::shared_ptr<StatementList> alternative;
+  std::shared_ptr<ConditionalExpressionNode> condition;
+  std::shared_ptr<StatementListNode> consequent;
+  std::shared_ptr<StatementListNode> alternative;
 
  public:
-  IfStatement(int line, std::shared_ptr<ConditionalExpression> condition, std::shared_ptr<StatementList> consequent,
-              std::shared_ptr<StatementList> alternative)
-      : Statement(line)
+  IfStatementNode(int line, std::shared_ptr<ConditionalExpressionNode> condition, std::shared_ptr<StatementListNode> consequent,
+              std::shared_ptr<StatementListNode> alternative)
+      : StatementNode(line)
   {
     this->condition = condition;
     this->consequent = consequent;
@@ -348,61 +348,61 @@ class IfStatement : public Statement
 
   std::string format(int level);
   StatementType getStatementType();
-  std::vector<std::shared_ptr<Statement>> getStatementList();
-  std::shared_ptr<StatementList> getConsequent();
-  std::shared_ptr<StatementList> getAlternative();
-  std::shared_ptr<ConditionalExpression> getConditional();
+  std::vector<std::shared_ptr<StatementNode>> getStatementList();
+  std::shared_ptr<StatementListNode> getConsequent();
+  std::shared_ptr<StatementListNode> getAlternative();
+  std::shared_ptr<ConditionalExpressionNode> getConditional();
 };
 
-class AssignStatement : public Statement
+class AssignStatementNode : public StatementNode
 {
  private:
-  std::shared_ptr<Variable> id;
-  std::shared_ptr<Expression> expression;
+  std::shared_ptr<VariableNode> id;
+  std::shared_ptr<ExpressionNode> expression;
 
  public:
-  AssignStatement(int line, std::shared_ptr<Variable> id, std::shared_ptr<Expression> expr) : Statement(line)
+  AssignStatementNode(int line, std::shared_ptr<VariableNode> id, std::shared_ptr<ExpressionNode> expr) : StatementNode(line)
   {
     this->id = id;
     this->expression = expr;
   }
 
-  std::shared_ptr<Variable> getId();
-  std::shared_ptr<Expression> getExpr();
+  std::shared_ptr<VariableNode> getId();
+  std::shared_ptr<ExpressionNode> getExpr();
   std::string format(int level);
   StatementType getStatementType();
 };
 
-class Procedure : public Node
+class ProcedureNode : public Node
 {
  private:
   std::string name;
-  std::shared_ptr<StatementList> stmtList;
+  std::shared_ptr<StatementListNode> stmtList;
 
  public:
-  Procedure(std::string name, std::shared_ptr<StatementList> stmtList)
+  ProcedureNode(std::string name, std::shared_ptr<StatementListNode> stmtList)
   {
     this->name = name;
     this->stmtList = stmtList;
   }
 
-  std::shared_ptr<StatementList> getStatementList();
+  std::shared_ptr<StatementListNode> getStatementList();
   std::string getName();
   std::string format(int level);
 };
 
-class Program : public Node
+class ProgramNode : public Node
 {
  private:
-  std::vector<std::shared_ptr<Procedure>> procedures;
+  std::vector<std::shared_ptr<ProcedureNode>> procedures;
 
  public:
-  Program(std::vector<std::shared_ptr<Procedure>> procedures)
+  ProgramNode(std::vector<std::shared_ptr<ProcedureNode>> procedures)
   {
     this->procedures = procedures;
   }
 
-  std::vector<std::shared_ptr<Procedure>> getProcedures();
+  std::vector<std::shared_ptr<ProcedureNode>> getProcedures();
   std::string format();
   std::string format(int level);
 };
