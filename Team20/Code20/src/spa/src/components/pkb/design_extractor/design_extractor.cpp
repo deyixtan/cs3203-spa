@@ -13,6 +13,7 @@ void DesignExtractor::traverse_ast() {
   for (auto &proc : proc_list) {
     std::shared_ptr<StatementListNode> stmtLst = proc->getStatementList();
     std::vector<std::shared_ptr<StatementNode>> stmts = stmtLst->getStatements();
+    populate_proc(proc->getName());
     process_proc(proc, stmtLst, stmts);
   }
 }
@@ -22,7 +23,6 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
     int stmt_num = stmt->getLineNumber();
     StmtType stmt_type = stmt->getStatementType();
     std::string var_name = "";
-
     switch(stmt_type) {
       case PROC:
         populate_proc(proc->getName());
@@ -34,6 +34,7 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
         populate_stmt(stmt_num);
         std::shared_ptr<ReadStatementNode> read_stmt = static_pointer_cast<ReadStatementNode>(stmt);
         var_name = read_stmt->getId()->getName();
+        populate_vars(var_name);
         populate_read(stmt_num);
         populate_modifies(stmt_num, var_name);
         break;
@@ -42,6 +43,7 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
         populate_stmt(stmt_num);
         std::shared_ptr<PrintStatementNode> print_stmt = static_pointer_cast<PrintStatementNode>(stmt);
         var_name = print_stmt->getId()->getName();
+        populate_vars(var_name);
         populate_print(stmt_num);
         populate_uses(stmt_num, var_name);
         break;
@@ -50,6 +52,7 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
         populate_stmt(stmt_num);
         std::shared_ptr<AssignStatementNode> assign_stmt = static_pointer_cast<AssignStatementNode>(stmt);
         var_name = assign_stmt->getId()->getName();
+        populate_vars(var_name);
         std::shared_ptr<ExpressionNode> expr = assign_stmt->getExpr();
         ExpressionType expr_type = expr->getExpressionType();
         switch (expr_type) {
@@ -116,7 +119,7 @@ void DesignExtractor::populate_read(int stmt) {
 }
 
 void DesignExtractor::populate_print(int stmt) {
-  this->pkb->add_stmt(stmt, READ);
+  this->pkb->add_stmt(stmt, PRINT);
 }
 
 void DesignExtractor::populate_vars(std::string var) {
@@ -134,7 +137,3 @@ void DesignExtractor::populate_if(int stmt) {
 void DesignExtractor::populate_const(std::string name) {
   this->pkb->add_stmt(name, CONSTS);
 }
-
-
-
-
