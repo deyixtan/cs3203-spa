@@ -3,6 +3,7 @@
 namespace pql_evaluator {
 
 std::unordered_set<std::string> QueryEvaluator::Evaluate(ParsedQuery& query) {
+  result.clear();
   EvaluateSelect(query);
 }
 
