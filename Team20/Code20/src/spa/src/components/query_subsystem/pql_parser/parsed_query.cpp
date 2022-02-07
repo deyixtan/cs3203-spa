@@ -42,7 +42,7 @@ std::vector<Declaration> ParsedQuery::GetDeclaration() {
   return declarations;
 }
 
-ParsedQuery BuildParsedQuery(std::vector<PqlToken> &tokens) {
+ParsedQuery ParsedQuery::BuildParsedQuery(std::vector<PqlToken> &tokens) {
   ParsedQuery pq = ParsedQuery();
   std::vector<Declaration> declarations;
   PqlToken prev = tokens[0];
