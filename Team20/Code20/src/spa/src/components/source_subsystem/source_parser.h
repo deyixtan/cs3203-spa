@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "components/source_subsystem/tnode.h"
+#include "components/source_subsystem/node.h"
 #include "components/source_subsystem/source_token.h"
 
 class SourceParser {
@@ -14,29 +14,29 @@ class SourceParser {
 
  public:
   SourceParser(std::vector<SourceToken *> tokens_ptr);
-  SourceToken *FetchCurrentToken();
-  SourceToken *FetchNextToken();
+  std::shared_ptr<SourceToken> FetchCurrentToken();
+  std::shared_ptr<SourceToken> FetchNextToken();
   void IncrementCursor();
   bool AreTokensProcessed();
-  SourceToken *ConsumeToken(TokenType type);
-  ProgramNode *ParseProgram();
-  ProcedureNode *ParseProcedure();
-  StatementListNode *ParseStatementList();
-  StatementNode *ParseStatement();
-  ReadStatementNode *ParseReadStatement();
-  PrintStatementNode *ParsePrintStatement();
-  WhileStatementNode *ParseWhileStatement();
-  IfStatementNode *ParseIfStatement();
-  AssignStatementNode *ParseAssignStatement();
-  ConditionalExpressionNode *ParseConditionalExpression();
-  BooleanExpressionNode *ParseConditionalExpression2();
-  RelationalExpressionNode *ParseRelationalExpression();
-  Expression *ParseRelationalFactor();
-  Expression *ParseExpression();
-  ExpressionNode *ParseExpression2(ExpressionNode *left);
-  ExpressionNode *ParseTerm();
-  ExpressionNode *ParseTerm2(ExpressionNode *left);
-  ExpressionNode *ParseFactor();
+  std::shared_ptr<SourceToken> ConsumeToken(TokenType type);
+  std::shared_ptr<ProgramNode> ParseProgram();
+  std::shared_ptr<ProcedureNode> ParseProcedure();
+  std::shared_ptr<StatementListNode> ParseStatementList();
+  std::shared_ptr<StatementNode> ParseStatement();
+  std::shared_ptr<ReadStatementNode> ParseReadStatement();
+  std::shared_ptr<PrintStatementNode> ParsePrintStatement();
+  std::shared_ptr<WhileStatementNode> ParseWhileStatement();
+  std::shared_ptr<IfStatementNode> ParseIfStatement();
+  std::shared_ptr<AssignStatementNode> ParseAssignStatement();
+  std::shared_ptr<ConditionalExpressionNode> ParseConditionalExpression();
+  std::shared_ptr<BooleanExpressionNode> ParseConditionalExpression2();
+  std::shared_ptr<RelationalExpressionNode> ParseRelationalExpression();
+  std::shared_ptr<ExpressionNode> ParseRelationalFactor();
+  std::shared_ptr<ExpressionNode> ParseExpression();
+  std::shared_ptr<ExpressionNode> ParseExpression2(std::shared_ptr<ExpressionNode> left);
+  std::shared_ptr<ExpressionNode> ParseTerm();
+  std::shared_ptr<ExpressionNode> ParseTerm2(std::shared_ptr<ExpressionNode> left);
+  std::shared_ptr<ExpressionNode> ParseFactor();
 };
 
 #endif //SOURCE_PARSER_H
