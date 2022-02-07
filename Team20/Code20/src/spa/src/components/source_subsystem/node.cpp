@@ -45,39 +45,39 @@ ExpressionType ExpressionNode::getExpressionType()
   return ExpressionType::NONE;
 }
 
-StatementType CallStatementNode::getStatementType()
+StmtType CallStatementNode::getStatementType()
 {
-  return StatementType::CALL;
+  return StmtType::CALL;
 }
 
-StatementType WhileStatementNode::getStatementType()
+StmtType WhileStatementNode::getStatementType()
 {
-  return StatementType::WHILE;
+  return StmtType::WHILE;
 }
 
-StatementType PrintStatementNode::getStatementType()
+StmtType PrintStatementNode::getStatementType()
 {
-  return StatementType::PRINT;
+  return StmtType::PRINT;
 }
 
-StatementType ErrorStatementNode::getStatementType()
+//StmtType ErrorStatementNode::getStatementType()
+//{
+//  return StmtType::ERROR;
+//}
+
+StmtType IfStatementNode::getStatementType()
 {
-  return StatementType::ERROR;
+  return StmtType::IF;
 }
 
-StatementType IfStatementNode::getStatementType()
+StmtType AssignStatementNode::getStatementType()
 {
-  return StatementType::IF;
+  return StmtType::ASSIGN;
 }
 
-StatementType AssignStatementNode::getStatementType()
+StmtType ReadStatementNode::getStatementType()
 {
-  return StatementType::ASSIGN;
-}
-
-StatementType ReadStatementNode::getStatementType()
-{
-  return StatementType::READ;
+  return StmtType::READ;
 }
 
 std::shared_ptr<VariableNode> ReadStatementNode::getId()
@@ -223,9 +223,9 @@ std::vector<std::shared_ptr<StatementNode>> StatementNode::getStatementList()
   return {};
 }
 
-StatementType StatementNode::getStatementType()
+StmtType StatementNode::getStatementType()
 {
-  return StatementType::NONE;
+  return StmtType::NONE;
 }
 
 int StatementNode::getLineNumber()

@@ -245,7 +245,7 @@ class ErrorStatementNode : public StatementNode
   {
   }
   std::string format(int _);
-  StmtType getStatementType();
+  //StmtType getStatementType();
 };
 
 class ReadStatementNode : public StatementNode
