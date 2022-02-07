@@ -292,6 +292,22 @@ class PrintStatement : public Statement
   StatementType getStatementType();
 };
 
+class CallStatement : public Statement
+{
+ private:
+  std::shared_ptr<Identifier> procedureId;
+
+ public:
+  CallStatement(int index, std::shared_ptr<Identifier> procId) : Statement(index)
+  {
+    this->procedureId = procId;
+  }
+
+  std::shared_ptr<Identifier> getProcId();
+  std::string format(int level);
+  StatementType getStatementType();
+};
+
 class WhileStatement : public Statement
 {
  private:

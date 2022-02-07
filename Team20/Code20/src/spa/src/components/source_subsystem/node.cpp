@@ -45,6 +45,11 @@ ExpressionType Expression::getExpressionType()
   return ExpressionType::NONE;
 }
 
+StatementType CallStatement::getStatementType()
+{
+  return StatementType::CALL;
+}
+
 StatementType WhileStatement::getStatementType()
 {
   return StatementType::WHILE;
@@ -272,6 +277,16 @@ std::string PrintStatement::format(int level)
 std::shared_ptr<Identifier> PrintStatement::getId()
 {
   return id;
+}
+
+std::string CallStatement::format(int level)
+{
+  return Statement::format(level) + "call " + procedureId->format(level) + ";\n";
+}
+
+std::shared_ptr<Identifier> CallStatement::getProcId()
+{
+  return procedureId;
 }
 
 std::string WhileStatement::format(int level)
