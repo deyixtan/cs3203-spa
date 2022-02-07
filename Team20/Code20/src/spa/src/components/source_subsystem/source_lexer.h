@@ -11,7 +11,7 @@ class SourceLexer {
  private:
   std::string program_source;
   int cursor;
-  std::vector<std::pair<std::regex, TokenType>> tokenize_specs;
+  std::vector<std::pair<std::regex, SourceTokenType>> tokenize_specs;
 
  public:
   SourceLexer(std::string program_source);

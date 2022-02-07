@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <vector>
 
-enum class TokenType {
+enum class PqlTokenType {
   SYNONYM,
   SEMICOLON,
   COMMA,
@@ -51,20 +51,20 @@ enum class TokenType {
 
 class PqlToken {
  public:
-  TokenType type;
+  PqlTokenType type;
   std::string value;
   bool operator==(const PqlToken &other) const {
     return type == other.type && value == other.value;
   }
   PqlToken();
-  PqlToken(TokenType specified_token_type, std::string specified_value);
+  PqlToken(PqlTokenType specified_token_type, std::string specified_value);
 };
 
-extern std::unordered_map<std::string, TokenType> string_token_map;
-extern std::unordered_set<TokenType> rel_ref;
-extern std::unordered_set<TokenType> design_entities;
-extern std::unordered_set<TokenType> expression_spec;
-extern std::unordered_set<TokenType> ent_ref;
-extern std::unordered_set<TokenType> stmt_ref;
+extern std::unordered_map<std::string, PqlTokenType> string_token_map;
+extern std::unordered_set<PqlTokenType> rel_ref;
+extern std::unordered_set<PqlTokenType> design_entities;
+extern std::unordered_set<PqlTokenType> expression_spec;
+extern std::unordered_set<PqlTokenType> ent_ref;
+extern std::unordered_set<PqlTokenType> stmt_ref;
 
 #endif

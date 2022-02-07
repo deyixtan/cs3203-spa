@@ -11,16 +11,16 @@ void QueryEvaluator::EvaluateSelect(ParsedQuery& query) {
   const PqlToken select_synonym = query.GetSynonym();
   std::unordered_set<std::string> add_result;
   switch (select_synonym.type) {
-    case TokenType::PROCEDURE:
-      add_result = pkb->get_stmt_by_name(StmtType::PROC);
+    case PqlTokenType::PROCEDURE:
+      add_result = pkb.get_stmt_by_name(StmtType::PROC);
       result.insert(add_result.begin(), add_result.end());
       break;
-    case TokenType::VARIABLE:
-      add_result = pkb->get_stmt_by_name(StmtType::VARS);
+    case PqlTokenType::VARIABLE:
+      add_result = pkb.get_stmt_by_name(StmtType::VARS);
       result.insert(add_result.begin(), add_result.end());
       break;
-    case TokenType::CONSTANT:
-      add_result = pkb->get_stmt_by_name(StmtType::CONSTS);
+    case PqlTokenType::CONSTANT:
+      add_result = pkb.get_stmt_by_name(StmtType::CONSTS);
       result.insert(add_result.begin(), add_result.end());
       break;
     default:

@@ -19,17 +19,17 @@ std::vector<PqlToken> PqlLexer::Lex() {
     if (string_token_map.find(token) != string_token_map.end()) {
       tokens.push_back(PqlToken{string_token_map[token], token});
     } else if (IsIdent(token)) {
-      tokens.push_back(PqlToken{TokenType::SYNONYM, token});
+      tokens.push_back(PqlToken{PqlTokenType::SYNONYM, token});
     } else if (IsDigits(token)) {
-      tokens.push_back(PqlToken{TokenType::NUMBER, token});
+      tokens.push_back(PqlToken{PqlTokenType::NUMBER, token});
     } else if (IsValidString(token)) {
       if (IsEntRef(token)) {
-        tokens.push_back(PqlToken{TokenType::IDENT_WITH_QUOTES, RemoveSpace(token)});
+        tokens.push_back(PqlToken{PqlTokenType::IDENT_WITH_QUOTES, RemoveSpace(token)});
       } else {
-        tokens.push_back(PqlToken{TokenType::EXPR, RemoveSpace(token)});
+        tokens.push_back(PqlToken{PqlTokenType::EXPR, RemoveSpace(token)});
       }
     } else if (IsSubExpressionToken(token)) {
-      tokens.push_back(PqlToken{TokenType::SUB_EXPRESSION, RemoveSpace(token)});
+      tokens.push_back(PqlToken{PqlTokenType::SUB_EXPRESSION, RemoveSpace(token)});
     } else {
       throw "ERROR: Unrecognised token " + token + "\n";
     }

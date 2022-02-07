@@ -5,7 +5,7 @@ QueryValidator::QueryValidator(std::vector<PqlToken> tokens) : tokens_(tokens){}
 
 bool QueryValidator::IsValidSynonym(PqlToken synonym_token) {
   // rel_ref or design_entities can also be synonyms
-  return synonym_token.type == TokenType::SYNONYM ||
+  return synonym_token.type == PqlTokenType::SYNONYM ||
       design_entities.count(synonym_token.type) ||
       rel_ref.count(synonym_token.type);
 }
@@ -27,7 +27,7 @@ bool QueryValidator::IsValidRelRefClause(std::vector<PqlToken> rel_ref_tokens) {
     return false;
   }
   PqlToken open_parenthesis = rel_ref_tokens[1];
-  if (open_parenthesis.type != TokenType::OPEN_PARENTHESIS) {
+  if (open_parenthesis.type != PqlTokenType::OPEN_PARENTHESIS) {
     return false;
   }
   PqlToken first_arg = rel_ref_tokens[2];
@@ -35,7 +35,7 @@ bool QueryValidator::IsValidRelRefClause(std::vector<PqlToken> rel_ref_tokens) {
     return false;
   }
   PqlToken comma = rel_ref_tokens[3];
-  if (comma.type != TokenType::COMMA) {
+  if (comma.type != PqlTokenType::COMMA) {
     return false;
   }
   PqlToken second_arg = rel_ref_tokens[4];
@@ -43,21 +43,21 @@ bool QueryValidator::IsValidRelRefClause(std::vector<PqlToken> rel_ref_tokens) {
     return false;
   }
   PqlToken close_parenthesis = rel_ref_tokens[5];
-  if (close_parenthesis.type != TokenType::CLOSED_PARENTHESIS) {
+  if (close_parenthesis.type != PqlTokenType::CLOSED_PARENTHESIS) {
     return false;
   }
   return true;
 }
 
-void QueryValidator::IsValidRelRefArg(std::vector<PqlToken> rel_ref_tokens, TokenType type) {
+void QueryValidator::IsValidRelRefArg(std::vector<PqlToken> rel_ref_tokens, PqlTokenType type) {
   PqlToken first_arg = rel_ref_tokens[2];
   PqlToken second_arg = rel_ref_tokens[4];
-  if (type == TokenType::USES || type == TokenType::MODIFIES) {
+  if (type == PqlTokenType::USES || type == PqlTokenType::MODIFIES) {
     if (!ent_ref.count(second_arg.type)) {
       throw INVALID_REL_REF_ARGUMENTS;
     }
-  } else if (type == TokenType::PARENT || type == TokenType::PARENT_T ||
-             type == TokenType::FOLLOWS || type == TokenType::FOLLOWS_T) {
+  } else if (type == PqlTokenType::PARENT || type == PqlTokenType::PARENT_T ||
+             type == PqlTokenType::FOLLOWS || type == PqlTokenType::FOLLOWS_T) {
     if (!stmt_ref.count(first_arg.type) || !stmt_ref.count(second_arg.type)) {
       throw INVALID_REL_REF_ARGUMENTS;
     }
@@ -76,7 +76,7 @@ void QueryValidator::IsValidDeclaration(std::vector<PqlToken> declaration_query)
   }
   for (int j = 1; j < declaration_query.size() - 1; j++) {
     if (j % 2 == 0) {
-      if (declaration_query[j].type != TokenType::COMMA) {
+      if (declaration_query[j].type != PqlTokenType::COMMA) {
         throw INVALID_DECLARATION_FORMAT;
       }
     } else {
@@ -86,7 +86,7 @@ void QueryValidator::IsValidDeclaration(std::vector<PqlToken> declaration_query)
     }
   }
   PqlToken semicolon_token = declaration_query[declaration_query.size() - 1];
-  if (semicolon_token.type != TokenType::SEMICOLON) {
+  if (semicolon_token.type != PqlTokenType::SEMICOLON) {
     throw INVALID_DECLARATION_FORMAT;
   }
 }
@@ -96,7 +96,7 @@ void QueryValidator::IsValidPatternClause(std::vector<PqlToken> pattern_clause) 
     throw INVALID_PATTERN_CLAUSE_FORMAT;
   }
   PqlToken pattern_token = pattern_clause[0];
-  if (pattern_token.type != TokenType::PATTERN) {
+  if (pattern_token.type != PqlTokenType::PATTERN) {
     throw INVALID_PATTERN_KEYWORD;
   }
 
@@ -106,7 +106,7 @@ void QueryValidator::IsValidPatternClause(std::vector<PqlToken> pattern_clause) 
   }
 
   PqlToken open_parenthesis = pattern_clause[2];
-  if (open_parenthesis.type != TokenType::OPEN_PARENTHESIS) {
+  if (open_parenthesis.type != PqlTokenType::OPEN_PARENTHESIS) {
     throw INVALID_PATTERN_CLAUSE_FORMAT;
   }
 
@@ -116,7 +116,7 @@ void QueryValidator::IsValidPatternClause(std::vector<PqlToken> pattern_clause) 
   }
 
   PqlToken comma = pattern_clause[4];
-  if (comma.type != TokenType::COMMA) {
+  if (comma.type != PqlTokenType::COMMA) {
     throw INVALID_PATTERN_CLAUSE_FORMAT;
   }
 
@@ -126,7 +126,7 @@ void QueryValidator::IsValidPatternClause(std::vector<PqlToken> pattern_clause) 
   }
 
   PqlToken close_parenthesis = pattern_clause[6];
-  if (close_parenthesis.type != TokenType::CLOSED_PARENTHESIS) {
+  if (close_parenthesis.type != PqlTokenType::CLOSED_PARENTHESIS) {
     throw INVALID_PATTERN_CLAUSE_FORMAT;
   }
 }
@@ -136,7 +136,7 @@ void QueryValidator::IsValidSelectClause(std::vector<PqlToken> select_clause) {
     throw INVALID_SELECT_CLAUSE_FORMAT;
   }
   PqlToken select_token = select_clause[0];
-  if (select_token.type != TokenType::SELECT) {
+  if (select_token.type != PqlTokenType::SELECT) {
     throw INVALID_SELECT_KEYWORD;
   }
   // Select v;
@@ -148,11 +148,11 @@ void QueryValidator::IsValidSelectClause(std::vector<PqlToken> select_clause) {
 
   if (select_clause.size() > 2) { // Select s such that Follows (s, s1)
     PqlToken such_token = select_clause[2];
-    if (such_token.type != TokenType::SUCH) {
+    if (such_token.type != PqlTokenType::SUCH) {
       throw INVALID_SELECT_CLAUSE_FORMAT;
     }
     PqlToken that_token = select_clause[3];
-    if (that_token.type != TokenType::THAT) {
+    if (that_token.type != PqlTokenType::THAT) {
       throw INVALID_SELECT_CLAUSE_FORMAT;
     }
 
@@ -183,7 +183,7 @@ std::vector<PqlToken> QueryValidator::CheckValidation() {
   std::vector<PqlToken> single_query;
   for (PqlToken single_token : tokens_) {
     single_query.push_back(single_token);
-    if (single_token.type == TokenType::SEMICOLON) {
+    if (single_token.type == PqlTokenType::SEMICOLON) {
       token_table.push_back(single_query);
       single_query.clear();
     }
