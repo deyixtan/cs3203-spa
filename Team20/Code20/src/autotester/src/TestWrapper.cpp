@@ -12,7 +12,7 @@ volatile bool AbstractWrapper::GlobalStop = false;
 // a default constructor
 TestWrapper::TestWrapper() {
   std::cout << "TestWrapper::TestWrapper() Start" << std::endl;
-  auto pkb = PKB::get_instance();
+  pkb = PKB::get_instance();
   source_controller = new SourceController();
   query_controller = new QueryController(pkb);
   std::cout << "TestWrapper::TestWrapper() End" << std::endl;
@@ -34,12 +34,14 @@ void TestWrapper::parse(std::string filename) {
   std::shared_ptr<ProgramNode> ast = source_controller->ParseTokenStream(tokens_ptr);
   source_controller->PopulatePKB(pkb, ast);
 
+  std::cout << "RESULT: " << pkb->get_stmt_by_num(STMT).size() << std::endl;
+
   std::cout << "TestWrapper::parse() End" << std::endl;
 }
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
   std::cout << "TestWrapper::evaluate() Start" << std::endl;
-  query_controller->ProcessQuery(query, results);
+  //query_controller->ProcessQuery(query, results);
   std::cout << "TestWrapper::evaluate() End" << std::endl;
 }

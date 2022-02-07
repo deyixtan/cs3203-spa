@@ -31,6 +31,7 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
         populate_stmt(stmt_num);
         break;
       case READ: {
+        populate_stmt(stmt_num);
         std::shared_ptr<ReadStatementNode> read_stmt = static_pointer_cast<ReadStatementNode>(stmt);
         var_name = read_stmt->getId()->getName();
         populate_read(stmt_num);
@@ -38,6 +39,7 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
         break;
       }
       case PRINT: {
+        populate_stmt(stmt_num);
         std::shared_ptr<PrintStatementNode> print_stmt = static_pointer_cast<PrintStatementNode>(stmt);
         var_name = print_stmt->getId()->getName();
         populate_print(stmt_num);
@@ -45,6 +47,7 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
         break;
       }
       case ASSIGN: {
+        populate_stmt(stmt_num);
         std::shared_ptr<AssignStatementNode> assign_stmt = static_pointer_cast<AssignStatementNode>(stmt);
         var_name = assign_stmt->getId()->getName();
         std::shared_ptr<ExpressionNode> expr = assign_stmt->getExpr();
