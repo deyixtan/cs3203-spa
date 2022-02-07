@@ -38,6 +38,5 @@ class UsageStore {
   std::unordered_map<std::string, std::unordered_set<int> > var_stmt_map;
   std::unordered_map<std::string, std::unordered_set<std::string> > proc_var_map;
   std::unordered_map<std::string, std::unordered_set<std::string> > var_proc_map;
-
 };
 #endif //USAGE_STORE_H

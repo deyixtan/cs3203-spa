@@ -69,4 +69,3 @@ std::unordered_set<std::pair<int, std::string>, pair_hash> UsageStore::get_all_s
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> UsageStore::get_all_proc_var() {
   return proc_var_pairs;
 }
-
