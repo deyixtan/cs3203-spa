@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include "components/pkb/pkb.h"
 
 class Node
 {
@@ -177,19 +178,6 @@ class RelationalExpressionNode : public ConditionalExpressionNode
   std::string format(int level);
 };
 
-enum class StatementType
-{
-  ERROR,
-  WHILE,
-  IF,
-  READ,
-  PRINT,
-  CALL,
-  ASSIGN,
-  STATEMENT, // Used for Next* (meant to be AllStatement)
-  NONE,      // Should not happen
-};
-
 class StatementNode : public Node
 {
  private:
@@ -205,7 +193,7 @@ class StatementNode : public Node
   }
 
   virtual std::vector<std::shared_ptr<StatementNode>> getStatementList();
-  virtual StatementType getStatementType();
+  virtual StmtType getStatementType();
   int getLineNumber();
   std::string format(int level);
 };
@@ -257,7 +245,7 @@ class ErrorStatementNode : public StatementNode
   {
   }
   std::string format(int _);
-  StatementType getStatementType();
+  StmtType getStatementType();
 };
 
 class ReadStatementNode : public StatementNode
@@ -273,7 +261,7 @@ class ReadStatementNode : public StatementNode
 
   std::shared_ptr<VariableNode> getId();
   std::string format(int level);
-  StatementType getStatementType();
+  StmtType getStatementType();
 };
 
 class PrintStatementNode : public StatementNode
@@ -289,7 +277,7 @@ class PrintStatementNode : public StatementNode
 
   std::shared_ptr<VariableNode> getId();
   std::string format(int level);
-  StatementType getStatementType();
+  StmtType getStatementType();
 };
 
 class CallStatementNode : public StatementNode
@@ -305,7 +293,7 @@ class CallStatementNode : public StatementNode
 
   std::shared_ptr<VariableNode> getProcId();
   std::string format(int level);
-  StatementType getStatementType();
+  StmtType getStatementType();
 };
 
 class WhileStatementNode : public StatementNode
@@ -323,7 +311,7 @@ class WhileStatementNode : public StatementNode
   }
 
   std::string format(int level);
-  StatementType getStatementType();
+  StmtType getStatementType();
   std::vector<std::shared_ptr<StatementNode>> getStatementList();
   std::shared_ptr<StatementListNode> getBody();
   std::shared_ptr<ConditionalExpressionNode> getConditional();
@@ -347,7 +335,7 @@ class IfStatementNode : public StatementNode
   }
 
   std::string format(int level);
-  StatementType getStatementType();
+  StmtType getStatementType();
   std::vector<std::shared_ptr<StatementNode>> getStatementList();
   std::shared_ptr<StatementListNode> getConsequent();
   std::shared_ptr<StatementListNode> getAlternative();
@@ -370,7 +358,7 @@ class AssignStatementNode : public StatementNode
   std::shared_ptr<VariableNode> getId();
   std::shared_ptr<ExpressionNode> getExpr();
   std::string format(int level);
-  StatementType getStatementType();
+  StmtType getStatementType();
 };
 
 class ProcedureNode : public Node

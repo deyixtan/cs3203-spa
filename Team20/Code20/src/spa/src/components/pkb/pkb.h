@@ -76,7 +76,6 @@ class PKB {
   PKB();
   static PKB *instance;
 
-  std::unordered_set<std::string> proc_list;
   std::unordered_set<int> stmt_list;
   std::unordered_set<int> while_stmt_list;
   std::unordered_set<int> read_stmt_list;
@@ -85,6 +84,7 @@ class PKB {
   std::unordered_set<int> if_stmt_list; //need to create separate else-then or treat this as a block?
   std::unordered_set<int> assign_stmt_list;
 
+  std::unordered_set<std::string> proc_list;
   std::unordered_set<std::string> var_list;
   std::unordered_set<std::string> const_list;
 
