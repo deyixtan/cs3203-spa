@@ -6,6 +6,8 @@ void QueryController::ProcessQuery(std::string query, std::list<std::string> &re
   PqlLexer lexer {query};
   ParsedQuery parsed_query {};
   std::vector<PqlToken> tokens = lexer.Lex();
+  QueryValidator query_validator = QueryValidator(tokens);
+  query_validator.CheckValidation();
   parsed_query.BuildParsedQuery(tokens);
   validator_->ValidateQuery(parsed_query);
   std::unordered_set<std::string> res = evaluator_->Evaluate(parsed_query);
