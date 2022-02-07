@@ -6,6 +6,7 @@
 #include "./pql_parser/parsed_query.h"
 #include "./pql_validator/parsed_query_validator.h"
 #include "./pql_evaluator/query_evaluator.h"
+#include "../pkb/pkb.h"
 
 #include <list>
 #include <string>
@@ -16,7 +17,7 @@ using pql_evaluator::QueryEvaluator;
 
 class QueryController {
  public:
-  QueryController();
+  QueryController(PKB *pkb);
   void ProcessQuery(std::string query, std::list<std::string> &results);
 
  private:

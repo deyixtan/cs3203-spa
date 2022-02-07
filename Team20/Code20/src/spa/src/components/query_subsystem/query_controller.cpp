@@ -1,6 +1,6 @@
 #include "query_controller.h"
 
-QueryController::QueryController(): validator_{new pql_validator::ParsedQueryValidator()}, evaluator_{new pql_evaluator::QueryEvaluator()} {}
+QueryController::QueryController(PKB *pkb): validator_{new pql_validator::ParsedQueryValidator()}, evaluator_{new pql_evaluator::QueryEvaluator(pkb)} {}
 
 void QueryController::ProcessQuery(std::string query, std::list<std::string> &results) {
   PqlLexer lexer {query};

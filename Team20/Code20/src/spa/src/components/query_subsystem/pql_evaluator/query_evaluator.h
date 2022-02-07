@@ -12,12 +12,12 @@ namespace pql_evaluator {
 
 class QueryEvaluator {
  public:
-  QueryEvaluator() {};
+  QueryEvaluator(PKB* pkb): pkb{pkb} {};
   std::unordered_set<std::string> Evaluate(ParsedQuery&);
 
  private:
   std::unordered_set<std::string> result;
-  std::shared_ptr<PKB> pkb;
+  PKB *pkb;
   void EvaluateSelect(ParsedQuery&);
   std::unordered_set<std::string> Intersect(std::unordered_set<std::string>, std::unordered_set<std::string>);
 };
