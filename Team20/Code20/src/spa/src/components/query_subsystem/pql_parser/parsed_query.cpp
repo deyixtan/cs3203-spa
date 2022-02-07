@@ -50,7 +50,7 @@ ParsedQuery BuildParsedQuery(std::vector<PqlToken> &tokens) {
   // Add declaration
   while(pos < tokens.size()) {
     PqlToken token = tokens[pos];
-    if(token.type == TokenType::SELECT) {
+    if(token.type == PqlTokenType::SELECT) {
       PqlToken selected_synonym = tokens[++pos];
       pq.SetSynonym(selected_synonym);
       // skip such that tokens
@@ -58,9 +58,9 @@ ParsedQuery BuildParsedQuery(std::vector<PqlToken> &tokens) {
     } else if(design_entities.count(token.type)) {
       PqlToken entity = token;
       pos++;
-      while(tokens[pos].type != TokenType::SEMICOLON) {
+      while(tokens[pos].type != PqlTokenType::SEMICOLON) {
         // another synonym
-        if(tokens[pos].type == TokenType::SYNONYM) {
+        if(tokens[pos].type == PqlTokenType::SYNONYM) {
           Declaration decl = Declaration(tokens[pos], entity);
           declarations.push_back(decl);
           pos++;
@@ -80,7 +80,7 @@ ParsedQuery BuildParsedQuery(std::vector<PqlToken> &tokens) {
       Relationship relationship = Relationship(rlshp, first, second);
       pq.SetRelationship(relationship);
       pos += 2;
-    } else if(token.type == TokenType::PATTERN) {
+    } else if(token.type == PqlTokenType::PATTERN) {
       PqlToken syn = tokens[++pos];
       pos += 2;
       PqlToken first = tokens[pos];
