@@ -2,15 +2,28 @@
 
 namespace pql_evaluator {
 
-std::unordered_set<std::string> QueryEvaluator::Evaluate(ParsedQuery& query) {
+void QueryEvaluator::Evaluate(ParsedQuery& query, std::list<std::string>& results) {
   result.clear();
   EvaluateSelect(query);
+  for (auto i = result.begin(); i != result.end(); ++i) {
+    results.emplace_back(*i);
+  }
 }
 
 void QueryEvaluator::EvaluateSelect(ParsedQuery& query) {
   const PqlToken select_synonym = query.GetSynonym();
+  // TODO::
+  const auto declarations = query.GetDeclaration();
+  PqlToken token; // uninit
+
+  // pass thru validation
+  for (auto declaration : declarations) {
+    if (declaration.GetSynonym().value == select_synonym.value) {
+      token = declaration.GetDesignEntity();
+    }
+  }
   std::unordered_set<std::string> add_result;
-  switch (select_synonym.type) {
+  switch (token.type) {
     case PqlTokenType::PROCEDURE:
       add_result = pkb->get_stmt_by_name(StmtType::PROC);
       result.insert(add_result.begin(), add_result.end());
@@ -23,7 +36,12 @@ void QueryEvaluator::EvaluateSelect(ParsedQuery& query) {
       add_result = pkb->get_stmt_by_name(StmtType::CONSTS);
       result.insert(add_result.begin(), add_result.end());
       break;
-    default:
+    case PqlTokenType::STMT:
+      auto temp = pkb->get_stmt_by_num(StmtType::STMT);
+      for (auto i = temp.begin(); i != temp.end(); ++i) {
+        add_result.insert(std::to_string(*i));
+      }
+      result.insert(add_result.begin(), add_result.end());
       break;
       //fall through
   }

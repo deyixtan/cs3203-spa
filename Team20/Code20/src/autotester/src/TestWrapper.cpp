@@ -42,6 +42,6 @@ void TestWrapper::parse(std::string filename) {
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
   std::cout << "TestWrapper::evaluate() Start" << std::endl;
-  //query_controller->ProcessQuery(query, results);
+  query_controller->ProcessQuery(query, results);
   std::cout << "TestWrapper::evaluate() End" << std::endl;
 }

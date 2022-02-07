@@ -4,14 +4,11 @@ QueryController::QueryController(PKB *pkb): validator_{new pql_validator::Parsed
 
 void QueryController::ProcessQuery(std::string query, std::list<std::string> &results) {
   PqlLexer lexer {query};
-  ParsedQuery parsed_query {};
+  ParsedQuery pqb {};
   std::vector<PqlToken> tokens = lexer.Lex();
-  QueryValidator query_validator = QueryValidator(tokens);
-  query_validator.CheckValidation();
-  parsed_query.BuildParsedQuery(tokens);
+//  QueryValidator query_validator = QueryValidator(tokens);
+//  query_validator.CheckValidation();
+  ParsedQuery parsed_query = pqb.BuildParsedQuery(tokens);
   validator_->ValidateQuery(parsed_query);
-  std::unordered_set<std::string> res = evaluator_->Evaluate(parsed_query);
-  for (auto i = res.begin(); i != res.end(); ++i) {
-    results.emplace_back(*i);
-  }
+  evaluator_->Evaluate(parsed_query, results);
 }

@@ -7,13 +7,14 @@
 #include <string>
 #include <unordered_set>
 #include <memory>
+#include <list>
 
 namespace pql_evaluator {
 
 class QueryEvaluator {
  public:
   QueryEvaluator(PKB* pkb): pkb{pkb} {};
-  std::unordered_set<std::string> Evaluate(ParsedQuery&);
+  void Evaluate(ParsedQuery&, std::list<std::string>&);
 
  private:
   std::unordered_set<std::string> result;
