@@ -12,9 +12,9 @@ volatile bool AbstractWrapper::GlobalStop = false;
 // a default constructor
 TestWrapper::TestWrapper() {
   std::cout << "TestWrapper::TestWrapper() Start" << std::endl;
-  query_controller = new QueryController();
+  auto pkb = PKB::get_instance();
   source_controller = new SourceController();
-  pkb = PKB::get_instance();
+  query_controller = new QueryController(pkb);
   std::cout << "TestWrapper::TestWrapper() End" << std::endl;
 }
 
