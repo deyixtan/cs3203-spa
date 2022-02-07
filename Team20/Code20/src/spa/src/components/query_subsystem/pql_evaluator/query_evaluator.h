@@ -6,16 +6,18 @@
 
 #include <string>
 #include <unordered_set>
+#include <memory>
 
 namespace pql_evaluator {
 
 class QueryEvaluator {
  public:
+  QueryEvaluator() {};
   std::unordered_set<std::string> Evaluate(ParsedQuery&);
 
  private:
   std::unordered_set<std::string> result;
-  PKB& pkb;
+  std::shared_ptr<PKB> pkb;
   void EvaluateSelect(ParsedQuery&);
   std::unordered_set<std::string> Intersect(std::unordered_set<std::string>, std::unordered_set<std::string>);
 };

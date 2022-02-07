@@ -1,5 +1,15 @@
 #include "query_controller.h"
 
-QueryController::QueryController() {}
+QueryController::QueryController(): validator_{new pql_validator::ParsedQueryValidator()}, evaluator_{new pql_evaluator::QueryEvaluator()} {}
 
-void QueryController::ProcessQuery(std::string query, std::list<std::string> &results) {}
+void QueryController::ProcessQuery(std::string query, std::list<std::string> &results) {
+  PqlLexer lexer {query};
+  ParsedQuery parsed_query {};
+  std::vector<PqlToken> tokens = lexer.Lex();
+  parsed_query.BuildParsedQuery(tokens);
+  validator_->ValidateQuery(parsed_query);
+  std::unordered_set<std::string> res = evaluator_->Evaluate(parsed_query);
+  for (auto i = res.begin(); i != res.end(); ++i) {
+    results.emplace_back(*i);
+  }
+}
