@@ -193,20 +193,20 @@ enum class StatementType
 class Statement : public Node
 {
  private:
-  int index = 0;
+  int line_number = 0;
 
  protected:
   std::string getStatementLabel();
 
  public:
-  Statement(int index)
+  Statement(int line)
   {
-    this->index = index;
+    this->line_number = line;
   }
 
   virtual std::vector<std::shared_ptr<Statement>> getStatementList();
   virtual StatementType getStatementType();
-  int getIndex();
+  int getLineNumber();
   std::string format(int level);
 };
 
@@ -253,7 +253,7 @@ class Variable : public Expression
 class ErrorStatement : public Statement
 {
  public:
-  ErrorStatement(int index) : Statement(index)
+  ErrorStatement(int line) : Statement(line)
   {
   }
   std::string format(int _);
@@ -266,7 +266,7 @@ class ReadStatement : public Statement
   std::shared_ptr<Variable> id;
 
  public:
-  ReadStatement(int index, std::shared_ptr<Variable> id) : Statement(index)
+  ReadStatement(int line, std::shared_ptr<Variable> id) : Statement(line)
   {
     this->id = id;
   }
@@ -282,7 +282,7 @@ class PrintStatement : public Statement
   std::shared_ptr<Variable> id;
 
  public:
-  PrintStatement(int index, std::shared_ptr<Variable> id) : Statement(index)
+  PrintStatement(int line, std::shared_ptr<Variable> id) : Statement(line)
   {
     this->id = id;
   }
@@ -298,7 +298,7 @@ class CallStatement : public Statement
   std::shared_ptr<Variable> procedureId;
 
  public:
-  CallStatement(int index, std::shared_ptr<Variable> procId) : Statement(index)
+  CallStatement(int line, std::shared_ptr<Variable> procId) : Statement(line)
   {
     this->procedureId = procId;
   }
@@ -315,8 +315,8 @@ class WhileStatement : public Statement
   std::shared_ptr<StatementList> block;
 
  public:
-  WhileStatement(int index, std::shared_ptr<ConditionalExpression> cond, std::shared_ptr<StatementList> block)
-      : Statement(index)
+  WhileStatement(int line, std::shared_ptr<ConditionalExpression> cond, std::shared_ptr<StatementList> block)
+      : Statement(line)
   {
     this->condition = cond;
     this->block = block;
@@ -337,9 +337,9 @@ class IfStatement : public Statement
   std::shared_ptr<StatementList> alternative;
 
  public:
-  IfStatement(int index, std::shared_ptr<ConditionalExpression> condition, std::shared_ptr<StatementList> consequent,
+  IfStatement(int line, std::shared_ptr<ConditionalExpression> condition, std::shared_ptr<StatementList> consequent,
               std::shared_ptr<StatementList> alternative)
-      : Statement(index)
+      : Statement(line)
   {
     this->condition = condition;
     this->consequent = consequent;
@@ -361,7 +361,7 @@ class AssignStatement : public Statement
   std::shared_ptr<Expression> expression;
 
  public:
-  AssignStatement(int index, std::shared_ptr<Variable> id, std::shared_ptr<Expression> expr) : Statement(index)
+  AssignStatement(int line, std::shared_ptr<Variable> id, std::shared_ptr<Expression> expr) : Statement(line)
   {
     this->id = id;
     this->expression = expr;

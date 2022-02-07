@@ -202,13 +202,13 @@ std::string RelationalExpression::format(int level)
 
 std::string Statement::getStatementLabel()
 {
-  if (index == 0)
+  if (line_number == 0)
   {
     return "   ";
   }
   else
   {
-    std::string num = std::to_string(index);
+    std::string num = std::to_string(line_number);
     return std::string(3 - num.length(), ' ') + num;
   }
 }
@@ -228,9 +228,9 @@ StatementType Statement::getStatementType()
   return StatementType::NONE;
 }
 
-int Statement::getIndex()
+int Statement::getLineNumber()
 {
-  return index;
+  return line_number;
 }
 
 std::vector<std::shared_ptr<Statement>> StatementList::getStatements()
