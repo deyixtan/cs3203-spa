@@ -15,6 +15,7 @@ class DesignExtractor {
   UsageStore storage;
   void process_proc(std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst, std::vector<std::shared_ptr<StatementNode>> stmts);
 
+  void process_assign(std::shared_ptr<ExpressionNode> expr);
   void populate_uses(int stmt, std::string var);
   void populate_modifies(int stmt, std::string var);
   void populate_proc(std::string name);

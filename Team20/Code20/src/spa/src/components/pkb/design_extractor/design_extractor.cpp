@@ -52,28 +52,11 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
         populate_stmt(stmt_num);
         std::shared_ptr<AssignStatementNode> assign_stmt = static_pointer_cast<AssignStatementNode>(stmt);
         var_name = assign_stmt->getId()->getName();
+        //Add LHS variable of assign
         populate_vars(var_name);
         std::shared_ptr<ExpressionNode> expr = assign_stmt->getExpr();
-        ExpressionType expr_type = expr->getExpressionType();
-        switch (expr_type) {
-          case ExpressionType::CONSTANT: {
-            std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(expr);
-            std::string name = constant->getValue();
-            populate_const(name);
-            break;
-          }
-          case ExpressionType::COMBINATION: {
-            std::shared_ptr<CombinationExpressionNode> comb = static_pointer_cast<CombinationExpressionNode>(expr);
-            std::shared_ptr<ExpressionNode> lhs = comb->getLHS();
-            std::shared_ptr<ExpressionNode> rhs = comb->getRHS();
-            Operation op = comb->getOperation();
-          }
-          case ExpressionType::VARIABLE: {
-            std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
-            std::string name = var->getName();
-            populate_const(name);
-          }
-        }
+
+        process_assign(expr);
         populate_assign(stmt_num);
         //populate_modifies(stmt_num);
         break;
@@ -90,6 +73,32 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
         //populate_modifies(stmt_num);
         break;
       }
+    }
+  }
+}
+
+void DesignExtractor::process_assign(std::shared_ptr<ExpressionNode> expr) {
+  ExpressionType expr_type = expr->getExpressionType();
+
+  switch (expr_type) {
+    case ExpressionType::CONSTANT: {
+      std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(expr);
+      std::string name = constant->getValue();
+      populate_const(name);
+      break;
+    }
+    case ExpressionType::COMBINATION: {
+      std::shared_ptr<CombinationExpressionNode> comb = static_pointer_cast<CombinationExpressionNode>(expr);
+      std::shared_ptr<ExpressionNode> lhs = comb->getLHS();
+      std::shared_ptr<ExpressionNode> rhs = comb->getRHS();
+      Operation op = comb->getOperation();
+      process_assign(lhs);
+      process_assign(rhs);
+    }
+    case ExpressionType::VARIABLE: {
+      std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
+      std::string var_name = var->getName();
+      populate_vars(var_name);
     }
   }
 }
