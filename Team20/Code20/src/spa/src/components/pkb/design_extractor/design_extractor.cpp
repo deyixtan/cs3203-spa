@@ -73,9 +73,15 @@ void DesignExtractor::process_proc(std::string proc_name, std::shared_ptr<Statem
       }
       case IF: {
         std::shared_ptr<IfStatementNode> if_stmt = static_pointer_cast<IfStatementNode>(stmt);
+        std::shared_ptr<StatementListNode> then_stmt_list = if_stmt->getConsequent();
+        std::vector<std::shared_ptr<StatementNode>> then_stmt = then_stmt_list->getStatements();
+        std::shared_ptr<StatementListNode> else_stmt_list = if_stmt->getAlternative();
+        std::vector<std::shared_ptr<StatementNode>> else_stmt = else_stmt_list->getStatements();
         std::shared_ptr<ConditionalExpressionNode> cond_expr = if_stmt->getConditional();
         ConditionalType cond_expr_type = cond_expr->getConditionalType();
         process_if(cond_expr, cond_expr_type);
+        process_proc(proc_name, then_stmt_list, then_stmt);
+        process_proc(proc_name, else_stmt_list, else_stmt);
         populate_if(stmt_num);
         //populate_modifies(stmt_num);
         break;
@@ -115,14 +121,29 @@ void DesignExtractor::process_while(std::shared_ptr<ConditionalExpressionNode> c
   switch(cond_expr_type) {
     case ConditionalType::BOOLEAN: {
       std::shared_ptr<BooleanExpressionNode> bool_expr = static_pointer_cast<BooleanExpressionNode>(cond_expr);
+      std::shared_ptr<ConditionalExpressionNode> lhs = bool_expr->getLHS();
+      ConditionalType lhs_type = lhs->getConditionalType();
+      std::shared_ptr<ConditionalExpressionNode> rhs = bool_expr->getRHS();
+      ConditionalType rhs_type = rhs->getConditionalType();
+      process_while(lhs, lhs_type);
+      process_while(rhs, rhs_type);
       break;
     }
     case ConditionalType::NOT: {
       std::shared_ptr<NotExpressionNode> not_expr = static_pointer_cast<NotExpressionNode>(cond_expr);
+      std::shared_ptr<ConditionalExpressionNode> not_cond_expr = not_expr->getExpr();
+      ConditionalType not_cond_expr_type = not_cond_expr->getConditionalType();
+      process_while(not_cond_expr, not_cond_expr_type);
       break;
     }
     case ConditionalType::RELATIONAL: {
       std::shared_ptr<RelationalExpressionNode> relational_expr = static_pointer_cast<RelationalExpressionNode>(cond_expr);
+      std::shared_ptr<ExpressionNode> lhs = relational_expr->getLHS();
+      ExpressionType lhs_type = lhs->getExpressionType();
+      std::shared_ptr<ExpressionNode> rhs = relational_expr->getRHS();
+      ExpressionType rhs_type = rhs->getExpressionType();
+      //process_while(lhs, lhs_type);
+      //process_while(rhs, rhs_type);
       break;
     }
     case ConditionalType::NONE:
