@@ -13,8 +13,6 @@ TNode* PKB::getRootAST (PROC p){
 }
 */
 
-//Keywords = [procedure, while, read, print, call, if-else-then, assign] -> Need to maintain 1 list for each of these
-
 PKB* PKB::instance = NULL;
 
 PKB::PKB() {}
@@ -85,4 +83,70 @@ std::unordered_set<std::string> PKB::get_stmt(StmtType type) {
     case CONSTS:return const_list;
     default:break;
   }
+}
+
+std::unordered_set<std::string> PKB::get_var_used_by_stmt(std::string stmt) {
+  return usage_store.get_var_used_by_stmt(stmt);
+}
+
+std::unordered_set<std::string> PKB::get_stmt_used_by_var(std::string var) {
+  return usage_store.get_stmt_used_by_var(var);
+}
+
+std::unordered_set<std::string> PKB::get_var_used_by_proc(std::string proc) {
+  return usage_store.get_var_used_by_proc(proc);
+}
+
+std::unordered_set<std::string> PKB::get_proc_used_by_var(std::string var) {
+  return usage_store.get_proc_used_by_var(var);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::get_all_usage_stmt_var() {
+  return usage_store.get_all_stmt_var();
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::get_all_usage_proc_var() {
+  return usage_store.get_all_proc_var();
+}
+
+std::unordered_set<std::string> PKB::get_var_mod_by_stmt(std::string stmt) {
+  return modify_store.get_var_mod_by_stmt(stmt);
+}
+
+std::unordered_set<std::string> PKB::get_stmt_mod_by_var(std::string var) {
+  return modify_store.get_stmt_mod_by_var(var);
+}
+
+std::unordered_set<std::string> PKB::get_var_mod_by_proc(std::string proc) {
+  return modify_store.get_var_mod_by_proc(proc);
+}
+
+std::unordered_set<std::string> PKB::get_proc_mod_by_var(std::string var) {
+  return modify_store.get_proc_mod_by_var(var);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::get_all_mod_stmt_var() {
+  return modify_store.get_all_stmt_var();
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::get_all_mod_proc_var() {
+  return modify_store.get_all_proc_var();
+}
+
+/* Checkers */
+
+bool PKB::is_usage_stmt_var_exist(std::pair<std::string, std::string> pair) {
+  return usage_store.stmt_var_exists(pair);
+}
+
+bool PKB::is_usage_proc_var_exist(std::pair<std::string, std::string> pair) {
+  return usage_store.proc_var_exists(pair);
+}
+
+bool PKB::is_modify_stmt_var_exist(std::pair<std::string, std::string> pair) {
+  return modify_store.stmt_var_exists(pair);
+}
+
+bool PKB::is_modify_proc_var_exist(std::pair<std::string, std::string> pair) {
+  return modify_store.stmt_var_exists(pair);
 }

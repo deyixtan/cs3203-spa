@@ -14,8 +14,10 @@ class DesignExtractor {
   PKB *pkb;
   UsageStore storage;
   void process_proc(std::string proc_name, std::shared_ptr<StatementListNode> stmtLst, std::vector<std::shared_ptr<StatementNode>> stmts);
-
   void process_assign(std::string proc_name, std::string stmt_num, std::shared_ptr<ExpressionNode> expr);
+  void process_while(std::shared_ptr<ConditionalExpressionNode> cond_expr, ConditionalType cond_expr_type);
+  void process_if(std::shared_ptr<ConditionalExpressionNode> cond_expr, ConditionalType cond_expr_type);
+
   void populate_uses(std::string proc_name, std::string stmt, std::string var);
   void populate_modifies(std::string proc_name, std::string stmt, std::string var);
   void populate_proc(std::string name);
