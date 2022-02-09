@@ -17,15 +17,15 @@ class Query {
  public:
   void AddDeclaration(string ident, string design_entity);
   void SetSelectedSynonym(string ident);
-  void AddSuchThatClause(pair<string, pair<string, string>> such_that_clause);
-  void AddPatternClause(pair<string, pair<string, string>> pattern_clause);
-  string GetSelectedSynonym() const;
-  vector<pair<string, pair<string, string>>> GetSuchThatClauses() const;
-  vector<pair<string, pair<string, string>>> GetPatternClauses() const;
+  void AddSuchThatClause(string rel_ref, string arg1, string arg2);
+  void AddPatternClause(string pattern_syn, string arg1, string arg2);
+  [[nodiscard]] string GetSelectedSynonym() const;
+  [[nodiscard]] vector<pair<string, pair<string, string>>> GetSuchThatClauses() const;
+  [[nodiscard]] vector<pair<string, pair<string, string>>> GetPatternClauses() const;
 
  private:
   unordered_map<string, string> declarations; // IDENT -> design-entity
-  string selected_syonym; // IDENT
+  string selected_synonym; // IDENT
   vector<pair<string, pair<string, string>>> such_that_clauses; // [ (relRef, (arg1, arg2)) ]
   vector<pair<string, pair<string, string>>> pattern_clauses; // [ (pattern-syn, (arg1, arg2)) ]
 };
