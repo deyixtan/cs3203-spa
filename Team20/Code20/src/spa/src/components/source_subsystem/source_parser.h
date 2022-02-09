@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "components/source_subsystem/node.h"
+#include "components/source_subsystem/ast/node.h"
 #include "components/source_subsystem/source_token.h"
 
 class SourceParser {
