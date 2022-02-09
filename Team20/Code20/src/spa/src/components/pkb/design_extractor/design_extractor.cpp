@@ -13,19 +13,20 @@ void DesignExtractor::traverse_ast() {
   for (auto &proc : proc_list) {
     std::shared_ptr<StatementListNode> stmtLst = proc->getStatementList();
     std::vector<std::shared_ptr<StatementNode>> stmts = stmtLst->getStatements();
-    populate_proc(proc->getName());
-    process_proc(proc, stmtLst, stmts);
+    std::string proc_name = proc->getName();
+    populate_proc(proc_name);
+    process_proc(proc_name, stmtLst, stmts);
   }
 }
 
-void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst, std::vector<std::shared_ptr<StatementNode>> stmts) {
+void DesignExtractor::process_proc(std::string proc_name, std::shared_ptr<StatementListNode> stmtLst, std::vector<std::shared_ptr<StatementNode>> stmts) {
   for (auto &stmt : stmts) {
-    int stmt_num = stmt->getLineNumber();
+    std::string stmt_num = std::to_string(stmt->getLineNumber());
     StmtType stmt_type = stmt->getStatementType();
     std::string var_name = "";
     switch(stmt_type) {
       case PROC:
-        populate_proc(proc->getName());
+        populate_proc(proc_name);
         break;
       case STMT:
         populate_stmt(stmt_num);
@@ -36,7 +37,7 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
         var_name = read_stmt->getId()->getName();
         populate_vars(var_name);
         populate_read(stmt_num);
-        populate_modifies(stmt_num, var_name);
+        populate_modifies(proc_name, stmt_num, var_name);
         break;
       }
       case PRINT: {
@@ -45,7 +46,7 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
         var_name = print_stmt->getId()->getName();
         populate_vars(var_name);
         populate_print(stmt_num);
-        populate_uses(stmt_num, var_name);
+        populate_uses(proc_name, stmt_num, var_name);
         break;
       }
       case ASSIGN: {
@@ -56,9 +57,9 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
         populate_vars(var_name);
         std::shared_ptr<ExpressionNode> expr = assign_stmt->getExpr();
 
-        process_assign(expr);
         populate_assign(stmt_num);
-        //populate_modifies(stmt_num);
+        populate_modifies(proc_name, stmt_num, var_name);
+        process_assign(proc_name, stmt_num, expr);
         break;
       }
       case WHILE: {
@@ -77,7 +78,7 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
   }
 }
 
-void DesignExtractor::process_assign(std::shared_ptr<ExpressionNode> expr) {
+void DesignExtractor::process_assign(std::string proc_name, std::string stmt_num, std::shared_ptr<ExpressionNode> expr) {
   ExpressionType expr_type = expr->getExpressionType();
 
   switch (expr_type) {
@@ -92,22 +93,25 @@ void DesignExtractor::process_assign(std::shared_ptr<ExpressionNode> expr) {
       std::shared_ptr<ExpressionNode> lhs = comb->getLHS();
       std::shared_ptr<ExpressionNode> rhs = comb->getRHS();
       Operation op = comb->getOperation();
-      process_assign(lhs);
-      process_assign(rhs);
+      process_assign(proc_name, stmt_num, lhs);
+      process_assign(proc_name, stmt_num, rhs);
     }
     case ExpressionType::VARIABLE: {
       std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
       std::string var_name = var->getName();
       populate_vars(var_name);
+      populate_uses(proc_name, stmt_num, var_name);
     }
   }
 }
 
-void DesignExtractor::populate_uses(int stmt, std::string var) {
+void DesignExtractor::populate_uses(std::string proc, std::string stmt, std::string var) {
+  this->pkb->add_usage_proc_var(proc, var);
   this->pkb->add_usage_stmt_var(stmt, var);
 }
 
-void DesignExtractor::populate_modifies(int stmt, std::string var) {
+void DesignExtractor::populate_modifies(std::string proc, std::string stmt, std::string var) {
+  this->pkb->add_modify_proc_var(proc, var);
   this->pkb->add_modify_stmt_var(stmt, var);
 }
 
@@ -115,19 +119,19 @@ void DesignExtractor::populate_proc(std::string name) {
   this->pkb->add_stmt(name, PROC);
 }
 
-void DesignExtractor::populate_assign(int stmt) {
+void DesignExtractor::populate_assign(std::string stmt) {
   this->pkb->add_stmt(stmt, ASSIGN);
 }
 
-void DesignExtractor::populate_stmt(int stmt) {
+void DesignExtractor::populate_stmt(std::string stmt) {
   this->pkb->add_stmt(stmt, STMT);
 }
 
-void DesignExtractor::populate_read(int stmt) {
+void DesignExtractor::populate_read(std::string stmt) {
   this->pkb->add_stmt(stmt, READ);
 }
 
-void DesignExtractor::populate_print(int stmt) {
+void DesignExtractor::populate_print(std::string stmt) {
   this->pkb->add_stmt(stmt, PRINT);
 }
 
@@ -135,11 +139,11 @@ void DesignExtractor::populate_vars(std::string var) {
   this->pkb->add_stmt(var, VARS);
 }
 
-void DesignExtractor::populate_while(int stmt) {
+void DesignExtractor::populate_while(std::string stmt) {
   this->pkb->add_stmt(stmt, WHILE);
 }
 
-void DesignExtractor::populate_if(int stmt) {
+void DesignExtractor::populate_if(std::string stmt) {
   this->pkb->add_stmt(stmt, IF);
 }
 
