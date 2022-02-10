@@ -1,0 +1,18 @@
+#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONDITIONAL_EXPRESSION_H_
+#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONDITIONAL_EXPRESSION_H_
+
+#include "node.h"
+
+enum class ConditionalType {
+  BOOLEAN,
+  NOT,
+  RELATIONAL,
+  NONE
+};
+
+class ConditionalExpressionNode : public Node {
+ public:
+  virtual ConditionalType getConditionalType();
+};
+
+#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONDITIONAL_EXPRESSION_H_
