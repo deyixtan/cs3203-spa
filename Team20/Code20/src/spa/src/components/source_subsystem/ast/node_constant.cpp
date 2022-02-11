@@ -2,14 +2,14 @@
 
 ConstantNode::ConstantNode(std::string value) : m_value(value) {}
 
-std::string ConstantNode::getValue() {
+std::string ConstantNode::GetValue() {
   return m_value;
 }
 
-ExpressionType ConstantNode::getExpressionType() {
+ExpressionType ConstantNode::GetExpressionType() {
   return ExpressionType::CONSTANT;
 }
 
-std::string ConstantNode::ToString(int _) {
+std::string ConstantNode::ToString(int level) {
   return m_value;
 }
