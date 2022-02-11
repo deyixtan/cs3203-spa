@@ -1,10 +1,10 @@
 #include "node_if_statement.h"
 
-IfStatementNode::IfStatementNode(int line,
+IfStatementNode::IfStatementNode(int stmt_no,
                                  std::shared_ptr<ConditionalExpressionNode> condition,
                                  std::shared_ptr<StatementListNode> if_stmt_list,
                                  std::shared_ptr<StatementListNode> else_stmt_list)
-    : StatementNode(line), m_condition(condition), m_if_stmt_list(if_stmt_list), m_else_stmt_list(else_stmt_list) {}
+    : StatementNode(stmt_no), m_condition(condition), m_if_stmt_list(if_stmt_list), m_else_stmt_list(else_stmt_list) {}
 
 std::shared_ptr<ConditionalExpressionNode> IfStatementNode::GetCondition() {
   return m_condition;
