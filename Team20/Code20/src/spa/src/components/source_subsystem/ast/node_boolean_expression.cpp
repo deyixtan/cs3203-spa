@@ -17,12 +17,12 @@ std::shared_ptr<ConditionalExpressionNode> BooleanExpressionNode::GetRightExpres
   return m_right_expression;
 }
 
-ConditionalType BooleanExpressionNode::GetConditionalType() {
-  return ConditionalType::BOOLEAN;
-}
-
 void BooleanExpressionNode::SetLeftExpression(std::shared_ptr<ConditionalExpressionNode> left_expression) {
   m_left_expression = left_expression;
+}
+
+ConditionalType BooleanExpressionNode::GetConditionalType() {
+  return ConditionalType::BOOLEAN;
 }
 
 std::string BooleanExpressionNode::ToString(int level) {

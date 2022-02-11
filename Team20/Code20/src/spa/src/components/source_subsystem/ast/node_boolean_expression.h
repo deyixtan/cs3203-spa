@@ -21,8 +21,8 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
                         std::shared_ptr<ConditionalExpressionNode> right_expression);
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetLeftExpression();
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetRightExpression();
-  [[nodiscard]] ConditionalType GetConditionalType();
   void SetLeftExpression(std::shared_ptr<ConditionalExpressionNode> left_expression);
+  [[nodiscard]] ConditionalType GetConditionalType() override;
   [[nodiscard]] std::string ToString(int level) override;
 };
 
