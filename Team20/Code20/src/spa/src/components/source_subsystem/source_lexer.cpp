@@ -9,7 +9,6 @@ SourceLexer::SourceLexer(std::string program_source) {
 }
 
 void SourceLexer::ConstructSpecs() {
-  tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^\\n", TokenType::NEW_LINE));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^\\s+", TokenType::WHITE_SPACE));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^\\d+", TokenType::DIGIT));
   tokenize_specs.emplace_back(std::pair<std::regex, TokenType>("^[a-zA-Z]+[a-zA-Z0-9]*", TokenType::NAME));
@@ -65,9 +64,7 @@ SourceToken *SourceLexer::GetNextToken() {
     std::string token_value = match[0].str();
     cursor += match[0].str().length();
 
-    if (token_type == TokenType::NEW_LINE) {
-      token_value = "";
-    } else if (token_type == TokenType::WHITE_SPACE) {
+    if (token_type == TokenType::WHITE_SPACE) {
       return GetNextToken();
     }
 

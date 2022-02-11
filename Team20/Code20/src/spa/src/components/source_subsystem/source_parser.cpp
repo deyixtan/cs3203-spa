@@ -43,9 +43,6 @@ std::shared_ptr<SourceToken> SourceParser::ConsumeToken(TokenType type) {
   }
   IncrementCursor();
 
-  if (token_ptr->GetType() == TokenType::NEW_LINE) {
-    line_number++;
-  }
   return token_ptr;
 }
 
@@ -91,10 +88,6 @@ std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
     case TokenType::PRINT:return ParsePrintStatement();
     case TokenType::WHILE:return ParseWhileStatement();
     case TokenType::IF:return ParseIfStatement();
-    case TokenType::NEW_LINE: {
-      ConsumeToken(TokenType::NEW_LINE);
-      return nullptr;
-    }
     default:throw std::runtime_error("Parsing invalid statement.");
   }
 }
@@ -103,14 +96,14 @@ std::shared_ptr<ReadStatementNode> SourceParser::ParseReadStatement() {
   ConsumeToken(TokenType::READ);
   std::shared_ptr<SourceToken> identifier = ConsumeToken(TokenType::NAME);
   ConsumeToken(TokenType::SEMI_COLON);
-  return std::make_shared<ReadStatementNode>(line_number, std::make_shared<VariableNode>(identifier->GetValue()));
+  return std::make_shared<ReadStatementNode>(line_number++, std::make_shared<VariableNode>(identifier->GetValue()));
 }
 
 std::shared_ptr<PrintStatementNode> SourceParser::ParsePrintStatement() {
   ConsumeToken(TokenType::PRINT);
   std::shared_ptr<SourceToken> identifier = ConsumeToken(TokenType::NAME);
   ConsumeToken(TokenType::SEMI_COLON);
-  return std::make_shared<PrintStatementNode>(line_number, std::make_shared<VariableNode>(identifier->GetValue()));
+  return std::make_shared<PrintStatementNode>(line_number++, std::make_shared<VariableNode>(identifier->GetValue()));
 }
 
 std::shared_ptr<WhileStatementNode> SourceParser::ParseWhileStatement() {
@@ -121,7 +114,7 @@ std::shared_ptr<WhileStatementNode> SourceParser::ParseWhileStatement() {
   ConsumeToken(TokenType::OPENED_BRACES);
   std::shared_ptr<StatementListNode> stmt_list = ParseStatementList();
   ConsumeToken(TokenType::CLOSED_BRACES);
-  return std::make_shared<WhileStatementNode>(line_number, cond_expr, stmt_list);
+  return std::make_shared<WhileStatementNode>(line_number++, cond_expr, stmt_list);
 }
 
 std::shared_ptr<IfStatementNode> SourceParser::ParseIfStatement() {
@@ -137,7 +130,7 @@ std::shared_ptr<IfStatementNode> SourceParser::ParseIfStatement() {
   ConsumeToken(TokenType::OPENED_BRACES);
   std::shared_ptr<StatementListNode> else_stmt_list = ParseStatementList();
   ConsumeToken(TokenType::CLOSED_BRACES);
-  return std::make_shared<IfStatementNode>(line_number, cond_expr, if_stmt_list, else_stmt_list);
+  return std::make_shared<IfStatementNode>(line_number++, cond_expr, if_stmt_list, else_stmt_list);
 }
 
 std::shared_ptr<AssignStatementNode> SourceParser::ParseAssignStatement() {
@@ -145,7 +138,7 @@ std::shared_ptr<AssignStatementNode> SourceParser::ParseAssignStatement() {
   ConsumeToken(TokenType::EQUAL);;
   std::shared_ptr<ExpressionNode> expr = ParseExpression();
   ConsumeToken(TokenType::SEMI_COLON);
-  return std::make_shared<AssignStatementNode>(line_number,
+  return std::make_shared<AssignStatementNode>(line_number++,
                                                std::make_shared<VariableNode>(identifier->GetValue()),
                                                expr);
 }
