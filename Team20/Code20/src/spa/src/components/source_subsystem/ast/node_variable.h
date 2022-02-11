@@ -1,18 +1,18 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_VARIABLE_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_VARIABLE_H_
+#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_VARIABLE_H_
+#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_VARIABLE_H_
 
 #include "node_expression.h"
 
 class VariableNode : public ExpressionNode {
  private:
-  std::string m_name;
+  std::string m_identifier;
 
  public:
   VariableNode();
-  VariableNode(std::string name);
-  std::string getName();
-  ExpressionType getExpressionType();
-  std::string ToString(int _);
+  VariableNode(std::string identifier);
+  [[nodiscard]] std::string GetIdentifier();
+  [[nodiscard]] ExpressionType GetExpressionType() override;
+  [[nodiscard]] std::string ToString(int level) override;
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_VARIABLE_H_
+#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_VARIABLE_H_
