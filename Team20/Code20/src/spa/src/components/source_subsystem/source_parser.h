@@ -3,7 +3,16 @@
 
 #include <vector>
 
-#include "components/source_subsystem/node.h"
+#include "ast/node_program.h"
+#include "ast/node_read_statement.h"
+#include "ast/node_print_statement.h"
+#include "ast/node_while_statement.h"
+#include "ast/node_if_statement.h"
+#include "ast/node_assign_statement.h"
+#include "ast/node_boolean_expression.h"
+#include "ast/node_relational_expression.h"
+#include "ast/node_not_expression.h"
+#include "ast/node_constant.h"
 #include "components/source_subsystem/source_token.h"
 
 class SourceParser {

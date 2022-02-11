@@ -9,23 +9,23 @@ DesignExtractor::DesignExtractor(ProgramNode root_node, PKB *pkb, UsageStore sto
 }
 
 void DesignExtractor::traverse_ast() {
-  std::vector<std::shared_ptr<ProcedureNode>> proc_list = this->root_node.getProcedures();
+  std::vector<std::shared_ptr<ProcedureNode>> proc_list = this->root_node.GetProcedures();
   for (auto &proc : proc_list) {
-    std::shared_ptr<StatementListNode> stmtLst = proc->getStatementList();
-    std::vector<std::shared_ptr<StatementNode>> stmts = stmtLst->getStatements();
-    populate_proc(proc->getName());
+    std::shared_ptr<StatementListNode> stmtLst = proc->GetStatementList();
+    std::vector<std::shared_ptr<StatementNode>> stmts = stmtLst->GetStatements();
+    populate_proc(proc->GetIdentifier());
     process_proc(proc, stmtLst, stmts);
   }
 }
 
 void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst, std::vector<std::shared_ptr<StatementNode>> stmts) {
   for (auto &stmt : stmts) {
-    int stmt_num = stmt->getLineNumber();
-    StmtType stmt_type = stmt->getStatementType();
+    int stmt_num = stmt->GetStatementNumber();
+    StmtType stmt_type = stmt->GetStatementType();
     std::string var_name = "";
     switch(stmt_type) {
       case PROC:
-        populate_proc(proc->getName());
+        populate_proc(proc->GetIdentifier());
         break;
       case STMT:
         populate_stmt(stmt_num);
@@ -33,7 +33,7 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
       case READ: {
         populate_stmt(stmt_num);
         std::shared_ptr<ReadStatementNode> read_stmt = static_pointer_cast<ReadStatementNode>(stmt);
-        var_name = read_stmt->getId()->getName();
+        var_name = read_stmt->GetIdentifier()->GetIdentifier();
         populate_vars(var_name);
         populate_read(stmt_num);
         populate_modifies(stmt_num, var_name);
@@ -42,7 +42,7 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
       case PRINT: {
         populate_stmt(stmt_num);
         std::shared_ptr<PrintStatementNode> print_stmt = static_pointer_cast<PrintStatementNode>(stmt);
-        var_name = print_stmt->getId()->getName();
+        var_name = print_stmt->GetIdentifier()->GetIdentifier();
         populate_vars(var_name);
         populate_print(stmt_num);
         populate_uses(stmt_num, var_name);
@@ -51,26 +51,26 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
       case ASSIGN: {
         populate_stmt(stmt_num);
         std::shared_ptr<AssignStatementNode> assign_stmt = static_pointer_cast<AssignStatementNode>(stmt);
-        var_name = assign_stmt->getId()->getName();
+        var_name = assign_stmt->GetIdentifier()->GetIdentifier();
         populate_vars(var_name);
-        std::shared_ptr<ExpressionNode> expr = assign_stmt->getExpr();
-        ExpressionType expr_type = expr->getExpressionType();
+        std::shared_ptr<ExpressionNode> expr = assign_stmt->GetExpression();
+        ExpressionType expr_type = expr->GetExpressionType();
         switch (expr_type) {
           case ExpressionType::CONSTANT: {
             std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(expr);
-            std::string name = constant->getValue();
+            std::string name = constant->GetValue();
             populate_const(name);
             break;
           }
           case ExpressionType::COMBINATION: {
             std::shared_ptr<CombinationExpressionNode> comb = static_pointer_cast<CombinationExpressionNode>(expr);
-            std::shared_ptr<ExpressionNode> lhs = comb->getLHS();
-            std::shared_ptr<ExpressionNode> rhs = comb->getRHS();
-            Operation op = comb->getOperation();
+            std::shared_ptr<ExpressionNode> lhs = comb->GetLeftExpression();
+            std::shared_ptr<ExpressionNode> rhs = comb->GetRightExpression();
+            ArithmeticOperator op = comb->GetArithmeticOperator();
           }
           case ExpressionType::VARIABLE: {
             std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
-            std::string name = var->getName();
+            std::string name = var->GetIdentifier();
             populate_const(name);
           }
         }
