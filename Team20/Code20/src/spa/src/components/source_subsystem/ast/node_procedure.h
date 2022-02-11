@@ -14,7 +14,7 @@ class ProcedureNode : public Node
   ProcedureNode(std::string name, std::shared_ptr<StatementListNode> stmtList);
   std::shared_ptr<StatementListNode> getStatementList();
   std::string getName();
-  std::string format(int level);
+  std::string ToString(int level);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROCEDURE_H_

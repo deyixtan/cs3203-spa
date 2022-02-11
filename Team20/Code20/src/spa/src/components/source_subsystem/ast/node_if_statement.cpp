@@ -29,8 +29,8 @@ StmtType IfStatementNode::getStatementType() {
   return StmtType::IF;
 }
 
-std::string IfStatementNode::format(int level) {
-  std::string header = StatementNode::format(level);
-  return header + "if (" + m_condition->format(level) + ") then {\n" + m_if_stmt_list->format(level + 1) + header +
-      "} else {\n" + m_else_stmt_list->format(level + 1) + header + "}\n";
+std::string IfStatementNode::ToString(int level) {
+  std::string header = StatementNode::ToString(level);
+  return header + "if (" + m_condition->ToString(level) + ") then {\n" + m_if_stmt_list->ToString(level + 1) + header +
+      "} else {\n" + m_else_stmt_list->ToString(level + 1) + header + "}\n";
 }

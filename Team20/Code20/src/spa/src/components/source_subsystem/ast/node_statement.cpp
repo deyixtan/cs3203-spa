@@ -23,6 +23,6 @@ int StatementNode::getLineNumber() {
   return m_line_number;
 }
 
-std::string StatementNode::format(int level) {
+std::string StatementNode::ToString(int level) {
   return this->getStatementLabel();
 }

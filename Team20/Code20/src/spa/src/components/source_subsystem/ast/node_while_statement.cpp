@@ -21,7 +21,7 @@ StmtType WhileStatementNode::getStatementType() {
   return StmtType::WHILE;
 }
 
-std::string WhileStatementNode::format(int level) {
-  std::string header = StatementNode::format(level);
-  return header + "while (" + m_condition->format(level) + ") {\n" + m_stmt_list->format(level + 1) + header + "}\n";
+std::string WhileStatementNode::ToString(int level) {
+  std::string header = StatementNode::ToString(level);
+  return header + "while (" + m_condition->ToString(level) + ") {\n" + m_stmt_list->ToString(level + 1) + header + "}\n";
 }

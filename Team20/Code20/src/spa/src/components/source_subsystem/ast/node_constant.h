@@ -12,7 +12,7 @@ class ConstantNode : public ExpressionNode
   ConstantNode(std::string value);
   std::string getValue();
   ExpressionType getExpressionType();
-  std::string format(int lvl);
+  std::string ToString(int lvl);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONSTANT_H_

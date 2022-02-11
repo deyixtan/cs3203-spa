@@ -27,7 +27,7 @@ class CombinationExpressionNode : public ExpressionNode {
   Operation getOperation();
   std::string getOperationLabel(Operation op);
   ExpressionType getExpressionType();
-  std::string format(int level);
+  std::string ToString(int level);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_

@@ -24,6 +24,6 @@ std::shared_ptr<ConditionalExpressionNode> BooleanExpressionNode::getRHS() {
   return m_rhs;
 }
 
-std::string BooleanExpressionNode::format(int level) {
-  return "(" + m_lhs->format(level) + (m_op == BooleanOperator::AND ? " && " : " || ") + m_rhs->format(level) + ")";
+std::string BooleanExpressionNode::ToString(int level) {
+  return "(" + m_lhs->ToString(level) + (m_op == BooleanOperator::AND ? " && " : " || ") + m_rhs->ToString(level) + ")";
 }

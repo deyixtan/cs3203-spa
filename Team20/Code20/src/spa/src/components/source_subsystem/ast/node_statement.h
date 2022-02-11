@@ -17,7 +17,7 @@ class StatementNode : public Node
   virtual std::vector<std::shared_ptr<StatementNode>> getStatementList();
   virtual StmtType getStatementType();
   int getLineNumber();
-  std::string format(int level);
+  std::string ToString(int level);
 };
 
 

@@ -21,7 +21,7 @@ class IfStatementNode : public StatementNode {
   std::shared_ptr<StatementListNode> getConsequent();
   std::shared_ptr<StatementListNode> getAlternative();
   StmtType getStatementType();
-  std::string format(int level);
+  std::string ToString(int level);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_IF_STATEMENT_H_

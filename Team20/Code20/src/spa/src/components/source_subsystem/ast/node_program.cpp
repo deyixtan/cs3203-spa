@@ -7,14 +7,14 @@ std::vector<std::shared_ptr<ProcedureNode>> ProgramNode::getProcedures() {
   return m_procedures;
 }
 
-std::string ProgramNode::format() {
-  return this->format(0);
+std::string ProgramNode::ToString() {
+  return this->ToString(0);
 }
 
-std::string ProgramNode::format(int level) {
+std::string ProgramNode::ToString(int level) {
   std::string acc = "";
   for (std::shared_ptr<ProcedureNode> procedure : m_procedures) {
-    acc += procedure->format(level) + "\n";
+    acc += procedure->ToString(level) + "\n";
   }
   return acc;
 }

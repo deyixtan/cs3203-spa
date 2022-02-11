@@ -12,7 +12,7 @@ class PrintStatementNode : public StatementNode {
   PrintStatementNode(int line, std::shared_ptr<VariableNode> id);
   std::shared_ptr<VariableNode> getId();
   StmtType getStatementType();
-  std::string format(int level);
+  std::string ToString(int level);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PRINT_STATEMENT_H_

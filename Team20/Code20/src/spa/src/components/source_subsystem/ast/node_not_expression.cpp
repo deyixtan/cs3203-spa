@@ -9,6 +9,6 @@ ConditionalType NotExpressionNode::getConditionalType() {
   return ConditionalType::NOT;
 }
 
-std::string NotExpressionNode::format(int level) {
-  return "(!" + m_expr->format(level) + ")";
+std::string NotExpressionNode::ToString(int level) {
+  return "(!" + m_expr->ToString(level) + ")";
 }

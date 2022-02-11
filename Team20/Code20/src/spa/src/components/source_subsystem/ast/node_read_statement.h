@@ -12,7 +12,7 @@ class ReadStatementNode : public StatementNode
  public:
   ReadStatementNode(int line, std::shared_ptr<VariableNode> id);
   std::shared_ptr<VariableNode> getId();
-  std::string format(int level);
+  std::string ToString(int level);
   StmtType getStatementType();
 };
 

@@ -10,6 +10,6 @@ StmtType ReadStatementNode::getStatementType() {
   return StmtType::READ;
 }
 
-std::string ReadStatementNode::format(int level) {
-  return StatementNode::format(level) + "read " + m_id->format(level) + ";\n";
+std::string ReadStatementNode::ToString(int level) {
+  return StatementNode::ToString(level) + "read " + m_id->ToString(level) + ";\n";
 }

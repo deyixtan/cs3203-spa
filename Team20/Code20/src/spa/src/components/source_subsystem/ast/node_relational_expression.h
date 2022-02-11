@@ -27,7 +27,7 @@ class RelationalExpressionNode : public ConditionalExpressionNode {
   std::shared_ptr<ExpressionNode> getLHS();
   std::shared_ptr<ExpressionNode> getRHS();
   std::string getRelationalOpLabel(RelationalOperation op);
-  std::string format(int level);
+  std::string ToString(int level);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_RELATIONAL_EXPRESSION_H_

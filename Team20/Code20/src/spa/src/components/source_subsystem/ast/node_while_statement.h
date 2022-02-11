@@ -18,7 +18,7 @@ class WhileStatementNode : public StatementNode {
   std::shared_ptr<ConditionalExpressionNode> getConditional();
   std::shared_ptr<StatementListNode> getBody();
   StmtType getStatementType();
-  std::string format(int level);
+  std::string ToString(int level);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_WHILE_STATEMENT_H_

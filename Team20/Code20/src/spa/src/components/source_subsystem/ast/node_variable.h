@@ -12,7 +12,7 @@ class VariableNode : public ExpressionNode {
   VariableNode(std::string name);
   std::string getName();
   ExpressionType getExpressionType();
-  std::string format(int _);
+  std::string ToString(int _);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_VARIABLE_H_

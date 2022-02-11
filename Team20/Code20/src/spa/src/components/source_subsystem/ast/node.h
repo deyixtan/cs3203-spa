@@ -1,15 +1,12 @@
-#ifndef NODE_H
-#define NODE_H
+#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_H_
+#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_H_
 
-#include <memory>
-#include <string>
-#include <unordered_set>
-#include <vector>
-#include "components/pkb/pkb.h"
+// TODO: remove dependence on PKB's StmtType
+#include "../../pkb/pkb.h"
 
 class Node {
  public:
-  virtual std::string format(int level) = 0;
+  [[nodiscard]] virtual std::string ToString(int level) = 0;
 };
 
-#endif //NODE_H
+#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_H_

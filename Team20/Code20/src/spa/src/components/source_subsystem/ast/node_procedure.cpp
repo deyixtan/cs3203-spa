@@ -11,6 +11,6 @@ std::shared_ptr<StatementListNode> ProcedureNode::getStatementList() {
   return m_stmt_list;
 }
 
-std::string ProcedureNode::format(int level) {
-  return "procedure " + m_name + " {\n" + m_stmt_list->format(level + 1) + "}\n";
+std::string ProcedureNode::ToString(int level) {
+  return "procedure " + m_name + " {\n" + m_stmt_list->ToString(level + 1) + "}\n";
 }

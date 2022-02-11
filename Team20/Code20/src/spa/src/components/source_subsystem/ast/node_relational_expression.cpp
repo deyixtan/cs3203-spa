@@ -29,6 +29,6 @@ std::string RelationalExpressionNode::getRelationalOpLabel(RelationalOperation o
   }
 }
 
-std::string RelationalExpressionNode::format(int level) {
-  return "(" + m_lhs->format(level) + " " + getRelationalOpLabel(m_rop) + " " + m_rhs->format(level) + ")";
+std::string RelationalExpressionNode::ToString(int level) {
+  return "(" + m_lhs->ToString(level) + " " + getRelationalOpLabel(m_rop) + " " + m_rhs->ToString(level) + ")";
 }

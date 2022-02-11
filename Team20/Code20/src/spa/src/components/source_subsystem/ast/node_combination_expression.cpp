@@ -39,6 +39,6 @@ ExpressionType CombinationExpressionNode::getExpressionType() {
   return ExpressionType::COMBINATION;
 }
 
-std::string CombinationExpressionNode::format(int level) {
-  return "(" + m_lhs->format(level) + " " + getOperationLabel(m_op) + " " + m_rhs->format(level) + ")";
+std::string CombinationExpressionNode::ToString(int level) {
+  return "(" + m_lhs->ToString(level) + " " + getOperationLabel(m_op) + " " + m_rhs->ToString(level) + ")";
 }

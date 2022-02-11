@@ -10,6 +10,6 @@ ExpressionType ConstantNode::getExpressionType() {
   return ExpressionType::CONSTANT;
 }
 
-std::string ConstantNode::format(int _) {
+std::string ConstantNode::ToString(int _) {
   return m_value;
 }

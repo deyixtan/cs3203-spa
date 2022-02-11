@@ -12,6 +12,6 @@ ExpressionType VariableNode::getExpressionType() {
   return ExpressionType::VARIABLE;
 }
 
-std::string VariableNode::format(int _) {
+std::string VariableNode::ToString(int _) {
   return "$" + m_name;
 }

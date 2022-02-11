@@ -23,7 +23,7 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
   void setLeft(std::shared_ptr<ConditionalExpressionNode> lhs);
   std::shared_ptr<ConditionalExpressionNode> getLHS();
   std::shared_ptr<ConditionalExpressionNode> getRHS();
-  std::string format(int level);
+  std::string ToString(int level);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_

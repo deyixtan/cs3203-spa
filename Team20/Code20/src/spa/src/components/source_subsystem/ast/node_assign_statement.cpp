@@ -17,6 +17,6 @@ StmtType AssignStatementNode::getStatementType() {
   return StmtType::ASSIGN;
 }
 
-std::string AssignStatementNode::format(int level) {
-  return StatementNode::format(level) + m_id->format(level) + " = " + m_expression->format(level) + ";\n";
+std::string AssignStatementNode::ToString(int level) {
+  return StatementNode::ToString(level) + m_id->ToString(level) + " = " + m_expression->ToString(level) + ";\n";
 }

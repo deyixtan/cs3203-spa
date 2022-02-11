@@ -15,7 +15,7 @@ class AssignStatementNode : public StatementNode
   std::shared_ptr<VariableNode> getId();
   std::shared_ptr<ExpressionNode> getExpr();
   StmtType getStatementType();
-  std::string format(int level);
+  std::string ToString(int level);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_ASSIGN_STATEMENT_H_

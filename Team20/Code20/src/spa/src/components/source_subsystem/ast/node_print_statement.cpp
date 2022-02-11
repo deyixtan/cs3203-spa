@@ -10,6 +10,6 @@ StmtType PrintStatementNode::getStatementType() {
   return StmtType::PRINT;
 }
 
-std::string PrintStatementNode::format(int level) {
-  return StatementNode::format(level) + "print " + m_id->format(level) + ";\n";
+std::string PrintStatementNode::ToString(int level) {
+  return StatementNode::ToString(level) + "print " + m_id->ToString(level) + ";\n";
 }
