@@ -10,7 +10,7 @@ BooleanExpressionNode::BooleanExpressionNode(BooleanOperator boolean_operator,
     : m_boolean_operator(boolean_operator), m_left_expression(left_expression), m_right_expression(right_expression) {}
 
 std::shared_ptr<ConditionalExpressionNode> BooleanExpressionNode::GetLeftExpression() {
-  return m_left_expression
+  return m_left_expression;
 }
 
 std::shared_ptr<ConditionalExpressionNode> BooleanExpressionNode::GetRightExpression() {

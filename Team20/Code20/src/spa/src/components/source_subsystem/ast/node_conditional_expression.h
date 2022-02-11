@@ -11,7 +11,7 @@ enum class ConditionalType {
 
 class ConditionalExpressionNode : public Node {
  public:
-  [[nodiscard]] virtual ConditionalType GetConditionalType();
+  [[nodiscard]] virtual ConditionalType GetConditionalType() = 0;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONDITIONAL_EXPRESSION_H_
