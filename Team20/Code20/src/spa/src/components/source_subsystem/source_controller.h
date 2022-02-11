@@ -6,6 +6,8 @@
 #include "components/pkb/design_extractor/design_extractor.h"
 #include "utils/file_util.h"
 
+namespace source {
+
 class SourceController {
  public:
   SourceController();
@@ -14,5 +16,7 @@ class SourceController {
   std::string RetrieveFileContent(std::string file_path);
   void PopulatePKB(PKB *pkb, std::shared_ptr<ProgramNode> ast);
 };
+
+}
 
 #endif //SOURCE_CONTROLLER_H

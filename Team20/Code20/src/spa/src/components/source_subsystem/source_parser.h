@@ -15,6 +15,8 @@
 #include "ast/node_constant.h"
 #include "components/source_subsystem/source_token.h"
 
+namespace source {
+
 class SourceParser {
  private:
   std::vector<SourceToken *> tokens_ptr;
@@ -28,7 +30,7 @@ class SourceParser {
   std::shared_ptr<SourceToken> FetchNextToken();
   void IncrementCursor();
   bool AreTokensProcessed();
-  std::shared_ptr<SourceToken> ConsumeToken(SourceTokenType type);
+  std::shared_ptr<SourceToken> ConsumeToken(TokenType type);
   std::shared_ptr<ProgramNode> ParseProgram();
   std::shared_ptr<ProcedureNode> ParseProcedure();
   std::shared_ptr<StatementListNode> ParseStatementList();
@@ -48,5 +50,7 @@ class SourceParser {
   std::shared_ptr<ExpressionNode> ParseTerm2(std::shared_ptr<ExpressionNode> left);
   std::shared_ptr<ExpressionNode> ParseFactor();
 };
+
+}
 
 #endif //SOURCE_PARSER_H
