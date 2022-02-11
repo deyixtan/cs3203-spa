@@ -1,34 +1,37 @@
 #include "node_relational_expression.h"
 
-RelationalExpressionNode::RelationalExpressionNode(RelationalOperation op,
-                                                   std::shared_ptr<ExpressionNode> lhs,
-                                                   std::shared_ptr<ExpressionNode> rhs)
-    : m_rop(op), m_lhs(lhs), m_rhs(rhs) {}
+RelationalExpressionNode::RelationalExpressionNode(RelationOperator relation_operator,
+                                                   std::shared_ptr<ExpressionNode> left_expression,
+                                                   std::shared_ptr<ExpressionNode> right_expression)
+    : m_relation_operator(relation_operator),
+      m_left_expression(left_expression),
+      m_right_expression(right_expression) {}
 
-ConditionalType RelationalExpressionNode::getConditionalType() {
-  return ConditionalType::RELATIONAL;
+std::shared_ptr<ExpressionNode> RelationalExpressionNode::GetLeftExpression() {
+  return m_left_expression;
 }
 
-std::shared_ptr<ExpressionNode> RelationalExpressionNode::getLHS() {
-  return m_lhs;
+std::shared_ptr<ExpressionNode> RelationalExpressionNode::GetRightExpression() {
+  return m_right_expression;
 }
 
-std::shared_ptr<ExpressionNode> RelationalExpressionNode::getRHS() {
-  return m_rhs;
-}
-
-std::string RelationalExpressionNode::getRelationalOpLabel(RelationalOperation op) {
-  switch (op) {
-    case RelationalOperation::LESS_THAN:return "<";
-    case RelationalOperation::LESS_THAN_EQUALS:return "<=";
-    case RelationalOperation::GREATER_THAN:return ">";
-    case RelationalOperation::GREATER_THAN_EQUALS:return ">=";
-    case RelationalOperation::EQUALS:return "==";
-    case RelationalOperation::NOT_EQUALS:return "!=";
+std::string RelationalExpressionNode::GetRelationOperatorLabel(RelationOperator relation_operator) {
+  switch (relation_operator) {
+    case RelationOperator::LESS_THAN:return "<";
+    case RelationOperator::LESS_THAN_EQUALS:return "<=";
+    case RelationOperator::GREATER_THAN:return ">";
+    case RelationOperator::GREATER_THAN_EQUALS:return ">=";
+    case RelationOperator::EQUALS:return "==";
+    case RelationOperator::NOT_EQUALS:return "!=";
     default:return "";
   }
 }
 
+ConditionalType RelationalExpressionNode::GetConditionalType() {
+  return ConditionalType::RELATIONAL;
+}
+
 std::string RelationalExpressionNode::ToString(int level) {
-  return "(" + m_lhs->ToString(level) + " " + getRelationalOpLabel(m_rop) + " " + m_rhs->ToString(level) + ")";
+  return "(" + m_left_expression->ToString(level) + " " + GetRelationOperatorLabel(m_relation_operator) + " "
+      + m_right_expression->ToString(level) + ")";
 }
