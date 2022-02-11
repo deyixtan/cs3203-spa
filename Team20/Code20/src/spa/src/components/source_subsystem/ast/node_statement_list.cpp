@@ -5,14 +5,14 @@ StatementListNode::StatementListNode() : m_statements(std::vector<std::shared_pt
 StatementListNode::StatementListNode(std::vector<std::shared_ptr<StatementNode>> statements)
     : m_statements(statements) {}
 
-std::vector<std::shared_ptr<StatementNode>> StatementListNode::getStatements() {
+std::vector<std::shared_ptr<StatementNode>> StatementListNode::GetStatements() {
   return m_statements;
 }
 
 std::string StatementListNode::ToString(int level) {
-  std::string acc = "";
+  std::string str = "";
   for (std::shared_ptr<StatementNode> statement : m_statements) {
-    acc += statement->ToString(level);
+    str += statement->ToString(level);
   }
-  return acc;
+  return str;
 }

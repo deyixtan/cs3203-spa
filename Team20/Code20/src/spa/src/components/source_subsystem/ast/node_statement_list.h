@@ -11,8 +11,8 @@ class StatementListNode : public Node {
  public:
   StatementListNode();
   StatementListNode(std::vector<std::shared_ptr<StatementNode>> statements);
-  std::vector<std::shared_ptr<StatementNode>> getStatements();
-  std::string ToString(int level);
+  [[nodiscard]] std::vector<std::shared_ptr<StatementNode>> GetStatements();
+  [[nodiscard]] std::string ToString(int level) override;
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_LIST_H_
