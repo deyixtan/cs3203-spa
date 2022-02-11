@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
+#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
+#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
 
 #include "node_conditional_expression.h"
 
@@ -10,20 +10,20 @@ enum class BooleanOperator {
 
 class BooleanExpressionNode : public ConditionalExpressionNode {
  private:
-  BooleanOperator m_op;
-  std::shared_ptr<ConditionalExpressionNode> m_lhs;
-  std::shared_ptr<ConditionalExpressionNode> m_rhs;
+  BooleanOperator m_boolean_operator;
+  std::shared_ptr<ConditionalExpressionNode> m_left_expression;
+  std::shared_ptr<ConditionalExpressionNode> m_right_expression;
 
  public:
-  BooleanExpressionNode(BooleanOperator op, std::shared_ptr<ConditionalExpressionNode> rhs);
-  BooleanExpressionNode(BooleanOperator op,
-                        std::shared_ptr<ConditionalExpressionNode> lhs,
-                        std::shared_ptr<ConditionalExpressionNode> rhs);
-  ConditionalType getConditionalType();
-  void setLeft(std::shared_ptr<ConditionalExpressionNode> lhs);
-  std::shared_ptr<ConditionalExpressionNode> getLHS();
-  std::shared_ptr<ConditionalExpressionNode> getRHS();
-  std::string ToString(int level);
+  BooleanExpressionNode(BooleanOperator boolean_operator, std::shared_ptr<ConditionalExpressionNode> right_expression);
+  BooleanExpressionNode(BooleanOperator boolean_operator,
+                        std::shared_ptr<ConditionalExpressionNode> left_expression,
+                        std::shared_ptr<ConditionalExpressionNode> right_expression);
+  [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetLeftExpression();
+  [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetRightExpression();
+  [[nodiscard]] ConditionalType GetConditionalType();
+  void SetLeftExpression(std::shared_ptr<ConditionalExpressionNode> left_expression);
+  [[nodiscard]] std::string ToString(int level) override;
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
+#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
