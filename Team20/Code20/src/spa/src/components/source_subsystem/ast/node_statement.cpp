@@ -1,28 +1,20 @@
 #include "node_statement.h"
 
-StatementNode::StatementNode(int line) : m_line_number(line) {}
+StatementNode::StatementNode(int stmt_no) : m_stmt_no(stmt_no) {}
 
-std::vector<std::shared_ptr<StatementNode>> StatementNode::getStatementList() {
-  return {};
+int StatementNode::GetStatementNumber() {
+  return m_stmt_no;
 }
 
-std::string StatementNode::getStatementLabel() {
-  if (m_line_number == 0) {
+std::string StatementNode::GetStatementLabel() {
+  if (m_stmt_no == 0) {
     return "   ";
-  } else {
-    std::string num = std::to_string(m_line_number);
-    return std::string(3 - num.length(), ' ') + num;
   }
-}
 
-StmtType StatementNode::getStatementType() {
-  return StmtType::NONE;
-}
-
-int StatementNode::getLineNumber() {
-  return m_line_number;
+  std::string num = std::to_string(m_stmt_no);
+  return std::string(3 - num.length(), ' ') + num;
 }
 
 std::string StatementNode::ToString(int level) {
-  return this->getStatementLabel();
+  return GetStatementLabel();
 }

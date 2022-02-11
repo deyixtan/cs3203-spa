@@ -1,24 +1,20 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
+#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
+#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
 
 #include "node.h"
 
-class StatementNode : public Node
-{
+class StatementNode : public Node {
  private:
-  int m_line_number = 0;
+  int m_stmt_no;
 
  protected:
-  std::string getStatementLabel();
+  [[nodiscard]] std::string GetStatementLabel();
 
  public:
-  StatementNode(int line);
-
-  virtual std::vector<std::shared_ptr<StatementNode>> getStatementList();
-  virtual StmtType getStatementType();
-  int getLineNumber();
-  std::string ToString(int level);
+  StatementNode(int stmt_no);
+  [[nodiscard]] int GetStatementNumber();
+  [[nodiscard]] virtual StmtType GetStatementType() = 0;
+  [[nodiscard]] std::string ToString(int level) override;
 };
 
-
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
+#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
