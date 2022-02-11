@@ -1,9 +1,9 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_WHILE_STATEMENT_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_WHILE_STATEMENT_H_
+#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_WHILE_STATEMENT_H_
+#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_WHILE_STATEMENT_H_
 
 #include "node_statement.h"
-#include "node_statement_list.h"
 #include "node_conditional_expression.h"
+#include "node_statement_list.h"
 
 class WhileStatementNode : public StatementNode {
  private:
@@ -11,14 +11,13 @@ class WhileStatementNode : public StatementNode {
   std::shared_ptr<StatementListNode> m_stmt_list;
 
  public:
-  WhileStatementNode(int line,
-                     std::shared_ptr<ConditionalExpressionNode> cond,
+  WhileStatementNode(int stmt_no,
+                     std::shared_ptr<ConditionalExpressionNode> condition,
                      std::shared_ptr<StatementListNode> stmt_list);
-  std::vector<std::shared_ptr<StatementNode>> getStatementList();
-  std::shared_ptr<ConditionalExpressionNode> getConditional();
-  std::shared_ptr<StatementListNode> getBody();
-  StmtType getStatementType();
-  std::string ToString(int level);
+  [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetCondition();
+  [[nodiscard]] std::shared_ptr<StatementListNode> GetStatementList();
+  [[nodiscard]] StmtType GetStatementType() override;
+  [[nodiscard]] std::string ToString(int level) override;
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_WHILE_STATEMENT_H_
+#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_WHILE_STATEMENT_H_
