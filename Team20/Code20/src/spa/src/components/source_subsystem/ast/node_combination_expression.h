@@ -1,33 +1,34 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_
+#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_
+#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_
 
 #include "node_expression.h"
 
-enum class Operation {
+enum class ArithmeticOperator {
   PLUS,
   MINUS,
-  DIVIDE,
   MULTIPLY,
+  DIVIDE,
   MOD,
 };
 
 class CombinationExpressionNode : public ExpressionNode {
  private:
-  Operation m_op;
-  std::shared_ptr<ExpressionNode> m_lhs;
-  std::shared_ptr<ExpressionNode> m_rhs;
+  ArithmeticOperator m_arithmetic_operator;
+  std::shared_ptr<ExpressionNode> m_left_expression;
+  std::shared_ptr<ExpressionNode> m_right_expression;
 
  public:
-  CombinationExpressionNode(Operation op, std::shared_ptr<ExpressionNode> right);
-  CombinationExpressionNode(Operation op, std::shared_ptr<ExpressionNode> lhs, std::shared_ptr<ExpressionNode> rhs);
-
-  void setLeftExpression(std::shared_ptr<ExpressionNode> left);
-  std::shared_ptr<ExpressionNode> getLHS();
-  std::shared_ptr<ExpressionNode> getRHS();
-  Operation getOperation();
-  std::string getOperationLabel(Operation op);
-  ExpressionType getExpressionType();
-  std::string ToString(int level);
+  CombinationExpressionNode(ArithmeticOperator arithmetic_operator, std::shared_ptr<ExpressionNode> right_expression);
+  CombinationExpressionNode(ArithmeticOperator arithmetic_operator,
+                            std::shared_ptr<ExpressionNode> left_expression,
+                            std::shared_ptr<ExpressionNode> right_expression);
+  [[nodiscard]] std::shared_ptr<ExpressionNode> GetLeftExpression();
+  [[nodiscard]] std::shared_ptr<ExpressionNode> GetRightExpression();
+  [[nodiscard]] ArithmeticOperator GetArithmeticOperator();
+  [[nodiscard]] std::string GetArithmeticOperatorLabel(ArithmeticOperator arithmetic_operator);
+  void SetLeftExpression(std::shared_ptr<ExpressionNode> left_expression);
+  [[nodiscard]] ExpressionType GetExpressionType() override;
+  [[nodiscard]] std::string ToString(int level) override;
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_
+#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_

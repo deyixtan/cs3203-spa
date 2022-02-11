@@ -1,44 +1,48 @@
 #include "node_combination_expression.h"
 
-CombinationExpressionNode::CombinationExpressionNode(Operation op, std::shared_ptr<ExpressionNode> right)
-    : m_op(op), m_rhs(right), m_lhs(NULL) {}
+CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator,
+                                                     std::shared_ptr<ExpressionNode> right_expression)
+    : m_arithmetic_operator(arithmetic_operator), m_left_expression(NULL), m_right_expression(right_expression) {}
 
-CombinationExpressionNode::CombinationExpressionNode(Operation op,
-                                                     std::shared_ptr<ExpressionNode> lhs,
-                                                     std::shared_ptr<ExpressionNode> rhs)
-    : m_op(op), m_rhs(rhs), m_lhs(lhs) {}
+CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator,
+                                                     std::shared_ptr<ExpressionNode> left_expression,
+                                                     std::shared_ptr<ExpressionNode> right_expression)
+    : m_arithmetic_operator(arithmetic_operator),
+      m_left_expression(left_expression),
+      m_right_expression(right_expression) {}
 
-void CombinationExpressionNode::setLeftExpression(std::shared_ptr<ExpressionNode> left) {
-  this->m_lhs = left;
+std::shared_ptr<ExpressionNode> CombinationExpressionNode::GetLeftExpression() {
+  return m_left_expression;
 }
 
-std::shared_ptr<ExpressionNode> CombinationExpressionNode::getLHS() {
-  return m_lhs;
+std::shared_ptr<ExpressionNode> CombinationExpressionNode::GetRightExpression() {
+  return m_right_expression;
 }
 
-std::shared_ptr<ExpressionNode> CombinationExpressionNode::getRHS() {
-  return m_rhs;
+ArithmeticOperator CombinationExpressionNode::GetArithmeticOperator() {
+  return m_arithmetic_operator;
 }
 
-Operation CombinationExpressionNode::getOperation() {
-  return m_op;
-}
-
-std::string CombinationExpressionNode::getOperationLabel(Operation op) {
-  switch (op) {
-    case Operation::PLUS:return "+";
-    case Operation::MINUS:return "-";
-    case Operation::DIVIDE:return "/";
-    case Operation::MULTIPLY:return "*";
-    case Operation::MOD:return "%";
+std::string CombinationExpressionNode::GetArithmeticOperatorLabel(ArithmeticOperator arithmetic_operator) {
+  switch (arithmetic_operator) {
+    case ArithmeticOperator::PLUS:return "+";
+    case ArithmeticOperator::MINUS:return "-";
+    case ArithmeticOperator::DIVIDE:return "/";
+    case ArithmeticOperator::MULTIPLY:return "*";
+    case ArithmeticOperator::MOD:return "%";
     default:return "";
   }
 }
 
-ExpressionType CombinationExpressionNode::getExpressionType() {
+void CombinationExpressionNode::SetLeftExpression(std::shared_ptr<ExpressionNode> left_expression) {
+  m_left_expression = left_expression;
+}
+
+ExpressionType CombinationExpressionNode::GetExpressionType() {
   return ExpressionType::COMBINATION;
 }
 
 std::string CombinationExpressionNode::ToString(int level) {
-  return "(" + m_lhs->ToString(level) + " " + getOperationLabel(m_op) + " " + m_rhs->ToString(level) + ")";
+  return "(" + m_left_expression->ToString(level) + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
+      + m_right_expression->ToString(level) + ")";
 }
