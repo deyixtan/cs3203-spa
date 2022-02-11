@@ -3,8 +3,6 @@
 #include "components/query_subsystem/pql_parser/query_validator.h"
 #include "components/query_subsystem/pql_parser/query_grammar_error.h"
 #include "sample_token.h"
-#include "components/source_subsystem/ast/node.h"
-
 
 #include "catch.hpp"
 
