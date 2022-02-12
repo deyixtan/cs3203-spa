@@ -23,7 +23,7 @@ class SourceLexer {
   void TryTranslateToKeywordToken(std::shared_ptr<SourceToken> &token_ptr);
 
  public:
-  SourceLexer(std::string simple_source);
+  explicit SourceLexer(std::string simple_source);
   void Tokenize(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
 };
 
