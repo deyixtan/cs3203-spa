@@ -2,7 +2,7 @@
 
 namespace source {
 
-SourceToken::SourceToken(TokenType type, std::string &value) : m_type(type), m_value(value) {}
+SourceToken::SourceToken(TokenType type, std::string value) : m_type(type), m_value(value) {}
 
 TokenType SourceToken::GetType() {
   return m_type;

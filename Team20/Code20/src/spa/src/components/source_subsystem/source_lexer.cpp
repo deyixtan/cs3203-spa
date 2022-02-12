@@ -3,10 +3,10 @@
 namespace source {
 
 SourceLexer::SourceLexer(std::string simple_source) : m_cursor(0), m_simple_source(simple_source) {
-  ConstructSpecs();
+  ConstructLexerSpecs();
 }
 
-void SourceLexer::ConstructSpecs() {
+void SourceLexer::ConstructLexerSpecs() {
   m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^\\s+", TokenType::WHITE_SPACE));
   m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^\\d+", TokenType::DIGIT));
   m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[a-zA-Z]+[a-zA-Z0-9]*", TokenType::NAME));
@@ -42,22 +42,18 @@ std::shared_ptr<SourceToken> SourceLexer::GetNextToken() {
   }
 
   std::string remaining_source = m_simple_source.substr(m_cursor);
-
-  std::vector<std::pair<std::regex, TokenType>>::iterator itr;
-  for (itr = m_lexer_specs.begin(); itr != m_lexer_specs.end(); ++itr) {
-    std::regex expression = itr->first;
-    TokenType token_type = itr->second;
+  for (std::pair<std::regex, TokenType> lexer_spec : m_lexer_specs) {
+    std::regex expression = lexer_spec.first;
+    TokenType token_type = lexer_spec.second;
 
     std::smatch match;
     std::regex_search(remaining_source, match, expression);
-
     if (match.length() == 0) {
       continue;
     }
 
     std::string token_value = match[0].str();
     m_cursor += match[0].str().length();
-
     if (token_type == TokenType::WHITE_SPACE) {
       return GetNextToken();
     }
@@ -65,8 +61,7 @@ std::shared_ptr<SourceToken> SourceLexer::GetNextToken() {
     return std::make_shared<SourceToken>(token_type, token_value);
   }
 
-  // TODO: throw UnexpectedTokenException
-  return nullptr;
+  throw std::runtime_error("[SourceLexer] Unexpected token.");
 }
 
 void SourceLexer::TryTranslateToKeywordToken(std::shared_ptr<SourceToken> &token_ptr) {
@@ -78,22 +73,20 @@ void SourceLexer::TryTranslateToKeywordToken(std::shared_ptr<SourceToken> &token
   }
 
   if (token_value == "procedure") {
-    token_ptr = std::make_shared<SourceToken>(TokenType::PROCEDURE, (std::string &) "");
+    token_ptr = std::make_shared<SourceToken>(TokenType::PROCEDURE, "");
   } else if (token_value == "read") {
-    token_ptr = std::make_shared<SourceToken>(TokenType::READ, (std::string &) "");
+    token_ptr = std::make_shared<SourceToken>(TokenType::READ, "");
   } else if (token_value == "print") {
-    token_ptr = std::make_shared<SourceToken>(TokenType::PRINT, (std::string &) "");
+    token_ptr = std::make_shared<SourceToken>(TokenType::PRINT, "");
   } else if (token_value == "while") {
-    token_ptr = std::make_shared<SourceToken>(TokenType::WHILE, (std::string &) "");
+    token_ptr = std::make_shared<SourceToken>(TokenType::WHILE, "");
   } else if (token_value == "if") {
-    token_ptr = std::make_shared<SourceToken>(TokenType::IF, (std::string &) "");
+    token_ptr = std::make_shared<SourceToken>(TokenType::IF, "");
   } else if (token_value == "then") {
-    token_ptr = std::make_shared<SourceToken>(TokenType::THEN, (std::string &) "");
+    token_ptr = std::make_shared<SourceToken>(TokenType::THEN, "");
   } else if (token_value == "else") {
-    token_ptr = std::make_shared<SourceToken>(TokenType::ELSE, (std::string &) "");
+    token_ptr = std::make_shared<SourceToken>(TokenType::ELSE, "");
   }
-
-  // TODO: throw TokenTranslationException
 }
 
 void SourceLexer::Tokenize(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr) {

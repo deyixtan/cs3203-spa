@@ -16,7 +16,7 @@ class SourceLexer {
   std::vector<std::pair<std::regex, TokenType>> m_lexer_specs;
 
  private:
-  void ConstructSpecs();
+  void ConstructLexerSpecs();
   bool HasMoreTokens();
   std::shared_ptr<SourceToken> GetNextToken();
   void TryTranslateToKeywordToken(std::shared_ptr<SourceToken> &token_ptr);
