@@ -15,13 +15,11 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
   std::shared_ptr<ConditionalExpressionNode> m_right_expression;
 
  public:
-  BooleanExpressionNode(BooleanOperator boolean_operator, std::shared_ptr<ConditionalExpressionNode> right_expression);
   BooleanExpressionNode(BooleanOperator boolean_operator,
                         std::shared_ptr<ConditionalExpressionNode> left_expression,
                         std::shared_ptr<ConditionalExpressionNode> right_expression);
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetLeftExpression();
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetRightExpression();
-  void SetLeftExpression(std::shared_ptr<ConditionalExpressionNode> left_expression);
   [[nodiscard]] ConditionalType GetConditionalType() override;
   [[nodiscard]] std::string ToString(int level) override;
 };
