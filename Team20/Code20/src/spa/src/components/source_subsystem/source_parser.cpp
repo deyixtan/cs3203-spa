@@ -25,7 +25,7 @@ std::shared_ptr<SourceToken> SourceParser::FetchNextToken() {
 
 void SourceParser::IncrementCursor() {
   if (cursor >= tokens_ptr.size()) {
-    throw std::runtime_error("Cursor reached end of stream.");
+    throw EndOfStreamException();
   }
   cursor++;
 }
