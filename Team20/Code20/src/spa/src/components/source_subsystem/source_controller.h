@@ -11,8 +11,8 @@ namespace source {
 class SourceController {
  public:
   SourceController();
-  void Tokenize(std::string program_source, std::vector<SourceToken *> &tokens_ptr);
-  std::shared_ptr<ProgramNode> ParseTokenStream(std::vector<SourceToken *> &tokens_ptr);
+  void Tokenize(std::string program_source, std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
+  std::shared_ptr<ProgramNode> ParseTokenStream(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
   std::string RetrieveFileContent(std::string file_path);
   void PopulatePKB(PKB *pkb, std::shared_ptr<ProgramNode> ast);
 };

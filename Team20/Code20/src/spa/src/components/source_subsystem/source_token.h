@@ -45,7 +45,7 @@ class SourceToken {
   std::string m_value;
 
  public:
-  SourceToken(TokenType type, std::string &value);
+  SourceToken(TokenType type, std::string value);
   [[nodiscard]] TokenType GetType();
   [[nodiscard]] std::string GetValue();
   [[nodiscard]] std::string ToString();

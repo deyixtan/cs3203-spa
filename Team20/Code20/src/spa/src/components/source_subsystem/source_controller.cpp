@@ -4,12 +4,16 @@ namespace source {
 
 SourceController::SourceController() {}
 
-void SourceController::Tokenize(std::string program_source, std::vector<SourceToken *> &tokens_ptr) {
+void SourceController::Tokenize(std::string program_source, std::vector<std::shared_ptr<SourceToken>> &tokens_ptr) {
   SourceLexer lexer = SourceLexer(program_source);
-  lexer.Tokenize(tokens_ptr);
+  try {
+    lexer.Tokenize(tokens_ptr);
+  } catch (const UnexpectedTokenException &unexpected_token) {
+    tokens_ptr.clear();
+  }
 }
 
-std::shared_ptr<ProgramNode> SourceController::ParseTokenStream(std::vector<SourceToken *> &tokens_ptr) {
+std::shared_ptr<ProgramNode> SourceController::ParseTokenStream(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr) {
   SourceParser parser = SourceParser(tokens_ptr);
   return parser.ParseProgram();
 }

@@ -2,7 +2,7 @@
 
 namespace source {
 
-SourceParser::SourceParser(std::vector<SourceToken *> tokens_ptr) {
+SourceParser::SourceParser(std::vector<std::shared_ptr<SourceToken>> tokens_ptr) {
   this->tokens_ptr = tokens_ptr;
   this->cursor = 0;
   this->line_number = 0;
@@ -13,16 +13,14 @@ std::shared_ptr<SourceToken> SourceParser::FetchCurrentToken() {
   if (cursor >= tokens_ptr.size()) {
     return nullptr;
   }
-  SourceToken token = *(tokens_ptr[cursor]);
-  return std::make_shared<SourceToken>(token);
+  return tokens_ptr[cursor];
 }
 
 std::shared_ptr<SourceToken> SourceParser::FetchNextToken() {
   if (cursor + 1 >= tokens_ptr.size()) {
     return nullptr;
   }
-  SourceToken token = *(tokens_ptr[cursor + 1]);
-  return std::make_shared<SourceToken>(token);
+  return tokens_ptr[cursor + 1];
 }
 
 void SourceParser::IncrementCursor() {
