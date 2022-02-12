@@ -1,5 +1,7 @@
 #include "source_controller.h"
 
+namespace source {
+
 SourceController::SourceController() {}
 
 void SourceController::Tokenize(std::string program_source, std::vector<SourceToken *> &tokens_ptr) {
@@ -20,4 +22,6 @@ void SourceController::PopulatePKB(PKB *pkb, std::shared_ptr<ProgramNode> ast) {
   UsageStore usage_store;
   DesignExtractor design_extractor = DesignExtractor(*ast, pkb, usage_store);
   design_extractor.traverse_ast();
+}
+
 }
