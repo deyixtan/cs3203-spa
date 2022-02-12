@@ -61,7 +61,7 @@ std::shared_ptr<SourceToken> SourceLexer::GetNextToken() {
     return std::make_shared<SourceToken>(token_type, token_value);
   }
 
-  throw source::UnexpectedTokenException();
+  throw UnexpectedTokenException();
 }
 
 void SourceLexer::TryTranslateToKeywordToken(std::shared_ptr<SourceToken> &token_ptr) {

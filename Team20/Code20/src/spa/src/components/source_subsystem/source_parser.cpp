@@ -86,7 +86,7 @@ std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
     case TokenType::PRINT:return ParsePrintStatement();
     case TokenType::WHILE:return ParseWhileStatement();
     case TokenType::IF:return ParseIfStatement();
-    default:throw std::runtime_error("Parsing invalid statement.");
+    default:throw InvalidParseException("Parsing invalid statement.");
   }
 }
 
@@ -160,7 +160,7 @@ std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpress
       || type == TokenType::OPENED_PARENTHESIS) {
     return ParseRelationalExpression();
   }
-  throw std::runtime_error("Unable to parse conditional expression");
+  throw InvalidParseException("Unable to parse conditional expression.");
 }
 
 std::shared_ptr<BooleanExpressionNode> SourceParser::ParseConditionalExpression2() {
@@ -172,7 +172,7 @@ std::shared_ptr<BooleanExpressionNode> SourceParser::ParseConditionalExpression2
     case TokenType::OR:ConsumeToken(TokenType::OR);
       value = BooleanOperator::OR;
       break;
-    default:throw std::runtime_error("Parsing invalid conditional expression operator");
+    default:throw InvalidParseException("Parsing invalid conditional expression operator.");
   }
   ConsumeToken(TokenType::OPENED_PARENTHESIS);
   std::shared_ptr<ConditionalExpressionNode> right = ParseConditionalExpression();
@@ -202,7 +202,7 @@ std::shared_ptr<RelationalExpressionNode> SourceParser::ParseRelationalExpressio
     case TokenType::IS_NOT_EQUAL:ConsumeToken(TokenType::IS_NOT_EQUAL);
       value = RelationOperator::NOT_EQUALS;
       break;
-    default:throw std::runtime_error("Parsing invalid relational expression");
+    default:throw InvalidParseException("Parsing invalid relational expression.");
   }
   std::shared_ptr<ExpressionNode> right = ParseRelationalFactor();
   return std::make_shared<RelationalExpressionNode>(value, left, right);
@@ -265,7 +265,7 @@ std::shared_ptr<ExpressionNode> SourceParser::ParseFactor() {
       ConsumeToken(TokenType::CLOSED_PARENTHESIS);
       return expr;
     }
-    default:throw std::runtime_error("Unable to parse factor.");
+    default:throw InvalidParseException("Unable to parse factor.");
   }
 }
 

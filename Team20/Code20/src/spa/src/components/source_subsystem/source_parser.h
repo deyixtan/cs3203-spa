@@ -15,6 +15,7 @@
 #include "ast/node_constant.h"
 #include "components/source_subsystem/source_token.h"
 #include "exceptions/end_of_stream.h"
+#include "exceptions/invalid_parse.h"
 #include "exceptions/mismatch_token.h"
 
 namespace source {
