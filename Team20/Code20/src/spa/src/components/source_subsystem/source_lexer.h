@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "source_token.h"
+#include "exceptions/unexpected_token.h"
 
 namespace source {
 
