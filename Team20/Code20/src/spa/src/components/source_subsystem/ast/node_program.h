@@ -11,6 +11,7 @@ class ProgramNode : public Node {
   std::vector<std::shared_ptr<ProcedureNode>> m_procedures;
 
  public:
+  ProgramNode();
   ProgramNode(std::vector<std::shared_ptr<ProcedureNode>> procedures);
   [[nodiscard]] std::vector<std::shared_ptr<ProcedureNode>> GetProcedures();
   [[nodiscard]] std::string ToString(int level) override;

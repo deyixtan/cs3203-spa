@@ -1,6 +1,8 @@
 #ifndef SOURCE_CONTROLLER_H
 #define SOURCE_CONTROLLER_H
 
+#include <iostream>
+
 #include "components/source_subsystem/source_lexer.h"
 #include "components/source_subsystem/source_parser.h"
 #include "components/pkb/design_extractor/design_extractor.h"
