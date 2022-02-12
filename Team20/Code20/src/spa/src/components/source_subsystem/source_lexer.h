@@ -1,30 +1,31 @@
-#ifndef SOURCE_LEXER_H
-#define SOURCE_LEXER_H
+#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_LEXER_H_
+#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_LEXER_H_
 
 #include <regex>
 #include <string>
 #include <vector>
 
-#include "components/source_subsystem/source_token.h"
+#include "source_token.h"
 
 namespace source {
 
 class SourceLexer {
  private:
-  std::string program_source;
-  int cursor;
-  std::vector<std::pair<std::regex, TokenType>> tokenize_specs;
+  int m_cursor;
+  std::string m_simple_source;
+  std::vector<std::pair<std::regex, TokenType>> m_lexer_specs;
+
+ private:
+  void ConstructSpecs();
+  bool HasMoreTokens();
+  std::shared_ptr<SourceToken> GetNextToken();
+  void TryTranslateToKeywordToken(std::shared_ptr<SourceToken> &token_ptr);
 
  public:
-  SourceLexer(std::string program_source);
-  void ConstructSpecs();
-  bool IsEOF();
-  bool HasMoreTokens();
-  SourceToken *GetNextToken();
-  void TryTranslateToKeywordToken(SourceToken *&token_ptr);
-  void Tokenize(std::vector<SourceToken *> &tokens_ptr);
+  SourceLexer(std::string simple_source);
+  void Tokenize(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
 };
 
 }
 
-#endif //SOURCE_LEXER_H
+#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_LEXER_H_

@@ -22,7 +22,7 @@ TestWrapper::TestWrapper() {
 void TestWrapper::parse(std::string filename) {
   std::cout << "TestWrapper::parse() Start" << std::endl;
   std::string simple_source = source_controller->RetrieveFileContent(filename);
-  std::vector<source::SourceToken *> tokens_ptr;
+  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
   source_controller->Tokenize(simple_source, tokens_ptr);
 
   // // Print tokens

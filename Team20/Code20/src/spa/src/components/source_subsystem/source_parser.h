@@ -19,13 +19,13 @@ namespace source {
 
 class SourceParser {
  private:
-  std::vector<SourceToken *> tokens_ptr;
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
   int cursor;
   int line_number;
   int max_tokens_index;
 
  public:
-  SourceParser(std::vector<SourceToken *> tokens_ptr);
+  SourceParser(std::vector<std::shared_ptr<SourceToken>> tokens_ptr);
   std::shared_ptr<SourceToken> FetchCurrentToken();
   std::shared_ptr<SourceToken> FetchNextToken();
   void IncrementCursor();
