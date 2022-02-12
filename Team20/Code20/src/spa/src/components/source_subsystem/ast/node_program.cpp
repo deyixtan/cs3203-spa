@@ -1,5 +1,7 @@
 #include "node_program.h"
 
+ProgramNode::ProgramNode() {}
+
 ProgramNode::ProgramNode(std::vector<std::shared_ptr<ProcedureNode>> procedures) :
     m_procedures(procedures) {}
 
