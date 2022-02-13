@@ -1,7 +1,10 @@
 #include "catch.hpp"
 #include "components/source_subsystem/source_lexer.h"
 #include "components/source_subsystem/source_parser.h"
+#include "components/source_subsystem/exceptions/empty_statement_list.h"
+#include "components/source_subsystem/exceptions/invalid_parse.h"
 #include "components/source_subsystem/exceptions/mismatch_token.h"
+#include "components/source_subsystem/exceptions/unexpected_token.h"
 
 using namespace source;
 
@@ -68,6 +71,45 @@ TEST_CASE("Test one assign statement") {
 
   // test
   REQUIRE_THROWS_WITH(parser.ParseProgram(), MismatchedTokenException().what());
+}
+
+TEST_CASE("Test single program with no procedure") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+
+  // test
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), UnexpectedTokenException().what());
+}
+
+TEST_CASE("Test single procedure with no statement") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure main { }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+
+  // test
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), EmptyStatementListException().what());
+}
+
+TEST_CASE("Test invalid single procedure with one assign statement") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure main {{ a = 1; }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+
+  // test
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseException("Parsing invalid statement.").what());
 }
 
 TEST_CASE("Test single procedure with one read statement") {

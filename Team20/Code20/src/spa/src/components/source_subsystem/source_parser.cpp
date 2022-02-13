@@ -22,6 +22,10 @@ std::shared_ptr<SourceToken> SourceParser::FetchCurrentToken() {
 
 std::shared_ptr<SourceToken> SourceParser::ProcessToken(TokenType type) {
   std::shared_ptr<SourceToken> token_ptr = FetchCurrentToken();
+  if (token_ptr == nullptr) {
+    throw UnexpectedTokenException();
+  }
+
   if (token_ptr->GetType() != type) {
     throw MismatchedTokenException();
   }
@@ -38,6 +42,9 @@ std::shared_ptr<ProgramNode> SourceParser::ParseProgram() {
   std::vector<std::shared_ptr<ProcedureNode>> procedures;
   while (!AreTokensProcessed()) {
     procedures.push_back(ParseProcedure());
+  }
+  if (procedures.size() == 0) {
+    throw EmptyStatementListException();
   }
   return std::make_shared<ProgramNode>(procedures);
 }
@@ -56,6 +63,9 @@ std::shared_ptr<StatementListNode> SourceParser::ParseStatementList() {
   std::vector<std::shared_ptr<StatementNode>> stmt_list;
   while (FetchCurrentToken()->GetType() != TokenType::CLOSED_BRACES) {
     stmt_list.push_back(ParseStatement());
+  }
+  if (stmt_list.size() == 0) {
+    throw EmptyStatementListException();
   }
   return std::make_shared<StatementListNode>(stmt_list);
 }
