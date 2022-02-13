@@ -28,7 +28,7 @@ class RelationalExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::string GetRelationOperatorLabel(RelationOperator relation_operator);
   [[nodiscard]] ConditionalType GetConditionalType() override;
   [[nodiscard]] std::string ToString(int level) override;
-  [[nodiscard]] bool operator==(const RelationalExpressionNode &other) const;
+  [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_RELATIONAL_EXPRESSION_H_

@@ -36,7 +36,9 @@ std::string RelationalExpressionNode::ToString(int level) {
       + m_right_expression->ToString(level) + ")";
 }
 
-bool RelationalExpressionNode::operator==(const RelationalExpressionNode &other) const {
-  return m_relation_operator == other.m_relation_operator && m_left_expression == other.m_left_expression
-      && m_right_expression == other.m_right_expression;
+bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other) const {
+  const auto casted_other = dynamic_cast<const RelationalExpressionNode *>(&other);
+  return m_relation_operator == casted_other->m_relation_operator
+      && *m_left_expression == *(casted_other->m_left_expression)
+      && *m_right_expression == *(casted_other->m_right_expression);
 }

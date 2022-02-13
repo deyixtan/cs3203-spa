@@ -22,7 +22,7 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetRightExpression();
   [[nodiscard]] ConditionalType GetConditionalType() override;
   [[nodiscard]] std::string ToString(int level) override;
-  [[nodiscard]] bool operator==(const BooleanExpressionNode &other) const;
+  [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_

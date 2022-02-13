@@ -91,3 +91,60 @@ TEST_CASE("Test single procedure with one print statement") {
   // test
   REQUIRE(*program_node == *expected_program_node);
 }
+
+TEST_CASE("Test single procedure with one if statement (simple equal condition)") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure main { if (a == 1) then { a = 2; } else { a = 3; } }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+  program_node = parser.ParseProgram();
+
+  // set up expected
+  // if's stmt_list
+  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a");
+  std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("2");
+  std::shared_ptr<AssignStatementNode>
+      if_assign_stmt = std::make_shared<AssignStatementNode>(1, if_variable_node, if_constant_node);
+
+  std::vector<std::shared_ptr<StatementNode>> if_statements;
+  if_statements.emplace_back(if_assign_stmt);
+  std::shared_ptr<StatementListNode> if_stmt_list = std::make_shared<StatementListNode>(if_statements);
+
+  // else's stmt_list
+  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a");
+  std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("3");
+  std::shared_ptr<AssignStatementNode>
+      else_assign_stmt = std::make_shared<AssignStatementNode>(2, else_variable_node, else_constant_node);
+
+  std::vector<std::shared_ptr<StatementNode>> else_statements;
+  else_statements.emplace_back(else_assign_stmt);
+  std::shared_ptr<StatementListNode> else_stmt_list = std::make_shared<StatementListNode>(else_statements);
+
+  // condition
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a");
+  std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
+  std::shared_ptr<RelationalExpressionNode> condition_node =
+      std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
+                                                 condition_variable_node,
+                                                 condition_constant_node);
+
+  std::shared_ptr<IfStatementNode>
+      if_stmt = std::make_shared<IfStatementNode>(3, condition_node, if_stmt_list, else_stmt_list);
+
+  // if_stmt to procedure's stmt_list
+  std::vector<std::shared_ptr<StatementNode>> statements;
+  statements.emplace_back(if_stmt);
+  std::shared_ptr<StatementListNode> stmt_list = std::make_shared<StatementListNode>(statements);
+
+  std::shared_ptr<ProcedureNode> procedure = std::make_shared<ProcedureNode>("main", stmt_list);
+
+  std::vector<std::shared_ptr<ProcedureNode>> procedures;
+  procedures.emplace_back(procedure);
+  std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
+
+  // test
+  REQUIRE(*program_node == *expected_program_node);
+}

@@ -15,6 +15,7 @@ std::string NotExpressionNode::ToString(int level) {
   return "(!" + m_expression->ToString(level) + ")";
 }
 
-bool NotExpressionNode::operator==(const NotExpressionNode &other) const {
-  return m_expression == other.m_expression;
+bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const {
+  const auto casted_other = dynamic_cast<const NotExpressionNode *>(&other);
+  return *m_expression == *(casted_other->m_expression);
 }
