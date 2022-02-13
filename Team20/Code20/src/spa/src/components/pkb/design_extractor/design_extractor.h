@@ -23,16 +23,16 @@ class DesignExtractor {
   void process_proc(std::shared_ptr<ProcedureNode> proc,
                     std::shared_ptr<StatementListNode> stmtLst,
                     std::vector<std::shared_ptr<StatementNode>> stmts);
-  void populate_uses(int stmt, std::string var);
-  void populate_modifies(int stmt, std::string var);
+  void populate_uses(std::string stmt, std::string var);
+  void populate_modifies(std::string stmt, std::string var);
   void populate_proc(std::string name);
-  void populate_assign(int stmt);
-  void populate_stmt(int stmt);
-  void populate_read(int stmt);
-  void populate_print(int stmt);
+  void populate_assign(std::string stmt);
+  void populate_stmt(std::string stmt);
+  void populate_read(std::string stmt);
+  void populate_print(std::string stmt);
   void populate_vars(std::string var);
-  void populate_while(int stmt);
-  void populate_if(int stmt);
+  void populate_while(std::string stmt);
+  void populate_if(std::string stmt);
   void populate_const(std::string name);
  public:
   DesignExtractor(ProgramNode root_node, PKB *pkb, UsageStore storage);

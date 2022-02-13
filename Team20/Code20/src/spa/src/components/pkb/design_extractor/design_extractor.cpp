@@ -20,7 +20,7 @@ void DesignExtractor::traverse_ast() {
 
 void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst, std::vector<std::shared_ptr<StatementNode>> stmts) {
   for (auto &stmt : stmts) {
-    int stmt_num = stmt->GetStatementNumber();
+    std::string stmt_num = std::to_string(stmt->GetStatementNumber());
     StmtType stmt_type = stmt->GetStatementType();
     std::string var_name = "";
     switch(stmt_type) {
@@ -94,11 +94,11 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
   }
 }
 
-void DesignExtractor::populate_uses(int stmt, std::string var) {
+void DesignExtractor::populate_uses(std::string stmt, std::string var) {
   this->pkb->add_usage_stmt_var(stmt, var);
 }
 
-void DesignExtractor::populate_modifies(int stmt, std::string var) {
+void DesignExtractor::populate_modifies(std::string stmt, std::string var) {
   this->pkb->add_modify_stmt_var(stmt, var);
 }
 
@@ -106,19 +106,19 @@ void DesignExtractor::populate_proc(std::string name) {
   this->pkb->add_stmt(name, PROC);
 }
 
-void DesignExtractor::populate_assign(int stmt) {
+void DesignExtractor::populate_assign(std::string stmt) {
   this->pkb->add_stmt(stmt, ASSIGN);
 }
 
-void DesignExtractor::populate_stmt(int stmt) {
+void DesignExtractor::populate_stmt(std::string stmt) {
   this->pkb->add_stmt(stmt, STMT);
 }
 
-void DesignExtractor::populate_read(int stmt) {
+void DesignExtractor::populate_read(std::string stmt) {
   this->pkb->add_stmt(stmt, READ);
 }
 
-void DesignExtractor::populate_print(int stmt) {
+void DesignExtractor::populate_print(std::string stmt) {
   this->pkb->add_stmt(stmt, PRINT);
 }
 
@@ -126,11 +126,11 @@ void DesignExtractor::populate_vars(std::string var) {
   this->pkb->add_stmt(var, VARS);
 }
 
-void DesignExtractor::populate_while(int stmt) {
+void DesignExtractor::populate_while(std::string stmt) {
   this->pkb->add_stmt(stmt, WHILE);
 }
 
-void DesignExtractor::populate_if(int stmt) {
+void DesignExtractor::populate_if(std::string stmt) {
   this->pkb->add_stmt(stmt, IF);
 }
 
