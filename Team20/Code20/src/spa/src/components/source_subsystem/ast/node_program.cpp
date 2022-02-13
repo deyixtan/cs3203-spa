@@ -20,3 +20,14 @@ std::string ProgramNode::ToString(int level) {
 std::string ProgramNode::ToString() {
   return this->ToString(0);
 }
+
+bool ProgramNode::operator==(const ProgramNode &other) const {
+  if (m_procedures.size() != other.m_procedures.size()) {
+    return false;
+  }
+  for (int i = 0; i < m_procedures.size(); i++) {
+    if (*(m_procedures.at(i)) == *(other.m_procedures.at(i))) {}
+    else { return false; }
+  }
+  return true;
+}
