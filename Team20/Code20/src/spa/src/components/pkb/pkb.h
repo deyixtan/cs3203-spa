@@ -35,55 +35,52 @@ class PKB {
   //VarTable* varTable;
   //int setProcToAST(PROC p, TNode* r);
   //TNode* getRootAST (PROC p);
-  static PKB *get_instance();
+  static PKB *GetInstance();
 
   /* Adders */
-  void add_stmt(int stmt, StmtType type);
-  void add_stmt(std::string name, StmtType type);
+  void AddStmt(std::string name, StmtType type);
 
-  void add_usage_stmt_var(int stmt, std::string variable);
-  void add_usage_proc_var(std::string proc, std::string var);
+  void AddUsageStmtVar(std::string stmt, std::string variable);
+  void AddUsageProcVar(std::string proc, std::string var);
 
-  void add_modify_stmt_var(int stmt, std::string variable);
-  void add_modify_proc_var(std::string proc, std::string var);
+  void AddModifyStmtVar(std::string stmt, std::string variable);
+  void AddModifyProcVar(std::string proc, std::string var);
 
   /* Getters */
-  std::unordered_set<int> get_stmt_by_num(StmtType type);
-  std::unordered_set<std::string> get_stmt_by_name(StmtType type);
+  std::unordered_set<std::string> GetStmt(StmtType type);
 
-  std::unordered_set<std::string> get_var_used_by_stmt(int stmt);
-  std::unordered_set<int> get_stmt_used_by_var(std::string var);
-  std::unordered_set<std::string> get_var_used_by_proc(std::string proc);
-  std::unordered_set<std::string> get_proc_used_by_var(std::string var);
-  std::unordered_set<std::pair<int, std::string>, pair_hash> get_all_usage_stmt_var();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_usage_proc_var();
+  std::unordered_set<std::string> GetVarUsedByStmt(std::string stmt);
+  std::unordered_set<std::string> GetStmtUsedByVar(std::string var);
+  std::unordered_set<std::string> GetVarUsedByProc(std::string proc);
+  std::unordered_set<std::string> GetProcUsedByVar(std::string var);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsageStmtVar();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsageProcVar();
 
-  std::unordered_set<std::string> get_var_mod_by_stmt(int stmt);
-  std::unordered_set<int> get_stmt_mod_by_var(std::string var);
-  std::unordered_set<std::string> get_var_mod_by_proc(std::string proc);
-  std::unordered_set<std::string> get_proc_mod_by_var(std::string var);
-  std::unordered_set<std::pair<int, std::string>, pair_hash> get_all_mod_stmt_var();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_mod_proc_var();
+  std::unordered_set<std::string> GetVarModByStmt(std::string stmt);
+  std::unordered_set<std::string> GetStmtModByVar(std::string var);
+  std::unordered_set<std::string> GetVarModByProc(std::string proc);
+  std::unordered_set<std::string> GetProcModByVar(std::string var);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModStmtVar();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModProcVar();
 
   /* Checkers */
-  bool usage_stmt_var_exists(std::pair<int, std::string> pair);
-  bool usage_proc_var_exists(std::pair<std::string, std::string> pair);
+  bool IsUsageStmtVarExist(std::pair<std::string, std::string> pair);
+  bool IsUsageProcVarExist(std::pair<std::string, std::string> pair);
 
-  bool modify_stmt_var_exists(std::pair<int, std::string> pair);
-  bool modify_proc_var_exists(std::pair<std::string, std::string> pair);
+  bool IsModifyStmtVarExist(std::pair<std::string, std::string> pair);
+  bool IsModifyProcVarExist(std::pair<std::string, std::string> pair);
 
  private:
   PKB();
   static PKB *instance;
 
-  std::unordered_set<int> stmt_list;
-  std::unordered_set<int> while_stmt_list;
-  std::unordered_set<int> read_stmt_list;
-  std::unordered_set<int> print_stmt_list;
-  std::unordered_set<int> call_stmt_list;
-  std::unordered_set<int> if_stmt_list; //need to create separate else-then or treat this as a block?
-  std::unordered_set<int> assign_stmt_list;
-
+  std::unordered_set<std::string> stmt_list;
+  std::unordered_set<std::string> while_stmt_list;
+  std::unordered_set<std::string> read_stmt_list;
+  std::unordered_set<std::string> print_stmt_list;
+  std::unordered_set<std::string> call_stmt_list;
+  std::unordered_set<std::string> if_stmt_list; //need to create separate else-then or treat this as a block?
+  std::unordered_set<std::string> assign_stmt_list;
   std::unordered_set<std::string> proc_list;
   std::unordered_set<std::string> var_list;
   std::unordered_set<std::string> const_list;
