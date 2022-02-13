@@ -3,8 +3,10 @@
 #include "components/pkb/pkb.h"
 
 std::unordered_set<std::string> proc_list = {"main", "foo", "bar", "funcX", "funcY", "funcZ"};
-std::unordered_set<std::string> stmt_list = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
-std::unordered_set<std::string> var_list = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v"};
+std::unordered_set<std::string>
+    stmt_list = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
+std::unordered_set<std::string> var_list =
+    {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v"};
 std::unordered_set<std::string> assign_list = {"1", "2", "3"};
 std::unordered_set<std::string> if_list = {"4", "5", "6"};
 std::unordered_set<std::string> while_list = {"7"};
@@ -14,22 +16,31 @@ std::unordered_set<std::string> print_list = {"12", "13", "14", "15"};
 
 std::unordered_map<std::string, std::unordered_set<std::string>> proc_to_stmt =
     {
-      {"main", {"1", "2", "3", "4", "5", "6"}},
-      {"foo", {"7"}},
-      {"bar", {"8", "9"}},
-      {"funcX", {"10", "11", "12"}},
-      {"funcY", {"13", "14"}},
-      {"funcZ", {"15"}}
-    };
-
-std::unordered_map<std::string, std::unordered_set<std::string>> stmt_to_proc =
-    {
         {"main", {"1", "2", "3", "4", "5", "6"}},
         {"foo", {"7"}},
         {"bar", {"8", "9"}},
         {"funcX", {"10", "11", "12"}},
         {"funcY", {"13", "14"}},
         {"funcZ", {"15"}}
+    };
+
+std::unordered_map<std::string, std::unordered_set<std::string>> stmt_to_proc =
+    {
+        {"1", {"main"}},
+        {"2", {"main"}},
+        {"3", {"main"}},
+        {"4", {"main"}},
+        {"5", {"main"}},
+        {"6", {"main"}},
+        {"7", {"foo"}},
+        {"8", {"bar"}},
+        {"9", {"bar"}},
+        {"10", {"funcX"}},
+        {"11", {"funcX"}},
+        {"12", {"funcX"}},
+        {"13", {"funcY"}},
+        {"14", {"funcY"}},
+        {"15", {"funcZ"}},
     };
 
 std::unordered_map<std::string, std::unordered_set<std::string>> stmt_to_var =
@@ -76,5 +87,62 @@ std::unordered_map<std::string, std::unordered_set<std::string>> var_to_stmt =
         {"u", {"14"}},
         {"v", {"15"}},
     };
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs =
+    {
+        {"main", "1"},
+        {"main", "2"},
+        {"main", "3"},
+        {"main", "4"},
+        {"main", "5"},
+        {"main", "6"},
+        {"foo", "7"},
+        {"bar", "8"},
+        {"bar", "9"},
+        {"funcX", "10"},
+        {"funcX", "11"},
+        {"funcX", "12"},
+        {"funcY", "13"},
+        {"funcY", "14"},
+        {"funcZ", "15"},
+    };
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> stmt_var_pairs =
+    {
+        {"1", "a"},
+        {"6", "a"},
+        {"1", "b"},
+        {"2", "c"},
+        {"7", "c"},
+        {"9", "c"},
+        {"11", "c"},
+        {"4", "d"},
+        {"5", "e"},
+        {"1", "f"},
+        {"6", "f"},
+        {"6", "g"},
+        {"6", "h"},
+        {"1", "i"},
+        {"6", "i"},
+        {"6", "j"},
+        {"4", "k"},
+        {"7", "k"},
+        {"7", "l"},
+        {"8", "m"},
+        {"4", "n"},
+        {"9", "n"},
+        {"5", "o"},
+        {"10", "o"},
+        {"8", "p"},
+        {"11", "p"},
+        {"11", "q"},
+        {"12", "r"},
+        {"4", "s"},
+        {"14", "s"},
+        {"14", "t"},
+        {"14", "u"},
+        {"15", "v"},
+    };
+
 
 #endif //PKB_STUB_H

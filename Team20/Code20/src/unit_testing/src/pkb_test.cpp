@@ -183,7 +183,7 @@ TEST_CASE("if ifs; select ifs") {
 TEST_CASE("while w; select w") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
-  auto actual = pkb->GetStmt(ASSIGN);
+  auto actual = pkb->GetStmt(WHILE);
   auto expected = while_list;
 
   REQUIRE(actual == expected);
@@ -221,6 +221,33 @@ TEST_CASE("Get var used by stmt") {
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetVarUsedByStmt("7");
   auto expected = stmt_to_var.at("7");
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get stmt used by var") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetStmtUsedByVar("c");
+  auto expected = var_to_stmt.at("c");
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get all usage proc-var pairs") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetAllUsageProcVar();
+  auto expected = proc_var_pairs;
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get all usage stmt-var pairs") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetAllUsageStmtVar();
+  auto expected = stmt_var_pairs;
 
   REQUIRE(actual == expected);
 }
