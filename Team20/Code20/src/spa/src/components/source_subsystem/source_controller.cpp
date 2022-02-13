@@ -37,8 +37,7 @@ std::string SourceController::RetrieveFileContent(std::string file_path) {
 }
 
 void SourceController::PopulatePKB(PKB *pkb, std::shared_ptr<ProgramNode> ast) {
-  UsageStore usage_store;
-  DesignExtractor design_extractor = DesignExtractor(*ast, pkb, usage_store);
+  DesignExtractor design_extractor = DesignExtractor(*ast, pkb);
   design_extractor.TraverseAst();
 }
 
