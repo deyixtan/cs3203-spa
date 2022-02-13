@@ -12,6 +12,7 @@ class ConstantNode : public ExpressionNode {
   [[nodiscard]] std::string GetValue();
   [[nodiscard]] ExpressionType GetExpressionType() override;
   [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONSTANT_H_

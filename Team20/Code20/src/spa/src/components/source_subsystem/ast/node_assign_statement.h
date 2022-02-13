@@ -17,6 +17,7 @@ class AssignStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<ExpressionNode> GetExpression();
   [[nodiscard]] StmtType GetStatementType() override;
   [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_ASSIGN_STATEMENT_H_

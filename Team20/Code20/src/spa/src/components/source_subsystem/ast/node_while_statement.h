@@ -18,6 +18,7 @@ class WhileStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<StatementListNode> GetStatementList();
   [[nodiscard]] StmtType GetStatementType() override;
   [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] bool operator==(const StatementNode &other) const;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_WHILE_STATEMENT_H_

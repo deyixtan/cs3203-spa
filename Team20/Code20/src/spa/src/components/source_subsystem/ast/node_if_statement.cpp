@@ -34,3 +34,29 @@ std::string IfStatementNode::ToString(int level) {
   return str + "if (" + m_condition->ToString(level) + ") then {\n" + m_if_stmt_list->ToString(level + 1) + str +
       "} else {\n" + m_else_stmt_list->ToString(level + 1) + str + "}\n";
 }
+
+bool IfStatementNode::operator==(const StatementNode &other) const {
+  const auto casted_other = dynamic_cast<const IfStatementNode *>(&other);
+  std::vector<std::shared_ptr<StatementNode>> if_this_stmt_list = m_if_stmt_list->GetStatements();
+  std::vector<std::shared_ptr<StatementNode>> if_other_stmt_list = casted_other->m_if_stmt_list->GetStatements();
+  std::vector<std::shared_ptr<StatementNode>> else_this_stmt_list = m_else_stmt_list->GetStatements();
+  std::vector<std::shared_ptr<StatementNode>> else_other_stmt_list = casted_other->m_else_stmt_list->GetStatements();
+
+  if (if_this_stmt_list.size() != if_other_stmt_list.size()) {
+    return false;
+  }
+  for (int i = 0; i < if_this_stmt_list.size(); i++) {
+    if (*(if_this_stmt_list.at(i)) == *(if_other_stmt_list.at(i))) {}
+    else { return false; }
+  }
+
+  if (else_this_stmt_list.size() != else_other_stmt_list.size()) {
+    return false;
+  }
+  for (int i = 0; i < else_this_stmt_list.size(); i++) {
+    if (*(else_this_stmt_list.at(i)) == *(else_other_stmt_list.at(i))) {}
+    else { return false; }
+  }
+
+  return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
+}

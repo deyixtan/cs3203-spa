@@ -19,6 +19,9 @@ std::shared_ptr<ProgramNode> SourceController::ParseTokenStream(std::vector<std:
   std::shared_ptr<ProgramNode> program_node;
   try {
     program_node = parser.ParseProgram();
+  } catch (const EmptyStatementListException &empty_statement_list) {
+    program_node = std::make_shared<ProgramNode>();
+    std::cout << empty_statement_list.what() << std::endl;
   } catch (const EndOfStreamException &end_of_stream) {
     program_node = std::make_shared<ProgramNode>();
     std::cout << end_of_stream.what() << std::endl;
@@ -28,6 +31,9 @@ std::shared_ptr<ProgramNode> SourceController::ParseTokenStream(std::vector<std:
   } catch (const MismatchedTokenException &mismatched_token) {
     program_node = std::make_shared<ProgramNode>();
     std::cout << mismatched_token.what() << std::endl;
+  } catch (const UnexpectedTokenException &unexpected_token) {
+    program_node = std::make_shared<ProgramNode>();
+    std::cout << unexpected_token.what() << std::endl;
   }
   return program_node;
 }

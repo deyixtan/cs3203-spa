@@ -26,9 +26,9 @@ class CombinationExpressionNode : public ExpressionNode {
   [[nodiscard]] std::shared_ptr<ExpressionNode> GetRightExpression();
   [[nodiscard]] ArithmeticOperator GetArithmeticOperator();
   [[nodiscard]] std::string GetArithmeticOperatorLabel(ArithmeticOperator arithmetic_operator);
-  void SetLeftExpression(std::shared_ptr<ExpressionNode> left_expression);
   [[nodiscard]] ExpressionType GetExpressionType() override;
   [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_
