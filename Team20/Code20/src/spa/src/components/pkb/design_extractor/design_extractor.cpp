@@ -9,24 +9,23 @@ DesignExtractor::DesignExtractor(ProgramNode root_node, PKB *pkb, UsageStore sto
 }
 
 void DesignExtractor::traverse_ast() {
-  std::vector<std::shared_ptr<ProcedureNode>> proc_list = this->root_node.getProcedures();
+  std::vector<std::shared_ptr<ProcedureNode>> proc_list = this->root_node.GetProcedures();
   for (auto &proc : proc_list) {
-    std::shared_ptr<StatementListNode> stmtLst = proc->getStatementList();
-    std::vector<std::shared_ptr<StatementNode>> stmts = stmtLst->getStatements();
-    std::string proc_name = proc->getName();
-    populate_proc(proc_name);
-    process_proc(proc_name, stmtLst, stmts);
+    std::shared_ptr<StatementListNode> stmtLst = proc->GetStatementList();
+    std::vector<std::shared_ptr<StatementNode>> stmts = stmtLst->GetStatements();
+    populate_proc(proc->GetIdentifier());
+    process_proc(proc, stmtLst, stmts);
   }
 }
 
-void DesignExtractor::process_proc(std::string proc_name, std::shared_ptr<StatementListNode> stmtLst, std::vector<std::shared_ptr<StatementNode>> stmts) {
+void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst, std::vector<std::shared_ptr<StatementNode>> stmts) {
   for (auto &stmt : stmts) {
-    std::string stmt_num = std::to_string(stmt->getLineNumber());
-    StmtType stmt_type = stmt->getStatementType();
+    int stmt_num = stmt->GetStatementNumber();
+    StmtType stmt_type = stmt->GetStatementType();
     std::string var_name = "";
     switch(stmt_type) {
       case PROC:
-        populate_proc(proc_name);
+        populate_proc(proc->GetIdentifier());
         break;
       case STMT:
         populate_stmt(stmt_num);
@@ -34,54 +33,59 @@ void DesignExtractor::process_proc(std::string proc_name, std::shared_ptr<Statem
       case READ: {
         populate_stmt(stmt_num);
         std::shared_ptr<ReadStatementNode> read_stmt = static_pointer_cast<ReadStatementNode>(stmt);
-        var_name = read_stmt->getId()->getName();
+        var_name = read_stmt->GetIdentifier()->GetIdentifier();
         populate_vars(var_name);
         populate_read(stmt_num);
-        populate_modifies(proc_name, stmt_num, var_name);
+        populate_modifies(stmt_num, var_name);
         break;
       }
       case PRINT: {
         populate_stmt(stmt_num);
         std::shared_ptr<PrintStatementNode> print_stmt = static_pointer_cast<PrintStatementNode>(stmt);
-        var_name = print_stmt->getId()->getName();
+        var_name = print_stmt->GetIdentifier()->GetIdentifier();
         populate_vars(var_name);
         populate_print(stmt_num);
-        populate_uses(proc_name, stmt_num, var_name);
+        populate_uses(stmt_num, var_name);
         break;
       }
       case ASSIGN: {
         populate_stmt(stmt_num);
         std::shared_ptr<AssignStatementNode> assign_stmt = static_pointer_cast<AssignStatementNode>(stmt);
-        var_name = assign_stmt->getId()->getName();
-        //Add LHS variable of assign
+        var_name = assign_stmt->GetIdentifier()->GetIdentifier();
         populate_vars(var_name);
-        std::shared_ptr<ExpressionNode> expr = assign_stmt->getExpr();
-
+        std::shared_ptr<ExpressionNode> expr = assign_stmt->GetExpression();
+        ExpressionType expr_type = expr->GetExpressionType();
+        switch (expr_type) {
+          case ExpressionType::CONSTANT: {
+            std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(expr);
+            std::string name = constant->GetValue();
+            populate_const(name);
+            break;
+          }
+          case ExpressionType::COMBINATION: {
+            std::shared_ptr<CombinationExpressionNode> comb = static_pointer_cast<CombinationExpressionNode>(expr);
+            std::shared_ptr<ExpressionNode> lhs = comb->GetLeftExpression();
+            std::shared_ptr<ExpressionNode> rhs = comb->GetRightExpression();
+            ArithmeticOperator op = comb->GetArithmeticOperator();
+          }
+          case ExpressionType::VARIABLE: {
+            std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
+            std::string name = var->GetIdentifier();
+            populate_const(name);
+          }
+        }
         populate_assign(stmt_num);
-        populate_modifies(proc_name, stmt_num, var_name);
-        process_assign(proc_name, stmt_num, expr);
+        //populate_modifies(stmt_num);
         break;
       }
       case WHILE: {
         std::shared_ptr<WhileStatementNode> while_stmt = static_pointer_cast<WhileStatementNode>(stmt);
-        std::shared_ptr<ConditionalExpressionNode> cond_expr = while_stmt->getConditional();
-        ConditionalType cond_expr_type = cond_expr->getConditionalType();
-        process_while(cond_expr, cond_expr_type);
         populate_while(stmt_num);
         //populate_modifies(stmt_num);
         break;
       }
       case IF: {
         std::shared_ptr<IfStatementNode> if_stmt = static_pointer_cast<IfStatementNode>(stmt);
-        std::shared_ptr<StatementListNode> then_stmt_list = if_stmt->getConsequent();
-        std::vector<std::shared_ptr<StatementNode>> then_stmt = then_stmt_list->getStatements();
-        std::shared_ptr<StatementListNode> else_stmt_list = if_stmt->getAlternative();
-        std::vector<std::shared_ptr<StatementNode>> else_stmt = else_stmt_list->getStatements();
-        std::shared_ptr<ConditionalExpressionNode> cond_expr = if_stmt->getConditional();
-        ConditionalType cond_expr_type = cond_expr->getConditionalType();
-        process_if(cond_expr, cond_expr_type);
-        process_proc(proc_name, then_stmt_list, then_stmt);
-        process_proc(proc_name, else_stmt_list, else_stmt);
         populate_if(stmt_num);
         //populate_modifies(stmt_num);
         break;
@@ -90,93 +94,11 @@ void DesignExtractor::process_proc(std::string proc_name, std::shared_ptr<Statem
   }
 }
 
-void DesignExtractor::process_assign(std::string proc_name, std::string stmt_num, std::shared_ptr<ExpressionNode> expr) {
-  ExpressionType expr_type = expr->getExpressionType();
-
-  switch (expr_type) {
-    case ExpressionType::CONSTANT: {
-      std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(expr);
-      std::string name = constant->getValue();
-      populate_const(name);
-      break;
-    }
-    case ExpressionType::COMBINATION: {
-      std::shared_ptr<CombinationExpressionNode> comb = static_pointer_cast<CombinationExpressionNode>(expr);
-      std::shared_ptr<ExpressionNode> lhs = comb->getLHS();
-      std::shared_ptr<ExpressionNode> rhs = comb->getRHS();
-      Operation op = comb->getOperation();
-      process_assign(proc_name, stmt_num, lhs);
-      process_assign(proc_name, stmt_num, rhs);
-    }
-    case ExpressionType::VARIABLE: {
-      std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
-      std::string var_name = var->getName();
-      populate_vars(var_name);
-      populate_uses(proc_name, stmt_num, var_name);
-    }
-  }
-}
-
-void DesignExtractor::process_while(std::shared_ptr<ConditionalExpressionNode> cond_expr, ConditionalType cond_expr_type) {
-  switch(cond_expr_type) {
-    case ConditionalType::BOOLEAN: {
-      std::shared_ptr<BooleanExpressionNode> bool_expr = static_pointer_cast<BooleanExpressionNode>(cond_expr);
-      std::shared_ptr<ConditionalExpressionNode> lhs = bool_expr->getLHS();
-      ConditionalType lhs_type = lhs->getConditionalType();
-      std::shared_ptr<ConditionalExpressionNode> rhs = bool_expr->getRHS();
-      ConditionalType rhs_type = rhs->getConditionalType();
-      process_while(lhs, lhs_type);
-      process_while(rhs, rhs_type);
-      break;
-    }
-    case ConditionalType::NOT: {
-      std::shared_ptr<NotExpressionNode> not_expr = static_pointer_cast<NotExpressionNode>(cond_expr);
-      std::shared_ptr<ConditionalExpressionNode> not_cond_expr = not_expr->getExpr();
-      ConditionalType not_cond_expr_type = not_cond_expr->getConditionalType();
-      process_while(not_cond_expr, not_cond_expr_type);
-      break;
-    }
-    case ConditionalType::RELATIONAL: {
-      std::shared_ptr<RelationalExpressionNode> relational_expr = static_pointer_cast<RelationalExpressionNode>(cond_expr);
-      std::shared_ptr<ExpressionNode> lhs = relational_expr->getLHS();
-      ExpressionType lhs_type = lhs->getExpressionType();
-      std::shared_ptr<ExpressionNode> rhs = relational_expr->getRHS();
-      ExpressionType rhs_type = rhs->getExpressionType();
-      //process_while(lhs, lhs_type);
-      //process_while(rhs, rhs_type);
-      break;
-    }
-    case ConditionalType::NONE:
-      break;
-  }
-}
-
-void DesignExtractor::process_if(std::shared_ptr<ConditionalExpressionNode> cond_expr, ConditionalType cond_expr_type) {
-  switch(cond_expr_type) {
-    case ConditionalType::BOOLEAN: {
-      std::shared_ptr<BooleanExpressionNode> bool_expr = static_pointer_cast<BooleanExpressionNode>(cond_expr);
-      break;
-    }
-    case ConditionalType::NOT: {
-      std::shared_ptr<NotExpressionNode> not_expr = static_pointer_cast<NotExpressionNode>(cond_expr);
-      break;
-    }
-    case ConditionalType::RELATIONAL: {
-      std::shared_ptr<RelationalExpressionNode> relational_expr = static_pointer_cast<RelationalExpressionNode>(cond_expr);
-      break;
-    }
-    case ConditionalType::NONE:
-      break;
-  }
-}
-
-void DesignExtractor::populate_uses(std::string proc, std::string stmt, std::string var) {
-  this->pkb->add_usage_proc_var(proc, var);
+void DesignExtractor::populate_uses(int stmt, std::string var) {
   this->pkb->add_usage_stmt_var(stmt, var);
 }
 
-void DesignExtractor::populate_modifies(std::string proc, std::string stmt, std::string var) {
-  this->pkb->add_modify_proc_var(proc, var);
+void DesignExtractor::populate_modifies(int stmt, std::string var) {
   this->pkb->add_modify_stmt_var(stmt, var);
 }
 
@@ -184,19 +106,19 @@ void DesignExtractor::populate_proc(std::string name) {
   this->pkb->add_stmt(name, PROC);
 }
 
-void DesignExtractor::populate_assign(std::string stmt) {
+void DesignExtractor::populate_assign(int stmt) {
   this->pkb->add_stmt(stmt, ASSIGN);
 }
 
-void DesignExtractor::populate_stmt(std::string stmt) {
+void DesignExtractor::populate_stmt(int stmt) {
   this->pkb->add_stmt(stmt, STMT);
 }
 
-void DesignExtractor::populate_read(std::string stmt) {
+void DesignExtractor::populate_read(int stmt) {
   this->pkb->add_stmt(stmt, READ);
 }
 
-void DesignExtractor::populate_print(std::string stmt) {
+void DesignExtractor::populate_print(int stmt) {
   this->pkb->add_stmt(stmt, PRINT);
 }
 
@@ -204,11 +126,11 @@ void DesignExtractor::populate_vars(std::string var) {
   this->pkb->add_stmt(var, VARS);
 }
 
-void DesignExtractor::populate_while(std::string stmt) {
+void DesignExtractor::populate_while(int stmt) {
   this->pkb->add_stmt(stmt, WHILE);
 }
 
-void DesignExtractor::populate_if(std::string stmt) {
+void DesignExtractor::populate_if(int stmt) {
   this->pkb->add_stmt(stmt, IF);
 }
 

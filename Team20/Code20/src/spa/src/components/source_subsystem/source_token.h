@@ -1,11 +1,12 @@
-#ifndef SOURCE_TOKEN_H
-#define SOURCE_TOKEN_H
+#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_TOKEN_H_
+#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_TOKEN_H_
 
 #include <string>
 
-enum class SourceTokenType {
+namespace source {
+
+enum class TokenType {
   UNKNOWN,
-  NEW_LINE,
   WHITE_SPACE,
   DIGIT,
   NAME,
@@ -40,14 +41,16 @@ enum class SourceTokenType {
 
 class SourceToken {
  private:
-  SourceTokenType type;
-  std::string value;
+  TokenType m_type;
+  std::string m_value;
 
  public:
-  SourceToken(SourceTokenType type, std::string value);
-  SourceTokenType GetType();
-  std::string GetTypeStr();
-  std::string GetValue();
+  SourceToken(TokenType type, std::string value);
+  [[nodiscard]] TokenType GetType();
+  [[nodiscard]] std::string GetValue();
+  [[nodiscard]] std::string ToString();
 };
 
-#endif //SOURCE_TOKEN_H
+}
+
+#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_TOKEN_H_

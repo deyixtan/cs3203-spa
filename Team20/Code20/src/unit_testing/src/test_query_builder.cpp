@@ -29,8 +29,7 @@ TEST_CASE("Test query parser with uses") {
   test_token_vect.push_back(v_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  //BuildParsedQuery(test_token_vect);
-  ParsedQuery pq = BuildParsedQuery(test_token_vect);
+  ParsedQuery pq  = ParsedQuery().BuildParsedQuery(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
   std::optional<Relationship> rship = pq.GetRelationship();
   std::optional<Pattern> patt = pq.GetPattern();
@@ -83,8 +82,7 @@ TEST_CASE("Test query parser with uses and pattern") {
   test_token_vect.push_back(underscore_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  //BuildParsedQuery(test_token_vect);
-  ParsedQuery pq = BuildParsedQuery(test_token_vect);
+  ParsedQuery pq = ParsedQuery().BuildParsedQuery(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
   std::optional<Relationship> rship = pq.GetRelationship();
   std::optional<Pattern> patt = pq.GetPattern();
@@ -134,8 +132,8 @@ TEST_CASE("Test query parser with multiple variables") {
   test_token_vect.push_back(s_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  //BuildParsedQuery(test_token_vect);
-  ParsedQuery pq = BuildParsedQuery(test_token_vect);
+  //To Do: Fix this after refractoring
+  ParsedQuery pq = ParsedQuery().BuildParsedQuery(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
   std::optional<Relationship> rship = pq.GetRelationship();
   std::optional<Pattern> patt = pq.GetPattern();
@@ -153,4 +151,65 @@ TEST_CASE("Test query parser with multiple variables") {
   REQUIRE(decl[2].GetSynonym().value == "v1");
   REQUIRE(decl[3].GetDesignEntity().value == "variable");
   REQUIRE(decl[3].GetSynonym().value == "a");
+}
+
+TEST_CASE("Test select without such that") {
+  std::vector<PqlToken> test_token_vect;
+
+  // stmt
+  test_token_vect.push_back(procedure_token);
+  test_token_vect.push_back(s_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // select clause
+  test_token_vect.push_back(select_token);
+  test_token_vect.push_back(s_token);
+
+  //BuildParsedQuery(test_token_vect);
+  ParsedQuery pq = ParsedQuery().BuildParsedQuery(test_token_vect);
+  PqlToken synonym = pq.GetSynonym();
+  std::optional<Relationship> rship = pq.GetRelationship();
+  std::optional<Pattern> patt = pq.GetPattern();
+  std::vector<Declaration> decl = pq.GetDeclaration();
+
+  REQUIRE(synonym.value == "s");
+}
+
+TEST_CASE("Test query parser with pattern without such that") {
+  std::vector<PqlToken> test_token_vect;
+
+  // assign
+  test_token_vect.push_back(assign_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // variable
+  test_token_vect.push_back(variable_token);
+  test_token_vect.push_back(v_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // select clause
+  test_token_vect.push_back(select_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(pattern_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(open_parenthesis_token);
+  test_token_vect.push_back(v_token);
+  test_token_vect.push_back(comma_token);
+  test_token_vect.push_back(underscore_token);
+  test_token_vect.push_back(closed_parenthesis_token);
+
+  ParsedQuery pq = ParsedQuery().BuildParsedQuery(test_token_vect);
+  PqlToken synonym = pq.GetSynonym();
+  std::optional<Pattern> patt = pq.GetPattern();
+  std::vector<Declaration> decl = pq.GetDeclaration();
+
+  REQUIRE(synonym.value == "a");
+  REQUIRE(patt->GetSynAssign().value == "a");
+  REQUIRE(patt->GetFirst().value == "v");
+  REQUIRE(patt->GetSecond().value == "_");
+  REQUIRE(decl[0].GetDesignEntity().value == "assign");
+  REQUIRE(decl[0].GetSynonym().value == "a");
+  REQUIRE(decl[1].GetDesignEntity().value == "variable");
+  REQUIRE(decl[1].GetSynonym().value == "v");
 }

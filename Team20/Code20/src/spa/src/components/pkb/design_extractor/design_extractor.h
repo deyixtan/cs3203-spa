@@ -1,33 +1,38 @@
 #ifndef DESIGN_EXTRACTOR_H
 #define DESIGN_EXTRACTOR_H
 
-#include "../src/components/source_subsystem/node.h"
-#include "../src/components/query_subsystem/pql_lexer/pql_token.h"
-#include "../src/components/pkb/usage_store.h"
-#include "../src/components/pkb/pkb.h"
 #include <unordered_set>
 
+#include "../pkb.h"
+#include "../usage_store.h"
+#include "../../source_subsystem/ast/node_program.h"
+#include "../../source_subsystem/ast/node_read_statement.h"
+#include "../../source_subsystem/ast/node_print_statement.h"
+#include "../../source_subsystem/ast/node_while_statement.h"
+#include "../../source_subsystem/ast/node_if_statement.h"
+#include "../../source_subsystem/ast/node_assign_statement.h"
+#include "../../source_subsystem/ast/node_combination_expression.h"
+#include "../../source_subsystem/ast/node_constant.h"
+#include "../../query_subsystem/pql_lexer/pql_token.h"
 
 class DesignExtractor {
  private:
   ProgramNode root_node;
   PKB *pkb;
   UsageStore storage;
-  void process_proc(std::string proc_name, std::shared_ptr<StatementListNode> stmtLst, std::vector<std::shared_ptr<StatementNode>> stmts);
-  void process_assign(std::string proc_name, std::string stmt_num, std::shared_ptr<ExpressionNode> expr);
-  void process_while(std::shared_ptr<ConditionalExpressionNode> cond_expr, ConditionalType cond_expr_type);
-  void process_if(std::shared_ptr<ConditionalExpressionNode> cond_expr, ConditionalType cond_expr_type);
-
-  void populate_uses(std::string proc_name, std::string stmt, std::string var);
-  void populate_modifies(std::string proc_name, std::string stmt, std::string var);
+  void process_proc(std::shared_ptr<ProcedureNode> proc,
+                    std::shared_ptr<StatementListNode> stmtLst,
+                    std::vector<std::shared_ptr<StatementNode>> stmts);
+  void populate_uses(int stmt, std::string var);
+  void populate_modifies(int stmt, std::string var);
   void populate_proc(std::string name);
-  void populate_assign(std::string stmt);
-  void populate_stmt(std::string stmt);
-  void populate_read(std::string stmt);
-  void populate_print(std::string stmt);
+  void populate_assign(int stmt);
+  void populate_stmt(int stmt);
+  void populate_read(int stmt);
+  void populate_print(int stmt);
   void populate_vars(std::string var);
-  void populate_while(std::string stmt);
-  void populate_if(std::string stmt);
+  void populate_while(int stmt);
+  void populate_if(int stmt);
   void populate_const(std::string name);
  public:
   DesignExtractor(ProgramNode root_node, PKB *pkb, UsageStore storage);
