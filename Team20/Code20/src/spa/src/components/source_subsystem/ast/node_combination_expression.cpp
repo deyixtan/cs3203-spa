@@ -46,5 +46,6 @@ std::string CombinationExpressionNode::ToString(int level) {
 bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const CombinationExpressionNode *>(&other);
   return m_arithmetic_operator == casted_other->m_arithmetic_operator
-      && m_left_expression == casted_other->m_left_expression && m_right_expression == casted_other->m_right_expression;
+      && *m_left_expression == *(casted_other->m_left_expression)
+      && *m_right_expression == *(casted_other->m_right_expression);
 }
