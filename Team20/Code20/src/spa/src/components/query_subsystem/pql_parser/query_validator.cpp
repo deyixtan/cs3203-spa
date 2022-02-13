@@ -147,33 +147,39 @@ void QueryValidator::IsValidSelectClause(std::vector<PqlToken> select_clause) {
   }
 
   if (select_clause.size() > 2) { // Select s such that Follows (s, s1)
-    PqlToken such_token = select_clause[2];
-    if (such_token.type != PqlTokenType::SUCH) {
-      throw INVALID_SELECT_CLAUSE_FORMAT;
-    }
-    PqlToken that_token = select_clause[3];
-    if (that_token.type != PqlTokenType::THAT) {
-      throw INVALID_SELECT_CLAUSE_FORMAT;
-    }
 
-    std::vector<PqlToken> rel_ref_tokens;
-    for (int index = 4; index < 10; index++) {
-      rel_ref_tokens.push_back(select_clause[index]);
-    }
-
-    if (IsValidRelRefClause(rel_ref_tokens)) {
-      IsValidRelRefArg(rel_ref_tokens, rel_ref_tokens[0].type);
+    PqlToken third_token = select_clause[2];
+    if (third_token.type == PqlTokenType::SUCH) {  // such that
+      PqlToken that_token = select_clause[3];
+      if (that_token.type != PqlTokenType::THAT) {
+        throw INVALID_SELECT_CLAUSE_FORMAT;
+      }
+      std::vector<PqlToken> rel_ref_tokens;
+      for (int index = 4; index < 10; index++) {
+        rel_ref_tokens.push_back(select_clause[index]);
+      }
+      if (IsValidRelRefClause(rel_ref_tokens)) {
+        IsValidRelRefArg(rel_ref_tokens, rel_ref_tokens[0].type);
+      } else {
+        throw INVALID_REL_REF_FORMAT;
+      }
+    } else if (third_token.type == PqlTokenType::PATTERN) {
+      std::vector<PqlToken> pattern_tokens;
+      for (int index = 2; index < select_clause.size(); index++) {
+        pattern_tokens.push_back(select_clause[index]);
+      }
+      IsValidPatternClause(pattern_tokens);
     } else {
-      throw INVALID_REL_REF_FORMAT;
+      throw INVALID_SELECT_CLAUSE_FORMAT;
     }
   }
 
   if (select_clause.size() > 10) { // Select s such that Follows (s, s1) pattern a (a, "x")
     std::vector<PqlToken> pattern_tokens;
-    for (int index = 10; index < select_clause.size() - 1; index++) {
+    for (int index = 10; index < select_clause.size(); index++) {
       pattern_tokens.push_back(select_clause[index]);
-      IsValidPatternClause(pattern_tokens);
     }
+    IsValidPatternClause(pattern_tokens);
   }
 }
 

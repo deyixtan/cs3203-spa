@@ -1,49 +1,36 @@
 #include "components/source_subsystem/source_parser.h"
 
-SourceParser::SourceParser(std::vector<SourceToken *> tokens_ptr) {
-  this->tokens_ptr = tokens_ptr;
-  this->cursor = 0;
-  this->line_number = 0;
-  this->max_tokens_index = tokens_ptr.size() - 1;
+namespace source {
+
+SourceParser::SourceParser(std::vector<std::shared_ptr<SourceToken>> tokens_ptr)
+    : m_cursor(0), m_curr_stmt_no(0), m_tokens_ptr(std::move(tokens_ptr)) {}
+
+bool SourceParser::AreTokensProcessed() {
+  return m_cursor >= m_tokens_ptr.size() - 1;
+}
+
+std::shared_ptr<SourceToken> SourceParser::FetchToken(int tokens_ahead) {
+  if (m_cursor + tokens_ahead >= m_tokens_ptr.size()) {
+    return nullptr;
+  }
+  return m_tokens_ptr[m_cursor + tokens_ahead];
 }
 
 std::shared_ptr<SourceToken> SourceParser::FetchCurrentToken() {
-  if (cursor >= tokens_ptr.size()) {
-    return nullptr;
-  }
-  SourceToken token = *(tokens_ptr[cursor]);
-  return std::make_shared<SourceToken>(token);
+  return FetchToken(0);
 }
 
-std::shared_ptr<SourceToken> SourceParser::FetchNextToken() {
-  if (cursor + 1 >= tokens_ptr.size()) {
-    return nullptr;
-  }
-  SourceToken token = *(tokens_ptr[cursor + 1]);
-  return std::make_shared<SourceToken>(token);
-}
-
-void SourceParser::IncrementCursor() {
-  if (cursor >= tokens_ptr.size()) {
-    throw std::runtime_error("Cursor reached end of stream.");
-  }
-  cursor++;
-}
-
-bool SourceParser::AreTokensProcessed() {
-  return cursor >= max_tokens_index;
-}
-
-std::shared_ptr<SourceToken> SourceParser::ConsumeToken(SourceTokenType type) {
+std::shared_ptr<SourceToken> SourceParser::ProcessToken(TokenType type) {
   std::shared_ptr<SourceToken> token_ptr = FetchCurrentToken();
   if (token_ptr->GetType() != type) {
-    throw std::runtime_error("Unable to consume token, mismatched type.");
+    throw MismatchedTokenException();
   }
-  IncrementCursor();
 
-  if (token_ptr->GetType() == SourceTokenType::NEW_LINE) {
-    line_number++;
+  if (m_cursor >= m_tokens_ptr.size()) {
+    throw EndOfStreamException();
   }
+  m_cursor++;
+
   return token_ptr;
 }
 
@@ -56,221 +43,219 @@ std::shared_ptr<ProgramNode> SourceParser::ParseProgram() {
 }
 
 std::shared_ptr<ProcedureNode> SourceParser::ParseProcedure() {
-  ConsumeToken(SourceTokenType::PROCEDURE);
-  std::shared_ptr<SourceToken> identifier = ConsumeToken(SourceTokenType::NAME);
-  ConsumeToken(SourceTokenType::OPENED_BRACES);
+  ProcessToken(TokenType::PROCEDURE);
+  std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  ProcessToken(TokenType::OPENED_BRACES);
   std::shared_ptr<StatementListNode> stmt_list = ParseStatementList();
-  ConsumeToken(SourceTokenType::CLOSED_BRACES);
-  return std::make_shared<ProcedureNode>(identifier->GetValue(), stmt_list);
+  ProcessToken(TokenType::CLOSED_BRACES);
+  std::string procedure_name = identifier->GetValue();
+  return std::make_shared<ProcedureNode>(procedure_name, stmt_list);
 }
 
 std::shared_ptr<StatementListNode> SourceParser::ParseStatementList() {
-  std::vector<std::shared_ptr<StatementNode>> statements;
-  while (FetchCurrentToken()->GetType() != SourceTokenType::CLOSED_BRACES) {
-    std::shared_ptr<StatementNode> statement = ParseStatement();
-    if (statement == nullptr) {
-      continue;
-    }
-    statements.push_back(statement);
+  std::vector<std::shared_ptr<StatementNode>> stmt_list;
+  while (FetchCurrentToken()->GetType() != TokenType::CLOSED_BRACES) {
+    stmt_list.push_back(ParseStatement());
   }
-  return std::make_shared<StatementListNode>(statements);
+  return std::make_shared<StatementListNode>(stmt_list);
 }
 
 std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
-  // handle assignment by predicting next token
-  if (FetchNextToken()->GetType() == SourceTokenType::EQUAL) {
+  // case 1: assignment by predicting if next token is '='
+  if (FetchToken(1)->GetType() == TokenType::EQUAL) {
     return ParseAssignStatement();
   }
-
-  // handle other type of statements
+  // case 2: handle other type of supported statements
   std::shared_ptr<SourceToken> token_ptr = FetchCurrentToken();
   switch (token_ptr->GetType()) {
-    case SourceTokenType::READ:return ParseReadStatement();
-    case SourceTokenType::PRINT:return ParsePrintStatement();
-    case SourceTokenType::WHILE:return ParseWhileStatement();
-    case SourceTokenType::IF:return ParseIfStatement();
-    case SourceTokenType::NEW_LINE: {
-      ConsumeToken(SourceTokenType::NEW_LINE);
-      return nullptr;
-    }
-    default:throw std::runtime_error("Parsing invalid statement.");
+    case TokenType::READ:return ParseReadStatement();
+    case TokenType::PRINT:return ParsePrintStatement();
+    case TokenType::WHILE:return ParseWhileStatement();
+    case TokenType::IF:return ParseIfStatement();
+    default:throw InvalidParseException("Parsing invalid statement.");
   }
 }
 
 std::shared_ptr<ReadStatementNode> SourceParser::ParseReadStatement() {
-  ConsumeToken(SourceTokenType::READ);
-  std::shared_ptr<SourceToken> identifier = ConsumeToken(SourceTokenType::NAME);
-  ConsumeToken(SourceTokenType::SEMI_COLON);
-  return std::make_shared<ReadStatementNode>(line_number, std::make_shared<VariableNode>(identifier->GetValue()));
+  ProcessToken(TokenType::READ);
+  std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  ProcessToken(TokenType::SEMI_COLON);
+  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue());
+  return std::make_shared<ReadStatementNode>(++m_curr_stmt_no, variable);
 }
 
 std::shared_ptr<PrintStatementNode> SourceParser::ParsePrintStatement() {
-  ConsumeToken(SourceTokenType::PRINT);
-  std::shared_ptr<SourceToken> identifier = ConsumeToken(SourceTokenType::NAME);
-  ConsumeToken(SourceTokenType::SEMI_COLON);
-  return std::make_shared<PrintStatementNode>(line_number, std::make_shared<VariableNode>(identifier->GetValue()));
+  ProcessToken(TokenType::PRINT);
+  std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  ProcessToken(TokenType::SEMI_COLON);
+  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue());
+  return std::make_shared<PrintStatementNode>(++m_curr_stmt_no, variable);
 }
 
 std::shared_ptr<WhileStatementNode> SourceParser::ParseWhileStatement() {
-  ConsumeToken(SourceTokenType::WHILE);
-  ConsumeToken(SourceTokenType::OPENED_PARENTHESIS);
-  std::shared_ptr<ConditionalExpressionNode> cond_expr = ParseConditionalExpression();
-  ConsumeToken(SourceTokenType::CLOSED_PARENTHESIS);
-  ConsumeToken(SourceTokenType::OPENED_BRACES);
+  ProcessToken(TokenType::WHILE);
+  ProcessToken(TokenType::OPENED_PARENTHESIS);
+  std::shared_ptr<ConditionalExpressionNode> condition = ParseConditionalExpression();
+  ProcessToken(TokenType::CLOSED_PARENTHESIS);
+  ProcessToken(TokenType::OPENED_BRACES);
   std::shared_ptr<StatementListNode> stmt_list = ParseStatementList();
-  ConsumeToken(SourceTokenType::CLOSED_BRACES);
-  return std::make_shared<WhileStatementNode>(line_number, cond_expr, stmt_list);
+  ProcessToken(TokenType::CLOSED_BRACES);
+  return std::make_shared<WhileStatementNode>(++m_curr_stmt_no, condition, stmt_list);
 }
 
 std::shared_ptr<IfStatementNode> SourceParser::ParseIfStatement() {
-  ConsumeToken(SourceTokenType::IF);
-  ConsumeToken(SourceTokenType::OPENED_PARENTHESIS);
-  std::shared_ptr<ConditionalExpressionNode> cond_expr = ParseConditionalExpression();
-  ConsumeToken(SourceTokenType::CLOSED_PARENTHESIS);
-  ConsumeToken(SourceTokenType::THEN);
-  ConsumeToken(SourceTokenType::OPENED_BRACES);
+  ProcessToken(TokenType::IF);
+  ProcessToken(TokenType::OPENED_PARENTHESIS);
+  std::shared_ptr<ConditionalExpressionNode> condition = ParseConditionalExpression();
+  ProcessToken(TokenType::CLOSED_PARENTHESIS);
+  ProcessToken(TokenType::THEN);
+  ProcessToken(TokenType::OPENED_BRACES);
   std::shared_ptr<StatementListNode> if_stmt_list = ParseStatementList();
-  ConsumeToken(SourceTokenType::CLOSED_BRACES);
-  ConsumeToken(SourceTokenType::ELSE);
-  ConsumeToken(SourceTokenType::OPENED_BRACES);
+  ProcessToken(TokenType::CLOSED_BRACES);
+  ProcessToken(TokenType::ELSE);
+  ProcessToken(TokenType::OPENED_BRACES);
   std::shared_ptr<StatementListNode> else_stmt_list = ParseStatementList();
-  ConsumeToken(SourceTokenType::CLOSED_BRACES);
-  return std::make_shared<IfStatementNode>(line_number, cond_expr, if_stmt_list, else_stmt_list);
+  ProcessToken(TokenType::CLOSED_BRACES);
+  return std::make_shared<IfStatementNode>(++m_curr_stmt_no, condition, if_stmt_list, else_stmt_list);
 }
 
 std::shared_ptr<AssignStatementNode> SourceParser::ParseAssignStatement() {
-  std::shared_ptr<SourceToken> identifier = ConsumeToken(SourceTokenType::NAME);
-  ConsumeToken(SourceTokenType::EQUAL);;
-  std::shared_ptr<ExpressionNode> expr = ParseExpression();
-  ConsumeToken(SourceTokenType::SEMI_COLON);
-  return std::make_shared<AssignStatementNode>(line_number,
-                                               std::make_shared<VariableNode>(identifier->GetValue()),
-                                               expr);
+  std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  ProcessToken(TokenType::EQUAL);
+  std::shared_ptr<ExpressionNode> expression = ParseExpression();
+  ProcessToken(TokenType::SEMI_COLON);
+  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue());
+  return std::make_shared<AssignStatementNode>(++m_curr_stmt_no, variable, expression);
 }
 
 std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpression() {
-  SourceTokenType type = FetchCurrentToken()->GetType();
-  if (type == SourceTokenType::NOT) {
-    ConsumeToken(SourceTokenType::NOT);
-    ConsumeToken(SourceTokenType::OPENED_PARENTHESIS);
-    std::shared_ptr<ConditionalExpressionNode> expr = ParseConditionalExpression();
-    ConsumeToken(SourceTokenType::CLOSED_PARENTHESIS);
-    return std::make_shared<NotExpressionNode>(expr);
-  } else if (type == SourceTokenType::OPENED_PARENTHESIS) {
-    ConsumeToken(SourceTokenType::OPENED_PARENTHESIS);
-    std::shared_ptr<ConditionalExpressionNode> left = ParseConditionalExpression();
-    ConsumeToken(SourceTokenType::CLOSED_PARENTHESIS);
-    std::shared_ptr<BooleanExpressionNode> right = ParseConditionalExpression2();
-    right->setLeft(left);
-    return right;
-  } else if (type == SourceTokenType::NAME || type == SourceTokenType::DIGIT || type == SourceTokenType::OPENED_PARENTHESIS) {
+  TokenType type = FetchCurrentToken()->GetType();
+  if (type == TokenType::NOT) {
+    ProcessToken(TokenType::NOT);
+    ProcessToken(TokenType::OPENED_PARENTHESIS);
+    std::shared_ptr<ConditionalExpressionNode> expression = ParseConditionalExpression();
+    ProcessToken(TokenType::CLOSED_PARENTHESIS);
+    return std::make_shared<NotExpressionNode>(expression);
+  } else if (type == TokenType::OPENED_PARENTHESIS) {
+    ProcessToken(TokenType::OPENED_PARENTHESIS);
+    std::shared_ptr<ConditionalExpressionNode> left_expression = ParseConditionalExpression();
+    ProcessToken(TokenType::CLOSED_PARENTHESIS);
+    BooleanOperator boolean_operator;
+    switch (FetchCurrentToken()->GetType()) {
+      case TokenType::AND:ProcessToken(TokenType::AND);
+        boolean_operator = BooleanOperator::AND;
+        break;
+      case TokenType::OR:ProcessToken(TokenType::OR);
+        boolean_operator = BooleanOperator::OR;
+        break;
+      default:throw InvalidParseException("Parsing invalid conditional expression operator.");
+    }
+    ProcessToken(TokenType::OPENED_PARENTHESIS);
+    std::shared_ptr<ConditionalExpressionNode> right_expression = ParseConditionalExpression();
+    ProcessToken(TokenType::CLOSED_PARENTHESIS);
+    return std::make_shared<BooleanExpressionNode>(boolean_operator, left_expression, right_expression);
+  } else if (type == TokenType::NAME || type == TokenType::DIGIT) {
+    // 'rel_expr' grammar can be reduced to 'factor'
     return ParseRelationalExpression();
   }
-  throw std::runtime_error("Unable to parse conditional expression");
-}
-
-std::shared_ptr<BooleanExpressionNode> SourceParser::ParseConditionalExpression2() {
-  BooleanOperator value;
-  switch (FetchCurrentToken()->GetType()) {
-    case SourceTokenType::AND:ConsumeToken(SourceTokenType::AND);
-      value = BooleanOperator::AND;
-      break;
-    case SourceTokenType::OR:ConsumeToken(SourceTokenType::OR);
-      value = BooleanOperator::OR;
-      break;
-    default:throw std::runtime_error("Parsing invalid conditional expression operator");
-  }
-  ConsumeToken(SourceTokenType::OPENED_PARENTHESIS);
-  std::shared_ptr<ConditionalExpressionNode> right = ParseConditionalExpression();
-  ConsumeToken(SourceTokenType::CLOSED_PARENTHESIS);
-  return std::make_shared<BooleanExpressionNode>(value, right);
+  throw InvalidParseException("Unable to parse conditional expression.");
 }
 
 std::shared_ptr<RelationalExpressionNode> SourceParser::ParseRelationalExpression() {
-  std::shared_ptr<ExpressionNode> left = ParseRelationalFactor();
-  RelationalOperation value;
+  std::shared_ptr<ExpressionNode> left_relation_factor = ParseRelationalFactor();
+  RelationOperator relation_operator;
   switch (FetchCurrentToken()->GetType()) {
-    case SourceTokenType::IS_GREATER:ConsumeToken(SourceTokenType::IS_GREATER);
-      value = RelationalOperation::GREATER_THAN;
+    case TokenType::IS_GREATER:ProcessToken(TokenType::IS_GREATER);
+      relation_operator = RelationOperator::GREATER_THAN;
       break;
-    case SourceTokenType::IS_GREATER_EQUAL:ConsumeToken(SourceTokenType::IS_GREATER_EQUAL);
-      value = RelationalOperation::GREATER_THAN_EQUALS;
+    case TokenType::IS_GREATER_EQUAL:ProcessToken(TokenType::IS_GREATER_EQUAL);
+      relation_operator = RelationOperator::GREATER_THAN_EQUALS;
       break;
-    case SourceTokenType::IS_LESSER_EQUAL:ConsumeToken(SourceTokenType::IS_LESSER_EQUAL);
-      value = RelationalOperation::LESS_THAN_EQUALS;
+    case TokenType::IS_LESSER:ProcessToken(TokenType::IS_LESSER);
+      relation_operator = RelationOperator::LESS_THAN;
       break;
-    case SourceTokenType::IS_LESSER:ConsumeToken(SourceTokenType::IS_LESSER);
-      value = RelationalOperation::LESS_THAN;
+    case TokenType::IS_LESSER_EQUAL:ProcessToken(TokenType::IS_LESSER_EQUAL);
+      relation_operator = RelationOperator::LESS_THAN_EQUALS;
       break;
-    case SourceTokenType::IS_EQUAL:ConsumeToken(SourceTokenType::IS_EQUAL);
-      value = RelationalOperation::EQUALS;
+    case TokenType::IS_EQUAL:ProcessToken(TokenType::IS_EQUAL);
+      relation_operator = RelationOperator::EQUALS;
       break;
-    case SourceTokenType::IS_NOT_EQUAL:ConsumeToken(SourceTokenType::IS_NOT_EQUAL);
-      value = RelationalOperation::NOT_EQUALS;
+    case TokenType::IS_NOT_EQUAL:ProcessToken(TokenType::IS_NOT_EQUAL);
+      relation_operator = RelationOperator::NOT_EQUALS;
       break;
-    default:throw std::runtime_error("Parsing invalid relational expression");
+    default:throw InvalidParseException("Parsing invalid relational expression.");
   }
-  std::shared_ptr<ExpressionNode> right = ParseRelationalFactor();
-  return std::make_shared<RelationalExpressionNode>(value, left, right);
+  std::shared_ptr<ExpressionNode> right_relation_factor = ParseRelationalFactor();
+  return std::make_shared<RelationalExpressionNode>(relation_operator, left_relation_factor, right_relation_factor);
 }
 
 std::shared_ptr<ExpressionNode> SourceParser::ParseRelationalFactor() {
+  // rel_factor -> expr -> term -> factor -> 'var_name'/'const_value'
+  // thus not required to check for 'var_name' and 'const_value'
+  // i.e. just evaluate expr
   return ParseExpression();
 }
 
 std::shared_ptr<ExpressionNode> SourceParser::ParseExpression() {
-  std::shared_ptr<ExpressionNode> expr = ParseTerm();
-  return ParseExpression2(expr);
+  // expr is essentially 'term (operator) term'
+  std::shared_ptr<ExpressionNode> left_term = ParseTerm();
+  return ParseExpression(left_term);
 }
 
-std::shared_ptr<ExpressionNode> SourceParser::ParseExpression2(std::shared_ptr<ExpressionNode> left) {
-  Operation value;
+std::shared_ptr<ExpressionNode> SourceParser::ParseExpression(std::shared_ptr<ExpressionNode> left_term) {
+  // recursively call and append '(add/minus) term' part of the expression
+  ArithmeticOperator arithmetic_operator;
   switch (FetchCurrentToken()->GetType()) {
-    case SourceTokenType::ADDITION:ConsumeToken(SourceTokenType::ADDITION);
-      value = Operation::PLUS;
+    case TokenType::ADDITION:ProcessToken(TokenType::ADDITION);
+      arithmetic_operator = ArithmeticOperator::PLUS;
       break;
-    case SourceTokenType::SUBTRACTION:ConsumeToken(SourceTokenType::SUBTRACTION);
-      value = Operation::MINUS;
+    case TokenType::SUBTRACTION:ProcessToken(TokenType::SUBTRACTION);
+      arithmetic_operator = ArithmeticOperator::MINUS;
       break;
-    default:return left;
+    default:return left_term;
   }
-  std::shared_ptr<ExpressionNode> right = ParseTerm();
-  return ParseExpression2(std::make_shared<CombinationExpressionNode>(value, left, right));
+  std::shared_ptr<ExpressionNode> right_term = ParseTerm();
+  return ParseExpression(std::make_shared<CombinationExpressionNode>(arithmetic_operator, left_term, right_term));
 }
 
 std::shared_ptr<ExpressionNode> SourceParser::ParseTerm() {
-  std::shared_ptr<ExpressionNode> factor = ParseFactor();
-  return ParseTerm2(factor);
+  // expr is essentially 'factor (multiply/divide/mod) factor'
+  std::shared_ptr<ExpressionNode> left_factor = ParseFactor();
+  return ParseTerm(left_factor);
 }
 
-std::shared_ptr<ExpressionNode> SourceParser::ParseTerm2(std::shared_ptr<ExpressionNode> left) {
-  Operation value;
+std::shared_ptr<ExpressionNode> SourceParser::ParseTerm(std::shared_ptr<ExpressionNode> left_factor) {
+  // recursively call and append '(operator) factor' part of the expression
+  ArithmeticOperator arithmetic_operator;
   switch (FetchCurrentToken()->GetType()) {
-    case SourceTokenType::MULTIPLICATION:ConsumeToken(SourceTokenType::MULTIPLICATION);
-      value = Operation::MULTIPLY;
+    case TokenType::MULTIPLICATION:ProcessToken(TokenType::MULTIPLICATION);
+      arithmetic_operator = ArithmeticOperator::MULTIPLY;
       break;
-    case SourceTokenType::DIVISION:ConsumeToken(SourceTokenType::DIVISION);
-      value = Operation::DIVIDE;
+    case TokenType::DIVISION:ProcessToken(TokenType::DIVISION);
+      arithmetic_operator = ArithmeticOperator::DIVIDE;
       break;
-    case SourceTokenType::MODULUS:ConsumeToken(SourceTokenType::MODULUS);
-      value = Operation::MOD;
+    case TokenType::MODULUS:ProcessToken(TokenType::MODULUS);
+      arithmetic_operator = ArithmeticOperator::MOD;
       break;
-    default:return left;
+    default:return left_factor;
   }
-  std::shared_ptr<ExpressionNode> right = ParseFactor();
-  return ParseTerm2(std::make_shared<CombinationExpressionNode>(value, left, right));
+  std::shared_ptr<ExpressionNode> right_factor = ParseFactor();
+  return ParseTerm(std::make_shared<CombinationExpressionNode>(arithmetic_operator, left_factor, right_factor));
 }
 
 std::shared_ptr<ExpressionNode> SourceParser::ParseFactor() {
-  switch (FetchCurrentToken()->GetType()) {
-    case SourceTokenType::NAME:return std::make_shared<VariableNode>(ConsumeToken(SourceTokenType::NAME)->GetValue());
-    case SourceTokenType::DIGIT:return std::make_shared<ConstantNode>(ConsumeToken(SourceTokenType::DIGIT)->GetValue());
-    case SourceTokenType::OPENED_PARENTHESIS: {
-      ConsumeToken(SourceTokenType::OPENED_PARENTHESIS);
-      std::shared_ptr<ExpressionNode> expr = ParseExpression();
-      ConsumeToken(SourceTokenType::CLOSED_PARENTHESIS);
-      return expr;
+  TokenType type = FetchCurrentToken()->GetType();
+  switch (type) {
+    case TokenType::NAME:return std::make_shared<VariableNode>(ProcessToken(TokenType::NAME)->GetValue());
+    case TokenType::DIGIT:return std::make_shared<ConstantNode>(ProcessToken(TokenType::DIGIT)->GetValue());
+    case TokenType::OPENED_PARENTHESIS: {
+      ProcessToken(TokenType::OPENED_PARENTHESIS);
+      std::shared_ptr<ExpressionNode> expression = ParseExpression();
+      ProcessToken(TokenType::CLOSED_PARENTHESIS);
+      return expression;
     }
-    default:throw std::runtime_error("Unable to parse factor.");
+    default:throw InvalidParseException("Unable to parse factor.");
   }
+}
+
 }
