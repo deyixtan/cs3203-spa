@@ -20,20 +20,22 @@ class DesignExtractor {
   ProgramNode root_node;
   PKB *pkb;
   UsageStore storage;
-  void process_proc(std::shared_ptr<ProcedureNode> proc,
-                    std::shared_ptr<StatementListNode> stmtLst,
-                    std::vector<std::shared_ptr<StatementNode>> stmts);
-  void populate_uses(std::string stmt, std::string var);
-  void populate_modifies(std::string stmt, std::string var);
-  void populate_proc(std::string name);
-  void populate_assign(std::string stmt);
-  void populate_stmt(std::string stmt);
-  void populate_read(std::string stmt);
-  void populate_print(std::string stmt);
-  void populate_vars(std::string var);
-  void populate_while(std::string stmt);
-  void populate_if(std::string stmt);
-  void populate_const(std::string name);
+
+  void ProcessProc(std::shared_ptr<ProcedureNode> proc,
+                    std::shared_ptr<StatementListNode> stmtLst);
+  void ProcessAssign(std::shared_ptr<ExpressionNode> expr);
+
+  void PopulateUses(std::string stmt, std::string var);
+  void PopulateModifies(std::string stmt, std::string var);
+  void PopulateProc(std::string name);
+  void PopulateAssign(std::string stmt);
+  void PopulateStmt(std::string stmt);
+  void PopulateRead(std::string stmt);
+  void PopulatePrint(std::string stmt);
+  void PopulateVars(std::string var);
+  void PopulateWhile(std::string stmt);
+  void PopulateIf(std::string stmt);
+  void PopulateConst(std::string name);
  public:
   DesignExtractor(ProgramNode root_node, PKB *pkb, UsageStore storage);
   void traverse_ast();
