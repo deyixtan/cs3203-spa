@@ -113,3 +113,24 @@ TEST_CASE("Test source lexer with while loop") {
     REQUIRE(token->GetType() == expected_tokens[i].GetType());
   }
 }
+
+TEST_CASE("Test source lexer with unrecognised character hash") {
+  std::string program_source = "procedure p { x = # }";
+  source::SourceLexer lexer = source::SourceLexer(program_source);
+  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
+  REQUIRE_THROWS_WITH(lexer.Tokenize(tokens_ptr), "Unexpected token.");
+}
+
+TEST_CASE("Test source lexer with unrecognised character question") {
+  std::string program_source = "procedure p { x = 2 ?";
+  source::SourceLexer lexer = source::SourceLexer(program_source);
+  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
+  REQUIRE_THROWS_WITH(lexer.Tokenize(tokens_ptr), "Unexpected token.");
+}
+
+TEST_CASE("Test source lexer with unrecognised characters") {
+  std::string program_source = "@$/ p { x = 2 }";
+  source::SourceLexer lexer = source::SourceLexer(program_source);
+  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
+  REQUIRE_THROWS_WITH(lexer.Tokenize(tokens_ptr), "Unexpected token.");
+}
