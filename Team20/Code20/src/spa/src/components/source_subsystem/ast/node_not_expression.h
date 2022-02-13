@@ -12,6 +12,7 @@ class NotExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetExpression();
   [[nodiscard]] ConditionalType GetConditionalType() override;
   [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] bool operator==(const NotExpressionNode &other) const;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_NOT_EXPRESSION_H_

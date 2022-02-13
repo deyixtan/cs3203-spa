@@ -20,3 +20,9 @@ StmtType AssignStatementNode::GetStatementType() {
 std::string AssignStatementNode::ToString(int level) {
   return StatementNode::ToString(level) + m_identifier->ToString(level) + " = " + m_expression->ToString(level) + ";\n";
 }
+
+bool AssignStatementNode::operator==(const StatementNode &other) const {
+  const auto casted_other = dynamic_cast<const AssignStatementNode *>(&other);
+  return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier)
+      && *m_expression == *(casted_other->m_expression);
+}

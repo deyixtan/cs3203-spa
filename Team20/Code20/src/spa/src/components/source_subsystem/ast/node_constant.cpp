@@ -13,3 +13,8 @@ ExpressionType ConstantNode::GetExpressionType() {
 std::string ConstantNode::ToString(int level) {
   return m_value;
 }
+
+bool ConstantNode::operator==(const ExpressionNode &other) const {
+  const auto casted_other = dynamic_cast<const ConstantNode *>(&other);
+  return m_value == casted_other->m_value;
+}

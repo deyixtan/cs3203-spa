@@ -34,3 +34,9 @@ std::string IfStatementNode::ToString(int level) {
   return str + "if (" + m_condition->ToString(level) + ") then {\n" + m_if_stmt_list->ToString(level + 1) + str +
       "} else {\n" + m_else_stmt_list->ToString(level + 1) + str + "}\n";
 }
+
+bool IfStatementNode::operator==(const StatementNode &other) const {
+  const auto casted_other = dynamic_cast<const IfStatementNode *>(&other);
+  return m_stmt_no == casted_other->m_stmt_no && m_condition == casted_other->m_condition
+      && m_if_stmt_list == casted_other->m_if_stmt_list && m_else_stmt_list == casted_other->m_else_stmt_list;
+}

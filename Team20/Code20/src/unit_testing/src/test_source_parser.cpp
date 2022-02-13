@@ -5,7 +5,7 @@
 using namespace source;
 
 TEST_CASE("Test single procedure with one assign statement") {
-  // actual
+  // set up actual
   std::vector<std::shared_ptr<SourceToken>> token_list;
   std::shared_ptr<ProgramNode> program_node;
 
@@ -14,7 +14,7 @@ TEST_CASE("Test single procedure with one assign statement") {
   SourceParser parser = SourceParser(token_list);
   program_node = parser.ParseProgram();
 
-  // expected
+  // set up expected
   std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<AssignStatementNode>
@@ -30,12 +30,12 @@ TEST_CASE("Test single procedure with one assign statement") {
   procedures.emplace_back(procedure);
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
-  // TODO: overload equality operator for all Node classes
-  REQUIRE(program_node == expected_program_node);
+  // test
+  REQUIRE(*program_node == *expected_program_node);
 }
 
 TEST_CASE("Test single procedure with one read statement") {
-  // actual
+  // set up actual
   std::vector<std::shared_ptr<SourceToken>> token_list;
   std::shared_ptr<ProgramNode> program_node;
 
@@ -44,7 +44,7 @@ TEST_CASE("Test single procedure with one read statement") {
   SourceParser parser = SourceParser(token_list);
   program_node = parser.ParseProgram();
 
-  // expected
+  // set up expected
   std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ReadStatementNode>
       assign_stmt = std::make_shared<ReadStatementNode>(1, variable_node);
@@ -59,11 +59,12 @@ TEST_CASE("Test single procedure with one read statement") {
   procedures.emplace_back(procedure);
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
-  REQUIRE(program_node == expected_program_node);
+  // test
+  REQUIRE(*program_node == *expected_program_node);
 }
 
 TEST_CASE("Test single procedure with one print statement") {
-  // actual
+  // set up actual
   std::vector<std::shared_ptr<SourceToken>> token_list;
   std::shared_ptr<ProgramNode> program_node;
 
@@ -72,7 +73,7 @@ TEST_CASE("Test single procedure with one print statement") {
   SourceParser parser = SourceParser(token_list);
   program_node = parser.ParseProgram();
 
-  // expected
+  // set up expected
   std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<PrintStatementNode>
       assign_stmt = std::make_shared<PrintStatementNode>(1, variable_node);
@@ -87,5 +88,6 @@ TEST_CASE("Test single procedure with one print statement") {
   procedures.emplace_back(procedure);
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
-  REQUIRE(program_node == expected_program_node);
+  // test
+  REQUIRE(*program_node == *expected_program_node);
 }

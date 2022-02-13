@@ -34,10 +34,6 @@ std::string CombinationExpressionNode::GetArithmeticOperatorLabel(ArithmeticOper
   }
 }
 
-void CombinationExpressionNode::SetLeftExpression(std::shared_ptr<ExpressionNode> left_expression) {
-  m_left_expression = left_expression;
-}
-
 ExpressionType CombinationExpressionNode::GetExpressionType() {
   return ExpressionType::COMBINATION;
 }
@@ -45,4 +41,10 @@ ExpressionType CombinationExpressionNode::GetExpressionType() {
 std::string CombinationExpressionNode::ToString(int level) {
   return "(" + m_left_expression->ToString(level) + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
       + m_right_expression->ToString(level) + ")";
+}
+
+bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
+  const auto casted_other = dynamic_cast<const CombinationExpressionNode *>(&other);
+  return m_arithmetic_operator == casted_other->m_arithmetic_operator
+      && m_left_expression == casted_other->m_left_expression && m_right_expression == casted_other->m_right_expression;
 }

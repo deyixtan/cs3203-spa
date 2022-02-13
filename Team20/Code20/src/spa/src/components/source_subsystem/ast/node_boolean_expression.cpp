@@ -21,3 +21,8 @@ std::string BooleanExpressionNode::ToString(int level) {
   return "(" + m_left_expression->ToString(level) + (m_boolean_operator == BooleanOperator::AND ? " && " : " || ")
       + m_right_expression->ToString(level) + ")";
 }
+
+bool BooleanExpressionNode::operator==(const BooleanExpressionNode &other) const {
+  return m_boolean_operator == other.m_boolean_operator && m_left_expression == other.m_left_expression
+      && m_right_expression == other.m_right_expression;
+}

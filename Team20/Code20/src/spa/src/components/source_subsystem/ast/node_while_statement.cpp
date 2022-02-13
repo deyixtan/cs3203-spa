@@ -21,3 +21,9 @@ std::string WhileStatementNode::ToString(int level) {
   std::string str = StatementNode::ToString(level);
   return str + "while (" + m_condition->ToString(level) + ") {\n" + m_stmt_list->ToString(level + 1) + str + "}\n";
 }
+
+bool WhileStatementNode::operator==(const StatementNode &other) const {
+  const auto casted_other = dynamic_cast<const WhileStatementNode *>(&other);
+  return m_stmt_no == casted_other->m_stmt_no && m_condition == casted_other->m_condition
+      && m_stmt_list == casted_other->m_stmt_list;
+}

@@ -14,3 +14,7 @@ ConditionalType NotExpressionNode::GetConditionalType() {
 std::string NotExpressionNode::ToString(int level) {
   return "(!" + m_expression->ToString(level) + ")";
 }
+
+bool NotExpressionNode::operator==(const NotExpressionNode &other) const {
+  return m_expression == other.m_expression;
+}
