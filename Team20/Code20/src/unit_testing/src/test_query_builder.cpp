@@ -30,15 +30,16 @@ TEST_CASE("Test query parser with uses") {
   test_token_vect.push_back(closed_parenthesis_token);
 
   //BuildParsedQuery(test_token_vect);
-  ParsedQuery pq = BuildParsedQuery(test_token_vect);
+  ParsedQuery pqb;
+  ParsedQuery pq = pqb.BuildParsedQuery(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
-  std::optional<Relationship> rship = pq.GetRelationships();
-  std::optional<Pattern> patt = pq.GetPatterns();
+  Relationship rship = pq.GetRelationships().front();
+  Pattern patt = pq.GetPatterns().front();
   std::vector<Declaration> decl = pq.GetDeclaration();
 
-  REQUIRE(rship->GetRelRef().value == "Uses");
-  REQUIRE(rship->GetFirst().value == "s");
-  REQUIRE(rship->GetSecond().value == "v");
+  REQUIRE(rship.GetRelRef().value == "Uses");
+  REQUIRE(rship.GetFirst().value == "s");
+  REQUIRE(rship.GetSecond().value == "v");
   REQUIRE(synonym.value == "s");
   REQUIRE(decl[0].GetSynonym().value == "s");
   REQUIRE(decl[0].GetDesignEntity().value == "stmt");
@@ -84,19 +85,20 @@ TEST_CASE("Test query parser with uses and pattern") {
   test_token_vect.push_back(closed_parenthesis_token);
 
   //BuildParsedQuery(test_token_vect);
-  ParsedQuery pq = BuildParsedQuery(test_token_vect);
+  ParsedQuery pqb;
+  ParsedQuery pq = pqb.BuildParsedQuery(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
-  std::optional<Relationship> rship = pq.GetRelationships();
-  std::optional<Pattern> patt = pq.GetPatterns();
+  Relationship rship = pq.GetRelationships().front();
+  Pattern patt = pq.GetPatterns().front();
   std::vector<Declaration> decl = pq.GetDeclaration();
 
-  REQUIRE(rship->GetRelRef().value == "Uses");
-  REQUIRE(rship->GetFirst().value == "s");
-  REQUIRE(rship->GetSecond().value == "\"x\"");
+  REQUIRE(rship.GetRelRef().value == "Uses");
+  REQUIRE(rship.GetFirst().value == "s");
+  REQUIRE(rship.GetSecond().value == "\"x\"");
   REQUIRE(synonym.value == "s");
-  REQUIRE(patt->GetSynAssign().value == "a");
-  REQUIRE(patt->GetFirst().value == "v");
-  REQUIRE(patt->GetSecond().value == "_");
+  REQUIRE(patt.GetSynAssign().value == "a");
+  REQUIRE(patt.GetFirst().value == "v");
+  REQUIRE(patt.GetSecond().value == "_");
   REQUIRE(decl[0].GetSynonym().value == "s");
   REQUIRE(decl[0].GetDesignEntity().value == "stmt");
   REQUIRE(decl[1].GetDesignEntity().value == "variable");
@@ -135,15 +137,16 @@ TEST_CASE("Test query parser with multiple variables") {
   test_token_vect.push_back(closed_parenthesis_token);
 
   //BuildParsedQuery(test_token_vect);
-  ParsedQuery pq = BuildParsedQuery(test_token_vect);
+  ParsedQuery pqb;
+  ParsedQuery pq = pqb.BuildParsedQuery(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
-  std::optional<Relationship> rship = pq.GetRelationships();
-  std::optional<Pattern> patt = pq.GetPatterns();
+  Relationship rship = pq.GetRelationships().front();
+  Pattern patt = pq.GetPatterns().front();
   std::vector<Declaration> decl = pq.GetDeclaration();
 
-  REQUIRE(rship->GetRelRef().value == "Parent");
-  REQUIRE(rship->GetFirst().value == "1");
-  REQUIRE(rship->GetSecond().value == "s");
+  REQUIRE(rship.GetRelRef().value == "Parent");
+  REQUIRE(rship.GetFirst().value == "1");
+  REQUIRE(rship.GetSecond().value == "s");
   REQUIRE(synonym.value == "s");
   REQUIRE(decl[0].GetSynonym().value == "s");
   REQUIRE(decl[0].GetDesignEntity().value == "stmt");
