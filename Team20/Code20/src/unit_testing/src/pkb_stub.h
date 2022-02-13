@@ -90,21 +90,21 @@ std::unordered_map<std::string, std::unordered_set<std::string>> var_to_stmt =
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs =
     {
-        {"main", "1"},
-        {"main", "2"},
-        {"main", "3"},
-        {"main", "4"},
-        {"main", "5"},
-        {"main", "6"},
-        {"foo", "7"},
-        {"bar", "8"},
-        {"bar", "9"},
-        {"funcX", "10"},
-        {"funcX", "11"},
-        {"funcX", "12"},
-        {"funcY", "13"},
-        {"funcY", "14"},
-        {"funcZ", "15"},
+        {"main", "a"},
+        {"main", "b"},
+        {"main", "e"},
+        {"main", "f"},
+        {"main", "i"},
+        {"main", "k"},
+        {"foo", "g"},
+        {"bar", "c"},
+        {"bar", "d"},
+        {"funcX", "a"},
+        {"funcX", "b"},
+        {"funcX", "c"},
+        {"funcY", "h"},
+        {"funcY", "j"},
+        {"funcZ", "c"},
     };
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> stmt_var_pairs =

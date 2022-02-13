@@ -76,21 +76,21 @@ void set_up_pkb() {
   pkb->AddStmt("14", PRINT);
   pkb->AddStmt("15", PRINT);
 
-  pkb->AddUsageProcVar("main", "1");
-  pkb->AddUsageProcVar("main", "2");
-  pkb->AddUsageProcVar("main", "3");
-  pkb->AddUsageProcVar("main", "4");
-  pkb->AddUsageProcVar("main", "5");
-  pkb->AddUsageProcVar("main", "6");
-  pkb->AddUsageProcVar("foo", "7");
-  pkb->AddUsageProcVar("bar", "8");
-  pkb->AddUsageProcVar("bar", "9");
-  pkb->AddUsageProcVar("funcX", "10");
-  pkb->AddUsageProcVar("funcX", "11");
-  pkb->AddUsageProcVar("funcX", "12");
-  pkb->AddUsageProcVar("funcY", "13");
-  pkb->AddUsageProcVar("funcY", "14");
-  pkb->AddUsageProcVar("funcZ", "15");
+  pkb->AddUsageProcVar("main", "a");
+  pkb->AddUsageProcVar("main", "b");
+  pkb->AddUsageProcVar("main", "e");
+  pkb->AddUsageProcVar("main", "f");
+  pkb->AddUsageProcVar("main", "i");
+  pkb->AddUsageProcVar("main", "k");
+  pkb->AddUsageProcVar("foo", "g");
+  pkb->AddUsageProcVar("bar", "c");
+  pkb->AddUsageProcVar("bar", "d");
+  pkb->AddUsageProcVar("funcX", "a");
+  pkb->AddUsageProcVar("funcX", "b");
+  pkb->AddUsageProcVar("funcX", "c");
+  pkb->AddUsageProcVar("funcY", "h");
+  pkb->AddUsageProcVar("funcY", "j");
+  pkb->AddUsageProcVar("funcZ", "c");
 
   pkb->AddUsageStmtVar("1", "a");
   pkb->AddUsageStmtVar("1", "b");
@@ -125,7 +125,6 @@ void set_up_pkb() {
   pkb->AddUsageStmtVar("14", "t");
   pkb->AddUsageStmtVar("14", "u");
   pkb->AddUsageStmtVar("15", "v");
-
 }
 
 TEST_CASE("PKB instance") {
@@ -250,4 +249,42 @@ TEST_CASE("Get all usage stmt-var pairs") {
   auto expected = stmt_var_pairs;
 
   REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check if usage proc-var pair exists (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsUsageProcVarExist({"funcX", "c"});
+  auto expected = proc_var_pairs.find({"funcX", "c"}) != proc_var_pairs.end();
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check if usage proc-var pair exists (wrong)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsUsageProcVarExist({"funcA", "2"});
+  auto expected = proc_var_pairs.find({"funcA", "2"}) != proc_var_pairs.end();
+
+  REQUIRE(actual == false);
+  REQUIRE(expected == false);
+}
+
+TEST_CASE("Check if usage stmt-var pair exists (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsUsageStmtVarExist({"4", "k"});
+  auto expected = stmt_var_pairs.find({"4", "k"}) != stmt_var_pairs.end();
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check if usage stmt-var pair exists (wrong)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsUsageStmtVarExist({"5", "j"});
+  auto expected = stmt_var_pairs.find({"5", "j"}) != stmt_var_pairs.end();
+
+  REQUIRE(actual == false);
+  REQUIRE(expected == false);
 }
