@@ -61,6 +61,7 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         break;
       }
       case WHILE: {
+        PopulateStmt(stmt_num);
         std::shared_ptr<WhileStatementNode> while_stmt = static_pointer_cast<WhileStatementNode>(stmt);
         std::shared_ptr<ConditionalExpressionNode> while_stmt_cond = while_stmt->GetCondition();
 
@@ -72,6 +73,7 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         break;
       }
       case IF: {
+        PopulateStmt(stmt_num);
         std::shared_ptr<IfStatementNode> if_stmt = static_pointer_cast<IfStatementNode>(stmt);
         std::shared_ptr<ConditionalExpressionNode> if_stmt_cond = if_stmt->GetCondition();
 
@@ -137,11 +139,13 @@ void DesignExtractor::ExprNodeHandler(std::shared_ptr<ExpressionNode> expr) {
       ArithmeticOperator op = comb->GetArithmeticOperator();
       ExprNodeHandler(lhs);
       ExprNodeHandler(rhs);
+      break;
     }
     case ExpressionType::VARIABLE: {
       std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
       std::string var_name = var->GetIdentifier();
       PopulateVars(var_name);
+      break;
     }
   }
 }
