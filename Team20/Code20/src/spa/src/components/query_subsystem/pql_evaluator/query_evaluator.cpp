@@ -23,27 +23,82 @@ void QueryEvaluator::EvaluateSelect(ParsedQuery& query) {
     }
   }
   std::unordered_set<std::string> add_result;
+  std::unordered_set<int> temp;
   switch (token.type) {
-    case PqlTokenType::PROCEDURE:
+    case PqlTokenType::PROCEDURE: {
       add_result = pkb->get_stmt_by_name(StmtType::PROC);
       result.insert(add_result.begin(), add_result.end());
       break;
-    case PqlTokenType::VARIABLE:
+    }
+    case PqlTokenType::VARIABLE: {
       add_result = pkb->get_stmt_by_name(StmtType::VARS);
       result.insert(add_result.begin(), add_result.end());
       break;
-    case PqlTokenType::CONSTANT:
+    }
+    case PqlTokenType::CONSTANT: {
       add_result = pkb->get_stmt_by_name(StmtType::CONSTS);
       result.insert(add_result.begin(), add_result.end());
       break;
-    case PqlTokenType::STMT:
-      auto temp = pkb->get_stmt_by_num(StmtType::STMT);
-      for (auto i = temp.begin(); i != temp.end(); ++i) {
+    }
+    case PqlTokenType::STMT: {
+      std::unordered_set<int> temp = pkb->get_stmt_by_num(StmtType::STMT);
+      for (auto i = temp.begin(); i!=temp.end(); ++i) {
         add_result.insert(std::to_string(*i));
       }
       result.insert(add_result.begin(), add_result.end());
       break;
-      //fall through
+    }
+    case PqlTokenType::WHILE: {
+      temp = pkb->get_stmt_by_num(StmtType::WHILE);
+      for (auto i = temp.begin(); i!=temp.end(); ++i) {
+        add_result.insert(std::to_string(*i));
+      }
+      result.insert(add_result.begin(), add_result.end());
+      break;
+    }
+    case PqlTokenType::READ: {
+      temp = pkb->get_stmt_by_num(StmtType::READ);
+      for (auto i = temp.begin(); i!=temp.end(); ++i) {
+        add_result.insert(std::to_string(*i));
+      }
+      result.insert(add_result.begin(), add_result.end());
+      break;
+    }
+    case PqlTokenType::PRINT: {
+      temp = pkb->get_stmt_by_num(StmtType::PRINT);
+      for (auto i = temp.begin(); i!=temp.end(); ++i) {
+        add_result.insert(std::to_string(*i));
+      }
+      result.insert(add_result.begin(), add_result.end());
+      break;
+    }
+    case PqlTokenType::CALL: {
+      temp = pkb->get_stmt_by_num(StmtType::CALL);
+      for (auto i = temp.begin(); i!=temp.end(); ++i) {
+        add_result.insert(std::to_string(*i));
+      }
+      result.insert(add_result.begin(), add_result.end());
+      break;
+    }
+    case PqlTokenType::IF: {
+      temp = pkb->get_stmt_by_num(StmtType::IF);
+      for (auto i = temp.begin(); i!=temp.end(); ++i) {
+        add_result.insert(std::to_string(*i));
+      }
+      result.insert(add_result.begin(), add_result.end());
+      break;
+    }
+    case PqlTokenType::ASSIGN: {
+      temp = pkb->get_stmt_by_num(StmtType::ASSIGN);
+      for (auto i = temp.begin(); i!=temp.end(); ++i) {
+        add_result.insert(std::to_string(*i));
+      }
+      result.insert(add_result.begin(), add_result.end());
+      break;
+    }
+    default: {
+      // TODO:throw exception
+    }
   }
   // TODO:
   //  1. call pkb to get based on type of select synonym
@@ -63,6 +118,8 @@ std::unordered_set<std::string> Intersect(std::unordered_set<std::string> s1, st
       new_result.insert(*i);
     }
   }
+
+  return new_result;
 }
 
 }
