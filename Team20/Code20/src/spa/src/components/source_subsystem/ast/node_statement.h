@@ -4,7 +4,7 @@
 #include "node.h"
 
 class StatementNode : public Node {
- private:
+ protected:
   int m_stmt_no;
 
  protected:
@@ -15,6 +15,7 @@ class StatementNode : public Node {
   [[nodiscard]] int GetStatementNumber();
   [[nodiscard]] virtual StmtType GetStatementType() = 0;
   [[nodiscard]] std::string ToString(int level) override;
+  virtual bool operator==(const StatementNode &other) const = 0;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_

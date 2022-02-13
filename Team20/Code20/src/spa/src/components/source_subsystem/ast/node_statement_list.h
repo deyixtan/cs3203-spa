@@ -3,6 +3,7 @@
 
 #include "node.h"
 #include "node_statement.h"
+#include <iostream>
 
 class StatementListNode : public Node {
  private:
@@ -13,6 +14,7 @@ class StatementListNode : public Node {
   StatementListNode(std::vector<std::shared_ptr<StatementNode>> statements);
   [[nodiscard]] std::vector<std::shared_ptr<StatementNode>> GetStatements();
   [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] bool operator==(const StatementListNode &other) const;
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_LIST_H_

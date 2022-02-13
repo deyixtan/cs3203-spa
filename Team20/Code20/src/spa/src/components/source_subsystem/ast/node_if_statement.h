@@ -22,6 +22,7 @@ class IfStatementNode : public StatementNode {
   [[nodiscard]] std::vector<std::shared_ptr<StatementNode>> GetAllStatementList();
   [[nodiscard]] StmtType GetStatementType() override;
   [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_IF_STATEMENT_H_
