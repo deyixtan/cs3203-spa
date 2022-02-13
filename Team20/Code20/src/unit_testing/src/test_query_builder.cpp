@@ -3,6 +3,7 @@
 #include "components/query_subsystem/pql_parser/parsed_query.h"
 
 #include "catch.hpp"
+#include "components/query_subsystem/pql_parser/parsed_query_builder.h"
 
 TEST_CASE("Test query parser with uses") {
   std::vector<PqlToken> test_token_vect;
@@ -30,8 +31,8 @@ TEST_CASE("Test query parser with uses") {
   test_token_vect.push_back(closed_parenthesis_token);
 
   //BuildParsedQuery(test_token_vect);
-  ParsedQuery pqb;
-  ParsedQuery pq = pqb.BuildParsedQuery(test_token_vect);
+  ParsedQueryBuilder pqb;
+  ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
   Relationship rship = pq.GetRelationships().front();
   Pattern patt = pq.GetPatterns().front();
@@ -85,8 +86,8 @@ TEST_CASE("Test query parser with uses and pattern") {
   test_token_vect.push_back(closed_parenthesis_token);
 
   //BuildParsedQuery(test_token_vect);
-  ParsedQuery pqb;
-  ParsedQuery pq = pqb.BuildParsedQuery(test_token_vect);
+  ParsedQueryBuilder pqb;
+  ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
   Relationship rship = pq.GetRelationships().front();
   Pattern patt = pq.GetPatterns().front();
@@ -137,8 +138,8 @@ TEST_CASE("Test query parser with multiple variables") {
   test_token_vect.push_back(closed_parenthesis_token);
 
   //BuildParsedQuery(test_token_vect);
-  ParsedQuery pqb;
-  ParsedQuery pq = pqb.BuildParsedQuery(test_token_vect);
+  ParsedQueryBuilder pqb;
+  ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
   Relationship rship = pq.GetRelationships().front();
   Pattern patt = pq.GetPatterns().front();
