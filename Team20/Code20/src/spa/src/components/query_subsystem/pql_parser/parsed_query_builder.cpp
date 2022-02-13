@@ -4,7 +4,7 @@
 
 #include "parsed_query_builder.h"
 
-ParsedQuery ParsedQueryBuilder::build(std::vector<PqlToken> &tokens) {
+ParsedQuery ParsedQueryBuilder::Build(std::vector<PqlToken> &tokens) {
   ParsedQuery pq = ParsedQuery();
   std::vector<Declaration> declarations;
   PqlToken prev = tokens[0];

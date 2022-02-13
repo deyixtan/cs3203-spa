@@ -25,7 +25,6 @@ class ParsedQuery {
   std::vector<Declaration> GetDeclaration();
   std::vector<Relationship> GetRelationships();
   std::vector<Pattern> GetPatterns();
-  ParsedQuery BuildParsedQuery(std::vector<PqlToken>&);
 };
 
 #endif

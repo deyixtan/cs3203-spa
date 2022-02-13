@@ -5,7 +5,7 @@
 
 class ParsedQueryBuilder {
  public:
-  ParsedQuery build(std::vector<PqlToken>& tokens);
+  ParsedQuery Build(std::vector<PqlToken>& tokens);
 
 };
 

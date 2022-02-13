@@ -1,9 +1,6 @@
 #ifndef QUERY_CONTROLLER_H
 #define QUERY_CONTROLLER_H
 
-#include "./pql_lexer/pql_lexer.h"
-#include "./pql_parser/query_validator.h"
-#include "./pql_parser/parsed_query.h"
 #include "./pql_validator/parsed_query_validator.h"
 #include "./pql_evaluator/query_evaluator.h"
 #include "../pkb/pkb.h"
