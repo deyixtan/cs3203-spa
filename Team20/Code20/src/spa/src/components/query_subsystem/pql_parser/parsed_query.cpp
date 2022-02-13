@@ -6,20 +6,18 @@ ParsedQuery::ParsedQuery() {
   vect.push_back(Declaration());
   this->selected_synonym = PqlToken();
   this->declarations = vect;
-  this->relationship = std::nullopt;
-  this->pattern = std::nullopt;
 };
 
 void ParsedQuery::SetSynonym(PqlToken synonym) {
   selected_synonym = synonym;
 }
 
-void ParsedQuery::SetPattern(Pattern parsed_pattern) {
-  pattern = std::make_optional(parsed_pattern);
+void ParsedQuery::AddPattern(Pattern parsed_pattern) {
+  patterns.push_back(parsed_pattern);
 }
 
-void ParsedQuery::SetRelationship(Relationship parsed_relationship) {
-  relationship = std::make_optional(parsed_relationship);
+void ParsedQuery::AddRelationship(Relationship parsed_relationship) {
+  relationships.push_back(parsed_relationship);
 }
 
 void ParsedQuery::SetDeclarations(std::vector<Declaration> parsed_declarations) {
@@ -30,12 +28,12 @@ PqlToken ParsedQuery::GetSynonym() {
   return selected_synonym;
 }
 
-std::optional<Relationship> ParsedQuery::GetRelationship() {
-  return relationship;
+std::vector<Relationship> ParsedQuery::GetRelationships() {
+  return relationships;
 }
 
-std::optional<Pattern> ParsedQuery::GetPattern() {
-  return pattern;
+std::vector<Pattern> ParsedQuery::GetPatterns() {
+  return patterns;
 }
 
 std::vector<Declaration> ParsedQuery::GetDeclaration() {
@@ -78,7 +76,7 @@ ParsedQuery ParsedQuery::BuildParsedQuery(std::vector<PqlToken> &tokens) {
       pos += 2;
       PqlToken second = tokens[pos];
       Relationship relationship = Relationship(rlshp, first, second);
-      pq.SetRelationship(relationship);
+      pq.AddRelationship(relationship);
       pos += 2;
     } else if(token.type == PqlTokenType::PATTERN) {
       PqlToken syn = tokens[++pos];
@@ -87,7 +85,7 @@ ParsedQuery ParsedQuery::BuildParsedQuery(std::vector<PqlToken> &tokens) {
       pos += 2;
       PqlToken second = tokens[pos];
       Pattern patt = Pattern(syn, first, second);
-      pq.SetPattern(patt);
+      pq.AddPattern(patt);
       pos++;
     } else {
       pos++;
