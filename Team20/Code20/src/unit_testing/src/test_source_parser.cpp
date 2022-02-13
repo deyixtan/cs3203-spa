@@ -148,3 +148,50 @@ TEST_CASE("Test single procedure with one if statement (simple equal condition)"
   // test
   REQUIRE(*program_node == *expected_program_node);
 }
+
+TEST_CASE("Test single procedure with one while statement (simple equal condition)") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure main { while (a == 1) { a = 2; } }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+  program_node = parser.ParseProgram();
+
+  // set up expected
+  // while's stmt_list
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a");
+  std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("2");
+  std::shared_ptr<AssignStatementNode>
+      assign_stmt = std::make_shared<AssignStatementNode>(1, variable_node, constant_node);
+
+  std::vector<std::shared_ptr<StatementNode>> while_statements;
+  while_statements.emplace_back(assign_stmt);
+  std::shared_ptr<StatementListNode> while_stmt_list = std::make_shared<StatementListNode>(while_statements);
+
+  // condition
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a");
+  std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
+  std::shared_ptr<RelationalExpressionNode> condition_node =
+      std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
+                                                 condition_variable_node,
+                                                 condition_constant_node);
+
+  std::shared_ptr<WhileStatementNode>
+      while_stmt = std::make_shared<WhileStatementNode>(2, condition_node, while_stmt_list);
+
+  // while_stmt to procedure's stmt_list
+  std::vector<std::shared_ptr<StatementNode>> statements;
+  statements.emplace_back(while_stmt);
+  std::shared_ptr<StatementListNode> stmt_list = std::make_shared<StatementListNode>(statements);
+
+  std::shared_ptr<ProcedureNode> procedure = std::make_shared<ProcedureNode>("main", stmt_list);
+
+  std::vector<std::shared_ptr<ProcedureNode>> procedures;
+  procedures.emplace_back(procedure);
+  std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
+
+  // test
+  REQUIRE(*program_node == *expected_program_node);
+}
