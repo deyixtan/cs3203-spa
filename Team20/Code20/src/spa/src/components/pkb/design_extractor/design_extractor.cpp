@@ -95,45 +95,45 @@ void DesignExtractor::process_proc(std::shared_ptr<ProcedureNode> proc, std::sha
 }
 
 void DesignExtractor::populate_uses(std::string stmt, std::string var) {
-  this->pkb->add_usage_stmt_var(stmt, var);
+  this->pkb->AddUsageStmtVar(stmt, var);
 }
 
 void DesignExtractor::populate_modifies(std::string stmt, std::string var) {
-  this->pkb->add_modify_stmt_var(stmt, var);
+  this->pkb->AddModifyStmtVar(stmt, var);
 }
 
 void DesignExtractor::populate_proc(std::string name) {
-  this->pkb->add_stmt(name, PROC);
+  this->pkb->AddStmt(name, PROC);
 }
 
 void DesignExtractor::populate_assign(std::string stmt) {
-  this->pkb->add_stmt(stmt, ASSIGN);
+  this->pkb->AddStmt(stmt, ASSIGN);
 }
 
 void DesignExtractor::populate_stmt(std::string stmt) {
-  this->pkb->add_stmt(stmt, STMT);
+  this->pkb->AddStmt(stmt, STMT);
 }
 
 void DesignExtractor::populate_read(std::string stmt) {
-  this->pkb->add_stmt(stmt, READ);
+  this->pkb->AddStmt(stmt, READ);
 }
 
 void DesignExtractor::populate_print(std::string stmt) {
-  this->pkb->add_stmt(stmt, PRINT);
+  this->pkb->AddStmt(stmt, PRINT);
 }
 
 void DesignExtractor::populate_vars(std::string var) {
-  this->pkb->add_stmt(var, VARS);
+  this->pkb->AddStmt(var, VARS);
 }
 
 void DesignExtractor::populate_while(std::string stmt) {
-  this->pkb->add_stmt(stmt, WHILE);
+  this->pkb->AddStmt(stmt, WHILE);
 }
 
 void DesignExtractor::populate_if(std::string stmt) {
-  this->pkb->add_stmt(stmt, IF);
+  this->pkb->AddStmt(stmt, IF);
 }
 
 void DesignExtractor::populate_const(std::string name) {
-  this->pkb->add_stmt(name, CONSTS);
+  this->pkb->AddStmt(name, CONSTS);
 }

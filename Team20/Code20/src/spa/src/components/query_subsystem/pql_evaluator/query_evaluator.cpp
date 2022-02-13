@@ -25,19 +25,19 @@ void QueryEvaluator::EvaluateSelect(ParsedQuery& query) {
   std::unordered_set<std::string> add_result;
   switch (token.type) {
     case PqlTokenType::PROCEDURE:
-      add_result = pkb->get_stmt(StmtType::PROC);
+      add_result = pkb->GetStmt(StmtType::PROC);
       result.insert(add_result.begin(), add_result.end());
       break;
     case PqlTokenType::VARIABLE:
-      add_result = pkb->get_stmt(StmtType::VARS);
+      add_result = pkb->GetStmt(StmtType::VARS);
       result.insert(add_result.begin(), add_result.end());
       break;
     case PqlTokenType::CONSTANT:
-      add_result = pkb->get_stmt(StmtType::CONSTS);
+      add_result = pkb->GetStmt(StmtType::CONSTS);
       result.insert(add_result.begin(), add_result.end());
       break;
     case PqlTokenType::STMT:
-      auto temp = pkb->get_stmt(StmtType::STMT);
+      auto temp = pkb->GetStmt(StmtType::STMT);
       for (auto i = temp.begin(); i != temp.end(); ++i) {
         add_result.insert(*i);
       }

@@ -12,7 +12,7 @@ volatile bool AbstractWrapper::GlobalStop = false;
 // a default constructor
 TestWrapper::TestWrapper() {
   std::cout << "TestWrapper::TestWrapper() Start" << std::endl;
-  pkb = PKB::get_instance();
+  pkb = PKB::GetInstance();
   source_controller = new source::SourceController();
   query_controller = new QueryController(pkb);
   std::cout << "TestWrapper::TestWrapper() End" << std::endl;
@@ -34,7 +34,7 @@ void TestWrapper::parse(std::string filename) {
   std::shared_ptr<ProgramNode> ast = source_controller->ParseTokenStream(tokens_ptr);
   source_controller->PopulatePKB(pkb, ast);
 
-//  std::cout << "RESULT: " << pkb->get_stmt_by_num(STMT).size() << std::endl;
+  std::cout << "RESULT: " << pkb->GetStmt(STMT).size() << std::endl;
 
   std::cout << "TestWrapper::parse() End" << std::endl;
 }

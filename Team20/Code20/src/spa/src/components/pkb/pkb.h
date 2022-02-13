@@ -35,40 +35,40 @@ class PKB {
   //VarTable* varTable;
   //int setProcToAST(PROC p, TNode* r);
   //TNode* getRootAST (PROC p);
-  static PKB *get_instance();
+  static PKB *GetInstance();
 
   /* Adders */
-  void add_stmt(std::string name, StmtType type);
+  void AddStmt(std::string name, StmtType type);
 
-  void add_usage_stmt_var(std::string stmt, std::string variable);
-  void add_usage_proc_var(std::string proc, std::string var);
+  void AddUsageStmtVar(std::string stmt, std::string variable);
+  void AddUsageProcVar(std::string proc, std::string var);
 
-  void add_modify_stmt_var(std::string stmt, std::string variable);
-  void add_modify_proc_var(std::string proc, std::string var);
+  void AddModifyStmtVar(std::string stmt, std::string variable);
+  void AddModifyProcVar(std::string proc, std::string var);
 
   /* Getters */
-  std::unordered_set<std::string> get_stmt(StmtType type);
+  std::unordered_set<std::string> GetStmt(StmtType type);
 
-  std::unordered_set<std::string> get_var_used_by_stmt(std::string stmt);
-  std::unordered_set<std::string> get_stmt_used_by_var(std::string var);
-  std::unordered_set<std::string> get_var_used_by_proc(std::string proc);
-  std::unordered_set<std::string> get_proc_used_by_var(std::string var);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_usage_stmt_var();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_usage_proc_var();
+  std::unordered_set<std::string> GetVarUsedByStmt(std::string stmt);
+  std::unordered_set<std::string> GetStmtUsedByVar(std::string var);
+  std::unordered_set<std::string> GetVarUsedByProc(std::string proc);
+  std::unordered_set<std::string> GetProcUsedByVar(std::string var);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsageStmtVar();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsageProcVar();
 
-  std::unordered_set<std::string> get_var_mod_by_stmt(std::string stmt);
-  std::unordered_set<std::string> get_stmt_mod_by_var(std::string var);
-  std::unordered_set<std::string> get_var_mod_by_proc(std::string proc);
-  std::unordered_set<std::string> get_proc_mod_by_var(std::string var);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_mod_stmt_var();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_mod_proc_var();
+  std::unordered_set<std::string> GetVarModByStmt(std::string stmt);
+  std::unordered_set<std::string> GetStmtModByVar(std::string var);
+  std::unordered_set<std::string> GetVarModByProc(std::string proc);
+  std::unordered_set<std::string> GetProcModByVar(std::string var);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModStmtVar();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModProcVar();
 
   /* Checkers */
-  bool is_usage_stmt_var_exist(std::pair<std::string, std::string> pair);
-  bool is_usage_proc_var_exist(std::pair<std::string, std::string> pair);
+  bool IsUsageStmtVarExist(std::pair<std::string, std::string> pair);
+  bool IsUsageProcVarExist(std::pair<std::string, std::string> pair);
 
-  bool is_modify_stmt_var_exist(std::pair<std::string, std::string> pair);
-  bool is_modify_proc_var_exist(std::pair<std::string, std::string> pair);
+  bool IsModifyStmtVarExist(std::pair<std::string, std::string> pair);
+  bool IsModifyProcVarExist(std::pair<std::string, std::string> pair);
 
  private:
   PKB();

@@ -17,7 +17,7 @@ PKB* PKB::instance = NULL;
 
 PKB::PKB() {}
 
-PKB* PKB::get_instance() {
+PKB* PKB::GetInstance() {
   if (!instance) {
     instance = new PKB;
   }
@@ -25,7 +25,7 @@ PKB* PKB::get_instance() {
 }
 
 /* Adders */
-void PKB::add_stmt(std::string stmt, StmtType type) {
+void PKB::AddStmt(std::string stmt, StmtType type) {
   switch (type) {
     case STMT:stmt_list.insert(stmt);
       break;
@@ -51,25 +51,25 @@ void PKB::add_stmt(std::string stmt, StmtType type) {
   }
 }
 
-void PKB::add_usage_stmt_var(std::string stmt, std::string var) {
+void PKB::AddUsageStmtVar(std::string stmt, std::string var) {
   usage_store.AddStmtVar(stmt, var);
 }
 
-void PKB::add_usage_proc_var(std::string proc, std::string var) {
+void PKB::AddUsageProcVar(std::string proc, std::string var) {
   usage_store.AddProcVar(proc, var);
 }
 
-void PKB::add_modify_stmt_var(std::string stmt, std::string var) {
+void PKB::AddModifyStmtVar(std::string stmt, std::string var) {
   modify_store.AddStmtVar(stmt, var);
 }
 
-void PKB::add_modify_proc_var(std::string proc, std::string var) {
+void PKB::AddModifyProcVar(std::string proc, std::string var) {
   modify_store.AddProcVar(proc, var);
 }
 
 /* Getters */
 
-std::unordered_set<std::string> PKB::get_stmt(StmtType type) {
+std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
   switch (type) {
     case STMT: return stmt_list;
     case WHILE:return while_stmt_list;
@@ -85,68 +85,68 @@ std::unordered_set<std::string> PKB::get_stmt(StmtType type) {
   }
 }
 
-std::unordered_set<std::string> PKB::get_var_used_by_stmt(std::string stmt) {
+std::unordered_set<std::string> PKB::GetVarUsedByStmt(std::string stmt) {
   return usage_store.GetVarUsedByStmt(stmt);
 }
 
-std::unordered_set<std::string> PKB::get_stmt_used_by_var(std::string var) {
+std::unordered_set<std::string> PKB::GetStmtUsedByVar(std::string var) {
   return usage_store.GetStmtUsedByVar(var);
 }
 
-std::unordered_set<std::string> PKB::get_var_used_by_proc(std::string proc) {
+std::unordered_set<std::string> PKB::GetVarUsedByProc(std::string proc) {
   return usage_store.GetVarUsedByProc(proc);
 }
 
-std::unordered_set<std::string> PKB::get_proc_used_by_var(std::string var) {
+std::unordered_set<std::string> PKB::GetProcUsedByVar(std::string var) {
   return usage_store.GetProcUsedByVar(var);
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::get_all_usage_stmt_var() {
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllUsageStmtVar() {
   return usage_store.GetAllStmtVar();
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::get_all_usage_proc_var() {
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllUsageProcVar() {
   return usage_store.GetAllProcVar();
 }
 
-std::unordered_set<std::string> PKB::get_var_mod_by_stmt(std::string stmt) {
+std::unordered_set<std::string> PKB::GetVarModByStmt(std::string stmt) {
   return modify_store.GetVarModByStmt(stmt);
 }
 
-std::unordered_set<std::string> PKB::get_stmt_mod_by_var(std::string var) {
+std::unordered_set<std::string> PKB::GetStmtModByVar(std::string var) {
   return modify_store.GetStmtModByVar(var);
 }
 
-std::unordered_set<std::string> PKB::get_var_mod_by_proc(std::string proc) {
+std::unordered_set<std::string> PKB::GetVarModByProc(std::string proc) {
   return modify_store.GetVarModByProc(proc);
 }
 
-std::unordered_set<std::string> PKB::get_proc_mod_by_var(std::string var) {
+std::unordered_set<std::string> PKB::GetProcModByVar(std::string var) {
   return modify_store.GetProcModByVar(var);
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::get_all_mod_stmt_var() {
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllModStmtVar() {
   return modify_store.GetAllStmtVar();
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::get_all_mod_proc_var() {
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllModProcVar() {
   return modify_store.GetAllProcVar();
 }
 
 /* Checkers */
 
-bool PKB::is_usage_stmt_var_exist(std::pair<std::string, std::string> pair) {
+bool PKB::IsUsageStmtVarExist(std::pair<std::string, std::string> pair) {
   return usage_store.StmtVarExists(pair);
 }
 
-bool PKB::is_usage_proc_var_exist(std::pair<std::string, std::string> pair) {
+bool PKB::IsUsageProcVarExist(std::pair<std::string, std::string> pair) {
   return usage_store.ProcVarExists(pair);
 }
 
-bool PKB::is_modify_stmt_var_exist(std::pair<std::string, std::string> pair) {
+bool PKB::IsModifyStmtVarExist(std::pair<std::string, std::string> pair) {
   return modify_store.StmtVarExists(pair);
 }
 
-bool PKB::is_modify_proc_var_exist(std::pair<std::string, std::string> pair) {
+bool PKB::IsModifyProcVarExist(std::pair<std::string, std::string> pair) {
   return modify_store.ProcVarExists(pair);
 }
