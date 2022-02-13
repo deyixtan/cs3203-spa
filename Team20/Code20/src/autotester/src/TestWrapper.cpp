@@ -34,7 +34,7 @@ void TestWrapper::parse(std::string filename) {
   std::shared_ptr<ProgramNode> ast = source_controller->ParseTokenStream(tokens_ptr);
   source_controller->PopulatePKB(pkb, ast);
 
-  std::cout << "RESULT: " << pkb->GetStmt(IF).size() << std::endl;
+  //std::cout << "RESULT: " << pkb->GetStmt(STMT).size() << std::endl;
 
   std::cout << "TestWrapper::parse() End" << std::endl;
 }

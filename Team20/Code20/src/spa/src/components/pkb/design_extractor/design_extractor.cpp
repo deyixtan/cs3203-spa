@@ -1,23 +1,23 @@
 #include "design_extractor.h"
 #include "components/pkb/pkb.h"
 
-DesignExtractor::DesignExtractor(ProgramNode root_node, PKB *pkb, UsageStore storage) :
-    root_node(root_node), pkb(pkb), storage(storage) {
+DesignExtractor::DesignExtractor(ProgramNode root_node, PKB *pkb) :
+    root_node(root_node), pkb(pkb) {
   this->root_node = root_node;
   this->pkb = pkb;
   this->storage = storage;
 }
 
-void DesignExtractor::traverse_ast() {
+void DesignExtractor::TraverseAst() {
   std::vector<std::shared_ptr<ProcedureNode>> proc_list = this->root_node.GetProcedures();
   for (auto &proc : proc_list) {
     std::shared_ptr<StatementListNode> stmtLst = proc->GetStatementList();
     PopulateProc(proc->GetIdentifier());
-    ProcessProc(proc, stmtLst);
+    ProcNodeHandler(proc, stmtLst);
   }
 }
 
-void DesignExtractor::ProcessProc(std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst) {
+void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst) {
   std::vector<std::shared_ptr<StatementNode>> stmts = stmtLst->GetStatements();
   for (auto &stmt : stmts) {
     std::string stmt_num = std::to_string(stmt->GetStatementNumber());
@@ -55,24 +55,33 @@ void DesignExtractor::ProcessProc(std::shared_ptr<ProcedureNode> proc, std::shar
         PopulateVars(var_name);
         std::shared_ptr<ExpressionNode> expr = assign_stmt->GetExpression();
 
-        ProcessAssign(expr);
+        ExprNodeHandler(expr);
         PopulateAssign(stmt_num);
         //PopulateModifies(stmt_num);
         break;
       }
       case WHILE: {
         std::shared_ptr<WhileStatementNode> while_stmt = static_pointer_cast<WhileStatementNode>(stmt);
+        std::shared_ptr<ConditionalExpressionNode> while_stmt_cond = while_stmt->GetCondition();
+
+        CondExprNodeHandler(while_stmt_cond);
+
+        std::shared_ptr<StatementListNode> while_block = while_stmt->GetStatementList();
+        ProcNodeHandler(proc, while_block);
         PopulateWhile(stmt_num);
         break;
       }
       case IF: {
         std::shared_ptr<IfStatementNode> if_stmt = static_pointer_cast<IfStatementNode>(stmt);
         std::shared_ptr<ConditionalExpressionNode> if_stmt_cond = if_stmt->GetCondition();
+
+        CondExprNodeHandler(if_stmt_cond);
+
         std::shared_ptr<StatementListNode> if_block = if_stmt->GetIfStatementList();
         std::shared_ptr<StatementListNode> else_block = if_stmt->GetElseStatementList();
 
-        ProcessProc(proc, if_block);
-        ProcessProc(proc, else_block);
+        ProcNodeHandler(proc, if_block);
+        ProcNodeHandler(proc, else_block);
         PopulateIf(stmt_num);
         break;
       }
@@ -80,7 +89,38 @@ void DesignExtractor::ProcessProc(std::shared_ptr<ProcedureNode> proc, std::shar
   }
 }
 
-void DesignExtractor::ProcessAssign(std::shared_ptr<ExpressionNode> expr) {
+void DesignExtractor::CondExprNodeHandler(std::shared_ptr<ConditionalExpressionNode> if_stmt_cond) {
+  ConditionalType cond = if_stmt_cond->GetConditionalType();
+
+  switch(cond) {
+    case ConditionalType::BOOLEAN: {
+      std::shared_ptr<BooleanExpressionNode> bool_node = static_pointer_cast<BooleanExpressionNode>(if_stmt_cond);
+      std::shared_ptr<ConditionalExpressionNode> left = bool_node->GetLeftExpression();
+      std::shared_ptr<ConditionalExpressionNode> right = bool_node->GetRightExpression();
+
+      CondExprNodeHandler(left);
+      CondExprNodeHandler(right);
+      break;
+    }
+    case ConditionalType::NOT: {
+      std::shared_ptr<NotExpressionNode> not_node = static_pointer_cast<NotExpressionNode>(if_stmt_cond);
+      std::shared_ptr<ConditionalExpressionNode> expr = not_node->GetExpression();
+      CondExprNodeHandler(expr);
+      break;
+    }
+    case ConditionalType::RELATIONAL: {
+      std::shared_ptr<RelationalExpressionNode> rel_node = static_pointer_cast<RelationalExpressionNode>(if_stmt_cond);
+      std::shared_ptr<ExpressionNode> left = rel_node->GetLeftExpression();
+      std::shared_ptr<ExpressionNode> right = rel_node->GetRightExpression();
+
+      ExprNodeHandler(left);
+      ExprNodeHandler(right);
+      break;
+    }
+  }
+}
+
+void DesignExtractor::ExprNodeHandler(std::shared_ptr<ExpressionNode> expr) {
   ExpressionType expr_type = expr->GetExpressionType();
 
   switch (expr_type) {
@@ -95,8 +135,8 @@ void DesignExtractor::ProcessAssign(std::shared_ptr<ExpressionNode> expr) {
       std::shared_ptr<ExpressionNode> lhs = comb->GetLeftExpression();
       std::shared_ptr<ExpressionNode> rhs = comb->GetRightExpression();
       ArithmeticOperator op = comb->GetArithmeticOperator();
-      ProcessAssign(lhs);
-      ProcessAssign(rhs);
+      ExprNodeHandler(lhs);
+      ExprNodeHandler(rhs);
     }
     case ExpressionType::VARIABLE: {
       std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);

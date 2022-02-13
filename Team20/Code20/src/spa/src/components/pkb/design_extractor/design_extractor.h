@@ -13,6 +13,9 @@
 #include "../../source_subsystem/ast/node_assign_statement.h"
 #include "../../source_subsystem/ast/node_combination_expression.h"
 #include "../../source_subsystem/ast/node_constant.h"
+#include "../../source_subsystem/ast/node_boolean_expression.h"
+#include "../../source_subsystem/ast/node_not_expression.h"
+#include "../../source_subsystem/ast/node_relational_expression.h"
 #include "../../query_subsystem/pql_lexer/pql_token.h"
 
 class DesignExtractor {
@@ -21,9 +24,10 @@ class DesignExtractor {
   PKB *pkb;
   UsageStore storage;
 
-  void ProcessProc(std::shared_ptr<ProcedureNode> proc,
+  void ProcNodeHandler(std::shared_ptr<ProcedureNode> proc,
                     std::shared_ptr<StatementListNode> stmtLst);
-  void ProcessAssign(std::shared_ptr<ExpressionNode> expr);
+  void ExprNodeHandler(std::shared_ptr<ExpressionNode> expr);
+  void CondExprNodeHandler(std::shared_ptr<ConditionalExpressionNode> if_stmt_cond);
 
   void PopulateUses(std::string stmt, std::string var);
   void PopulateModifies(std::string stmt, std::string var);
@@ -37,8 +41,8 @@ class DesignExtractor {
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
  public:
-  DesignExtractor(ProgramNode root_node, PKB *pkb, UsageStore storage);
-  void traverse_ast();
+  DesignExtractor(ProgramNode root_node, PKB *pkb);
+  void TraverseAst();
 };
 
 #endif //DESIGN_EXTRACTOR_H
