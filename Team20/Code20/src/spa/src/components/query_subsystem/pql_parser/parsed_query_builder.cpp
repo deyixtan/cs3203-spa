@@ -16,7 +16,10 @@ ParsedQuery ParsedQueryBuilder::Build(std::vector<PqlToken> &tokens) {
       PqlToken selected_synonym = tokens[++pos];
       pq.SetSynonym(selected_synonym);
       // skip such that tokens
-      pos += 3;
+      pos += 1;
+    } else if (token.type == PqlTokenType::SUCH) {
+      // skip the token following such
+      pos += 2;
     } else if(design_entities.count(token.type)) {
       PqlToken entity = token;
       pos++;
