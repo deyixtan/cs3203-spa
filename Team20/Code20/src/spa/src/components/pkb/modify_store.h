@@ -12,25 +12,25 @@ class ModifyStore {
  public:
   ModifyStore();
 
-  void add_stmt_var(std::string stmt, std::string var);
+  void AddStmtVar(std::string stmt, std::string var);
 
-  void add_proc_var(std::string proc, std::string var);
+  void AddProcVar(std::string proc, std::string var);
 
-  bool stmt_var_exists(std::pair<std::string, std::string> pair);
+  bool StmtVarExists(std::pair<std::string, std::string> pair);
 
-  bool proc_var_exists(std::pair<std::string, std::string> pair);
+  bool ProcVarExists(std::pair<std::string, std::string> pair);
 
-  std::unordered_set<std::string> get_var_mod_by_stmt(std::string stmt);
+  std::unordered_set<std::string> GetVarModByStmt(std::string stmt);
 
-  std::unordered_set<std::string> get_stmt_mod_by_var(std::string var);
+  std::unordered_set<std::string> GetStmtModByVar(std::string var);
 
-  std::unordered_set<std::string> get_var_mod_by_proc(std::string proc);
+  std::unordered_set<std::string> GetVarModByProc(std::string proc);
 
-  std::unordered_set<std::string> get_proc_mod_by_var(std::string var);
+  std::unordered_set<std::string> GetProcModByVar(std::string var);
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_stmt_var();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStmtVar();
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_proc_var();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllProcVar();
 
  private:
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> stmt_var_pairs;

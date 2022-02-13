@@ -11,25 +11,25 @@ class UsageStore {
  public:
   UsageStore();
 
-  void add_stmt_var(std::string stmt, std::string var);
+  void AddStmtVar(std::string stmt, std::string var);
 
-  void add_proc_var(std::string proc, std::string var);
+  void AddProcVar(std::string proc, std::string var);
 
-  bool stmt_var_exists(std::pair<std::string, std::string> pair);
+  bool StmtVarExists(std::pair<std::string, std::string> pair);
 
-  bool proc_var_exists(std::pair<std::string, std::string> pair);
+  bool ProcVarExists(std::pair<std::string, std::string> pair);
 
-  std::unordered_set<std::string> get_var_used_by_stmt(std::string stmt);
+  std::unordered_set<std::string> GetVarUsedByStmt(std::string stmt);
 
-  std::unordered_set<std::string> get_stmt_used_by_var(std::string var);
+  std::unordered_set<std::string> GetStmtUsedByVar(std::string var);
 
-  std::unordered_set<std::string> get_var_used_by_proc(std::string proc);
+  std::unordered_set<std::string> GetVarUsedByProc(std::string proc);
 
-  std::unordered_set<std::string> get_proc_used_by_var(std::string var);
+  std::unordered_set<std::string> GetProcUsedByVar(std::string var);
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_stmt_var();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStmtVar();
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> get_all_proc_var();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllProcVar();
 
  private:
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> stmt_var_pairs;
