@@ -107,7 +107,7 @@ TEST_CASE("Test single procedure with one if statement (simple equal condition)"
   std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
-      if_assign_stmt = std::make_shared<AssignStatementNode>(1, if_variable_node, if_constant_node);
+      if_assign_stmt = std::make_shared<AssignStatementNode>(2, if_variable_node, if_constant_node);
 
   std::vector<std::shared_ptr<StatementNode>> if_statements;
   if_statements.emplace_back(if_assign_stmt);
@@ -117,7 +117,7 @@ TEST_CASE("Test single procedure with one if statement (simple equal condition)"
   std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
-      else_assign_stmt = std::make_shared<AssignStatementNode>(2, else_variable_node, else_constant_node);
+      else_assign_stmt = std::make_shared<AssignStatementNode>(3, else_variable_node, else_constant_node);
 
   std::vector<std::shared_ptr<StatementNode>> else_statements;
   else_statements.emplace_back(else_assign_stmt);
@@ -132,7 +132,7 @@ TEST_CASE("Test single procedure with one if statement (simple equal condition)"
                                                  condition_constant_node);
 
   std::shared_ptr<IfStatementNode>
-      if_stmt = std::make_shared<IfStatementNode>(3, condition_node, if_stmt_list, else_stmt_list);
+      if_stmt = std::make_shared<IfStatementNode>(1, condition_node, if_stmt_list, else_stmt_list);
 
   // if_stmt to procedure's stmt_list
   std::vector<std::shared_ptr<StatementNode>> statements;
@@ -164,7 +164,7 @@ TEST_CASE("Test single procedure with one while statement (simple equal conditio
   std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
-      assign_stmt = std::make_shared<AssignStatementNode>(1, variable_node, constant_node);
+      assign_stmt = std::make_shared<AssignStatementNode>(2, variable_node, constant_node);
 
   std::vector<std::shared_ptr<StatementNode>> while_statements;
   while_statements.emplace_back(assign_stmt);
@@ -179,7 +179,7 @@ TEST_CASE("Test single procedure with one while statement (simple equal conditio
                                                  condition_constant_node);
 
   std::shared_ptr<WhileStatementNode>
-      while_stmt = std::make_shared<WhileStatementNode>(2, condition_node, while_stmt_list);
+      while_stmt = std::make_shared<WhileStatementNode>(1, condition_node, while_stmt_list);
 
   // while_stmt to procedure's stmt_list
   std::vector<std::shared_ptr<StatementNode>> statements;

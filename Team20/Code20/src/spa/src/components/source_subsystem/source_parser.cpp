@@ -77,22 +77,25 @@ std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
 }
 
 std::shared_ptr<ReadStatementNode> SourceParser::ParseReadStatement() {
+  int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::READ);
   std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
   ProcessToken(TokenType::SEMI_COLON);
   std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue());
-  return std::make_shared<ReadStatementNode>(++m_curr_stmt_no, variable);
+  return std::make_shared<ReadStatementNode>(stmt_no, variable);
 }
 
 std::shared_ptr<PrintStatementNode> SourceParser::ParsePrintStatement() {
+  int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::PRINT);
   std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
   ProcessToken(TokenType::SEMI_COLON);
   std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue());
-  return std::make_shared<PrintStatementNode>(++m_curr_stmt_no, variable);
+  return std::make_shared<PrintStatementNode>(stmt_no, variable);
 }
 
 std::shared_ptr<WhileStatementNode> SourceParser::ParseWhileStatement() {
+  int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::WHILE);
   ProcessToken(TokenType::OPENED_PARENTHESIS);
   std::shared_ptr<ConditionalExpressionNode> condition = ParseConditionalExpression();
@@ -100,10 +103,11 @@ std::shared_ptr<WhileStatementNode> SourceParser::ParseWhileStatement() {
   ProcessToken(TokenType::OPENED_BRACES);
   std::shared_ptr<StatementListNode> stmt_list = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
-  return std::make_shared<WhileStatementNode>(++m_curr_stmt_no, condition, stmt_list);
+  return std::make_shared<WhileStatementNode>(stmt_no, condition, stmt_list);
 }
 
 std::shared_ptr<IfStatementNode> SourceParser::ParseIfStatement() {
+  int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::IF);
   ProcessToken(TokenType::OPENED_PARENTHESIS);
   std::shared_ptr<ConditionalExpressionNode> condition = ParseConditionalExpression();
@@ -116,16 +120,17 @@ std::shared_ptr<IfStatementNode> SourceParser::ParseIfStatement() {
   ProcessToken(TokenType::OPENED_BRACES);
   std::shared_ptr<StatementListNode> else_stmt_list = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
-  return std::make_shared<IfStatementNode>(++m_curr_stmt_no, condition, if_stmt_list, else_stmt_list);
+  return std::make_shared<IfStatementNode>(stmt_no, condition, if_stmt_list, else_stmt_list);
 }
 
 std::shared_ptr<AssignStatementNode> SourceParser::ParseAssignStatement() {
+  int stmt_no = ++m_curr_stmt_no;
   std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
   ProcessToken(TokenType::EQUAL);
   std::shared_ptr<ExpressionNode> expression = ParseExpression();
   ProcessToken(TokenType::SEMI_COLON);
   std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue());
-  return std::make_shared<AssignStatementNode>(++m_curr_stmt_no, variable, expression);
+  return std::make_shared<AssignStatementNode>(stmt_no, variable, expression);
 }
 
 std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpression() {
