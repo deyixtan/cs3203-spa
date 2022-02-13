@@ -153,7 +153,7 @@ TEST_CASE("Test query parser with multiple variables") {
   REQUIRE(decl[3].GetSynonym().value == "a");
 }
 
-TEST_CASE("Test") {
+TEST_CASE("Test select without such that") {
   std::vector<PqlToken> test_token_vect;
 
   // stmt
