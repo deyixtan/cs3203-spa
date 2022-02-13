@@ -34,8 +34,7 @@ TEST_CASE("Test query parser with uses") {
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
-  Relationship rship = pq.GetRelationships().front();
-  Pattern patt = pq.GetPatterns().front();
+  Relationship rship = pq.GetRelationships().front();\
   std::vector<Declaration> decl = pq.GetDeclaration();
 
   REQUIRE(rship.GetRelRef().value == "Uses");
@@ -142,7 +141,6 @@ TEST_CASE("Test query parser with multiple variables") {
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
   Relationship rship = pq.GetRelationships().front();
-  Pattern patt = pq.GetPatterns().front();
   std::vector<Declaration> decl = pq.GetDeclaration();
 
   REQUIRE(rship.GetRelRef().value == "Parent");
@@ -172,10 +170,9 @@ TEST_CASE("Test select without such that") {
   test_token_vect.push_back(s_token);
 
   //BuildParsedQuery(test_token_vect);
-  ParsedQuery pq = ParsedQuery().BuildParsedQuery(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
-  std::optional<Relationship> rship = pq.GetRelationship();
-  std::optional<Pattern> patt = pq.GetPattern();
+  ParsedQueryBuilder pqb;
+  ParsedQuery pq = pqb.Build(test_token_vect);
+  PqlToken synonym = pq.GetSynonym();\
   std::vector<Declaration> decl = pq.GetDeclaration();
 
   REQUIRE(synonym.value == "s");
@@ -205,9 +202,10 @@ TEST_CASE("Test query parser with pattern without such that") {
   test_token_vect.push_back(underscore_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  ParsedQuery pq = ParsedQuery().BuildParsedQuery(test_token_vect);
+  ParsedQueryBuilder pqb;
+  ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
-  std::optional<Pattern> patt = pq.GetPattern();
+  std::optional<Pattern> patt = pq.GetPatterns().front();
   std::vector<Declaration> decl = pq.GetDeclaration();
 
   REQUIRE(synonym.value == "a");
