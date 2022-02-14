@@ -20,7 +20,7 @@ class QueryResult {
       std::unordered_set<std::pair<std::string, std::string>> first_set,
       std::unordered_set<std::pair<std::string, std::string>> second_set
       );
-  std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>>> result;
+  std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>>> result_table;
 };
 
 #endif // QUERY_RESULT_H

@@ -8,10 +8,10 @@ class QueryCondition {
   QueryCondition();
   QueryCondition(PqlToken, PqlToken);
   bool operator==(const QueryCondition &other) const {
-    return first == other.first && second == other.second;
+    return first_arg == other.first_arg && second_arg == other.second_arg;
   }
-  PqlToken first;
-  PqlToken second;
+  PqlToken first_arg;
+  PqlToken second_arg;
 };
 
 #endif //QUERY_CONDITION_H

@@ -1,13 +1,13 @@
 #include "query_result.h"
 
-QueryResult::QueryResult() {};
+QueryResult::QueryResult() {}
 QueryResult::QueryResult(
-    std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>>> result
-    ) : result(result) {};
+    std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>>> result_table
+    ) : result_table(result_table) {}
 
 std::unordered_set<std::string> QueryResult::GetResult(PqlToken selected_synonym) {
-  std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>> first_condition_pair = result[0];
-  std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>> second_condition_pair = result[1];
+  std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>> first_condition_pair = result_table[0];
+  std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>> second_condition_pair = result_table[1];
 
   std::unordered_set<std::string> result;
 
@@ -16,7 +16,7 @@ std::unordered_set<std::string> QueryResult::GetResult(PqlToken selected_synonym
 
   if (first_condition_pair.first == second_condition_pair.first) {
     intersection = GetIntersection(first_condition_pair.second, second_condition_pair.second);
-    if (first_condition_pair.first.first == selected_synonym) {
+    if (first_condition_pair.first.first_arg == selected_synonym) {
      for (auto result_pair : intersection) {
        result.insert(result_pair.first);
      }
@@ -26,22 +26,22 @@ std::unordered_set<std::string> QueryResult::GetResult(PqlToken selected_synonym
       }
     }
   } else {
-    if (first_condition_pair.first.first == selected_synonym) {
+    if (first_condition_pair.first.first_arg == selected_synonym) {
       for (auto result_pair : first_condition_pair.second) {
         result_list.push_back(result_pair.first);
       }
     }
-    if (first_condition_pair.first.second == selected_synonym) {
+    if (first_condition_pair.first.second_arg == selected_synonym) {
       for (auto result_pair : first_condition_pair.second) {
         result_list.push_back(result_pair.second);
       }
     }
-    if (second_condition_pair.first.first == selected_synonym) {
+    if (second_condition_pair.first.first_arg == selected_synonym) {
       for (auto result_pair : second_condition_pair.second) {
         result_list.push_back(result_pair.first);
       }
     }
-    if (second_condition_pair.first.second == selected_synonym) {
+    if (second_condition_pair.first.second_arg == selected_synonym) {
       for (auto result_pair : second_condition_pair.second) {
         result_list.push_back(result_pair.second);
       }
