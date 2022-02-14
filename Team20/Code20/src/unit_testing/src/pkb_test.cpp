@@ -128,9 +128,8 @@ void set_up_pkb() {
   pkb->AddPattern("dog", "mouse+(10*cat)");
   pkb->AddPattern("pig", "ox+cat");
   pkb->AddPattern("dragon", "(dog*rabbit)/mouse");
-      snake=dog+rabbit
-  monkey = tiger + dog
-
+  pkb->AddPattern("snake", "dog+rabbit");
+  pkb->AddPattern("monkey", "tiger+dog");
 }
 
 TEST_CASE("PKB instance") {
