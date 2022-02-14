@@ -56,6 +56,7 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         std::shared_ptr<ExpressionNode> expr = assign_stmt->GetExpression();
 
         std::string rhs_expr = ExprNodeHandler(expr, 0, "");
+        rhs_expr.erase(0, 1);
         pkb->AddPattern(var_name, rhs_expr);
 
         PopulateAssign(stmt_num);
@@ -160,7 +161,7 @@ std::string DesignExtractor::ExprNodeHandler(std::shared_ptr<ExpressionNode> exp
       std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(expr);
       std::string name = constant->GetValue();
       if (direction == 1) {
-        pattern += "(" + name;
+        pattern += name;
       } else if (direction == 2) {
         pattern += name + ")";
       }
@@ -172,15 +173,19 @@ std::string DesignExtractor::ExprNodeHandler(std::shared_ptr<ExpressionNode> exp
       std::shared_ptr<ExpressionNode> lhs = comb->GetLeftExpression();
       std::shared_ptr<ExpressionNode> rhs = comb->GetRightExpression();
       ArithmeticOperator op = comb->GetArithmeticOperator();
-      ExprNodeHandler(lhs, 1, pattern);
-      ExprNodeHandler(rhs, 2, pattern);
+      std::string op_label = comb->GetArithmeticOperatorLabel(op);
+      if (direction == 0) {
+        pattern += "(";
+      }
+      pattern += ExprNodeHandler(lhs, 1, pattern) + op_label + ExprNodeHandler(rhs, 2, pattern);
       break;
     }
     case ExpressionType::VARIABLE: {
       std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
       std::string var_name = var->GetIdentifier();
+      pattern = "";
       if (direction == 1) {
-        pattern += "(" + var_name;
+        pattern += var_name;
       } else if (direction == 2) {
         pattern += var_name + ")";
       }
