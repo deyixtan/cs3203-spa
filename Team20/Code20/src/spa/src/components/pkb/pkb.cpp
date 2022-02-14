@@ -67,6 +67,14 @@ void PKB::AddModifyProcVar(std::string proc, std::string var) {
   modify_store.AddProcVar(proc, var);
 }
 
+void PKB::AddPattern(std::string lhs, std::string rhs) {
+  pattern_map.at(lhs) = rhs;
+}
+
+int PKB::GetPattern(std::string lhs, std::string rhs) {
+  //implement building and collapsing of arithmetic tree here
+}
+
 /* Getters */
 
 std::unordered_set<std::string> PKB::GetStmt(StmtType type) {

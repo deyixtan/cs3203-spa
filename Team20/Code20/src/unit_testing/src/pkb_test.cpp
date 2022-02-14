@@ -124,6 +124,13 @@ void set_up_pkb() {
   pkb->AddUsageStmtVar("15", "monkey");
   pkb->AddUsageStmtVar("15", "tiger");
   pkb->AddUsageStmtVar("15", "dog");
+
+  pkb->AddPattern("dog", "mouse+(10*cat)");
+  pkb->AddPattern("pig", "ox+cat");
+  pkb->AddPattern("dragon", "(dog*rabbit)/mouse");
+      snake=dog+rabbit
+  monkey = tiger + dog
+
 }
 
 TEST_CASE("PKB instance") {

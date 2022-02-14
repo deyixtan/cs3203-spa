@@ -180,11 +180,21 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> print_pairs =
     };
 
 std::unordered_map<std::string, std::pair<std::string, std::string> > pattern_list =
-    {{"4", {"dog", "mouse+(10*cat)"}}, {"7", {"pig", "ox+cat "}},
-     {"8", {"dragon", "(dog*rabbit)/mouse"}}, {"10", {"snake", " + dog rabbit "}},
-     {"15", {"monkey", " + tiger dog "}}};
+    {
+        {"4", {"dog", "mouse+(10*cat)"}},
+        {"7", {"pig", "ox+cat"}},
+        {"8", {"dragon", "(dog*rabbit)/mouse"}},
+        {"10", {"snake", "dog+rabbit"}},
+        {"15", {"monkey", "tiger+dog"}}
+    };
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_pairs =
-    {{"4", "dog"}, {"7", "pig"}, {"8", "dragon"}, {"10", "snake"}, {"15", "monkey"}};
+    {
+        {"4", "dog"},
+        {"7", "pig"},
+        {"8", "dragon"},
+        {"10", "snake"},
+        {"15", "monkey"}
+    };
 
 #endif //PKB_STUB_H
