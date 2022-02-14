@@ -150,9 +150,9 @@ TEST_CASE("Test valid select with rel ref") {
       that_token,
       follow_token,
       open_parenthesis_token,
-      number_value_token,
+      number_value_token_1,
       comma_token,
-      number_value_token,
+      number_value_token_1,
       closed_parenthesis_token
   };
 
@@ -200,7 +200,7 @@ TEST_CASE("Test valid pattern clause with rel ref clause") {
       that_token,
       use_token,
       open_parenthesis_token,
-      number_value_token,
+      number_value_token_1,
       comma_token,
       v_token,
       closed_parenthesis_token,

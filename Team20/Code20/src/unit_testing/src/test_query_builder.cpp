@@ -131,7 +131,7 @@ TEST_CASE("Test query parser with multiple variables") {
   test_token_vect.push_back(that_token);
   test_token_vect.push_back(parent_token);
   test_token_vect.push_back(open_parenthesis_token);
-  test_token_vect.push_back(number_value_token);
+  test_token_vect.push_back(number_value_token_1);
   test_token_vect.push_back(comma_token);
   test_token_vect.push_back(s_token);
   test_token_vect.push_back(closed_parenthesis_token);
