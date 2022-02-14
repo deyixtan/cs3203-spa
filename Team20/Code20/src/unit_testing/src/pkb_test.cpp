@@ -2,43 +2,58 @@
 #include "components/pkb/pkb.h"
 #include "catch.hpp"
 
+/*
+	procedure main {
+1		read dog;
+2		call foo;
+3		print cat;
+4		dog = mouse + 10 * cat;
+5		if (dog <= 0) then {
+6			while ( pig > mouse ) {
+7				pig = ox + cat;
+			}
+		} else {
+8			dragon = dog * rabbit / mouse;
+9			call bar;
+		}
+	}
+	procedure foo {
+10		snake = dog + rabbit;
+11		while (10 > cat) {
+12			call bar;
+		}
+	}
+	procedure bar {
+13		print rabbit;
+14		call func;
+	}
+	procedure func {
+15		monkey = tiger + dog;
+	}
+*/
+
 void set_up_pkb() {
   PKB *pkb = PKB::GetInstance();
   pkb->AddStmt("main", PROC);
   pkb->AddStmt("foo", PROC);
   pkb->AddStmt("bar", PROC);
-  pkb->AddStmt("funcX", PROC);
-  pkb->AddStmt("funcY", PROC);
-  pkb->AddStmt("funcZ", PROC);
+  pkb->AddStmt("func", PROC);
 
-  pkb->AddStmt("4", IF);
   pkb->AddStmt("5", IF);
-  pkb->AddStmt("6", IF);
 
-  pkb->AddStmt("7", WHILE);
+  pkb->AddStmt("6", WHILE);
+  pkb->AddStmt("11", WHILE);
 
-  pkb->AddStmt("a", VARS);
-  pkb->AddStmt("b", VARS);
-  pkb->AddStmt("c", VARS);
-  pkb->AddStmt("d", VARS);
-  pkb->AddStmt("e", VARS);
-  pkb->AddStmt("f", VARS);
-  pkb->AddStmt("g", VARS);
-  pkb->AddStmt("h", VARS);
-  pkb->AddStmt("i", VARS);
-  pkb->AddStmt("j", VARS);
-  pkb->AddStmt("k", VARS);
-  pkb->AddStmt("l", VARS);
-  pkb->AddStmt("m", VARS);
-  pkb->AddStmt("n", VARS);
-  pkb->AddStmt("o", VARS);
-  pkb->AddStmt("p", VARS);
-  pkb->AddStmt("q", VARS);
-  pkb->AddStmt("r", VARS);
-  pkb->AddStmt("s", VARS);
-  pkb->AddStmt("t", VARS);
-  pkb->AddStmt("u", VARS);
-  pkb->AddStmt("v", VARS);
+  pkb->AddStmt("dog", VARS);
+  pkb->AddStmt("cat", VARS);
+  pkb->AddStmt("rabbit", VARS);
+  pkb->AddStmt("snake", VARS);
+  pkb->AddStmt("tiger", VARS);
+  pkb->AddStmt("monkey", VARS);
+  pkb->AddStmt("pig", VARS);
+  pkb->AddStmt("mouse", VARS);
+  pkb->AddStmt("dragon", VARS);
+  pkb->AddStmt("ox", VARS);
 
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("2", STMT);
@@ -56,75 +71,59 @@ void set_up_pkb() {
   pkb->AddStmt("14", STMT);
   pkb->AddStmt("15", STMT);
 
-  pkb->AddStmt("1", ASSIGN);
-  pkb->AddStmt("2", ASSIGN);
-  pkb->AddStmt("3", ASSIGN);
+  pkb->AddStmt("4", ASSIGN);
+  pkb->AddStmt("7", ASSIGN);
+  pkb->AddStmt("8", ASSIGN);
+  pkb->AddStmt("10", ASSIGN);
+  pkb->AddStmt("15", ASSIGN);
 
-  pkb->AddStmt("1", CONSTS);
-  pkb->AddStmt("4", CONSTS);
-  pkb->AddStmt("7", CONSTS);
-  pkb->AddStmt("9", CONSTS);
-  pkb->AddStmt("11", CONSTS);
+  pkb->AddStmt("0", CONSTS);
+  pkb->AddStmt("10", CONSTS);
 
-  pkb->AddStmt("8", READ);
-  pkb->AddStmt("9", READ);
-  pkb->AddStmt("10", READ);
-  pkb->AddStmt("11", READ);
+  pkb->AddStmt("1", READ);
 
-  pkb->AddStmt("12", PRINT);
+  pkb->AddStmt("3", PRINT);
   pkb->AddStmt("13", PRINT);
-  pkb->AddStmt("14", PRINT);
-  pkb->AddStmt("15", PRINT);
 
-  pkb->AddUsageProcVar("main", "a");
-  pkb->AddUsageProcVar("main", "b");
-  pkb->AddUsageProcVar("main", "e");
-  pkb->AddUsageProcVar("main", "f");
-  pkb->AddUsageProcVar("main", "i");
-  pkb->AddUsageProcVar("main", "k");
-  pkb->AddUsageProcVar("foo", "g");
-  pkb->AddUsageProcVar("bar", "c");
-  pkb->AddUsageProcVar("bar", "d");
-  pkb->AddUsageProcVar("funcX", "a");
-  pkb->AddUsageProcVar("funcX", "b");
-  pkb->AddUsageProcVar("funcX", "c");
-  pkb->AddUsageProcVar("funcY", "h");
-  pkb->AddUsageProcVar("funcY", "j");
-  pkb->AddUsageProcVar("funcZ", "c");
+  pkb->AddUsageProcVar("main", "dog");
+  pkb->AddUsageProcVar("main", "cat");
+  pkb->AddUsageProcVar("main", "mouse");
+  pkb->AddUsageProcVar("main", "pig");
+  pkb->AddUsageProcVar("main", "ox");
+  pkb->AddUsageProcVar("main", "dragon");
+  pkb->AddUsageProcVar("main", "rabbit");
+  pkb->AddUsageProcVar("foo", "snake");
+  pkb->AddUsageProcVar("foo", "dog");
+  pkb->AddUsageProcVar("foo", "rabbit");
+  pkb->AddUsageProcVar("foo", "cat");
+  pkb->AddUsageProcVar("bar", "rabbit");
+  pkb->AddUsageProcVar("func", "monkey");
+  pkb->AddUsageProcVar("func", "tiger");
+  pkb->AddUsageProcVar("func", "dog");
 
-  pkb->AddUsageStmtVar("1", "a");
-  pkb->AddUsageStmtVar("1", "b");
-  pkb->AddUsageStmtVar("1", "f");
-  pkb->AddUsageStmtVar("1", "i");
-  pkb->AddUsageStmtVar("2", "c");
-  pkb->AddUsageStmtVar("4", "d");
-  pkb->AddUsageStmtVar("4", "k");
-  pkb->AddUsageStmtVar("4", "n");
-  pkb->AddUsageStmtVar("4", "s");
-  pkb->AddUsageStmtVar("5", "e");
-  pkb->AddUsageStmtVar("5", "o");
-  pkb->AddUsageStmtVar("6", "a");
-  pkb->AddUsageStmtVar("6", "f");
-  pkb->AddUsageStmtVar("6", "g");
-  pkb->AddUsageStmtVar("6", "h");
-  pkb->AddUsageStmtVar("6", "i");
-  pkb->AddUsageStmtVar("6", "j");
-  pkb->AddUsageStmtVar("7", "c");
-  pkb->AddUsageStmtVar("7", "k");
-  pkb->AddUsageStmtVar("7", "l");
-  pkb->AddUsageStmtVar("8", "m");
-  pkb->AddUsageStmtVar("8", "p");
-  pkb->AddUsageStmtVar("9", "c");
-  pkb->AddUsageStmtVar("9", "n");
-  pkb->AddUsageStmtVar("10", "o");
-  pkb->AddUsageStmtVar("11", "c");
-  pkb->AddUsageStmtVar("11", "p");
-  pkb->AddUsageStmtVar("11", "q");
-  pkb->AddUsageStmtVar("12", "r");
-  pkb->AddUsageStmtVar("14", "s");
-  pkb->AddUsageStmtVar("14", "t");
-  pkb->AddUsageStmtVar("14", "u");
-  pkb->AddUsageStmtVar("15", "v");
+  pkb->AddUsageStmtVar("1", "dog");
+  pkb->AddUsageStmtVar("3", "cat");
+  pkb->AddUsageStmtVar("4", "dog");
+  pkb->AddUsageStmtVar("4", "mouse");
+  pkb->AddUsageStmtVar("4", "cat");
+  pkb->AddUsageStmtVar("5", "dog");
+  pkb->AddUsageStmtVar("6", "pig");
+  pkb->AddUsageStmtVar("6", "mouse");
+  pkb->AddUsageStmtVar("7", "pig");
+  pkb->AddUsageStmtVar("7", "ox");
+  pkb->AddUsageStmtVar("7", "cat");
+  pkb->AddUsageStmtVar("8", "dragon");
+  pkb->AddUsageStmtVar("8", "dog");
+  pkb->AddUsageStmtVar("8", "rabbit");
+  pkb->AddUsageStmtVar("8", "mouse");
+  pkb->AddUsageStmtVar("10", "snake");
+  pkb->AddUsageStmtVar("10", "dog");
+  pkb->AddUsageStmtVar("10", "rabbit");
+  pkb->AddUsageStmtVar("11", "cat");
+  pkb->AddUsageStmtVar("13", "rabbit");
+  pkb->AddUsageStmtVar("15", "monkey");
+  pkb->AddUsageStmtVar("15", "tiger");
+  pkb->AddUsageStmtVar("15", "dog");
 }
 
 TEST_CASE("PKB instance") {
@@ -227,8 +226,26 @@ TEST_CASE("Get var used by stmt") {
 TEST_CASE("Get stmt used by var") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
-  auto actual = pkb->GetStmtUsedByVar("c");
-  auto expected = var_to_stmt.at("c");
+  auto actual = pkb->GetStmtUsedByVar("rabbit");
+  auto expected = var_to_stmt.at("rabbit");
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get var used by proc") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetVarUsedByProc("main");
+  auto expected = proc_to_var.at("main");
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get proc used by var") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetProcUsedByVar("dog");
+  auto expected = var_to_proc.at("dog");
 
   REQUIRE(actual == expected);
 }
