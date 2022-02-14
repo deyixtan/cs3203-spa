@@ -43,6 +43,10 @@ void ParsedQueryValidator::ValidateNoDuplicateSynonymDeclared(ParsedQuery query)
 
 void ParsedQueryValidator::ValidatePatternSynonymIsAssigned(ParsedQuery query) {
   // assume only single pattern for now
+  if (query.GetPatterns().empty()) {
+    return;
+  }
+
   Pattern pattern = query.GetPatterns().front();
   std::unordered_set<std::string> assign_syonym_set;
   std::string synonym = pattern.GetSynAssign().value;
