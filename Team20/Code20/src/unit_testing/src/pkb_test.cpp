@@ -125,11 +125,11 @@ void set_up_pkb() {
   pkb->AddUsageStmtVar("15", "tiger");
   pkb->AddUsageStmtVar("15", "dog");
 
-  pkb->AddPattern("dog", "mouse+(10*cat)");
-  pkb->AddPattern("pig", "ox+cat");
-  pkb->AddPattern("dragon", "(dog*rabbit)/mouse");
-  pkb->AddPattern("snake", "dog+rabbit");
-  pkb->AddPattern("monkey", "tiger+dog");
+  pkb->AddPattern("4", "dog", "(mouse+(10*cat))");
+  pkb->AddPattern("7", "pig", "(ox+cat)");
+  pkb->AddPattern("8", "dragon", "((dog*rabbit)/mouse)");
+  pkb->AddPattern("10", "snake", "(dog+rabbit)");
+  pkb->AddPattern("13", "monkey", "(tiger+dog)");
 }
 
 TEST_CASE("PKB instance") {
@@ -310,4 +310,13 @@ TEST_CASE("Check if usage stmt-var pair exists (wrong)") {
 
   REQUIRE(actual == false);
   REQUIRE(expected == false);
+}
+
+TEST_CASE("Check pattern matching") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetStmtWithPattern("pig", "ox + cat");
+  auto expected = pattern_to_stmt.at({"pig", "(ox+cat)"});
+
+  REQUIRE(actual == expected);
 }

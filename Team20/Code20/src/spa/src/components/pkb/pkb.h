@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include <map>
 
 #include "usage_store.h"
 #include "modify_store.h"
@@ -46,7 +47,7 @@ class PKB {
   void AddModifyStmtVar(std::string stmt, std::string variable);
   void AddModifyProcVar(std::string proc, std::string var);
 
-  void AddPattern(std::string lhs, std::string rhs);
+  void AddPattern(std::string stmt, std::string lhs, std::string rhs);
 
   /* Getters */
   std::unordered_set<std::string> GetStmt(StmtType type);
@@ -65,7 +66,7 @@ class PKB {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModStmtVar();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModProcVar();
 
-  int GetPattern(std::string lhs, std::string rhs);
+  std::unordered_set<std::string> GetStmtWithPattern(std::string lhs, std::string rhs);
 
   /* Checkers */
   bool IsUsageStmtVarExist(std::pair<std::string, std::string> pair);
@@ -89,7 +90,7 @@ class PKB {
   std::unordered_set<std::string> var_list;
   std::unordered_set<std::string> const_list;
 
-  std::unordered_map<std::string, std::string> pattern_map;
+  std::unordered_map<std::pair<std::string, std::string>, std::string, pair_hash> pattern_map;
 
   FollowStore follow_store;
   ParentStore parent_Store;

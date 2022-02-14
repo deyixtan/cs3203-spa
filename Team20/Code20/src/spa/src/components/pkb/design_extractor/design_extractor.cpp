@@ -56,8 +56,8 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         std::shared_ptr<ExpressionNode> expr = assign_stmt->GetExpression();
 
         std::string rhs_expr = ExprNodeHandler(expr, 0, "");
-        rhs_expr.erase(0, 1);
-        pkb->AddPattern(var_name, rhs_expr);
+        //rhs_expr.erase(0, 1);
+        //pkb->AddPattern(stmt_num, var_name, rhs_expr);
 
         PopulateAssign(stmt_num);
         PopulateModifies(stmt_num, var_name);

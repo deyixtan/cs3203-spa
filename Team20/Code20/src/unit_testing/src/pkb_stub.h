@@ -179,13 +179,22 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> print_pairs =
         std::pair<std::string, std::string>("13", "rabbit")
     };
 
-std::unordered_map<std::string, std::pair<std::string, std::string> > pattern_list =
+std::unordered_map<std::string, std::pair<std::string, std::string> > stmt_to_pattern =
     {
         {"4", {"dog", "mouse+(10*cat)"}},
         {"7", {"pig", "ox+cat"}},
         {"8", {"dragon", "(dog*rabbit)/mouse"}},
         {"10", {"snake", "dog+rabbit"}},
         {"15", {"monkey", "tiger+dog"}}
+    };
+
+std::unordered_map<std::pair<std::string, std::string>, std::unordered_set<std::string>, pair_hash> pattern_to_stmt =
+    {
+        {{"dog", "(mouse+(10*cat))"}, {"4"}},
+        {{"pig", "(ox+cat)"}, {"7"}},
+        {{"dragon", "((dog*rabbit)/mouse)"}, {"8"}},
+        {{"snake", "(dog+rabbit)"}, {"10"}},
+        {{"monkey", "(tiger+dog)"}, {"15"}}
     };
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_pairs =
