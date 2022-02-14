@@ -21,8 +21,8 @@ void UsageStore::AddProcVar(std::string proc, std::string var) {
     proc_var_map.at(proc).emplace(var);
   }
 
-  if (!proc_var_map.emplace(var, std::unordered_set<std::string>{ proc }).second) {
-    proc_var_map.at(var).emplace(proc);
+  if (!var_proc_map.emplace(var, std::unordered_set<std::string>{ proc }).second) {
+    var_proc_map.at(var).emplace(proc);
   }
 }
 
