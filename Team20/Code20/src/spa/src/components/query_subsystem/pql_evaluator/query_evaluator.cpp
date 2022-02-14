@@ -69,6 +69,20 @@ void QueryEvaluator::EvaluateSelect(ParsedQuery& query) {
     }
   }
 
+  // if such that clause but no pattern
+  if (!query.GetRelationships().empty() && query.GetPatterns().empty()) {
+
+  }
+
+  // if no such that clause but has pattern
+  if (query.GetRelationships().empty() && !query.GetPatterns().empty()) {
+
+  }
+
+  // if both such that clause and pattern
+  if (!query.GetRelationships().empty() && !query.GetPatterns().empty()) {
+
+  }
 }
 
 }
