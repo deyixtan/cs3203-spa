@@ -2,16 +2,16 @@
 
 QueryResult::QueryResult() {}
 QueryResult::QueryResult(
-    std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>>> result_table
+    std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>> result_table
     ) : result_table(result_table) {}
 
 std::unordered_set<std::string> QueryResult::GetResult(PqlToken selected_synonym) {
-  std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>> first_condition_pair = result_table[0];
-  std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>> second_condition_pair = result_table[1];
+  std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> first_condition_pair = result_table[0];
+  std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> second_condition_pair = result_table[1];
 
   std::unordered_set<std::string> result;
 
-  std::unordered_set<std::pair<std::string, std::string>> intersection;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> intersection;
   std::vector<std::string> result_list;
 
   if (first_condition_pair.first == second_condition_pair.first) {
@@ -66,12 +66,12 @@ std::unordered_set<std::string> QueryResult::GetResult(PqlToken selected_synonym
   return result;
 }
 
-std::unordered_set<std::pair<std::string, std::string>> QueryResult::GetIntersection(
-    std::unordered_set<std::pair<std::string, std::string>> first_set,
-    std::unordered_set<std::pair<std::string, std::string>> second_set
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> QueryResult::GetIntersection(
+    std::unordered_set<std::pair<std::string, std::string>, pair_hash> first_set,
+    std::unordered_set<std::pair<std::string, std::string>, pair_hash> second_set
     ) {
 
-  std::unordered_set<std::pair<std::string, std::string>> intersection;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> intersection;
   for (auto result_pair : first_set) {
     if (second_set.find(result_pair) != second_set.end()) {
       intersection.insert(result_pair);

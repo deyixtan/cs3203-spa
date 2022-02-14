@@ -29,8 +29,8 @@ TEST_CASE("Test same condition pair") {
    */
 
   QueryCondition condition = QueryCondition(a_token, v_token);
-  std::unordered_set<std::pair<std::string, std::string>> first_set;
-  std::unordered_set<std::pair<std::string, std::string>> second_set;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> first_set;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> second_set;
   first_set.insert(pair_1x);
   first_set.insert(pair_2x);
   first_set.insert(pair_3x);
@@ -38,7 +38,7 @@ TEST_CASE("Test same condition pair") {
   second_set.insert(pair_2x);
   second_set.insert(pair_3y);
 
-  std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>>> result_table;
+  std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>> result_table;
   result_table.push_back(std::make_pair(condition, first_set));
   result_table.push_back(std::make_pair(condition, second_set));
 

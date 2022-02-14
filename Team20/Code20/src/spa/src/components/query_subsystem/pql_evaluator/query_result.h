@@ -8,19 +8,20 @@
 #include <utility>
 
 #include "query_condition.h"
+#include "components/pkb/hash.h"
 
 class QueryResult {
  public:
   QueryResult();
-  QueryResult(std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>>>);
+  QueryResult(std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>>);
   std::unordered_set<std::string> GetResult(PqlToken selected_synonym);
 
  private:
-  std::unordered_set<std::pair<std::string, std::string>> GetIntersection(
-      std::unordered_set<std::pair<std::string, std::string>> first_set,
-      std::unordered_set<std::pair<std::string, std::string>> second_set
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetIntersection(
+      std::unordered_set<std::pair<std::string, std::string>, pair_hash> first_set,
+      std::unordered_set<std::pair<std::string, std::string>, pair_hash> second_set
       );
-  std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>>>> result_table;
+  std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>> result_table;
 };
 
 #endif // QUERY_RESULT_H
