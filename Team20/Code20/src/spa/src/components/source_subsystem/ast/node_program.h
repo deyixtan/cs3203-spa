@@ -16,6 +16,7 @@ class ProgramNode : public Node {
   [[nodiscard]] std::vector<std::shared_ptr<ProcedureNode>> GetProcedures();
   [[nodiscard]] std::string ToString(int level) override;
   [[nodiscard]] std::string ToString();
+  [[nodiscard]] bool operator==(const ProgramNode &other) const;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROGRAM_H_

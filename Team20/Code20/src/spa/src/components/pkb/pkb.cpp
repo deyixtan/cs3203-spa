@@ -13,13 +13,11 @@ TNode* PKB::getRootAST (PROC p){
 }
 */
 
-//Keywords = [procedure, while, read, print, call, if-else-then, assign] -> Need to maintain 1 list for each of these
-
 PKB* PKB::instance = NULL;
 
 PKB::PKB() {}
 
-PKB* PKB::get_instance() {
+PKB* PKB::GetInstance() {
   if (!instance) {
     instance = new PKB;
   }
@@ -27,7 +25,7 @@ PKB* PKB::get_instance() {
 }
 
 /* Adders */
-void PKB::add_stmt(int stmt, StmtType type) {
+void PKB::AddStmt(std::string stmt, StmtType type) {
   switch (type) {
     case STMT:stmt_list.insert(stmt);
       break;
@@ -43,41 +41,43 @@ void PKB::add_stmt(int stmt, StmtType type) {
       break;
     case ASSIGN:assign_stmt_list.insert(stmt);
       break;
-    default:break;
-  }
-}
-
-void PKB::add_stmt(std::string name, StmtType type) {
-  switch (type) {
-    case PROC:proc_list.insert(name);
+    case PROC:proc_list.insert(stmt);
       break;
-    case VARS:var_list.insert(name);
+    case VARS:var_list.insert(stmt);
       break;
-    case CONSTS:const_list.insert(name);
+    case CONSTS:const_list.insert(stmt);
        break;
     default:break;
   }
 }
 
-void PKB::add_usage_stmt_var(int stmt, std::string var) {
-  usage_store.add_stmt_var(stmt, var);
+void PKB::AddUsageStmtVar(std::string stmt, std::string var) {
+  usage_store.AddStmtVar(stmt, var);
 }
 
-void PKB::add_usage_proc_var(std::string proc, std::string var) {
-  usage_store.add_proc_var(proc, var);
+void PKB::AddUsageProcVar(std::string proc, std::string var) {
+  usage_store.AddProcVar(proc, var);
 }
 
-void PKB::add_modify_stmt_var(int stmt, std::string var) {
-  modify_store.add_stmt_var(stmt, var);
+void PKB::AddModifyStmtVar(std::string stmt, std::string var) {
+  modify_store.AddStmtVar(stmt, var);
 }
 
-void PKB::add_modify_proc_var(std::string proc, std::string var) {
-  modify_store.add_proc_var(proc, var);
+void PKB::AddModifyProcVar(std::string proc, std::string var) {
+  modify_store.AddProcVar(proc, var);
+}
+
+void PKB::AddPattern(std::string lhs, std::string rhs) {
+  pattern_map.at(lhs) = rhs;
+}
+
+int PKB::GetPattern(std::string lhs, std::string rhs) {
+  //implement building and collapsing of arithmetic tree here
 }
 
 /* Getters */
 
-std::unordered_set<int> PKB::get_stmt_by_num(StmtType type) {
+std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
   switch (type) {
     case STMT: return stmt_list;
     case WHILE:return while_stmt_list;
@@ -86,15 +86,75 @@ std::unordered_set<int> PKB::get_stmt_by_num(StmtType type) {
     case CALL:return call_stmt_list;
     case IF:return if_stmt_list;
     case ASSIGN:return assign_stmt_list;
-    default:break;
-  }
-}
-
-std::unordered_set<std::string> PKB::get_stmt_by_name(StmtType type) {
-  switch (type) {
     case PROC:return proc_list;
     case VARS:return var_list;
     case CONSTS:return const_list;
     default:break;
   }
+}
+
+std::unordered_set<std::string> PKB::GetVarUsedByStmt(std::string stmt) {
+  return usage_store.GetVarUsedByStmt(stmt);
+}
+
+std::unordered_set<std::string> PKB::GetStmtUsedByVar(std::string var) {
+  return usage_store.GetStmtUsedByVar(var);
+}
+
+std::unordered_set<std::string> PKB::GetVarUsedByProc(std::string proc) {
+  return usage_store.GetVarUsedByProc(proc);
+}
+
+std::unordered_set<std::string> PKB::GetProcUsedByVar(std::string var) {
+  return usage_store.GetProcUsedByVar(var);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllUsageStmtVar() {
+  return usage_store.GetAllStmtVar();
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllUsageProcVar() {
+  return usage_store.GetAllProcVar();
+}
+
+std::unordered_set<std::string> PKB::GetVarModByStmt(std::string stmt) {
+  return modify_store.GetVarModByStmt(stmt);
+}
+
+std::unordered_set<std::string> PKB::GetStmtModByVar(std::string var) {
+  return modify_store.GetStmtModByVar(var);
+}
+
+std::unordered_set<std::string> PKB::GetVarModByProc(std::string proc) {
+  return modify_store.GetVarModByProc(proc);
+}
+
+std::unordered_set<std::string> PKB::GetProcModByVar(std::string var) {
+  return modify_store.GetProcModByVar(var);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllModStmtVar() {
+  return modify_store.GetAllStmtVar();
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllModProcVar() {
+  return modify_store.GetAllProcVar();
+}
+
+/* Checkers */
+
+bool PKB::IsUsageStmtVarExist(std::pair<std::string, std::string> pair) {
+  return usage_store.StmtVarExists(pair);
+}
+
+bool PKB::IsUsageProcVarExist(std::pair<std::string, std::string> pair) {
+  return usage_store.ProcVarExists(pair);
+}
+
+bool PKB::IsModifyStmtVarExist(std::pair<std::string, std::string> pair) {
+  return modify_store.StmtVarExists(pair);
+}
+
+bool PKB::IsModifyProcVarExist(std::pair<std::string, std::string> pair) {
+  return modify_store.ProcVarExists(pair);
 }

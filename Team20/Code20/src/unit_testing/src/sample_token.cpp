@@ -35,7 +35,11 @@ PqlToken re_token = PqlToken(PqlTokenType::SYNONYM, "re");
 PqlToken pn_token = PqlToken(PqlTokenType::SYNONYM, "pn");
 PqlToken cl_token = PqlToken(PqlTokenType::SYNONYM, "cl");
 
-PqlToken number_value_token = PqlToken(PqlTokenType::NUMBER, "1");
+PqlToken number_value_token_1 = PqlToken(PqlTokenType::NUMBER, "1");
+PqlToken number_value_token_2 = PqlToken(PqlTokenType::NUMBER, "2");
+PqlToken number_value_token_3 = PqlToken(PqlTokenType::NUMBER, "3");
+PqlToken number_value_token_4 = PqlToken(PqlTokenType::NUMBER, "4");
+PqlToken number_value_token_5 = PqlToken(PqlTokenType::NUMBER, "5");
 PqlToken x_token = PqlToken(PqlTokenType::SYNONYM, "x");
 PqlToken y_token = PqlToken(PqlTokenType::SYNONYM, "y");
 PqlToken x_string_token = PqlToken(PqlTokenType::IDENT_WITH_QUOTES, "\"x\"");

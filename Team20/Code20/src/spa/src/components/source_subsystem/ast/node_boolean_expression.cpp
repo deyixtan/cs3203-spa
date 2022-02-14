@@ -21,3 +21,10 @@ std::string BooleanExpressionNode::ToString(int level) {
   return "(" + m_left_expression->ToString(level) + (m_boolean_operator == BooleanOperator::AND ? " && " : " || ")
       + m_right_expression->ToString(level) + ")";
 }
+
+bool BooleanExpressionNode::operator==(const ConditionalExpressionNode &other) const {
+  const auto casted_other = dynamic_cast<const BooleanExpressionNode *>(&other);
+  return m_boolean_operator == casted_other->m_boolean_operator
+      && *m_left_expression == *(casted_other->m_left_expression)
+      && *m_right_expression == *(casted_other->m_right_expression);
+}

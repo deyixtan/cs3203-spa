@@ -16,3 +16,14 @@ std::string StatementListNode::ToString(int level) {
   }
   return str;
 }
+
+bool StatementListNode::operator==(const StatementListNode &other) const {
+  if (m_statements.size() != other.m_statements.size()) {
+    return false;
+  }
+  for (int i = 0; i < m_statements.size(); i++) {
+    if (*(m_statements.at(i)) == *(other.m_statements.at(i))) {}
+    else { return false; }
+  }
+  return true;
+}

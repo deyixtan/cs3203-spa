@@ -37,7 +37,11 @@ extern PqlToken re_token;
 extern PqlToken pn_token;
 extern PqlToken cl_token;
 
-extern PqlToken number_value_token;
+extern PqlToken number_value_token_1;
+extern PqlToken number_value_token_2;
+extern PqlToken number_value_token_3;
+extern PqlToken number_value_token_4;
+extern PqlToken number_value_token_5;
 extern PqlToken x_token;
 extern PqlToken y_token;
 extern PqlToken x_string_token;
