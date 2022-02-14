@@ -55,9 +55,11 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         PopulateVars(var_name);
         std::shared_ptr<ExpressionNode> expr = assign_stmt->GetExpression();
 
-        ExprNodeHandler(expr);
+        std::string rhs_expr = ExprNodeHandler(expr, 0, "");
+        pkb->AddPattern(var_name, rhs_expr);
+
         PopulateAssign(stmt_num);
-        //PopulateModifies(stmt_num);
+        PopulateModifies(stmt_num, var_name);
         break;
       }
       case WHILE: {
@@ -148,6 +150,46 @@ void DesignExtractor::ExprNodeHandler(std::shared_ptr<ExpressionNode> expr) {
       break;
     }
   }
+}
+
+std::string DesignExtractor::ExprNodeHandler(std::shared_ptr<ExpressionNode> expr, int direction, std::string pattern) {
+  ExpressionType expr_type = expr->GetExpressionType();
+
+  switch (expr_type) {
+    case ExpressionType::CONSTANT: {
+      std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(expr);
+      std::string name = constant->GetValue();
+      if (direction == 1) {
+        pattern += "(" + name;
+      } else if (direction == 2) {
+        pattern += name + ")";
+      }
+      PopulateConst(name);
+      break;
+    }
+    case ExpressionType::COMBINATION: {
+      std::shared_ptr<CombinationExpressionNode> comb = static_pointer_cast<CombinationExpressionNode>(expr);
+      std::shared_ptr<ExpressionNode> lhs = comb->GetLeftExpression();
+      std::shared_ptr<ExpressionNode> rhs = comb->GetRightExpression();
+      ArithmeticOperator op = comb->GetArithmeticOperator();
+      ExprNodeHandler(lhs, 1, pattern);
+      ExprNodeHandler(rhs, 2, pattern);
+      break;
+    }
+    case ExpressionType::VARIABLE: {
+      std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
+      std::string var_name = var->GetIdentifier();
+      if (direction == 1) {
+        pattern += "(" + var_name;
+      } else if (direction == 2) {
+        pattern += var_name + ")";
+      }
+      PopulateVars(var_name);
+      break;
+    }
+  }
+
+  return pattern;
 }
 
 void DesignExtractor::PopulateUses(std::string stmt, std::string var) {
