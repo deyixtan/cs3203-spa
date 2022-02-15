@@ -63,9 +63,10 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         std::shared_ptr<AssignStatementNode> assign_stmt = static_pointer_cast<AssignStatementNode>(stmt);
         var_name = assign_stmt->GetIdentifier()->GetIdentifier();
         PopulateVars(var_name);
+        PopulateModifies(stmt_num, var_name);
         std::shared_ptr<ExpressionNode> expr = assign_stmt->GetExpression();
 
-        ExprNodeHandler(expr);
+        ExprNodeHandler(stmt_num, expr);
         PopulateAssign(stmt_num);
         //PopulateModifies(stmt_num);
         break;
@@ -75,7 +76,7 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         std::shared_ptr<WhileStatementNode> while_stmt = static_pointer_cast<WhileStatementNode>(stmt);
         std::shared_ptr<ConditionalExpressionNode> while_stmt_cond = while_stmt->GetCondition();
 
-        CondExprNodeHandler(while_stmt_cond);
+        CondExprNodeHandler(stmt_num, while_stmt_cond);
 
         std::shared_ptr<StatementListNode> while_block = while_stmt->GetStatementList();
         ProcNodeHandler(proc, while_block);
@@ -87,7 +88,7 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         std::shared_ptr<IfStatementNode> if_stmt = static_pointer_cast<IfStatementNode>(stmt);
         std::shared_ptr<ConditionalExpressionNode> if_stmt_cond = if_stmt->GetCondition();
 
-        CondExprNodeHandler(if_stmt_cond);
+        CondExprNodeHandler(stmt_num, if_stmt_cond);
 
         std::shared_ptr<StatementListNode> if_block = if_stmt->GetIfStatementList();
         std::shared_ptr<StatementListNode> else_block = if_stmt->GetElseStatementList();
@@ -139,6 +140,7 @@ void DesignExtractor::ExprNodeHandler(std::shared_ptr<ExpressionNode> expr) {
     case ExpressionType::CONSTANT: {
       std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(expr);
       std::string name = constant->GetValue();
+      PopulateUses(stmt_num, var_name);
       PopulateConst(name);
       break;
     }

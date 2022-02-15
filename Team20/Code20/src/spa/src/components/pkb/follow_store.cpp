@@ -28,6 +28,15 @@ void FollowStore::Init(int num_stmts) {
 
 void FollowStore::AddFollow(std::string follower, std::string following) {
   all_follow_pairs.emplace(std::pair<std::string, std::string>(follower, following));
+
+  if (rs_map.find(follower) == rs_map.end()) {
+    rs_map.insert({follower, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
+  }
+
+  if (rs_map.find(following) == rs_map.end()) {
+    rs_map.insert({following, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
+  }
+
   rs_map.at(follower).following = following;
   rs_map.at(following).follower = follower;
   follower_set.insert(follower);
@@ -36,6 +45,15 @@ void FollowStore::AddFollow(std::string follower, std::string following) {
 
 void FollowStore::AddFollowStar(std::string follower, std::string following) {
   all_follow_star_pairs.emplace(std::pair<std::string, std::string>(follower, following));
+
+  if (rs_map.find(follower) == rs_map.end()) {
+    rs_map.insert({follower, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
+  }
+
+  if (rs_map.find(following) == rs_map.end()) {
+    rs_map.insert({following, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
+  }
+
   rs_map.at(follower).following_star.insert(following);
   rs_map.at(following).follower_star.insert(follower);
   follower_star_set.insert(follower);
