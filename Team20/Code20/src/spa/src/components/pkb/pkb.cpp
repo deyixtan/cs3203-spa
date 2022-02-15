@@ -1,6 +1,7 @@
 #include <vector>
 
 #include "pkb.h"
+#include <string>
 //#include "components/source_subsystem/TNode.h"
 
 /*
@@ -67,8 +68,40 @@ void PKB::AddModifyProcVar(std::string proc, std::string var) {
   modify_store.AddProcVar(proc, var);
 }
 
-void PKB::AddPattern(std::string lhs, std::string rhs) {
-  pattern_map.at(lhs) = rhs;
+void PKB::AddPattern(std::string stmt, std::string lhs, std::string rhs) {
+  pattern_map[{lhs, rhs}] = stmt;
+}
+
+std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::string rhs) {
+  std::unordered_set<std::string> result = {};
+  rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
+  //rhs = "(" + rhs + ")";
+  //TODO: Tree builder and parser
+
+  for (auto const&[key, val] : pattern_map) {
+    if (lhs == "_" && rhs == "_") {
+      result.insert(val);
+    }
+
+    if (lhs == "_" && rhs != "_") {
+      if (key.second.find(rhs) != -1) {
+        result.insert(val);
+      }
+    }
+
+    if (lhs != "_" && rhs == "_") {
+      if (lhs == key.first) {
+        result.insert(val);
+      }
+    }
+
+    if (lhs != "_" && rhs != "_") {
+      if (lhs == key.first && key.second.find(rhs) != -1) {
+        result.insert(val);
+      }
+    }
+  }
+  return result;
 }
 
 void PKB::AddFollowStmt(std::string stmt1, std::string stmt2) {
@@ -84,10 +117,6 @@ void PKB::AddParentStmt(std::string stmt1, std::string stmt2) {
 }
 
 //TODO: AddParentStarStmt
-
-int PKB::GetPattern(std::string lhs, std::string rhs) {
-  //implement building and collapsing of arithmetic tree here
-}
 
 /* Getters */
 
