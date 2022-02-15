@@ -19,6 +19,7 @@ void DesignExtractor::TraverseAst() {
 
 void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst) {
   std::vector<std::shared_ptr<StatementNode>> stmts = stmtLst->GetStatements();
+
   for (auto &stmt : stmts) {
     std::string stmt_num = std::to_string(stmt->GetStatementNumber());
     StmtType stmt_type = stmt->GetStatementType();
