@@ -75,7 +75,7 @@ void PKB::AddPattern(std::string stmt, std::string lhs, std::string rhs) {
 std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::string rhs) {
   std::unordered_set<std::string> result = {};
   rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
-  rhs = "(" + rhs + ")";
+  //rhs = "(" + rhs + ")";
   //TODO: Tree builder and parser
 
   for (auto const& [key, val] : pattern_map) {
