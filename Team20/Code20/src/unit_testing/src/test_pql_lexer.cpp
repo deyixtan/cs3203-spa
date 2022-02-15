@@ -101,7 +101,7 @@ TEST_CASE("Test declarations with follows relationship") {
   expected_token_vect.push_back(that_token);
   expected_token_vect.push_back(follow_token);
   expected_token_vect.push_back(open_parenthesis_token);
-  expected_token_vect.push_back(number_value_token);
+  expected_token_vect.push_back(number_value_token_1);
   expected_token_vect.push_back(comma_token);
   expected_token_vect.push_back(s_token);
   expected_token_vect.push_back(closed_parenthesis_token);
@@ -127,7 +127,7 @@ TEST_CASE("Test declarations with follows* relationship") {
   expected_token_vect.push_back(that_token);
   expected_token_vect.push_back(follow_t_token);
   expected_token_vect.push_back(open_parenthesis_token);
-  expected_token_vect.push_back(number_value_token);
+  expected_token_vect.push_back(number_value_token_1);
   expected_token_vect.push_back(comma_token);
   expected_token_vect.push_back(s_token);
   expected_token_vect.push_back(closed_parenthesis_token);
@@ -153,7 +153,7 @@ TEST_CASE("Test declarations with parent relationship") {
   expected_token_vect.push_back(that_token);
   expected_token_vect.push_back(parent_token);
   expected_token_vect.push_back(open_parenthesis_token);
-  expected_token_vect.push_back(number_value_token);
+  expected_token_vect.push_back(number_value_token_1);
   expected_token_vect.push_back(comma_token);
   expected_token_vect.push_back(s_token);
   expected_token_vect.push_back(closed_parenthesis_token);
@@ -179,7 +179,7 @@ TEST_CASE("Test declarations with parent* relationship") {
   expected_token_vect.push_back(that_token);
   expected_token_vect.push_back(parent_t_token);
   expected_token_vect.push_back(open_parenthesis_token);
-  expected_token_vect.push_back(number_value_token);
+  expected_token_vect.push_back(number_value_token_1);
   expected_token_vect.push_back(comma_token);
   expected_token_vect.push_back(s_token);
   expected_token_vect.push_back(closed_parenthesis_token);
