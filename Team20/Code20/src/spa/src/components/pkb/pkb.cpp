@@ -75,6 +75,10 @@ void PKB::AddFollowStmt(std::string stmt1, std::string stmt2) {
   follow_store.AddFollow(stmt1, stmt2);
 }
 
+void PKB::AddFollowStarStmt(std::string stmt1, std::string stmt2) {
+  follow_store.AddFollowStar(stmt1, stmt2);
+}
+
 int PKB::GetPattern(std::string lhs, std::string rhs) {
   //implement building and collapsing of arithmetic tree here
 }

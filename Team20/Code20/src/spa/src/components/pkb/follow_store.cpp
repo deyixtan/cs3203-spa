@@ -2,19 +2,19 @@
 
 FollowStore::FollowStore() {}
 
-bool FollowStore::IsFollower(int stmt) {
+bool FollowStore::IsFollower(std::string stmt) {
   return follower_set.find(stmt) != follower_set.end();
 }
 
-bool FollowStore::IsFollowing(int stmt) {
+bool FollowStore::IsFollowing(std::string stmt) {
   return following_set.find(stmt) != following_set.end();
 }
 
-bool FollowStore::IsFollowerStar(int stmt) {
+bool FollowStore::IsFollowerStar(std::string stmt) {
   return follower_star_set.find(stmt) != follower_star_set.end();
 }
 
-bool FollowStore::IsFollowingStar(int stmt) {
+bool FollowStore::IsFollowingStar(std::string stmt) {
   return following_star_set.find(stmt) != following_star_set.end();
 }
 
@@ -28,9 +28,18 @@ void FollowStore::Init(int num_stmts) {
 
 void FollowStore::AddFollow(std::string follower, std::string following) {
   all_follow_pairs.emplace(std::pair<std::string, std::string>(follower, following));
-  //need to handle follow_star_pairs
   rs_map.at(follower).following = following;
   rs_map.at(following).follower = follower;
+  follower_set.insert(follower);
+  following_set.insert(following);
+}
+
+void FollowStore::AddFollowStar(std::string follower, std::string following) {
+  all_follow_star_pairs.emplace(std::pair<std::string, std::string>(follower, following));
+  rs_map.at(follower).following_star.insert(following);
+  rs_map.at(following).follower_star.insert(follower);
+  follower_star_set.insert(follower);
+  following_star_set.insert(following);
 }
 
 // Used for follower(s1, s2)

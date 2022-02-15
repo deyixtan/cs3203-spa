@@ -20,10 +20,19 @@ void DesignExtractor::TraverseAst() {
 void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst) {
   std::vector<std::shared_ptr<StatementNode>> stmts = stmtLst->GetStatements();
 
-  for (auto &stmt : stmts) {
+  for (int i = 0; i < stmts.size(); ++i) {
+    std::shared_ptr<StatementNode> stmt = stmts[i];
     std::string stmt_num = std::to_string(stmt->GetStatementNumber());
     StmtType stmt_type = stmt->GetStatementType();
     std::string var_name = "";
+
+    if (stmt != stmts.back()) {
+      int curr_stmt = stmt->GetStatementNumber();
+      int next_stmt = stmts[i + 1]->GetStatementNumber();
+      PopulateFollows(std::to_string(curr_stmt), std::to_string(next_stmt));
+      PopulateFollowsStar(stmts, i);
+    }
+
     switch(stmt_type) {
       case PROC:
         PopulateProc(proc->GetIdentifier());
@@ -148,6 +157,19 @@ void DesignExtractor::ExprNodeHandler(std::shared_ptr<ExpressionNode> expr) {
       PopulateVars(var_name);
       break;
     }
+  }
+}
+
+void DesignExtractor::PopulateFollows(std::string stmt1, std::string stmt2) {
+  this->pkb->AddFollowStmt(stmt1, stmt2);
+}
+
+void DesignExtractor::PopulateFollowsStar(std::vector<std::shared_ptr<StatementNode>> stmt_lst, int index) {
+  int curr_stmt = stmt_lst[index]->GetStatementNumber();
+
+  for (int i = index + 1; i < stmt_lst.size(); ++i) {
+    int next_stmt = stmt_lst[i]->GetStatementNumber();
+    this->pkb->AddFollowStarStmt(std::to_string(curr_stmt), std::to_string(next_stmt));
   }
 }
 

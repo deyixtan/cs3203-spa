@@ -19,13 +19,13 @@ class FollowStore {
     std::unordered_set<std::string> following_star;
   };
 
-  bool IsFollower(int stmt);
+  bool IsFollower(std::string stmt);
 
-  bool IsFollowing(int stmt);
+  bool IsFollowing(std::string stmt);
 
-  bool IsFollowerStar(int stmt);
+  bool IsFollowerStar(std::string stmt);
 
-  bool IsFollowingStar(int stmt);
+  bool IsFollowingStar(std::string stmt);
 
   bool FollowExists(std::pair<std::string, std::string> pair);
 
@@ -34,6 +34,8 @@ class FollowStore {
   void Init(int num_stmts);
 
   void AddFollow(std::string parent, std::string child);
+
+  void AddFollowStar(std::string parent, std::string child);
 
   std::string GetFollowerOf(std::string stmt);
 
@@ -47,10 +49,10 @@ class FollowStore {
 
  private:
   std::unordered_map<std::string, node> rs_map;
-  std::unordered_set<int> follower_star_set;
-  std::unordered_set<int> following_star_set;
-  std::unordered_set<int> follower_set;
-  std::unordered_set<int> following_set;
+  std::unordered_set<std::string> follower_star_set;
+  std::unordered_set<std::string> following_star_set;
+  std::unordered_set<std::string> follower_set;
+  std::unordered_set<std::string> following_set;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash > all_follow_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash > all_follow_star_pairs;
 };
