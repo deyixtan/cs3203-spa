@@ -80,6 +80,39 @@ void ParsedQueryValidator::ValidateModifiesUsesFirstArgumentNotUnderscore(Parsed
 
 void ParsedQueryValidator::ValidateClauseDesignEntity(ParsedQuery query) {
 
+  std::unordered_set<std::string> line_no_synonym_set;
+  std::unordered_set<std::string> var_synonym_set;
+
+  for (Declaration declaration : query.GetDeclaration()) {
+    if (line_no_set.count(declaration.GetDesignEntity().type)) {
+      line_no_synonym_set.insert(declaration.GetSynonym().value);
+    } else if (var_set.count(declaration.GetDesignEntity().type)) {
+      var_synonym_set.insert(declaration.GetSynonym().value);
+    }
+  }
+
+  std::vector<Relationship> relationships = query.GetRelationships();
+  if (!relationships.empty()) {
+    if (relationships.front().GetRelRef().type == PqlTokenType::MODIFIES ||
+        relationships.front().GetRelRef().type == PqlTokenType::USES) {
+      if (!line_no_synonym_set.count(relationships.front().GetFirst().value)) {
+        // TODO: throw exception if first argument of Modifies/Uses is not a line no synonym
+      }
+      if (!var_synonym_set.count(relationships.front().GetSecond().value)) {
+        // TODO: throw exception if second argument of Modifies/Uses is not a var synonym
+      }
+    } else if (relationships.front().GetRelRef().type == PqlTokenType::FOLLOWS_T ||
+               relationships.front().GetRelRef().type == PqlTokenType::FOLLOWS ||
+               relationships.front().GetRelRef().type == PqlTokenType::PARENT_T ||
+               relationships.front().GetRelRef().type == PqlTokenType::PARENT) {
+      if (!line_no_synonym_set.count(relationships.front().GetFirst().value)) {
+        // TODO: throw exception if first argument of Follows/Parent is not a line no synonym
+      }
+      if (!line_no_synonym_set.count(relationships.front().GetSecond().value)) {
+        // TODO: throw exception if second argument of Follows/Parent is not a line no synonym
+      }
+    }
+  }
 }
 
 }
