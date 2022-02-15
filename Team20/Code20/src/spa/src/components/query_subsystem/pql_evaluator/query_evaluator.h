@@ -21,6 +21,7 @@ class QueryEvaluator {
   PKB *pkb;
   void EvaluateSelect(ParsedQuery&);
   void EvaluateSelectOnly(ParsedQuery&  query);
+  void EvaluateSelectWithRelationship(ParsedQuery& query);
 };
 
 }

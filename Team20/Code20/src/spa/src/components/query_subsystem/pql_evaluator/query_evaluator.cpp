@@ -79,6 +79,64 @@ void QueryEvaluator::EvaluateSelectOnly(ParsedQuery &query) {
   }
 }
 
+void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
+  // assume only select with 1 relationship
+  PqlToken select_syonym = query.GetSynonym();
+  Relationship relationship = query.GetRelationships().front();
+  PqlTokenType rel_ref = relationship.GetRelRef().type;
+  PqlToken first_arg = relationship.GetFirst();
+  PqlToken second_arg = relationship.GetSecond();
+
+  std::unordered_set<std::string> add_result;
+  if (rel_ref==PqlTokenType::USES) {
+    // Cases
+    // Uses(s, v)
+    // Uses(s, _)
+    if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
+      // Uses(s, "x")
+      if (select_syonym.value == first_arg.value) {
+        add_result = pkb->GetStmtUsedByVar(second_arg.value);
+      } else { // selected synonym is not in the Uses clause
+        EvaluateSelectOnly(query);
+      }
+    }
+    else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM){
+      // Uses(1, v)
+      if (select_syonym.value == first_arg.value) {
+        add_result = pkb->GetVarUsedByStmt(first_arg.value);
+      } else { // selected synonym is not in the Uses clause
+        EvaluateSelectOnly(query);
+      }
+    }
+    else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
+      // Uses(1, _)
+      if (!pkb->GetVarUsedByStmt(first_arg.value).empty()) {
+        // line does not use any variables
+        // false
+        return;
+      } else {
+        // line uses some variable
+        // true
+        EvaluateSelectOnly(query);
+      }
+    }
+    else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
+      // Uses(1, "x")
+      std::pair arg_pair(first_arg.value, second_arg.value);
+      bool is_true = pkb->IsUsageStmtVarExist(arg_pair);
+      if (is_true) { // defaults to case with just select
+        EvaluateSelectOnly(query);
+      } else { // none
+        return;
+      }
+    } else { // TODO: exception
+
+    }
+  } else if (rel_ref==PqlTokenType::MODIFIES) {
+
+  }
+}
+
 void QueryEvaluator::EvaluateSelect(ParsedQuery &query) {
   const PqlToken select_synonym = query.GetSynonym();
   const auto declarations = query.GetDeclaration();
