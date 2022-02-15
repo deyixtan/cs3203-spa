@@ -7,7 +7,7 @@
 1		read dog;
 2		call foo;
 3		print cat;
-4		dog = mouse + 10 * cat;
+4		dog = mouse + 10 * cat - (dog / mouse) * dragon + mouse + rabbit - cat;
 5		if (dog <= 0) then {
 6			while ( pig > mouse ) {
 7				pig = ox + cat;
@@ -100,12 +100,13 @@ void set_up_pkb() {
   pkb->AddUsageProcVar("func", "monkey");
   pkb->AddUsageProcVar("func", "tiger");
   pkb->AddUsageProcVar("func", "dog");
-
   pkb->AddUsageStmtVar("1", "dog");
   pkb->AddUsageStmtVar("3", "cat");
   pkb->AddUsageStmtVar("4", "dog");
   pkb->AddUsageStmtVar("4", "mouse");
   pkb->AddUsageStmtVar("4", "cat");
+  pkb->AddUsageStmtVar("4", "dragon");
+  pkb->AddUsageStmtVar("4", "rabbit");
   pkb->AddUsageStmtVar("5", "dog");
   pkb->AddUsageStmtVar("6", "pig");
   pkb->AddUsageStmtVar("6", "mouse");
@@ -125,7 +126,7 @@ void set_up_pkb() {
   pkb->AddUsageStmtVar("15", "tiger");
   pkb->AddUsageStmtVar("15", "dog");
 
-  pkb->AddPattern("4", "dog", "(mouse+(10*cat))");
+  pkb->AddPattern("4", "dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))");
   pkb->AddPattern("7", "pig", "(ox+cat)");
   pkb->AddPattern("8", "dragon", "((dog*rabbit)/mouse)");
   pkb->AddPattern("10", "snake", "(dog+rabbit)");
@@ -312,11 +313,31 @@ TEST_CASE("Check if usage stmt-var pair exists (wrong)") {
   REQUIRE(expected == false);
 }
 
-TEST_CASE("Check pattern matching") {
+TEST_CASE("Check pattern matching (correct)") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
-  auto actual = pkb->GetStmtWithPattern("pig", "ox + cat");
-  auto expected = pattern_to_stmt.at({"pig", "(ox+cat)"});
+  std::unordered_set<std::string> actual = pkb->GetStmtWithPattern("dog", "10 * cat");
+  std::unordered_set<std::string> expected = {};
+  for (auto const& [key, val] : pattern_to_stmt) {
+    if (key.first == "dog" && key.second.find("(10*cat)") != -1) {
+      expected = val;
+    }
+  }
 
   REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check pattern matching (wrong)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  std::unordered_set<std::string> actual = pkb->GetStmtWithPattern("dog", "rabbit - cat");
+  std::unordered_set<std::string> expected = {};
+  for (auto const& [key, val] : pattern_to_stmt) {
+    if (key.first == "dog" && key.second.find("(rabbit-cat)") != -1) {
+      expected = val;
+    }
+  }
+
+  REQUIRE(actual == std::unordered_set<std::string>());
+  REQUIRE(expected == std::unordered_set<std::string>());
 }

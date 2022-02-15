@@ -90,7 +90,7 @@ std::unordered_map<std::string, std::unordered_set<std::string>> stmt_to_var =
     {
         {"1", {"dog"}},
         {"3", {"cat"}},
-        {"4", {"dog", "mouse", "cat"}},
+        {"4", {"dog", "mouse", "cat", "dragon", "rabbit"}},
         {"5", {"dog"}},
         {"6", {"pig", "mouse"}},
         {"7", {"pig", "ox", "cat"}},
@@ -105,13 +105,13 @@ std::unordered_map<std::string, std::unordered_set<std::string>> var_to_stmt =
     {
         {"dog", {"1"}},
         {"cat", {"3", "4", "7", "11"}},
-        {"rabbit", {"8", "10", "13"}},
+        {"rabbit", {"4", "8", "10", "13"}},
         {"snake", {"10"}},
         {"tiger", {"15"}},
         {"monkey", {"15"}},
         {"pig", {"6", "7"}},
         {"mouse", {"4", "6", "8"}},
-        {"dragon", {"8"}},
+        {"dragon", {"4", "8"}},
         {"ox", {"7"}},
     };
 
@@ -151,6 +151,9 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> stmt_var_pair
         {"4", "dog"},
         {"4", "mouse"},
         {"4", "cat"},
+        {"4", "dragon"},
+        {"4", "mouse"},
+        {"4", "rabbit"},
         {"5", "dog"},
         {"6", "pig"},
         {"6", "mouse"},
@@ -181,16 +184,16 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> print_pairs =
 
 std::unordered_map<std::string, std::pair<std::string, std::string> > stmt_to_pattern =
     {
-        {"4", {"dog", "mouse+(10*cat)"}},
-        {"7", {"pig", "ox+cat"}},
-        {"8", {"dragon", "(dog*rabbit)/mouse"}},
-        {"10", {"snake", "dog+rabbit"}},
-        {"15", {"monkey", "tiger+dog"}}
+        {"4", {"dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))"}},
+        {"7", {"pig", "(ox+cat)"}},
+        {"8", {"dragon", "((dog*rabbit)/mouse)"}},
+        {"10", {"snake", "(dog+rabbit)"}},
+        {"15", {"monkey", "(tiger+dog)"}}
     };
 
 std::unordered_map<std::pair<std::string, std::string>, std::unordered_set<std::string>, pair_hash> pattern_to_stmt =
     {
-        {{"dog", "(mouse+(10*cat))"}, {"4"}},
+        {{"dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))"}, {"4"}},
         {{"pig", "(ox+cat)"}, {"7"}},
         {{"dragon", "((dog*rabbit)/mouse)"}, {"8"}},
         {{"snake", "(dog+rabbit)"}, {"10"}},
