@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_QUERY_SUBSYSTEM_PQL_EVALUATOR_TABLE_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_QUERY_SUBSYSTEM_PQL_EVALUATOR_TABLE_H_
+#ifndef TABLE_H_
+#define TABLE_H_
 
 #include <utility>
 #include <string>
@@ -24,6 +24,7 @@ class Table {
   Table(std::string synonym, std::unordered_set<std::string> possible_single_values);
   Table(std::string first_synonym, std::string second_synonym,
                      std::unordered_set<std::pair<std::string, std::string>> possible_pair_values);
+  bool IsEmpty();
   void Join(Table& other_table);
   void NaturalJoin(Table& other_table);
   void CrossJoin(Table& other_table);
@@ -38,4 +39,4 @@ class Table {
 
 }
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_QUERY_SUBSYSTEM_PQL_EVALUATOR_TABLE_H_
+#endif //TABLE_H_

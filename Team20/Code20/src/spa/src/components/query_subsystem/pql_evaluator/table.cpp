@@ -18,6 +18,10 @@ Table::Table(std::string first_synonym, std::string second_synonym,
   }
 }
 
+bool Table::IsEmpty() {
+  return table_.empty();
+}
+
 std::unordered_set<std::string> Table::GetSharedSynonyms(Table& other_table) {
   std::unordered_set<std::string> synonyms;
   std::unordered_set<std::string> other_synonyms;
@@ -59,11 +63,11 @@ void Table::Join(Table &other_table) {
   }
 }
 
-void NaturalJoin(Table &other_table) {
+void Table::NaturalJoin(Table &other_table) {
 
 }
 
-void CrossJoin(Table& other_table) {
+void Table::CrossJoin(Table& other_table) {
 
 }
 
