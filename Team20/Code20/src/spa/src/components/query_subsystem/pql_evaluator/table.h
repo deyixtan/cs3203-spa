@@ -1,7 +1,7 @@
 #ifndef SPA_SRC_SPA_SRC_COMPONENTS_QUERY_SUBSYSTEM_PQL_EVALUATOR_TABLE_H_
 #define SPA_SRC_SPA_SRC_COMPONENTS_QUERY_SUBSYSTEM_PQL_EVALUATOR_TABLE_H_
 
-#include <pair>
+#include <utility>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
