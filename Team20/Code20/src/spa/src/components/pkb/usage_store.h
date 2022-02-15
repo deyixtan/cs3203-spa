@@ -27,11 +27,17 @@ class UsageStore {
 
   std::unordered_set<std::string> GetProcUsedByVar(std::string var);
 
+  std::unordered_set<std::string> GetAllStmtUsing();
+
+  std::unordered_set<std::string> GetAllProcUsing();
+
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStmtVar();
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllProcVar();
 
  private:
+  std::unordered_set<std::string> all_stmt_using;
+  std::unordered_set<std::string> all_proc_using;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> stmt_var_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
   std::unordered_map<std::string, std::unordered_set<std::string> > stmt_var_map;

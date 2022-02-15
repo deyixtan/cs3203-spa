@@ -139,6 +139,14 @@ std::unordered_set<std::string> PKB::GetProcUsedByVar(std::string var) {
   return usage_store.GetProcUsedByVar(var);
 }
 
+std::unordered_set<std::string> PKB::GetAllStmtUsing() {
+  return usage_store.GetAllStmtUsing();
+}
+
+std::unordered_set<std::string> PKB::GetAllProcUsing() {
+  return usage_store.GetAllProcUsing();
+}
+
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllUsageStmtVar() {
   return usage_store.GetAllStmtVar();
 }

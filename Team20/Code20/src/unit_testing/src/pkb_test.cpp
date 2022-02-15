@@ -100,7 +100,7 @@ void set_up_pkb() {
   pkb->AddUsageProcVar("func", "monkey");
   pkb->AddUsageProcVar("func", "tiger");
   pkb->AddUsageProcVar("func", "dog");
-  pkb->AddUsageStmtVar("1", "dog");
+
   pkb->AddUsageStmtVar("3", "cat");
   pkb->AddUsageStmtVar("4", "dog");
   pkb->AddUsageStmtVar("4", "mouse");
@@ -225,7 +225,7 @@ TEST_CASE("Get var used by stmt") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetVarUsedByStmt("7");
-  auto expected = stmt_to_var.at("7");
+  auto expected = uses_stmt_to_var.at("7");
 
   REQUIRE(actual == expected);
 }
@@ -234,7 +234,7 @@ TEST_CASE("Get stmt used by var") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetStmtUsedByVar("rabbit");
-  auto expected = var_to_stmt.at("rabbit");
+  auto expected = uses_var_to_stmt.at("rabbit");
 
   REQUIRE(actual == expected);
 }
@@ -243,7 +243,7 @@ TEST_CASE("Get var used by proc") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetVarUsedByProc("main");
-  auto expected = proc_to_var.at("main");
+  auto expected = uses_proc_to_var.at("main");
 
   REQUIRE(actual == expected);
 }
@@ -252,7 +252,7 @@ TEST_CASE("Get proc used by var") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetProcUsedByVar("dog");
-  auto expected = var_to_proc.at("dog");
+  auto expected = uses_var_to_proc.at("dog");
 
   REQUIRE(actual == expected);
 }
@@ -261,7 +261,7 @@ TEST_CASE("Get all usage proc-var pairs") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetAllUsageProcVar();
-  auto expected = proc_var_pairs;
+  auto expected = uses_proc_var_pairs;
 
   REQUIRE(actual == expected);
 }
@@ -270,7 +270,7 @@ TEST_CASE("Get all usage stmt-var pairs") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetAllUsageStmtVar();
-  auto expected = stmt_var_pairs;
+  auto expected = uses_stmt_var_pairs;
 
   REQUIRE(actual == expected);
 }
@@ -279,7 +279,7 @@ TEST_CASE("Check if usage proc-var pair exists (correct)") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->IsUsageProcVarExist({"funcX", "c"});
-  auto expected = proc_var_pairs.find({"funcX", "c"}) != proc_var_pairs.end();
+  auto expected = uses_proc_var_pairs.find({"funcX", "c"}) != uses_proc_var_pairs.end();
 
   REQUIRE(actual == expected);
 }
@@ -288,7 +288,7 @@ TEST_CASE("Check if usage proc-var pair exists (wrong)") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->IsUsageProcVarExist({"funcA", "2"});
-  auto expected = proc_var_pairs.find({"funcA", "2"}) != proc_var_pairs.end();
+  auto expected = uses_proc_var_pairs.find({"funcA", "2"}) != uses_proc_var_pairs.end();
 
   REQUIRE(actual == false);
   REQUIRE(expected == false);
@@ -298,7 +298,7 @@ TEST_CASE("Check if usage stmt-var pair exists (correct)") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->IsUsageStmtVarExist({"4", "k"});
-  auto expected = stmt_var_pairs.find({"4", "k"}) != stmt_var_pairs.end();
+  auto expected = uses_stmt_var_pairs.find({"4", "k"}) != uses_stmt_var_pairs.end();
 
   REQUIRE(actual == expected);
 }
@@ -307,7 +307,7 @@ TEST_CASE("Check if usage stmt-var pair exists (wrong)") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->IsUsageStmtVarExist({"5", "j"});
-  auto expected = stmt_var_pairs.find({"5", "j"}) != stmt_var_pairs.end();
+  auto expected = uses_stmt_var_pairs.find({"5", "j"}) != uses_stmt_var_pairs.end();
 
   REQUIRE(actual == false);
   REQUIRE(expected == false);
