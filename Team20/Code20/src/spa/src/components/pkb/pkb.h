@@ -49,6 +49,9 @@ class PKB {
   void AddFollowStmt(std::string stmt1, std::string stmt2);
   void AddFollowStarStmt(std::string stmt1, std::string stmt2);
 
+  void AddParentStmt(std::string stmt1, std::string stmt2);
+  void AddParentStarStmt();
+
   void AddPattern(std::string lhs, std::string rhs);
 
   /* Getters */
@@ -103,7 +106,7 @@ class PKB {
   std::unordered_map<std::string, std::string> pattern_map;
 
   FollowStore follow_store;
-  ParentStore parent_Store;
+  ParentStore parent_store;
   UsageStore usage_store;
   ModifyStore modify_store;
 };

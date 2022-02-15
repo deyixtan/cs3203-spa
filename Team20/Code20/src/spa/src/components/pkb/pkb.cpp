@@ -79,6 +79,12 @@ void PKB::AddFollowStarStmt(std::string stmt1, std::string stmt2) {
   follow_store.AddFollowStar(stmt1, stmt2);
 }
 
+void PKB::AddParentStmt(std::string stmt1, std::string stmt2) {
+  parent_store.AddParentStmt(stmt1, stmt2);
+}
+
+//TODO: AddParentStarStmt
+
 int PKB::GetPattern(std::string lhs, std::string rhs) {
   //implement building and collapsing of arithmetic tree here
 }

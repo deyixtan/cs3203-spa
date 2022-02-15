@@ -29,6 +29,8 @@ class DesignExtractor {
   void ExprNodeHandler(std::string stmt, std::shared_ptr<ExpressionNode> expr);
   void CondExprNodeHandler(std::string stmt, std::shared_ptr<ConditionalExpressionNode> if_stmt_cond);
 
+  void PopulateParent(std::string stmt1, std::string stmt2);
+  void PopulateParentStar();
   void PopulateFollows(std::string stmt1, std::string stmt2);
   void PopulateFollowsStar(std::vector<std::shared_ptr<StatementNode>> stmts_lst, int index);
   void PopulateUses(std::string stmt, std::string var);

@@ -79,6 +79,13 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         CondExprNodeHandler(stmt_num, while_stmt_cond);
 
         std::shared_ptr<StatementListNode> while_block = while_stmt->GetStatementList();
+        std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
+
+        for (int j = 0; j < while_stmts.size(); ++j) {
+          int curr = while_stmts[j]->GetStatementNumber();
+          PopulateParent(stmt_num, std::to_string(curr));
+        }
+
         ProcNodeHandler(proc, while_block);
         PopulateWhile(stmt_num);
         break;
@@ -91,7 +98,19 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         CondExprNodeHandler(stmt_num, if_stmt_cond);
 
         std::shared_ptr<StatementListNode> if_block = if_stmt->GetIfStatementList();
+        std::vector<std::shared_ptr<StatementNode>> if_stmts = if_block->GetStatements();
         std::shared_ptr<StatementListNode> else_block = if_stmt->GetElseStatementList();
+        std::vector<std::shared_ptr<StatementNode>> else_stmts = else_block->GetStatements();
+
+        for (int j = 0; j < if_stmts.size(); ++j) {
+          int curr = if_stmts[j]->GetStatementNumber();
+          PopulateParent(stmt_num, std::to_string(curr));
+        }
+
+        for (int j = 0; j < else_stmts.size(); ++j) {
+          int curr = else_stmts[j]->GetStatementNumber();
+          PopulateParent(stmt_num, std::to_string(curr));
+        }
 
         ProcNodeHandler(proc, if_block);
         ProcNodeHandler(proc, else_block);
@@ -99,6 +118,8 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         break;
       }
     }
+
+    //TODO: PopulateParentStar();
   }
 }
 
@@ -161,6 +182,12 @@ void DesignExtractor::ExprNodeHandler(std::string stmt, std::shared_ptr<Expressi
     }
   }
 }
+
+void DesignExtractor::PopulateParent(std::string stmt1, std::string stmt2) {
+  this->pkb->AddParentStmt(stmt1, stmt2);
+}
+
+//TODO: PopulateParentStar
 
 void DesignExtractor::PopulateFollows(std::string stmt1, std::string stmt2) {
   this->pkb->AddFollowStmt(stmt1, stmt2);
