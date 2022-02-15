@@ -10,6 +10,8 @@ void ParsedQueryValidator::ValidateQuery(ParsedQuery query) {
   ValidateSelectSynonymDeclared(query);
   ValidateNoDuplicateSynonymDeclared(query);
   ValidatePatternSynonymIsAssigned(query);
+  ValidateModifiesUsesFirstArgumentNotUnderscore(query);
+  ValidateClauseDesignEntity(query);
 }
 
 void ParsedQueryValidator::ValidateSelectSynonymDeclared(ParsedQuery query) {
@@ -48,20 +50,36 @@ void ParsedQueryValidator::ValidatePatternSynonymIsAssigned(ParsedQuery query) {
   }
 
   Pattern pattern = query.GetPatterns().front();
-  std::unordered_set<std::string> assign_syonym_set;
+  std::unordered_set<std::string> assign_synonym_set;
   std::string synonym = pattern.GetSynAssign().value;
 
   for (Declaration declaration : query.GetDeclaration()) {
     if (declaration.GetDesignEntity().type==PqlTokenType::ASSIGN) {
-      assign_syonym_set.insert(declaration.GetSynonym().value);
+      assign_synonym_set.insert(declaration.GetSynonym().value);
     }
   }
 
-  const bool is_in = assign_syonym_set.find(synonym)!=assign_syonym_set.end();
+  const bool is_in = assign_synonym_set.find(synonym)!=assign_synonym_set.end();
 
   if (!is_in) {
     // TODO: throw exception if pattern synonym is not declared
   }
+}
+
+void ParsedQueryValidator::ValidateModifiesUsesFirstArgumentNotUnderscore(ParsedQuery query) {
+  std::vector<Relationship> relationships = query.GetRelationships();
+  if (!relationships.empty()) {
+    if (relationships.front().GetRelRef().type == PqlTokenType::MODIFIES ||
+        relationships.front().GetRelRef().type == PqlTokenType::USES) {
+      if (relationships.front().GetFirst().type == PqlTokenType::UNDERSCORE) {
+        // TODO: throw exception if first argument of Modifies or Uses is _
+      }
+    }
+  }
+}
+
+void ParsedQueryValidator::ValidateClauseDesignEntity(ParsedQuery query) {
+
 }
 
 }

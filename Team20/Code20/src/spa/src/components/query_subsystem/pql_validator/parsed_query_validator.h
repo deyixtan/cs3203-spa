@@ -14,6 +14,8 @@ class ParsedQueryValidator {
   void ValidateNoDuplicateSynonymDeclared(ParsedQuery);
   void ValidateSelectSynonymDeclared(ParsedQuery);
   void ValidatePatternSynonymIsAssigned(ParsedQuery);
+  void ValidateModifiesUsesFirstArgumentNotUnderscore(ParsedQuery);
+  void ValidateClauseDesignEntity(ParsedQuery);
 };
 
 };
