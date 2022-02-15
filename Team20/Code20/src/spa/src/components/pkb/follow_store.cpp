@@ -19,38 +19,38 @@ bool FollowStore::IsFollowingStar(int stmt) {
 }
 
 void FollowStore::Init(int num_stmts) {
-  node n = {0, 0, std::unordered_set<int>(), std::unordered_set<int>()};
+  node n = {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()};
 
   for (int i = 1; i <= num_stmts; i++) {
-    rs_map[i] = n;
+    rs_map[std::to_string(i)] = n;
   }
 }
 
-void FollowStore::AddFollow(int follower, int following) {
-  all_follow_pairs.emplace(std::pair<int, int>(follower, following));
+void FollowStore::AddFollow(std::string follower, std::string following) {
+  all_follow_pairs.emplace(std::pair<std::string, std::string>(follower, following));
   //need to handle follow_star_pairs
   rs_map.at(follower).following = following;
   rs_map.at(following).follower = follower;
 }
 
 // Used for follower(s1, s2)
-bool FollowStore::FollowExists(std::pair<int, int> pair) {
+bool FollowStore::FollowExists(std::pair<std::string, std::string> pair) {
   return all_follow_pairs.find(pair) != all_follow_pairs.end();
 }
 
 // Used for follower*(s1, s2)
-bool FollowStore::FollowStarExists(std::pair<int, int> pair) {
+bool FollowStore::FollowStarExists(std::pair<std::string, std::string> pair) {
   return all_follow_star_pairs.find(pair) != all_follow_star_pairs.end();
 }
 
-int FollowStore::GetFollowerOf(int stmt) {
+std::string FollowStore::GetFollowerOf(std::string stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     return rs_map.at(stmt).follower;
   }
   return 0;
 }
 
-int FollowStore::GetFollowingOf(int stmt) {
+std::string FollowStore::GetFollowingOf(std::string stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     node n = rs_map.at(stmt);
     return n.following;
@@ -58,7 +58,7 @@ int FollowStore::GetFollowingOf(int stmt) {
   return 0;
 }
 
-std::unordered_set<int> FollowStore::GetFollowerStarOf(int stmt) {
+std::unordered_set<std::string> FollowStore::GetFollowerStarOf(std::string stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     node n = rs_map.at(stmt);
     return n.follower_star;
@@ -66,7 +66,7 @@ std::unordered_set<int> FollowStore::GetFollowerStarOf(int stmt) {
   return {};
 }
 
-std::unordered_set<int> FollowStore::GetFollowingStarOf(int stmt) {
+std::unordered_set<std::string> FollowStore::GetFollowingStarOf(std::string stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     node n = rs_map.at(stmt);
     return n.following_star;

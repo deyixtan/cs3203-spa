@@ -46,6 +46,9 @@ class PKB {
   void AddModifyStmtVar(std::string stmt, std::string variable);
   void AddModifyProcVar(std::string proc, std::string var);
 
+  void AddFollowStmt(std::string stmt1, std::string stmt2);
+  void AddFollowStarStmt(std::string stmt1, std::string stmt2);
+
   void AddPattern(std::string lhs, std::string rhs);
 
   /* Getters */
@@ -67,6 +70,9 @@ class PKB {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModStmtVar();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModProcVar();
 
+  std::unordered_set<std::string> GetFollowerOf(std::string stmt);
+  std::unordered_set<std::string> GetFollowingOf(std::string stmt);
+
   int GetPattern(std::string lhs, std::string rhs);
 
   /* Checkers */
@@ -75,6 +81,9 @@ class PKB {
 
   bool IsModifyStmtVarExist(std::pair<std::string, std::string> pair);
   bool IsModifyProcVarExist(std::pair<std::string, std::string> pair);
+
+  bool IsFollowExist();
+  bool IsFollowStarExist();
 
  private:
   PKB();
