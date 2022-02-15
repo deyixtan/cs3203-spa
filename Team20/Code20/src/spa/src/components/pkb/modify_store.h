@@ -28,11 +28,17 @@ class ModifyStore {
 
   std::unordered_set<std::string> GetProcModByVar(std::string var);
 
+  std::unordered_set<std::string> GetAllStmtModify();
+
+  std::unordered_set<std::string> GetAllProcModify();
+
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStmtVar();
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllProcVar();
 
  private:
+  std::unordered_set<std::string> all_stmt_modify;
+  std::unordered_set<std::string> all_proc_modify;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> stmt_var_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
   std::unordered_map<std::string, std::unordered_set<std::string> > stmt_var_map;

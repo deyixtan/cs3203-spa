@@ -26,8 +26,8 @@ class DesignExtractor {
 
   void ProcNodeHandler(std::shared_ptr<ProcedureNode> proc,
                     std::shared_ptr<StatementListNode> stmtLst);
-  void ExprNodeHandler(std::shared_ptr<ExpressionNode> expr);
-  void CondExprNodeHandler(std::shared_ptr<ConditionalExpressionNode> if_stmt_cond);
+  void ExprNodeHandler(std::string stmt, std::shared_ptr<ExpressionNode> expr);
+  void CondExprNodeHandler(std::string stmt, std::shared_ptr<ConditionalExpressionNode> if_stmt_cond);
 
   void PopulateFollows(std::string stmt1, std::string stmt2);
   void PopulateFollowsStar(std::vector<std::shared_ptr<StatementNode>> stmts_lst, int index);

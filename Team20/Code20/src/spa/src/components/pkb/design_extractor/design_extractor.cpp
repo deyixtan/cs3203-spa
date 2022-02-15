@@ -102,7 +102,7 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
   }
 }
 
-void DesignExtractor::CondExprNodeHandler(std::shared_ptr<ConditionalExpressionNode> if_stmt_cond) {
+void DesignExtractor::CondExprNodeHandler(std::string stmt, std::shared_ptr<ConditionalExpressionNode> if_stmt_cond) {
   ConditionalType cond = if_stmt_cond->GetConditionalType();
 
   switch(cond) {
@@ -111,14 +111,14 @@ void DesignExtractor::CondExprNodeHandler(std::shared_ptr<ConditionalExpressionN
       std::shared_ptr<ConditionalExpressionNode> left = bool_node->GetLeftExpression();
       std::shared_ptr<ConditionalExpressionNode> right = bool_node->GetRightExpression();
 
-      CondExprNodeHandler(left);
-      CondExprNodeHandler(right);
+      CondExprNodeHandler(stmt, left);
+      CondExprNodeHandler(stmt, right);
       break;
     }
     case ConditionalType::NOT: {
       std::shared_ptr<NotExpressionNode> not_node = static_pointer_cast<NotExpressionNode>(if_stmt_cond);
       std::shared_ptr<ConditionalExpressionNode> expr = not_node->GetExpression();
-      CondExprNodeHandler(expr);
+      CondExprNodeHandler(stmt, expr);
       break;
     }
     case ConditionalType::RELATIONAL: {
@@ -126,21 +126,20 @@ void DesignExtractor::CondExprNodeHandler(std::shared_ptr<ConditionalExpressionN
       std::shared_ptr<ExpressionNode> left = rel_node->GetLeftExpression();
       std::shared_ptr<ExpressionNode> right = rel_node->GetRightExpression();
 
-      ExprNodeHandler(left);
-      ExprNodeHandler(right);
+      ExprNodeHandler(stmt, left);
+      ExprNodeHandler(stmt, right);
       break;
     }
   }
 }
 
-void DesignExtractor::ExprNodeHandler(std::shared_ptr<ExpressionNode> expr) {
+void DesignExtractor::ExprNodeHandler(std::string stmt, std::shared_ptr<ExpressionNode> expr) {
   ExpressionType expr_type = expr->GetExpressionType();
 
   switch (expr_type) {
     case ExpressionType::CONSTANT: {
       std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(expr);
       std::string name = constant->GetValue();
-      PopulateUses(stmt_num, var_name);
       PopulateConst(name);
       break;
     }
@@ -149,13 +148,14 @@ void DesignExtractor::ExprNodeHandler(std::shared_ptr<ExpressionNode> expr) {
       std::shared_ptr<ExpressionNode> lhs = comb->GetLeftExpression();
       std::shared_ptr<ExpressionNode> rhs = comb->GetRightExpression();
       ArithmeticOperator op = comb->GetArithmeticOperator();
-      ExprNodeHandler(lhs);
-      ExprNodeHandler(rhs);
+      ExprNodeHandler(stmt, lhs);
+      ExprNodeHandler(stmt, rhs);
       break;
     }
     case ExpressionType::VARIABLE: {
       std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
       std::string var_name = var->GetIdentifier();
+      PopulateUses(stmt, var_name);
       PopulateVars(var_name);
       break;
     }
