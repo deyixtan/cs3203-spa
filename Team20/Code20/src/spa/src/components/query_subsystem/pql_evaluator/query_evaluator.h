@@ -20,7 +20,7 @@ class QueryEvaluator {
   std::unordered_set<std::string> result;
   PKB *pkb;
   void EvaluateSelect(ParsedQuery&);
-  std::unordered_set<std::string> Intersect(std::unordered_set<std::string>, std::unordered_set<std::string>);
+  void EvaluateSelectOnly(ParsedQuery&  query);
 };
 
 }
