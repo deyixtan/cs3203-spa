@@ -89,50 +89,78 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
   std::unordered_set<std::string> add_result;
   if (rel_ref==PqlTokenType::USES) {
-    // Cases
-    // Uses(s, v)
-    // Uses(s, _)
-    if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
-      // Uses(s, "x")
-      if (select_syonym.value == first_arg.value) {
+    // 9 Total Cases (Handles UsesS now) TODO: refactor Uses to UsesS and UsesP
+    if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+      // 1. Uses(s, v)
+      if (select_syonym.value==first_arg.value) {
+        //TODO: need pkb to get all statements that use some variable
+      } else if (select_syonym.value==second_arg.value) {
+        //TODO: need pkb to get all variables that are used in statements
+      } else { // not equal to any
+        // is this correct handling?
+        EvaluateSelectOnly(query);
+      }
+    } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
+      // 2. Uses(s, _)
+      if (select_syonym.value==first_arg.value) {
+        //TODO: need pkb to get all statements that use any variable
+      } else {
+        EvaluateSelectOnly(query);
+      }
+    } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
+      // 3. Uses(s, "x")
+      if (select_syonym.value==first_arg.value) {
         add_result = pkb->GetStmtUsedByVar(second_arg.value);
       } else { // selected synonym is not in the Uses clause
         EvaluateSelectOnly(query);
       }
-    }
-    else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM){
-      // Uses(1, v)
-      if (select_syonym.value == first_arg.value) {
+    } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SYNONYM) {
+      // 4. Uses(_, v)
+      if (select_syonym.value==second_arg.value) {
+        //TODO: pkb should get all variables used any statement
+      } else {
+        EvaluateSelectOnly(query);
+      }
+    } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::UNDERSCORE) {
+      // 5. Uses(_, _)
+      //TODO: check if exists any statement that uses a variable
+      // if exist default to select only
+      // else return None;
+    } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
+      // 6. Uses(_, "x")
+      // Check if any statement uses variable
+      // true -> evaluate select only
+      // false -> none
+      // TODO: pkb add method to check if used by statement
+    } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
+      // 7. Uses(1, v)
+      if (select_syonym.value==first_arg.value) {
         add_result = pkb->GetVarUsedByStmt(first_arg.value);
       } else { // selected synonym is not in the Uses clause
         EvaluateSelectOnly(query);
       }
     }
-    else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
-      // Uses(1, _)
-      if (!pkb->GetVarUsedByStmt(first_arg.value).empty()) {
-        // line does not use any variables
-        // false
-        return;
-      } else {
-        // line uses some variable
-        // true
-        EvaluateSelectOnly(query);
-      }
+  } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
+    // 8. Uses(1, _)
+    if (!pkb->GetVarUsedByStmt(first_arg.value).empty()) {
+      // line does not use any variables
+      // false
+      return;
+    } else {
+      // line uses some variable
+      // true
+      EvaluateSelectOnly(query);
     }
-    else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
-      // Uses(1, "x")
-      std::pair arg_pair(first_arg.value, second_arg.value);
-      bool is_true = pkb->IsUsageStmtVarExist(arg_pair);
-      if (is_true) { // defaults to case with just select
-        EvaluateSelectOnly(query);
-      } else { // none
-        return;
-      }
-    } else { // TODO: exception
-
+  } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
+    // 9. Uses(1, "x")
+    std::pair arg_pair(first_arg.value, second_arg.value);
+    bool is_true = pkb->IsUsageStmtVarExist(arg_pair);
+    if (is_true) { // defaults to case with just select
+      EvaluateSelectOnly(query);
+    } else { // none
+      return;
     }
-  } else if (rel_ref==PqlTokenType::MODIFIES) {
+  } else { // TODO: exception
 
   }
 }
