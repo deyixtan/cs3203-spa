@@ -109,7 +109,7 @@ Select v such that Uses(pn, v)
 sum, max
 5000
 23 - Uses Test 2
-call c; assign a1, a2;
+assign a1, a2;
 Select s such that Uses(s, “sum”)
 5, 7, 8
 5000
