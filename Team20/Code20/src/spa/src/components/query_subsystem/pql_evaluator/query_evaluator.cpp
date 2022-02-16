@@ -45,22 +45,27 @@ void QueryEvaluator::EvaluateSelectOnly(ParsedQuery &query) {
     case PqlTokenType::READ: {
       add_result = pkb->GetStmt(StmtType::READ);
       result.insert(add_result.begin(), add_result.end());
+      break;
     }
     case PqlTokenType::PRINT: {
       add_result = pkb->GetStmt(StmtType::PRINT);
       result.insert(add_result.begin(), add_result.end());
+      break;
     }
     case PqlTokenType::WHILE: {
       add_result = pkb->GetStmt(StmtType::WHILE);
       result.insert(add_result.begin(), add_result.end());
+      break;
     }
     case PqlTokenType::IF: {
       add_result = pkb->GetStmt(StmtType::IF);
       result.insert(add_result.begin(), add_result.end());
+      break;
     }
     case PqlTokenType::ASSIGN: {
       add_result = pkb->GetStmt(StmtType::ASSIGN);
       result.insert(add_result.begin(), add_result.end());
+      break;
     }
     case PqlTokenType::VARIABLE: {
       add_result = pkb->GetStmt(StmtType::VARS);
