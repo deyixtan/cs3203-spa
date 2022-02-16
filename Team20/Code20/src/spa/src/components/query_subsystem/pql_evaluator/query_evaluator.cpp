@@ -66,7 +66,7 @@ void QueryEvaluator::EvaluateSelectOnly(ParsedQuery &query) {
       result.insert(add_result.begin(), add_result.end());
       break;
     }
-    case PqlTokenType::CALL {
+    case PqlTokenType::CALL: {
       add_result = pkb->GetStmt(StmtType::CALL);
       result.insert(add_result.begin(), add_result.end());
       break;
@@ -110,29 +110,84 @@ void QueryEvaluator::EvaluateSelectOnly(ParsedQuery &query) {
 void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
   // assume only select with 1 relationship
   PqlToken select_synonym = query.GetSynonym();
+  const auto declarations = query.GetDeclaration();
+  PqlTokenType select_synonym_type;
   Relationship relationship = query.GetRelationships().front();
   PqlTokenType rel_ref = relationship.GetRelRef().type;
   PqlToken first_arg = relationship.GetFirst();
   PqlToken second_arg = relationship.GetSecond();
 
+  for (auto declaration : declarations) {
+    if (declaration.GetSynonym().value==select_synonym.value) {
+      select_synonym_type = declaration.GetDesignEntity().type;
+    }
+  }
+
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> pair_result;
   std::unordered_set<std::string> add_result;
   if (rel_ref==PqlTokenType::USES) {
     // 6 Total Cases (Handles UsesS now) TODO: refactor Uses to UsesS and UsesP
     if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
       // 1. Uses(s, v)
+      // LHS can be s, pn, a
+      // TODO: handle each case appropriately
       if (select_synonym.value==first_arg.value) {
-        //TODO: need pkb to get all statements that use some variable
+        if (select_synonym_type==PqlTokenType::STMT) {
+          add_result = pkb->GetAllStmtUsing();
+          result.insert(add_result.begin(), add_result.end());
+        } else if (select_synonym_type==PqlTokenType::PRINT) {
+          pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.first);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
+          pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.first);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        }
       } else if (select_synonym.value==second_arg.value) {
         //TODO: need pkb to get all variables that are used in statements
+        if (select_synonym_type==PqlTokenType::STMT) {
+          //TODO: PQL crazy
+        } else if (select_synonym_type==PqlTokenType::PRINT) {
+          pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.second);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
+          pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.second);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        }
       } else { // not equal to any
         // is this correct handling?
-        // TODO: do we need to check if Uses(s, v) is non-empty???
         EvaluateSelectOnly(query);
       }
     } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
       // 2. Uses(s, _)
       if (select_synonym.value==first_arg.value) {
-        //TODO: need pkb to get all statements that use any variable
+        if (select_synonym_type==PqlTokenType::STMT) {
+          add_result = pkb->GetAllStmtUsing();
+          result.insert(add_result.begin(), add_result.end());
+        } else if (select_synonym_type==PqlTokenType::PRINT) {
+          pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.first);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
+          pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.first);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        }
       } else {
         EvaluateSelectOnly(query);
       }
@@ -178,8 +233,17 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
     // Only handles ModifiesS TODO: need to specialize Modifies -> ModifiesS vs ModifiesP
     if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
       // 1. Modifies(s, v)
+      // first arg can be s, re, a
       if (select_synonym.value==first_arg.value) {
         //TODO: need pkb to get all statements that modify some variable
+        if (select_synonym_type==PqlTokenType::STMT) {
+
+        } else if (select_synonym_type==PqlTokenType::READ) {
+
+        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
+
+        }
+
       } else if (select_synonym.value==second_arg.value) {
         //TODO: need pkb to get all variables that are modified in statements
       } else { // not equal to any
