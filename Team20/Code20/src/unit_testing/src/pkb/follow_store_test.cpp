@@ -20,8 +20,8 @@ void set_up_follow(int numStmts) {
 
 TEST_CASE("Valid follow pair") {
   set_up_follow(10);
-  int stmt1 = 2;
-  int stmt2 = 3;
+  std::string stmt1 = "2";
+  std::string stmt2 = "3";
   bool actual = follow_store.FollowExists({stmt1, stmt2});
   bool expected = follow_set.find({stmt1, stmt2}) != follow_set.end();
 
@@ -30,8 +30,8 @@ TEST_CASE("Valid follow pair") {
 
 TEST_CASE("Invalid follow pair") {
   set_up_follow(10);
-  int stmt1 = 2;
-  int stmt2 = 5;
+  std::string stmt1 = "2";
+  std::string stmt2 = "5";
   bool actual = follow_store.FollowExists({stmt1, stmt2});
   bool expected = follow_set.find({stmt1, stmt2}) != follow_set.end();
 
@@ -40,36 +40,36 @@ TEST_CASE("Invalid follow pair") {
 
 TEST_CASE("Get follower of a statement (Correct)") {
   set_up_follow(10);
-  int num = 2;
-  int actual = follow_store.GetFollowerOf(num);
-  int expected = rs_map.at(num).follower;
+  std::string num = "2";
+  std::string actual = follow_store.GetFollowerOf(num);
+  std::string expected = rs_map.at(num).follower;
 
   REQUIRE(actual == expected);
 }
 
 TEST_CASE("Get follower of a statement (Wrong)") {
   set_up_follow(10);
-  int num = 2;
-  int actual = follow_store.GetFollowerOf(num);
-  int expected = rs_map.at(8).follower;
+  std::string num = "2";
+  std::string actual = follow_store.GetFollowerOf(num);
+  std::string expected = rs_map.at("8").follower;
 
   REQUIRE(actual != expected);
 }
 
 TEST_CASE("Get following of a statement (Correct)") {
   set_up_follow(10);
-  int num = 5;
-  int actual = follow_store.GetFollowingOf(num);
-  int expected = rs_map.at(num).following;
+  std::string num = "5";
+  std::string actual = follow_store.GetFollowingOf(num);
+  std::string expected = rs_map.at(num).following;
 
   REQUIRE(actual == expected);
 }
 
 TEST_CASE("Get following of a statement (Wrong)") {
   set_up_follow(10);
-  int num = 5;
-  int actual = follow_store.GetFollowingOf(num);
-  int expected = rs_map.at(8).following;
+  std::string num = "5";
+  std::string actual = follow_store.GetFollowingOf(num);
+  std::string expected = rs_map.at("8").following;
 
   REQUIRE(actual != expected);
 }
