@@ -77,7 +77,7 @@ void SourceLexer::TranslateKeywordTokens(std::vector<std::shared_ptr<SourceToken
       continue;
     }
 
-    if (it + 1 <= tokens_ptr.end()) {
+    if (it + 1 < tokens_ptr.end()) {
       TokenType next_type = (*(it + 1))->GetType();
 
       if (value == "read" && next_type == TokenType::NAME) {

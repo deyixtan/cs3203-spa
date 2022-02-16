@@ -44,6 +44,25 @@ TEST_CASE("Test single unexpected token") {
   REQUIRE_THROWS_WITH(lexer.Tokenize(tokens_ptr), UnexpectedTokenException().what());
 }
 
+TEST_CASE("Test simple read string") {
+  SourceLexer lexer = SourceLexer("read");
+
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
+  lexer.Tokenize(tokens_ptr);
+
+  std::vector<std::shared_ptr<SourceToken>> expected_tokens_ptr;
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::NAME, "read"));
+
+  REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
+
+  for (int i = 0; i < tokens_ptr.size(); i++) {
+    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    REQUIRE(token->GetValue() == expected_token->GetValue());
+    REQUIRE(token->GetType() == expected_token->GetType());
+  }
+}
+
 TEST_CASE("Test simple read statement") {
   SourceLexer lexer = SourceLexer("read x;");
 
@@ -158,6 +177,27 @@ TEST_CASE("Test simple while-statement") {
   }
 }
 
+TEST_CASE("Test simple invalid while statement") {
+  SourceLexer lexer = SourceLexer("while 1;");
+
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
+  lexer.Tokenize(tokens_ptr);
+
+  std::vector<std::shared_ptr<SourceToken>> expected_tokens_ptr;
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::NAME, "while"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::INTEGER, "1"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::SEMI_COLON, ""));
+
+  REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
+
+  for (int i = 0; i < tokens_ptr.size(); i++) {
+    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    REQUIRE(token->GetValue() == expected_token->GetValue());
+    REQUIRE(token->GetType() == expected_token->GetType());
+  }
+}
+
 TEST_CASE("Test simple if-statement (if part)") {
   SourceLexer lexer = SourceLexer("if (x == 0)");
 
@@ -171,6 +211,27 @@ TEST_CASE("Test simple if-statement (if part)") {
   expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::IS_EQUAL, ""));
   expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::INTEGER, "0"));
   expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::CLOSED_PARENTHESIS, ""));
+
+  REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
+
+  for (int i = 0; i < tokens_ptr.size(); i++) {
+    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    REQUIRE(token->GetValue() == expected_token->GetValue());
+    REQUIRE(token->GetType() == expected_token->GetType());
+  }
+}
+
+TEST_CASE("Test simple invalid if-statement (if part)") {
+  SourceLexer lexer = SourceLexer("if 1;");
+
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
+  lexer.Tokenize(tokens_ptr);
+
+  std::vector<std::shared_ptr<SourceToken>> expected_tokens_ptr;
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::NAME, "if"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::INTEGER, "1"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::SEMI_COLON, ""));
 
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
@@ -207,6 +268,27 @@ TEST_CASE("Test simple if-statement (then part)") {
   }
 }
 
+TEST_CASE("Test simple invalid if-statement (then part)") {
+  SourceLexer lexer = SourceLexer("then 1;");
+
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
+  lexer.Tokenize(tokens_ptr);
+
+  std::vector<std::shared_ptr<SourceToken>> expected_tokens_ptr;
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::NAME, "then"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::INTEGER, "1"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::SEMI_COLON, ""));
+
+  REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
+
+  for (int i = 0; i < tokens_ptr.size(); i++) {
+    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    REQUIRE(token->GetValue() == expected_token->GetValue());
+    REQUIRE(token->GetType() == expected_token->GetType());
+  }
+}
+
 TEST_CASE("Test simple if-statement (else part)") {
   SourceLexer lexer = SourceLexer("else { x = 2; }");
 
@@ -221,6 +303,27 @@ TEST_CASE("Test simple if-statement (else part)") {
   expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::INTEGER, "2"));
   expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::SEMI_COLON, ""));
   expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::CLOSED_BRACES, ""));
+
+  REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
+
+  for (int i = 0; i < tokens_ptr.size(); i++) {
+    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    REQUIRE(token->GetValue() == expected_token->GetValue());
+    REQUIRE(token->GetType() == expected_token->GetType());
+  }
+}
+
+TEST_CASE("Test simple invalid if-statement (else part)") {
+  SourceLexer lexer = SourceLexer("else 1;");
+
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
+  lexer.Tokenize(tokens_ptr);
+
+  std::vector<std::shared_ptr<SourceToken>> expected_tokens_ptr;
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::NAME, "else"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::INTEGER, "1"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::SEMI_COLON, ""));
 
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
@@ -302,6 +405,28 @@ TEST_CASE("Test simple procedure (before stmt_list") {
   expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::PROCEDURE, ""));
   expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::NAME, "main"));
   expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::OPENED_BRACES, ""));
+
+  REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
+
+  for (int i = 0; i < tokens_ptr.size(); i++) {
+    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    REQUIRE(token->GetValue() == expected_token->GetValue());
+    REQUIRE(token->GetType() == expected_token->GetType());
+  }
+}
+
+TEST_CASE("Test simple invalid procedure") {
+  SourceLexer lexer = SourceLexer("procedure = 1;");
+
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
+  lexer.Tokenize(tokens_ptr);
+
+  std::vector<std::shared_ptr<SourceToken>> expected_tokens_ptr;
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::NAME, "procedure"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::EQUAL, ""));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::INTEGER, "1"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::SEMI_COLON, ""));
 
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
