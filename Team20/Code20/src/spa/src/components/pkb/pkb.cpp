@@ -14,11 +14,11 @@ TNode* PKB::getRootAST (PROC p){
 }
 */
 
-PKB* PKB::instance = NULL;
+PKB *PKB::instance = NULL;
 
 PKB::PKB() {}
 
-PKB* PKB::GetInstance() {
+PKB *PKB::GetInstance() {
   if (!instance) {
     instance = new PKB;
   }
@@ -47,7 +47,7 @@ void PKB::AddStmt(std::string stmt, StmtType type) {
     case VARS:var_list.insert(stmt);
       break;
     case CONSTS:const_list.insert(stmt);
-       break;
+      break;
     default:break;
   }
 }
@@ -140,17 +140,320 @@ void PKB::AddParentStarStmt(std::string stmt, std::vector<std::string> visited) 
 
 std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
   switch (type) {
-    case STMT: return stmt_list;
-    case WHILE:return while_stmt_list;
-    case READ:return read_stmt_list;
-    case PRINT:return print_stmt_list;
-    case CALL:return call_stmt_list;
-    case IF:return if_stmt_list;
-    case ASSIGN:return assign_stmt_list;
-    case PROC:return proc_list;
-    case VARS:return var_list;
-    case CONSTS:return const_list;
-    default:break;
+    case STMT:
+      return stmt_list;
+    case WHILE:
+      return while_stmt_list;
+    case READ:
+      return read_stmt_list;
+    case PRINT:
+      return print_stmt_list;
+    case CALL:
+      return call_stmt_list;
+    case IF:
+      return if_stmt_list;
+    case ASSIGN:
+      return assign_stmt_list;
+    case PROC:
+      return proc_list;
+    case VARS:
+      return var_list;
+    case CONSTS:
+      return const_list;
+    default:
+      break;
+  }
+}
+
+std::unordered_set<std::string> PKB::GetAllModStmt(StmtType type) {
+  std::unordered_set<std::string> mod_stmt_list = modify_store.GetAllStmtModify();
+  std::unordered_set<std::string> result;
+
+  switch (type) {
+    case WHILE:
+      for (auto i = mod_stmt_list.begin(); i != mod_stmt_list.end(); i++) {
+        if (while_stmt_list.find(*i) != while_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case READ:
+      for (auto i = mod_stmt_list.begin(); i != mod_stmt_list.end(); i++) {
+        if (read_stmt_list.find(*i) != read_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case PRINT:
+      for (auto i = mod_stmt_list.begin(); i != mod_stmt_list.end(); i++) {
+        if (print_stmt_list.find(*i) != print_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case CALL:
+      for (auto i = mod_stmt_list.begin(); i != mod_stmt_list.end(); i++) {
+        if (call_stmt_list.find(*i) != call_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case IF:
+      for (auto i = mod_stmt_list.begin(); i != mod_stmt_list.end(); i++) {
+        if (if_stmt_list.find(*i) != if_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case ASSIGN:
+      for (auto i = mod_stmt_list.begin(); i != mod_stmt_list.end(); i++) {
+        if (assign_stmt_list.find(*i) != assign_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case PROC:
+      for (auto i = mod_stmt_list.begin(); i != mod_stmt_list.end(); i++) {
+        if (proc_list.find(*i) != proc_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case VARS:
+      for (auto i = mod_stmt_list.begin(); i != mod_stmt_list.end(); i++) {
+        if (var_list.find(*i) != var_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case CONSTS:
+      for (auto i = mod_stmt_list.begin(); i != mod_stmt_list.end(); i++) {
+        if (const_list.find(*i) != const_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    default:
+      break;
+  }
+}
+
+std::unordered_set<std::string> PKB::GetAllUsesStmt(StmtType type) {
+  std::unordered_set<std::string> uses_stmt_list = usage_store.GetAllStmtUsing();
+  std::unordered_set<std::string> result;
+
+  switch (type) {
+    case WHILE:
+      for (auto i = uses_stmt_list.begin(); i != uses_stmt_list.end(); i++) {
+        if (while_stmt_list.find(*i) != while_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case READ:
+      for (auto i = uses_stmt_list.begin(); i != uses_stmt_list.end(); i++) {
+        if (read_stmt_list.find(*i) != read_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case PRINT:
+      for (auto i = uses_stmt_list.begin(); i != uses_stmt_list.end(); i++) {
+        if (print_stmt_list.find(*i) != print_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case CALL:
+      for (auto i = uses_stmt_list.begin(); i != uses_stmt_list.end(); i++) {
+        if (call_stmt_list.find(*i) != call_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case IF:
+      for (auto i = uses_stmt_list.begin(); i != uses_stmt_list.end(); i++) {
+        if (if_stmt_list.find(*i) != if_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case ASSIGN:
+      for (auto i = uses_stmt_list.begin(); i != uses_stmt_list.end(); i++) {
+        if (assign_stmt_list.find(*i) != assign_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case PROC:
+      for (auto i = uses_stmt_list.begin(); i != uses_stmt_list.end(); i++) {
+        if (proc_list.find(*i) != proc_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case VARS:
+      for (auto i = uses_stmt_list.begin(); i != uses_stmt_list.end(); i++) {
+        if (var_list.find(*i) != var_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case CONSTS:
+      for (auto i = uses_stmt_list.begin(); i != uses_stmt_list.end(); i++) {
+        if (const_list.find(*i) != const_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    default:
+      break;
+  }
+}
+
+std::unordered_set<std::string> PKB::GetAllFollowStmt(StmtType type) {
+  std::unordered_set<std::string> follow_stmt_list = follow_store.GetAllFollowers();
+  std::unordered_set<std::string> result;
+
+  switch (type) {
+    case WHILE:
+      for (auto i = follow_stmt_list.begin(); i != follow_stmt_list.end(); i++) {
+        if (while_stmt_list.find(*i) != while_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case READ:
+      for (auto i = follow_stmt_list.begin(); i != follow_stmt_list.end(); i++) {
+        if (read_stmt_list.find(*i) != read_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case PRINT:
+      for (auto i = follow_stmt_list.begin(); i != follow_stmt_list.end(); i++) {
+        if (print_stmt_list.find(*i) != print_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case CALL:
+      for (auto i = follow_stmt_list.begin(); i != follow_stmt_list.end(); i++) {
+        if (call_stmt_list.find(*i) != call_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case IF:
+      for (auto i = follow_stmt_list.begin(); i != follow_stmt_list.end(); i++) {
+        if (if_stmt_list.find(*i) != if_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case ASSIGN:
+      for (auto i = follow_stmt_list.begin(); i != follow_stmt_list.end(); i++) {
+        if (assign_stmt_list.find(*i) != assign_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case PROC:
+      for (auto i = follow_stmt_list.begin(); i != follow_stmt_list.end(); i++) {
+        if (proc_list.find(*i) != proc_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case VARS:
+      for (auto i = follow_stmt_list.begin(); i != follow_stmt_list.end(); i++) {
+        if (var_list.find(*i) != var_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case CONSTS:
+      for (auto i = follow_stmt_list.begin(); i != follow_stmt_list.end(); i++) {
+        if (const_list.find(*i) != const_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    default:
+      break;
+  }
+}
+
+std::unordered_set<std::string> PKB::GetAllParentStmt(StmtType type) {
+  std::unordered_set<std::string> parent_stmt_list = parent_store.GetAllParents();
+  std::unordered_set<std::string> result;
+
+  switch (type) {
+    case WHILE:
+      for (auto i = parent_stmt_list.begin(); i != parent_stmt_list.end(); i++) {
+        if (while_stmt_list.find(*i) != while_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case READ:
+      for (auto i = parent_stmt_list.begin(); i != parent_stmt_list.end(); i++) {
+        if (read_stmt_list.find(*i) != read_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case PRINT:
+      for (auto i = parent_stmt_list.begin(); i != parent_stmt_list.end(); i++) {
+        if (print_stmt_list.find(*i) != print_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case CALL:
+      for (auto i = parent_stmt_list.begin(); i != parent_stmt_list.end(); i++) {
+        if (call_stmt_list.find(*i) != call_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case IF:
+      for (auto i = parent_stmt_list.begin(); i != parent_stmt_list.end(); i++) {
+        if (if_stmt_list.find(*i) != if_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case ASSIGN:
+      for (auto i = parent_stmt_list.begin(); i != parent_stmt_list.end(); i++) {
+        if (assign_stmt_list.find(*i) != assign_stmt_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case PROC:
+      for (auto i = parent_stmt_list.begin(); i != parent_stmt_list.end(); i++) {
+        if (proc_list.find(*i) != proc_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case VARS:
+      for (auto i = parent_stmt_list.begin(); i != parent_stmt_list.end(); i++) {
+        if (var_list.find(*i) != var_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    case CONSTS:
+      for (auto i = parent_stmt_list.begin(); i != parent_stmt_list.end(); i++) {
+        if (const_list.find(*i) != const_list.end()) {
+          result.insert(*i);
+        }
+      }
+      return result;
+    default:
+      break;
   }
 }
 

@@ -56,6 +56,10 @@ class PKB {
 
   /* Getters */
   std::unordered_set<std::string> GetStmt(StmtType type);
+  std::unordered_set<std::string> GetAllModStmt(StmtType type);
+  std::unordered_set<std::string> GetAllUsesStmt(StmtType type);
+  std::unordered_set<std::string> GetAllFollowStmt(StmtType type);
+  std::unordered_set<std::string> GetAllParentStmt(StmtType type);
 
   std::unordered_set<std::string> GetVarUsedByStmt(std::string stmt);
   std::unordered_set<std::string> GetStmtUsedByVar(std::string var);

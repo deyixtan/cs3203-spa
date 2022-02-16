@@ -78,6 +78,10 @@ bool ParentStore::DescExists(std::string curr, std::string desc) {
   return false;
 }
 
+std::unordered_set<std::string> ParentStore::GetAllParents() {
+  return parent_set;
+}
+
 std::string ParentStore::GetParentOf(std::string stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     parent_child pc = rs_map.at(stmt);

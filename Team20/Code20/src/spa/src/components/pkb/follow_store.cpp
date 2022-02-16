@@ -70,6 +70,10 @@ bool FollowStore::FollowStarExists(std::pair<std::string, std::string> pair) {
   return all_follow_star_pairs.find(pair) != all_follow_star_pairs.end();
 }
 
+std::unordered_set<std::string> FollowStore::GetAllFollowers() {
+  return follower_set;
+}
+
 std::string FollowStore::GetFollowerOf(std::string stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     return rs_map.at(stmt).follower;

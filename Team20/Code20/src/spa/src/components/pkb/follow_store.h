@@ -37,6 +37,8 @@ class FollowStore {
 
   void AddFollowStar(std::string parent, std::string child);
 
+  std::unordered_set<std::string> GetAllFollowers();
+
   std::string GetFollowerOf(std::string stmt);
 
   std::string GetFollowingOf(std::string stmt);
