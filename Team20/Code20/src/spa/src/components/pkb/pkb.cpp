@@ -83,8 +83,14 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
       result.insert(val);
     }
 
-    if (lhs == "_" && rhs != "_") {
-      if (key.second.find(rhs) != -1) {
+    if (lhs == "_" && rhs != "_" && rhs.find("_") != std::string::npos) {
+      if (key.second.find(rhs) != std::string::npos) {
+        result.insert(val);
+      }
+    }
+
+    if (lhs == "_" && rhs != "_" && rhs.find("_") == std::string::npos) {
+      if (key.second == rhs) {
         result.insert(val);
       }
     }
@@ -95,8 +101,14 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
       }
     }
 
-    if (lhs != "_" && rhs != "_") {
-      if (lhs == key.first && key.second.find(rhs) != -1) {
+    if (lhs != "_" && rhs != "_" && rhs.find("_") != std::string::npos) {
+      if (lhs == key.first && key.second.find(rhs) != std::string::npos) {
+        result.insert(val);
+      }
+    }
+
+    if (lhs != "_" && rhs != "_" && rhs.find("_") == std::string::npos) {
+      if (lhs == key.first && key.second == rhs) {
         result.insert(val);
       }
     }
