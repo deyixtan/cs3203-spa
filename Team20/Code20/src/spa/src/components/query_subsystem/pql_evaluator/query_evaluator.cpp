@@ -58,6 +58,10 @@ void QueryEvaluator::EvaluateSelectOnly(ParsedQuery &query) {
       add_result = pkb->GetStmt(StmtType::IF);
       result.insert(add_result.begin(), add_result.end());
     }
+    case PqlTokenType::ASSIGN: {
+      add_result = pkb->GetStmt(StmtType::ASSIGN);
+      result.insert(add_result.begin(), add_result.end());
+    }
     case PqlTokenType::VARIABLE: {
       add_result = pkb->GetStmt(StmtType::VARS);
       result.insert(add_result.begin(), add_result.end());
