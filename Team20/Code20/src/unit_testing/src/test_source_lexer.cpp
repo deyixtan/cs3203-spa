@@ -4,33 +4,33 @@
 
 using namespace source;
 
-source::SourceToken source_procedure_token = source::SourceToken(source::TokenType::PROCEDURE, "");
-source::SourceToken p_val_token = source::SourceToken(source::TokenType::NAME, "p");
-source::SourceToken open_brace_token = source::SourceToken(source::TokenType::OPENED_BRACES, "");
-source::SourceToken close_brace_token = source::SourceToken(source::TokenType::CLOSED_BRACES, "");
-source::SourceToken open_bracket_token = source::SourceToken(source::TokenType::OPENED_PARENTHESIS, "");
-source::SourceToken close_bracket_token = source::SourceToken(source::TokenType::CLOSED_PARENTHESIS, "");
-source::SourceToken x_val_token = source::SourceToken(source::TokenType::NAME, "x");
-source::SourceToken y_val_token = source::SourceToken(source::TokenType::NAME, "y");
-source::SourceToken z_val_token = source::SourceToken(source::TokenType::NAME, "z");
-source::SourceToken equal_token = source::SourceToken(source::TokenType::EQUAL, "");
-source::SourceToken digit_token = source::SourceToken(source::TokenType::INTEGER, "2");
-source::SourceToken digit_five_token = source::SourceToken(source::TokenType::INTEGER, "5");
-source::SourceToken source_if_token = source::SourceToken(source::TokenType::IF, "");
-source::SourceToken source_then_token = source::SourceToken(source::TokenType::THEN, "");
-source::SourceToken source_else_token = source::SourceToken(source::TokenType::ELSE, "");
-source::SourceToken source_read_token = source::SourceToken(source::TokenType::READ, "");
-source::SourceToken source_print_token = source::SourceToken(source::TokenType::PRINT, "");
-source::SourceToken source_while_token = source::SourceToken(source::TokenType::WHILE, "");
-source::SourceToken source_semicolon_token = source::SourceToken(source::TokenType::SEMI_COLON, "");
-source::SourceToken source_subtract_token = source::SourceToken(source::TokenType::SUBTRACTION, "");
-source::SourceToken source_lesser_token = source::SourceToken(source::TokenType::IS_LESSER, "");
-source::SourceToken source_equal_token = source::SourceToken(source::TokenType::EQUAL, "");
+SourceToken source_procedure_token = SourceToken(TokenType::PROCEDURE, "");
+SourceToken p_val_token = SourceToken(TokenType::NAME, "p");
+SourceToken open_brace_token = SourceToken(TokenType::OPENED_BRACES, "");
+SourceToken close_brace_token = SourceToken(TokenType::CLOSED_BRACES, "");
+SourceToken open_bracket_token = SourceToken(TokenType::OPENED_PARENTHESIS, "");
+SourceToken close_bracket_token = SourceToken(TokenType::CLOSED_PARENTHESIS, "");
+SourceToken x_val_token = SourceToken(TokenType::NAME, "x");
+SourceToken y_val_token = SourceToken(TokenType::NAME, "y");
+SourceToken z_val_token = SourceToken(TokenType::NAME, "z");
+SourceToken equal_token = SourceToken(TokenType::EQUAL, "");
+SourceToken digit_token = SourceToken(TokenType::INTEGER, "2");
+SourceToken digit_five_token = SourceToken(TokenType::INTEGER, "5");
+SourceToken source_if_token = SourceToken(TokenType::IF, "");
+SourceToken source_then_token = SourceToken(TokenType::THEN, "");
+SourceToken source_else_token = SourceToken(TokenType::ELSE, "");
+SourceToken source_read_token = SourceToken(TokenType::READ, "");
+SourceToken source_print_token = SourceToken(TokenType::PRINT, "");
+SourceToken source_while_token = SourceToken(TokenType::WHILE, "");
+SourceToken source_semicolon_token = SourceToken(TokenType::SEMI_COLON, "");
+SourceToken source_subtract_token = SourceToken(TokenType::SUBTRACTION, "");
+SourceToken source_lesser_token = SourceToken(TokenType::IS_LESSER, "");
+SourceToken source_equal_token = SourceToken(TokenType::EQUAL, "");
 
 TEST_CASE("Test empty source") {
   SourceLexer lexer = SourceLexer("");
 
-  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
   lexer.Tokenize(tokens_ptr);
 
   REQUIRE(tokens_ptr.size() == 0);
@@ -39,7 +39,7 @@ TEST_CASE("Test empty source") {
 TEST_CASE("Test single unexpected token") {
   SourceLexer lexer = SourceLexer("@");
 
-  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
 
   REQUIRE_THROWS_WITH(lexer.Tokenize(tokens_ptr), UnexpectedTokenException().what());
 }
@@ -56,8 +56,8 @@ TEST_CASE("Test simple read string") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -77,8 +77,8 @@ TEST_CASE("Test simple read statement") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -98,8 +98,8 @@ TEST_CASE("Test simple invalid read statement") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -119,8 +119,8 @@ TEST_CASE("Test simple print statement") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -140,8 +140,8 @@ TEST_CASE("Test simple invalid print statement") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -170,8 +170,8 @@ TEST_CASE("Test simple while-statement") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -191,8 +191,8 @@ TEST_CASE("Test simple invalid while statement") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -215,8 +215,8 @@ TEST_CASE("Test simple if-statement (if part)") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -236,8 +236,8 @@ TEST_CASE("Test simple invalid if-statement (if part)") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -261,8 +261,8 @@ TEST_CASE("Test simple if-statement (then part)") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -282,8 +282,8 @@ TEST_CASE("Test simple invalid if-statement (then part)") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -307,8 +307,8 @@ TEST_CASE("Test simple if-statement (else part)") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -328,8 +328,8 @@ TEST_CASE("Test simple invalid if-statement (else part)") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -366,8 +366,8 @@ TEST_CASE("Test simple if-statement") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -388,8 +388,8 @@ TEST_CASE("Test simple assign statement") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -409,8 +409,8 @@ TEST_CASE("Test simple procedure (before stmt_list") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -431,8 +431,8 @@ TEST_CASE("Test simple invalid procedure") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -457,8 +457,8 @@ TEST_CASE("Test simple procedure statement") {
   REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
 
   for (int i = 0; i < tokens_ptr.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr.at(i);
-    std::shared_ptr<source::SourceToken> expected_token = expected_tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
     REQUIRE(token->GetValue() == expected_token->GetValue());
     REQUIRE(token->GetType() == expected_token->GetType());
   }
@@ -466,10 +466,10 @@ TEST_CASE("Test simple procedure statement") {
 
 TEST_CASE("Test source lexer with basic program") {
   std::string program_source = "procedure p { x = 2; }";
-  source::SourceLexer lexer = source::SourceLexer(program_source);
-  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
+  SourceLexer lexer = SourceLexer(program_source);
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
   lexer.Tokenize(tokens_ptr);
-  std::vector<source::SourceToken> expected_tokens;
+  std::vector<SourceToken> expected_tokens;
   expected_tokens.push_back(source_procedure_token);
   expected_tokens.push_back(p_val_token);
   expected_tokens.push_back(open_brace_token);
@@ -479,7 +479,7 @@ TEST_CASE("Test source lexer with basic program") {
   expected_tokens.push_back(source_semicolon_token);
   expected_tokens.push_back(close_brace_token);
   for (int i = 0; i < expected_tokens.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr[i];
+    std::shared_ptr<SourceToken> token = tokens_ptr[i];
     REQUIRE(token->GetValue() == expected_tokens[i].GetValue());
     REQUIRE(token->GetType() == expected_tokens[i].GetType());
   }
@@ -487,10 +487,10 @@ TEST_CASE("Test source lexer with basic program") {
 
 TEST_CASE("Test source lexer with if-else") {
   std::string program_source = "procedure p { if(x) then { read y; } else { print z; } }";
-  source::SourceLexer lexer = source::SourceLexer(program_source);
-  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
+  SourceLexer lexer = SourceLexer(program_source);
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
   lexer.Tokenize(tokens_ptr);
-  std::vector<source::SourceToken> expected_tokens;
+  std::vector<SourceToken> expected_tokens;
   expected_tokens.push_back(source_procedure_token);
   expected_tokens.push_back(p_val_token);
   expected_tokens.push_back(open_brace_token);
@@ -512,7 +512,7 @@ TEST_CASE("Test source lexer with if-else") {
   expected_tokens.push_back(close_brace_token);
   expected_tokens.push_back(close_brace_token);
   for (int i = 0; i < expected_tokens.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr[i];
+    std::shared_ptr<SourceToken> token = tokens_ptr[i];
     REQUIRE(token->GetValue() == expected_tokens[i].GetValue());
     REQUIRE(token->GetType() == expected_tokens[i].GetType());
   }
@@ -520,10 +520,10 @@ TEST_CASE("Test source lexer with if-else") {
 
 TEST_CASE("Test source lexer with while loop") {
   std::string program_source = "procedure p { x = 2; while(x < 5) { y = z - 2; } }";
-  source::SourceLexer lexer = source::SourceLexer(program_source);
-  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
+  SourceLexer lexer = SourceLexer(program_source);
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
   lexer.Tokenize(tokens_ptr);
-  std::vector<source::SourceToken> expected_tokens;
+  std::vector<SourceToken> expected_tokens;
   expected_tokens.push_back(source_procedure_token);
   expected_tokens.push_back(p_val_token);
   expected_tokens.push_back(open_brace_token);
@@ -547,7 +547,7 @@ TEST_CASE("Test source lexer with while loop") {
   expected_tokens.push_back(close_brace_token);
   expected_tokens.push_back(close_brace_token);
   for (int i = 0; i < expected_tokens.size(); i++) {
-    std::shared_ptr<source::SourceToken> token = tokens_ptr[i];
+    std::shared_ptr<SourceToken> token = tokens_ptr[i];
     REQUIRE(token->GetValue() == expected_tokens[i].GetValue());
     REQUIRE(token->GetType() == expected_tokens[i].GetType());
   }
@@ -555,21 +555,21 @@ TEST_CASE("Test source lexer with while loop") {
 
 TEST_CASE("Test source lexer with unrecognised character hash") {
   std::string program_source = "procedure p { x = # }";
-  source::SourceLexer lexer = source::SourceLexer(program_source);
-  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
+  SourceLexer lexer = SourceLexer(program_source);
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
   REQUIRE_THROWS_WITH(lexer.Tokenize(tokens_ptr), "Unexpected token.");
 }
 
 TEST_CASE("Test source lexer with unrecognised character question") {
   std::string program_source = "procedure p { x = 2 ?";
-  source::SourceLexer lexer = source::SourceLexer(program_source);
-  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
+  SourceLexer lexer = SourceLexer(program_source);
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
   REQUIRE_THROWS_WITH(lexer.Tokenize(tokens_ptr), "Unexpected token.");
 }
 
 TEST_CASE("Test source lexer with unrecognised characters") {
   std::string program_source = "@$/ p { x = 2 }";
-  source::SourceLexer lexer = source::SourceLexer(program_source);
-  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
+  SourceLexer lexer = SourceLexer(program_source);
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
   REQUIRE_THROWS_WITH(lexer.Tokenize(tokens_ptr), "Unexpected token.");
 }
