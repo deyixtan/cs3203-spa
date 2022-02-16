@@ -21,9 +21,11 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
   } else if (!query.GetRelationships().empty() && query.GetPatterns().empty()) {
     // select + 1 relationship
     EvaluateSelectWithRelationship(query);
-  } else if (query.GetRelationships().empty() && !query.GetPatterns().empty()) { // select + 1 pattern
+  } else if (query.GetRelationships().empty() && !query.GetPatterns().empty()) {
+    // select + 1 pattern
     EvaluateSelectWithPattern(query);
-  } else { // select + 1 relationship + 1 pattern
+  } else {
+    // select + 1 relationship + 1 pattern
     EvaluateSelectWithRelationshipAndPattern(query);
   }
 
@@ -107,7 +109,7 @@ void QueryEvaluator::EvaluateSelectOnly(ParsedQuery &query) {
 
 void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
   // assume only select with 1 relationship
-  PqlToken select_syonym = query.GetSynonym();
+  PqlToken select_synonym = query.GetSynonym();
   Relationship relationship = query.GetRelationships().front();
   PqlTokenType rel_ref = relationship.GetRelRef().type;
   PqlToken first_arg = relationship.GetFirst();
@@ -118,9 +120,9 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
     // 6 Total Cases (Handles UsesS now) TODO: refactor Uses to UsesS and UsesP
     if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
       // 1. Uses(s, v)
-      if (select_syonym.value==first_arg.value) {
+      if (select_synonym.value==first_arg.value) {
         //TODO: need pkb to get all statements that use some variable
-      } else if (select_syonym.value==second_arg.value) {
+      } else if (select_synonym.value==second_arg.value) {
         //TODO: need pkb to get all variables that are used in statements
       } else { // not equal to any
         // is this correct handling?
@@ -129,14 +131,14 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       }
     } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
       // 2. Uses(s, _)
-      if (select_syonym.value==first_arg.value) {
+      if (select_synonym.value==first_arg.value) {
         //TODO: need pkb to get all statements that use any variable
       } else {
         EvaluateSelectOnly(query);
       }
     } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
       // 3. Uses(s, "x")
-      if (select_syonym.value==first_arg.value) {
+      if (select_synonym.value==first_arg.value) {
         add_result = pkb->GetStmtUsedByVar(second_arg.value);
         result.insert(add_result.begin(), add_result.end());
       } else { // selected synonym is not in the Uses clause
@@ -144,7 +146,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       }
     } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
       // 4. Uses(1, v)
-      if (select_syonym.value==second_arg.value) {
+      if (select_synonym.value==second_arg.value) {
         add_result = pkb->GetVarUsedByStmt(first_arg.value);
         result.insert(add_result.begin(), add_result.end());
       } else { // selected synonym is not in the Uses clause
@@ -176,9 +178,9 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
     // Only handles ModifiesS TODO: need to specialize Modifies -> ModifiesS vs ModifiesP
     if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
       // 1. Modifies(s, v)
-      if (select_syonym.value==first_arg.value) {
+      if (select_synonym.value==first_arg.value) {
         //TODO: need pkb to get all statements that modify some variable
-      } else if (select_syonym.value==second_arg.value) {
+      } else if (select_synonym.value==second_arg.value) {
         //TODO: need pkb to get all variables that are modified in statements
       } else { // not equal to any
         // is this correct handling?
@@ -187,14 +189,14 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       }
     } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
       // 2. Modifies(s, _)
-      if (select_syonym.value==first_arg.value) {
+      if (select_synonym.value==first_arg.value) {
         //TODO: need pkb to get all statements that modify any variable
       } else {
         EvaluateSelectOnly(query);
       }
     } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
       // 3. Modifies(s, "x")
-      if (select_syonym.value==first_arg.value) {
+      if (select_synonym.value==first_arg.value) {
         add_result = pkb->GetStmtModByVar(second_arg.value);
         result.insert(add_result.begin(), add_result.end());
       } else { // selected synonym is not in the Uses clause
@@ -202,7 +204,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       }
     } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
       // 4. Modifies(1, v)
-      if (select_syonym.value==second_arg.value) {
+      if (select_synonym.value==second_arg.value) {
         add_result = pkb->GetVarModByStmt(first_arg.value);
         result.insert(add_result.begin(), add_result.end());
       } else { // selected synonym is not in the Uses clause
