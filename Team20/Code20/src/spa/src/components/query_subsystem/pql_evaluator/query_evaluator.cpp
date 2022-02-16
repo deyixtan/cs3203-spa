@@ -149,9 +149,12 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           result.insert(add_result.begin(), add_result.end());
         }
       } else if (select_synonym.value==second_arg.value) {
-        //TODO: need pkb to get all variables that are used in statements
         if (select_synonym_type==PqlTokenType::STMT) {
-          //TODO: PQL crazy
+          pair_result = pkb->GetAllUsesStmt(StmtType::STMT);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.second);
+          }
+          result.insert(add_result.begin(), add_result.end());
         } else if (select_synonym_type==PqlTokenType::PRINT) {
           pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
           for (auto pair : pair_result) {
@@ -235,26 +238,72 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       // 1. Modifies(s, v)
       // first arg can be s, re, a
       if (select_synonym.value==first_arg.value) {
-        //TODO: need pkb to get all statements that modify some variable
         if (select_synonym_type==PqlTokenType::STMT) {
-
+          pair_result = pkb->GetAllModStmt(StmtType::STMT);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.first);
+          }
+          result.insert(add_result.begin(), add_result.end());
         } else if (select_synonym_type==PqlTokenType::READ) {
-
+          pair_result = pkb->GetAllModStmt(StmtType::READ);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.first);
+          }
+          result.insert(add_result.begin(), add_result.end());
         } else if (select_synonym_type==PqlTokenType::ASSIGN) {
-
+          pair_result = pkb->GetAllModStmt(StmtType::ASSIGN);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.first);
+          }
+          result.insert(add_result.begin(), add_result.end());
         }
 
       } else if (select_synonym.value==second_arg.value) {
-        //TODO: need pkb to get all variables that are modified in statements
+        if (select_synonym_type==PqlTokenType::STMT) {
+          pair_result = pkb->GetAllModStmt(StmtType::STMT);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.second);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        } else if (select_synonym_type==PqlTokenType::READ) {
+          pair_result = pkb->GetAllModStmt(StmtType::READ);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.second);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
+          pair_result = pkb->GetAllModStmt(StmtType::ASSIGN);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.second);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        }
       } else { // not equal to any
         // is this correct handling?
-        // TODO: do we need to check if Modifies(s, v) is non-empty???
         EvaluateSelectOnly(query);
       }
     } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
       // 2. Modifies(s, _)
       if (select_synonym.value==first_arg.value) {
-        //TODO: need pkb to get all statements that modify any variable
+        if (select_synonym_type==PqlTokenType::STMT) {
+          pair_result = pkb->GetAllModStmt(StmtType::STMT);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.first);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        } else if (select_synonym_type==PqlTokenType::READ) {
+          pair_result = pkb->GetAllModStmt(StmtType::READ);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.first);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
+          pair_result = pkb->GetAllModStmt(StmtType::ASSIGN);
+          for (auto pair : pair_result) {
+            add_result.insert(pair.first);
+          }
+          result.insert(add_result.begin(), add_result.end());
+        }
       } else {
         EvaluateSelectOnly(query);
       }
@@ -316,21 +365,21 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
   PqlToken rel_first_arg = relationship.GetFirst();
   PqlToken rel_second_arg = relationship.GetSecond();
 
-  if (relationship.GetFirst().type != PqlTokenType::SYNONYM &&
-      relationship.GetSecond().type != PqlTokenType::SYNONYM) { // no synonym in such that clause
+  if (relationship.GetFirst().type!=PqlTokenType::SYNONYM &&
+      relationship.GetSecond().type!=PqlTokenType::SYNONYM) { // no synonym in such that clause
     bool such_that_bool_result;
     std::string rel_second_no_quote = rel_second_arg.value.substr(1, 1);
-    if (relationship_type == PqlTokenType::USES) {
+    if (relationship_type==PqlTokenType::USES) {
       such_that_bool_result = pkb->IsUsageStmtVarExist(std::make_pair(rel_first_arg.value, rel_second_no_quote));
-    } else if (relationship_type == PqlTokenType::MODIFIES) {
+    } else if (relationship_type==PqlTokenType::MODIFIES) {
       such_that_bool_result = pkb->IsModifyStmtVarExist(std::make_pair(rel_first_arg.value, rel_second_no_quote));
-    } else if (relationship_type == PqlTokenType::PARENT) {
+    } else if (relationship_type==PqlTokenType::PARENT) {
       // TODO: modify such_that_bool_result by calling from pkb
-    } else if (relationship_type == PqlTokenType::PARENT_T) {
+    } else if (relationship_type==PqlTokenType::PARENT_T) {
       // TODO: modify such_that_bool_result by calling from pkb
-    } else if (relationship_type == PqlTokenType::FOLLOWS) {
+    } else if (relationship_type==PqlTokenType::FOLLOWS) {
       // TODO: modify such_that_bool_result by calling from pkb
-    } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
+    } else if (relationship_type==PqlTokenType::FOLLOWS_T) {
       // TODO: modify such_that_bool_result by calling from pkb
     }
 
@@ -350,58 +399,58 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
     std::unordered_set<std::pair<std::string, std::string>, pair_hash> rel_result_set;
     std::unordered_set<std::string> single_result_set;
 
-    if (relationship.GetFirst().type == PqlTokenType::SYNONYM &&
-        relationship.GetSecond().type != PqlTokenType::SYNONYM) {
+    if (relationship.GetFirst().type==PqlTokenType::SYNONYM &&
+        relationship.GetSecond().type!=PqlTokenType::SYNONYM) {
       std::string second_arg = relationship.GetSecond().value;
-      if (relationship_type == PqlTokenType::USES) {
+      if (relationship_type==PqlTokenType::USES) {
         second_arg = second_arg.substr(1, 1);
         single_result_set = pkb->GetStmtUsedByVar(second_arg);
-      } else if (relationship_type == PqlTokenType::MODIFIES) {
+      } else if (relationship_type==PqlTokenType::MODIFIES) {
         second_arg = second_arg.substr(1, 1);
         single_result_set = pkb->GetStmtModByVar(second_arg);
-      } else if (relationship_type == PqlTokenType::PARENT) {
+      } else if (relationship_type==PqlTokenType::PARENT) {
         single_result_set; // TODO
-      } else if (relationship_type == PqlTokenType::PARENT_T) {
+      } else if (relationship_type==PqlTokenType::PARENT_T) {
         single_result_set; // TODO
-      } else if (relationship_type == PqlTokenType::FOLLOWS) {
+      } else if (relationship_type==PqlTokenType::FOLLOWS) {
         single_result_set; // TODO
-      } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
+      } else if (relationship_type==PqlTokenType::FOLLOWS_T) {
         single_result_set; // TODO
       }
       for (auto single_result : single_result_set) {
-        rel_result_set.insert(std::make_pair( single_result, second_arg));
+        rel_result_set.insert(std::make_pair(single_result, second_arg));
       }
-    } else if (relationship.GetFirst().type != PqlTokenType::SYNONYM &&
-               relationship.GetSecond().type == PqlTokenType::SYNONYM) {
-      if (relationship_type == PqlTokenType::USES) {
+    } else if (relationship.GetFirst().type!=PqlTokenType::SYNONYM &&
+        relationship.GetSecond().type==PqlTokenType::SYNONYM) {
+      if (relationship_type==PqlTokenType::USES) {
         single_result_set = pkb->GetVarUsedByStmt(relationship.GetFirst().value);
-      } else if (relationship_type == PqlTokenType::MODIFIES) {
+      } else if (relationship_type==PqlTokenType::MODIFIES) {
         single_result_set = pkb->GetVarModByStmt(relationship.GetFirst().value);
-      } else if (relationship_type == PqlTokenType::PARENT) {
+      } else if (relationship_type==PqlTokenType::PARENT) {
         single_result_set; // TODO
-      } else if (relationship_type == PqlTokenType::PARENT_T) {
+      } else if (relationship_type==PqlTokenType::PARENT_T) {
         single_result_set; // TODO
-      } else if (relationship_type == PqlTokenType::FOLLOWS) {
+      } else if (relationship_type==PqlTokenType::FOLLOWS) {
         single_result_set; // TODO
-      } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
+      } else if (relationship_type==PqlTokenType::FOLLOWS_T) {
         single_result_set; // TODO
       }
       for (auto single_result : single_result_set) {
         rel_result_set.insert(std::make_pair(relationship.GetFirst().value, single_result));
       }
-    } else if (relationship.GetFirst().type == PqlTokenType::SYNONYM &&
-               relationship.GetSecond().type == PqlTokenType::SYNONYM) {
-      if (relationship_type == PqlTokenType::USES) {
+    } else if (relationship.GetFirst().type==PqlTokenType::SYNONYM &&
+        relationship.GetSecond().type==PqlTokenType::SYNONYM) {
+      if (relationship_type==PqlTokenType::USES) {
         rel_result_set; // TODO
-      } else if (relationship_type == PqlTokenType::MODIFIES) {
+      } else if (relationship_type==PqlTokenType::MODIFIES) {
         rel_result_set; // TODO
-      } else if (relationship_type == PqlTokenType::PARENT) {
+      } else if (relationship_type==PqlTokenType::PARENT) {
         rel_result_set; // TODO
-      } else if (relationship_type == PqlTokenType::PARENT_T) {
+      } else if (relationship_type==PqlTokenType::PARENT_T) {
         rel_result_set; // TODO
-      } else if (relationship_type == PqlTokenType::FOLLOWS) {
+      } else if (relationship_type==PqlTokenType::FOLLOWS) {
         rel_result_set; // TODO
-      } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
+      } else if (relationship_type==PqlTokenType::FOLLOWS_T) {
         rel_result_set; // TODO
       }
     }
@@ -413,7 +462,8 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
     std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> pattern_column =
         std::make_pair(pattern_condition, pattern_result_set);
 
-    std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>> result_table =
+    std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>>
+        result_table =
         {rel_column, pattern_column};
     std::unordered_set<std::string> add_result = QueryResult(result_table).GetResult(selected_synonym);
     result.insert(add_result.begin(), add_result.end());
