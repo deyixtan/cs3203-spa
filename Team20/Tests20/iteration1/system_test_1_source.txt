@@ -8,8 +8,6 @@ procedure sumIsOdd {
     }
     if(sum % 2 != 0) {
         print(sum);
-    } else {
-        call greatestDivisor;
     }
 }
 

@@ -1,6 +1,6 @@
 1- Follows Test 1
 stmt s;
-Select s such that Follows(9,s)
+Select s such that Follows(8,s)
 none
 5000
 2 - Follows Test 2
@@ -10,8 +10,8 @@ Select s such that Follows(4,s)
 5000
 3 - Follows Test 3
 stmt s;
-Select s such that Follows(s,16)
-12
+Select s such that Follows(s,15)
+11
 5000
 4 - Follows Test 4
 stmt s;
@@ -38,7 +38,7 @@ stmt s;
 Select s such that Parent(3, s)
 4, 5, 6
 5000
-9 - Parent Test 3
+9 - Parent Test 3 (Parent of self)
 stmt s;
 Select s such that Parent(s,s)
 none
@@ -48,10 +48,10 @@ stmt s;
 Select n such that Parent(10, s)
 none
 5000
-11 - Parent Test 5
+11 - Parent Test 5 (Nested loop)
 stmt s;
-Select s such that Parent*(12, s)
-13, 14, 15
+Select s such that Parent*(11, s)
+12, 13, 14
 5000
 12 - Parent Test 6
 stmt s;
@@ -63,7 +63,7 @@ assign a; stmt s;
 Select a such that Parent*(1,3)
 none
 5000
-14 - Parent Test 8
+14 - Parent Test 8 (False query)
 assign a; stmt s;
 Select a such that Parent(s, 4)
 2, 4, 5, 6, 10, 11, 14, 15
@@ -76,7 +76,7 @@ number
 16 - Modifies Test 2
 while w; variable v;
 Select w such that Modifies(w, v)
-3, 12
+3, 11
 5000
 17 - Modifies Test 3
 if ifs; variable v;
@@ -93,15 +93,15 @@ stmt s;
 Select s such that Modifies(s, “number”)
 1, 6
 5000
-20 - Modifies Test 6 with wildcard
+20 - Modifies Test 6 (Query with wildcard)
 stmt s;
 Select s such that Modifies(s, _)
-1, 2, 4, 5, 6, 10, 11, 14, 15
+1, 2, 4, 5, 6, 9, 10, 13, 14
 5000
 21 - Modifies Test 7
 variable v; assign a;
 Select a such that Modifies(a, v)
-2, 4, 5, 6, 10, 11, 14, 15
+2, 4, 5, 6, 9, 10, 13, 14
 5000
 22 - Uses Test 1
 variable v; print pn;
@@ -116,7 +116,7 @@ Select s such that Uses(s, “sum”)
 24 - Uses Test 3
 assign a; variable v;
 Select a such that Uses(a, v)
-4, 5, 6, 14, 15
+4, 5, 6, 13, 14
 5000
 25 - Uses Test 4
 if ifs; variable v;
@@ -125,7 +125,7 @@ sum, number, div
 26 - Uses Test 5
 if ifs; variable v;
 Select ifs such that Uses(ifs, v)
-7, 8, 13, 14
+7, 8, 12, 13
 5000
 27 - Uses Test 6
 while w; variable v;
@@ -140,12 +140,12 @@ none
 29 - Uses Test 8
 stmt s; variable v;
 Select s such that Uses(s, _)
-3, 4, 5, 6, 7, 8, 12, 13, 14, 15, 16
+3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15
 5000
-30 - Pattern Test 1
+30 - Pattern Test 1 (With double wildcard)
 assign a;
 Select a pattern a(_, _)
-2, 4, 5, 6, 10, 11, 14, 15
+2, 4, 5, 6, 9, 10, 13, 14
 5000
 31 - Pattern Test 2
 assign a;
@@ -177,7 +177,7 @@ assign a;
 Select a such that Uses(a, “number”) pattern a(_,_“10”_ )
 4, 6
 5000
-37 - Mix Test 2
+37 - Mix Test 2 (False statement)
 assign a; variable v;
 Select a such that Modifies(7, v) pattern a(_,_)
 none
@@ -185,12 +185,12 @@ none
 38 - Mix Test 3
 assign a; variable v; stmt s;
 Select s such that Parent(s, a) pattern a(_,_)
-3, 12
+3, 11, 12
 5000
 39 - Mix Test 4
 assign a; variable v; stmt s;
 Select s such that Parent*(s, a) pattern a(_,_)
-12
+3, 11, 12
 5000
 40 - Mix Test 5
 assign a; variable v;
@@ -200,7 +200,7 @@ none
 41 - Mix Test 6
 assign a; variable v;
 Select a such that Uses(a, v) pattern a(_,_)
-none
+4, 5, 6, 13, 14
 5000
 42 - Mix Test 7
 assign a; variable v;
@@ -215,12 +215,12 @@ sum, number
 44 - Edge Case 1
 assign a; variable v;
 Select a;
-2, 4, 5, 6, 10, 11, 14, 15
+1, 2, 4, 5, 6, 9, 10, 13, 14
 5000
 45 - Edge Case 2
 stmt s;
 Select s;
-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
 5000
 46 - Edge Case 3
 variable v;
@@ -252,22 +252,22 @@ stmt s;
 Select s such that Follows*(s, s)
 none
 5000
-52 - Edge Case 9
+52 - Edge Case 9 (Undeclared synonym)
 constant c; stmt s;
 Select a;
 none
 5000
-53 - Edge Case 10
+53 - Edge Case 10 (Invalid use of wildcard)
 stmt s; assign a; variable v; procedure p;
 Select s such that Modifies(_, v)
 none
 5000
-54 - Edge Case 11
+54 - Edge Case 11 (Invalid use of wildcard)
 stmt s; assign a; variable v; procedure p;
 Select s such that Uses(_, v)
 none
 5000
-55 - Edge Case 12
+55 - Edge Case 12 (Use of whitespaces)
 Stmt s;
 Select s        such     that            Follows(    4, s)
 5
