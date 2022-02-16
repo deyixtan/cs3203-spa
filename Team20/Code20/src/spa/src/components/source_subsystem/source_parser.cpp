@@ -6,12 +6,12 @@ SourceParser::SourceParser(std::vector<std::shared_ptr<SourceToken>> tokens_ptr)
     : m_cursor(0), m_curr_stmt_no(0), m_tokens_ptr(std::move(tokens_ptr)) {}
 
 bool SourceParser::AreTokensProcessed() {
-  return m_cursor >= m_tokens_ptr.size() - 1;
+  return m_cursor >= m_tokens_ptr.size();
 }
 
 std::shared_ptr<SourceToken> SourceParser::FetchToken(int tokens_ahead) {
   if (m_cursor + tokens_ahead >= m_tokens_ptr.size()) {
-    return nullptr;
+    throw EndOfStreamException();
   }
   return m_tokens_ptr[m_cursor + tokens_ahead];
 }
@@ -22,19 +22,12 @@ std::shared_ptr<SourceToken> SourceParser::FetchCurrentToken() {
 
 std::shared_ptr<SourceToken> SourceParser::ProcessToken(TokenType type) {
   std::shared_ptr<SourceToken> token_ptr = FetchCurrentToken();
-  if (token_ptr == nullptr) {
-    throw UnexpectedTokenException();
-  }
 
   if (token_ptr->GetType() != type) {
     throw MismatchedTokenException();
   }
 
-  if (m_cursor >= m_tokens_ptr.size()) {
-    throw EndOfStreamException();
-  }
   m_cursor++;
-
   return token_ptr;
 }
 
@@ -169,7 +162,7 @@ std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpress
     std::shared_ptr<ConditionalExpressionNode> right_expression = ParseConditionalExpression();
     ProcessToken(TokenType::CLOSED_PARENTHESIS);
     return std::make_shared<BooleanExpressionNode>(boolean_operator, left_expression, right_expression);
-  } else if (type == TokenType::NAME || type == TokenType::DIGIT) {
+  } else if (type == TokenType::NAME || type == TokenType::INTEGER) {
     // 'rel_expr' grammar can be reduced to 'factor'
     return ParseRelationalExpression();
   }
@@ -262,7 +255,7 @@ std::shared_ptr<ExpressionNode> SourceParser::ParseFactor() {
   TokenType type = FetchCurrentToken()->GetType();
   switch (type) {
     case TokenType::NAME:return std::make_shared<VariableNode>(ProcessToken(TokenType::NAME)->GetValue());
-    case TokenType::DIGIT:return std::make_shared<ConstantNode>(ProcessToken(TokenType::DIGIT)->GetValue());
+    case TokenType::INTEGER:return std::make_shared<ConstantNode>(ProcessToken(TokenType::INTEGER)->GetValue());
     case TokenType::OPENED_PARENTHESIS: {
       ProcessToken(TokenType::OPENED_PARENTHESIS);
       std::shared_ptr<ExpressionNode> expression = ParseExpression();
