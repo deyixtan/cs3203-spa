@@ -3,6 +3,8 @@
 
 #include "../pql_parser/parsed_query.h"
 #include "../../pkb/pkb.h"
+#include "query_condition.h"
+#include "query_result.h"
 
 #include <string>
 #include <unordered_set>

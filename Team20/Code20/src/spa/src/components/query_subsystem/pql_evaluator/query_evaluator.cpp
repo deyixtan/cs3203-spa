@@ -223,6 +223,60 @@ void QueryEvaluator::EvaluateSelectWithPattern(ParsedQuery &query) {
 
 void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query) {
   //TODO: implement
+
+  PqlToken selected_synonym = query.GetSynonym();
+  std::vector<Declaration> declarations = query.GetDeclaration();
+  Relationship relationship = query.GetRelationships().front();
+  Pattern pattern = query.GetPatterns().front();
+
+  PqlTokenType relationship_type = relationship.GetRelRef().type;
+
+  if (relationship.GetFirst().type != PqlTokenType::SYNONYM &&
+      relationship.GetSecond().type != PqlTokenType::SYNONYM) { // no synonym in such that clause
+    bool such_that_bool_result;
+
+    if (relationship_type == PqlTokenType::USES) {
+      // TODO: modify such_that_bool_result by calling from pkb
+    } else if (relationship_type == PqlTokenType::MODIFIES) {
+      // TODO: modify such_that_bool_result by calling from pkb
+    } else if (relationship_type == PqlTokenType::PARENT) {
+      // TODO: modify such_that_bool_result by calling from pkb
+    } else if (relationship_type == PqlTokenType::PARENT_T) {
+      // TODO: modify such_that_bool_result by calling from pkb
+    } else if (relationship_type == PqlTokenType::FOLLOWS) {
+      // TODO: modify such_that_bool_result by calling from pkb
+    } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
+      // TODO: modify such_that_bool_result by calling from pkb
+    }
+
+    if (such_that_bool_result) { // resort to select pattern
+      EvaluateSelectWithPattern(query);
+    } else { // none
+      return;
+    }
+
+  } else { // there is a synonym in such that clause
+    PqlToken rel_first_arg = relationship.GetFirst();
+    PqlToken rel_second_arg = relationship.GetSecond();
+    PqlToken pattern_ass_arg = pattern.GetSynAssign();
+    PqlToken pattern_first_arg = pattern.GetFirst();
+
+    QueryCondition rel_condition = QueryCondition(rel_first_arg, rel_second_arg);
+    QueryCondition pattern_condition = QueryCondition(pattern_ass_arg, pattern_first_arg);
+
+    std::unordered_set<std::pair<std::string, std::string>, pair_hash> rel_result_set; // TODO:call from pkb
+    std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_result_set; // TODO:call from pkb
+
+    std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> rel_column =
+        std::make_pair(rel_condition, rel_result_set);
+    std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> pattern_column =
+        std::make_pair(pattern_condition, pattern_result_set);
+
+    std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>> result_table =
+        {rel_column, pattern_column};
+    std::unordered_set<std::string> add_result = QueryResult(result_table).GetResult(selected_synonym);
+    result.insert(add_result.begin(), add_result.end());
+  }
 }
 
 }
