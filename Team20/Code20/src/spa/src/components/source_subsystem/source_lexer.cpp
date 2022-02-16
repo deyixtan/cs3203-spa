@@ -37,10 +37,6 @@ bool SourceLexer::HasMoreTokens() {
 }
 
 std::shared_ptr<SourceToken> SourceLexer::GetNextToken() {
-  if (!HasMoreTokens()) {
-    throw EndOfStreamException();
-  }
-
   std::string remaining_source = m_simple_source.substr(m_cursor);
   for (std::pair<std::regex, TokenType> lexer_spec : m_lexer_specs) {
     std::regex pattern_expression = lexer_spec.first;
@@ -54,7 +50,10 @@ std::shared_ptr<SourceToken> SourceLexer::GetNextToken() {
 
     std::string token_value = match[0].str();
     m_cursor += match[0].str().length();
-    return std::make_shared<SourceToken>(token_type, token_value);
+    if (token_type == TokenType::NAME || token_type == TokenType::INTEGER) {
+      return std::make_shared<SourceToken>(token_type, token_value);
+    }
+    return std::make_shared<SourceToken>(token_type, "");
   }
 
   throw UnexpectedTokenException();
