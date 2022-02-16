@@ -5,9 +5,21 @@ namespace pql_evaluator {
 void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &results) {
   result.clear();
 
-  if (query.GetRelationships().empty() && query.GetPatterns().empty()) { // only select
+  // Evaluation has 4 cases
+  // 1. Select
+  // 2. Select + Relationship
+  // 3. Select + Pattern
+  // 4. Select + Relationship + Pattern
+
+  // Draft algo for future iterations
+  // eval(Relationship) * n -> Table has restrictions on synonym values (single or pair)
+  // eval(Pattern) * n -> Table has restrictions on synonym values (single or pair)
+  // Select should find tables with the synonyms and then merge the tables
+  if (query.GetRelationships().empty() && query.GetPatterns().empty()) {
+    // only select
     EvaluateSelectOnly(query);
-  } else if (!query.GetRelationships().empty() && query.GetPatterns().empty()) { // select + 1 relationship
+  } else if (!query.GetRelationships().empty() && query.GetPatterns().empty()) {
+    // select + 1 relationship
     EvaluateSelectWithRelationship(query);
   } else if (query.GetRelationships().empty() && !query.GetPatterns().empty()) { // select + 1 pattern
     EvaluateSelectWithPattern(query);
@@ -49,6 +61,11 @@ void QueryEvaluator::EvaluateSelectOnly(ParsedQuery &query) {
     }
     case PqlTokenType::PRINT: {
       add_result = pkb->GetStmt(StmtType::PRINT);
+      result.insert(add_result.begin(), add_result.end());
+      break;
+    }
+    case PqlTokenType::CALL {
+      add_result = pkb->GetStmt(StmtType::CALL);
       result.insert(add_result.begin(), add_result.end());
       break;
     }
