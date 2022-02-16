@@ -8,7 +8,7 @@ TEST_CASE("Test source WHITESPACE token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::WHITE_SPACE);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: WHITE_SPACE, value: }");
 }
 
@@ -41,7 +41,7 @@ TEST_CASE("Test source OPENED_BRACES token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::OPENED_BRACES);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: OPENED_BRACES, value: }");
 }
 
@@ -52,7 +52,7 @@ TEST_CASE("Test source CLOSED_BRACES token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::CLOSED_BRACES);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: CLOSED_BRACES, value: }");
 }
 
@@ -63,7 +63,7 @@ TEST_CASE("Test source OPENED_PARENTHESIS token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::OPENED_PARENTHESIS);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: OPENED_PARENTHESIS, value: }");
 }
 
@@ -74,7 +74,7 @@ TEST_CASE("Test source CLOSED_PARENTHESIS token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::CLOSED_PARENTHESIS);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: CLOSED_PARENTHESIS, value: }");
 }
 
@@ -85,7 +85,7 @@ TEST_CASE("Test source NOT token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::NOT);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: NOT, value: }");
 }
 
@@ -96,7 +96,7 @@ TEST_CASE("Test source AND token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::AND);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: AND, value: }");
 }
 
@@ -107,7 +107,7 @@ TEST_CASE("Test source OR token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::OR);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: OR, value: }");
 }
 
@@ -118,7 +118,7 @@ TEST_CASE("Test source IS_GREATER token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::IS_GREATER);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: IS_GREATER, value: }");
 }
 
@@ -129,7 +129,7 @@ TEST_CASE("Test source IS_GREATER_EQUAL token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::IS_GREATER_EQUAL);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: IS_GREATER_EQUAL, value: }");
 }
 
@@ -140,7 +140,7 @@ TEST_CASE("Test source IS_LESSER token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::IS_LESSER);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: IS_LESSER, value: }");
 }
 
@@ -151,7 +151,7 @@ TEST_CASE("Test source IS_LESSER_EQUAL token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::IS_LESSER_EQUAL);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: IS_LESSER_EQUAL, value: }");
 }
 
@@ -162,7 +162,7 @@ TEST_CASE("Test source IS_EQUAL token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::IS_EQUAL);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: IS_EQUAL, value: }");
 }
 
@@ -173,7 +173,7 @@ TEST_CASE("Test source IS_NOT_EQUAL token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::IS_NOT_EQUAL);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: IS_NOT_EQUAL, value: }");
 }
 
@@ -184,7 +184,7 @@ TEST_CASE("Test source ADDITION token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::ADDITION);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: ADDITION, value: }");
 }
 
@@ -195,7 +195,7 @@ TEST_CASE("Test source SUBTRACTION token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::SUBTRACTION);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: SUBTRACTION, value: }");
 }
 
@@ -206,7 +206,7 @@ TEST_CASE("Test source MULTIPLICATION token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::MULTIPLICATION);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: MULTIPLICATION, value: }");
 }
 
@@ -217,7 +217,7 @@ TEST_CASE("Test source DIVISION token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::DIVISION);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: DIVISION, value: }");
 }
 
@@ -228,7 +228,7 @@ TEST_CASE("Test source MODULUS token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::MODULUS);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: MODULUS, value: }");
 }
 
@@ -239,7 +239,7 @@ TEST_CASE("Test source EQUAL token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::EQUAL);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: EQUAL, value: }");
 }
 
@@ -250,7 +250,7 @@ TEST_CASE("Test source SEMI_COLON token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::SEMI_COLON);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: SEMI_COLON, value: }");
 }
 
@@ -283,7 +283,7 @@ TEST_CASE("Test source WHILE token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::WHILE);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: WHILE, value: }");
 }
 
@@ -294,7 +294,7 @@ TEST_CASE("Test source IF token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::IF);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: IF, value: }");
 }
 
@@ -305,7 +305,7 @@ TEST_CASE("Test source THEN token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::THEN);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: THEN, value: }");
 }
 
@@ -316,7 +316,7 @@ TEST_CASE("Test source ELSE token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::ELSE);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: ELSE, value: }");
 }
 
@@ -338,6 +338,6 @@ TEST_CASE("Test source UNKNOWN token") {
   std::string typeStr = token.ToString();
 
   REQUIRE(type == source::TokenType::UNKNOWN);
-  REQUIRE(value == "");
+  REQUIRE(std::empty(value));
   REQUIRE(typeStr == "{ type: UNKNOWN, value: }");
 }
