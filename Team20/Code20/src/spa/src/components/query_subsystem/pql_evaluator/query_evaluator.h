@@ -22,6 +22,8 @@ class QueryEvaluator {
   void EvaluateSelect(ParsedQuery&);
   void EvaluateSelectOnly(ParsedQuery&  query);
   void EvaluateSelectWithRelationship(ParsedQuery& query);
+  void EvaluateSelectWithPattern(ParsedQuery& query);
+  void EvaluateSelectWithRelationshipAndPattern(ParsedQuery& query);
 };
 
 }
