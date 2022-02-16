@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "hash.h"
+#include <vector>
 
 // A struct to maintain every node's relationships
 struct parent_child {
@@ -37,7 +38,7 @@ class ParentStore {
 
   void AddParentStmt(std::string parent, std::string child);
 
-  void AddParentStarStmt();
+  void AddParentStarStmt(std::string stmt, std::vector<std::string> visited);
 
   std::string GetParentOf(std::string stmt);
 

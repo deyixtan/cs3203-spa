@@ -36,13 +36,23 @@ void ParentStore::AddParentStmt(std::string parent, std::string child) {
   }
 
   parent_child_set.insert(std::make_pair(parent, child));
+  parent_set.insert(parent);
   rs_map.at(parent).child = child;
   rs_map.at(child).parent = parent;
   rs_map.at(parent).desc.insert(child);
   rs_map.at(child).ance.insert(parent);
 }
 
-//TODO: AddParentStarStmt
+void ParentStore::AddParentStarStmt(std::string stmt, std::vector<std::string> visited) {
+  for (std::string s : visited) {
+    if (rs_map.find(stmt) == rs_map.end()) {
+      rs_map.insert({stmt, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
+    }
+
+    rs_map.at(stmt).ance.insert(s);
+    ance_set.insert(s);
+  }
+}
 
 // Used for Parent(s1, s2)
 bool ParentStore::ParentChildExists(std::string stmt1, std::string stmt2) {

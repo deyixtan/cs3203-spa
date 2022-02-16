@@ -104,6 +104,22 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
   return result;
 }
 
+std::unordered_set<std::string> PKB::GetFollowOf(std::string stmt) {
+  follow_store.GetFollowingOf(stmt);
+}
+
+std::unordered_set<std::string> PKB::GetFollowStarOf(std::string stmt) {
+  follow_store.GetFollowingStarOf(stmt);
+}
+
+std::unordered_set<std::string> PKB::GetParentOf(std::string stmt) {
+  parent_store.GetParentOf(stmt);
+}
+
+std::unordered_set<std::string> PKB::GetParentStarOf(std::string stmt) {
+  parent_store.GetAllAnceOf(stmt);
+}
+
 void PKB::AddFollowStmt(std::string stmt1, std::string stmt2) {
   follow_store.AddFollow(stmt1, stmt2);
 }
@@ -116,7 +132,9 @@ void PKB::AddParentStmt(std::string stmt1, std::string stmt2) {
   parent_store.AddParentStmt(stmt1, stmt2);
 }
 
-//TODO: AddParentStarStmt
+void PKB::AddParentStarStmt(std::string stmt, std::vector<std::string> visited) {
+  parent_store.AddParentStarStmt(stmt, visited);
+}
 
 /* Getters */
 

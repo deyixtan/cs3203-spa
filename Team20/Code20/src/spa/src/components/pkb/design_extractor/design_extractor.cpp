@@ -5,19 +5,19 @@ DesignExtractor::DesignExtractor(ProgramNode root_node, PKB *pkb) :
     root_node(root_node), pkb(pkb) {
   this->root_node = root_node;
   this->pkb = pkb;
-  this->storage = storage;
 }
 
 void DesignExtractor::TraverseAst() {
   std::vector<std::shared_ptr<ProcedureNode>> proc_list = this->root_node.GetProcedures();
   for (auto &proc : proc_list) {
     std::shared_ptr<StatementListNode> stmtLst = proc->GetStatementList();
+    std::vector<std::string> visited;
     PopulateProc(proc->GetIdentifier());
-    ProcNodeHandler(proc, stmtLst);
+    ProcNodeHandler(visited, proc, stmtLst);
   }
 }
 
-void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst) {
+void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst) {
   std::vector<std::shared_ptr<StatementNode>> stmts = stmtLst->GetStatements();
 
   for (int i = 0; i < stmts.size(); ++i) {
@@ -32,6 +32,8 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
       PopulateFollows(std::to_string(curr_stmt), std::to_string(next_stmt));
       PopulateFollowsStar(stmts, i);
     }
+
+    PopulateParentStar(stmt_num, visited);
 
     switch(stmt_type) {
       case PROC:
@@ -78,8 +80,10 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
         PopulateStmt(stmt_num);
         std::shared_ptr<WhileStatementNode> while_stmt = static_pointer_cast<WhileStatementNode>(stmt);
         std::shared_ptr<ConditionalExpressionNode> while_stmt_cond = while_stmt->GetCondition();
+        std::string while_stmt_num = std::to_string(while_stmt->GetStatementNumber());
+        visited.push_back(while_stmt_num);
 
-        CondExprNodeHandler(stmt_num, while_stmt_cond);
+        CondExprNodeHandler(visited, stmt_num, while_stmt_cond);
 
         std::shared_ptr<StatementListNode> while_block = while_stmt->GetStatementList();
         std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
@@ -89,16 +93,19 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
           PopulateParent(stmt_num, std::to_string(curr));
         }
 
-        ProcNodeHandler(proc, while_block);
+        ProcNodeHandler(visited, proc, while_block);
         PopulateWhile(stmt_num);
+        visited.clear();
         break;
       }
       case IF: {
         PopulateStmt(stmt_num);
         std::shared_ptr<IfStatementNode> if_stmt = static_pointer_cast<IfStatementNode>(stmt);
         std::shared_ptr<ConditionalExpressionNode> if_stmt_cond = if_stmt->GetCondition();
+        std::string if_stmt_num = std::to_string(if_stmt->GetStatementNumber());
+        visited.push_back(if_stmt_num);
 
-        CondExprNodeHandler(stmt_num, if_stmt_cond);
+        CondExprNodeHandler(visited, stmt_num, if_stmt_cond);
 
         std::shared_ptr<StatementListNode> if_block = if_stmt->GetIfStatementList();
         std::vector<std::shared_ptr<StatementNode>> if_stmts = if_block->GetStatements();
@@ -115,18 +122,17 @@ void DesignExtractor::ProcNodeHandler(std::shared_ptr<ProcedureNode> proc, std::
           PopulateParent(stmt_num, std::to_string(curr));
         }
 
-        ProcNodeHandler(proc, if_block);
-        ProcNodeHandler(proc, else_block);
+        ProcNodeHandler(visited, proc, if_block);
+        ProcNodeHandler(visited, proc, else_block);
         PopulateIf(stmt_num);
+        visited.clear();
         break;
       }
     }
-
-    //TODO: PopulateParentStar();
   }
 }
 
-void DesignExtractor::CondExprNodeHandler(std::string stmt, std::shared_ptr<ConditionalExpressionNode> if_stmt_cond) {
+void DesignExtractor::CondExprNodeHandler(std::vector<std::string> visited, std::string stmt, std::shared_ptr<ConditionalExpressionNode> if_stmt_cond) {
   ConditionalType cond = if_stmt_cond->GetConditionalType();
 
   switch(cond) {
@@ -135,14 +141,14 @@ void DesignExtractor::CondExprNodeHandler(std::string stmt, std::shared_ptr<Cond
       std::shared_ptr<ConditionalExpressionNode> left = bool_node->GetLeftExpression();
       std::shared_ptr<ConditionalExpressionNode> right = bool_node->GetRightExpression();
 
-      CondExprNodeHandler(stmt, left);
-      CondExprNodeHandler(stmt, right);
+      CondExprNodeHandler(visited, stmt, left);
+      CondExprNodeHandler(visited, stmt, right);
       break;
     }
     case ConditionalType::NOT: {
       std::shared_ptr<NotExpressionNode> not_node = static_pointer_cast<NotExpressionNode>(if_stmt_cond);
       std::shared_ptr<ConditionalExpressionNode> expr = not_node->GetExpression();
-      CondExprNodeHandler(stmt, expr);
+      CondExprNodeHandler(visited, stmt, expr);
       break;
     }
     case ConditionalType::RELATIONAL: {
@@ -237,7 +243,9 @@ void DesignExtractor::PopulateParent(std::string stmt1, std::string stmt2) {
   this->pkb->AddParentStmt(stmt1, stmt2);
 }
 
-//TODO: PopulateParentStar
+void DesignExtractor::PopulateParentStar(std::string stmt, std::vector<std::string> visited) {
+  this->pkb->AddParentStarStmt(stmt, visited);
+}
 
 void DesignExtractor::PopulateFollows(std::string stmt1, std::string stmt2) {
   this->pkb->AddFollowStmt(stmt1, stmt2);

@@ -52,7 +52,7 @@ class PKB {
   void AddFollowStarStmt(std::string stmt1, std::string stmt2);
 
   void AddParentStmt(std::string stmt1, std::string stmt2);
-  void AddParentStarStmt();
+  void AddParentStarStmt(std::string stmt, std::vector<std::string> visited);
 
   /* Getters */
   std::unordered_set<std::string> GetStmt(StmtType type);
@@ -74,8 +74,10 @@ class PKB {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModProcVar();
 
   std::unordered_set<std::string> GetStmtWithPattern(std::string lhs, std::string rhs);
-  std::unordered_set<std::string> GetFollowerOf(std::string stmt);
-  std::unordered_set<std::string> GetFollowingOf(std::string stmt);
+  std::unordered_set<std::string> GetFollowOf(std::string stmt);
+  std::unordered_set<std::string> GetFollowStarOf(std::string stmt);
+  std::unordered_set<std::string> GetParentOf(std::string stmt);
+  std::unordered_set<std::string> GetParentStarOf(std::string stmt);
 
   /* Checkers */
   bool IsUsageStmtVarExist(std::pair<std::string, std::string> pair);
