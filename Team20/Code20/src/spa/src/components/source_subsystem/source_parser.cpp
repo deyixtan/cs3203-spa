@@ -6,12 +6,12 @@ SourceParser::SourceParser(std::vector<std::shared_ptr<SourceToken>> tokens_ptr)
     : m_cursor(0), m_curr_stmt_no(0), m_tokens_ptr(std::move(tokens_ptr)) {}
 
 bool SourceParser::AreTokensProcessed() {
-  return m_cursor >= m_tokens_ptr.size() - 1;
+  return m_cursor >= m_tokens_ptr.size();
 }
 
 std::shared_ptr<SourceToken> SourceParser::FetchToken(int tokens_ahead) {
   if (m_cursor + tokens_ahead >= m_tokens_ptr.size()) {
-    return nullptr;
+    throw EndOfStreamException();
   }
   return m_tokens_ptr[m_cursor + tokens_ahead];
 }
@@ -22,19 +22,12 @@ std::shared_ptr<SourceToken> SourceParser::FetchCurrentToken() {
 
 std::shared_ptr<SourceToken> SourceParser::ProcessToken(TokenType type) {
   std::shared_ptr<SourceToken> token_ptr = FetchCurrentToken();
-  if (token_ptr == nullptr) {
-    throw UnexpectedTokenException();
-  }
 
   if (token_ptr->GetType() != type) {
     throw MismatchedTokenException();
   }
 
-  if (m_cursor >= m_tokens_ptr.size()) {
-    throw EndOfStreamException();
-  }
   m_cursor++;
-
   return token_ptr;
 }
 
