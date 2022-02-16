@@ -344,7 +344,10 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
     } else { // none
       return;
     }
-  } else { // TODO: exception
+  } else {
+    // TODO: exception
+    // TODO: Parent/Parent*
+    // TODO: Follows/Follows*
 
   }
 }
