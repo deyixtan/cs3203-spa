@@ -182,6 +182,15 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllMo
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
 
   switch (type) {
+    case STMT:
+      for (auto i : mod_stmt_var_list) {
+        for (auto j : stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
     case READ:
       for (auto i : mod_stmt_var_list) {
         for (auto j : read_stmt_list) {
@@ -210,6 +219,15 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllUs
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
 
   switch (type) {
+    case STMT:
+      for (auto i : uses_stmt_list) {
+        for (auto j : stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
     case WHILE:
       for (auto i : uses_stmt_list) {
         for (auto j : while_stmt_list) {
@@ -256,6 +274,15 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
 
   switch (type) {
+    case STMT:
+      for (auto i : follow_stmt_list) {
+        for (auto j : stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
     case READ:
       for (auto i : follow_stmt_list) {
         for (auto j : read_stmt_list) {
@@ -311,6 +338,15 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
 
   switch (type) {
+    case STMT:
+      for (auto i : follow_star_stmt_list) {
+        for (auto j : stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
     case READ:
       for (auto i : follow_star_stmt_list) {
         for (auto j : read_stmt_list) {
@@ -366,6 +402,15 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
 
   switch (type) {
+    case STMT:
+      for (auto i : parent_child_list) {
+        for (auto j : stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
     case IF:
       for (auto i : parent_child_list) {
         for (auto j : if_stmt_list) {
@@ -394,6 +439,15 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
 
   switch (type) {
+    case STMT:
+      for (auto i : ance_desc_list) {
+        for (auto j : stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
     case IF:
       for (auto i : ance_desc_list) {
         for (auto j : if_stmt_list) {
