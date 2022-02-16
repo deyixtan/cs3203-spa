@@ -49,6 +49,7 @@ void ParentStore::AddParentStarStmt(std::string stmt, std::vector<std::string> v
       rs_map.insert({stmt, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
     }
 
+    ance_desc_set.insert(std::make_pair(s, stmt));
     rs_map.at(stmt).ance.insert(s);
     ance_set.insert(s);
   }
@@ -116,4 +117,8 @@ std::unordered_set<std::string> ParentStore::GetAllDescOf(std::string stmt) {
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetParentChildPairs() {
   return parent_child_set;
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAnceDescPairs() {
+  return ance_desc_set;
 }

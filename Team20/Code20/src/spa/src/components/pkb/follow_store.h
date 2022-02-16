@@ -47,7 +47,9 @@ class FollowStore {
 
   std::unordered_set<std::string> GetFollowingStarOf(std::string stmt);
 
-  //std::unordered_set<std::pair<int, int>, pair_hash> get_follow_pairs();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowPairs();
+
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowStarPairs();
 
  private:
   std::unordered_map<std::string, node> rs_map;

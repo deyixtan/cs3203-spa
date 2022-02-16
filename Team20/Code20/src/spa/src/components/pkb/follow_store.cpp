@@ -104,3 +104,11 @@ std::unordered_set<std::string> FollowStore::GetFollowingStarOf(std::string stmt
   }
   return {};
 }
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowStore::GetFollowPairs() {
+  return all_follow_pairs;
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowStore::GetFollowStarPairs() {
+  return all_follow_star_pairs;
+}

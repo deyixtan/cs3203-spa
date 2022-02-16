@@ -52,9 +52,12 @@ class ParentStore {
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetParentChildPairs();
 
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAnceDescPairs();
+
  private:
   std::unordered_map<std::string, parent_child> rs_map;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> parent_child_set;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> ance_desc_set;
   std::unordered_set<std::string> ance_set;
   std::unordered_set<std::string> desc_set;
   std::unordered_set<std::string> parent_set;
