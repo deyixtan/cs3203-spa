@@ -15,8 +15,6 @@ std::string SourceToken::GetValue() {
 std::string SourceToken::ToString() {
   std::string type_str;
   switch (m_type) {
-    case TokenType::UNKNOWN:type_str = "UNKNOWN";
-      break;
     case TokenType::WHITE_SPACE:type_str = "WHITE_SPACE";
       break;
     case TokenType::DIGIT:type_str = "DIGIT";
@@ -77,6 +75,8 @@ std::string SourceToken::ToString() {
       break;
     case TokenType::ELSE:type_str = "ELSE";
       break;
+    default:
+      type_str = "UNKNOWN";
   }
   return "{ type: " + type_str + ", value: " + m_value + "}";
 }
