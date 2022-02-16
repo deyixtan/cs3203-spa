@@ -112,13 +112,15 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       // 3. Uses(s, "x")
       if (select_syonym.value==first_arg.value) {
         add_result = pkb->GetStmtUsedByVar(second_arg.value);
+        result.insert(add_result.begin(), add_result.end());
       } else { // selected synonym is not in the Uses clause
         EvaluateSelectOnly(query);
       }
     } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
       // 4. Uses(1, v)
-      if (select_syonym.value==first_arg.value) {
+      if (select_syonym.value==second_arg.value) {
         add_result = pkb->GetVarUsedByStmt(first_arg.value);
+        result.insert(add_result.begin(), add_result.end());
       } else { // selected synonym is not in the Uses clause
         EvaluateSelectOnly(query);
       }
@@ -138,6 +140,64 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
     // 6. Uses(1, "x")
     std::pair arg_pair(first_arg.value, second_arg.value);
     bool is_true = pkb->IsUsageStmtVarExist(arg_pair);
+    if (is_true) { // defaults to case with just select
+      EvaluateSelectOnly(query);
+    } else { // none
+      return;
+    }
+  } else if (rel_ref==PqlTokenType::MODIFIES) {
+    // 6 Total Cases same as UsesS
+    // Only handles ModifiesS TODO: need to specialize Modifies -> ModifiesS vs ModifiesP
+    if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+      // 1. Modifies(s, v)
+      if (select_syonym.value==first_arg.value) {
+        //TODO: need pkb to get all statements that modify some variable
+      } else if (select_syonym.value==second_arg.value) {
+        //TODO: need pkb to get all variables that are modified in statements
+      } else { // not equal to any
+        // is this correct handling?
+        // TODO: do we need to check if Modifies(s, v) is non-empty???
+        EvaluateSelectOnly(query);
+      }
+    } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
+      // 2. Modifies(s, _)
+      if (select_syonym.value==first_arg.value) {
+        //TODO: need pkb to get all statements that modify any variable
+      } else {
+        EvaluateSelectOnly(query);
+      }
+    } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
+      // 3. Modifies(s, "x")
+      if (select_syonym.value==first_arg.value) {
+        add_result = pkb->GetStmtModByVar(second_arg.value);
+        result.insert(add_result.begin(), add_result.end());
+      } else { // selected synonym is not in the Uses clause
+        EvaluateSelectOnly(query);
+      }
+    } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
+      // 4. Modifies(1, v)
+      if (select_syonym.value==second_arg.value) {
+        add_result = pkb->GetVarModByStmt(first_arg.value);
+        result.insert(add_result.begin(), add_result.end());
+      } else { // selected synonym is not in the Uses clause
+        EvaluateSelectOnly(query);
+      }
+    }
+  } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
+    // 5. Modifies(1, _)
+    if (!pkb->GetVarModByStmt(first_arg.value).empty()) {
+      // line does not use any variables
+      // false
+      return;
+    } else {
+      // line uses some variable
+      // true
+      EvaluateSelectOnly(query);
+    }
+  } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
+    // 6. Modifies(1, "x")
+    std::pair arg_pair(first_arg.value, second_arg.value);
+    bool is_true = pkb->IsModifyStmtVarExist(arg_pair);
     if (is_true) { // defaults to case with just select
       EvaluateSelectOnly(query);
     } else { // none
