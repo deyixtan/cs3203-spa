@@ -19,7 +19,6 @@ class QueryEvaluator {
  private:
   std::unordered_set<std::string> result;
   PKB *pkb;
-  void EvaluateSelect(ParsedQuery&);
   void EvaluateSelectOnly(ParsedQuery&  query);
   void EvaluateSelectWithRelationship(ParsedQuery& query);
   void EvaluateSelectWithPattern(ParsedQuery& query);
