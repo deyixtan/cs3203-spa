@@ -232,6 +232,7 @@ std::string DesignExtractor::ExprNodeHandler(std::string stmt_num, std::shared_p
         pattern = var_name + ")";
       }
       PopulateVars(var_name);
+      PopulateUses(stmt_num, var_name);
       break;
     }
   }
