@@ -169,7 +169,7 @@ std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpress
     std::shared_ptr<ConditionalExpressionNode> right_expression = ParseConditionalExpression();
     ProcessToken(TokenType::CLOSED_PARENTHESIS);
     return std::make_shared<BooleanExpressionNode>(boolean_operator, left_expression, right_expression);
-  } else if (type == TokenType::NAME || type == TokenType::DIGIT) {
+  } else if (type == TokenType::NAME || type == TokenType::INTEGER) {
     // 'rel_expr' grammar can be reduced to 'factor'
     return ParseRelationalExpression();
   }
@@ -262,7 +262,7 @@ std::shared_ptr<ExpressionNode> SourceParser::ParseFactor() {
   TokenType type = FetchCurrentToken()->GetType();
   switch (type) {
     case TokenType::NAME:return std::make_shared<VariableNode>(ProcessToken(TokenType::NAME)->GetValue());
-    case TokenType::DIGIT:return std::make_shared<ConstantNode>(ProcessToken(TokenType::DIGIT)->GetValue());
+    case TokenType::INTEGER:return std::make_shared<ConstantNode>(ProcessToken(TokenType::INTEGER)->GetValue());
     case TokenType::OPENED_PARENTHESIS: {
       ProcessToken(TokenType::OPENED_PARENTHESIS);
       std::shared_ptr<ExpressionNode> expression = ParseExpression();

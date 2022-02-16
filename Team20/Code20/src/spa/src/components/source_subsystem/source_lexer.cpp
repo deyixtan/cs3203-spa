@@ -8,7 +8,7 @@ SourceLexer::SourceLexer(std::string simple_source) : m_cursor(0), m_simple_sour
 
 void SourceLexer::ConstructLexerSpecs() {
   m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^\\s+", TokenType::WHITE_SPACE));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^\\d+", TokenType::DIGIT));
+  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^\\d+", TokenType::INTEGER));
   m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[a-zA-Z]+[a-zA-Z0-9]*", TokenType::NAME));
   m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[{]", TokenType::OPENED_BRACES));
   m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[}]", TokenType::CLOSED_BRACES));

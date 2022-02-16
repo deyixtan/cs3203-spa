@@ -11,8 +11,8 @@ source::SourceToken x_val_token = source::SourceToken(source::TokenType::NAME, "
 source::SourceToken y_val_token = source::SourceToken(source::TokenType::NAME, "y");
 source::SourceToken z_val_token = source::SourceToken(source::TokenType::NAME, "z");
 source::SourceToken equal_token = source::SourceToken(source::TokenType::EQUAL, "=");
-source::SourceToken digit_token = source::SourceToken(source::TokenType::DIGIT, "2");
-source::SourceToken digit_five_token = source::SourceToken(source::TokenType::DIGIT, "5");
+source::SourceToken digit_token = source::SourceToken(source::TokenType::INTEGER, "2");
+source::SourceToken digit_five_token = source::SourceToken(source::TokenType::INTEGER, "5");
 source::SourceToken source_if_token = source::SourceToken(source::TokenType::IF, "");
 source::SourceToken source_then_token = source::SourceToken(source::TokenType::THEN, "");
 source::SourceToken source_else_token = source::SourceToken(source::TokenType::ELSE, "");
