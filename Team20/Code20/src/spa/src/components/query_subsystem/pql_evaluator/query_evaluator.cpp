@@ -230,24 +230,71 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 2. Uses(s, _)
         if (select_synonym.value==first_arg.value) {
-          if (select_synonym_design_entity==PqlTokenType::STMT) {
-            add_result = pkb->GetAllStmtUsing();
-            result.insert(add_result.begin(), add_result.end());
-          } else if (select_synonym_design_entity==PqlTokenType::PRINT) {
-            pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
-            for (auto pair : pair_result) {
-              add_result.insert(pair.first);
+          switch (select_synonym_design_entity) {
+            case PqlTokenType::STMT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::STMT);
+              break;
             }
-            result.insert(add_result.begin(), add_result.end());
-          } else if (select_synonym_design_entity==PqlTokenType::ASSIGN) {
-            pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
-            for (auto pair : pair_result) {
-              add_result.insert(pair.first);
+            case PqlTokenType::ASSIGN: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
+              break;
             }
-            result.insert(add_result.begin(), add_result.end());
+            case PqlTokenType::WHILE: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::WHILE);
+              break;
+            }
+            case PqlTokenType::IF: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::IF);
+              break;
+            }
+            case PqlTokenType::PRINT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+              break;
+            }
+            default: {
+              // do nothing
+              return;
+            }
+          }
+          for (auto pair : pair_result) {
+            add_result.insert(pair.first);
           }
         } else {
-          EvaluateSelectOnly(query);
+          // Check is Uses(s, _) is non-empty
+
+          PqlTokenType first_arg_design_entity;
+          for (auto declaration : declarations) {
+            if (declaration.GetSynonym().value==first_arg.value) {
+              first_arg_design_entity = declaration.GetDesignEntity().type;
+            }
+          }
+
+          switch (first_arg_design_entity) {
+            case PqlTokenType::STMT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::STMT);
+            }
+            case PqlTokenType::ASSIGN: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
+            }
+            case PqlTokenType::WHILE: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::WHILE);
+            }
+            case PqlTokenType::IF: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::IF);
+            }
+            case PqlTokenType::PRINT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+            }
+            default: {
+              // do nothing
+              return;
+            }
+          }
+
+          if (!pair_result.empty()) {
+            EvaluateSelectOnly(query);
+          }
+
         }
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
         // 3. Uses(s, "x")
