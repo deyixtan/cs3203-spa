@@ -139,6 +139,28 @@ void set_up_pkb() {
   pkb->AddModifyStmtVar("10", "snake");
   pkb->AddModifyStmtVar("15", "monkey");
 
+  pkb->AddFollowStmt("1", "2");
+  pkb->AddFollowStmt("2", "3");
+  pkb->AddFollowStmt("3", "4");
+  pkb->AddFollowStmt("8", "9");
+  pkb->AddFollowStmt("10", "11");
+  pkb->AddFollowStmt("13", "14");
+
+  pkb->AddFollowStarStmt("1", "2");
+  pkb->AddFollowStarStmt("1", "3");
+  pkb->AddFollowStarStmt("1", "4");
+  pkb->AddFollowStarStmt("1", "5");
+  pkb->AddFollowStarStmt("2", "3"),
+  pkb->AddFollowStarStmt("2", "4"),
+  pkb->AddFollowStarStmt("2", "5"),
+  pkb->AddFollowStarStmt("3", "4"),
+  pkb->AddFollowStarStmt("3", "5"),
+  pkb->AddFollowStarStmt("4", "5"),
+  pkb->AddFollowStarStmt("8", "9"),
+  pkb->AddFollowStarStmt("8", "9");
+  pkb->AddFollowStarStmt("10", "11");
+  pkb->AddFollowStarStmt("13", "14");
+
   pkb->AddPattern("4", "dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))");
   pkb->AddPattern("7", "pig", "(ox+cat)");
   pkb->AddPattern("8", "dragon", "((dog*rabbit)/mouse)");
@@ -531,6 +553,122 @@ TEST_CASE("Check if modifies stmt-var pair exists (wrong)") {
 }
 
 /* FOLLOW STORE */
+
+//TEST_CASE("Check if stmt is a follower") {
+//  set_up_pkb();
+//  PKB *pkb = PKB::GetInstance();
+//  auto actual = pkb->IsFollower({"5", "cat"});
+//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
+//
+//  REQUIRE(actual == false);
+//  REQUIRE(expected == false);
+//}
+//
+//TEST_CASE("Check if stmt is a following") {
+//  set_up_pkb();
+//  PKB *pkb = PKB::GetInstance();
+//  auto actual = pkb->IsModifyStmtVarExist({"5", "cat"});
+//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
+//
+//  REQUIRE(actual == false);
+//  REQUIRE(expected == false);
+//}
+//
+//TEST_CASE("Check if stmt is a follower star") {
+//  set_up_pkb();
+//  PKB *pkb = PKB::GetInstance();
+//  auto actual = pkb->IsModifyStmtVarExist({"5", "cat"});
+//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
+//
+//  REQUIRE(actual == false);
+//  REQUIRE(expected == false);
+//}
+//
+//TEST_CASE("Check if stmt is a following star") {
+//  set_up_pkb();
+//  PKB *pkb = PKB::GetInstance();
+//  auto actual = pkb->IsModifyStmtVarExist({"5", "cat"});
+//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
+//
+//  REQUIRE(actual == false);
+//  REQUIRE(expected == false);
+//}
+
+TEST_CASE("Check if follow pair exists") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsFollowExist({"8", "9"});
+  auto expected = follow_pairs.find({"8", "9"}) != follow_pairs.end();
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check if follow star pair exists") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsFollowStarExist({"1", "4"});
+  auto expected = follow_star_pairs.find({"1", "4"}) != follow_star_pairs.end();
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get follows of a stmt") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetFollowOf("2");
+  auto expected = relationships.at("2").following;
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get follows star of a stmt") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetFollowStarOf("2");
+  auto expected = relationships.at("2").following_star;
+
+  REQUIRE(actual == expected);
+}
+
+//TEST_CASE("Get all follow statements") {
+//  set_up_pkb();
+//  PKB *pkb = PKB::GetInstance();
+//  auto actual = pkb->GetAllFollowStmt(STMT);
+//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
+//
+//  REQUIRE(actual == false);
+//  REQUIRE(expected == false);
+//}
+//
+//TEST_CASE("Get all follow star statements") {
+//  set_up_pkb();
+//  PKB *pkb = PKB::GetInstance();
+//  auto actual = pkb->GetAllFollowStarStmt(STMT);
+//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
+//
+//  REQUIRE(actual == false);
+//  REQUIRE(expected == false);
+//}
+
+void Init(int num_stmts);
+
+void AddFollow(std::string parent, std::string child);
+
+void AddFollowStar(std::string parent, std::string child);
+
+std::unordered_set<std::string> GetAllFollowers();
+
+std::string GetFollowerOf(std::string stmt);
+
+std::string GetFollowingOf(std::string stmt);
+
+std::unordered_set<std::string> GetFollowerStarOf(std::string stmt);
+
+std::unordered_set<std::string> GetFollowingStarOf(std::string stmt);
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowPairs();
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowStarPairs();
 
 
 /* PARENT STORE */

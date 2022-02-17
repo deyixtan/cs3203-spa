@@ -64,6 +64,8 @@ std::unordered_map<std::string, std::string> stmt_to_proc =
         {"15", "func"}
     };
 
+/* USES STORE */
+
 std::unordered_map<std::string, std::unordered_set<std::string>> uses_proc_to_var =
     {
         {"main", {"dog", "cat", "mouse", "pig", "ox", "dragon", "rabbit"}},
@@ -222,6 +224,65 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> mod_stmt_var_
 
 std::unordered_set<std::string> all_stmt_mod = {"1", "4", "7", "8", "10", "15"};
 std::unordered_set<std::string> all_proc_mod = {"main", "foo", "func"};
+
+/* FOLLOW STORE */
+
+std::unordered_map<std::string, FollowStore::node> relationships =
+    {
+        {"1", {"0", "2", {}, {"2", "3", "4", "5"}}},
+        {"2", {"1", "3", {"1"}, {"3", "4", "5"}}},
+        {"3", {"2", "4", {"1", "2"}, {"4", "5"}}},
+        {"4", {"3", "5", {"1", "2", "3"}, {"5"}}},
+        {"5", {"4", "0", {"1", "2", "3", "4"}, {}}},
+        {"6", {"0", "0", {}, {}}},
+        {"7", {"0", "0", {}, {}}},
+        {"8", {"0", "9", {}, {"9"}}},
+        {"9", {"8", "0", {"8"}, {}}},
+        {"10", {"0", "11", {}, {"11"}}},
+        {"11", {"10", "0", {"10"}, {}}},
+        {"12", {"0", "0", {}, {}}},
+        {"13", {"0", "14", {}, {"14"}}},
+        {"14", {"13", "0", {"13"}, {}}},
+        {"15", {"0", "0", {}, {}}},
+    };
+
+std::unordered_set<std::string> follower_stars = {"1", "2", "3", "4", "8", "10", "13"};
+
+std::unordered_set<std::string> following_stars = {"2", "3", "4", "5", "9", "11", "14"};
+
+std::unordered_set<std::string> followers = {"1", "2", "3", "4", "8", "10", "13"};
+
+std::unordered_set<std::string> followings = {"2", "3", "4", "5", "9", "11", "14"};
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash > follow_pairs =
+    {
+        {"1", "2"},
+        {"2", "3"},
+        {"3", "4"},
+        {"8", "9"},
+        {"10", "11"},
+        {"13", "14"},
+    };
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash > follow_star_pairs =
+    {
+        {"1", "2"},
+        {"1", "3"},
+        {"1", "4"},
+        {"1", "5"},
+        {"2", "3"},
+        {"2", "4"},
+        {"2", "5"},
+        {"3", "4"},
+        {"3", "5"},
+        {"4", "5"},
+        {"8", "9"},
+        {"10", "11"},
+        {"13", "14"},
+    };
+
+
+/* GENERAL */
 
 std::unordered_set<std::string> var_list = {"dog", "cat", "mouse", "pig", "ox", "dragon",
                                             "rabbit", "snake", "monkey", "tiger"};

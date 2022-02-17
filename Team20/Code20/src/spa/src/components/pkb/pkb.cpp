@@ -122,12 +122,20 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
   return result;
 }
 
-std::unordered_set<std::string> PKB::GetFollowOf(std::string stmt) {
-  follow_store.GetFollowingOf(stmt);
+std::string PKB::GetFollowOf(std::string stmt) {
+  return follow_store.GetFollowingOf(stmt);
 }
 
 std::unordered_set<std::string> PKB::GetFollowStarOf(std::string stmt) {
-  follow_store.GetFollowingStarOf(stmt);
+  return follow_store.GetFollowingStarOf(stmt);
+}
+
+bool PKB::IsFollowExist(std::pair<std::string, std::string> pair) {
+  return follow_store.FollowExists(pair);
+}
+
+bool PKB::IsFollowStarExist(std::pair<std::string, std::string> pair) {
+  return follow_store.FollowStarExists(pair);
 }
 
 std::unordered_set<std::string> PKB::GetParentOf(std::string stmt) {

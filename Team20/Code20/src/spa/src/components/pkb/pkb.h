@@ -82,7 +82,7 @@ class PKB {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModProcVar();
 
   std::unordered_set<std::string> GetStmtWithPattern(std::string lhs, std::string rhs);
-  std::unordered_set<std::string> GetFollowOf(std::string stmt);
+  std::string GetFollowOf(std::string stmt);
   std::unordered_set<std::string> GetFollowStarOf(std::string stmt);
   std::unordered_set<std::string> GetParentOf(std::string stmt);
   std::unordered_set<std::string> GetParentStarOf(std::string stmt);
@@ -94,8 +94,8 @@ class PKB {
   bool IsModifyStmtVarExist(std::pair<std::string, std::string> pair);
   bool IsModifyProcVarExist(std::pair<std::string, std::string> pair);
 
-  bool IsFollowExist();
-  bool IsFollowStarExist();
+  bool IsFollowExist(std::pair<std::string, std::string> pair);
+  bool IsFollowStarExist(std::pair<std::string, std::string> pair);
 
  private:
   PKB();
