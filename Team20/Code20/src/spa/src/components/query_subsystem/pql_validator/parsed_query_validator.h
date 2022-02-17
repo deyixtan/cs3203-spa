@@ -2,6 +2,7 @@
 #define PARSED_QUERY_VALIDATOR_H_
 
 #include "../pql_parser/parsed_query.h"
+#include "../pql_lexer/pql_token.h"
 
 namespace pql_validator {
 
@@ -14,6 +15,8 @@ class ParsedQueryValidator {
   void ValidateNoDuplicateSynonymDeclared(ParsedQuery);
   void ValidateSelectSynonymDeclared(ParsedQuery);
   void ValidatePatternSynonymIsAssigned(ParsedQuery);
+  void ValidateModifiesUsesFirstArgumentNotUnderscore(ParsedQuery);
+  void ValidateClauseDesignEntity(ParsedQuery);
 };
 
 };
