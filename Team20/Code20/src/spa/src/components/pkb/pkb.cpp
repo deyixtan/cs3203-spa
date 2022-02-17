@@ -84,7 +84,10 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
     }
 
     if (lhs == "_" && rhs != "_" && rhs.find("_") != std::string::npos) {
-      if (key.second.find(rhs) != std::string::npos) {
+      auto first = rhs.find("_\"");
+      auto last = rhs.find("\"_");
+      auto sub_pattern = rhs.substr(first + 2, last - 2);
+      if (key.second.find(sub_pattern) != std::string::npos) {
         result.insert(val);
       }
     }
@@ -102,7 +105,10 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
     }
 
     if (lhs != "_" && rhs != "_" && rhs.find("_") != std::string::npos) {
-      if (lhs == key.first && key.second.find(rhs) != std::string::npos) {
+      auto first = rhs.find("_\"");
+      auto last = rhs.find("\"_");
+      auto sub_pattern = rhs.substr(first + 2, last - 2);
+      if (lhs == key.first && key.second.find(sub_pattern) != std::string::npos) {
         result.insert(val);
       }
     }
@@ -501,6 +507,14 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllUs
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllUsageProcVar() {
   return usage_store.GetAllProcVar();
+}
+
+std::unordered_set<std::string> PKB::GetAllStmtModify() {
+  return modify_store.GetAllStmtModify();
+}
+
+std::unordered_set<std::string> PKB::GetAllProcModify() {
+  return modify_store.GetAllProcModify();
 }
 
 std::unordered_set<std::string> PKB::GetVarModByStmt(std::string stmt) {

@@ -113,19 +113,6 @@ std::unordered_map<std::string, std::unordered_set<std::string>> uses_var_to_stm
         {"ox", {"7"}},
     };
 
-std::unordered_set<std::string> all_stmt_using = {"3", "4", "5", "6", "7", "8", "10", "11", "13", "15"};
-std::unordered_set<std::string> all_proc_using = {"main", "foo", "bar", "func"};
-
-std::unordered_set<std::string> var_list = {"dog", "cat", "mouse", "pig", "ox", "dragon",
-                                            "rabbit", "snake", "monkey", "tiger"};
-
-std::unordered_set<std::string> const_list = {"10", "0"};
-std::unordered_set<std::string> read_list = {"1"};
-std::unordered_set<std::string> print_list = {"3", "13"};
-std::unordered_set<std::string> assign_list = {"4", "7", "8", "10", "15"};
-std::unordered_set<std::string> if_list = {"5"};
-std::unordered_set<std::string> while_list = {"6", "11"};
-
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> uses_proc_var_pairs =
     {
         {"main", "dog"},
@@ -173,6 +160,78 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> uses_stmt_var
         {"15", "tiger"},
         {"15", "dog"},
     };
+
+std::unordered_set<std::string> all_stmt_using = {"3", "4", "5", "6", "7", "8", "10", "11", "13", "15"};
+std::unordered_set<std::string> all_proc_using = {"main", "foo", "bar", "func"};
+
+/* MODIFY STORE */
+
+std::unordered_map<std::string, std::unordered_set<std::string>> mod_proc_to_var =
+    {
+        {"main", {"dog", "pig", "dragon"}},
+        {"foo", {"snake"}},
+        {"func", {"monkey"}}
+    };
+
+std::unordered_map<std::string, std::unordered_set<std::string>> mod_var_to_proc =
+    {
+        {"dog", {"main"}},
+        {"pig", {"main"}},
+        {"dragon", {"main"}},
+        {"snake", {"foo"}},
+        {"monkey", {"func"}}
+    };
+
+std::unordered_map<std::string, std::unordered_set<std::string>> mod_stmt_to_var =
+    {   //1,4,7,8,10,15
+        {"1", {"dog"}},
+        {"4", {"dog"}},
+        {"7", {"pig"}},
+        {"8", {"dragon"}},
+        {"10", {"snake"}},
+        {"15", {"monkey"}},
+    };
+
+std::unordered_map<std::string, std::unordered_set<std::string>> mod_var_to_stmt =
+    {
+        {"dog", {"1", "4"}},
+        {"pig", {"7"}},
+        {"dragon", {"8"}},
+        {"snake", {"10"}},
+        {"monkey", {"15"}},
+    };
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> mod_proc_var_pairs =
+    {
+        {"main", "dog"},
+        {"main", "pig"},
+        {"main", "dragon"},
+        {"foo", "snake"},
+        {"func", "monkey"},
+    };
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> mod_stmt_var_pairs =
+    {
+        {"1", {"dog"}},
+        {"4", {"dog"}},
+        {"7", {"pig"}},
+        {"8", {"dragon"}},
+        {"10", {"snake"}},
+        {"15", {"monkey"}},
+    };
+
+std::unordered_set<std::string> all_stmt_mod = {"1", "4", "7", "8", "10", "15"};
+std::unordered_set<std::string> all_proc_mod = {"main", "foo", "func"};
+
+std::unordered_set<std::string> var_list = {"dog", "cat", "mouse", "pig", "ox", "dragon",
+                                            "rabbit", "snake", "monkey", "tiger"};
+
+std::unordered_set<std::string> const_list = {"10", "0"};
+std::unordered_set<std::string> read_list = {"1"};
+std::unordered_set<std::string> print_list = {"3", "13"};
+std::unordered_set<std::string> assign_list = {"4", "7", "8", "10", "15"};
+std::unordered_set<std::string> if_list = {"5"};
+std::unordered_set<std::string> while_list = {"6", "11"};
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> read_pairs =
     {std::pair<std::string, std::string>("1", "dog")};

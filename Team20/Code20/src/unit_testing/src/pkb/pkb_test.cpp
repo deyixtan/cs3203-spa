@@ -126,6 +126,19 @@ void set_up_pkb() {
   pkb->AddUsageStmtVar("15", "tiger");
   pkb->AddUsageStmtVar("15", "dog");
 
+  pkb->AddModifyProcVar("main", "dog");
+  pkb->AddModifyProcVar("main", "pig");
+  pkb->AddModifyProcVar("main", "dragon");
+  pkb->AddModifyProcVar("foo", "snake");
+  pkb->AddModifyProcVar("func", "monkey");
+
+  pkb->AddModifyStmtVar("1", "dog");
+  pkb->AddModifyStmtVar("4", "dog");
+  pkb->AddModifyStmtVar("7", "pig");
+  pkb->AddModifyStmtVar("8", "dragon");
+  pkb->AddModifyStmtVar("10", "snake");
+  pkb->AddModifyStmtVar("15", "monkey");
+
   pkb->AddPattern("4", "dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))");
   pkb->AddPattern("7", "pig", "(ox+cat)");
   pkb->AddPattern("8", "dragon", "((dog*rabbit)/mouse)");
@@ -221,7 +234,9 @@ TEST_CASE("print p; select p") {
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Get var used by stmt") {
+/* USAGE STORE */
+
+TEST_CASE("Get var used by stmt (correct)") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetVarUsedByStmt("7");
@@ -230,7 +245,16 @@ TEST_CASE("Get var used by stmt") {
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Get stmt used by var") {
+TEST_CASE("Get var used by stmt (invalid)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetVarUsedByStmt("20");
+  std::unordered_set<std::string> expected = {};
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get stmt used by var (correct)") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetStmtUsedByVar("rabbit");
@@ -239,7 +263,16 @@ TEST_CASE("Get stmt used by var") {
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Get var used by proc") {
+TEST_CASE("Get stmt used by var (invalid)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetStmtUsedByVar("horse");
+  std::unordered_set<std::string> expected = {};
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get var used by proc (correct)") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetVarUsedByProc("main");
@@ -248,11 +281,29 @@ TEST_CASE("Get var used by proc") {
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Get proc used by var") {
+TEST_CASE("Get var used by proc (invalid)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetVarUsedByProc("foobar");
+  std::unordered_set<std::string> expected = {};
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get proc used by var (correct)") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetProcUsedByVar("dog");
   auto expected = uses_var_to_proc.at("dog");
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get proc used by var (invalid)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetProcUsedByVar("horse");
+  std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);
 }
@@ -271,6 +322,24 @@ TEST_CASE("Get all usage stmt-var pairs") {
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetAllUsageStmtVar();
   auto expected = uses_stmt_var_pairs;
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get all stmt using (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetAllStmtUsing();
+  auto expected = all_stmt_using;
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get all proc using (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetAllProcUsing();
+  auto expected = all_proc_using;
 
   REQUIRE(actual == expected);
 }
@@ -313,13 +382,170 @@ TEST_CASE("Check if usage stmt-var pair exists (wrong)") {
   REQUIRE(expected == false);
 }
 
+/* MODIFY STORE */
+
+TEST_CASE("Get var modified by stmt (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetVarModByStmt("7");
+  auto expected = mod_stmt_to_var.at("7");
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get var modified by stmt (invalid)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetVarModByStmt("20");
+  std::unordered_set<std::string> expected = {};
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get stmt modified by var (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetStmtModByVar("dog");
+  auto expected = mod_var_to_stmt.at("dog");
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get stmt modified by var (invalid)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetStmtModByVar("horse");
+  std::unordered_set<std::string> expected = {};
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get var modified by proc (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetVarModByProc("main");
+  auto expected = mod_proc_to_var.at("main");
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get var modified by proc (invalid)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetVarModByProc("foobar");
+  std::unordered_set<std::string> expected = {};
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get proc modified by var (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetProcModByVar("dog");
+  auto expected = mod_var_to_proc.at("dog");
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get proc modified by var (invalid)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetProcModByVar("horse");
+  std::unordered_set<std::string> expected = {};
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get all modifies proc-var pairs") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetAllModProcVar();
+  auto expected = mod_proc_var_pairs;
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get all modifies stmt-var pairs") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetAllModStmtVar();
+  auto expected = mod_stmt_var_pairs;
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get all stmt modifies (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetAllStmtModify();
+  auto expected = all_stmt_mod;
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Get all proc modifies (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->GetAllProcModify();
+  auto expected = all_proc_mod;
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check if modifies proc-var pair exists (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsModifyProcVarExist({"main", "dragon"});
+  auto expected = mod_proc_var_pairs.find({"main", "dragon"}) != mod_proc_var_pairs.end();
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check if modifies proc-var pair exists (wrong)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsModifyProcVarExist({"funcA", "2"});
+  auto expected = mod_proc_var_pairs.find({"funcA", "2"}) != mod_proc_var_pairs.end();
+
+  REQUIRE(actual == false);
+  REQUIRE(expected == false);
+}
+
+TEST_CASE("Check if modifies stmt-var pair exists (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsModifyStmtVarExist({"15", "monkey"});
+  auto expected = mod_stmt_var_pairs.find({"15", "monkey"}) != mod_stmt_var_pairs.end();
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check if modifies stmt-var pair exists (wrong)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsModifyStmtVarExist({"5", "cat"});
+  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
+
+  REQUIRE(actual == false);
+  REQUIRE(expected == false);
+}
+
+/* FOLLOW STORE */
+
+
+/* PARENT STORE */
+
+
+
+/* PATTERN */
+
 TEST_CASE("Check pattern matching (correct)") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
-  std::unordered_set<std::string> actual = pkb->GetStmtWithPattern("dog", "10 * cat");
+  std::unordered_set<std::string> actual = pkb->GetStmtWithPattern("pig", "_\"cat\"_");
   std::unordered_set<std::string> expected = {};
   for (auto const& [key, val] : pattern_to_stmt) {
-    if (key.first == "dog" && key.second.find("(10*cat)") != -1) {
+    if (key.first == "pig" && key.second.find("cat") != -1) {
       expected = val;
     }
   }

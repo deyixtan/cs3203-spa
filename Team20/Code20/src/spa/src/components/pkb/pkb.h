@@ -71,6 +71,8 @@ class PKB {
   std::unordered_set<std::string> GetAllProcUsing();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsageStmtVar();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsageProcVar();
+  std::unordered_set<std::string> GetAllStmtModify();
+  std::unordered_set<std::string> GetAllProcModify();
 
   std::unordered_set<std::string> GetVarModByStmt(std::string stmt);
   std::unordered_set<std::string> GetStmtModByVar(std::string var);
