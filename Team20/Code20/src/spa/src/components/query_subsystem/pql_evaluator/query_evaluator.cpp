@@ -300,10 +300,82 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         // 3. Uses(s, "x")
         std::string ident_without_quotes = second_arg.value.substr(1, second_arg.value.length() - 2);
         if (select_synonym.value==first_arg.value) {
-          add_result = pkb->GetStmtUsedByVar(ident_without_quotes);
-          result.insert(add_result.begin(), add_result.end());
-        } else { // selected synonym is not in the Uses clause
-          EvaluateSelectOnly(query);
+          switch (select_synonym_design_entity) {
+            case PqlTokenType::STMT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::ASSIGN: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
+              break;
+            }
+            case PqlTokenType::WHILE: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::WHILE);
+              break;
+            }
+            case PqlTokenType::IF: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::IF);
+              break;
+            }
+            case PqlTokenType::PRINT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+              break;
+            }
+            default: {
+              // do nothing
+              return;
+            }
+          }
+
+          for (auto pair : pair_result) {
+            if (pair.second==ident_without_quotes) {
+              add_result.insert(pair.first);
+            }
+          }
+
+        } else {
+          // selected synonym is not in the Uses clause
+          // Check if Uses(s, "x") is non-empty
+
+          PqlTokenType first_arg_design_entity;
+          for (auto declaration : declarations) {
+            if (declaration.GetSynonym().value==first_arg.value) {
+              first_arg_design_entity = declaration.GetDesignEntity().type;
+            }
+          }
+
+          switch (first_arg_design_entity) {
+            case PqlTokenType::STMT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::STMT);
+            }
+            case PqlTokenType::ASSIGN: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
+            }
+            case PqlTokenType::WHILE: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::WHILE);
+            }
+            case PqlTokenType::IF: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::IF);
+            }
+            case PqlTokenType::PRINT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+            }
+            default: {
+              // do nothing
+              return;
+            }
+          }
+
+          bool is_empty = true;
+          for (auto pair : pair_result) {
+            if (pair.second==ident_without_quotes) {
+              is_empty = false;
+            }
+          }
+
+          if (!is_empty) {
+            EvaluateSelectOnly(query);
+          }
         }
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
         // 4. Uses(1, v)
@@ -313,46 +385,46 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         } else { // selected synonym is not in the Uses clause
           EvaluateSelectOnly(query);
         }
+
+      } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
+        // 5. Uses(1, _)
+        if (!pkb->GetVarUsedByStmt(first_arg.value).empty()) {
+          // line does not use any variables
+          // false
+          return;
+        } else {
+          // line uses some variable
+          // true
+          EvaluateSelectOnly(query);
+        }
+      } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
+        // 6. Uses(1, "x")
+        std::string ident_without_quotes = second_arg.value.substr(1, second_arg.value.length() - 2);
+        std::pair arg_pair(first_arg.value, ident_without_quotes);
+        bool is_true = pkb->IsUsageStmtVarExist(arg_pair);
+        if (is_true) { // defaults to case with just select
+          EvaluateSelectOnly(query);
+        } else { // none
+          return;
+        }
       }
-    } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
-    // 5. Uses(1, _)
-    if (!pkb->GetVarUsedByStmt(first_arg.value).empty()) {
-      // line does not use any variables
-      // false
-      return;
-    } else {
-      // line uses some variable
-      // true
-      EvaluateSelectOnly(query);
-    }
-  } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
-    // 6. Uses(1, "x")
-    std::string ident_without_quotes = second_arg.value.substr(1, second_arg.value.length() - 2);
-    std::pair arg_pair(first_arg.value, ident_without_quotes);
-    bool is_true = pkb->IsUsageStmtVarExist(arg_pair);
-    if (is_true) { // defaults to case with just select
-      EvaluateSelectOnly(query);
-    } else { // none
-      return;
-    }
-  }
-    case PqlTokenType::MODIFIES: {
+      case PqlTokenType::MODIFIES: {
 
-    }
-    case PqlTokenType::PARENT: {
+      }
+      case PqlTokenType::PARENT: {
 
-    }
-    case PqlTokenType::PARENT_T: {
+      }
+      case PqlTokenType::PARENT_T: {
 
-    }
-    case PqlTokenType::FOLLOWS: {
+      }
+      case PqlTokenType::FOLLOWS: {
 
-    }
-    case PqlTokenType::FOLLOWS_T: {
+      }
+      case PqlTokenType::FOLLOWS_T: {
 
-    }
+      }
 
-  } else if (rel_ref==PqlTokenType::MODIFIES) {
+    } else if (rel_ref==PqlTokenType::MODIFIES) {
     // 6 Total Cases same as UsesS
     // Only handles ModifiesS TODO: need to specialize Modifies -> ModifiesS vs ModifiesP
     if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
@@ -473,10 +545,10 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
     // TODO: Follows/Follows*
 
   }
-  default: {
-    // do nothing
+    default: {
+      // do nothing
+    }
   }
-}
 }
 
 void QueryEvaluator::EvaluateSelectWithPattern(ParsedQuery &query) {
