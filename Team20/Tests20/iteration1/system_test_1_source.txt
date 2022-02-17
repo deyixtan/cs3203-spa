@@ -1,24 +1,28 @@
 procedure sumIsOdd {
     read number;
     sum = 0;
-    while(number > 0) {
+    while (number > 0) {
         digit = number % 10;
         sum = sum + digit;
         number = number / 10;
     }
-    if(sum % 2 != 0) {
-        print(sum);
+    if (sum % 2 != 0) then {
+        print sum;
+    } else {
+        print sum;
     }
 }
 
 procedure greatestDivisor {
     div = 2;
     max = 2;
-    while( div < number) {
-        if(number % div == 0) {
+    while (div < number) {
+        if (number % div == 0) then {
             max = div;
+        } else {
+            print sum;
         }
         div = div * 2;
     }
-    print(max);
+    print max;
 }
