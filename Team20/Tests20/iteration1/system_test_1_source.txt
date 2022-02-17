@@ -12,17 +12,3 @@ procedure sumIsOdd {
         print sum;
     }
 }
-
-procedure greatestDivisor {
-    div = 2;
-    max = 2;
-    while (div < number) {
-        if (number % div == 0) then {
-            max = div;
-        } else {
-            print sum;
-        }
-        div = div * 2;
-    }
-    print max;
-}
