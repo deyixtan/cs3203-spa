@@ -227,7 +227,7 @@ std::unordered_set<std::string> all_proc_mod = {"main", "foo", "func"};
 
 /* FOLLOW STORE */
 
-std::unordered_map<std::string, FollowStore::node> relationships =
+std::unordered_map<std::string, FollowStore::node> follows_rs =
     {
         {"1", {"0", "2", {}, {"2", "3", "4", "5"}}},
         {"2", {"1", "3", {"1"}, {"3", "4", "5"}}},
@@ -281,6 +281,52 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash > follow_star_
         {"13", "14"},
     };
 
+/* PARENT STORE */
+std::unordered_map<std::string, parent_child> parent_rs =
+    {
+        {"1", {"0", "0", {}, {}}},
+        {"2", {"0", "0", {}, {}}},
+        {"3", {"0", "0", {}, {}}},
+        {"4", {"0", "0", {}, {}}},
+        {"5", {"0", "6", {}, {"6", "7"}}},
+        {"6", {"5", "7", {"5"}, {"7"}}},
+        {"7", {"6", "0", {"5", "6"}, {}}},
+        {"8", {"5", "0", {"5"}, {}}},
+        {"9", {"5", "0", {"5"}, {}}},
+        {"10", {"0", "0", {}, {}}},
+        {"11", {"0", "12", {}, {"12"}}},
+        {"12", {"11", "0", {"11"}, {}}},
+        {"13", {"0", "0", {}, {}}},
+        {"14", {"0", "0", {}, {}}},
+        {"15", {"0", "0", {}, {}}},
+    };
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> parent_child_pairs =
+    {
+        {"5", "6"},
+        {"5", "8"},
+        {"5", "9"},
+        {"6", "7"},
+        {"11", "12"},
+    };
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> ance_desc_pairs =
+    {
+        {"5", "6"},
+        {"5", "7"},
+        {"5", "8"},
+        {"5", "9"},
+        {"6", "7"},
+        {"11", "12"},
+    };
+
+std::unordered_set<std::string> ancestors = {"5", "6", "11"};
+
+std::unordered_set<std::string> descendants = {"6", "7", "8", "9", "12"};
+
+std::unordered_set<std::string> parents = {"5", "6", "11"};
+
+std::unordered_set<std::string> children = {"6", "7", "8", "9", "12"};
 
 /* GENERAL */
 

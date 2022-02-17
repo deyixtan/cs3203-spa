@@ -138,12 +138,56 @@ bool PKB::IsFollowStarExist(std::pair<std::string, std::string> pair) {
   return follow_store.FollowStarExists(pair);
 }
 
+bool PKB::IsFollower(std::string stmt) {
+  return follow_store.IsFollower(stmt);
+}
+
+bool PKB::IsFollowing(std::string stmt) {
+  return follow_store.IsFollowing(stmt);
+}
+
+bool PKB::IsFollowerStar(std::string stmt) {
+  return follow_store.IsFollowerStar(stmt);
+}
+
+bool PKB::IsFollowingStar(std::string stmt) {
+  return follow_store.IsFollowingStar(stmt);
+}
+
 std::unordered_set<std::string> PKB::GetParentOf(std::string stmt) {
   parent_store.GetParentOf(stmt);
 }
 
 std::unordered_set<std::string> PKB::GetParentStarOf(std::string stmt) {
   parent_store.GetAllAnceOf(stmt);
+}
+
+bool PKB::IsParent(std::string stmt) {
+  return parent_store.IsParent(stmt);
+}
+
+bool PKB::IsChild(std::string stmt) {
+  return parent_store.IsChild(stmt);
+}
+
+bool PKB::IsAnce(std::string stmt) {
+  return parent_store.IsAnce(stmt);
+}
+
+bool PKB::IsDesc(std::string stmt) {
+  return parent_store.IsDesc(stmt);
+}
+
+bool PKB::ParentChildExists(std::string stmt1, std::string stmt2) {
+  return parent_store.ParentChildExists(stmt1, stmt2);
+}
+
+bool PKB::AnceExists(std::string curr, std::string ance) {
+  return parent_store.AnceExists(curr, ance);
+}
+
+bool DescExists(std::string curr, std::string desc) {
+
 }
 
 void PKB::AddFollowStmt(std::string stmt1, std::string stmt2) {

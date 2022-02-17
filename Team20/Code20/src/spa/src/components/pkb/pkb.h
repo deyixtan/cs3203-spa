@@ -97,6 +97,19 @@ class PKB {
   bool IsFollowExist(std::pair<std::string, std::string> pair);
   bool IsFollowStarExist(std::pair<std::string, std::string> pair);
 
+  bool IsFollower(std::string stmt);
+  bool IsFollowing(std::string stmt);
+  bool IsFollowerStar(std::string stmt);
+  bool IsFollowingStar(std::string stmt);
+
+  bool IsParent(std::string stmt);
+  bool IsChild(std::string stmt);
+  bool IsAnce(std::string stmt);
+  bool IsDesc(std::string stmt);
+  bool ParentChildExists(std::string stmt1, std::string stmt2);
+  bool AnceExists(std::string curr, std::string ance);
+  bool DescExists(std::string curr, std::string desc);
+
  private:
   PKB();
   static PKB *instance;

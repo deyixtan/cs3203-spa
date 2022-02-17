@@ -142,6 +142,7 @@ void set_up_pkb() {
   pkb->AddFollowStmt("1", "2");
   pkb->AddFollowStmt("2", "3");
   pkb->AddFollowStmt("3", "4");
+  pkb->AddFollowStmt("4", "5");
   pkb->AddFollowStmt("8", "9");
   pkb->AddFollowStmt("10", "11");
   pkb->AddFollowStmt("13", "14");
@@ -160,6 +161,12 @@ void set_up_pkb() {
   pkb->AddFollowStarStmt("8", "9");
   pkb->AddFollowStarStmt("10", "11");
   pkb->AddFollowStarStmt("13", "14");
+
+  pkb->AddParentStmt("5", "6");
+  pkb->AddParentStmt("5", "8");
+  pkb->AddParentStmt("5", "9");
+  pkb->AddParentStmt("6", "7");
+  pkb->AddParentStmt("11", "12");
 
   pkb->AddPattern("4", "dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))");
   pkb->AddPattern("7", "pig", "(ox+cat)");
@@ -554,45 +561,41 @@ TEST_CASE("Check if modifies stmt-var pair exists (wrong)") {
 
 /* FOLLOW STORE */
 
-//TEST_CASE("Check if stmt is a follower") {
-//  set_up_pkb();
-//  PKB *pkb = PKB::GetInstance();
-//  auto actual = pkb->IsFollower({"5", "cat"});
-//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
-//
-//  REQUIRE(actual == false);
-//  REQUIRE(expected == false);
-//}
-//
-//TEST_CASE("Check if stmt is a following") {
-//  set_up_pkb();
-//  PKB *pkb = PKB::GetInstance();
-//  auto actual = pkb->IsModifyStmtVarExist({"5", "cat"});
-//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
-//
-//  REQUIRE(actual == false);
-//  REQUIRE(expected == false);
-//}
-//
-//TEST_CASE("Check if stmt is a follower star") {
-//  set_up_pkb();
-//  PKB *pkb = PKB::GetInstance();
-//  auto actual = pkb->IsModifyStmtVarExist({"5", "cat"});
-//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
-//
-//  REQUIRE(actual == false);
-//  REQUIRE(expected == false);
-//}
-//
-//TEST_CASE("Check if stmt is a following star") {
-//  set_up_pkb();
-//  PKB *pkb = PKB::GetInstance();
-//  auto actual = pkb->IsModifyStmtVarExist({"5", "cat"});
-//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
-//
-//  REQUIRE(actual == false);
-//  REQUIRE(expected == false);
-//}
+TEST_CASE("Check if stmt is a follower") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsFollower("4");
+  auto expected = followers.find("4") != followers.end();
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check if stmt is a following") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsFollowing("4");
+  auto expected = followings.find("4") != followings.end();
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check if stmt is a follower star") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsFollowerStar("4");
+  auto expected = follower_stars.find("4") != follower_stars.end();
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check if stmt is a following star") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsFollowingStar("4");
+  auto expected = following_stars.find("4") != following_stars.end();
+
+  REQUIRE(actual == expected);
+}
 
 TEST_CASE("Check if follow pair exists") {
   set_up_pkb();
@@ -616,7 +619,7 @@ TEST_CASE("Get follows of a stmt") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetFollowOf("2");
-  auto expected = relationships.at("2").following;
+  auto expected = follows_rs.at("2").following;
 
   REQUIRE(actual == expected);
 }
@@ -625,7 +628,7 @@ TEST_CASE("Get follows star of a stmt") {
   set_up_pkb();
   PKB *pkb = PKB::GetInstance();
   auto actual = pkb->GetFollowStarOf("2");
-  auto expected = relationships.at("2").following_star;
+  auto expected = follows_rs.at("2").following_star;
 
   REQUIRE(actual == expected);
 }
@@ -649,6 +652,64 @@ TEST_CASE("Get follows star of a stmt") {
 //  REQUIRE(actual == false);
 //  REQUIRE(expected == false);
 //}
+
+/* PARENT STORE */
+
+TEST_CASE("Checks if a stmt is a parent") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsParent("5");
+  auto expected = parents.find("5") != parents.end();
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Checks if a stmt is a child") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->IsChild("7");
+  auto expected = children.find("7") != children.end();
+
+  REQUIRE(actual == expected);
+}
+
+//TEST_CASE("Checks if a stmt is an ancestor") {
+//  set_up_pkb();
+//  PKB *pkb = PKB::GetInstance();
+//  auto actual = pkb->IsAnce("5");
+//  auto expected = ancestors.find("5") != ancestors.end();
+//
+//  REQUIRE(actual == expected);
+//}
+
+//TEST_CASE("Checks if a stmt is a descendent") {
+//  set_up_pkb();
+//  PKB *pkb = PKB::GetInstance();
+//  auto actual = pkb->IsDesc("7");
+//  auto expected = descendants.find("7") != descendants.end();
+//
+//  REQUIRE(actual == expected);
+//}
+
+TEST_CASE("Checks if a parent-child pair relationship exists") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  auto actual = pkb->ParentChildExists("5", "9");
+  auto expected = parent_child_pairs.find({"5", "9"}) != parent_child_pairs.end();
+
+  REQUIRE(actual == expected);
+}
+
+//TEST_CASE("Checks if a ance-desc pair relationship exists") {
+//  set_up_pkb();
+//  PKB *pkb = PKB::GetInstance();
+//  auto actual = pkb->AnceExists("5", "9");
+//  auto expected = ance_desc_pairs.find({"5", "9"}) != ance_desc_pairs.end();
+//
+//  REQUIRE(actual == expected);
+//}
+
+/* GENERAL */
 
 void Init(int num_stmts);
 
