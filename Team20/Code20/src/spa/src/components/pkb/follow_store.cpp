@@ -78,29 +78,26 @@ std::string FollowStore::GetFollowerOf(std::string stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     return rs_map.at(stmt).follower;
   }
-  return 0;
+  return "0";
 }
 
 std::string FollowStore::GetFollowingOf(std::string stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
-    node n = rs_map.at(stmt);
-    return n.following;
+    return rs_map.at(stmt).following;
   }
-  return 0;
+  return "0";
 }
 
 std::unordered_set<std::string> FollowStore::GetFollowerStarOf(std::string stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
-    node n = rs_map.at(stmt);
-    return n.follower_star;
+    return rs_map.at(stmt).follower_star;
   }
   return {};
 }
 
 std::unordered_set<std::string> FollowStore::GetFollowingStarOf(std::string stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
-    node n = rs_map.at(stmt);
-    return n.following_star;
+    return rs_map.at(stmt).following_star;
   }
   return {};
 }
