@@ -3,16 +3,16 @@
 
 #include <string>
 
-static const int LINE_1 = 1;
-static const int LINE_2 = 2;
-static const int LINE_3 = 3;
-static const int LINE_4 = 4;
-static const int LINE_5 = 5;
-static const int LINE_6 = 6;
-static const int LINE_7 = 7;
-static const int LINE_8 = 8;
-static const int LINE_9 = 9;
-static const int LINE_10 = 10;
+static const std::string LINE_1 = "1";
+static const std::string LINE_2 = "2";
+static const std::string LINE_3 = "3";
+static const std::string LINE_4 = "4";
+static const std::string LINE_5 = "5";
+static const std::string LINE_6 = "6";
+static const std::string LINE_7 = "7";
+static const std::string LINE_8 = "8";
+static const std::string LINE_9 = "9";
+static const std::string LINE_10 = "10";
 
 static const std::string VAR_A = "a";
 static const std::string VAR_B = "b";

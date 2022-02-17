@@ -3,6 +3,7 @@
 UsageStore::UsageStore() {}
 
 void UsageStore::AddStmtVar(std::string stmt, std::string var) {
+  all_stmt_using.insert({stmt});
   stmt_var_pairs.emplace(std::pair<std::string, std::string>(stmt, var));
 
   if (!stmt_var_map.emplace(stmt, std::unordered_set<std::string>{ var }).second) {
@@ -15,6 +16,7 @@ void UsageStore::AddStmtVar(std::string stmt, std::string var) {
 }
 
 void UsageStore::AddProcVar(std::string proc, std::string var) {
+  all_proc_using.insert({proc});
   proc_var_pairs.emplace(std::pair<std::string, std::string>(proc, var));
 
   if (!proc_var_map.emplace(proc, std::unordered_set<std::string>{ var }).second) {
@@ -60,6 +62,14 @@ std::unordered_set<std::string> UsageStore::GetProcUsedByVar(std::string var) {
     return var_proc_map.at(var);
   }
   return {};
+}
+
+std::unordered_set<std::string> UsageStore::GetAllStmtUsing() {
+  return all_stmt_using;
+}
+
+std::unordered_set<std::string> UsageStore::GetAllProcUsing() {
+  return all_proc_using;
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> UsageStore::GetAllStmtVar() {

@@ -30,7 +30,6 @@ std::unordered_map<std::string, PqlTokenType> string_token_map = {
     {"variable", PqlTokenType::VARIABLE},
     {"constant", PqlTokenType::CONSTANT},
     {"procedure", PqlTokenType::PROCEDURE},
-    {"assign", PqlTokenType::ASSIGN},
 
     {"Select", PqlTokenType::SELECT},
     {"such", PqlTokenType::SUCH},
@@ -83,5 +82,19 @@ std::unordered_set<PqlTokenType> stmt_ref = {
     PqlTokenType::SYNONYM,
     PqlTokenType::UNDERSCORE,
     PqlTokenType::NUMBER,
+};
+
+std::unordered_set<PqlTokenType> line_no_set = {
+    PqlTokenType::STMT,
+    PqlTokenType::READ,
+    PqlTokenType::PRINT,
+    PqlTokenType::WHILE,
+    PqlTokenType::IF,
+    PqlTokenType::ASSIGN,
+};
+
+std::unordered_set<PqlTokenType> var_set = {
+    PqlTokenType::VARIABLE,
+    PqlTokenType::CONSTANT,
 };
 

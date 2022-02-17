@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include <map>
 
 #include "usage_store.h"
 #include "modify_store.h"
@@ -46,15 +47,28 @@ class PKB {
   void AddModifyStmtVar(std::string stmt, std::string variable);
   void AddModifyProcVar(std::string proc, std::string var);
 
-  void AddPattern(std::string lhs, std::string rhs);
+  void AddPattern(std::string stmt, std::string lhs, std::string rhs);
+  void AddFollowStmt(std::string stmt1, std::string stmt2);
+  void AddFollowStarStmt(std::string stmt1, std::string stmt2);
+
+  void AddParentStmt(std::string stmt1, std::string stmt2);
+  void AddParentStarStmt(std::string stmt, std::vector<std::string> visited);
 
   /* Getters */
   std::unordered_set<std::string> GetStmt(StmtType type);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModStmt(StmtType type);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsesStmt(StmtType type);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStmt(StmtType type);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStarStmt(StmtType type);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStmt(StmtType type);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStarStmt(StmtType type);
 
   std::unordered_set<std::string> GetVarUsedByStmt(std::string stmt);
   std::unordered_set<std::string> GetStmtUsedByVar(std::string var);
   std::unordered_set<std::string> GetVarUsedByProc(std::string proc);
   std::unordered_set<std::string> GetProcUsedByVar(std::string var);
+  std::unordered_set<std::string> GetAllStmtUsing();
+  std::unordered_set<std::string> GetAllProcUsing();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsageStmtVar();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsageProcVar();
 
@@ -65,7 +79,11 @@ class PKB {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModStmtVar();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModProcVar();
 
-  int GetPattern(std::string lhs, std::string rhs);
+  std::unordered_set<std::string> GetStmtWithPattern(std::string lhs, std::string rhs);
+  std::unordered_set<std::string> GetFollowOf(std::string stmt);
+  std::unordered_set<std::string> GetFollowStarOf(std::string stmt);
+  std::unordered_set<std::string> GetParentOf(std::string stmt);
+  std::unordered_set<std::string> GetParentStarOf(std::string stmt);
 
   /* Checkers */
   bool IsUsageStmtVarExist(std::pair<std::string, std::string> pair);
@@ -73,6 +91,9 @@ class PKB {
 
   bool IsModifyStmtVarExist(std::pair<std::string, std::string> pair);
   bool IsModifyProcVarExist(std::pair<std::string, std::string> pair);
+
+  bool IsFollowExist();
+  bool IsFollowStarExist();
 
  private:
   PKB();
@@ -89,10 +110,10 @@ class PKB {
   std::unordered_set<std::string> var_list;
   std::unordered_set<std::string> const_list;
 
-  std::unordered_map<std::string, std::string> pattern_map;
+  std::unordered_map<std::pair<std::string, std::string>, std::string, pair_hash> pattern_map;
 
   FollowStore follow_store;
-  ParentStore parent_Store;
+  ParentStore parent_store;
   UsageStore usage_store;
   ModifyStore modify_store;
 };
