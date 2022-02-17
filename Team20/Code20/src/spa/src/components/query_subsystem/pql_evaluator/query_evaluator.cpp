@@ -102,7 +102,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
   // assume only select with 1 relationship
   PqlToken select_synonym = query.GetSynonym();
   const auto declarations = query.GetDeclaration();
-  PqlTokenType select_synonym_type;
+  PqlTokenType select_synonym_design_entity;
   Relationship relationship = query.GetRelationships().front();
   PqlTokenType rel_ref = relationship.GetRelRef().type;
   PqlToken first_arg = relationship.GetFirst();
@@ -110,100 +110,164 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
   for (auto declaration : declarations) {
     if (declaration.GetSynonym().value==select_synonym.value) {
-      select_synonym_type = declaration.GetDesignEntity().type;
+      select_synonym_design_entity = declaration.GetDesignEntity().type;
     }
   }
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> pair_result;
   std::unordered_set<std::string> add_result;
-  if (rel_ref==PqlTokenType::USES) {
-    // 6 Total Cases (Handles UsesS now) TODO: refactor Uses to UsesS and UsesP
-    if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
-      // 1. Uses(s, v)
-      // LHS can be s, pn, a
-      // TODO: handle each case appropriately
-      if (select_synonym.value==first_arg.value) {
-        if (select_synonym_type==PqlTokenType::STMT) {
-          add_result = pkb->GetAllStmtUsing();
-          result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::PRINT) {
-          pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+  switch (rel_ref) {
+    case PqlTokenType::USES: {
+      // 6 Total Cases (Handles UsesS now) TODO: refactor Uses to UsesS and UsesP
+      // UsesS is a relationship between statement and variables
+      // Statements: assign, while, if, call, print, read (total 6 types of statements)
+
+      if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+        // 1. Uses(s, v)
+        if (select_synonym.value==first_arg.value) {
+          // Select s such that Uses(s, v)
+          switch (select_synonym_design_entity) {
+            case PqlTokenType::STMT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::ASSIGN: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
+              break;
+            }
+            case PqlTokenType::WHILE: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::WHILE);
+              break;
+            }
+            case PqlTokenType::IF: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::IF);
+              break;
+            }
+            case PqlTokenType::PRINT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+              break;
+            }
+            default: {
+              // do nothing
+              return;
+            }
+          }
           for (auto pair : pair_result) {
             add_result.insert(pair.first);
           }
-          result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
-          pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
-          for (auto pair : pair_result) {
-            add_result.insert(pair.first);
+        } else if (select_synonym.value==second_arg.value) {
+          // Select v such that Uses(s, v)
+          PqlTokenType first_arg_design_entity;
+          for (auto declaration : declarations) {
+            if (declaration.GetSynonym().value==first_arg.value) {
+              first_arg_design_entity = declaration.GetDesignEntity().type;
+            }
           }
-          result.insert(add_result.begin(), add_result.end());
-        }
-      } else if (select_synonym.value==second_arg.value) {
-        if (select_synonym_type==PqlTokenType::STMT) {
-          pair_result = pkb->GetAllUsesStmt(StmtType::STMT);
+
+          switch (first_arg_design_entity) {
+            case PqlTokenType::STMT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::STMT);
+            }
+            case PqlTokenType::ASSIGN: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
+            }
+            case PqlTokenType::WHILE: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::WHILE);
+            }
+            case PqlTokenType::IF: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::IF);
+            }
+            case PqlTokenType::PRINT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+            }
+            default: {
+              // do nothing
+              return;
+            }
+          }
           for (auto pair : pair_result) {
             add_result.insert(pair.second);
           }
-          result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::PRINT) {
-          pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
-          for (auto pair : pair_result) {
-            add_result.insert(pair.second);
+        } else {
+          // check if Uses(s, v)
+          // is empty -> return None
+          // else -> Evaluate the select
+
+          PqlTokenType first_arg_design_entity;
+          for (auto declaration : declarations) {
+            if (declaration.GetSynonym().value==first_arg.value) {
+              first_arg_design_entity = declaration.GetDesignEntity().type;
+            }
           }
-          result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
-          pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
-          for (auto pair : pair_result) {
-            add_result.insert(pair.second);
+
+          switch (first_arg_design_entity) {
+            case PqlTokenType::STMT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::STMT);
+            }
+            case PqlTokenType::ASSIGN: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
+            }
+            case PqlTokenType::WHILE: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::WHILE);
+            }
+            case PqlTokenType::IF: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::IF);
+            }
+            case PqlTokenType::PRINT: {
+              pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+            }
+            default: {
+              // do nothing
+              return;
+            }
           }
-          result.insert(add_result.begin(), add_result.end());
+
+          if (!pair_result.empty()) {
+            EvaluateSelectOnly(query);
+          }
+
         }
-      } else { // not equal to any
-        // is this correct handling?
-        EvaluateSelectOnly(query);
-      }
-    } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
-      // 2. Uses(s, _)
-      if (select_synonym.value==first_arg.value) {
-        if (select_synonym_type==PqlTokenType::STMT) {
-          add_result = pkb->GetAllStmtUsing();
-          result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::PRINT) {
-          pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
-          for (auto pair : pair_result) {
-            add_result.insert(pair.first);
+      } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
+        // 2. Uses(s, _)
+        if (select_synonym.value==first_arg.value) {
+          if (select_synonym_design_entity==PqlTokenType::STMT) {
+            add_result = pkb->GetAllStmtUsing();
+            result.insert(add_result.begin(), add_result.end());
+          } else if (select_synonym_design_entity==PqlTokenType::PRINT) {
+            pair_result = pkb->GetAllUsesStmt(StmtType::PRINT);
+            for (auto pair : pair_result) {
+              add_result.insert(pair.first);
+            }
+            result.insert(add_result.begin(), add_result.end());
+          } else if (select_synonym_design_entity==PqlTokenType::ASSIGN) {
+            pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
+            for (auto pair : pair_result) {
+              add_result.insert(pair.first);
+            }
+            result.insert(add_result.begin(), add_result.end());
           }
-          result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
-          pair_result = pkb->GetAllUsesStmt(StmtType::ASSIGN);
-          for (auto pair : pair_result) {
-            add_result.insert(pair.first);
-          }
-          result.insert(add_result.begin(), add_result.end());
+        } else {
+          EvaluateSelectOnly(query);
         }
-      } else {
-        EvaluateSelectOnly(query);
+      } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
+        // 3. Uses(s, "x")
+        std::string ident_without_quotes = second_arg.value.substr(1, second_arg.value.length() - 2);
+        if (select_synonym.value==first_arg.value) {
+          add_result = pkb->GetStmtUsedByVar(ident_without_quotes);
+          result.insert(add_result.begin(), add_result.end());
+        } else { // selected synonym is not in the Uses clause
+          EvaluateSelectOnly(query);
+        }
+      } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
+        // 4. Uses(1, v)
+        if (select_synonym.value==second_arg.value) {
+          add_result = pkb->GetVarUsedByStmt(first_arg.value);
+          result.insert(add_result.begin(), add_result.end());
+        } else { // selected synonym is not in the Uses clause
+          EvaluateSelectOnly(query);
+        }
       }
-    } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
-      // 3. Uses(s, "x")
-      std::string ident_without_quotes = second_arg.value.substr(1, second_arg.value.length() - 2);
-      if (select_synonym.value==first_arg.value) {
-        add_result = pkb->GetStmtUsedByVar(ident_without_quotes);
-        result.insert(add_result.begin(), add_result.end());
-      } else { // selected synonym is not in the Uses clause
-        EvaluateSelectOnly(query);
-      }
-    } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
-      // 4. Uses(1, v)
-      if (select_synonym.value==second_arg.value) {
-        add_result = pkb->GetVarUsedByStmt(first_arg.value);
-        result.insert(add_result.begin(), add_result.end());
-      } else { // selected synonym is not in the Uses clause
-        EvaluateSelectOnly(query);
-      }
-    }
-  } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
+    } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
     // 5. Uses(1, _)
     if (!pkb->GetVarUsedByStmt(first_arg.value).empty()) {
       // line does not use any variables
@@ -224,6 +288,23 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
     } else { // none
       return;
     }
+  }
+    case PqlTokenType::MODIFIES: {
+
+    }
+    case PqlTokenType::PARENT: {
+
+    }
+    case PqlTokenType::PARENT_T: {
+
+    }
+    case PqlTokenType::FOLLOWS: {
+
+    }
+    case PqlTokenType::FOLLOWS_T: {
+
+    }
+
   } else if (rel_ref==PqlTokenType::MODIFIES) {
     // 6 Total Cases same as UsesS
     // Only handles ModifiesS TODO: need to specialize Modifies -> ModifiesS vs ModifiesP
@@ -231,19 +312,19 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       // 1. Modifies(s, v)
       // first arg can be s, re, a
       if (select_synonym.value==first_arg.value) {
-        if (select_synonym_type==PqlTokenType::STMT) {
+        if (select_synonym_design_entity==PqlTokenType::STMT) {
           pair_result = pkb->GetAllModStmt(StmtType::STMT);
           for (auto pair : pair_result) {
             add_result.insert(pair.first);
           }
           result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::READ) {
+        } else if (select_synonym_design_entity==PqlTokenType::READ) {
           pair_result = pkb->GetAllModStmt(StmtType::READ);
           for (auto pair : pair_result) {
             add_result.insert(pair.first);
           }
           result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
+        } else if (select_synonym_design_entity==PqlTokenType::ASSIGN) {
           pair_result = pkb->GetAllModStmt(StmtType::ASSIGN);
           for (auto pair : pair_result) {
             add_result.insert(pair.first);
@@ -252,19 +333,19 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         }
 
       } else if (select_synonym.value==second_arg.value) {
-        if (select_synonym_type==PqlTokenType::STMT) {
+        if (select_synonym_design_entity==PqlTokenType::STMT) {
           pair_result = pkb->GetAllModStmt(StmtType::STMT);
           for (auto pair : pair_result) {
             add_result.insert(pair.second);
           }
           result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::READ) {
+        } else if (select_synonym_design_entity==PqlTokenType::READ) {
           pair_result = pkb->GetAllModStmt(StmtType::READ);
           for (auto pair : pair_result) {
             add_result.insert(pair.second);
           }
           result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
+        } else if (select_synonym_design_entity==PqlTokenType::ASSIGN) {
           pair_result = pkb->GetAllModStmt(StmtType::ASSIGN);
           for (auto pair : pair_result) {
             add_result.insert(pair.second);
@@ -278,19 +359,19 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
     } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
       // 2. Modifies(s, _)
       if (select_synonym.value==first_arg.value) {
-        if (select_synonym_type==PqlTokenType::STMT) {
+        if (select_synonym_design_entity==PqlTokenType::STMT) {
           pair_result = pkb->GetAllModStmt(StmtType::STMT);
           for (auto pair : pair_result) {
             add_result.insert(pair.first);
           }
           result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::READ) {
+        } else if (select_synonym_design_entity==PqlTokenType::READ) {
           pair_result = pkb->GetAllModStmt(StmtType::READ);
           for (auto pair : pair_result) {
             add_result.insert(pair.first);
           }
           result.insert(add_result.begin(), add_result.end());
-        } else if (select_synonym_type==PqlTokenType::ASSIGN) {
+        } else if (select_synonym_design_entity==PqlTokenType::ASSIGN) {
           pair_result = pkb->GetAllModStmt(StmtType::ASSIGN);
           for (auto pair : pair_result) {
             add_result.insert(pair.first);
@@ -345,6 +426,10 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
     // TODO: Follows/Follows*
 
   }
+  default: {
+    // do nothing
+  }
+}
 }
 
 void QueryEvaluator::EvaluateSelectWithPattern(ParsedQuery &query) {
