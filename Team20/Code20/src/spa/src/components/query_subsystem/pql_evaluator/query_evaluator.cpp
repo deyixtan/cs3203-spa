@@ -389,17 +389,14 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
             EvaluateSelectOnly(query);
           }
         }
-
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 5. Uses(1, _)
         if (!pkb->GetVarUsedByStmt(first_arg.value).empty()) {
-          // line does not use any variables
-          // false
-          return;
-        } else {
-          // line uses some variable
-          // true
+          // Line uses some variable
           EvaluateSelectOnly(query);
+        } else {
+          // Line does not use some variable
+          return;
         }
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
         // 6. Uses(1, "x")
