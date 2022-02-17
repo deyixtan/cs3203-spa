@@ -381,9 +381,13 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         // 4. Uses(1, v)
         if (select_synonym.value==second_arg.value) {
           add_result = pkb->GetVarUsedByStmt(first_arg.value);
-          result.insert(add_result.begin(), add_result.end());
-        } else { // selected synonym is not in the Uses clause
-          EvaluateSelectOnly(query);
+        } else {
+          // selected synonym is not in the Uses clause
+          add_result = pkb->GetVarUsedByStmt(first_arg.value);
+
+          if (!add_result.empty()) {
+            EvaluateSelectOnly(query);
+          }
         }
 
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
