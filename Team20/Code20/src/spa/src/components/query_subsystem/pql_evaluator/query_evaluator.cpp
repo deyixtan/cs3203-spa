@@ -36,75 +36,66 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
 
 void QueryEvaluator::EvaluateSelectOnly(ParsedQuery &query) {
   const PqlToken select_synonym = query.GetSynonym();
+  PqlTokenType select_synonym_design_entity;
   const auto declarations = query.GetDeclaration();
-  PqlToken token;
 
   // assume semantically valid and declaration must contain the select_synonym
-  // TODO: refactor ParsedQuery to ValidQuery
   for (auto declaration : declarations) {
     if (declaration.GetSynonym().value==select_synonym.value) {
-      token = declaration.GetDesignEntity();
+      select_synonym_design_entity = declaration.GetDesignEntity().type;
     }
   }
 
   // assume that only select
   // evaluation with relationship and pattern may default to this in case of true boolean
-  std::unordered_set<std::string> add_result;
-  switch (token.type) {
+  std::unordered_set<std::string> result_to_add;
+  switch (select_synonym_design_entity) {
     case PqlTokenType::STMT: {
-      add_result = pkb->GetStmt(StmtType::STMT);
-      result.insert(add_result.begin(), add_result.end());
+      result_to_add = pkb->GetStmt(StmtType::STMT);
       break;
     }
     case PqlTokenType::READ: {
-      add_result = pkb->GetStmt(StmtType::READ);
-      result.insert(add_result.begin(), add_result.end());
+      result_to_add = pkb->GetStmt(StmtType::READ);
       break;
     }
     case PqlTokenType::PRINT: {
-      add_result = pkb->GetStmt(StmtType::PRINT);
-      result.insert(add_result.begin(), add_result.end());
+      result_to_add = pkb->GetStmt(StmtType::PRINT);
       break;
     }
     case PqlTokenType::CALL: {
-      add_result = pkb->GetStmt(StmtType::CALL);
-      result.insert(add_result.begin(), add_result.end());
+      result_to_add = pkb->GetStmt(StmtType::CALL);
       break;
     }
     case PqlTokenType::WHILE: {
-      add_result = pkb->GetStmt(StmtType::WHILE);
-      result.insert(add_result.begin(), add_result.end());
+      result_to_add = pkb->GetStmt(StmtType::WHILE);
       break;
     }
     case PqlTokenType::IF: {
-      add_result = pkb->GetStmt(StmtType::IF);
-      result.insert(add_result.begin(), add_result.end());
+      result_to_add = pkb->GetStmt(StmtType::IF);
       break;
     }
     case PqlTokenType::ASSIGN: {
-      add_result = pkb->GetStmt(StmtType::ASSIGN);
-      result.insert(add_result.begin(), add_result.end());
+      result_to_add = pkb->GetStmt(StmtType::ASSIGN);
       break;
     }
     case PqlTokenType::VARIABLE: {
-      add_result = pkb->GetStmt(StmtType::VARS);
-      result.insert(add_result.begin(), add_result.end());
+      result_to_add = pkb->GetStmt(StmtType::VARS);
       break;
     }
     case PqlTokenType::CONSTANT: {
-      add_result = pkb->GetStmt(StmtType::CONSTS);
-      result.insert(add_result.begin(), add_result.end());
+      result_to_add = pkb->GetStmt(StmtType::CONSTS);
       break;
     }
     case PqlTokenType::PROCEDURE: {
-      add_result = pkb->GetStmt(StmtType::PROC);
-      result.insert(add_result.begin(), add_result.end());
+      result_to_add = pkb->GetStmt(StmtType::PROC);
       break;
     }
     default: {
       // TODO:throw exception
     }
   }
+
+  result.insert(result_to_add.begin(), result_to_add.end());
 }
 
 void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
@@ -196,8 +187,9 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       }
     } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
       // 3. Uses(s, "x")
+      std::string ident_without_quotes = second_arg.value.substr(1, second_arg.value.length() - 2);
       if (select_synonym.value==first_arg.value) {
-        add_result = pkb->GetStmtUsedByVar(second_arg.value);
+        add_result = pkb->GetStmtUsedByVar(ident_without_quotes);
         result.insert(add_result.begin(), add_result.end());
       } else { // selected synonym is not in the Uses clause
         EvaluateSelectOnly(query);
@@ -224,7 +216,8 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
     }
   } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
     // 6. Uses(1, "x")
-    std::pair arg_pair(first_arg.value, second_arg.value);
+    std::string ident_without_quotes = second_arg.value.substr(1, second_arg.value.length() - 2);
+    std::pair arg_pair(first_arg.value, ident_without_quotes);
     bool is_true = pkb->IsUsageStmtVarExist(arg_pair);
     if (is_true) { // defaults to case with just select
       EvaluateSelectOnly(query);
@@ -309,8 +302,9 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       }
     } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
       // 3. Modifies(s, "x")
+      std::string ident_without_quotes = second_arg.value.substr(1, second_arg.value.length() - 2);
       if (select_synonym.value==first_arg.value) {
-        add_result = pkb->GetStmtModByVar(second_arg.value);
+        add_result = pkb->GetStmtModByVar(ident_without_quotes);
         result.insert(add_result.begin(), add_result.end());
       } else { // selected synonym is not in the Uses clause
         EvaluateSelectOnly(query);
@@ -337,7 +331,8 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
     }
   } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::IDENT_WITH_QUOTES) {
     // 6. Modifies(1, "x")
-    std::pair arg_pair(first_arg.value, second_arg.value);
+    std::string ident_without_quotes = second_arg.value.substr(1, second_arg.value.length() - 2);
+    std::pair arg_pair(first_arg.value, ident_without_quotes);
     bool is_true = pkb->IsModifyStmtVarExist(arg_pair);
     if (is_true) { // defaults to case with just select
       EvaluateSelectOnly(query);
