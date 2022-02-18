@@ -1,4 +1,3 @@
-//#define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "components/query_subsystem/pql_parser/parsed_query_builder.h"
 #include "components/query_subsystem/pql_parser/parsed_query.cpp"

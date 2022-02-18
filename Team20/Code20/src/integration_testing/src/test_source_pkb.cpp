@@ -230,4 +230,138 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
     REQUIRE(result11 == expected_result11);
     REQUIRE(result12 == expected_result12);
   }
+
+  SECTION("Test Uses relationship for variables") {
+    std::unordered_set<std::string> result1 = pkb->GetVarUsedByStmt("1");
+    std::unordered_set<std::string> result2 = pkb->GetVarUsedByStmt("2");
+    std::unordered_set<std::string> result3 = pkb->GetVarUsedByStmt("3");
+    std::unordered_set<std::string> result4 = pkb->GetVarUsedByStmt("4");
+    std::unordered_set<std::string> result5 = pkb->GetVarUsedByStmt("5");
+    std::unordered_set<std::string> result6 = pkb->GetVarUsedByStmt("6");
+    std::unordered_set<std::string> result7 = pkb->GetVarUsedByStmt("7");
+    std::unordered_set<std::string> result8 = pkb->GetVarUsedByStmt("8");
+    std::unordered_set<std::string> result9 = pkb->GetVarUsedByStmt("9");
+    std::unordered_set<std::string> result10 = pkb->GetVarUsedByStmt("10");
+    std::unordered_set<std::string> result11 = pkb->GetVarUsedByStmt("11");
+    std::unordered_set<std::string> result12 = pkb->GetVarUsedByStmt("12");
+
+    std::unordered_set<std::string> expected_result1 = {};
+    std::unordered_set<std::string> expected_result2 = {};
+    std::unordered_set<std::string> expected_result3 = {};
+    std::unordered_set<std::string> expected_result4 = {"x", "y", "count", "cenX", "x", "cenY", "y"};
+    std::unordered_set<std::string> expected_result5 = {"count"};
+    std::unordered_set<std::string> expected_result6 = {"cenX", "x"};
+    std::unordered_set<std::string> expected_result7 = {"cenY", "y"};
+    std::unordered_set<std::string> expected_result8 = {"count"};
+    std::unordered_set<std::string> expected_result9 = {};
+    std::unordered_set<std::string> expected_result10 = {"cenX", "count"};
+    std::unordered_set<std::string> expected_result11 = {"cenY", "count"};
+    std::unordered_set<std::string> expected_result12 = {"cenX", "cenY"};
+
+    REQUIRE(result1 == expected_result1);
+    REQUIRE(result2 == expected_result2);
+    REQUIRE(result3 == expected_result3);
+    REQUIRE(result4 == expected_result4);
+    REQUIRE(result5 == expected_result5);
+    REQUIRE(result6 == expected_result6);
+    REQUIRE(result7 == expected_result7);
+    REQUIRE(result8 == expected_result8);
+    REQUIRE(result9 == expected_result9);
+    REQUIRE(result10 == expected_result10);
+    REQUIRE(result11 == expected_result11);
+    REQUIRE(result12 == expected_result12);
+  }
+
+  SECTION("Test Uses relationship for statement number") {
+    std::unordered_set<std::string> result1 = pkb->GetStmtUsedByVar("count");
+    std::unordered_set<std::string> result2 = pkb->GetStmtUsedByVar("cenX");
+    std::unordered_set<std::string> result3 = pkb->GetStmtUsedByVar("cenY");
+    std::unordered_set<std::string> result4 = pkb->GetStmtUsedByVar("x");
+    std::unordered_set<std::string> result5 = pkb->GetStmtUsedByVar("y");
+    std::unordered_set<std::string> result6 = pkb->GetStmtUsedByVar("flag");
+    std::unordered_set<std::string> result7 = pkb->GetStmtUsedByVar("normSq");
+
+    std::unordered_set<std::string> expected_result1 = {"5", "8", "10", "11"};
+    std::unordered_set<std::string> expected_result2 = {"6", "10", "12"};
+    std::unordered_set<std::string> expected_result3 = {"7", "11", "12"};
+    std::unordered_set<std::string> expected_result4 = {"4", "6"};
+    std::unordered_set<std::string> expected_result5 = {"4", "7"};
+    std::unordered_set<std::string> expected_result6 = {};
+    std::unordered_set<std::string> expected_result7 = {};
+
+    REQUIRE(result1 == expected_result1);
+    REQUIRE(result2 == expected_result2);
+    REQUIRE(result3 == expected_result3);
+    REQUIRE(result4 == expected_result4);
+    REQUIRE(result5 == expected_result5);
+    REQUIRE(result6 == expected_result6);
+    REQUIRE(result7 == expected_result7);
+  }
+
+  SECTION("Test Modifies relationship for variables") {
+    std::unordered_set<std::string> result1 = pkb->GetVarModByStmt("1");
+    std::unordered_set<std::string> result2 = pkb->GetVarModByStmt("2");
+    std::unordered_set<std::string> result3 = pkb->GetVarModByStmt("3");
+    std::unordered_set<std::string> result4 = pkb->GetVarModByStmt("4");
+    std::unordered_set<std::string> result5 = pkb->GetVarModByStmt("5");
+    std::unordered_set<std::string> result6 = pkb->GetVarModByStmt("6");
+    std::unordered_set<std::string> result7 = pkb->GetVarModByStmt("7");
+    std::unordered_set<std::string> result8 = pkb->GetVarModByStmt("8");
+    std::unordered_set<std::string> result9 = pkb->GetVarModByStmt("9");
+    std::unordered_set<std::string> result10 = pkb->GetVarModByStmt("10");
+    std::unordered_set<std::string> result11 = pkb->GetVarModByStmt("11");
+    std::unordered_set<std::string> result12 = pkb->GetVarModByStmt("12");
+
+    std::unordered_set<std::string> expected_result1 = {"count"};
+    std::unordered_set<std::string> expected_result2 = {"cenX"};
+    std::unordered_set<std::string> expected_result3 = {"cenY"};
+    std::unordered_set<std::string> expected_result4 = {};
+    std::unordered_set<std::string> expected_result5 = {"count"};
+    std::unordered_set<std::string> expected_result6 = {"cenX"};
+    std::unordered_set<std::string> expected_result7 = {"cenY"};
+    std::unordered_set<std::string> expected_result8 = {};
+    std::unordered_set<std::string> expected_result9 = {"flag"};
+    std::unordered_set<std::string> expected_result10 = {"cenX"};
+    std::unordered_set<std::string> expected_result11 = {"cenY"};
+    std::unordered_set<std::string> expected_result12 = {"normSq"};
+
+    REQUIRE(result1 == expected_result1);
+    REQUIRE(result2 == expected_result2);
+    REQUIRE(result3 == expected_result3);
+    REQUIRE(result4 == expected_result4);
+    REQUIRE(result5 == expected_result5);
+    REQUIRE(result6 == expected_result6);
+    REQUIRE(result7 == expected_result7);
+    REQUIRE(result8 == expected_result8);
+    REQUIRE(result9 == expected_result9);
+    REQUIRE(result10 == expected_result10);
+    REQUIRE(result11 == expected_result11);
+    REQUIRE(result12 == expected_result12);
+  }
+
+  SECTION("Test Modifies relationship for statement number") {
+    std::unordered_set<std::string> result1 = pkb->GetStmtModByVar("count");
+    std::unordered_set<std::string> result2 = pkb->GetStmtModByVar("cenX");
+    std::unordered_set<std::string> result3 = pkb->GetStmtModByVar("cenY");
+    std::unordered_set<std::string> result4 = pkb->GetStmtModByVar("x");
+    std::unordered_set<std::string> result5 = pkb->GetStmtModByVar("y");
+    std::unordered_set<std::string> result6 = pkb->GetStmtModByVar("flag");
+    std::unordered_set<std::string> result7 = pkb->GetStmtModByVar("normSq");
+
+    std::unordered_set<std::string> expected_result1 = {"1", "5"};
+    std::unordered_set<std::string> expected_result2 = {"2", "6", "10"};
+    std::unordered_set<std::string> expected_result3 = {"3", "7", "11"};
+    std::unordered_set<std::string> expected_result4 = {};
+    std::unordered_set<std::string> expected_result5 = {};
+    std::unordered_set<std::string> expected_result6 = {"9"};
+    std::unordered_set<std::string> expected_result7 = {"12"};
+
+    REQUIRE(result1 == expected_result1);
+    REQUIRE(result2 == expected_result2);
+    REQUIRE(result3 == expected_result3);
+    REQUIRE(result4 == expected_result4);
+    REQUIRE(result5 == expected_result5);
+    REQUIRE(result6 == expected_result6);
+    REQUIRE(result7 == expected_result7);
+  }
 }
