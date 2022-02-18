@@ -85,7 +85,7 @@ class PKB {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonym(std::string rhs);
   std::string GetFollowOf(std::string stmt);
   std::unordered_set<std::string> GetFollowStarOf(std::string stmt);
-  std::unordered_set<std::string> GetParentOf(std::string stmt);
+  std::string GetParentOf(std::string stmt);
   std::unordered_set<std::string> GetParentStarOf(std::string stmt);
 
   /* Checkers */

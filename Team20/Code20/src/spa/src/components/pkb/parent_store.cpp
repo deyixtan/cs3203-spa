@@ -89,7 +89,7 @@ std::string ParentStore::GetParentOf(std::string stmt) {
     parent_child pc = rs_map.at(stmt);
     return pc.parent;
   }
-  return 0;
+  return "0";
 }
 
 std::string ParentStore::GetChildOf(std::string stmt) {
@@ -97,7 +97,7 @@ std::string ParentStore::GetChildOf(std::string stmt) {
     parent_child pc = rs_map.at(stmt);
     return pc.child;
   }
-  return 0;
+  return "0";
 }
 
 std::unordered_set<std::string> ParentStore::GetAllAnceOf(std::string stmt) {

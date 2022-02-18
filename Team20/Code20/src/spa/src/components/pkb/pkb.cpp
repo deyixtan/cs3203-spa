@@ -184,12 +184,12 @@ bool PKB::IsFollowingStar(std::string stmt) {
   return follow_store.IsFollowingStar(stmt);
 }
 
-std::unordered_set<std::string> PKB::GetParentOf(std::string stmt) {
-  parent_store.GetParentOf(stmt);
+std::string PKB::GetParentOf(std::string stmt) {
+  return parent_store.GetParentOf(stmt);
 }
 
 std::unordered_set<std::string> PKB::GetParentStarOf(std::string stmt) {
-  parent_store.GetAllAnceOf(stmt);
+  return parent_store.GetAllAnceOf(stmt);
 }
 
 bool PKB::IsParent(std::string stmt) {
