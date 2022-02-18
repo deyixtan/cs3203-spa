@@ -747,16 +747,64 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       }
       break;
     }
+    case PqlTokenType::FOLLOWS: {
+      // Follows is a relationship between statements
+      // Total 6 types of statements (assign, while, if, call, print, read)
+      // Total 9 cases
+
+      if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::NUMBER) {
+        // 1. Follows(1, 2)
+        if (pkb->GetFollowOf(first_arg.value)==second_arg.value) {
+          // clause is true
+          EvaluateSelectOnly(query);
+        }
+      } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
+        // 2. Follows(1, _)
+        if (pkb->GetFollowOf(first_arg.value)=="0") {
+          // clause is false
+        } else {
+          EvaluateSelectOnly(query);
+        }
+      } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
+        // 3. Follows(9, s)
+
+        PqlTokenType second_arg_design_entity;
+        for (auto declaration : declarations) {
+          if (declaration.GetSynonym().value==second_arg.value) {
+            second_arg_design_entity = declaration.GetDesignEntity().type;
+          }
+        }
+
+        if (select_synonym_design_entity==second_arg_design_entity) {
+          result_to_add.insert(pkb->GetFollowOf(first_arg.value));
+        } else {
+          if (pkb->GetFollowOf(first_arg.value)=="0") {
+            // clause is false no possible s
+          } else {
+            EvaluateSelectOnly(query);
+          }
+        }
+      } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::NUMBER) {
+        // 4. Follows(_, 9)
+      } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::UNDERSCORE) {
+        // 5. Follows(_, _)
+      } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SYNONYM) {
+        // 6. Follows(_, s)
+      } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::NUMBER) {
+        // 7. Follows(s, 8)
+      } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
+        // 8. Follows(s, _)
+      } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+        // 9. Follows(s1, s2)
+      }
+    }
+    case PqlTokenType::FOLLOWS_T: {
+      break;
+    }
     case PqlTokenType::PARENT: {
       break;
     }
     case PqlTokenType::PARENT_T: {
-      break;
-    }
-    case PqlTokenType::FOLLOWS: {
-      break;
-    }
-    case PqlTokenType::FOLLOWS_T: {
       break;
     }
     default: {
