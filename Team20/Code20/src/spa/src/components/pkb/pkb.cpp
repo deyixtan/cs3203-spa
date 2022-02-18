@@ -492,7 +492,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
     case STMT:
       for (auto i : follow_star_stmt_list) {
         for (auto j : stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -501,7 +501,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
     case READ:
       for (auto i : follow_star_stmt_list) {
         for (auto j : read_stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -510,7 +510,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
     case ASSIGN:
       for (auto i : follow_star_stmt_list) {
         for (auto j : assign_stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -519,7 +519,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
     case WHILE:
       for (auto i : follow_star_stmt_list) {
         for (auto j : while_stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -528,7 +528,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
     case PRINT:
       for (auto i : follow_star_stmt_list) {
         for (auto j : print_stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -536,6 +536,69 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
       return result;
     case IF:
       for (auto i : follow_star_stmt_list) {
+        for (auto j : if_stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    default:
+      break;
+  }
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFollowStarStmt(StmtType type1, StmtType type2) {
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
+
+  switch (type1) {
+    case STMT:
+      for (auto i : GetAllFollowStarStmt(type2)) {
+        for (auto j : stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case READ:
+      for (auto i : GetAllFollowStarStmt(type2)) {
+        for (auto j : read_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case ASSIGN:
+      for (auto i : GetAllFollowStarStmt(type2)) {
+        for (auto j : assign_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case WHILE:
+      for (auto i : GetAllFollowStarStmt(type2)) {
+        for (auto j : while_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case PRINT:
+      for (auto i : GetAllFollowStarStmt(type2)) {
+        for (auto j : print_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case IF:
+      for (auto i : GetAllFollowStarStmt(type2)) {
         for (auto j : if_stmt_list) {
           if (i.first == j) {
             result.insert(i);
@@ -556,7 +619,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
     case STMT:
       for (auto i : parent_child_list) {
         for (auto j : stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -565,7 +628,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
     case IF:
       for (auto i : parent_child_list) {
         for (auto j : if_stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -573,6 +636,42 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
       return result;
     case WHILE:
       for (auto i : parent_child_list) {
+        for (auto j : while_stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    default:
+      break;
+  }
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllParentStmt(StmtType type1, StmtType type2) {
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
+
+  switch (type1) {
+    case STMT:
+      for (auto i : GetAllParentStmt(type2)) {
+        for (auto j : stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case IF:
+      for (auto i : GetAllParentStmt(type2)) {
+        for (auto j : if_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case WHILE:
+      for (auto i : GetAllParentStmt(type2)) {
         for (auto j : while_stmt_list) {
           if (i.first == j) {
             result.insert(i);
@@ -593,7 +692,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
     case STMT:
       for (auto i : ance_desc_list) {
         for (auto j : stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -602,7 +701,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
     case IF:
       for (auto i : ance_desc_list) {
         for (auto j : if_stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -610,6 +709,42 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
       return result;
     case WHILE:
       for (auto i : ance_desc_list) {
+        for (auto j : while_stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    default:
+      break;
+  }
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllParentStarStmt(StmtType type1, StmtType type2) {
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
+
+  switch (type1) {
+    case STMT:
+      for (auto i : GetAllParentStmt(type2)) {
+        for (auto j : stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case IF:
+      for (auto i : GetAllParentStmt(type2)) {
+        for (auto j : if_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case WHILE:
+      for (auto i : GetAllParentStmt(type2)) {
         for (auto j : while_stmt_list) {
           if (i.first == j) {
             result.insert(i);
