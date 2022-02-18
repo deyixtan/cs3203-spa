@@ -832,7 +832,15 @@ void QueryEvaluator::EvaluateSelectWithPattern(ParsedQuery &query) {
     }
   } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::UNDERSCORE) {
     // 3. pattern a(_, _)
-
+    if (select_synonym.value==pattern_synonym.value) {
+      // Select a pattern a(_, _)
+      result_to_add = pkb->GetStmtWithPattern("_", "_");
+    } else {
+      // check if pattern a(_, _) is non-empty
+      if (!pkb->GetStmtWithPattern("_", "_").empty()) {
+        EvaluateSelectOnly(query);
+      }
+    }
   } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SUB_EXPRESSION) {
     // 4. pattern a(_, _"x"_)
 
