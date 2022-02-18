@@ -843,10 +843,26 @@ void QueryEvaluator::EvaluateSelectWithPattern(ParsedQuery &query) {
     }
   } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SUB_EXPRESSION) {
     // 4. pattern a(_, _"x"_)
-
+    if (select_synonym.value==pattern_synonym.value) {
+      // Select a pattern a(_, _"x"_)
+      result_to_add = pkb->GetStmtWithPattern("_", second_arg.value);
+    } else {
+      // check if pattern a(_, _"x"_) is non-empty
+      if (!pkb->GetStmtWithPattern("_", second_arg.value).empty()) {
+        EvaluateSelectOnly(query);
+      }
+    }
   } else if (first_arg.type==PqlTokenType::IDENT_WITH_QUOTES && second_arg.type==PqlTokenType::UNDERSCORE) {
     // 5. pattern a("x", _)
-
+    if (select_synonym.value==pattern_synonym.value) {
+      // Select a pattern a("x", _)
+      result_to_add = pkb->GetStmtWithPattern(first_arg.value, "_");
+    } else {
+      // check if pattern a("x", _) is non-empty
+      if (!pkb->GetStmtWithPattern(first_arg.value, "_").empty()) {
+        EvaluateSelectOnly(query);
+      }
+    }
   } else if (first_arg.type==PqlTokenType::IDENT_WITH_QUOTES && second_arg.type==PqlTokenType::SUB_EXPRESSION) {
     // 6. pattern a("x", _"y"_)
 
