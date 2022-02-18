@@ -37,6 +37,7 @@ void ParentStore::AddParentStmt(std::string parent, std::string child) {
 
   parent_child_set.insert(std::make_pair(parent, child));
   parent_set.insert(parent);
+  child_set.insert(child);
   rs_map.at(parent).child = child;
   rs_map.at(child).parent = parent;
   rs_map.at(parent).desc.insert(child);
