@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "source_token.h"
+#include "exceptions/end_of_stream.h"
 #include "exceptions/unexpected_token.h"
 
 namespace source {
@@ -19,8 +20,9 @@ class SourceLexer {
  private:
   void ConstructLexerSpecs();
   bool HasMoreTokens();
-  std::shared_ptr<SourceToken> GetNextToken();
-  void TryTranslateToKeywordToken(std::shared_ptr<SourceToken> &token_ptr);
+  [[nodiscard]] std::shared_ptr<SourceToken> GetNextToken();
+  void RemoveWhiteSpaceTokens(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
+  void TranslateKeywordTokens(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
 
  public:
   explicit SourceLexer(std::string simple_source);
