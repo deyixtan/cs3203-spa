@@ -306,19 +306,36 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
       }
     } else if (relationship.GetFirst().type != PqlTokenType::SYNONYM &&
                relationship.GetSecond().type == PqlTokenType::SYNONYM) {  // (1, v)
+
+      PqlTokenType second_arg_design_entity;
+      for (auto declaration : declarations) {
+        if (declaration.GetSynonym().value==relationship.GetSecond().value) {
+          second_arg_design_entity = declaration.GetDesignEntity().type;
+        }
+      }
+
       if (relationship_type == PqlTokenType::USES) {
         single_result_set = pkb->GetVarUsedByStmt(relationship.GetFirst().value);
       } else if (relationship_type == PqlTokenType::MODIFIES) {
         single_result_set = pkb->GetVarModByStmt(relationship.GetFirst().value);
       } else if (relationship_type == PqlTokenType::PARENT) {
-        single_result_set; // TODO
+        temp_set = pkb->GetAllParentStmt(GetStmtType(second_arg_design_entity));
       } else if (relationship_type == PqlTokenType::PARENT_T) {
-        single_result_set; // TODO
+        temp_set = pkb->GetAllParentStarStmt(GetStmtType(second_arg_design_entity));
       } else if (relationship_type == PqlTokenType::FOLLOWS) {
-        single_result_set; // TODO
+        temp_set = pkb->GetAllFollowStmt(GetStmtType(second_arg_design_entity));
       } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
-        single_result_set; // TODO
+        temp_set = pkb->GetAllFollowStarStmt(GetStmtType(second_arg_design_entity));
       }
+
+      if (!temp_set.empty()) {
+        for (auto pair : temp_set) {
+          if (pair.first == relationship.GetFirst().value) {
+            single_result_set.insert(pair.second);
+          }
+        }
+      }
+
       for (auto single_result : single_result_set) {
         rel_result_set.insert(std::make_pair(relationship.GetFirst().value, single_result));
       }
