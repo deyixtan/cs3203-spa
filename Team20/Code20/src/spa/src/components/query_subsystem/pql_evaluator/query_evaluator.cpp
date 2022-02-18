@@ -357,7 +357,7 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
       std::string pattern_first_arg_value = pattern_first_arg.value.substr(1, 1);
       std::string pattern_second_arg_value = pattern.GetSecond().value;
       if (pattern.GetSecond().type == PqlTokenType::EXPR || pattern.GetSecond().type == PqlTokenType::IDENT_WITH_QUOTES) {
-        pattern_second_arg_value = pattern.GetSecond().value.substr(1, 1);
+        pattern_second_arg_value = pattern.GetSecond().value.substr(1, pattern.GetSecond().value.length() - 2);
       }
       std::unordered_set<std::string> pattern_single_set = pkb->GetStmtWithPattern(pattern_first_arg_value, pattern_second_arg_value);
       for (auto pattern_single : pattern_single_set) {
