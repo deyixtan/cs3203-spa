@@ -122,6 +122,36 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
   return result;
 }
 
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetStmtWithPatternSynonym(std::string rhs) {
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
+  rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
+
+  for (auto const&[key, val] : pattern_map) {
+    if (rhs == "_") {
+      result.insert({val, key.first});
+    }
+
+    // Exact match
+    if (rhs != "_" && rhs.find("_") == std::string::npos) {
+      if (key.second == rhs) {
+        result.insert({val, key.first});
+      }
+    }
+
+    // Partial match
+    if (rhs != "_" && rhs.find("_") != std::string::npos){
+      auto first = rhs.find("_\"");
+      auto last = rhs.find("\"_");
+      auto sub_pattern = rhs.substr(first + 2, last - 2);
+      if (key.second.find(sub_pattern) != std::string::npos) {
+        result.insert({val, key.first});
+      }
+    }
+  }
+
+  return result;
+}
+
 std::string PKB::GetFollowOf(std::string stmt) {
   return follow_store.GetFollowingOf(stmt);
 }
