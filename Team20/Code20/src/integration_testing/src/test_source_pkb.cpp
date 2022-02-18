@@ -252,7 +252,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
     std::unordered_set<std::string> expected_result5 = {"count"};
     std::unordered_set<std::string> expected_result6 = {"cenX", "x"};
     std::unordered_set<std::string> expected_result7 = {"cenY", "y"};
-    std::unordered_set<std::string> expected_result8 = {"count"};
+    std::unordered_set<std::string> expected_result8 = {"count", "cenX", "cenY"};
     std::unordered_set<std::string> expected_result9 = {};
     std::unordered_set<std::string> expected_result10 = {"cenX", "count"};
     std::unordered_set<std::string> expected_result11 = {"cenY", "count"};
@@ -281,9 +281,9 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
     std::unordered_set<std::string> result6 = pkb->GetStmtUsedByVar("flag");
     std::unordered_set<std::string> result7 = pkb->GetStmtUsedByVar("normSq");
 
-    std::unordered_set<std::string> expected_result1 = {"5", "8", "10", "11"};
-    std::unordered_set<std::string> expected_result2 = {"6", "10", "12"};
-    std::unordered_set<std::string> expected_result3 = {"7", "11", "12"};
+    std::unordered_set<std::string> expected_result1 = {"4", "5", "8", "10", "11"};
+    std::unordered_set<std::string> expected_result2 = {"4", "8", "6", "10", "12"};
+    std::unordered_set<std::string> expected_result3 = {"4", "8", "7", "11", "12"};
     std::unordered_set<std::string> expected_result4 = {"4", "6"};
     std::unordered_set<std::string> expected_result5 = {"4", "7"};
     std::unordered_set<std::string> expected_result6 = {};
