@@ -1,0 +1,270 @@
+1 - select print uses(print, var)
+print pn; variable v;
+Select pn such that Uses(pn, v)
+2, 5, 11, 14
+5000
+2 - select var uses(print, var)
+print pn; variable v;
+Select v such that Uses(pn, v)
+apple, peach
+5000
+3 - select pn uses(print, 'var')
+print pn;
+Select pn such that Uses(pn, "apple")
+2, 5, 14
+5000
+4 - select pn uses(print, _)
+print pn;
+Select pn such that Uses(pn, _)
+2, 5, 11, 14
+5000
+5 - select read uses(read, _)
+read r;
+Select r such that Uses(r, _)
+none
+5000
+6 - select assign uses(assign, var)
+assign apple; variable v;
+Select apple such that Uses(apple, v)
+1, 12, 17, 18
+5000
+7 - select var uses(assign, var)
+assign apple; variable v;
+Select v such that Uses(apple, v)
+apple, berry, avocado, peach
+5000
+8 - select var uses(assign, 'var')
+assign apple; variable v;
+Select apple such that Uses(apple, "berry")
+12, 17
+5000
+9 - select var uses(assign, 'const') (Invalid)
+assign apple;
+Select v such that Uses(apple, "100")
+none
+5000
+10 - select const uses(assign, const) (Invalid)
+assign apple; const carrot;
+Select carrot such that Uses(apple, carrot)
+none
+5000
+11 - select assign uses(assign, const) (Invalid)
+assign apple; const carrot;
+Select apple such that Uses(apple, carrot)
+none
+5000
+12 - select assign uses(assign, _)
+assign apple;
+Select apple such that Uses(apple, _)
+1, 12, 17, 18
+5000
+13 - select proc uses(proc, _)
+procedure pear;
+Select pear such that Uses(pear, _)
+Uses
+5000
+14 - select proc uses(proc, 'var')
+procedure pear;
+Select pear such that Uses(pear, "apple")
+Uses
+5000
+15 - select proc uses(proc, 'nested_var')
+procedure pear;
+Select pear such that Uses(pear, "plum")
+none
+5000
+16 - select proc uses(proc, 'while_var')
+procedure pear;
+Select pear such that Uses(pear, "pear")
+Uses
+5000
+17 - select proc uses(proc, 'const') (Invalid)
+procedure pear;
+Select pear such that Uses(pear, "100")
+none
+5000
+18 - select proc uses(proc, 'var')
+procedure pear;
+Select pear such that Uses(pear, "fake")
+none
+5000
+19 - select proc uses(proc, var)
+procedure pear; variable v;
+Select pear such that Uses(pear, v)
+Uses
+5000
+20 - select var uses(proc, var)
+procedure pear; variable v;
+Select v such that Uses(pear, v)
+apple, banana, papaya, pear, orange, peach, berry, carrot, grape, avocado
+5000
+21 - select proc uses(proc, const) (Invalid)
+procedure pear; constant carrot;
+Select pear such that Uses(pear, carrot)
+none
+5000
+22 - select const uses(proc, const) (Invalid)
+procedure pear; constant carrot;
+Select carrot such that Uses(pear, carrot)
+none
+5000
+23 - select const uses('proc', const) (Invalid)
+procedure pear; constant carrot;
+Select carrot such that Uses("Uses", carrot)
+none
+5000
+24 - select const uses('proc', const) (Invalid)
+procedure pear; constant carrot;
+Select carrot such that Uses("uses", carrot)
+none
+5000
+25 - select var uses('proc', var)
+procedure pear; variable v;
+Select v such that Uses(pear, v)
+apple, banana, papaya, pear, orange, peach, berry, carrot, grape, avocado
+5000
+26 - select var uses('proc', var)
+procedure pear; variable v;
+Select v such that Uses("USes", v)
+none
+5000
+27 - select stmt uses(stmt, var)
+stmt s; variable v;
+Select s such that Uses(s, v)
+1, 2, 3, 5, 6, 8, 11, 12, 13, 14, 15, 17, 18
+5000
+28 - select var uses(stmt, var)
+stmt s; variable v;
+Select v such that Uses(s, v)
+apple, banana, papaya, pear, orange, peach, berry, carrot, grape, avocado
+5000
+29 - select stmt uses(stmt, 'var')
+stmt s;
+Select s such that Uses(s, "apple")
+1, 2, 3, 5, 8, 14, 6, 13
+5000
+30 - select stmt uses(stmt, 'var')
+stmt s;
+Select s such that Uses(s, "plum")
+none
+5000
+31 - select stmt uses(stmt, const) (Invalid)
+stmt s; constant carrot;
+Select s such that Uses(s, carrot)
+none
+5000
+32 - select stmt uses(stmt, const) (Invalid)
+stmt s; constant carrot;
+Select carrot such that Uses(s, carrot)
+none
+5000
+33 - select stmt uses(stmt, 'const') (Invalid)
+stmt s;
+Select s such that Uses(s, "3")
+none
+5000
+34 - select stmt uses(stmt, 'const') (Invalid)
+stmt s;
+Select s such that Uses(s, "10")
+none
+5000
+35 - select stmt uses(stmt, _)
+stmt s;
+Select s such that Uses(s, _)
+1, 2, 3, 5, 6, 8, 11, 12, 13, 14, 15, 17, 18
+5000
+36 - select var uses('stmt', var)
+variable v;
+Select v such that Uses(8, v)
+apple, pear, orange, peach, berry
+5000
+37 - select const uses('stmt', const) (Invalid)
+constant carrot
+Select carrot such that Uses(8, carrot)
+none
+5000
+38 - select variable uses('stmt', _)
+variable v;
+Select v such that Uses(8, _)
+durian, apple, banana, papaya, pear, orange, plum, peach, berry, carrot, grape, avocado
+5000
+39 - select variable uses(_, _)
+variable v;
+Select v such that Uses(_, _)
+none
+5000
+40 - select variable uses(_, var)
+variable v;
+Select v such that Uses(_, v)
+none
+5000
+41 - select while uses(while, var)
+while plum; variable v;
+Select plum such that Uses(plum, v)
+6, 8, 15
+5000
+42 - select var uses(while, var)
+while plum; variable v;
+Select v such that Uses(plum, v)
+banana, papaya, apple, pear, orange, grape, peach, berry
+5000
+43 - select while uses(while, 'while_var')
+while plum;
+Select plum such that Uses(plum, "apple")
+6, 8
+5000
+44 - select while uses(while, 'nested_while_var')
+while plum;
+Select plum such that Uses(plum, "peach")
+6, 8
+5000
+45 - select while uses(while, 'var')
+while plum;
+Select plum such that Uses(plum, "plum")
+none
+5000
+46 - select const uses(while, _)
+while plum; constant carrot;
+Select carrot such that Uses(plum, _)
+1, 2, 3, 100
+5000
+47 - select while uses(while, _)
+while plum;
+Select plum such that Uses(plum, _)
+6, 8, 15
+5000
+48 - select if uses(if, var)
+if ifs; variable v;
+Select ifs such that Uses(ifs, v)
+3, 13
+5000
+49 - select var uses(if, var)
+if ifs; variable v;
+Select v such that Uses(ifs, v)
+apple, banana, papaya, pear, orange, peach, berry, carrot, grape
+5000
+50 - select if uses(if, 'if_var')
+if ifs;
+Select ifs such that Uses(ifs, "carrot")
+13
+5000
+51 - select if uses(if, 'nested_var')
+if ifs;
+Select ifs such that Uses(ifs, "apple")
+3, 13
+5000
+52 - select if uses(if, 'var')
+if ifs;
+Select ifs such that Uses(ifs, "avocado")
+none
+5000
+53 - select const uses(if, _)
+if ifs; constant carrot;
+Select carrot such that Uses(ifs, _)
+1, 2, 3, 100
+5000
+54 - select if uses(if, _)
+if ifs;
+Select ifs such that Uses(ifs, _)
+3, 13
+5000
