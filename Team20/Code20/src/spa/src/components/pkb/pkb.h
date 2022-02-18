@@ -71,6 +71,8 @@ class PKB {
   std::unordered_set<std::string> GetAllProcUsing();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsageStmtVar();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsageProcVar();
+  std::unordered_set<std::string> GetAllStmtModify();
+  std::unordered_set<std::string> GetAllProcModify();
 
   std::unordered_set<std::string> GetVarModByStmt(std::string stmt);
   std::unordered_set<std::string> GetStmtModByVar(std::string var);
@@ -80,7 +82,8 @@ class PKB {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModProcVar();
 
   std::unordered_set<std::string> GetStmtWithPattern(std::string lhs, std::string rhs);
-  std::unordered_set<std::string> GetFollowOf(std::string stmt);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonym(std::string rhs);
+  std::string GetFollowOf(std::string stmt);
   std::unordered_set<std::string> GetFollowStarOf(std::string stmt);
   std::unordered_set<std::string> GetParentOf(std::string stmt);
   std::unordered_set<std::string> GetParentStarOf(std::string stmt);
@@ -92,8 +95,21 @@ class PKB {
   bool IsModifyStmtVarExist(std::pair<std::string, std::string> pair);
   bool IsModifyProcVarExist(std::pair<std::string, std::string> pair);
 
-  bool IsFollowExist();
-  bool IsFollowStarExist();
+  bool IsFollowExist(std::pair<std::string, std::string> pair);
+  bool IsFollowStarExist(std::pair<std::string, std::string> pair);
+
+  bool IsFollower(std::string stmt);
+  bool IsFollowing(std::string stmt);
+  bool IsFollowerStar(std::string stmt);
+  bool IsFollowingStar(std::string stmt);
+
+  bool IsParent(std::string stmt);
+  bool IsChild(std::string stmt);
+  bool IsAnce(std::string stmt);
+  bool IsDesc(std::string stmt);
+  bool ParentChildExists(std::string stmt1, std::string stmt2);
+  bool AnceExists(std::string curr, std::string ance);
+  bool DescExists(std::string curr, std::string desc);
 
  private:
   PKB();

@@ -34,7 +34,7 @@ TEST_CASE("Test query parser with uses") {
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
-  Relationship rship = pq.GetRelationships().front();\
+  Relationship rship = pq.GetRelationships().front();
   std::vector<Declaration> decl = pq.GetDeclaration();
 
   REQUIRE(rship.GetRelRef().value == "Uses");
