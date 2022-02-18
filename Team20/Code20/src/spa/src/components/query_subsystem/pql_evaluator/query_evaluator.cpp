@@ -369,7 +369,11 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
 
     std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_result_set;
     if (pattern_first_arg.type == PqlTokenType::SYNONYM) { // a(v, "x")
-      //TODO
+        std::string second_pattern_arg_value = pattern.GetSecond().value;
+        if (pattern.GetSecond().type != PqlTokenType::SUB_EXPRESSION) {
+          second_pattern_arg_value = pattern.GetSecond().value.substr(1, pattern.GetSecond().value.length() - 2);
+        }
+        pattern_result_set = pkb->GetStmtWithPatternSynonym(second_pattern_arg_value);
     } else { // a("x", "x")
       std::string pattern_first_arg_value = pattern_first_arg.value.substr(1, 1);
       std::string pattern_second_arg_value = pattern.GetSecond().value;
