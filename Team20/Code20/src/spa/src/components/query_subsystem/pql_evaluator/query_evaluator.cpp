@@ -302,7 +302,7 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
       }
 
       for (auto single_result : single_result_set) {
-        rel_result_set.insert(std::make_pair( single_result, second_arg));
+        rel_result_set.insert(std::make_pair( single_result, relationship.GetSecond().value));
       }
     } else if (relationship.GetFirst().type != PqlTokenType::SYNONYM &&
                relationship.GetSecond().type == PqlTokenType::SYNONYM) {  // (1, v)
@@ -361,7 +361,7 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
       }
       std::unordered_set<std::string> pattern_single_set = pkb->GetStmtWithPattern(pattern_first_arg_value, pattern_second_arg_value);
       for (auto pattern_single : pattern_single_set) {
-        rel_result_set.insert(std::make_pair( pattern_single, pattern.GetFirst().value));
+        pattern_result_set.insert(std::make_pair( pattern_single, pattern.GetFirst().value));
       }
     }
 
