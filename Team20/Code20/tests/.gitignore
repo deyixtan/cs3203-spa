@@ -2,3 +2,5 @@
 # Please put your test cases inside the correct directory; this is a scratch directory
 *.xml
 *.txt
+sample_query
+sample_source

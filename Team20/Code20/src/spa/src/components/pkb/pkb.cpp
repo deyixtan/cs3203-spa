@@ -184,12 +184,12 @@ bool PKB::IsFollowingStar(std::string stmt) {
   return follow_store.IsFollowingStar(stmt);
 }
 
-std::unordered_set<std::string> PKB::GetParentOf(std::string stmt) {
-  parent_store.GetParentOf(stmt);
+std::string PKB::GetParentOf(std::string stmt) {
+  return parent_store.GetParentOf(stmt);
 }
 
 std::unordered_set<std::string> PKB::GetParentStarOf(std::string stmt) {
-  parent_store.GetAllAnceOf(stmt);
+  return parent_store.GetAllAnceOf(stmt);
 }
 
 bool PKB::IsParent(std::string stmt) {
@@ -365,7 +365,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
     case STMT:
       for (auto i : follow_stmt_list) {
         for (auto j : stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -374,7 +374,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
     case READ:
       for (auto i : follow_stmt_list) {
         for (auto j : read_stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -383,7 +383,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
     case ASSIGN:
       for (auto i : follow_stmt_list) {
         for (auto j : assign_stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -392,7 +392,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
     case WHILE:
       for (auto i : follow_stmt_list) {
         for (auto j : while_stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -409,6 +409,69 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
       return result;
     case IF:
       for (auto i : follow_stmt_list) {
+        for (auto j : if_stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    default:
+      break;
+  }
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFollowStmt(StmtType type1, StmtType type2) {
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
+
+  switch (type1) {
+    case STMT:
+      for (auto i : GetAllFollowStmt(type2)) {
+        for (auto j : stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case READ:
+      for (auto i : GetAllFollowStmt(type2)) {
+        for (auto j : read_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case ASSIGN:
+      for (auto i : GetAllFollowStmt(type2)) {
+        for (auto j : assign_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case WHILE:
+      for (auto i : GetAllFollowStmt(type2)) {
+        for (auto j : while_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case PRINT:
+      for (auto i : GetAllFollowStmt(type2)) {
+        for (auto j : print_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case IF:
+      for (auto i : GetAllFollowStmt(type2)) {
         for (auto j : if_stmt_list) {
           if (i.first == j) {
             result.insert(i);
