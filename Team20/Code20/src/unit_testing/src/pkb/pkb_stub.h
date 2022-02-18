@@ -357,22 +357,22 @@ std::unordered_map<std::string, std::pair<std::string, std::string> > stmt_to_pa
         {"15", {"monkey", "(tiger+dog)"}}
     };
 
-std::unordered_map<std::pair<std::string, std::string>, std::unordered_set<std::string>, pair_hash> pattern_to_stmt =
+std::unordered_map<std::pair<std::string, std::string>, std::string, pair_hash> pattern_to_stmt =
     {
-        {{"dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))"}, {"4"}},
-        {{"pig", "(ox+cat)"}, {"7"}},
-        {{"dragon", "((dog*rabbit)/mouse)"}, {"8"}},
-        {{"snake", "(dog+rabbit)"}, {"10"}},
-        {{"monkey", "(tiger+dog)"}, {"15"}}
+        {{"dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))"}, "4"},
+        {{"pig", "(ox+cat)"}, "7"},
+        {{"dragon", "((dog*rabbit)/mouse)"}, "8"},
+        {{"snake", "(dog+rabbit)"}, "10"},
+        {{"monkey", "(tiger+dog)"}, "15"}
     };
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_pairs =
     {
-        {"4", "dog"},
-        {"7", "pig"},
-        {"8", "dragon"},
-        {"10", "snake"},
-        {"15", "monkey"}
+        {"dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))"},
+        {"pig", "(ox+cat)"},
+        {"dragon", "((dog*rabbit)/mouse)"},
+        {"snake", "(dog+rabbit)"},
+        {"monkey", "(tiger+dog)"}
     };
 
 #endif //PKB_STUB_H

@@ -172,7 +172,7 @@ void set_up_pkb() {
   pkb->AddPattern("7", "pig", "(ox+cat)");
   pkb->AddPattern("8", "dragon", "((dog*rabbit)/mouse)");
   pkb->AddPattern("10", "snake", "(dog+rabbit)");
-  pkb->AddPattern("13", "monkey", "(tiger+dog)");
+  pkb->AddPattern("15", "monkey", "(tiger+dog)");
 }
 
 TEST_CASE("PKB instance") {
@@ -745,7 +745,7 @@ TEST_CASE("Check pattern matching (correct)") {
   std::unordered_set<std::string> expected = {};
   for (auto const& [key, val] : pattern_to_stmt) {
     if (key.first == "pig" && key.second.find("cat") != -1) {
-      expected = val;
+      expected.insert(val);
     }
   }
 
@@ -759,10 +759,38 @@ TEST_CASE("Check pattern matching (wrong)") {
   std::unordered_set<std::string> expected = {};
   for (auto const& [key, val] : pattern_to_stmt) {
     if (key.first == "dog" && key.second.find("(rabbit-cat)") != -1) {
-      expected = val;
+      expected.insert(val);
     }
   }
 
   REQUIRE(actual == std::unordered_set<std::string>());
   REQUIRE(expected == std::unordered_set<std::string>());
+}
+
+TEST_CASE("Check pattern synonym matching exact (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetStmtWithPatternSynonym("dog");
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected;
+  for (auto i : pattern_pairs) {
+    if (i.second == "dog") {
+      expected.insert({pattern_to_stmt.at(i), i.first});
+    }
+  }
+
+  REQUIRE(actual == expected);
+}
+
+TEST_CASE("Check pattern synonym matching partial (correct)") {
+  set_up_pkb();
+  PKB *pkb = PKB::GetInstance();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetStmtWithPatternSynonym("_\"dog\"_");
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected;
+  for (auto i : pattern_pairs) {
+    if (i.second.find("dog") != std::string::npos) {
+      expected.insert({pattern_to_stmt.at(i), i.first});
+    }
+  }
+
+  REQUIRE(actual == expected);
 }
