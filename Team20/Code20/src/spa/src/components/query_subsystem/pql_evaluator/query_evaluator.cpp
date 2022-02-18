@@ -812,7 +812,24 @@ void QueryEvaluator::EvaluateSelectWithPattern(ParsedQuery &query) {
     }
   } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SUB_EXPRESSION) {
     // 2. pattern a(v, _"x"_)
-
+    if (select_synonym.value==pattern_synonym.value) {
+      // Select a pattern a(v, _"x"_)
+      pair_result = pkb->GetStmtWithPatternSynonym(second_arg.value);
+      for (auto pair : pair_result) {
+        result_to_add.insert(pair.first);
+      }
+    } else if (select_synonym.value==first_arg.value) {
+      // Select v pattern a(v, _)
+      pair_result = pkb->GetStmtWithPatternSynonym(second_arg.value);
+      for (auto pair : pair_result) {
+        result_to_add.insert(pair.second);
+      }
+    } else {
+      // check if pattern a(v, _) is non-empty
+      if (!pkb->GetStmtWithPatternSynonym(second_arg.value).empty()) {
+        EvaluateSelectOnly(query);
+      }
+    }
   } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::UNDERSCORE) {
     // 3. pattern a(_, _)
 
