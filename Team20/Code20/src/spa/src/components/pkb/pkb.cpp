@@ -421,6 +421,70 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
   }
 }
 
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFollowStmt(StmtType type1, StmtType type2) {
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_stmt_list = follow_store.GetFollowPairs();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
+
+  switch (type1) {
+    case STMT:
+      for (auto i : follow_stmt_list) {
+        for (auto j : stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case READ:
+      for (auto i : follow_stmt_list) {
+        for (auto j : read_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case ASSIGN:
+      for (auto i : follow_stmt_list) {
+        for (auto j : assign_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case WHILE:
+      for (auto i : follow_stmt_list) {
+        for (auto j : while_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case PRINT:
+      for (auto i : follow_stmt_list) {
+        for (auto j : print_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case IF:
+      for (auto i : follow_stmt_list) {
+        for (auto j : if_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    default:
+      break;
+  }
+}
+
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFollowStarStmt(StmtType type) {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_star_stmt_list = follow_store.GetFollowStarPairs();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
