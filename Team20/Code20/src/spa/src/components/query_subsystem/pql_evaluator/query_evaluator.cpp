@@ -768,7 +768,66 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 }
 
 void QueryEvaluator::EvaluateSelectWithPattern(ParsedQuery &query) {
-  //TODO: implement
+  // For iteration 1 we only have patterns for assignment statements
+  // Assume we only evaluate a syntactically and semantically valid query
+  // i.e. the pattern synonym is of assign design-entity and if first argument is a synonym it must be a variable design-entity
+  // Total of 6 possible cases given that 3 entRef possibilities * 2 exp-spec possibilitiesd
+
+  PqlToken select_synonym = query.GetSynonym();
+  const auto declarations = query.GetDeclaration();
+  PqlTokenType select_synonym_design_entity;
+  Pattern pattern = query.GetPatterns().front();
+  PqlToken pattern_synonym = pattern.GetSynAssign();
+  PqlToken first_arg = pattern.GetFirst();
+  PqlToken second_arg = pattern.GetSecond();
+
+  for (auto declaration : declarations) {
+    if (declaration.GetSynonym().value==select_synonym.value) {
+      select_synonym_design_entity = declaration.GetDesignEntity().type;
+    }
+  }
+
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> pair_result;
+  std::unordered_set<std::string> result_to_add;
+
+  if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
+    // 1. pattern a(v, _)
+    if (select_synonym.value==pattern_synonym.value) {
+      // Select a pattern a(v, _)
+      pair_result = pkb->GetStmtWithPatternSynonym("_");
+      for (auto pair : pair_result) {
+        result_to_add.insert(pair.first);
+      }
+    } else if (select_synonym.value==first_arg.value) {
+      // Select v pattern a(v, _)
+      pair_result = pkb->GetStmtWithPatternSynonym("_");
+      for (auto pair : pair_result) {
+        result_to_add.insert(pair.second);
+      }
+    } else {
+      // check if pattern a(v, _) is non-empty
+      if (!pkb->GetStmtWithPatternSynonym("_").empty()) {
+        EvaluateSelectOnly(query);
+      }
+    }
+  } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SUB_EXPRESSION) {
+    // 2. pattern a(v, _"x"_)
+
+  } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::UNDERSCORE) {
+    // 3. pattern a(_, _)
+
+  } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SUB_EXPRESSION) {
+    // 4. pattern a(_, _"x"_)
+
+  } else if (first_arg.type==PqlTokenType::IDENT_WITH_QUOTES && second_arg.type==PqlTokenType::UNDERSCORE) {
+    // 5. pattern a("x", _)
+
+  } else if (first_arg.type==PqlTokenType::IDENT_WITH_QUOTES && second_arg.type==PqlTokenType::SUB_EXPRESSION) {
+    // 6. pattern a("x", _"y"_)
+
+  }
+
+  result.insert(result_to_add.begin(), result_to_add.end());
 }
 
 void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query) {
