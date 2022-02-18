@@ -11,6 +11,9 @@ class UnexpectedTokenException : public std::exception {
   std::string m_msg;
 
  public:
+  static std::string MESSAGE;
+
+ public:
   UnexpectedTokenException();
   [[nodiscard]] virtual const char *what() const noexcept override;
 };

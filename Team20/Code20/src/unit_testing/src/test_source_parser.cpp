@@ -2,7 +2,10 @@
 #include "components/source_subsystem/source_lexer.h"
 #include "components/source_subsystem/source_parser.h"
 #include "components/source_subsystem/exceptions/empty_statement_list.h"
-#include "components/source_subsystem/exceptions/invalid_parse.h"
+#include "components/source_subsystem/exceptions/invalid_parse_condition.h"
+#include "components/source_subsystem/exceptions/invalid_parse_factor.h"
+#include "components/source_subsystem/exceptions/invalid_parse_relation.h"
+#include "components/source_subsystem/exceptions/invalid_parse_statement.h"
 #include "components/source_subsystem/exceptions/mismatch_token.h"
 #include "components/source_subsystem/exceptions/unexpected_token.h"
 
@@ -109,7 +112,7 @@ TEST_CASE("Test invalid single procedure with one assign statement") {
   SourceParser parser = SourceParser(token_list);
 
   // test
-  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseException("Parsing invalid statement.").what());
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseStatementException().what());
 }
 
 TEST_CASE("Test single procedure with one read statement") {
@@ -522,7 +525,7 @@ TEST_CASE("Test single procedure with one if statement (invalid condition)") {
   SourceParser parser = SourceParser(token_list);
 
   // test
-  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseException("Parsing invalid relational expression.").what());
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseRelationException().what());
 }
 
 TEST_CASE("Test single procedure with one while statement (simple equal condition)") {
@@ -958,7 +961,7 @@ TEST_CASE("Test single procedure with one invalid assign statement 2") {
   SourceParser parser = SourceParser(token_list);
 
   // test
-  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseException("Unable to parse factor.").what());
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseFactorException().what());
 }
 
 TEST_CASE("Test single procedure with one invalid if-statement") {
@@ -971,7 +974,7 @@ TEST_CASE("Test single procedure with one invalid if-statement") {
   SourceParser parser = SourceParser(token_list);
 
   // test
-  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseException("Unable to parse conditional expression.").what());
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseConditionException().what());
 }
 
 TEST_CASE("Test single procedure with one assign statement (with combination expression)") {
