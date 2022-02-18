@@ -22,6 +22,10 @@ class QueryResult {
       std::unordered_set<std::pair<std::string, std::string>, pair_hash> second_set
       );
   std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>> result_table;
+  std::unordered_set<std::string> GetIntersectionSet(
+      std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> first_condition_pair,
+      std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> second_condition_pair,
+      std::string synonym);
 };
 
 #endif // QUERY_RESULT_H

@@ -11,6 +11,9 @@ class MismatchedTokenException : public std::exception {
   std::string m_msg;
 
  public:
+  static std::string MESSAGE;
+
+ public:
   MismatchedTokenException();
   [[nodiscard]] virtual const char *what() const noexcept override;
 };

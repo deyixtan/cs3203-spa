@@ -68,7 +68,7 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         PopulateModifies(stmt_num, var_name);
         std::shared_ptr<ExpressionNode> expr = assign_stmt->GetExpression();
 
-        std::string rhs_expr = ExprNodeHandler(stmt_num, expr, 0, "");
+        std::string rhs_expr = ExprNodeHandler(visited, stmt_num, expr, 0, "");
         //rhs_expr.erase(0, 1);
         pkb->AddPattern(stmt_num, var_name, rhs_expr);
 
@@ -156,14 +156,14 @@ void DesignExtractor::CondExprNodeHandler(std::vector<std::string> visited, std:
       std::shared_ptr<ExpressionNode> left = rel_node->GetLeftExpression();
       std::shared_ptr<ExpressionNode> right = rel_node->GetRightExpression();
 
-      ExprNodeHandler(stmt, left);
-      ExprNodeHandler(stmt, right);
+      ExprNodeHandler(visited, stmt, left);
+      ExprNodeHandler(visited, stmt, right);
       break;
     }
   }
 }
 
-void DesignExtractor::ExprNodeHandler(std::string stmt, std::shared_ptr<ExpressionNode> expr) {
+void DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, std::string stmt, std::shared_ptr<ExpressionNode> expr) {
   ExpressionType expr_type = expr->GetExpressionType();
 
   switch (expr_type) {
@@ -178,13 +178,16 @@ void DesignExtractor::ExprNodeHandler(std::string stmt, std::shared_ptr<Expressi
       std::shared_ptr<ExpressionNode> lhs = comb->GetLeftExpression();
       std::shared_ptr<ExpressionNode> rhs = comb->GetRightExpression();
       ArithmeticOperator op = comb->GetArithmeticOperator();
-      ExprNodeHandler(stmt, lhs);
-      ExprNodeHandler(stmt, rhs);
+      ExprNodeHandler(visited, stmt, lhs);
+      ExprNodeHandler(visited, stmt, rhs);
       break;
     }
     case ExpressionType::VARIABLE: {
       std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
       std::string var_name = var->GetIdentifier();
+      for (std::string s : visited) {
+        PopulateUses(s, var_name);
+      }
       PopulateUses(stmt, var_name);
       PopulateVars(var_name);
       break;
@@ -192,7 +195,7 @@ void DesignExtractor::ExprNodeHandler(std::string stmt, std::shared_ptr<Expressi
   }
 }
 
-std::string DesignExtractor::ExprNodeHandler(std::string stmt_num, std::shared_ptr<ExpressionNode> expr, int direction, std::string pattern) {
+std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, std::string stmt_num, std::shared_ptr<ExpressionNode> expr, int direction, std::string pattern) {
   ExpressionType expr_type = expr->GetExpressionType();
 
   switch (expr_type) {
@@ -214,7 +217,7 @@ std::string DesignExtractor::ExprNodeHandler(std::string stmt_num, std::shared_p
       ArithmeticOperator op = comb->GetArithmeticOperator();
       std::string op_label = comb->GetArithmeticOperatorLabel(op);
 
-      pattern = ExprNodeHandler(stmt_num, lhs, 1, pattern) + op_label + ExprNodeHandler(stmt_num, rhs, 2, pattern);
+      pattern = ExprNodeHandler(visited, stmt_num, lhs, 1, pattern) + op_label + ExprNodeHandler(visited, stmt_num, rhs, 2, pattern);
 
       if (direction == 1) {
         pattern = "(" + pattern;
@@ -230,6 +233,9 @@ std::string DesignExtractor::ExprNodeHandler(std::string stmt_num, std::shared_p
         pattern = "(" + var_name;
       } else if (direction == 2) {
         pattern = var_name + ")";
+      }
+      for (std::string s : visited) {
+        PopulateUses(s, var_name);
       }
       PopulateVars(var_name);
       PopulateUses(stmt_num, var_name);
