@@ -18,3 +18,27 @@ std::string sample_source1 =
     "    }"
     "    normSq = cenX * cenX + cenY * cenY;"
     "}";
+
+std::string sample_source2 =
+    "procedure bar {"
+    "    read x;"
+    "    read y;"
+    "    if ((x >= 0) && (y >= 0)) then {"
+    "        while (x != 0) {"
+    "            tan = y / x;"
+    "            sin = y / length;"
+    "            cos = x / length;"
+    "            if (((sin * sin + cos * cos) == 1) || (!(tan != (sin / cos)))) then {"
+    "                x = y / 2;"
+    "                y = x / 2;"
+    "            } else {"
+    "                x = 0;"
+    "            }"
+    "            length = x * x + y * y;"
+    "        }"
+    "    } else {"
+    "        x = 10;"
+    "        y = 10;"
+    "        length = x * x + y * y;"
+    "    }"
+    "}";
