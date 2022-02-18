@@ -11,6 +11,9 @@ class EmptyStatementListException : public std::exception {
   std::string m_msg;
 
  public:
+  static std::string MESSAGE;
+
+ public:
   EmptyStatementListException();
   [[nodiscard]] virtual const char *what() const noexcept override;
 };
