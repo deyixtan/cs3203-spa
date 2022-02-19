@@ -98,3 +98,24 @@ std::unordered_set<PqlTokenType> var_set = {
     PqlTokenType::CONSTANT,
 };
 
+std::unordered_set<PqlTokenType> allowed_synonyms = {
+    PqlTokenType::SYNONYM,
+    PqlTokenType::FOLLOWS,
+    PqlTokenType::PARENT,
+    PqlTokenType::USES,
+    PqlTokenType::MODIFIES,
+    PqlTokenType::STMT,
+    PqlTokenType::READ,
+    PqlTokenType::PRINT,
+    PqlTokenType::CALL,
+    PqlTokenType::WHILE,
+    PqlTokenType::IF,
+    PqlTokenType::ASSIGN,
+    PqlTokenType::VARIABLE,
+    PqlTokenType::CONSTANT,
+    PqlTokenType::PROCEDURE,
+    PqlTokenType::SUCH,
+    PqlTokenType::THAT,
+    PqlTokenType::SELECT,
+};
+

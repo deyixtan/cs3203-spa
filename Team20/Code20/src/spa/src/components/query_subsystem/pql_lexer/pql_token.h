@@ -68,5 +68,6 @@ extern std::unordered_set<PqlTokenType> ent_ref;
 extern std::unordered_set<PqlTokenType> stmt_ref;
 extern std::unordered_set<PqlTokenType> line_no_set;
 extern std::unordered_set<PqlTokenType> var_set;
+extern std::unordered_set<PqlTokenType> allowed_synonyms;
 
 #endif
