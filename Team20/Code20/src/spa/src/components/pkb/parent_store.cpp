@@ -19,7 +19,7 @@ bool ParentStore::IsDesc(std::string stmt) {
 }
 
 void ParentStore::Init(int num_stmts) {
-  parent_child new_PC = {0, 0, std::unordered_set<std::string>(), std::unordered_set<std::string>()};
+  parent_child new_PC = {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()};
 
   for (int i = 1; i <= num_stmts; i++) {
     rs_map[std::to_string(i)] = new_PC;
@@ -28,17 +28,17 @@ void ParentStore::Init(int num_stmts) {
 
 void ParentStore::AddParentStmt(std::string parent, std::string child) {
   if (rs_map.find(parent) == rs_map.end()) {
-    rs_map.insert({parent, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
+    rs_map.insert({parent, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
   }
 
   if (rs_map.find(child) == rs_map.end()) {
-    rs_map.insert({child, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
+    rs_map.insert({child, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
   }
 
   parent_child_set.insert(std::make_pair(parent, child));
   parent_set.insert(parent);
   child_set.insert(child);
-  rs_map.at(parent).child = child;
+  rs_map.at(parent).child.insert(child);
   rs_map.at(child).parent = parent;
   rs_map.at(parent).desc.insert(child);
   rs_map.at(child).ance.insert(parent);
@@ -47,7 +47,7 @@ void ParentStore::AddParentStmt(std::string parent, std::string child) {
 void ParentStore::AddParentStarStmt(std::string stmt, std::vector<std::string> visited) {
   for (std::string s : visited) {
     if (rs_map.find(stmt) == rs_map.end()) {
-      rs_map.insert({stmt, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
+      rs_map.insert({stmt, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
     }
 
     ance_desc_set.insert(std::make_pair(s, stmt));
@@ -92,12 +92,12 @@ std::string ParentStore::GetParentOf(std::string stmt) {
   return "0";
 }
 
-std::string ParentStore::GetChildOf(std::string stmt) {
+std::unordered_set<std::string> ParentStore::GetChildOf(std::string stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     parent_child pc = rs_map.at(stmt);
     return pc.child;
   }
-  return "0";
+  return {};
 }
 
 std::unordered_set<std::string> ParentStore::GetAllAnceOf(std::string stmt) {
