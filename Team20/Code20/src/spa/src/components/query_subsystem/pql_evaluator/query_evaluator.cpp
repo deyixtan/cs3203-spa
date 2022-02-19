@@ -907,6 +907,89 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         }
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 8. Follows(s, _)
+        PqlTokenType first_arg_design_entity;
+        for (auto declaration : declarations) {
+          if (declaration.GetSynonym().value==first_arg.value) {
+            first_arg_design_entity = declaration.GetDesignEntity().type;
+          }
+        }
+
+        if (select_synonym.value==first_arg.value) {
+          switch (first_arg_design_entity) {
+            case PqlTokenType::STMT: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::ASSIGN: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::ASSIGN, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::WHILE: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::WHILE, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::IF: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::IF, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::CALL: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::CALL, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::PRINT: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::PRINT, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::READ: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::READ, StmtType::STMT);
+              break;
+            }
+            default: {
+
+            }
+          }
+          for (auto pair : pair_result) {
+            result_to_add.insert(pair.first);
+          }
+        } else {
+          switch (first_arg_design_entity) {
+            case PqlTokenType::STMT: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::ASSIGN: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::ASSIGN, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::WHILE: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::WHILE, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::IF: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::IF, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::CALL: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::CALL, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::PRINT: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::PRINT, StmtType::STMT);
+              break;
+            }
+            case PqlTokenType::READ: {
+              pair_result = pkb->GetAllFollowStmt(StmtType::READ, StmtType::STMT);
+              break;
+            }
+            default: {
+
+            }
+          }
+
+          if (!pair_result.empty()) {
+            EvaluateSelectOnly(query);
+          }
+        }
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
         // 9. Follows(s1, s2)
       }
