@@ -75,7 +75,7 @@ std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
     case TokenType::PRINT:return ParsePrintStatement();
     case TokenType::WHILE:return ParseWhileStatement();
     case TokenType::IF:return ParseIfStatement();
-    default:throw InvalidParseException("Parsing invalid statement.");
+    default:throw InvalidParseStatementException();
   }
 }
 
@@ -156,7 +156,7 @@ std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpress
       case TokenType::OR:ProcessToken(TokenType::OR);
         boolean_operator = BooleanOperator::OR;
         break;
-      default:throw InvalidParseException("Parsing invalid conditional expression operator.");
+      default:throw InvalidParseConditionException();
     }
     ProcessToken(TokenType::OPENED_PARENTHESIS);
     std::shared_ptr<ConditionalExpressionNode> right_expression = ParseConditionalExpression();
@@ -166,7 +166,7 @@ std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpress
     // 'rel_expr' grammar can be reduced to 'factor'
     return ParseRelationalExpression();
   }
-  throw InvalidParseException("Unable to parse conditional expression.");
+  throw InvalidParseConditionException();
 }
 
 std::shared_ptr<RelationalExpressionNode> SourceParser::ParseRelationalExpression() {
@@ -191,7 +191,7 @@ std::shared_ptr<RelationalExpressionNode> SourceParser::ParseRelationalExpressio
     case TokenType::IS_NOT_EQUAL:ProcessToken(TokenType::IS_NOT_EQUAL);
       relation_operator = RelationOperator::NOT_EQUALS;
       break;
-    default:throw InvalidParseException("Parsing invalid relational expression.");
+    default:throw InvalidParseRelationException();
   }
   std::shared_ptr<ExpressionNode> right_relation_factor = ParseRelationalFactor();
   return std::make_shared<RelationalExpressionNode>(relation_operator, left_relation_factor, right_relation_factor);
@@ -262,7 +262,7 @@ std::shared_ptr<ExpressionNode> SourceParser::ParseFactor() {
       ProcessToken(TokenType::CLOSED_PARENTHESIS);
       return expression;
     }
-    default:throw InvalidParseException("Unable to parse factor.");
+    default:throw InvalidParseFactorException();
   }
 }
 

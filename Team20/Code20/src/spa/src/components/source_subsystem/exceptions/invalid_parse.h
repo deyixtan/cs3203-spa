@@ -7,12 +7,8 @@
 namespace source {
 
 class InvalidParseException : public std::exception {
- private:
-  std::string m_msg;
-
  public:
-  InvalidParseException(std::string msg);
-  [[nodiscard]] virtual const char *what() const noexcept override;
+  [[nodiscard]] virtual const char *what() const noexcept = 0;
 };
 
 }
