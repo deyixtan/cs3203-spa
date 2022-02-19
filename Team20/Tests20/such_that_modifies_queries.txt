@@ -1,0 +1,148 @@
+1 - Select such that no overlap true clause
+print pn; if ifs; variable v;
+Select pn such that Modifies(ifs, v)
+2, 11
+5000
+2 - Select such that no overlap false clause
+print pn; variable v;
+Select pn such that Modifies(3, "v")
+5000
+3 - Select such that overlap w param 1 in such that
+read r;
+Select r such that Modifies(r, "d")
+1
+5000
+4 - Select such that overlap w param 2 in such that
+read r; variable v;
+Select v such that Modifies(r, v)
+d, x
+5000
+5 - Select such that misspelt
+read r; print pn;
+Select pn suc that Modifies(r, pn)
+5000
+6 - Select such that Modifies(r, v)
+read r; variable v;
+Select r such that Modifies(r, v)
+1, 4, 6, 10
+5000
+7 - Select such that Modifies(r, 'x')
+read r;
+Select r such that Modifies(r, "x")
+4, 6, 10
+5000
+8 - Select such that Modifies(r, _)
+read r;
+Select r such that Modifies(r, _)
+1, 4, 6, 10
+5000
+9 - Select such that Modifies(a, v)
+assign a; variable v;
+Select v such that Modifies(a, v)
+d, z, p
+5000
+10 - Select such that Modifies(a, 'z')
+assign a;
+Select a such that Modifies(a, "z")
+8
+5000
+11 - Select such that Modifies(ifs, v)
+if ifs; variable v;
+Select v such that Modifies(ifs, v)
+x
+5000
+12 - Select such that Modifies(ifs, 'x')
+if ifs;
+Select ifs such that Modifies(ifs, "x")
+9
+5000
+13 - Select such that Modifies(ifs, _)
+if ifs;
+Select ifs such that Modifies(ifs, _)
+9
+5000
+14 - Select such that Modifies(w, v)
+while w; variable v;
+Select v such that Modifies(w, v)
+x, d, z
+5000
+15 - Select such that Modifies(w, 'x')
+while w;
+Select w such that Modifies(w, "x")
+3, 5
+5000
+16 - Select such that Modifies(w, _)
+while w;
+Select w such that Modifies(w, _)
+3, 5
+5000
+17 - Select such that Modifies(9, v)
+variable v;
+Select v such that Modifies(9, v)
+x
+5000
+18 - Select such that Modifies(9, 'z')
+print pn;
+Select pn such that Modifies(9, "z")
+5000
+19 - Select such that Modifies(9, _)
+print pn;
+Select pn such that Modifies(9, _)
+2, 11
+5000
+20 - Select such that negative: Modifies(_, v)
+print pn; variable v;
+Select pn such that Modifies(_, v)
+5000
+21 - Select such that negative: Modifies(_, 'x')
+print pn;
+Select pn such that Modifies(_, "x")
+5000
+22 - Select such that negative: Modifies(_, _)
+print pn;
+Select pn such that Modifies(_, _)
+5000
+23 - Select such that negative: Modifies(50, _)
+print pn;
+Select pn such that Modifies(50, _)
+5000
+24 - Select such that negative: Modifies(ifs, 'i982')
+print pn; if ifs;
+Select pn such that Modifies(ifs, "i982")
+5000
+25 - Select such that modifies negative
+print pn; variable v; stmt s1, s2;
+Select pn such that Modifies(s, v)
+5000
+26 - Select such that modifies negative
+print pn; variable v; stmt s1, s2;
+Select pn such that Modifies*(s, v)
+5000
+27 - Select such that modifies negative
+print pn; variable v; stmt s1, s2;
+Select pn such that Modifies*(s, v)
+5000
+28 - Select such that modifies negative
+print pn; variable v;
+Select pn such that Modifies(v1, v2)
+5000
+29 - Select such that modifies negative
+assign a; print pn; stmt s1, s2;
+Select pn such that Modifies(s, a)
+5000
+30 - Select such that modifies negative
+print pn; stmt s1, s2;
+Select pn such that Modifies(s, “9”)
+5000
+31 - Select such that modifies negative
+print pn; stmt s1, s2;
+Select pn such that Modifies(s, “ab#c”)
+5000
+32 - Select such that modifies negative
+print pn; stmt s1, s2;
+Select pn such that Modifies(s, “d y c”)
+5000
+33 - Select such that modifies negative
+print pn; stmt s1, s2;
+Select pn such that Modifies(s, 2)
+5000
