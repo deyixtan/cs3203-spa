@@ -40,8 +40,6 @@ void ParentStore::AddParentStmt(std::string parent, std::string child) {
   child_set.insert(child);
   rs_map.at(parent).child.insert(child);
   rs_map.at(child).parent = parent;
-  rs_map.at(parent).desc.insert(child);
-  rs_map.at(child).ance.insert(parent);
 }
 
 void ParentStore::AddParentStarStmt(std::string stmt, std::vector<std::string> visited) {
