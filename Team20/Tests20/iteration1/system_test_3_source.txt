@@ -15,7 +15,6 @@ procedure Fruit {
 			}
 		}
 	}
-
 	if (!(banana != carrot)) then {
 		print apple;
 	} else {
@@ -23,7 +22,6 @@ procedure Fruit {
 			grape = 100;
 		}
 	}
-
 	berry = avocado * (3 - peach) / berry;
 	apple = peach;
 }
