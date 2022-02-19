@@ -31,6 +31,53 @@ std::shared_ptr<SourceToken> SourceParser::ProcessToken(TokenType type) {
   return token_ptr;
 }
 
+bool SourceParser::IsConditionalOperand(int &cursor) {
+  int nest = 0;
+
+  while (cursor < m_tokens_ptr.size()) {
+    TokenType type = m_tokens_ptr[cursor]->GetType();
+
+    if (type == TokenType::OPENED_PARENTHESIS) {
+      nest++;
+    } else if (type == TokenType::CLOSED_PARENTHESIS) {
+      if (nest > 0) {
+        nest--;
+      } else if (nest == 0) {
+        cursor++;
+        break;
+      } else {
+        return false;
+      }
+    }
+
+    cursor++;
+  }
+
+  return cursor < m_tokens_ptr.size();
+}
+
+bool SourceParser::IsConditionalExpression() {
+  int tmp_cursor = m_cursor;
+
+  // check for valid start to conditional expression
+  if (m_tokens_ptr[tmp_cursor++]->GetType() != TokenType::OPENED_PARENTHESIS) {
+    return false;
+  }
+
+  // check left operand is valid
+  if (!IsConditionalOperand(tmp_cursor)) {
+    return false;
+  }
+
+  // check if boolean operator is valid
+  if (m_tokens_ptr[tmp_cursor]->GetType() != TokenType::AND && m_tokens_ptr[tmp_cursor]->GetType() != TokenType::OR) {
+    return false;
+  }
+
+  // check right operand is valid
+  return IsConditionalOperand(tmp_cursor);
+}
+
 std::shared_ptr<ProgramNode> SourceParser::ParseProgram() {
   std::vector<std::shared_ptr<ProcedureNode>> procedures;
   while (!AreTokensProcessed()) {
@@ -144,7 +191,7 @@ std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpress
     std::shared_ptr<ConditionalExpressionNode> expression = ParseConditionalExpression();
     ProcessToken(TokenType::CLOSED_PARENTHESIS);
     return std::make_shared<NotExpressionNode>(expression);
-  } else if (type == TokenType::OPENED_PARENTHESIS) {
+  } else if (IsConditionalExpression()) {
     ProcessToken(TokenType::OPENED_PARENTHESIS);
     std::shared_ptr<ConditionalExpressionNode> left_expression = ParseConditionalExpression();
     ProcessToken(TokenType::CLOSED_PARENTHESIS);
@@ -162,7 +209,7 @@ std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpress
     std::shared_ptr<ConditionalExpressionNode> right_expression = ParseConditionalExpression();
     ProcessToken(TokenType::CLOSED_PARENTHESIS);
     return std::make_shared<BooleanExpressionNode>(boolean_operator, left_expression, right_expression);
-  } else if (type == TokenType::NAME || type == TokenType::INTEGER) {
+  } else if (type == TokenType::OPENED_PARENTHESIS || type == TokenType::NAME || type == TokenType::INTEGER) {
     // 'rel_expr' grammar can be reduced to 'factor'
     return ParseRelationalExpression();
   }
