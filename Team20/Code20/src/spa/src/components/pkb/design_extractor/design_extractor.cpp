@@ -51,6 +51,7 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         for (std::string s : visited) {
           PopulateModifies(s, var_name);
         }
+        PopulateModifies(stmt_num, var_name);
         break;
       }
       case PRINT: {
@@ -62,6 +63,7 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         for (std::string s : visited) {
           PopulateUses(s, var_name);
         }
+        PopulateUses(stmt_num, var_name);
         break;
       }
       case ASSIGN: {
@@ -72,6 +74,7 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         for (std::string s : visited) {
           PopulateModifies(s, var_name);
         }
+        PopulateModifies(stmt_num, var_name);
         std::shared_ptr<ExpressionNode> expr = assign_stmt->GetExpression();
 
         std::string rhs_expr = ExprNodeHandler(visited, stmt_num, expr, 0, "");
@@ -193,6 +196,7 @@ void DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, std::str
       for (std::string s : visited) {
         PopulateUses(s, var_name);
       }
+      PopulateUses(stmt, var_name);
       PopulateVars(var_name);
       break;
     }
@@ -241,6 +245,7 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
       for (std::string s : visited) {
         PopulateUses(s, var_name);
       }
+      PopulateUses(stmt_num, var_name);
       PopulateVars(var_name);
       break;
     }

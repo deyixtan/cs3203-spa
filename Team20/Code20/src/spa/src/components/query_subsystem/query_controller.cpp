@@ -12,6 +12,7 @@ void QueryController::ProcessQuery(std::string query, std::list<std::string> &re
   QueryValidator query_validator = QueryValidator(tokens);
   std::vector<PqlToken> validated_tokens = query_validator.CheckValidation();
   ParsedQuery parsed_query = pqb.Build(validated_tokens);
-  //validator_->ValidateQuery(parsed_query);
-  evaluator_->Evaluate(parsed_query, results);
+  if (validator_->ValidateQuery(parsed_query)) {
+    evaluator_->Evaluate(parsed_query, results);
+  }
 }
