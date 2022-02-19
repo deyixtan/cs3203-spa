@@ -5,9 +5,7 @@ QueryValidator::QueryValidator(std::vector<PqlToken> tokens) : tokens_(tokens){}
 
 bool QueryValidator::IsValidSynonym(PqlToken synonym_token) {
   // rel_ref or design_entities can also be synonyms
-  return synonym_token.type == PqlTokenType::SYNONYM ||
-      design_entities.count(synonym_token.type) ||
-      rel_ref.count(synonym_token.type);
+  return allowed_synonyms.count(synonym_token.type);
 }
 
 bool QueryValidator::IsValidRelRefToken(PqlToken rel_ref_token) {
@@ -31,7 +29,7 @@ bool QueryValidator::IsValidRelRefClause(std::vector<PqlToken> rel_ref_tokens) {
     return false;
   }
   PqlToken first_arg = rel_ref_tokens[2];
-  if (!stmt_ref.count(first_arg.type) && !ent_ref.count(first_arg.type)) {
+  if (!stmt_ref.count(first_arg.type) && !ent_ref.count(first_arg.type) && !allowed_synonyms.count(first_arg.type)) {
     return false;
   }
   PqlToken comma = rel_ref_tokens[3];
@@ -39,7 +37,7 @@ bool QueryValidator::IsValidRelRefClause(std::vector<PqlToken> rel_ref_tokens) {
     return false;
   }
   PqlToken second_arg = rel_ref_tokens[4];
-  if (!stmt_ref.count(second_arg.type) && !ent_ref.count(second_arg.type)) {
+  if (!stmt_ref.count(second_arg.type) && !ent_ref.count(second_arg.type) && !allowed_synonyms.count(second_arg.type)) {
     return false;
   }
   PqlToken close_parenthesis = rel_ref_tokens[5];
@@ -53,12 +51,13 @@ void QueryValidator::IsValidRelRefArg(std::vector<PqlToken> rel_ref_tokens, PqlT
   PqlToken first_arg = rel_ref_tokens[2];
   PqlToken second_arg = rel_ref_tokens[4];
   if (type == PqlTokenType::USES || type == PqlTokenType::MODIFIES) {
-    if (!ent_ref.count(second_arg.type)) {
+    if (!ent_ref.count(second_arg.type) && !allowed_synonyms.count(second_arg.type)) {
       throw INVALID_REL_REF_ARGUMENTS;
     }
   } else if (type == PqlTokenType::PARENT || type == PqlTokenType::PARENT_T ||
              type == PqlTokenType::FOLLOWS || type == PqlTokenType::FOLLOWS_T) {
-    if (!stmt_ref.count(first_arg.type) || !stmt_ref.count(second_arg.type)) {
+    if ((!stmt_ref.count(first_arg.type) && !allowed_synonyms.count(first_arg.type)) ||
+        (!stmt_ref.count(second_arg.type) && !allowed_synonyms.count(second_arg.type))) {
       throw INVALID_REL_REF_ARGUMENTS;
     }
   } else {
@@ -82,6 +81,8 @@ void QueryValidator::IsValidDeclaration(std::vector<PqlToken> declaration_query)
     } else {
       if (!IsValidSynonym(declaration_query[j])) {
         throw INVALID_DECLARATION_SYNONYM;
+      } else {
+        declaration_query[j].type = PqlTokenType::SYNONYM;
       }
     }
   }
@@ -103,6 +104,8 @@ void QueryValidator::IsValidPatternClause(std::vector<PqlToken> pattern_clause) 
   PqlToken assign_synonym = pattern_clause[1];
   if (!IsValidSynonym(assign_synonym)) {
     throw INVALID_PATTERN_SYNONYM;
+  } else {
+    pattern_clause[1].type = PqlTokenType::SYNONYM;
   }
 
   PqlToken open_parenthesis = pattern_clause[2];
@@ -111,7 +114,7 @@ void QueryValidator::IsValidPatternClause(std::vector<PqlToken> pattern_clause) 
   }
 
   PqlToken first_arg = pattern_clause[3];
-  if (!ent_ref.count(first_arg.type)) {
+  if (!ent_ref.count(first_arg.type) && !allowed_synonyms.count(first_arg.type)) {
     throw INVALID_PATTERN_CLAUSE_ARGUMENT;
   }
 
@@ -144,6 +147,8 @@ void QueryValidator::IsValidSelectClause(std::vector<PqlToken> select_clause) {
   PqlToken synonym_token = select_clause[1];
   if (!IsValidSynonym(synonym_token)) {
     throw INVALID_SELECT_SYNONYM;
+  } else {
+    select_clause[1].type = PqlTokenType::SYNONYM;
   }
 
   if (select_clause.size() > 2) { // Select s such that Follows (s, s1)
@@ -220,5 +225,51 @@ std::vector<PqlToken> QueryValidator::CheckValidation() {
     std::vector<PqlToken> select_clause = token_table[token_table.size() - 1];
     IsValidSelectClause(select_clause);
   }
+  ConvertTokenType(tokens_);
   return tokens_;
+}
+
+void QueryValidator::ConvertTokenType(std::vector<PqlToken> &tokens) {
+  int curr = 1;
+  int last_semicolon_index;
+
+  while (curr < tokens.size() - 1) {
+    if (tokens[curr].type == PqlTokenType::SEMICOLON) {
+      tokens[curr - 1].type = PqlTokenType::SYNONYM;
+      last_semicolon_index = curr;
+    }
+    curr++;
+  }
+
+  if (tokens.size() - last_semicolon_index > 0) {
+    tokens[last_semicolon_index + 2].type = PqlTokenType::SYNONYM;
+  }
+
+  if (tokens.size() - last_semicolon_index > 2) {
+    if (tokens[last_semicolon_index + 3].type == PqlTokenType::SUCH) {
+      if (tokens[last_semicolon_index + 7].type != PqlTokenType::UNDERSCORE &&
+          tokens[last_semicolon_index + 7].type != PqlTokenType::IDENT_WITH_QUOTES &&
+          tokens[last_semicolon_index + 7].type != PqlTokenType::NUMBER) {
+        tokens[last_semicolon_index + 7].type = PqlTokenType::SYNONYM;
+      }
+      if (tokens[last_semicolon_index + 9].type != PqlTokenType::UNDERSCORE &&
+          tokens[last_semicolon_index + 9].type != PqlTokenType::IDENT_WITH_QUOTES &&
+          tokens[last_semicolon_index + 9].type != PqlTokenType::NUMBER) {
+        tokens[last_semicolon_index + 9].type = PqlTokenType::SYNONYM;
+      }
+    } else {
+      tokens[last_semicolon_index + 4].type = PqlTokenType::SYNONYM;
+      if (tokens[last_semicolon_index + 6].type != PqlTokenType::UNDERSCORE &&
+          tokens[last_semicolon_index + 6].type != PqlTokenType::IDENT_WITH_QUOTES) {
+        tokens[last_semicolon_index + 6].type = PqlTokenType::SYNONYM;
+      }
+    }
+  }
+  if (tokens.size() - last_semicolon_index > 10) {
+    tokens[last_semicolon_index + 12].type = PqlTokenType::SYNONYM;
+    if (tokens[last_semicolon_index + 14].type != PqlTokenType::UNDERSCORE &&
+        tokens[last_semicolon_index + 14].type != PqlTokenType::IDENT_WITH_QUOTES) {
+      tokens[last_semicolon_index + 14].type = PqlTokenType::SYNONYM;
+    }
+  }
 }
