@@ -892,51 +892,122 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       // Total 6 types of statements (assign, while, if, call, print, read)
       // Total 9 cases
 
-//      if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::NUMBER) {
-//        // 1. Parent(1, 2)
-//        if (pkb->GetParentOf(first_arg.value)==second_arg.value) {
-//          // clause is true
-//          EvaluateSelectOnly(query);
-//        }
-//      } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
-//        // 2. Parent(1, _)
-//        if (pkb->GetParentOf(first_arg.value)=="0") {
-//          // clause is false
-//        } else {
-//          EvaluateSelectOnly(query);
-//        }
-//      } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
-//        // 3. Parent(9, s)
-//
-//        PqlTokenType second_arg_design_entity;
-//        for (auto declaration : declarations) {
-//          if (declaration.GetSynonym().value==second_arg.value) {
-//            second_arg_design_entity = declaration.GetDesignEntity().type;
-//          }
-//        }
-//
-//        if (select_synonym_design_entity==second_arg_design_entity) {
-//          result_to_add.insert(pkb->GetFollowOf(first_arg.value));
-//        } else {
-//          if (pkb->GetFollowOf(first_arg.value)=="0") {
-//            // clause is false no possible s
-//          } else {
-//            EvaluateSelectOnly(query);
-//          }
-//        }
-//      } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::NUMBER) {
-//        // 4. Parent(_, 9)
-//      } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::UNDERSCORE) {
-//        // 5. Parent(_, _)
-//      } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SYNONYM) {
-//        // 6. Parent(_, s)
-//      } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::NUMBER) {
-//        // 7. Parent(s, 8)
-//      } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
-//        // 8. Parent(s, _)
-//      } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
-//        // 9. Parent(s1, s2)
-//      }
+      if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::NUMBER) {
+        // 1. Parent(1, 2)
+        if (pkb->GetChildOf(first_arg.value)==second_arg.value) {
+          // clause is true
+          EvaluateSelectOnly(query);
+        }
+      } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
+        // 2. Parent(1, _)
+        if (pkb->GetChildOf(first_arg.value)!="0") {
+          EvaluateSelectOnly(query);
+        }
+      } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
+        // 3. Parent(9, s)
+
+        PqlTokenType second_arg_design_entity;
+        for (auto declaration : declarations) {
+          if (declaration.GetSynonym().value==second_arg.value) {
+            second_arg_design_entity = declaration.GetDesignEntity().type;
+          }
+        }
+
+        if (select_synonym.value==second_arg.value) {
+          result_to_add.insert(pkb->GetChildOf(first_arg.value));
+        } else if (pkb->GetChildOf(first_arg.value)!="0") {
+          EvaluateSelectOnly(query);
+        }
+
+      } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::NUMBER) {
+        // 4. Parent(_, 9)
+        if (pkb->GetParentOf(second_arg.value)!="0") {
+          EvaluateSelectOnly(query);
+        }
+      } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::UNDERSCORE) {
+        // 5. Parent(_, _)
+        pair_result = pkb->GetAllParentStmt(StmtType::STMT, StmtType::STMT);
+        if (!pair_result.empty()) {
+          EvaluateSelectOnly(query);
+        }
+      } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SYNONYM) {
+        // 6. Parent(_, s)
+        PqlTokenType second_arg_design_entity;
+        for (auto declaration : declarations) {
+          if (declaration.GetSynonym().value==second_arg.value) {
+            second_arg_design_entity = declaration.GetDesignEntity().type;
+          }
+        }
+
+        pair_result = pkb->GetAllParentStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
+        if (select_synonym.value==second_arg.value) {
+          for (auto pair : pair_result) {
+            result_to_add.insert(pair.second);
+          }
+        } else if (!pair_result.empty()) {
+          EvaluateSelectOnly(query);
+        }
+
+      } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::NUMBER) {
+        // 7. Parent(s, 8)
+        PqlTokenType first_arg_design_entity;
+        for (auto declaration : declarations) {
+          if (declaration.GetSynonym().value==first_arg.value) {
+            first_arg_design_entity = declaration.GetDesignEntity().type;
+          }
+        }
+
+        if (select_synonym.value==first_arg.value) {
+          result_to_add.insert(pkb->GetParentOf(second_arg.value));
+        } else if (pkb->GetParentOf(second_arg.value)!="0") {
+          EvaluateSelectOnly(query);
+        }
+
+      } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
+        // 8. Parent(s, _)
+        PqlTokenType first_arg_design_entity;
+        for (auto declaration : declarations) {
+          if (declaration.GetSynonym().value==first_arg.value) {
+            first_arg_design_entity = declaration.GetDesignEntity().type;
+          }
+        }
+
+        pair_result = pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
+        if (select_synonym.value==first_arg.value) {
+          for (auto pair : pair_result) {
+            result_to_add.insert(pair.first);
+          }
+        } else if (!pair_result.empty()) {
+          EvaluateSelectOnly(query);
+        }
+
+      } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+        // 9. Parent(s1, s2)
+        PqlTokenType first_arg_design_entity;
+        PqlTokenType second_arg_design_entity;
+        for (auto declaration : declarations) {
+          if (declaration.GetSynonym().value==first_arg.value) {
+            first_arg_design_entity = declaration.GetDesignEntity().type;
+          }
+          if (declaration.GetSynonym().value==second_arg.value) {
+            second_arg_design_entity = declaration.GetDesignEntity().type;
+          }
+        }
+
+        pair_result =
+            pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity), GetStmtType(second_arg_design_entity));
+        if (select_synonym.value==first_arg.value) {
+          for (auto pair : pair_result) {
+            result_to_add.insert(pair.first);
+          }
+        } else if (select_synonym.value==second_arg.value) {
+          for (auto pair : pair_result) {
+            result_to_add.insert(pair.second);
+          }
+        } else if (!pair_result.empty()) {
+          EvaluateSelectOnly(query);
+        }
+      }
       break;
     }
     case PqlTokenType::PARENT_T: {
