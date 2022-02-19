@@ -152,12 +152,20 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetStmtW
   return result;
 }
 
-std::string PKB::GetFollowOf(std::string stmt) {
+std::string PKB::GetFollowingOf(std::string stmt) {
   return follow_store.GetFollowingOf(stmt);
 }
 
-std::unordered_set<std::string> PKB::GetFollowStarOf(std::string stmt) {
+std::unordered_set<std::string> PKB::GetFollowingStarOf(std::string stmt) {
   return follow_store.GetFollowingStarOf(stmt);
+}
+
+std::string PKB::GetFollowerOf(std::string stmt) {
+  return follow_store.GetFollowerOf(stmt);
+}
+
+std::unordered_set<std::string> PKB::GetFollowerStarOf(std::string stmt) {
+  return follow_store.GetFollowerStarOf(stmt);
 }
 
 bool PKB::IsFollowExist(std::pair<std::string, std::string> pair) {
@@ -188,8 +196,16 @@ std::string PKB::GetParentOf(std::string stmt) {
   return parent_store.GetParentOf(stmt);
 }
 
-std::unordered_set<std::string> PKB::GetParentStarOf(std::string stmt) {
+std::unordered_set<std::string> PKB::GetAnceOf(std::string stmt) {
   return parent_store.GetAllAnceOf(stmt);
+}
+
+std::string PKB::GetChildOf(std::string stmt) {
+  return parent_store.GetChildOf(stmt);
+}
+
+std::unordered_set<std::string> PKB::GetDescOf(std::string stmt) {
+  return parent_store.GetAllDescOf(stmt);
 }
 
 bool PKB::IsParent(std::string stmt) {
