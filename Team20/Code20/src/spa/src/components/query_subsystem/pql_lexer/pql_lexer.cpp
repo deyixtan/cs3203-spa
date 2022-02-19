@@ -4,7 +4,6 @@
 #include <unordered_set>
 #include <vector>
 #include <stack>
-#include <iostream>
 
 // public
 PqlLexer::PqlLexer(std::string query) { this->query = query; }
@@ -253,11 +252,9 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
     if (isspace(c)) {
       if (double_quote_count == 1) {
         single_raw_token.push_back(c);
-      } else {
-        if (!single_raw_token.empty()) {
+      } else if (!single_raw_token.empty()) {
           raw_tokens.push_back(single_raw_token);
           single_raw_token.clear();
-        }
       }
     } else if (stickChar.count(c)) {
       if (c == '*' && relationship.count(single_raw_token)) {
@@ -278,37 +275,34 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
         }
       } else if (c == '"') {
         if (double_quote_count == 0) {
-          if (i >= 1 && s[i - 1] != '_') { // (_, "
+          if (i >= 1 && s[i - 1] != '_' && !single_raw_token.empty()) { // (_, "
               underscore_count = 0;
-              if (!single_raw_token.empty()) {
-                raw_tokens.push_back(single_raw_token);
-                single_raw_token.clear();
-              }
+              raw_tokens.push_back(single_raw_token);
+              single_raw_token.clear();
+          } else if(i >= 1 && s[i - 1] != '_') {
+            underscore_count = 0;
           }
           single_raw_token.push_back(c);
           double_quote_count += 1;
-        } else {
-          if (underscore_count == 1) { // _"x": string complete, sub-expression incomplete
-            single_raw_token.push_back(c);
-          } else { // "x"
-            single_raw_token.push_back(c);
-            raw_tokens.push_back(single_raw_token);
-            single_raw_token.clear();
-          }
-          double_quote_count = 0;
-        }
-      } else {
-        if (double_quote_count == 1) {
+        } else if (underscore_count == 1) { // _"x": string complete, sub-expression incomplete
           single_raw_token.push_back(c);
-        } else {
-          underscore_count = 0;
           double_quote_count = 0;
-          if (!single_raw_token.empty()) {
-            raw_tokens.push_back(single_raw_token);
-            single_raw_token.clear();
-          }
-          raw_tokens.push_back(std::string(1, c));
+        } else { // "x"
+          single_raw_token.push_back(c);
+          raw_tokens.push_back(single_raw_token);
+          single_raw_token.clear();
+          double_quote_count = 0;
         }
+      } else if (double_quote_count == 1) {
+          single_raw_token.push_back(c);
+      } else {
+        underscore_count = 0;
+        double_quote_count = 0;
+        if (!single_raw_token.empty()) {
+          raw_tokens.push_back(single_raw_token);
+          single_raw_token.clear();
+        }
+        raw_tokens.push_back(std::string(1, c));
       }
     } else {
       single_raw_token.push_back(c);
