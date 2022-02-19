@@ -754,13 +754,13 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::NUMBER) {
         // 1. Follows(1, 2)
-        if (pkb->GetFollowOf(first_arg.value)==second_arg.value) {
+        if (pkb->GetFollowingOf(first_arg.value)==second_arg.value) {
           // clause is true
           EvaluateSelectOnly(query);
         }
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 2. Follows(1, _)
-        if (pkb->GetFollowOf(first_arg.value)=="0") {
+        if (pkb->GetFollowingOf(first_arg.value)=="0") {
           // clause is false
         } else {
           EvaluateSelectOnly(query);
@@ -776,9 +776,9 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         }
 
         if (select_synonym_design_entity==second_arg_design_entity) {
-          result_to_add.insert(pkb->GetFollowOf(first_arg.value));
+          result_to_add.insert(pkb->GetFollowingOf(first_arg.value));
         } else {
-          if (pkb->GetFollowOf(first_arg.value)=="0") {
+          if (pkb->GetFollowingOf(first_arg.value)=="0") {
             // clause is false no possible s
           } else {
             EvaluateSelectOnly(query);
