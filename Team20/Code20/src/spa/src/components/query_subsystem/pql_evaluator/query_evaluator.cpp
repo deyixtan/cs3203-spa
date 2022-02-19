@@ -811,82 +811,15 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         }
 
+        pair_result = pkb->GetAllFollowStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
         if (select_synonym.value==second_arg.value) {
-          switch (second_arg_design_entity) {
-            case PqlTokenType::STMT: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::ASSIGN: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::ASSIGN);
-              break;
-            }
-            case PqlTokenType::WHILE: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::WHILE);
-              break;
-            }
-            case PqlTokenType::IF: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::IF);
-              break;
-            }
-            case PqlTokenType::CALL: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::CALL);
-              break;
-            }
-            case PqlTokenType::PRINT: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::PRINT);
-              break;
-            }
-            case PqlTokenType::READ: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::READ);
-              break;
-            }
-            default: {
-
-            }
-          }
           for (auto pair : pair_result) {
             result_to_add.insert(pair.second);
           }
-        } else {
-          switch (second_arg_design_entity) {
-            case PqlTokenType::STMT: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::ASSIGN: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::ASSIGN);
-              break;
-            }
-            case PqlTokenType::WHILE: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::WHILE);
-              break;
-            }
-            case PqlTokenType::IF: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::IF);
-              break;
-            }
-            case PqlTokenType::CALL: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::CALL);
-              break;
-            }
-            case PqlTokenType::PRINT: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::PRINT);
-              break;
-            }
-            case PqlTokenType::READ: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::READ);
-              break;
-            }
-            default: {
-
-            }
-          }
-
-          if (!pair_result.empty()) {
-            EvaluateSelectOnly(query);
-          }
+        } else if (!pair_result.empty()) {
+          EvaluateSelectOnly(query);
         }
+
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::NUMBER) {
         // 7. Follows(s, 8)
         PqlTokenType first_arg_design_entity;
@@ -914,84 +847,41 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         }
 
+        pair_result = pkb->GetAllFollowStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
         if (select_synonym.value==first_arg.value) {
-          switch (first_arg_design_entity) {
-            case PqlTokenType::STMT: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::ASSIGN: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::ASSIGN, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::WHILE: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::WHILE, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::IF: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::IF, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::CALL: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::CALL, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::PRINT: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::PRINT, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::READ: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::READ, StmtType::STMT);
-              break;
-            }
-            default: {
-
-            }
-          }
           for (auto pair : pair_result) {
             result_to_add.insert(pair.first);
           }
-        } else {
-          switch (first_arg_design_entity) {
-            case PqlTokenType::STMT: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::STMT, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::ASSIGN: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::ASSIGN, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::WHILE: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::WHILE, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::IF: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::IF, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::CALL: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::CALL, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::PRINT: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::PRINT, StmtType::STMT);
-              break;
-            }
-            case PqlTokenType::READ: {
-              pair_result = pkb->GetAllFollowStmt(StmtType::READ, StmtType::STMT);
-              break;
-            }
-            default: {
-
-            }
-          }
-
-          if (!pair_result.empty()) {
-            EvaluateSelectOnly(query);
-          }
+        } else if (!pair_result.empty()) {
+          EvaluateSelectOnly(query);
         }
+
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
         // 9. Follows(s1, s2)
+        PqlTokenType first_arg_design_entity;
+        PqlTokenType second_arg_design_entity;
+        for (auto declaration : declarations) {
+          if (declaration.GetSynonym().value==first_arg.value) {
+            first_arg_design_entity = declaration.GetDesignEntity().type;
+          }
+          if (declaration.GetSynonym().value==second_arg.value) {
+            second_arg_design_entity = declaration.GetDesignEntity().type;
+          }
+        }
+
+        pair_result =
+            pkb->GetAllFollowStmt(GetStmtType(first_arg_design_entity), GetStmtType(second_arg_design_entity));
+        if (select_synonym.value==first_arg.value) {
+          for (auto pair : pair_result) {
+            result_to_add.insert(pair.first);
+          }
+        } else if (select_synonym.value==second_arg.value) {
+          for (auto pair : pair_result) {
+            result_to_add.insert(pair.second);
+          }
+        } else if (!pair_result.empty()) {
+          EvaluateSelectOnly(query);
+        }
       }
     }
     case PqlTokenType::FOLLOWS_T: {
@@ -1367,6 +1257,12 @@ StmtType QueryEvaluator::GetStmtType(PqlTokenType token_type) {
     }
     case PqlTokenType::PRINT: {
       return StmtType::PRINT;
+    }
+    case PqlTokenType::READ: {
+      return StmtType::READ;
+    }
+    case PqlTokenType::CALL: {
+      return StmtType::CALL;
     }
   }
 }
