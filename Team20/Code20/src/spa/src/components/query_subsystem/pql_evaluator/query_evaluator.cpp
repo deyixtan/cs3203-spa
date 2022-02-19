@@ -1151,13 +1151,13 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::NUMBER) {
         // 1. Parent(1, 2)
-        if (pkb->GetChildOf(first_arg.value)==second_arg.value) {
+        if (pkb->ParentChildExists(first_arg.value, second_arg.value)) {
           // clause is true
           EvaluateSelectOnly(query);
         }
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 2. Parent(1, _)
-        if (pkb->GetChildOf(first_arg.value)!="0") {
+        if (!pkb->GetChildOf(first_arg.value).empty()) {
           EvaluateSelectOnly(query);
         }
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
@@ -1170,10 +1170,10 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         }
 
-        const bool is_empty = pkb->GetChildOf(first_arg.value)=="0";
+        const bool is_empty = pkb->GetChildOf(first_arg.value).empty();
         if (!is_empty) {
           if (select_synonym.value==second_arg.value) {
-            result_to_add.insert(pkb->GetChildOf(first_arg.value));
+            result_to_add = pkb->GetChildOf(first_arg.value);
           } else {
             EvaluateSelectOnly(query);
           }

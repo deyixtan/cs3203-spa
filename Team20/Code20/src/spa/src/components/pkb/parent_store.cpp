@@ -50,9 +50,13 @@ void ParentStore::AddParentStarStmt(std::string stmt, std::vector<std::string> v
       rs_map.insert({stmt, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
     }
 
-    ance_desc_set.insert(std::make_pair(s, stmt));
-    rs_map.at(stmt).ance.insert(s);
-    ance_set.insert(s);
+    if (s != stmt) {
+      ance_desc_set.insert(std::make_pair(s, stmt));
+      rs_map.at(stmt).ance.insert(s);
+      rs_map.at(s).desc.insert(stmt);
+      ance_set.insert(s);
+      desc_set.insert(stmt);
+    }
   }
 }
 
