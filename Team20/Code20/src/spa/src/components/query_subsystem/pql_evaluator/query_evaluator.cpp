@@ -760,9 +760,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         }
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 2. Follows(1, _)
-        if (pkb->GetFollowingOf(first_arg.value)=="0") {
-          // clause is false
-        } else {
+        if (pkb->GetFollowingOf(first_arg.value)!="0") {
           EvaluateSelectOnly(query);
         }
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
@@ -777,13 +775,10 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
         if (select_synonym.value==second_arg.value) {
           result_to_add.insert(pkb->GetFollowingOf(first_arg.value));
-        } else {
-          if (pkb->GetFollowingOf(first_arg.value)=="0") {
-            // clause is false no possible s
-          } else {
-            EvaluateSelectOnly(query);
-          }
+        } else if (pkb->GetFollowingOf(first_arg.value)!="0") {
+          EvaluateSelectOnly(query);
         }
+
       } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::NUMBER) {
         // 4. Follows(_, 9)
         pair_result = pkb->GetAllFollowStmt(StmtType::STMT);
@@ -831,13 +826,11 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
         if (select_synonym.value==first_arg.value) {
           result_to_add.insert(pkb->GetFollowerOf(second_arg.value));
-        } else {
-          if (pkb->GetFollowerOf(second_arg.value)=="0") {
-            // clause is false no possible s
-          } else {
-            EvaluateSelectOnly(query);
-          }
+        } else if (pkb->GetFollowerOf(second_arg.value)!="0") {
+          // clause is false no possible s
+          EvaluateSelectOnly(query);
         }
+
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 8. Follows(s, _)
         PqlTokenType first_arg_design_entity;
