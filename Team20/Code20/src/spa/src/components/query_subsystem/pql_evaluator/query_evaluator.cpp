@@ -913,7 +913,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         }
 
-        followings = pkb->GetDescOf(first_arg.value);
+        followings = pkb->GetFollowingStarOf(first_arg.value);
         if (select_synonym.value==second_arg.value) {
           result_to_add.insert(followings.begin(), followings.end());
         } else if (!followings.empty()) {
