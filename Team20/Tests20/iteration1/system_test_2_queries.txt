@@ -181,7 +181,7 @@ none
 37 - Mix Test 3
 stmt s; assign a, a1; variable v, v1;
 Select v such that Follows*(s, a) pattern a(v, _)
-tan,sin,cos,x,y,length
+sin,cos,y,length
 5000
 38 - Mix Test 4
 stmt s; assign a, a1; variable v, v1;
