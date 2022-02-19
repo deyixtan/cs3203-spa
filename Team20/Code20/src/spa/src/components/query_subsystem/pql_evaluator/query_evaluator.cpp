@@ -754,13 +754,13 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::NUMBER) {
         // 1. Follows(1, 2)
-        if (pkb->GetFollowOf(first_arg.value)==second_arg.value) {
+        if (pkb->GetFollowingOf(first_arg.value)==second_arg.value) {
           // clause is true
           EvaluateSelectOnly(query);
         }
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 2. Follows(1, _)
-        if (pkb->GetFollowOf(first_arg.value)=="0") {
+        if (pkb->GetFollowingOf(first_arg.value)=="0") {
           // clause is false
         } else {
           EvaluateSelectOnly(query);
@@ -776,9 +776,9 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         }
 
         if (select_synonym_design_entity==second_arg_design_entity) {
-          result_to_add.insert(pkb->GetFollowOf(first_arg.value));
+          result_to_add.insert(pkb->GetFollowingOf(first_arg.value));
         } else {
-          if (pkb->GetFollowOf(first_arg.value)=="0") {
+          if (pkb->GetFollowingOf(first_arg.value)=="0") {
             // clause is false no possible s
           } else {
             EvaluateSelectOnly(query);
@@ -997,9 +997,9 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
     } else if (relationship_type == PqlTokenType::MODIFIES) {
       such_that_bool_result = pkb->IsModifyStmtVarExist(std::make_pair(rel_first_arg.value, rel_second_no_quote));
     } else if (relationship_type == PqlTokenType::PARENT) {
-      // TODO: modify such_that_bool_result by calling from pkb
+      such_that_bool_result = pkb->GetParentOf(rel_first_arg.value) == rel_second_arg.value;
     } else if (relationship_type == PqlTokenType::PARENT_T) {
-      // TODO: modify such_that_bool_result by calling from pkb
+      such_that_bool_result = pkb->GetAnceOf(rel_first_arg.value).count(rel_second_arg.value);
     } else if (relationship_type == PqlTokenType::FOLLOWS) {
       such_that_bool_result = pkb->IsFollowExist(std::make_pair(rel_first_arg.value, rel_second_arg.value));
     } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
@@ -1099,9 +1099,13 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
       std::string second_arg = relationship.GetSecond().value;
 
       PqlTokenType first_arg_design_entity;
+      PqlTokenType second_arg_design_entity;
       for (auto declaration : declarations) {
         if (declaration.GetSynonym().value==relationship.GetFirst().value) {
           first_arg_design_entity = declaration.GetDesignEntity().type;
+        }
+        if (declaration.GetSynonym().value==relationship.GetSecond().value) {
+          second_arg_design_entity = declaration.GetDesignEntity().type;
         }
       }
 
@@ -1112,13 +1116,17 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
         second_arg = second_arg.substr(1, 1);
         rel_result_set = pkb->GetAllModStmt(GetStmtType(first_arg_design_entity));
       } else if (relationship_type == PqlTokenType::PARENT) {
-        rel_result_set = pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity));
+        rel_result_set = pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity),
+                                               GetStmtType(second_arg_design_entity));
       } else if (relationship_type == PqlTokenType::PARENT_T) {
-        rel_result_set = pkb->GetAllParentStarStmt(GetStmtType(first_arg_design_entity));
+        rel_result_set = pkb->GetAllParentStarStmt(GetStmtType(first_arg_design_entity),
+                                               GetStmtType(second_arg_design_entity));
       } else if (relationship_type == PqlTokenType::FOLLOWS) {
-        rel_result_set = pkb->GetAllFollowStmt(GetStmtType(first_arg_design_entity));
+        rel_result_set = pkb->GetAllFollowStmt(GetStmtType(first_arg_design_entity),
+                                               GetStmtType(second_arg_design_entity));
       } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
-        rel_result_set = pkb->GetAllFollowStarStmt(GetStmtType(first_arg_design_entity));
+        rel_result_set = pkb->GetAllFollowStarStmt(GetStmtType(first_arg_design_entity),
+                                               GetStmtType(second_arg_design_entity));
       }
     }
 
