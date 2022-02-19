@@ -775,7 +775,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         }
 
-        if (select_synonym_design_entity==second_arg_design_entity) {
+        if (select_synonym.value==second_arg.value) {
           result_to_add.insert(pkb->GetFollowingOf(first_arg.value));
         } else {
           if (pkb->GetFollowingOf(first_arg.value)=="0") {
