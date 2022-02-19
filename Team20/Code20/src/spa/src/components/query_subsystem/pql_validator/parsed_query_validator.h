@@ -9,14 +9,19 @@ namespace pql_validator {
 class ParsedQueryValidator {
  public:
   ParsedQueryValidator() {};
-  void ValidateQuery(ParsedQuery);
+  bool ValidateQuery(ParsedQuery);
 
  private:
-  void ValidateNoDuplicateSynonymDeclared(ParsedQuery);
-  void ValidateSelectSynonymDeclared(ParsedQuery);
-  void ValidatePatternSynonymIsAssigned(ParsedQuery);
-  void ValidateModifiesUsesFirstArgumentNotUnderscore(ParsedQuery);
-  void ValidateClauseDesignEntity(ParsedQuery);
+  bool ValidateNoDuplicateSynonymDeclared(ParsedQuery);
+  bool ValidateSelectSynonymDeclared(ParsedQuery);
+  bool ValidateSuchThatClause(ParsedQuery);
+  bool ValidatePatternClause(ParsedQuery);
+  bool ValidatePatternSynonymIsAssigned(ParsedQuery);
+  bool ValidatePatternArguments(ParsedQuery);
+  bool ValidatePatternFirstArgumentIsEntRef(ParsedQuery);
+  bool ValidatePatternSecondArgumentIsExpressionSpec(ParsedQuery);
+  bool ValidateModifiesUsesFirstArgumentNotUnderscore(ParsedQuery);
+  bool ValidateClauseDesignEntity(ParsedQuery);
 };
 
 };
