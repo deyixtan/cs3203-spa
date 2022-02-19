@@ -798,6 +798,10 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         }
       } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 5. Follows(_, _)
+        pair_result = pkb->GetAllFollowStmt((StmtType::STMT, StmtType::STMT);
+        if (!pair_result.empty()) {
+          EvaluateSelectOnly(query);
+        }
       } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SYNONYM) {
         // 6. Follows(_, s)
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::NUMBER) {
