@@ -48,7 +48,9 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         var_name = read_stmt->GetIdentifier()->GetIdentifier();
         PopulateVars(var_name);
         PopulateRead(stmt_num);
-        PopulateModifies(stmt_num, var_name);
+        for (std::string s : visited) {
+          PopulateModifies(s, var_name);
+        }
         break;
       }
       case PRINT: {
@@ -57,7 +59,9 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         var_name = print_stmt->GetIdentifier()->GetIdentifier();
         PopulateVars(var_name);
         PopulatePrint(stmt_num);
-        PopulateUses(stmt_num, var_name);
+        for (std::string s : visited) {
+          PopulateUses(s, var_name);
+        }
         break;
       }
       case ASSIGN: {
@@ -65,7 +69,9 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         std::shared_ptr<AssignStatementNode> assign_stmt = static_pointer_cast<AssignStatementNode>(stmt);
         var_name = assign_stmt->GetIdentifier()->GetIdentifier();
         PopulateVars(var_name);
-        PopulateModifies(stmt_num, var_name);
+        for (std::string s : visited) {
+          PopulateModifies(s, var_name);
+        }
         std::shared_ptr<ExpressionNode> expr = assign_stmt->GetExpression();
 
         std::string rhs_expr = ExprNodeHandler(visited, stmt_num, expr, 0, "");
@@ -73,7 +79,6 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         pkb->AddPattern(stmt_num, var_name, rhs_expr);
 
         PopulateAssign(stmt_num);
-        PopulateModifies(stmt_num, var_name);
         break;
       }
       case WHILE: {
@@ -188,7 +193,6 @@ void DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, std::str
       for (std::string s : visited) {
         PopulateUses(s, var_name);
       }
-      PopulateUses(stmt, var_name);
       PopulateVars(var_name);
       break;
     }
@@ -238,7 +242,6 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
         PopulateUses(s, var_name);
       }
       PopulateVars(var_name);
-      PopulateUses(stmt_num, var_name);
       break;
     }
   }
