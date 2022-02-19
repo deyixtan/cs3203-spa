@@ -889,6 +889,22 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         }
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::NUMBER) {
         // 7. Follows(s, 8)
+        PqlTokenType first_arg_design_entity;
+        for (auto declaration : declarations) {
+          if (declaration.GetSynonym().value==first_arg.value) {
+            first_arg_design_entity = declaration.GetDesignEntity().type;
+          }
+        }
+
+        if (select_synonym.value==first_arg.value) {
+          result_to_add.insert(pkb->GetFollowerOf(second_arg.value));
+        } else {
+          if (pkb->GetFollowerOf(second_arg.value)=="0") {
+            // clause is false no possible s
+          } else {
+            EvaluateSelectOnly(query);
+          }
+        }
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 8. Follows(s, _)
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
