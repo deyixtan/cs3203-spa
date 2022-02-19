@@ -6,7 +6,7 @@ Select s such that Parent(s, 7)
 2 - Parent Test 2
 stmt s, s1, s2; assign a, a1; while w; if ifs; variable v;constant c; print pn; read re;
 Select s such that Parent(4, s)
-5,6,7,12
+5,6,7,8,12
 5000
 3 - Parent Test 3
 stmt s, s1, s2; assign a, a1; while w; if ifs; variable v;constant c; print pn; read re;
@@ -41,12 +41,12 @@ cos
 9 - Modifies Test 2 (Find all variables modified on line)
 stmt s; assign a; while w; if ifs; variable v; print pn; read re;
 Select v such that Modifies (4, v)
-none
+cos,length,sin,tan,x,y
 5000
 10 - Modifies Test 3 (Find all statements that modify a specific variable)
 stmt s; assign a; while w; if ifs; variable v; print pn; read re;
 Select s such that Modifies (s, "x")
-1,3,8,9,11,13
+1,3,4,8,9,11,13
 5000
 11 - Modifies Test 4 (Find all statements that modify a specific variable)
 stmt s; assign a; while w; if ifs; variable v; print pn; read re;
@@ -66,7 +66,7 @@ Select ifs such that Modifies (ifs, _)
 14 - Modifies Test 7 (Find all variables modified by if statements)
 stmt s; assign a; while w; if ifs; variable v; print pn; read re;
 Select v such that Modifies (ifs, v)
-length,x,y
+length,x,y,cos,sin,tan
 5000
 15 - Uses Test 1 (Find all variables used on a line)
 stmt s; assign a; while w; if ifs; variable v; print pn; read re;
@@ -101,7 +101,7 @@ Select ifs such that Uses (ifs, _)
 21 - Uses Test 7 (Find all variables used by if statements)
 stmt s; assign a; while w; if ifs; variable v; print pn; read re;
 Select v such that Uses (ifs, v)
-x,y,sin,cos,tan
+x,y,sin,cos,tan,length
 5000
 22 - Follows Test 1
 stmt s, s1, s2; assign a, a1; while w; if ifs; variable v; print pn; read re;
