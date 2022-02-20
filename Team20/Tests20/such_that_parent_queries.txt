@@ -26,7 +26,7 @@ none
 6 - Double synonym (s1, s2)
 stmt s1, s2;
 Select s2 such that Parent(s1, s2)
-4, 5, 6, 7, 8, 10, 11, 12, 13, 14
+4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16
 5000
 7 - Single synonym (s, 3)
 stmt s;
@@ -41,7 +41,7 @@ Select s such that Parent(s, 8)
 9 - Single synonym with wildcard (s, _)
 stmt s;
 Select s such that Parent(s, _)
-3, 5, 9
+3, 5, 9, 12, 14
 5000
 10 - Single synonym (3, s2)
 stmt s1, s2;
@@ -71,7 +71,7 @@ Select pn such that Parent(5, _)
 15 - Single synonym with wildcard (_, s2)
 stmt s1, s2;
 Select s2 such that Parent(_, s2)
-4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16
 5000
 16 - No synonym with wildcard (_, 5)
 stmt s1, s2;
@@ -111,12 +111,12 @@ Select w such that Parent(w, 4)
 23 - Single synonym with wildcard (w, _)
 while w;
 Select w such that Parent(w, _)
-3, 5
+3, 5, 12
 5000
 24 - No synonym with wildcard; no parent (_, 12)
 while w;
 Select w such that Parent(_, 12)
-none
+3, 5, 12
 5000
 25 - No synonym with wildcard; no children (6, _)
 stmt s;
@@ -216,6 +216,7 @@ Select w1 such that Parent*(w, w1)
 44 - Double synonym; intentionally misspelt (w, w1)
 while w, w1;
 Select pn suc that Parent*(w, w1)
+none
 5000
 45 - Double synonym (s1, s2)
 stmt s1, s2;
@@ -225,6 +226,7 @@ Select s2 such that Parent*(s1, s2)
 46 - Single synonym (s1, 3)
 stmt s1, s2;
 Select s1 such that Parent*(s1, 3)
+none
 5000
 47 - Single synonym (s1, 8)
 stmt s1, s2;
@@ -294,7 +296,7 @@ Select ifs such that Parent*(ifs, _)
 60 - Double synonym (w, s2)
 stmt s1, s2;
 Select s2 such that Parent*(w, s2)
-4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+none
 5000
 61 - Single synonym (w, 4)
 while w;
