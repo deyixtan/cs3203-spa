@@ -1437,7 +1437,10 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
   if (relationship.GetFirst().type != PqlTokenType::SYNONYM &&
       relationship.GetSecond().type != PqlTokenType::SYNONYM) { // no synonym in such that clause
     bool such_that_bool_result;
-    std::string rel_second_no_quote = rel_second_arg.value.substr(1, rel_second_arg.value.length() - 2);
+    std::string rel_second_no_quote;
+    if (relationship.GetSecond().type != PqlTokenType::UNDERSCORE) {
+      rel_second_no_quote = rel_second_arg.value.substr(1, rel_second_arg.value.length() - 2);
+    }
     if (relationship_type == PqlTokenType::USES) {
       such_that_bool_result = pkb->IsUsageStmtVarExist(std::make_pair(rel_first_arg.value, rel_second_no_quote));
     } else if (relationship_type == PqlTokenType::MODIFIES) {
@@ -1481,10 +1484,14 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
       }
 
       if (relationship_type == PqlTokenType::USES) {
-        second_arg = second_arg.substr(1, second_arg.length() - 2);
+        if (relationship.GetSecond().type != PqlTokenType::UNDERSCORE) {
+          second_arg = second_arg.substr(1, second_arg.length() - 2);
+        }
         temp_set = pkb->GetAllUsesStmt(GetStmtType(first_arg_design_entity));
       } else if (relationship_type == PqlTokenType::MODIFIES) {
-        second_arg = second_arg.substr(1, second_arg.length() - 2);
+        if (relationship.GetSecond().type != PqlTokenType::UNDERSCORE) {
+          second_arg = second_arg.substr(1, second_arg.length() - 2);
+        }
         temp_set = pkb->GetAllModStmt(GetStmtType(first_arg_design_entity));
       } else if (relationship_type == PqlTokenType::PARENT) {
         temp_set = pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity));
@@ -1497,7 +1504,9 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
       }
 
       for (auto pair : temp_set) {
-        if (pair.second == second_arg) {
+        if (second_arg == "_") {
+          single_result_set.insert(pair.first);
+        } else if (pair.second == second_arg) {
           single_result_set.insert(pair.first);
         }
       }
