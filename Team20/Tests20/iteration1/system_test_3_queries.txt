@@ -160,7 +160,7 @@ apple, peach
 5000
 33 -  Uses Test 10 (Find all print statements that use a variable)
 stmt s; assign a; while w; if ifs; variable v; print pn;
-Select pn such that Uses (pn, “avocado”)
+Select pn such that Uses (pn, "avocado")
 none
 5000
 34 -  Uses Test 11 (Find all variables used on line)
@@ -270,7 +270,7 @@ berry
 5000
 55 - Mix Test 6
 stmt s; assign a, a1; variable v, v1;
-Select v such that Uses(a, “apple”) pattern a(v, _”3”_)
+Select v such that Uses(a, "apple") pattern a(v, _"3"_)
 none
 5000
 56 - Mix Test 7
