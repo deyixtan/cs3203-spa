@@ -215,6 +215,8 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
         pattern = "(" + name;
       } else if (direction == 2) {
         pattern = name + ")";
+      } else {
+        pattern = name;
       }
       PopulateConst(name);
       break;
@@ -242,6 +244,8 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
         pattern = "(" + var_name;
       } else if (direction == 2) {
         pattern = var_name + ")";
+      } else {
+        pattern = var_name;
       }
       for (std::string s : visited) {
         PopulateUses(s, var_name);
