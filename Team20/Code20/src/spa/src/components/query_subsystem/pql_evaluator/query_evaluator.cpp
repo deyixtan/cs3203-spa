@@ -1498,9 +1498,9 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
       } else if (relationship_type == PqlTokenType::MODIFIES) {
         such_that_bool_result = pkb->IsModifyStmtVarExist(std::make_pair(rel_first_arg.value, rel_second_no_quote));
       } else if (relationship_type == PqlTokenType::PARENT) {
-        such_that_bool_result = pkb->GetParentOf(rel_first_arg.value) == rel_second_arg.value;
+        such_that_bool_result = pkb->GetParentOf(rel_second_arg.value) == rel_first_arg.value;
       } else if (relationship_type == PqlTokenType::PARENT_T) {
-        such_that_bool_result = pkb->GetAnceOf(rel_first_arg.value).count(rel_second_arg.value);
+        such_that_bool_result = pkb->GetAnceOf(rel_second_arg.value).count(rel_first_arg.value);
       } else if (relationship_type == PqlTokenType::FOLLOWS) {
         such_that_bool_result = pkb->IsFollowExist(std::make_pair(rel_first_arg.value, rel_second_arg.value));
       } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
