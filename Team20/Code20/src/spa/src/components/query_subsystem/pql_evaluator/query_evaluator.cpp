@@ -1369,23 +1369,25 @@ void QueryEvaluator::EvaluateSelectWithPattern(ParsedQuery &query) {
     }
   } else if (first_arg.type==PqlTokenType::IDENT_WITH_QUOTES && second_arg.type==PqlTokenType::UNDERSCORE) {
     // 5. pattern a("x", _)
+    std::string ident_without_quotes = first_arg.value.substr(1, second_arg.value.length() - 2);
     if (select_synonym.value==pattern_synonym.value) {
       // Select a pattern a("x", _)
-      result_to_add = pkb->GetStmtWithPattern(first_arg.value, "_");
+      result_to_add = pkb->GetStmtWithPattern(ident_without_quotes, "_");
     } else {
       // check if pattern a("x", _) is non-empty
-      if (!pkb->GetStmtWithPattern(first_arg.value, "_").empty()) {
+      if (!pkb->GetStmtWithPattern(ident_without_quotes, "_").empty()) {
         EvaluateSelectOnly(query);
       }
     }
   } else if (first_arg.type==PqlTokenType::IDENT_WITH_QUOTES && second_arg.type==PqlTokenType::SUB_EXPRESSION) {
     // 6. pattern a("x", _"y"_)
+    std::string ident_without_quotes = first_arg.value.substr(1, second_arg.value.length() - 2);
     if (select_synonym.value==pattern_synonym.value) {
       // Select a pattern a("x", _"y"_)
-      result_to_add = pkb->GetStmtWithPattern(first_arg.value, second_arg.value);
+      result_to_add = pkb->GetStmtWithPattern(ident_without_quotes, second_arg.value);
     } else {
       // check if pattern a("x", _"y"_) is non-empty
-      if (!pkb->GetStmtWithPattern(first_arg.value, second_arg.value).empty()) {
+      if (!pkb->GetStmtWithPattern(ident_without_quotes, second_arg.value).empty()) {
         EvaluateSelectOnly(query);
       }
     }
