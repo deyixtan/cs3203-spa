@@ -11,10 +11,6 @@ bool ParsedQueryValidator::ValidateQuery(ParsedQuery query) {
       && ValidateNoDuplicateSynonymDeclared(query)
       && ValidateSuchThatClause(query)
       && ValidatePatternClause(query);
-
-//      && ValidatePatternSynonymIsAssigned(query)
-//      && ValidateModifiesUsesFirstArgumentNotUnderscore(query)
-//      && ValidateClauseDesignEntity(query);
 }
 
 bool ParsedQueryValidator::ValidateSelectSynonymDeclared(ParsedQuery query) {
@@ -49,10 +45,205 @@ bool ParsedQueryValidator::ValidateNoDuplicateSynonymDeclared(ParsedQuery query)
 
 bool ParsedQueryValidator::ValidateSuchThatClause(ParsedQuery query) {
   if (!query.GetRelationships().empty()) {
-
+    Relationship relationship = query.GetRelationships().front();
+    PqlTokenType rel_ref = relationship.GetRelRef().type;
+    switch (rel_ref) {
+      case PqlTokenType::FOLLOWS: {
+        return ValidateFollowsFollowsTArguments(query);
+      }
+      case PqlTokenType::PARENT: {
+        return ValidateParentParentTArguments(query);
+      }
+      case PqlTokenType::FOLLOWS_T: {
+        return ValidateFollowsFollowsTArguments(query);
+      }
+      case PqlTokenType::PARENT_T: {
+        return ValidateParentParentTArguments(query);
+      }
+      case PqlTokenType::USES: {
+        return ValidateUsesArguments(query);
+      }
+      case PqlTokenType::MODIFIES: {
+        return ValidateModifiesArguments(query);
+      }
+      default: {
+        return false;
+      }
+    }
   }
 
   return true;
+}
+
+bool ParsedQueryValidator::ValidateFollowsFollowsTArguments(ParsedQuery query) {
+  assert(!query.GetRelationships().empty());
+  Relationship relationship = query.GetRelationships().front();
+  PqlToken first_arg = relationship.GetFirst();
+  PqlToken second_arg = relationship.GetSecond();
+
+  if (!IsStmtRef(first_arg.type)) {
+    return false;
+  }
+  if (!IsStmtRef(second_arg.type)) {
+    return false;
+  }
+
+  if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+    if (first_arg.value==second_arg.value) {
+      // Follows(s, s) is semantically invalid
+      return false;
+    }
+
+    bool found_first = false;
+    PqlTokenType first_arg_design_entity;
+    bool found_second = false;
+    PqlTokenType second_arg_design_entity;
+    for (auto declaration : query.GetDeclaration()) {
+      if (declaration.GetSynonym().value==first_arg.value) {
+        found_first = true;
+        first_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+      if (declaration.GetSynonym().value==second_arg.value) {
+        found_second = true;
+        second_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+    }
+
+    if (!found_first || !found_second) {
+      return false;
+    }
+    if (!IsStmt(first_arg_design_entity)) {
+      return false;
+    }
+    if (!IsStmt(second_arg_design_entity)) {
+      return false;
+    }
+  } else if (first_arg.type==PqlTokenType::SYNONYM) {
+    bool found_first = false;
+    PqlTokenType first_arg_design_entity;
+    for (auto declaration : query.GetDeclaration()) {
+      if (declaration.GetSynonym().value==first_arg.value) {
+        found_first = true;
+        first_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+    }
+
+    if (!found_first) {
+      return false;
+    }
+    if (!IsStmt(first_arg_design_entity)) {
+      return false;
+    }
+  } else if (second_arg.type==PqlTokenType::SYNONYM) {
+    bool found_second = false;
+    PqlTokenType second_arg_design_entity;
+    for (auto declaration : query.GetDeclaration()) {
+      if (declaration.GetSynonym().value==second_arg.value) {
+        found_second = true;
+        second_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+    }
+
+    if (!found_second) {
+      return false;
+    }
+    if (!IsStmt(second_arg_design_entity)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool ParsedQueryValidator::ValidateParentParentTArguments(ParsedQuery query) {
+  // since Parent/Parent* parallels Follows/Follows* we use the same validation
+  return ValidateFollowsFollowsTArguments(query);
+}
+
+bool ParsedQueryValidator::ValidateUsesArguments(ParsedQuery query) {
+  assert(!query.GetRelationships().empty());
+  Relationship relationship = query.GetRelationships().front();
+  PqlToken first_arg = relationship.GetFirst();
+  PqlToken second_arg = relationship.GetSecond();
+
+  if (first_arg.type!=PqlTokenType::SYNONYM
+      && first_arg.type!=PqlTokenType::NUMBER) {
+    return false;
+  }
+  if (!IsEntRef(second_arg.type)) {
+    return false;
+  }
+
+  if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+    if (first_arg.value==second_arg.value) {
+      // Uses(s, s) is semantically invalid
+      return false;
+    }
+
+    bool found_first = false;
+    PqlTokenType first_arg_design_entity;
+    bool found_second = false;
+    PqlTokenType second_arg_design_entity;
+    for (auto declaration : query.GetDeclaration()) {
+      if (declaration.GetSynonym().value==first_arg.value) {
+        found_first = true;
+        first_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+      if (declaration.GetSynonym().value==second_arg.value) {
+        found_second = true;
+        second_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+    }
+
+    if (!found_first || !found_second) {
+      return false;
+    }
+    if (!IsStmt(first_arg_design_entity)) {
+      return false;
+    }
+    if (second_arg_design_entity!=PqlTokenType::VARIABLE) {
+      return false;
+    }
+  } else if (first_arg.type==PqlTokenType::SYNONYM) {
+    bool found_first = false;
+    PqlTokenType first_arg_design_entity;
+    for (auto declaration : query.GetDeclaration()) {
+      if (declaration.GetSynonym().value==first_arg.value) {
+        found_first = true;
+        first_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+    }
+
+    if (!found_first) {
+      return false;
+    }
+    if (!IsStmt(first_arg_design_entity)) {
+      return false;
+    }
+  } else if (second_arg.type==PqlTokenType::SYNONYM) {
+    bool found_second = false;
+    PqlTokenType second_arg_design_entity;
+    for (auto declaration : query.GetDeclaration()) {
+      if (declaration.GetSynonym().value==second_arg.value) {
+        found_second = true;
+        second_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+    }
+
+    if (!found_second) {
+      return false;
+    }
+    if (second_arg_design_entity!=PqlTokenType::VARIABLE) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool ParsedQueryValidator::ValidateModifiesArguments(ParsedQuery query) {
+  // same validation as Uses
+  return ValidateUsesArguments(query);
 }
 
 bool ParsedQueryValidator::ValidatePatternClause(ParsedQuery query) {
@@ -83,19 +274,15 @@ bool ParsedQueryValidator::ValidatePatternSynonymIsAssigned(ParsedQuery query) {
 
 bool ParsedQueryValidator::ValidatePatternArguments(ParsedQuery query) {
   assert(!query.GetPatterns().empty());
-  return ValidatePatternFirstArgumentIsEntRef(query)
-      && ValidatePatternSecondArgumentIsExpressionSpec(query);
-}
-
-bool ParsedQueryValidator::ValidatePatternFirstArgumentIsEntRef(ParsedQuery query) {
-  assert(!query.GetPatterns().empty());
   PqlToken first_arg = query.GetPatterns().front().GetFirst();
-  if (first_arg.type!=PqlTokenType::SYNONYM
-      && first_arg.type!=PqlTokenType::UNDERSCORE
-      && first_arg.type!=PqlTokenType::IDENT_WITH_QUOTES) {
+  PqlToken second_arg = query.GetPatterns().front().GetSecond();
+
+  if (!IsEntRef(first_arg.type)) {
     return false;
   }
-
+  if (!IsExpressionSpec(second_arg.type)) {
+    return false;
+  }
   if (first_arg.type==PqlTokenType::SYNONYM) {
     bool found = false;
     PqlTokenType first_arg_design_entity;
@@ -110,70 +297,42 @@ bool ParsedQueryValidator::ValidatePatternFirstArgumentIsEntRef(ParsedQuery quer
       // synonym not declared
       return false;
     }
+
+    if (first_arg_design_entity!=PqlTokenType::VARIABLE) {
+      // pattern first argument synonym must be of type variable
+      return false;
+    }
   }
 
   return true;
 }
 
-bool ParsedQueryValidator::ValidatePatternSecondArgumentIsExpressionSpec(ParsedQuery query) {
-  assert(!query.GetPatterns().empty());
-  PqlToken second_arg = query.GetPatterns().front().GetSecond();
-  if (second_arg.type!=PqlTokenType::UNDERSCORE
-      && second_arg.type!=PqlTokenType::SUB_EXPRESSION) {
-    return false;
-  }
-
-  return true;
+bool ParsedQueryValidator::IsStmt(PqlTokenType token_type) {
+  return token_type==PqlTokenType::STMT
+      || token_type==PqlTokenType::READ
+      || token_type==PqlTokenType::PRINT
+      || token_type==PqlTokenType::CALL
+      || token_type==PqlTokenType::WHILE
+      || token_type==PqlTokenType::IF
+      || token_type==PqlTokenType::ASSIGN;
 }
 
-bool ParsedQueryValidator::ValidateModifiesUsesFirstArgumentNotUnderscore(ParsedQuery query) {
-  std::vector<Relationship> relationships = query.GetRelationships();
-  if (!relationships.empty()) {
-    if (relationships.front().GetRelRef().type==PqlTokenType::MODIFIES ||
-        relationships.front().GetRelRef().type==PqlTokenType::USES) {
-      if (relationships.front().GetFirst().type==PqlTokenType::UNDERSCORE) {
-        return false;
-      }
-    }
-  }
-  return true;
+bool ParsedQueryValidator::IsStmtRef(PqlTokenType token_type) {
+  return token_type==PqlTokenType::SYNONYM
+      || token_type==PqlTokenType::UNDERSCORE
+      || token_type==PqlTokenType::NUMBER;
 }
 
-bool ParsedQueryValidator::ValidateClauseDesignEntity(ParsedQuery query) {
+bool ParsedQueryValidator::IsEntRef(PqlTokenType token_type) {
+  return token_type==PqlTokenType::SYNONYM
+      || token_type==PqlTokenType::UNDERSCORE
+      || token_type==PqlTokenType::IDENT_WITH_QUOTES;
+}
 
-  std::unordered_set<std::string> line_no_synonym_set;
-  std::unordered_set<std::string> var_synonym_set;
-
-  for (Declaration declaration : query.GetDeclaration()) {
-    if (line_no_set.count(declaration.GetDesignEntity().type)) {
-      line_no_synonym_set.insert(declaration.GetSynonym().value);
-    } else if (var_set.count(declaration.GetDesignEntity().type)) {
-      var_synonym_set.insert(declaration.GetSynonym().value);
-    }
-  }
-
-  std::vector<Relationship> relationships = query.GetRelationships();
-  if (!relationships.empty()) {
-    if (relationships.front().GetRelRef().type==PqlTokenType::MODIFIES ||
-        relationships.front().GetRelRef().type==PqlTokenType::USES) {
-      if (!line_no_synonym_set.count(relationships.front().GetFirst().value)) {
-        // TODO: throw exception if first argument of Modifies/Uses is not a line no synonym
-      }
-      if (!var_synonym_set.count(relationships.front().GetSecond().value)) {
-        // TODO: throw exception if second argument of Modifies/Uses is not a var synonym
-      }
-    } else if (relationships.front().GetRelRef().type==PqlTokenType::FOLLOWS_T ||
-        relationships.front().GetRelRef().type==PqlTokenType::FOLLOWS ||
-        relationships.front().GetRelRef().type==PqlTokenType::PARENT_T ||
-        relationships.front().GetRelRef().type==PqlTokenType::PARENT) {
-      if (!line_no_synonym_set.count(relationships.front().GetFirst().value)) {
-        // TODO: throw exception if first argument of Follows/Parent is not a line no synonym
-      }
-      if (!line_no_synonym_set.count(relationships.front().GetSecond().value)) {
-        // TODO: throw exception if second argument of Follows/Parent is not a line no synonym
-      }
-    }
-  }
+bool ParsedQueryValidator::IsExpressionSpec(PqlTokenType token_type) {
+  // exact match not in iter 1
+  return token_type==PqlTokenType::UNDERSCORE
+      || token_type==PqlTokenType::SUB_EXPRESSION;
 }
 
 }

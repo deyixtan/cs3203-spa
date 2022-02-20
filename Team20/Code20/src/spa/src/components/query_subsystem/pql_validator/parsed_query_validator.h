@@ -12,16 +12,20 @@ class ParsedQueryValidator {
   bool ValidateQuery(ParsedQuery);
 
  private:
+  bool IsStmt(PqlTokenType);
+  bool IsStmtRef(PqlTokenType);
+  bool IsEntRef(PqlTokenType);
+  bool IsExpressionSpec(PqlTokenType);
   bool ValidateNoDuplicateSynonymDeclared(ParsedQuery);
   bool ValidateSelectSynonymDeclared(ParsedQuery);
   bool ValidateSuchThatClause(ParsedQuery);
+  bool ValidateFollowsFollowsTArguments(ParsedQuery);
+  bool ValidateParentParentTArguments(ParsedQuery);
+  bool ValidateUsesArguments(ParsedQuery);
+  bool ValidateModifiesArguments(ParsedQuery);
   bool ValidatePatternClause(ParsedQuery);
   bool ValidatePatternSynonymIsAssigned(ParsedQuery);
   bool ValidatePatternArguments(ParsedQuery);
-  bool ValidatePatternFirstArgumentIsEntRef(ParsedQuery);
-  bool ValidatePatternSecondArgumentIsExpressionSpec(ParsedQuery);
-  bool ValidateModifiesUsesFirstArgumentNotUnderscore(ParsedQuery);
-  bool ValidateClauseDesignEntity(ParsedQuery);
 };
 
 };
