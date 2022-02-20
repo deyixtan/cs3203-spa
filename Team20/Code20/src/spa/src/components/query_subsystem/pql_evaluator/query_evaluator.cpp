@@ -1555,9 +1555,10 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
     }
 
     std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_result_set;
-    if (pattern_first_arg.type == PqlTokenType::SYNONYM) { // a(v, "x")
+    if (pattern_first_arg.type == PqlTokenType::SYNONYM) { // a(v, "x") OR a(v, _)
       std::string second_pattern_arg_value = pattern.GetSecond().value;
-      if (pattern.GetSecond().type != PqlTokenType::SUB_EXPRESSION) {
+      if (pattern.GetSecond().type != PqlTokenType::SUB_EXPRESSION &&
+          pattern.GetSecond().type != PqlTokenType::UNDERSCORE) {
         second_pattern_arg_value = pattern.GetSecond().value.substr(1, pattern.GetSecond().value.length() - 2);
       }
       pattern_result_set = pkb->GetStmtWithPatternSynonym(second_pattern_arg_value);
