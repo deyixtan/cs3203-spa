@@ -1525,7 +1525,8 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
     if (such_that_bool_result && (selected_synonym.value == pattern.GetSynAssign().value ||
                                   selected_synonym.value == pattern.GetFirst().value)) { // resort to select pattern
       EvaluateSelectWithPattern(query);
-    } else if (such_that_bool_result && (selected_synonym.value != pattern.GetSynAssign().value)) { // none
+    } else if (such_that_bool_result && (selected_synonym.value != pattern.GetSynAssign().value) &&
+                                          selected_synonym.value != pattern.GetFirst().value) { // none
       result = pkb->GetStmt(GetStmtType(selected_synonym_design_entity));
       return;
     } else {
