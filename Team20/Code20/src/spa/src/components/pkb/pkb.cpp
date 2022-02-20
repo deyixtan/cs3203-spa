@@ -334,6 +334,24 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllMo
         }
       }
       return result;
+    case IF:
+      for (auto i : mod_stmt_var_list) {
+        for (auto j : if_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case WHILE:
+      for (auto i : mod_stmt_var_list) {
+        for (auto j : while_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
     default:
       break;
   }
@@ -656,6 +674,33 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
     case STMT:
       for (auto i : parent_child_list) {
         for (auto j : stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case ASSIGN:
+      for (auto i : parent_child_list) {
+        for (auto j : assign_stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case PRINT:
+      for (auto i : parent_child_list) {
+        for (auto j : print_stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case READ:
+      for (auto i : parent_child_list) {
+        for (auto j : read_stmt_list) {
           if (i.second == j) {
             result.insert(i);
           }
