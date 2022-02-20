@@ -152,7 +152,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
     REQUIRE(result12 == expected_result12);
   }
 
-  SECTION("Test Parents relationship") {
+  SECTION("Test Parents relationship 1") {
     std::string result1 = pkb->GetParentOf("1");
     std::string result2 = pkb->GetParentOf("2");
     std::string result3 = pkb->GetParentOf("3");
@@ -193,7 +193,48 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
     REQUIRE(result12 == expected_result12);
   }
 
-  SECTION("Test Parents* relationship") {
+  SECTION("Test Parents relationship 2") {
+    std::unordered_set<std::string> result1 = pkb->GetChildOf("1");
+    std::unordered_set<std::string> result2 = pkb->GetChildOf("2");
+    std::unordered_set<std::string> result3 = pkb->GetChildOf("3");
+    std::unordered_set<std::string> result4 = pkb->GetChildOf("4");
+    std::unordered_set<std::string> result5 = pkb->GetChildOf("5");
+    std::unordered_set<std::string> result6 = pkb->GetChildOf("6");
+    std::unordered_set<std::string> result7 = pkb->GetChildOf("7");
+    std::unordered_set<std::string> result8 = pkb->GetChildOf("8");
+    std::unordered_set<std::string> result9 = pkb->GetChildOf("9");
+    std::unordered_set<std::string> result10 = pkb->GetChildOf("10");
+    std::unordered_set<std::string> result11 = pkb->GetChildOf("11");
+    std::unordered_set<std::string> result12 = pkb->GetChildOf("12");
+
+    std::unordered_set<std::string> expected_result1 = {};
+    std::unordered_set<std::string> expected_result2 = {};
+    std::unordered_set<std::string> expected_result3 = {};
+    std::unordered_set<std::string> expected_result4 = {"5", "6", "7"};
+    std::unordered_set<std::string> expected_result5 = {};
+    std::unordered_set<std::string> expected_result6 = {};
+    std::unordered_set<std::string> expected_result7 = {};
+    std::unordered_set<std::string> expected_result8 = {"9", "10", "11"};
+    std::unordered_set<std::string> expected_result9 = {};
+    std::unordered_set<std::string> expected_result10 = {};
+    std::unordered_set<std::string> expected_result11 = {};
+    std::unordered_set<std::string> expected_result12 = {};
+
+    REQUIRE(result1 == expected_result1);
+    REQUIRE(result2 == expected_result2);
+    REQUIRE(result3 == expected_result3);
+    REQUIRE(result4 == expected_result4);
+    REQUIRE(result5 == expected_result5);
+    REQUIRE(result6 == expected_result6);
+    REQUIRE(result7 == expected_result7);
+    REQUIRE(result8 == expected_result8);
+    REQUIRE(result9 == expected_result9);
+    REQUIRE(result10 == expected_result10);
+    REQUIRE(result11 == expected_result11);
+    REQUIRE(result12 == expected_result12);
+  }
+
+  SECTION("Test Parents* relationship 1") {
     std::unordered_set<std::string> result1 = pkb->GetAnceOf("1");
     std::unordered_set<std::string> result2 = pkb->GetAnceOf("2");
     std::unordered_set<std::string> result3 = pkb->GetAnceOf("3");
@@ -218,6 +259,47 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
     std::unordered_set<std::string> expected_result9 = {"8"};
     std::unordered_set<std::string> expected_result10 = {"8"};
     std::unordered_set<std::string> expected_result11 = {"8"};
+    std::unordered_set<std::string> expected_result12 = {};
+
+    REQUIRE(result1 == expected_result1);
+    REQUIRE(result2 == expected_result2);
+    REQUIRE(result3 == expected_result3);
+    REQUIRE(result4 == expected_result4);
+    REQUIRE(result5 == expected_result5);
+    REQUIRE(result6 == expected_result6);
+    REQUIRE(result7 == expected_result7);
+    REQUIRE(result8 == expected_result8);
+    REQUIRE(result9 == expected_result9);
+    REQUIRE(result10 == expected_result10);
+    REQUIRE(result11 == expected_result11);
+    REQUIRE(result12 == expected_result12);
+  }
+
+  SECTION("Test Parents* relationship 2") {
+    std::unordered_set<std::string> result1 = pkb->GetDescOf("1");
+    std::unordered_set<std::string> result2 = pkb->GetDescOf("2");
+    std::unordered_set<std::string> result3 = pkb->GetDescOf("3");
+    std::unordered_set<std::string> result4 = pkb->GetDescOf("4");
+    std::unordered_set<std::string> result5 = pkb->GetDescOf("5");
+    std::unordered_set<std::string> result6 = pkb->GetDescOf("6");
+    std::unordered_set<std::string> result7 = pkb->GetDescOf("7");
+    std::unordered_set<std::string> result8 = pkb->GetDescOf("8");
+    std::unordered_set<std::string> result9 = pkb->GetDescOf("9");
+    std::unordered_set<std::string> result10 = pkb->GetDescOf("10");
+    std::unordered_set<std::string> result11 = pkb->GetDescOf("11");
+    std::unordered_set<std::string> result12 = pkb->GetDescOf("12");
+
+    std::unordered_set<std::string> expected_result1 = {};
+    std::unordered_set<std::string> expected_result2 = {};
+    std::unordered_set<std::string> expected_result3 = {};
+    std::unordered_set<std::string> expected_result4 = {"5", "6", "7"};
+    std::unordered_set<std::string> expected_result5 = {};
+    std::unordered_set<std::string> expected_result6 = {};
+    std::unordered_set<std::string> expected_result7 = {};
+    std::unordered_set<std::string> expected_result8 = {"9", "10", "11"};
+    std::unordered_set<std::string> expected_result9 = {};
+    std::unordered_set<std::string> expected_result10 = {};
+    std::unordered_set<std::string> expected_result11 = {};
     std::unordered_set<std::string> expected_result12 = {};
 
     REQUIRE(result1 == expected_result1);
@@ -509,7 +591,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
     REQUIRE(result15 == expected_result15);
   }
 
-  SECTION("Test Parents relationship") {
+  SECTION("Test Parents relationship 1") {
     std::string result1 = pkb->GetParentOf("1");
     std::string result2 = pkb->GetParentOf("2");
     std::string result3 = pkb->GetParentOf("3");
@@ -559,7 +641,57 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
     REQUIRE(result15 == expected_result15);
   }
 
-  SECTION("Test Parents* relationship") {
+  SECTION("Test Parents relationship 2") {
+    std::unordered_set<std::string> result1 = pkb->GetChildOf("1");
+    std::unordered_set<std::string> result2 = pkb->GetChildOf("2");
+    std::unordered_set<std::string> result3 = pkb->GetChildOf("3");
+    std::unordered_set<std::string> result4 = pkb->GetChildOf("4");
+    std::unordered_set<std::string> result5 = pkb->GetChildOf("5");
+    std::unordered_set<std::string> result6 = pkb->GetChildOf("6");
+    std::unordered_set<std::string> result7 = pkb->GetChildOf("7");
+    std::unordered_set<std::string> result8 = pkb->GetChildOf("8");
+    std::unordered_set<std::string> result9 = pkb->GetChildOf("9");
+    std::unordered_set<std::string> result10 = pkb->GetChildOf("10");
+    std::unordered_set<std::string> result11 = pkb->GetChildOf("11");
+    std::unordered_set<std::string> result12 = pkb->GetChildOf("12");
+    std::unordered_set<std::string> result13 = pkb->GetChildOf("13");
+    std::unordered_set<std::string> result14 = pkb->GetChildOf("14");
+    std::unordered_set<std::string> result15 = pkb->GetChildOf("15");
+
+    std::unordered_set<std::string> expected_result1 = {};
+    std::unordered_set<std::string> expected_result2 = {};
+    std::unordered_set<std::string> expected_result3 = {"4", "13", "14", "15"};
+    std::unordered_set<std::string> expected_result4 = {"5", "6", "7", "8", "12"};
+    std::unordered_set<std::string> expected_result5 = {};
+    std::unordered_set<std::string> expected_result6 = {};
+    std::unordered_set<std::string> expected_result7 = {};
+    std::unordered_set<std::string> expected_result8 = {"9", "10", "11"};
+    std::unordered_set<std::string> expected_result9 = {};
+    std::unordered_set<std::string> expected_result10 = {};
+    std::unordered_set<std::string> expected_result11 = {};
+    std::unordered_set<std::string> expected_result12 = {};
+    std::unordered_set<std::string> expected_result13 = {};
+    std::unordered_set<std::string> expected_result14 = {};
+    std::unordered_set<std::string> expected_result15 = {};
+
+    REQUIRE(result1 == expected_result1);
+    REQUIRE(result2 == expected_result2);
+    REQUIRE(result3 == expected_result3);
+    REQUIRE(result4 == expected_result4);
+    REQUIRE(result5 == expected_result5);
+    REQUIRE(result6 == expected_result6);
+    REQUIRE(result7 == expected_result7);
+    REQUIRE(result8 == expected_result8);
+    REQUIRE(result9 == expected_result9);
+    REQUIRE(result10 == expected_result10);
+    REQUIRE(result11 == expected_result11);
+    REQUIRE(result12 == expected_result12);
+    REQUIRE(result13 == expected_result13);
+    REQUIRE(result14 == expected_result14);
+    REQUIRE(result15 == expected_result15);
+  }
+
+  SECTION("Test Parents* relationship 1") {
     std::unordered_set<std::string> result1 = pkb->GetAnceOf("1");
     std::unordered_set<std::string> result2 = pkb->GetAnceOf("2");
     std::unordered_set<std::string> result3 = pkb->GetAnceOf("3");
@@ -591,6 +723,57 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
     std::unordered_set<std::string> expected_result13 = {"3"};
     std::unordered_set<std::string> expected_result14 = {"3"};
     std::unordered_set<std::string> expected_result15 = {"3"};
+
+    REQUIRE(result1 == expected_result1);
+    REQUIRE(result2 == expected_result2);
+    REQUIRE(result3 == expected_result3);
+    REQUIRE(result4 == expected_result4);
+    REQUIRE(result5 == expected_result5);
+    REQUIRE(result6 == expected_result6);
+    REQUIRE(result7 == expected_result7);
+    REQUIRE(result8 == expected_result8);
+    REQUIRE(result9 == expected_result9);
+    REQUIRE(result10 == expected_result10);
+    REQUIRE(result11 == expected_result11);
+    REQUIRE(result12 == expected_result12);
+    REQUIRE(result13 == expected_result13);
+    REQUIRE(result14 == expected_result14);
+    REQUIRE(result15 == expected_result15);
+  }
+
+  SECTION("Test Parents* relationship 2") {
+    std::unordered_set<std::string> result1 = pkb->GetDescOf("1");
+    std::unordered_set<std::string> result2 = pkb->GetDescOf("2");
+    std::unordered_set<std::string> result3 = pkb->GetDescOf("3");
+    std::unordered_set<std::string> result4 = pkb->GetDescOf("4");
+    std::unordered_set<std::string> result5 = pkb->GetDescOf("5");
+    std::unordered_set<std::string> result6 = pkb->GetDescOf("6");
+    std::unordered_set<std::string> result7 = pkb->GetDescOf("7");
+    std::unordered_set<std::string> result8 = pkb->GetDescOf("8");
+    std::unordered_set<std::string> result9 = pkb->GetDescOf("9");
+    std::unordered_set<std::string> result10 = pkb->GetDescOf("10");
+    std::unordered_set<std::string> result11 = pkb->GetDescOf("11");
+    std::unordered_set<std::string> result12 = pkb->GetDescOf("12");
+    std::unordered_set<std::string> result13 = pkb->GetDescOf("13");
+    std::unordered_set<std::string> result14 = pkb->GetDescOf("14");
+    std::unordered_set<std::string> result15 = pkb->GetDescOf("15");
+
+    std::unordered_set<std::string> expected_result1 = {};
+    std::unordered_set<std::string> expected_result2 = {};
+    std::unordered_set<std::string>
+        expected_result3 = {"4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
+    std::unordered_set<std::string> expected_result4 = {"5", "6", "7", "8", "9", "10", "11", "12"};
+    std::unordered_set<std::string> expected_result5 = {};
+    std::unordered_set<std::string> expected_result6 = {};
+    std::unordered_set<std::string> expected_result7 = {};
+    std::unordered_set<std::string> expected_result8 = {"9", "10", "11"};
+    std::unordered_set<std::string> expected_result9 = {};
+    std::unordered_set<std::string> expected_result10 = {};
+    std::unordered_set<std::string> expected_result11 = {};
+    std::unordered_set<std::string> expected_result12 = {};
+    std::unordered_set<std::string> expected_result13 = {};
+    std::unordered_set<std::string> expected_result14 = {};
+    std::unordered_set<std::string> expected_result15 = {};
 
     REQUIRE(result1 == expected_result1);
     REQUIRE(result2 == expected_result2);
