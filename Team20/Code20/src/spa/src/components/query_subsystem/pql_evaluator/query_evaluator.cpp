@@ -1461,30 +1461,44 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
   if (relationship.GetFirst().type != PqlTokenType::SYNONYM &&
       relationship.GetSecond().type != PqlTokenType::SYNONYM) { // no synonym in such that clause
     bool such_that_bool_result;
-    std::string rel_second_no_quote;
-    if (relationship.GetSecond().type != PqlTokenType::UNDERSCORE) {
-      rel_second_no_quote = rel_second_arg.value.substr(1, rel_second_arg.value.length() - 2);
-    }
-    if (relationship_type == PqlTokenType::USES) {
-      such_that_bool_result = pkb->IsUsageStmtVarExist(std::make_pair(rel_first_arg.value, rel_second_no_quote));
-    } else if (relationship_type == PqlTokenType::MODIFIES) {
-      such_that_bool_result = pkb->IsModifyStmtVarExist(std::make_pair(rel_first_arg.value, rel_second_no_quote));
-    } else if (relationship_type == PqlTokenType::PARENT) {
-      such_that_bool_result = pkb->GetParentOf(rel_first_arg.value) == rel_second_arg.value;
-    } else if (relationship_type == PqlTokenType::PARENT_T) {
-      such_that_bool_result = pkb->GetAnceOf(rel_first_arg.value).count(rel_second_arg.value);
-    } else if (relationship_type == PqlTokenType::FOLLOWS) {
-      such_that_bool_result = pkb->IsFollowExist(std::make_pair(rel_first_arg.value, rel_second_arg.value));
-    } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
-      such_that_bool_result = pkb->IsFollowStarExist(std::make_pair(rel_first_arg.value, rel_second_arg.value));
-    }
+    if (relationship.GetFirst().type == PqlTokenType::UNDERSCORE &&
+          relationship.GetSecond().type != PqlTokenType::UNDERSCORE) {
+      if (relationship_type == PqlTokenType::PARENT || relationship_type == PqlTokenType::PARENT_T) {
+        if (pkb->GetStmt(StmtType::WHILE).empty() || pkb->GetStmt(StmtType::IF).empty()) {
+          such_that_bool_result = false;
+        } else {
+          such_that_bool_result = true;
+        }
+      } else if (pkb->GetAllFollowStmt(StmtType::STMT, StmtType::STMT).empty()) {
+          such_that_bool_result = false;
+      } else {
+        such_that_bool_result = true;
+      }
+    } else {
+      std::string rel_second_no_quote;
+      if (relationship.GetSecond().type != PqlTokenType::UNDERSCORE) {
+        rel_second_no_quote = rel_second_arg.value.substr(1, rel_second_arg.value.length() - 2);
+      }
+      if (relationship_type == PqlTokenType::USES) {
+        such_that_bool_result = pkb->IsUsageStmtVarExist(std::make_pair(rel_first_arg.value, rel_second_no_quote));
+      } else if (relationship_type == PqlTokenType::MODIFIES) {
+        such_that_bool_result = pkb->IsModifyStmtVarExist(std::make_pair(rel_first_arg.value, rel_second_no_quote));
+      } else if (relationship_type == PqlTokenType::PARENT) {
+        such_that_bool_result = pkb->GetParentOf(rel_first_arg.value) == rel_second_arg.value;
+      } else if (relationship_type == PqlTokenType::PARENT_T) {
+        such_that_bool_result = pkb->GetAnceOf(rel_first_arg.value).count(rel_second_arg.value);
+      } else if (relationship_type == PqlTokenType::FOLLOWS) {
+        such_that_bool_result = pkb->IsFollowExist(std::make_pair(rel_first_arg.value, rel_second_arg.value));
+      } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
+        such_that_bool_result = pkb->IsFollowStarExist(std::make_pair(rel_first_arg.value, rel_second_arg.value));
+      }
 
-    if (such_that_bool_result) { // resort to select pattern
-      EvaluateSelectWithPattern(query);
-    } else { // none
-      return;
+      if (such_that_bool_result) { // resort to select pattern
+        EvaluateSelectWithPattern(query);
+      } else { // none
+        return;
+      }
     }
-
   } else { // there is a synonym in such that clause
     PqlToken pattern_ass_arg = pattern.GetSynAssign();
     PqlToken pattern_first_arg = pattern.GetFirst();
@@ -1527,20 +1541,20 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
         }
       } else if (relationship_type == PqlTokenType::PARENT) {
         if (IsValidStmtForParent(first_arg_design_entity)) {
-          temp_set = pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity));
+          temp_set = pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
         } else {
           return;
         }
       } else if (relationship_type == PqlTokenType::PARENT_T) {
         if (IsValidStmtForParent(first_arg_design_entity)) {
-          temp_set = pkb->GetAllParentStarStmt(GetStmtType(first_arg_design_entity));
+          temp_set = pkb->GetAllParentStarStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
         } else {
           return;
         }
       } else if (relationship_type == PqlTokenType::FOLLOWS) {
-        temp_set = pkb->GetAllFollowStmt(GetStmtType(first_arg_design_entity));
+        temp_set = pkb->GetAllFollowStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
       } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
-        temp_set = pkb->GetAllFollowStarStmt(GetStmtType(first_arg_design_entity));
+        temp_set = pkb->GetAllFollowStarStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
       }
 
       for (auto pair : temp_set) {
@@ -1580,7 +1594,9 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
 
       if (!temp_set.empty()) {
         for (auto pair : temp_set) {
-          if (pair.first == relationship.GetFirst().value) {
+          if (pair.first == "_") {
+            single_result_set.insert(pair.second);
+          } else if (pair.first == relationship.GetFirst().value) {
             single_result_set.insert(pair.second);
           }
         }
