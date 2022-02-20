@@ -116,7 +116,7 @@ none
 24 - Uses Test 1 (Find all variables used on line)
 stmt s; assign a; while w; if ifs; variable v;
 Select v such that Uses (8, v)
-apple, pear, orange, berry
+apple, pear, orange, berry, peach
 5000
 25 - Uses Test 2 (Find all variables used on line)
 stmt s; assign a; while w; if ifs; variable v;
@@ -126,7 +126,7 @@ none
 26 - Uses Test 3 (Find all statements that uses a specific variable)
 stmt s;
 Select s such that Uses (s, "berry")
-12, 17
+3, 6, 8, 12, 17
 5000
 27 - Uses Test 4 (Find all statements that uses a specific variable)
 stmt s; assign a; while w; if ifs;
@@ -176,7 +176,7 @@ none
 36 - Follows Test 2
 stmt s, s1, s2;
 Select s such that Follows(9, s)
-10,11,12
+10
 5000
 37 - Follows Test 3
 stmt s;
@@ -256,7 +256,7 @@ Select ifs such that Follows(s, ifs) pattern a1(v,  _)
 52 - Mix Test 3
 stmt s; assign a, a1; variable v, v1; if ifs;
 Select s such that Follows*(s, a) pattern a(v1, _)
-9,10,11,13,17
+1,2,3,9,10,11,13,17
 5000
 53 - Mix Test 4
 stmt s; assign a, a1; variable v, v1;
@@ -281,7 +281,7 @@ Select w such that Parent*(w, a) pattern a(v, _)
 57 - Mix Test 8
 stmt s; assign a, a1; variable v, v1;
 Select v such that Uses(a, _) pattern a(_, _)
-Durian, apple, banana, papaya, pear, orange, plum, peach, berry, carrot, grape, avocado
+durian, apple, banana, papaya, pear, orange, plum, peach, berry, carrot, grape, avocado
 5000
 58 - Mix Test 9
 stmt s; assign a, a1; variable v, v1; while w;
