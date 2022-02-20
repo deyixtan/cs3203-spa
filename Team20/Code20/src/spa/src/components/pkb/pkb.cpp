@@ -680,6 +680,33 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
         }
       }
       return result;
+    case ASSIGN:
+      for (auto i : parent_child_list) {
+        for (auto j : assign_stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case PRINT:
+      for (auto i : parent_child_list) {
+        for (auto j : print_stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case READ:
+      for (auto i : parent_child_list) {
+        for (auto j : read_stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
     case IF:
       for (auto i : parent_child_list) {
         for (auto j : if_stmt_list) {
