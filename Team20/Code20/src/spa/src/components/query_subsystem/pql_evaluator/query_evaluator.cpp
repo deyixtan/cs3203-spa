@@ -881,6 +881,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           EvaluateSelectOnly(query);
         }
       }
+      break;
     }
     case PqlTokenType::FOLLOWS_T: {
       // Follows* is a relationship between statements

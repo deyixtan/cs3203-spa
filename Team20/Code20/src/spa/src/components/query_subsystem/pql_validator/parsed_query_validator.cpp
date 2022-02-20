@@ -49,6 +49,7 @@ bool ParsedQueryValidator::ValidateNoDuplicateSynonymDeclared(ParsedQuery query)
 bool ParsedQueryValidator::ValidateSuchThatClause(ParsedQuery query) {
   if (!query.GetRelationships().empty()) {
 
+
   }
 
   return true;
