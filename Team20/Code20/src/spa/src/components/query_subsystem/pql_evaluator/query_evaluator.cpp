@@ -1476,17 +1476,25 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
       }
     } else if (relationship.GetFirst().type == PqlTokenType::UNDERSCORE &&
                 relationship.GetSecond().type != PqlTokenType::UNDERSCORE) {
-      if (relationship_type == PqlTokenType::PARENT || relationship_type == PqlTokenType::PARENT_T) {
+      if (relationship_type == PqlTokenType::PARENT) {
         such_that_bool_result = pkb->GetParentOf(rel_second_arg.value) != "0";
-      } else if (relationship_type == PqlTokenType::FOLLOWS || relationship_type == PqlTokenType::FOLLOWS_T) {
+      } else if (relationship_type == PqlTokenType::PARENT_T) {
+        such_that_bool_result = !pkb->GetAnceOf(rel_second_arg.value).empty();
+      } else if (relationship_type == PqlTokenType::FOLLOWS) {
         such_that_bool_result = pkb->GetFollowerOf(rel_second_arg.value) != "0";
+      } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
+        such_that_bool_result = !pkb->GetFollowerStarOf(rel_second_arg.value).empty();
       }
     } else if (relationship.GetFirst().type != PqlTokenType::UNDERSCORE &&
         relationship.GetSecond().type == PqlTokenType::UNDERSCORE) {
-      if (relationship_type == PqlTokenType::PARENT || relationship_type == PqlTokenType::PARENT_T) {
+      if (relationship_type == PqlTokenType::PARENT) {
         such_that_bool_result = !pkb->GetChildOf(rel_first_arg.value).empty();
-      } else if (relationship_type == PqlTokenType::FOLLOWS || relationship_type == PqlTokenType::FOLLOWS_T) {
+      } else if (relationship_type == PqlTokenType::PARENT_T) {
+        such_that_bool_result = !pkb->GetDescOf(rel_first_arg.value).empty();
+      } else if (relationship_type == PqlTokenType::FOLLOWS) {
         such_that_bool_result = pkb->GetFollowingOf(rel_first_arg.value) != "0";
+      } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
+        such_that_bool_result = !pkb->GetFollowingStarOf(rel_first_arg.value).empty();
       }
     } else {
       std::string rel_second_no_quote;
@@ -1514,7 +1522,8 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
       }
     }
 
-    if (such_that_bool_result && (selected_synonym.value == pattern.GetSynAssign().value)) { // resort to select pattern
+    if (such_that_bool_result && (selected_synonym.value == pattern.GetSynAssign().value ||
+                                  selected_synonym.value == pattern.GetFirst().value)) { // resort to select pattern
       EvaluateSelectWithPattern(query);
     } else if (such_that_bool_result && (selected_synonym.value != pattern.GetSynAssign().value)) { // none
       result = pkb->GetStmt(GetStmtType(selected_synonym_design_entity));
