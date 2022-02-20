@@ -78,6 +78,15 @@ bool ParsedQueryValidator::ValidateSuchThatClause(ParsedQuery query) {
   return true;
 }
 
+bool ParsedQueryValidator::ValidateFollowsFollowsTArguments(ParsedQuery query) {
+  assert(!query.GetRelationships().empty());
+  Relationship relationship = query.GetRelationships().front();
+  PqlToken first_arg = relationship.GetFirst();
+  PqlToken second_arg = relationship.GetSecond();
+
+    return true;
+}
+
 bool ParsedQueryValidator::ValidatePatternClause(ParsedQuery query) {
   if (!query.GetPatterns().empty()) {
     return ValidatePatternSynonymIsAssigned(query)
@@ -106,19 +115,15 @@ bool ParsedQueryValidator::ValidatePatternSynonymIsAssigned(ParsedQuery query) {
 
 bool ParsedQueryValidator::ValidatePatternArguments(ParsedQuery query) {
   assert(!query.GetPatterns().empty());
-  return ValidatePatternFirstArgumentIsEntRef(query)
-      && ValidatePatternSecondArgumentIsExpressionSpec(query);
-}
-
-bool ParsedQueryValidator::ValidatePatternFirstArgumentIsEntRef(ParsedQuery query) {
-  assert(!query.GetPatterns().empty());
   PqlToken first_arg = query.GetPatterns().front().GetFirst();
-  if (first_arg.type!=PqlTokenType::SYNONYM
-      && first_arg.type!=PqlTokenType::UNDERSCORE
-      && first_arg.type!=PqlTokenType::IDENT_WITH_QUOTES) {
+  PqlToken second_arg = query.GetPatterns().front().GetSecond();
+
+  if (!IsEntRef(first_arg.type)) {
     return false;
   }
-
+  if (!IsExpressionSpec(second_arg.type)) {
+    return false;
+  }
   if (first_arg.type==PqlTokenType::SYNONYM) {
     bool found = false;
     PqlTokenType first_arg_design_entity;
@@ -143,15 +148,22 @@ bool ParsedQueryValidator::ValidatePatternFirstArgumentIsEntRef(ParsedQuery quer
   return true;
 }
 
-bool ParsedQueryValidator::ValidatePatternSecondArgumentIsExpressionSpec(ParsedQuery query) {
-  assert(!query.GetPatterns().empty());
-  PqlToken second_arg = query.GetPatterns().front().GetSecond();
-  if (second_arg.type!=PqlTokenType::UNDERSCORE
-      && second_arg.type!=PqlTokenType::SUB_EXPRESSION) {
-    return false;
-  }
+bool ParsedQueryValidator::IsStmtRef(PqlTokenType token_type) {
+  return token_type==PqlTokenType::SYNONYM
+      || token_type==PqlTokenType::UNDERSCORE
+      || token_type==PqlTokenType::NUMBER;
+}
 
-  return true;
+bool ParsedQueryValidator::IsEntRef(PqlTokenType token_type) {
+  return token_type==PqlTokenType::SYNONYM
+      || token_type==PqlTokenType::UNDERSCORE
+      || token_type==PqlTokenType::IDENT_WITH_QUOTES;
+}
+
+bool ParsedQueryValidator::IsExpressionSpec(PqlTokenType token_type) {
+  // exact match not in iter 1
+  return token_type==PqlTokenType::UNDERSCORE
+      || token_type==PqlTokenType::SUB_EXPRESSION;
 }
 
 bool ParsedQueryValidator::ValidateModifiesUsesFirstArgumentNotUnderscore(ParsedQuery query) {
