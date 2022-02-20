@@ -1,0 +1,26 @@
+procedure Parent {
+  read x;
+  print y;
+  while (b > c) {
+    read a;
+    while (d > e) {
+      read b;
+      a = 7;
+      x = z - 2
+      if (x > z) then {
+          b = 10;
+          read y;
+      } else {
+          while (b == 7) {
+              z = 3;
+          }
+      }
+    }
+  }
+  if (a > b) then {
+    read x;
+  } else {
+    print x;
+  }
+  p = 1;
+}

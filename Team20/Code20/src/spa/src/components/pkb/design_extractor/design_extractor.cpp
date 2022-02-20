@@ -33,8 +33,6 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
       PopulateFollowsStar(stmts, i);
     }
 
-    PopulateParentStar(stmt_num, visited);
-
     switch(stmt_type) {
       case PROC:
         PopulateProc(proc->GetIdentifier());
@@ -51,6 +49,7 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         for (std::string s : visited) {
           PopulateModifies(s, var_name);
         }
+        PopulateModifies(stmt_num, var_name);
         break;
       }
       case PRINT: {
@@ -62,6 +61,7 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         for (std::string s : visited) {
           PopulateUses(s, var_name);
         }
+        PopulateUses(stmt_num, var_name);
         break;
       }
       case ASSIGN: {
@@ -72,6 +72,7 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         for (std::string s : visited) {
           PopulateModifies(s, var_name);
         }
+        PopulateModifies(stmt_num, var_name);
         std::shared_ptr<ExpressionNode> expr = assign_stmt->GetExpression();
 
         std::string rhs_expr = ExprNodeHandler(visited, stmt_num, expr, 0, "");
@@ -100,7 +101,8 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
 
         ProcNodeHandler(visited, proc, while_block);
         PopulateWhile(stmt_num);
-        visited.clear();
+        PopulateParentStar(while_stmt_num, visited);
+        visited.pop_back();
         break;
       }
       case IF: {
@@ -130,10 +132,12 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         ProcNodeHandler(visited, proc, if_block);
         ProcNodeHandler(visited, proc, else_block);
         PopulateIf(stmt_num);
-        visited.clear();
+        PopulateParentStar(if_stmt_num, visited);
+        visited.pop_back();
         break;
       }
     }
+    PopulateParentStar(stmt_num, visited);
   }
 }
 
@@ -193,6 +197,7 @@ void DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, std::str
       for (std::string s : visited) {
         PopulateUses(s, var_name);
       }
+      PopulateUses(stmt, var_name);
       PopulateVars(var_name);
       break;
     }
@@ -241,6 +246,7 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
       for (std::string s : visited) {
         PopulateUses(s, var_name);
       }
+      PopulateUses(stmt_num, var_name);
       PopulateVars(var_name);
       break;
     }

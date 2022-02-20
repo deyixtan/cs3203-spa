@@ -10,7 +10,7 @@
 // A struct to maintain every node's relationships
 struct parent_child {
   std::string parent;
-  std::string child;
+  std::unordered_set<std::string> child;
   std::unordered_set<std::string> ance;
   std::unordered_set<std::string> desc;
 };
@@ -44,7 +44,7 @@ class ParentStore {
 
   std::string GetParentOf(std::string stmt);
 
-  std::string GetChildOf(std::string stmt);
+  std::unordered_set<std::string> GetChildOf(std::string stmt);
 
   std::unordered_set<std::string> GetAllAnceOf(std::string stmt);
 
