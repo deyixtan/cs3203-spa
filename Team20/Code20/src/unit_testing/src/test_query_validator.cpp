@@ -98,7 +98,8 @@ TEST_CASE("Test invalid select clause format") {
 TEST_CASE("Test valid select clause") {
   std::string query = "variable v; Select v";
   PqlLexer pql_lexer = PqlLexer(query);
-  QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
+  std::vector<PqlToken> token_input = pql_lexer.Lex();
+  QueryValidator query_validator = QueryValidator(token_input);
   std::vector<PqlToken> expected_tokens = {
       variable_token,
       v_token,
