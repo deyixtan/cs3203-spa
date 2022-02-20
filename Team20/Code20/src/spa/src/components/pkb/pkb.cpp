@@ -456,7 +456,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
     case PRINT:
       for (auto i : follow_stmt_list) {
         for (auto j : print_stmt_list) {
-          if (i.first == j) {
+          if (i.second == j) {
             result.insert(i);
           }
         }
@@ -743,33 +743,6 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
         }
       }
       return result;
-    case ASSIGN:
-      for (auto i : GetAllParentStmt(type2)) {
-        for (auto j : assign_stmt_list) {
-          if (i.first == j) {
-            result.insert(i);
-          }
-        }
-      }
-      return result;
-    case PRINT:
-      for (auto i : GetAllParentStmt(type2)) {
-        for (auto j : print_stmt_list) {
-          if (i.first == j) {
-            result.insert(i);
-          }
-        }
-      }
-      return result;
-    case READ:
-      for (auto i : GetAllParentStmt(type2)) {
-        for (auto j : read_stmt_list) {
-          if (i.first == j) {
-            result.insert(i);
-          }
-        }
-      }
-      return result;
     case IF:
       for (auto i : GetAllParentStmt(type2)) {
         for (auto j : if_stmt_list) {
@@ -801,6 +774,33 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
     case STMT:
       for (auto i : ance_desc_list) {
         for (auto j : stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case ASSIGN:
+      for (auto i : ance_desc_list) {
+        for (auto j : assign_stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case PRINT:
+      for (auto i : ance_desc_list) {
+        for (auto j : print_stmt_list) {
+          if (i.second == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case READ:
+      for (auto i : ance_desc_list) {
+        for (auto j : read_stmt_list) {
           if (i.second == j) {
             result.insert(i);
           }
