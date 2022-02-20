@@ -15,6 +15,10 @@ class ParsedQueryValidator {
   bool ValidateNoDuplicateSynonymDeclared(ParsedQuery);
   bool ValidateSelectSynonymDeclared(ParsedQuery);
   bool ValidateSuchThatClause(ParsedQuery);
+  bool ValidateFollowsFollowsTArguments(ParsedQuery);
+  bool ValidateParentParentTArguments(ParsedQuery);
+  bool ValidateUsesArguments(ParsedQuery);
+  bool ValidateModifiesArguments(ParsedQuery);
   bool ValidatePatternClause(ParsedQuery);
   bool ValidatePatternSynonymIsAssigned(ParsedQuery);
   bool ValidatePatternArguments(ParsedQuery);

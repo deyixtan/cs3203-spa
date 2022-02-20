@@ -48,8 +48,31 @@ bool ParsedQueryValidator::ValidateNoDuplicateSynonymDeclared(ParsedQuery query)
 
 bool ParsedQueryValidator::ValidateSuchThatClause(ParsedQuery query) {
   if (!query.GetRelationships().empty()) {
-
-
+    Relationship relationship = query.GetRelationships().front();
+    PqlTokenType rel_ref = relationship.GetRelRef().type;
+    switch (rel_ref) {
+      case PqlTokenType::FOLLOWS: {
+        return ValidateFollowsFollowsTArguments(query);
+      }
+      case PqlTokenType::PARENT: {
+        return ValidateParentParentTArguments(query);
+      }
+      case PqlTokenType::FOLLOWS_T: {
+        return ValidateFollowsFollowsTArguments(query);
+      }
+      case PqlTokenType::PARENT_T: {
+        return ValidateParentParentTArguments(query);
+      }
+      case PqlTokenType::USES: {
+        return ValidateUsesArguments(query);
+      }
+      case PqlTokenType::MODIFIES: {
+        return ValidateModifiesArguments(query);
+      }
+      default: {
+        return false;
+      }
+    }
   }
 
   return true;
