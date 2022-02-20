@@ -90,7 +90,7 @@ void PKB::AddModifyProcVar(std::string proc, std::string var) {
 }
 
 void PKB::AddPattern(std::string stmt, std::string lhs, std::string rhs) {
-  pattern_map[{lhs, rhs}] = stmt;
+  pattern_map[stmt] = {lhs, rhs};
 }
 
 std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::string rhs) {
@@ -101,27 +101,27 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
 
   for (auto const&[key, val] : pattern_map) {
     if (lhs == "_" && rhs == "_") {
-      result.insert(val);
+      result.insert(key);
     }
 
     if (lhs == "_" && rhs != "_" && rhs.find("_") != std::string::npos) {
       auto first = rhs.find("_\"");
       auto last = rhs.find("\"_");
       auto sub_pattern = rhs.substr(first + 2, last - 2);
-      if (key.second.find(sub_pattern) != std::string::npos) {
-        result.insert(val);
+      if (val.second.find(sub_pattern) != std::string::npos) {
+        result.insert(key);
       }
     }
 
     if (lhs == "_" && rhs != "_" && rhs.find("_") == std::string::npos) {
-      if (key.second == rhs) {
-        result.insert(val);
+      if (val.second == rhs) {
+        result.insert(key);
       }
     }
 
     if (lhs != "_" && rhs == "_") {
-      if (lhs == key.first) {
-        result.insert(val);
+      if (lhs == val.first) {
+        result.insert(key);
       }
     }
 
@@ -129,14 +129,14 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
       auto first = rhs.find("_\"");
       auto last = rhs.find("\"_");
       auto sub_pattern = rhs.substr(first + 2, last - 2);
-      if (lhs == key.first && key.second.find(sub_pattern) != std::string::npos) {
-        result.insert(val);
+      if (lhs == val.first && val.second.find(sub_pattern) != std::string::npos) {
+        result.insert(key);
       }
     }
 
     if (lhs != "_" && rhs != "_" && rhs.find("_") == std::string::npos) {
-      if (lhs == key.first && key.second == rhs) {
-        result.insert(val);
+      if (lhs == val.first && val.second == rhs) {
+        result.insert(key);
       }
     }
   }
@@ -149,13 +149,13 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetStmtW
 
   for (auto const&[key, val] : pattern_map) {
     if (rhs == "_") {
-      result.insert({val, key.first});
+      result.insert({key, val.first});
     }
 
     // Exact match
     if (rhs != "_" && rhs.find("_") == std::string::npos) {
-      if (key.second == rhs) {
-        result.insert({val, key.first});
+      if (val.second == rhs) {
+        result.insert({key, val.first});
       }
     }
 
@@ -164,8 +164,8 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetStmtW
       auto first = rhs.find("_\"");
       auto last = rhs.find("\"_");
       auto sub_pattern = rhs.substr(first + 2, last - 2);
-      if (key.second.find(sub_pattern) != std::string::npos) {
-        result.insert({val, key.first});
+      if (val.second.find(sub_pattern) != std::string::npos) {
+        result.insert({key, val.first});
       }
     }
   }

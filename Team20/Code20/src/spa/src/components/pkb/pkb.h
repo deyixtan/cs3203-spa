@@ -136,7 +136,7 @@ class PKB {
   std::unordered_set<std::string> var_list;
   std::unordered_set<std::string> const_list;
 
-  std::unordered_map<std::pair<std::string, std::string>, std::string, pair_hash> pattern_map;
+  std::unordered_map<std::string, std::pair<std::string, std::string>> pattern_map;
 
   FollowStore follow_store;
   ParentStore parent_store;
