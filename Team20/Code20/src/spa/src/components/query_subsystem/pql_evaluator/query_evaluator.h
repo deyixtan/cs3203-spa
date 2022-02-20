@@ -26,6 +26,9 @@ class QueryEvaluator {
   void EvaluateSelectWithPattern(ParsedQuery& query);
   void EvaluateSelectWithRelationshipAndPattern(ParsedQuery& query);
   StmtType GetStmtType(PqlTokenType token_type);
+  bool IsValidStmtForUse(PqlTokenType token_type);
+  bool IsValidStmtForModify(PqlTokenType token_type);
+  bool IsValidStmtForParent(PqlTokenType token_type);
 };
 
 }

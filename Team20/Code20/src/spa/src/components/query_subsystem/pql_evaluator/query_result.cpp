@@ -54,7 +54,7 @@ std::unordered_set<std::string> QueryResult::GetResult(PqlToken selected_synonym
     }
 
     std::unordered_set<std::string> single_value_set;
-    if (synonym_set.size() < 4) {
+    if (synonym_set.size() < 4 && duplicated_synonym != "_") {
       single_value_set = GetIntersectionSet(first_condition_pair, second_condition_pair, duplicated_synonym);
       if (selected_synonym.value == duplicated_synonym) {
         return single_value_set;
