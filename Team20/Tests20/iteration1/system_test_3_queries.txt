@@ -293,12 +293,22 @@ stmt s; assign a, a1; variable v, v1; while w; if ifs; print pn;
 Select a such that Uses(s, v) pattern a1(v, _)
 1,12,16,17,18
 5000
-60 - Edge Case 1
+60 - Mix Test 11
+stmt s; assign a, a1; variable v, v1; while w; if ifs; print pn;
+Select pn such that Uses(pn, v) pattern a1(_, _)
+2,5,11,14
+5000
+61 - Mix Test 12
+stmt s; assign a, a1; variable v, v1; while w; if ifs; print pn; read re;
+Select re such that Modifies(re, v) pattern a1(_, _)
+4,7,9,10
+5000
+62 - Edge Case 1
 stmt s;
 Select a
 none
 5000
-61 - Edge Case 2
+63 - Edge Case 2
 stmt s;
 Select s1
 none
