@@ -109,6 +109,11 @@ bool ParsedQueryValidator::ValidatePatternFirstArgumentIsEntRef(ParsedQuery quer
       // synonym not declared
       return false;
     }
+
+    if (first_arg_design_entity!=PqlTokenType::VARIABLE) {
+      // pattern first argument synonym must be of type variable
+      return false;
+    }
   }
 
   return true;
