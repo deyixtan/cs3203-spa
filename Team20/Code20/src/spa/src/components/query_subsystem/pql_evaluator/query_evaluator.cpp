@@ -1511,16 +1511,32 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
         if (relationship.GetSecond().type != PqlTokenType::UNDERSCORE) {
           second_arg = second_arg.substr(1, second_arg.length() - 2);
         }
-        temp_set = pkb->GetAllUsesStmt(GetStmtType(first_arg_design_entity));
+        if (IsValidStmtForUse(first_arg_design_entity)) {
+          temp_set = pkb->GetAllUsesStmt(GetStmtType(first_arg_design_entity));
+        } else {
+          return;
+        }
       } else if (relationship_type == PqlTokenType::MODIFIES) {
         if (relationship.GetSecond().type != PqlTokenType::UNDERSCORE) {
           second_arg = second_arg.substr(1, second_arg.length() - 2);
         }
-        temp_set = pkb->GetAllModStmt(GetStmtType(first_arg_design_entity));
+        if (IsValidStmtForModify(first_arg_design_entity)) {
+          temp_set = pkb->GetAllModStmt(GetStmtType(first_arg_design_entity));
+        } else {
+          return;
+        }
       } else if (relationship_type == PqlTokenType::PARENT) {
-        temp_set = pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity));
+        if (IsValidStmtForParent(first_arg_design_entity)) {
+          temp_set = pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity));
+        } else {
+          return;
+        }
       } else if (relationship_type == PqlTokenType::PARENT_T) {
-        temp_set = pkb->GetAllParentStarStmt(GetStmtType(first_arg_design_entity));
+        if (IsValidStmtForParent(first_arg_design_entity)) {
+          temp_set = pkb->GetAllParentStarStmt(GetStmtType(first_arg_design_entity));
+        } else {
+          return;
+        }
       } else if (relationship_type == PqlTokenType::FOLLOWS) {
         temp_set = pkb->GetAllFollowStmt(GetStmtType(first_arg_design_entity));
       } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
@@ -1590,16 +1606,33 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
 
       if (relationship_type == PqlTokenType::USES) {
         second_arg = second_arg.substr(1, second_arg.length() - 2);
-        rel_result_set = pkb->GetAllUsesStmt(GetStmtType(first_arg_design_entity));
+        if (IsValidStmtForUse(first_arg_design_entity)) {
+          rel_result_set = pkb->GetAllUsesStmt(GetStmtType(first_arg_design_entity));
+        } else {
+          return;
+        }
       } else if (relationship_type == PqlTokenType::MODIFIES) {
         second_arg = second_arg.substr(1, second_arg.length() - 2);
-        rel_result_set = pkb->GetAllModStmt(GetStmtType(first_arg_design_entity));
+        if (IsValidStmtForModify(first_arg_design_entity)) {
+          rel_result_set = pkb->GetAllModStmt(GetStmtType(first_arg_design_entity));
+        } else {
+          return;
+        }
       } else if (relationship_type == PqlTokenType::PARENT) {
-        rel_result_set = pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity),
-                                               GetStmtType(second_arg_design_entity));
+        if (IsValidStmtForParent(first_arg_design_entity)) {
+          rel_result_set = pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity),
+                                                 GetStmtType(second_arg_design_entity));
+        } else {
+          return;
+        }
       } else if (relationship_type == PqlTokenType::PARENT_T) {
-        rel_result_set = pkb->GetAllParentStarStmt(GetStmtType(first_arg_design_entity),
-                                                   GetStmtType(second_arg_design_entity));
+        if (IsValidStmtForParent(first_arg_design_entity)) {
+          rel_result_set = pkb->GetAllParentStarStmt(GetStmtType(first_arg_design_entity),
+                                                     GetStmtType(second_arg_design_entity));
+        } else {
+          return;
+        };
+
       } else if (relationship_type == PqlTokenType::FOLLOWS) {
         rel_result_set = pkb->GetAllFollowStmt(GetStmtType(first_arg_design_entity),
                                                GetStmtType(second_arg_design_entity));
@@ -1704,7 +1737,41 @@ StmtType QueryEvaluator::GetStmtType(PqlTokenType token_type) {
     case PqlTokenType::CONSTANT: {
       return StmtType::CONSTS;
     }
+    case PqlTokenType::PROCEDURE: {
+      return StmtType::PROC;
+    }
   }
+}
+
+bool QueryEvaluator::IsValidStmtForUse(PqlTokenType token_type) {
+  if (token_type == PqlTokenType::STMT ||
+      token_type == PqlTokenType::PRINT ||
+      token_type == PqlTokenType::WHILE ||
+      token_type == PqlTokenType::IF ||
+      token_type == PqlTokenType::ASSIGN) {
+    return true;
+  }
+  return false;
+}
+
+bool QueryEvaluator::IsValidStmtForModify(PqlTokenType token_type) {
+  if (token_type == PqlTokenType::STMT ||
+      token_type == PqlTokenType::READ ||
+      token_type == PqlTokenType::WHILE ||
+      token_type == PqlTokenType::IF ||
+      token_type == PqlTokenType::ASSIGN) {
+    return true;
+  }
+  return false;
+}
+
+bool QueryEvaluator::IsValidStmtForParent(PqlTokenType token_type) {
+  if (token_type == PqlTokenType::STMT ||
+      token_type == PqlTokenType::WHILE ||
+      token_type == PqlTokenType::IF) {
+    return true;
+  }
+  return false;
 }
 
 }
