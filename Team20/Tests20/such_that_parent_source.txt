@@ -6,7 +6,7 @@ procedure Parent {
     while (d > e) {
       read b;
       a = 7;
-      x = z - 2
+      x = z - 2;
       if (x > z) then {
           b = 10;
           read y;
