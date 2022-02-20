@@ -73,7 +73,7 @@ bool PqlLexer::IsEntRef(const std::string &s) {
 
   for (int i = 2; i < s.size() - 1; i++) {
     const char c = s[i];
-    if (!isalpha(c) || !isdigit(c)) {
+    if (!isalpha(c) && !isdigit(c)) {
       return false;
     }
   }
