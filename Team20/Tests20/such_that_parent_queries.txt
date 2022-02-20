@@ -6,7 +6,7 @@ Select pn such that Parent(3, 4)
 2 - No overlap (false)
 assign a; print pn;
 Select pn such that Parent(ifs, a)
-None
+none
 5000
 3 - Overlap with param 1
 while w, w1;
@@ -21,7 +21,7 @@ Select w1 such that Parent(w, w1)
 5 - Intentionally misspelt
 print pn; while w, w1;
 Select pn suc that Parent(w, w1)
-None
+none
 5000
 6 - Double synonym (s1, s2)
 stmt s1, s2;
@@ -31,7 +31,7 @@ Select s2 such that Parent(s1, s2)
 7 - Single synonym (s, 3)
 stmt s;
 Select s such that Parent(s, 3)
-None
+none
 5000
 8 - Single synonym (s, 8)
 stmt s;
@@ -61,7 +61,7 @@ Select pn such that Parent(9, 11)
 13 - No synonym (3, 7)
 print pn;
 Select pn such that Parent(3, 7)
-None
+none
 5000
 14 - No synonym with wildcard (5, _)
 print pn;
@@ -91,7 +91,7 @@ Select s2 such that Parent(ifs, s2)
 19 - Single Synonym (ifs, 5)
 if ifs;
 Select ifs such that Parent(ifs, 5)
-None
+none
 5000
 20 - Single Synonym with wildcard (ifs, _)
 if ifs;
@@ -116,17 +116,17 @@ Select w such that Parent(w, _)
 24 - No synonym with wildcard; no parent (_, 12)
 while w;
 Select w such that Parent(_, 12)
-None
+none
 5000
 25 - No synonym with wildcard; no children (6, _)
 stmt s;
 Select s such that Parent(6, _)
-None
+none
 5000
 26 - No synonym; out of bounds (50, 6)
 stmt s1, s2;
 Select s such that Parent(50, 6)
-None
+none
 5000
 27 - Single synonym with wildcard; random whitespaces (w, _)
 while w; stmt s1, s2;
@@ -136,62 +136,62 @@ Select   s1 such    that Parent(w, _)
 28 - Double synonym; negative (s1, s2)
 stmt s1, s2;
 Select s such that parent(s1, s2)
-None
+none
 5000
 29 - Double synonym; negative (s1, s2)
 stmt s1, s2;
 Select s such that Parents(s1, s2)
-None
+none
 5000
 30 - Double synonym; negative (s1, s1)
 stmt s1, s2;
 Select s such that Parent(s1, s1)
-None
+none
 5000
 31 - No synonym; negative (3, 3)
 stmt s1, s2;
 Select s such that Parent(3, 3)
-None
+none
 5000
-32 - Single synonym; negative ("abc", s2)
+32 - Single synonym; negative ('abc', s2)
 stmt s1, s2;
 Select s such that Parent("abc", s2)
-None
+none
 5000
-33 - Single synonym; negative (s1, "abc")
+33 - Single synonym; negative (s1, 'abc')
 stmt s1, s2;
-Select s such that Parent(s1, “abc”)
-None
+Select s such that Parent(s1, "abc")
+none
 5000
 34 - Single synonym; negative (9abc, s2)
 stmt s1, s2;
 Select s such that Parent(9abc, s2)
-None
+none
 5000
 35 - Single synonym; negative (s1, 9abc)
 stmt s1, s2;
 Select s such that Parent(s1, 9abc)
-None
+none
 5000
 36 - Double synonym; negative (v, s2)
 stmt s1, s2;
 Select s such that Parent(v, s2)
-None
+none
 5000
 37 - Double synonym; negative (s1, v)
 stmt s1, s2;
 Select s such that Parent(s1, v)
-None
+none
 5000
 38 - Double synonym; negative (c, s2)
 constant c; stmt s1, s2;
 Select s such that Parent(c, s2)
-None
+none
 5000
 39 - Double synonym; negative (s1, c)
 constant c; stmt s1, s2;
 Select s such that Parent(s1, c)
-None
+none
 5000
 40 - No synonym (3, 4)
 print pn;
@@ -201,7 +201,7 @@ Select pn such that Parent*(3, 4)
 41 - Double synonym (ifs, ifs1)
 print pn; if ifs, ifs1;
 Select pn such that Parent*(ifs, ifs1)
-None
+none
 5000
 42 - Double synonym (w, w1)
 while w, w1;
@@ -309,17 +309,17 @@ Select w such that Parent*(w, _)
 63 - No synonym with wildcard; no parent (_, 2)
 while w;
 Select w such that Parent*(_, 2)
-None
+none
 5000
 64 - No synonym with wildcard; no children (17, _)
 stmt s1, s2;
 Select s such that Parent*(17, _)
-None
+none
 5000
 65 - No synonym; out of bounds (50, 6)
 stmt s1, s2;
 Select s such that Parent*(50, 6)
-None
+none
 5000
 66 - Single synonym with wildcard; random whitespaces (w, _)
 while w; stmt s1, s2;
@@ -329,65 +329,65 @@ Select   s1 such    that Parent*(w, _)
 67 - Double synonym; negative (s1, s2)
 stmt s1, s2;
 Select s such that parent*(s1, s2)
-None
+none
 5000
 68 - Double synonym; negative (s1, s2)
 stmt s1, s2;
 Select s such that Parents*(s1, s2)
-None
+none
 5000
 69 - Double synonym; negative (s1, s2)
 stmt s1, s2;
 Select s such that Parent**(s1, s2)
-None
+none
 5000
 70 - Double synonym; negative (s1, s1)
 stmt s1, s2;
 Select s such that Parent*(s1, s1)
-None
+none
 5000
 71 - No synonym; negative (3, 3)
 stmt s1, s2;
 Select s such that Parent*(3, 3)
-None
+none
 5000
-72 - Single synonym; negative ("abc", s2)
+72 - Single synonym; negative ('abc', s2)
 stmt s1, s2;
 Select s such that Parent*("abc", s2)
-None
+none
 5000
-73 - Single synonym; negative (s1, "abc")
+73 - Single synonym; negative (s1, 'abc')
 stmt s1, s2;
-Select s such that Parent*(s1, “abc”)
-None
+Select s such that Parent*(s1, "abc")
+none
 5000
 74 - Single synonym; negative (9abc, s2)
 stmt s1, s2;
 Select s such that Parent*(9abc, s2)
-None
+none
 5000
 75 - Single synonym; negative (s1, 9abc)
 stmt s1, s2;
 Select s such that Parent*(s1, 9abc)
-None
+none
 5000
 76 - Double synonym; negative (v, s2)
 stmt s1, s2; variable v;
 Select s such that Parent*(v, s2)
-None
+none
 5000
 77 - Double synonym; negative (s1, v)
 stmt s1, s2; variable v;
 Select s such that Parent*(s1, v)
-None
+none
 5000
 78 - Double synonym; negative (c, s2)
 constant c; stmt s1, s2;
 Select s such that Parent*(c, s2)
-None
+none
 5000
 79 - Double synonym; negative (s1, c)
 constant c; stmt s1, s2;
 Select s such that Parent*(s1, c)
-None
+none
 5000
