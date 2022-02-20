@@ -102,7 +102,7 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         ProcNodeHandler(visited, proc, while_block);
         PopulateWhile(stmt_num);
         PopulateParentStar(while_stmt_num, visited);
-        visited.clear();
+        visited.pop_back();
         break;
       }
       case IF: {
@@ -133,7 +133,7 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         ProcNodeHandler(visited, proc, else_block);
         PopulateIf(stmt_num);
         PopulateParentStar(if_stmt_num, visited);
-        visited.clear();
+        visited.pop_back();
         break;
       }
     }
