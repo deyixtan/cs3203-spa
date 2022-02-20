@@ -773,14 +773,17 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         }
 
-        const bool is_empty = pkb->GetFollowingOf(first_arg.value)=="0";
-        if (!is_empty) {
-          if (select_synonym.value==second_arg.value) {
-            result_to_add.insert(pkb->GetFollowingOf(first_arg.value));
-          } else {
-            EvaluateSelectOnly(query);
+        pair_result = pkb->GetAllFollowStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
+        if (select_synonym.value == second_arg.value) {
+          for (auto pair : pair_result) {
+            if (pair.first == first_arg.value) {
+              result_to_add.insert(pair.second);
+            }
           }
+        } else if (!pair_result.empty()) {
+          EvaluateSelectOnly(query);
         }
+
       } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::NUMBER) {
         // 4. Follows(_, 9)
         pair_result = pkb->GetAllFollowStmt(StmtType::STMT);
@@ -826,14 +829,15 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         }
 
-        const bool is_empty = pkb->GetFollowerOf(second_arg.value)=="0";
-        if (!is_empty) {
-          if (select_synonym.value==first_arg.value) {
-            result_to_add.insert(pkb->GetFollowerOf(second_arg.value));
-          } else {
-            // clause is false no possible s
-            EvaluateSelectOnly(query);
+        pair_result = pkb->GetAllFollowStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
+        if (select_synonym.value == first_arg.value) {
+          for (auto pair : pair_result) {
+            if (pair.second == second_arg.value) {
+              result_to_add.insert(pair.first);
+            }
           }
+        } else if (!pair_result.empty()) {
+          EvaluateSelectOnly(query);
         }
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
