@@ -1171,10 +1171,21 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         }
 
-        const bool is_empty = pkb->GetChildOf(first_arg.value).empty();
+        pair_result = pkb->GetAllParentStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
+        bool is_empty = true;
+        for (auto pair : pair_result) {
+          if (pair.first==first_arg.value) {
+            is_empty = false;
+            break;
+          }
+        }
         if (!is_empty) {
           if (select_synonym.value==second_arg.value) {
-            result_to_add = pkb->GetChildOf(first_arg.value);
+            for (auto pair : pair_result) {
+              if (pair.first==first_arg.value) {
+                result_to_add.insert(pair.second);
+              }
+            }
           } else {
             EvaluateSelectOnly(query);
           }
