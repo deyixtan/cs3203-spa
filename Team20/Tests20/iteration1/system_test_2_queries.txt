@@ -205,17 +205,17 @@ tan,cos,y,length
 5000
 42 - Mix Test 8
 stmt s; assign a, a1; variable v, v1; while w; if ifs;
-Select w such that Parent(w, a) pattern a(v,_”10”_)
+Select w such that Parent(w, a) pattern a(v,_"10"_)
 none
 5000
 43 - Mix Test 9
 stmt s; assign a, a1; variable v, v1; while w;
-Select w such that Parent(w, a) pattern a(v,_”length”_)
+Select w such that Parent(w, a) pattern a(v,_"length"_)
 4
 5000
 44 - Mix Test 10
 stmt s; assign a, a1; variable v, v1; while w;
-Select s such that Follows*(s, a) pattern a(“x”, _)
+Select s such that Follows*(s, a) pattern a("x", _)
 none
 5000
 45 - Mix Test 11
