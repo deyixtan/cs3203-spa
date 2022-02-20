@@ -835,7 +835,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
 
   switch (type1) {
     case STMT:
-      for (auto i : GetAllParentStmt(type2)) {
+      for (auto i : GetAllParentStarStmt(type2)) {
         for (auto j : stmt_list) {
           if (i.first == j) {
             result.insert(i);
@@ -844,7 +844,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
       }
       return result;
     case IF:
-      for (auto i : GetAllParentStmt(type2)) {
+      for (auto i : GetAllParentStarStmt(type2)) {
         for (auto j : if_stmt_list) {
           if (i.first == j) {
             result.insert(i);
@@ -853,7 +853,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
       }
       return result;
     case WHILE:
-      for (auto i : GetAllParentStmt(type2)) {
+      for (auto i : GetAllParentStarStmt(type2)) {
         for (auto j : while_stmt_list) {
           if (i.first == j) {
             result.insert(i);
