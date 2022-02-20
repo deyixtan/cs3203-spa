@@ -221,7 +221,7 @@ std::unordered_set<std::string> PKB::GetAnceOf(std::string stmt) {
   return parent_store.GetAllAnceOf(stmt);
 }
 
-std::string PKB::GetChildOf(std::string stmt) {
+std::unordered_set<std::string> PKB::GetChildOf(std::string stmt) {
   return parent_store.GetChildOf(stmt);
 }
 

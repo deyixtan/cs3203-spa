@@ -33,8 +33,6 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
       PopulateFollowsStar(stmts, i);
     }
 
-    PopulateParentStar(stmt_num, visited);
-
     switch(stmt_type) {
       case PROC:
         PopulateProc(proc->GetIdentifier());
@@ -103,6 +101,7 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
 
         ProcNodeHandler(visited, proc, while_block);
         PopulateWhile(stmt_num);
+        PopulateParentStar(while_stmt_num, visited);
         visited.clear();
         break;
       }
@@ -133,10 +132,12 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
         ProcNodeHandler(visited, proc, if_block);
         ProcNodeHandler(visited, proc, else_block);
         PopulateIf(stmt_num);
+        PopulateParentStar(if_stmt_num, visited);
         visited.clear();
         break;
       }
     }
+    PopulateParentStar(stmt_num, visited);
   }
 }
 
