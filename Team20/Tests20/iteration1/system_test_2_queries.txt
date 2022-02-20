@@ -275,7 +275,7 @@ none
 5000
 56 - Edge Case 11
 assign a;
-select a such that Uses(a, "T")
+Select a such that Uses(a, "T")
 none
 5000
 57 - Edge Case 12
