@@ -334,6 +334,24 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllMo
         }
       }
       return result;
+    case IF:
+      for (auto i : mod_stmt_var_list) {
+        for (auto j : if_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
+    case WHILE:
+      for (auto i : mod_stmt_var_list) {
+        for (auto j : while_stmt_list) {
+          if (i.first == j) {
+            result.insert(i);
+          }
+        }
+      }
+      return result;
     default:
       break;
   }
