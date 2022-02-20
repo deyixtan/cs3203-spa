@@ -1495,6 +1495,10 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
         such_that_bool_result = pkb->GetFollowingOf(rel_first_arg.value) != "0";
       } else if (relationship_type == PqlTokenType::FOLLOWS_T) {
         such_that_bool_result = !pkb->GetFollowingStarOf(rel_first_arg.value).empty();
+      } else if (relationship_type == PqlTokenType::MODIFIES) {
+        such_that_bool_result = !pkb->GetVarModByStmt(rel_first_arg.value).empty();
+      } else if (relationship_type == PqlTokenType::USES) {
+        such_that_bool_result = !pkb->GetVarUsedByStmt(rel_first_arg.value).empty();
       }
     } else {
       std::string rel_second_no_quote;
