@@ -12,7 +12,6 @@ bool ParsedQueryValidator::ValidateQuery(ParsedQuery query) {
       && ValidateSuchThatClause(query)
       && ValidatePatternClause(query);
 
-//      && ValidatePatternSynonymIsAssigned(query)
 //      && ValidateModifiesUsesFirstArgumentNotUnderscore(query)
 //      && ValidateClauseDesignEntity(query);
 }
