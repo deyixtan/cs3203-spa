@@ -150,7 +150,7 @@ none
 5000
 31 - Pattern Test 4
 assign a;
-Select a pattern a(_, _”2”_)
+Select a pattern a(_, _"2"_)
 9,10
 5000
 32 - Pattern Test 5
@@ -165,7 +165,7 @@ x, y
 5000
 34 - Pattern Test 7
 assign a; variable v;
-Select a pattern a(“x”, _)
+Select a pattern a("x", _)
 9,11,13
 5000
 35 - Mix Test 1

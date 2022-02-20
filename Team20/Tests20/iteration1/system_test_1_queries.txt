@@ -189,7 +189,7 @@ Select s such that Parent*(s, a) pattern a(_,_)
 3
 5000
 39 - Mix Test 5
-assign a; variable v;
+stmt s; assign a; variable v;
 Select a such that Follows(s, a) pattern a(_,_"5"_)
 none
 5000
@@ -250,7 +250,7 @@ none
 5000
 51 - Edge Case 9 (Undeclared synonym)
 constant c; stmt s;
-Select a;
+Select a
 none
 5000
 52 - Edge Case 10 (Invalid use of wildcard)
