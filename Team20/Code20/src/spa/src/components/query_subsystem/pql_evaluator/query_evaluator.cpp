@@ -1104,11 +1104,24 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         }
 
-        ancestors = pkb->GetAnceOf(second_arg.value);
-        if (select_synonym.value==first_arg.value) {
-          result_to_add.insert(ancestors.begin(), ancestors.end());
-        } else if (!ancestors.empty()) {
-          EvaluateSelectOnly(query);
+        pair_result = pkb->GetAllParentStarStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
+        bool is_empty = true;
+        for (auto pair : pair_result) {
+          if (pair.second==second_arg.value) {
+            is_empty = false;
+            break;
+          }
+        }
+        if (!is_empty) {
+          if (select_synonym.value==first_arg.value) {
+            for (auto pair : pair_result) {
+              if (pair.second==second_arg.value) {
+                result_to_add.insert(pair.first);
+              }
+            }
+          } else {
+            EvaluateSelectOnly(query);
+          }
         }
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
@@ -1242,10 +1255,21 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         }
 
-        const bool is_empty = pkb->GetParentOf(second_arg.value)=="0";
+        pair_result = pkb->GetAllParentStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
+        bool is_empty = true;
+        for (auto pair : pair_result) {
+          if (pair.second==second_arg.value) {
+            is_empty = false;
+            break;
+          }
+        }
         if (!is_empty) {
           if (select_synonym.value==first_arg.value) {
-            result_to_add.insert(pkb->GetParentOf(second_arg.value));
+            for (auto pair : pair_result) {
+              if (pair.second==second_arg.value) {
+                result_to_add.insert(pair.first);
+              }
+            }
           } else {
             EvaluateSelectOnly(query);
           }
