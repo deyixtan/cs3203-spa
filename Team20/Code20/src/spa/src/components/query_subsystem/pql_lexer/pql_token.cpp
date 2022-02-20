@@ -104,6 +104,7 @@ std::unordered_set<PqlTokenType> allowed_synonyms = {
     PqlTokenType::PARENT,
     PqlTokenType::USES,
     PqlTokenType::MODIFIES,
+    PqlTokenType::PATTERN,
     PqlTokenType::STMT,
     PqlTokenType::READ,
     PqlTokenType::PRINT,

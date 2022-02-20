@@ -150,7 +150,7 @@ none
 5000
 31 - Pattern Test 4
 assign a;
-Select a pattern a(_, _”2”_)
+Select a pattern a(_, _"2"_)
 9,10
 5000
 32 - Pattern Test 5
@@ -165,7 +165,7 @@ x, y
 5000
 34 - Pattern Test 7
 assign a; variable v;
-Select a pattern a(“x”, _)
+Select a pattern a("x", _)
 9,11,13
 5000
 35 - Mix Test 1
@@ -205,17 +205,17 @@ tan,cos,y,length
 5000
 42 - Mix Test 8
 stmt s; assign a, a1; variable v, v1; while w; if ifs;
-Select w such that Parent(w, a) pattern a(v,_”10”_)
+Select w such that Parent(w, a) pattern a(v,_"10"_)
 none
 5000
 43 - Mix Test 9
 stmt s; assign a, a1; variable v, v1; while w;
-Select w such that Parent(w, a) pattern a(v,_”length”_)
+Select w such that Parent(w, a) pattern a(v,_"length"_)
 4
 5000
 44 - Mix Test 10
 stmt s; assign a, a1; variable v, v1; while w;
-Select s such that Follows*(s, a) pattern a(“x”, _)
+Select s such that Follows*(s, a) pattern a("x", _)
 none
 5000
 45 - Mix Test 11
@@ -275,7 +275,7 @@ none
 5000
 56 - Edge Case 11
 assign a;
-select a such that Uses(a, "T")
+Select a such that Uses(a, "T")
 none
 5000
 57 - Edge Case 12

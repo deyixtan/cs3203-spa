@@ -8,6 +8,7 @@
 #include <list>
 #include <string>
 #include <memory>
+#include <iostream>
 
 using pql_validator::ParsedQueryValidator;
 using pql_evaluator::QueryEvaluator;
