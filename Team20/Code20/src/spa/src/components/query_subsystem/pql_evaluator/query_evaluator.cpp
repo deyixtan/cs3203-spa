@@ -1403,6 +1403,10 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
   PqlToken rel_first_arg = relationship.GetFirst();
   PqlToken rel_second_arg = relationship.GetSecond();
 
+  if (rel_first_arg.value == rel_second_arg.value) {
+    return;
+  }
+
   if (relationship.GetFirst().type != PqlTokenType::SYNONYM &&
       relationship.GetSecond().type != PqlTokenType::SYNONYM) { // no synonym in such that clause
     bool such_that_bool_result;
