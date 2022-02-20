@@ -1,0 +1,18 @@
+procedure Follows {
+  read d;
+  print d;
+  while (d > c) {
+    read y;
+    while (d > c) {
+      read y;
+      d = 3 + w;
+      w = 4;
+    }
+  }
+  if (d > c) then {
+    read y;
+  } else {
+    print y;
+  }
+  p = 2;
+}

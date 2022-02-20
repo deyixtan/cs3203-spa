@@ -1,0 +1,395 @@
+1 - Double synonym no overlap true clause
+assign a, a1; print pn;
+Select pn such that Follows(a1, a)
+2, 11
+5000
+2 - Double synonym no overlap false clause
+print pn; if ifs;
+Select pn such that Follows(ifs, w)
+none
+5000
+3 - Double synonym overlap w param 1
+print pn; while w;
+Select pn such that Follows(pn, w)
+2
+5000
+4 - Double synonym overlap w param 2
+read r; print pn;
+Select pn such that Follows(r, pn)
+2
+5000
+5 - Double synonym intentionally misspelt
+read r; print pn;
+Select pn suc that Follows(r, pn)
+none
+5000
+6 - Double synonym
+stmt s1, s2;
+Select s2 such that Follows(s1, s2)
+2, 3, 5, 7, 8, 9, 12
+5000
+7 - Single synonym
+stmt s1;
+Select s1 such that Follows(s1, 3)
+2
+5000
+8 - Single synonym with wildcard
+stmt s1;
+Select s1 such that Follows(s1, _)
+1, 2, 3, 4, 6, 7, 9
+5000
+9 - Single synonym
+stmt s2;
+Select s2 such that Follows(3, s2)
+9
+5000
+10 - No synonym
+print pn;
+Select pn such that Follows(2, 3)
+2, 11
+5000
+11 - No synonym with wildcard
+print pn;
+Select pn such that Follows(3, _)
+2, 11
+5000
+12 - Single synonym with wildcard
+stmt s2;
+Select s2 such that Follows(_, s2)
+2, 3, 5, 7, 8, 9, 12
+5000
+13 - No synonym with wildcard
+read r;
+Select r such that Follows(_, 9)
+1, 4, 6, 10
+5000
+14 - No synonym with wildcard
+read r;
+Select r such that Follows(_, _)
+1, 4, 6, 10
+5000
+15 - No synonym with wildcard
+read r;
+Select r such that Follows(_, 1)
+none
+5000
+16 - Double synonym
+assign a; stmt s1;
+Select s1 such that Follows(s1, a)
+6, 7, 9
+5000
+17 - Double synonym
+stmt s1;
+Select s1 such that Follows(s1, r)
+none
+5000
+18 - Double synonym
+print pn; stmt s1;
+Select pn such that Follows(s1, pn)
+2
+5000
+19 - Double synonym
+if ifs; stmt s1, s2;
+Select s1 such that Follows(s1, ifs)
+3
+5000
+20 - Double synonym
+while w; stmt s1, s2;
+Select s1 such that Follows(s1, w)
+2, 4
+5000
+21 - Double synonym
+assign a; stmt s1, s2;
+Select a such that Follows(a, s2)
+7
+5000
+22 - Single synonym
+assign a;
+Select a such that Follows(a, 8)
+7
+5000
+23 - Single synonym with wildcard
+assign a;
+Select a such that Follows(a, _)
+7
+5000
+24 - Double synonym
+assign a, a1;
+Select a such that Follows(a, a1)
+7
+5000
+25 - Double synonym
+assign a, a1;
+Select a such that Follows(a, r)
+none
+5000
+26 - Double synonym
+assign a, a1; print pn;
+Select a such that Follows(a, pn)
+none
+5000
+27 - Double synonym
+assign a, a1; if ifs;
+Select a such that Follows(a, ifs)
+none
+5000
+28 - Double synonym
+assign a, a1; while w;
+Select a such that Follows(a, w)
+none
+5000
+29 - Double synonym
+assign a, a1; while w;
+Select a such that Follows(a, w)
+none
+5000
+30 - Single synonym
+read r;
+Select r such that Follows(r, 7)
+6
+5000
+31 - Single synonym with wildcard
+read r;
+Select r such that Follows(r, _)
+1, 4, 6
+5000
+32 - Double synonym
+assign a; read r;
+Select r such that Follows(r, a)
+6
+5000
+33 - Double synonym
+read r, r1;
+Select r such that Follows(r, r1)
+none
+5000
+34 - Double synonym
+read r, r1; print pn;
+Select r such that Follows(r, pn)
+1
+5000
+35 - Double synonym
+read r, r1; if ifs;
+Select ifs such that Follows(r, ifs)
+none
+5000
+36 - Double synonym
+read r, r1; while w;
+Select w such that Follows(r, w)
+5
+5000
+37 - Double synonym
+print pn; stmt s1, s2;
+Select pn such that Follows(pn, s2)
+2
+5000
+38 - Single synonym
+print pn;
+Select pn such that Follows(pn, 3)
+2
+5000
+39 - Single synonym with wildcard
+print pn;
+Select pn such that Follows(pn, _)
+2
+5000
+40 - Double synonym
+assign a, a1; print pn;
+Select a such that Follows(pn, a)
+none
+5000
+41 - Double synonym
+read r, r1; print pn;
+Select pn such that Follows(pn, r)
+none
+5000
+42 - Double synonym
+print pn, pn1;
+Select pn such that Follows(pn, pn1)
+none
+5000
+43 - Double synonym
+print pn, pn1; if ifs;
+Select pn such that Follows(pn, ifs)
+none
+5000
+44 - Double synonym
+print pn, pn1; while w;
+Select w such that Follows(pn, w)
+3
+5000
+45 - Double synonym
+if ifs; stmt s1, s2;
+Select ifs such that Follows(ifs, s2)
+9
+5000
+46 - Single synonym
+if ifs;
+Select ifs such that Follows(ifs, 4)
+none
+5000
+47 - Single synonym with wildcard
+if ifs;
+Select ifs such that Follows(ifs, _)
+9
+5000
+48 - Double synonym
+assign a, a1; if ifs;
+Select a such that Follows(ifs, a)
+12
+5000
+49 - Double synonym
+read r, r1; if ifs;
+Select r such that Follows(ifs, r)
+none
+5000
+50 - Double synonym
+print pn, pn1; if ifs;
+Select ifs such that Follows(ifs, pn)
+none
+5000
+51 - Double synonym
+if ifs, ifs1;
+Select ifs such that Follows(ifs, ifs1)
+none
+5000
+52 - Double synonym
+if ifs, ifs1; while w;
+Select ifs such that Follows(ifs, w)
+none
+5000
+53 - Double synonym
+while w; stmt s1, s2;
+Select w such that Follows(w, s2)
+3
+5000
+54 - Double synonym
+while w;
+Select w such that Follows(w, 9)
+3
+5000
+55 - Single synonym with wildcard
+while w;
+Select w such that Follows(w, _)
+3
+5000
+56 - Double synonym
+assign a, a1; while w;
+Select w such that Follows(w, a)
+none
+5000
+57 - Double synonym
+read r, r1; while w;
+Select r such that Follows(w, r)
+none
+5000
+58 - Double synonym
+print pn, pn1; while w;
+Select pn such that Follows(w, pn)
+none
+5000
+59 - Double synonym
+if ifs, ifs1; while w;
+Select w such that Follows(w, ifs)
+3
+5000
+60 - Double synonym
+while w, w1;
+Select w such that Follows(w, w1)
+none
+5000
+61 - No synonym with wildcard
+read r;
+Select r such that Follows(12, _)
+none
+5000
+62 - No synonym with wildcard
+read r;
+Select r such that Follows(50, _)
+none
+5000
+63 - Double synonym
+print pn; if ifs; while w;
+Select pn such that Follows(ifs, w)
+none
+5000
+64 - Double synonym
+print pn; stmt s1, s2;
+Select pn such that follows(s1, s2)
+none
+5000
+65 - Double synonym
+print pn; stmt s1, s2;
+Select pn such that Follow(s1, s2)
+none
+5000
+66 - Double synonym; negative
+print pn; stmt s1, s2;
+Select pn such that Followsss(s1, s2)
+none
+5000
+67 - Double synonym; negative
+print pn; stmt s1, s2;
+Select pn such that Follows(s1, s1)
+none
+5000
+68 - No synonym; negative
+print pn;
+Select pn such that Follows(3, 3)
+none
+5000
+69 - Single synonym; negative
+print pn; stmt s1, s2;
+Select pn such that Follows(“abc”, s2)
+none
+5000
+70 - Single synonym; negative
+print pn; stmt s1, s2;
+Select pn such that Follows(s1, “abc”)
+none
+5000
+71 - Single synonym; negative
+print pn; stmt s1, s2;
+Select pn such that Follows(s1, “abc”)
+none
+5000
+72 - Single synonym; negative
+print pn; stmt s1, s2;
+Select pn such that Follows(9abc, s2)
+none
+5000
+73 - Single synonym; negative
+print pn; stmt s1, s2;
+Select pn such that Follows(s1, 9abc)
+none
+5000
+74 - Double synonym; negative
+print pn; variable v; stmt s1, s2;
+Select pn such that Follows(v, s2)
+none
+5000
+75 - Double synonym; negative
+print pn; stmt s1, s2;
+Select pn such that Follows(s1, v)
+none
+5000
+76 - Double synonym; negative
+print pn; constant c; stmt s1, s2;
+Select pn such that Follows(c, s2)
+none
+5000
+77 - Double synonym; negative
+print pn; constant c; stmt s1, s2;
+Select pn such that Follows(s1, c)
+none
+5000
+78 - Double synonym; negative
+print pn; stmt s1, s2;
+Select pn such that Follows(p, s2)
+none
+5000
+79 - Double synonym; negative
+print pn; stmt s1, s2;
+Select pn such that Follows(s2, p)
+none
+5000
