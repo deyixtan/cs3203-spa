@@ -86,7 +86,7 @@ none
 18 - Modifies Test 5
 stmt s;
 Select s such that Modifies(s, "number")
-1, 6
+1,3,6
 5000
 19 - Modifies Test 6 (Query with wildcard)
 stmt s;
