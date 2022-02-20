@@ -134,31 +134,41 @@ std::unordered_set<std::string> QueryResult::GetIntersectionSet(
     std::string synonym) {
 
   std::vector<std::string> result_list;
+  std::unordered_set<std::string> result_set_one;
+  std::unordered_set<std::string> result_set_two;
 
   int synonym_count = 0;
   if (first_condition_pair.first.first_arg.value == synonym) {
     for (auto result_pair : first_condition_pair.second) {
-      result_list.push_back(result_pair.first);
+      result_set_one.insert(result_pair.first);
     }
     synonym_count++;
   }
   if (first_condition_pair.first.second_arg.value == synonym) {
     for (auto result_pair : first_condition_pair.second) {
-      result_list.push_back(result_pair.second);
+      result_set_one.insert(result_pair.second);
     }
     synonym_count++;
   }
   if (second_condition_pair.first.first_arg.value == synonym) {
     for (auto result_pair : second_condition_pair.second) {
-      result_list.push_back(result_pair.first);
+      result_set_two.insert(result_pair.first);
     }
     synonym_count++;
   }
   if (second_condition_pair.first.second_arg.value == synonym) {
     for (auto result_pair : second_condition_pair.second) {
-      result_list.push_back(result_pair.second);
+      result_set_two.insert(result_pair.second);
     }
     synonym_count++;
+  }
+
+  for (auto result : result_set_one) {
+    result_list.push_back(result);
+  }
+
+  for (auto result : result_set_two) {
+    result_list.push_back(result);
   }
 
   std::unordered_set<std::string> result;
