@@ -25,6 +25,27 @@ PKB *PKB::GetInstance() {
   return instance;
 }
 
+void PKB::Clear() {
+  // purge all data
+  stmt_list.clear();
+  while_stmt_list.clear();
+  read_stmt_list.clear();
+  print_stmt_list.clear();
+  call_stmt_list.clear();
+  if_stmt_list.clear();
+  assign_stmt_list.clear();
+  proc_list.clear();
+  var_list.clear();
+  const_list.clear();
+  pattern_map.clear();
+
+  // re-init stores
+  follow_store = FollowStore();
+  parent_store = ParentStore();
+  usage_store = UsageStore();
+  modify_store = ModifyStore();
+}
+
 /* Adders */
 void PKB::AddStmt(std::string stmt, StmtType type) {
   switch (type) {
@@ -200,7 +221,7 @@ std::unordered_set<std::string> PKB::GetAnceOf(std::string stmt) {
   return parent_store.GetAllAnceOf(stmt);
 }
 
-std::string PKB::GetChildOf(std::string stmt) {
+std::unordered_set<std::string> PKB::GetChildOf(std::string stmt) {
   return parent_store.GetChildOf(stmt);
 }
 

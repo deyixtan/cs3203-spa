@@ -36,6 +36,8 @@ class SourceParser {
   [[nodiscard]] std::shared_ptr<SourceToken> FetchToken(int tokens_ahead);
   [[nodiscard]] std::shared_ptr<SourceToken> FetchCurrentToken();
   std::shared_ptr<SourceToken> ProcessToken(TokenType type);
+  [[nodiscard]] bool IsConditionalOperand(int &cursor);
+  [[nodiscard]] bool IsConditionalExpression();
   [[nodiscard]] std::shared_ptr<ProcedureNode> ParseProcedure();
   [[nodiscard]] std::shared_ptr<StatementListNode> ParseStatementList();
   [[nodiscard]] std::shared_ptr<StatementNode> ParseStatement();

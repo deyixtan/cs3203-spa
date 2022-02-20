@@ -38,6 +38,8 @@ class PKB {
   //TNode* getRootAST (PROC p);
   static PKB *GetInstance();
 
+  void Clear();
+
   /* Adders */
   void AddStmt(std::string name, StmtType type);
 
@@ -93,7 +95,7 @@ class PKB {
   std::unordered_set<std::string> GetFollowerStarOf(std::string stmt);
   std::string GetParentOf(std::string stmt);
   std::unordered_set<std::string> GetAnceOf(std::string stmt);
-  std::string GetChildOf(std::string stmt);
+  std::unordered_set<std::string> GetChildOf(std::string stmt);
   std::unordered_set<std::string> GetDescOf(std::string stmt);
 
   /* Checkers */
