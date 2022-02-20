@@ -38,6 +38,8 @@ class PKB {
   //TNode* getRootAST (PROC p);
   static PKB *GetInstance();
 
+  void Clear();
+
   /* Adders */
   void AddStmt(std::string name, StmtType type);
 
