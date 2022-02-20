@@ -603,7 +603,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
     REQUIRE(result9 == expected_result9);
     REQUIRE(result10 == expected_result10);
     REQUIRE(result11 == expected_result11);
-    // REQUIRE(result12 == expected_result12);
+    REQUIRE(result12 == expected_result12);
     REQUIRE(result13 == expected_result13);
     REQUIRE(result14 == expected_result14);
     REQUIRE(result15 == expected_result15);
@@ -718,7 +718,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
     REQUIRE(result1 == expected_result1);
     REQUIRE(result2 == expected_result2);
     REQUIRE(result3 == expected_result3);
-    // REQUIRE(result4 == expected_result4);
+    REQUIRE(result4 == expected_result4);
     REQUIRE(result5 == expected_result5);
     REQUIRE(result6 == expected_result6);
     REQUIRE(result7 == expected_result7);
@@ -749,7 +749,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
 
     REQUIRE(result1 == expected_result1);
     REQUIRE(result2 == expected_result2);
-    // REQUIRE(result3 == expected_result3);
+    REQUIRE(result3 == expected_result3);
     REQUIRE(result4 == expected_result4);
     REQUIRE(result5 == expected_result5);
     REQUIRE(result6 == expected_result6);
