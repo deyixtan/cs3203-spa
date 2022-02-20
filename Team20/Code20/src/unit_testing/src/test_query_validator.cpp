@@ -45,7 +45,8 @@ TEST_CASE("Test invalid declaration synonym") {
 TEST_CASE("Test valid declaration") {
   std::string query = "procedure p; variable v;";
   PqlLexer pql_lexer = PqlLexer(query);
-  QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
+  std::vector<PqlToken> token_input = pql_lexer.Lex();
+  QueryValidator query_validator = QueryValidator(token_input);
   std::vector<PqlToken> expected_tokens = {
       procedure_token,
       p_token,
@@ -139,7 +140,8 @@ TEST_CASE("Test invalid rel ref format") {
 TEST_CASE("Test valid select with rel ref") {
   std::string query = "variable v; Select v such that Follows(1, 1)";
   PqlLexer pql_lexer = PqlLexer(query);
-  QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
+  std::vector<PqlToken> token_input = pql_lexer.Lex();
+  QueryValidator query_validator = QueryValidator(token_input);
   std::vector<PqlToken> expected_tokens = {
       variable_token,
       v_token,
