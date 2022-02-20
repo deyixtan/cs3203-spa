@@ -1618,6 +1618,26 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
     std::vector<std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>> result_table =
         {rel_column, pattern_column};
     std::unordered_set<std::string> add_result = QueryResult(result_table).GetResult(selected_synonym);
+
+    PqlTokenType selected_synonym_design_entity;
+    for (auto declaration : declarations) {
+      if (declaration.GetSynonym().value==selected_synonym.value) {
+        selected_synonym_design_entity = declaration.GetDesignEntity().type;
+      }
+    }
+
+    // selected synonym not in clause
+    if (rel_first_arg.value != selected_synonym.value &&
+        rel_second_arg.value != selected_synonym.value &&
+        pattern.GetSynAssign().value != selected_synonym.value &&
+        pattern.GetFirst().value != selected_synonym.value &&
+        !rel_result_set.empty() &&
+        !pattern_result_set.empty()) {
+      std::unordered_set<std::string> add_result = pkb->GetStmt(GetStmtType(selected_synonym_design_entity));
+      result.insert(add_result.begin(), add_result.end());
+      return;
+    }
+
     result.insert(add_result.begin(), add_result.end());
   }
 }
@@ -1644,6 +1664,12 @@ StmtType QueryEvaluator::GetStmtType(PqlTokenType token_type) {
     }
     case PqlTokenType::CALL: {
       return StmtType::CALL;
+    }
+    case PqlTokenType::VARIABLE: {
+      return StmtType::VARS;
+    }
+    case PqlTokenType::CONSTANT: {
+      return StmtType::CONSTS;
     }
   }
 }
