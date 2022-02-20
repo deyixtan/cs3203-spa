@@ -84,7 +84,78 @@ bool ParsedQueryValidator::ValidateFollowsFollowsTArguments(ParsedQuery query) {
   PqlToken first_arg = relationship.GetFirst();
   PqlToken second_arg = relationship.GetSecond();
 
-    return true;
+  if (!IsStmtRef(first_arg.type)) {
+    return false;
+  }
+  if (!IsStmtRef(second_arg.type)) {
+    return false;
+  }
+
+  if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+    if (first_arg.value==second_arg.value) {
+      // Follows(s, s) is semantically invalid
+      return false;
+    }
+
+    bool found_first = false;
+    PqlTokenType first_arg_design_entity;
+    bool found_second = false;
+    PqlTokenType second_arg_design_entity;
+    for (auto declaration : query.GetDeclaration()) {
+      if (declaration.GetSynonym().value==first_arg.value) {
+        found_first = true;
+        first_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+      if (declaration.GetSynonym().value==second_arg.value) {
+        found_second = true;
+        second_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+    }
+
+    if (!found_first || !found_second) {
+      return false;
+    }
+    if (!IsStmt(first_arg_design_entity)) {
+      return false;
+    }
+    if (!IsStmt(second_arg_design_entity)) {
+      return false;
+    }
+  } else if (first_arg.type==PqlTokenType::SYNONYM) {
+    bool found_first = false;
+    PqlTokenType first_arg_design_entity;
+    for (auto declaration : query.GetDeclaration()) {
+      if (declaration.GetSynonym().value==first_arg.value) {
+        found_first = true;
+        first_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+    }
+
+    if (!found_first) {
+      return false;
+    }
+    if (!IsStmt(first_arg_design_entity)) {
+      return false;
+    }
+  } else if (second_arg.type==PqlTokenType::SYNONYM) {
+    bool found_second = false;
+    PqlTokenType second_arg_design_entity;
+    for (auto declaration : query.GetDeclaration()) {
+      if (declaration.GetSynonym().value==second_arg.value) {
+        found_second = true;
+        second_arg_design_entity = declaration.GetDesignEntity().type;
+      }
+    }
+
+    if (!found_second) {
+      return false;
+    }
+    if (!IsStmt(second_arg_design_entity)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 bool ParsedQueryValidator::ValidatePatternClause(ParsedQuery query) {
@@ -146,6 +217,16 @@ bool ParsedQueryValidator::ValidatePatternArguments(ParsedQuery query) {
   }
 
   return true;
+}
+
+bool ParsedQueryValidator::IsStmt(PqlTokenType token_type) {
+  return token_type==PqlTokenType::STMT
+      || token_type==PqlTokenType::READ
+      || token_type==PqlTokenType::PRINT
+      || token_type==PqlTokenType::CALL
+      || token_type==PqlTokenType::WHILE
+      || token_type==PqlTokenType::IF
+      || token_type==PqlTokenType::ASSIGN;
 }
 
 bool ParsedQueryValidator::IsStmtRef(PqlTokenType token_type) {

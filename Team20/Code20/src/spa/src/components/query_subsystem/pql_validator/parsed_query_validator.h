@@ -12,6 +12,7 @@ class ParsedQueryValidator {
   bool ValidateQuery(ParsedQuery);
 
  private:
+  bool IsStmt(PqlTokenType);
   bool IsStmtRef(PqlTokenType);
   bool IsEntRef(PqlTokenType);
   bool IsExpressionSpec(PqlTokenType);
