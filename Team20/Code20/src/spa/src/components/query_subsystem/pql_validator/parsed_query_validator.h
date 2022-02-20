@@ -26,10 +26,6 @@ class ParsedQueryValidator {
   bool ValidatePatternClause(ParsedQuery);
   bool ValidatePatternSynonymIsAssigned(ParsedQuery);
   bool ValidatePatternArguments(ParsedQuery);
-  bool ValidatePatternFirstArgumentIsEntRef(ParsedQuery);
-  bool ValidatePatternSecondArgumentIsExpressionSpec(ParsedQuery);
-  bool ValidateModifiesUsesFirstArgumentNotUnderscore(ParsedQuery);
-  bool ValidateClauseDesignEntity(ParsedQuery);
 };
 
 };
