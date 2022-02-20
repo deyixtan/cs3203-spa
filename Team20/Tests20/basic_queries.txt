@@ -1,0 +1,10 @@
+1 - comment
+read x;
+Select x
+1
+5000
+2 - comment
+procedure p;
+Select p
+main
+5000
