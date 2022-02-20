@@ -393,3 +393,68 @@ print pn; stmt s1, s2;
 Select pn such that Follows(s2, p)
 none
 5000
+80 - Double synonym
+stmt s1, s2;
+Select s2 such that Follows*(s1, s2)
+2, 3, 5, 7, 8, 9, 12
+5000
+81 - Single synonym
+stmt s1, s2;
+Select s1 such that Follows*(s1, 3)
+1, 2
+5000
+82 - Single synonym with wildcard
+stmt s1, s2;
+Select s1 such that Follows*(s1, _)
+1, 2, 3, 4, 6, 7, 9
+5000
+83 - Single synonym
+stmt s1, s2;
+Select s2 such that Follows*(3, s2)
+9, 12
+5000
+84 - No synonym
+print pn;
+Select pn such that Follows*(2, 3)
+2, 11
+5000
+85 - No synonym with wildcard
+print pn;
+Select pn such that Follows*(3, _)
+2, 11
+5000
+86 - Single synonym with wildcard
+stmt s1, s2;
+Select s2 such that Follows*(_, s2)
+2, 3, 5, 7, 8, 9, 12
+5000
+87 - No synonym with wildcard
+read r;
+Select r such that Follows*(_, 9)
+1, 4, 6, 10
+5000
+88 - No synonym with wildcard
+read r;
+Select r such that Follows*(_, _)
+1, 4, 6, 10
+5000
+89 - No synonym with wildcard; negative
+read r;
+Select r such that Follows*(_, 1)
+none
+5000
+90 - No synonym with wildcard; negative
+read r;
+Select r such that Follows*(12, _)
+none
+5000
+91 - SNo synonym with wildcard out of bounds; negative
+read r;
+Select r such that Follows*(50, _)
+none
+5000
+92 - Double synonym; negative
+print pn; if ifs;
+Select pn such that Follows*(ifs, w)
+none
+5000
