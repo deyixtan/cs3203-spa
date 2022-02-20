@@ -1548,6 +1548,11 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
                                                    GetStmtType(second_arg_design_entity));
       }
     }
+    if (rel_result_set.empty() &&
+        rel_first_arg.value != selected_synonym.value &&
+        rel_second_arg.value != selected_synonym.value) {
+      return;
+    }
 
     std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_result_set;
     if (pattern_first_arg.type == PqlTokenType::SYNONYM) { // a(v, "x")
