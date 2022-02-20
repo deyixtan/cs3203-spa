@@ -1381,7 +1381,7 @@ void QueryEvaluator::EvaluateSelectWithPattern(ParsedQuery &query) {
     }
   } else if (first_arg.type==PqlTokenType::IDENT_WITH_QUOTES && second_arg.type==PqlTokenType::SUB_EXPRESSION) {
     // 6. pattern a("x", _"y"_)
-    std::string ident_without_quotes = first_arg.value.substr(1, second_arg.value.length() - 2);
+    std::string ident_without_quotes = first_arg.value.substr(1, first_arg.value.length() - 2);
     if (select_synonym.value==pattern_synonym.value) {
       // Select a pattern a("x", _"y"_)
       result_to_add = pkb->GetStmtWithPattern(ident_without_quotes, second_arg.value);
