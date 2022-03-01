@@ -1,6 +1,5 @@
 #include "catch.hpp"
 #include "components/query_subsystem/pql_parser/parsed_query_builder.h"
-#include "components/query_subsystem/pql_parser/parsed_query.cpp"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
 #include "components/query_subsystem/pql_lexer/pql_lexer.h"
 
