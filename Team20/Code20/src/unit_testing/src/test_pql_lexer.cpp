@@ -437,3 +437,9 @@ TEST_CASE("Test declarations with unrecognised token") {
 
   REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
 }
+
+TEST_CASE("Test invalid integer") {
+  PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, _\"0123\"_)");
+  std::string expected_wrong_token = "_\"0123\"_";
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
+}
