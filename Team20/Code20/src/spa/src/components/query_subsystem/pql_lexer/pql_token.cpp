@@ -17,6 +17,7 @@ std::unordered_map<std::string, PqlTokenType> string_token_map = {
     {"-", PqlTokenType::MINUS},
     {"*", PqlTokenType::MULTIPLY},
     {"/", PqlTokenType::DIVIDE},
+    {"=", PqlTokenType::EQUAL},
     {"\"", PqlTokenType::DOUBLE_QUOTE},
 
     {"stmt", PqlTokenType::STMT},
@@ -34,6 +35,8 @@ std::unordered_map<std::string, PqlTokenType> string_token_map = {
     {"Select", PqlTokenType::SELECT},
     {"such", PqlTokenType::SUCH},
     {"that", PqlTokenType::THAT},
+    {"with", PqlTokenType::WITH},
+    {"and", PqlTokenType::AND},
 
     {"Follows", PqlTokenType::FOLLOWS},
     {"Follows*", PqlTokenType::FOLLOWS_T},
@@ -41,6 +44,12 @@ std::unordered_map<std::string, PqlTokenType> string_token_map = {
     {"Parent*", PqlTokenType::PARENT_T},
     {"Uses", PqlTokenType::USES},
     {"Modifies", PqlTokenType::MODIFIES},
+    {"Next", PqlTokenType::NEXT},
+    {"Next*", PqlTokenType::NEXT_T},
+    {"Calls", PqlTokenType::CALLS},
+    {"Calls*", PqlTokenType::CALLS_T},
+    {"Affects", PqlTokenType::AFFECTS},
+    {"Affects*", PqlTokenType::AFFECTS_T},
     {"pattern", PqlTokenType::PATTERN}
 };
 
@@ -91,6 +100,7 @@ std::unordered_set<PqlTokenType> line_no_set = {
     PqlTokenType::WHILE,
     PqlTokenType::IF,
     PqlTokenType::ASSIGN,
+    PqlTokenType::CALL,
 };
 
 std::unordered_set<PqlTokenType> var_set = {
@@ -104,6 +114,9 @@ std::unordered_set<PqlTokenType> allowed_synonyms = {
     PqlTokenType::PARENT,
     PqlTokenType::USES,
     PqlTokenType::MODIFIES,
+    PqlTokenType::NEXT,
+    PqlTokenType::CALLS,
+    PqlTokenType::AFFECTS,
     PqlTokenType::PATTERN,
     PqlTokenType::STMT,
     PqlTokenType::READ,
@@ -117,6 +130,8 @@ std::unordered_set<PqlTokenType> allowed_synonyms = {
     PqlTokenType::PROCEDURE,
     PqlTokenType::SUCH,
     PqlTokenType::THAT,
+    PqlTokenType::WITH,
+    PqlTokenType::AND,
     PqlTokenType::SELECT,
 };
 
