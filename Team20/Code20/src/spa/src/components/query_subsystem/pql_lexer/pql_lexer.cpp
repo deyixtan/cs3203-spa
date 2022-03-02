@@ -132,6 +132,53 @@ bool PqlLexer::IsValidSynonym(const std::string &s) {
   return true;
 }
 
+bool PqlLexer::isValidAttribute(const std::string &s) {
+  std::unordered_set<std::string> attr_name = {"procName", "varName", "value", "stmt#"};
+  size_t dot = s.find('.');
+  std::string attr = s.substr(dot + 1, s.length() - dot - 1);
+  if (!attr_name.count(attr)) {
+    return false;
+  }
+  return true;
+}
+
+std::string PqlLexer::getValidTuple(const std::string &s) {
+  int len = s.length();
+  if(!(s[0] == '<' && s[len - 1] == '>')) {
+    return "";
+  }
+  std::string temp = s.substr(1, s.length() - 2);
+  std::string res = "<";
+  while (temp.length()> 0) {
+    size_t comma = temp.find(',');
+    if (comma != std::string::npos && comma > 0) {
+      std::string str = Trim(temp.substr(0, comma));
+      if (IsIdent(str)) {
+        res += str;
+        res += ",";
+      } else {
+        return "";
+      }
+      temp = temp.substr(comma + 1, temp.length() - comma - 1);
+    }
+    else if (IsIdent(Trim(temp))) {
+      res += Trim(temp);
+      return res + '>';
+    }
+  }
+  return "";
+}
+
+// Trim leading and trailing whitespaces
+std::string PqlLexer::Trim(const std::string &s) {
+  std::string ws = " \n\r\t\f\v";
+  size_t start = s.find_first_not_of(ws);
+  std::string ltrim = (start == std::string::npos) ? "" : s.substr(start);
+  size_t end = ltrim.find_last_not_of(ws);
+  return (end == std::string::npos) ? "" : ltrim.substr(0, end + 1);
+
+}
+
 // 1. cannot end with mathematical signs
 // 2. cannot have 2 consecutive '*', '/', '+', '-', '%', '(', ')', 2 synonyms/integers
 // 3. cannot start with mathematical signs
