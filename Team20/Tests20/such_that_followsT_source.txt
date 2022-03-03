@@ -1,0 +1,54 @@
+procedure followsTSource {
+  read a;
+  read b;
+  c = 0;
+  print c;
+  while (a <= b) {
+    if (a < 50) then {
+      print a;
+      print b;
+      read d;
+    } else {
+      print a;
+      print b;
+      print c;
+    }
+    c = c + a;
+    a = a + 1;
+  }
+  print c;
+  if (b < 10) then {
+    print b;
+    while (b < 10) {
+      b = b + 1;
+      print b;
+    }
+    b = b + 10;
+  } else {
+    print b;
+    b = b - 10;
+  }
+  while ((b < c) && (a > 0)) {
+    read d;
+    b = b + d;
+    print b;
+  }
+  if (b < 50) then {
+    if (c < 50) then {
+      print b;
+      print c;
+    } else {
+      print b;
+    }
+  } else {
+    print c;
+  }
+  a = b + c;
+  print a;
+  while (a > 0) {
+    print b;
+    print c;
+    b = b + c;
+    a = a - b;
+  }
+}

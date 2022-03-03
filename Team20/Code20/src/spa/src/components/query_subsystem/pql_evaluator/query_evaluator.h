@@ -3,6 +3,8 @@
 
 #include "../pql_parser/parsed_query.h"
 #include "../../pkb/pkb.h"
+#include "query_condition.h"
+#include "query_result.h"
 
 #include <string>
 #include <unordered_set>
@@ -19,8 +21,14 @@ class QueryEvaluator {
  private:
   std::unordered_set<std::string> result;
   PKB *pkb;
-  void EvaluateSelect(ParsedQuery&);
-  std::unordered_set<std::string> Intersect(std::unordered_set<std::string>, std::unordered_set<std::string>);
+  void EvaluateSelectOnly(ParsedQuery&  query);
+  void EvaluateSelectWithRelationship(ParsedQuery& query);
+  void EvaluateSelectWithPattern(ParsedQuery& query);
+  void EvaluateSelectWithRelationshipAndPattern(ParsedQuery& query);
+  StmtType GetStmtType(PqlTokenType token_type);
+  bool IsValidStmtForUse(PqlTokenType token_type);
+  bool IsValidStmtForModify(PqlTokenType token_type);
+  bool IsValidStmtForParent(PqlTokenType token_type);
 };
 
 }

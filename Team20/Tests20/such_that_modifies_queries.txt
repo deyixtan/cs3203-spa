@@ -1,0 +1,165 @@
+1 - Double synonym; no overlap true clause (ifs, v)
+print pn; if ifs; variable v;
+Select pn such that Modifies(ifs, v)
+2, 11
+5000
+2 - No synonym; no overlap false clause (3, 'v')
+print pn; variable v;
+Select pn such that Modifies(3, "v")
+none
+5000
+3 - Single synonym; overlap (r, 'd')
+read r;
+Select r such that Modifies(r, "d")
+1
+5000
+4 - Double synonym; overlap (r, v)
+read r; variable v;
+Select v such that Modifies(r, v)
+d, x
+5000
+5 - Double synonym; intentionally misspelt (r, pn)
+read r; print pn;
+Select pn suc that Modifies(r, pn)
+none
+5000
+6 - Double synonym (r, v)
+read r; variable v;
+Select r such that Modifies(r, v)
+1, 4, 6, 10
+5000
+7 - Single synonym (r, 'x')
+read r;
+Select r such that Modifies(r, "x")
+4, 6, 10
+5000
+8 - Single synonym with wildcard (r, _)
+read r;
+Select r such that Modifies(r, _)
+1, 4, 6, 10
+5000
+9 - Double synonym (a, v)
+assign a; variable v;
+Select v such that Modifies(a, v)
+d, z, p
+5000
+10 - Single synonym (a, 'z')
+assign a;
+Select a such that Modifies(a, "z")
+8
+5000
+11 - Double synonym (ifs, v)
+if ifs; variable v;
+Select v such that Modifies(ifs, v)
+x
+5000
+12 - Single synonym (ifs, 'x')
+if ifs;
+Select ifs such that Modifies(ifs, "x")
+9
+5000
+13 - Single synonym with wildcard (ifs, _)
+if ifs;
+Select ifs such that Modifies(ifs, _)
+9
+5000
+14 - Double synonym (w, v)
+while w; variable v;
+Select v such that Modifies(w, v)
+x, d, z
+5000
+15 - Single synonym (w, 'x')
+while w;
+Select w such that Modifies(w, "x")
+3, 5
+5000
+16 - Single synonym with wildcard (w, _)
+while w;
+Select w such that Modifies(w, _)
+3, 5
+5000
+17 - Single synonym (9, v)
+variable v;
+Select v such that Modifies(9, v)
+x
+5000
+18 - No synonym (9, 'z')
+print pn;
+Select pn such that Modifies(9, "z")
+none
+5000
+19 - No synonym with wildcard (9, _)
+print pn;
+Select pn such that Modifies(9, _)
+2, 11
+5000
+20 - Single synonym with wildcard (_, v)
+print pn; variable v;
+Select pn such that Modifies(_, v)
+none
+5000
+21 - No synonym with wildcard (_, 'x')
+print pn;
+Select pn such that Modifies(_, "x")
+none
+5000
+22 - No synonym with wildcard (_, _)
+print pn;
+Select pn such that Modifies(_, _)
+none
+5000
+23 - No synonym with wildcard (50, _)
+print pn;
+Select pn such that Modifies(50, _)
+none
+5000
+24 - Single synonym (ifs, 'i982')
+print pn; if ifs;
+Select pn such that Modifies(ifs, "i982")
+none
+5000
+25 - Double synonym; negative (s, v)
+print pn; variable v; stmt s1, s2;
+Select pn such that Modifies(s, v)
+none
+5000
+26 - Double synonym; negative (s, v)
+print pn; variable v; stmt s1, s2;
+Select pn such that Modifies*(s, v)
+none
+5000
+27 - Double synonym; negative (s, v)
+print pn; variable v; stmt s1, s2;
+Select pn such that Modifies*(s, v)
+none
+5000
+28 - Double synonym; negative (v1, v2)
+print pn; variable v;
+Select pn such that Modifies(v1, v2)
+none
+5000
+29 - Double synonym; negative (s, a)
+assign a; print pn; stmt s1, s2;
+Select pn such that Modifies(s, a)
+none
+5000
+30 - Single synonym; negative (s, '9')
+print pn; stmt s1, s2;
+Select pn such that Modifies(s, "9")
+none
+5000
+31 - Single synonym; negative (s, 'ab#c')
+print pn; stmt s1, s2;
+Select pn such that Modifies(s, "ab#c")
+none
+5000
+32 - Single synonym; negative (s, 'd y c')
+print pn; stmt s1, s2;
+Select pn such that Modifies(s, "d y c")
+none
+5000
+33 - Single synonym; negative (s, 2)
+print pn; stmt s1, s2;
+Select pn such that Modifies(s, 2)
+none
+5000

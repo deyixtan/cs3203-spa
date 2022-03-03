@@ -1,0 +1,315 @@
+1 - Parent Test 1
+stmt s, s1, s2;
+Select s such that Parent(3, 7)
+none
+5000
+2 - Parent Test 2
+stmt s, s1, s2;
+Select s such that Parent(8, s)
+9,10,11,12
+5000
+3 - Parent Test 3
+stmt s, s1, s2;
+Select s such that Parent*(3, 14)
+none
+5000
+4 - Parent Test 4
+stmt s, s1, s2;
+Select s such that Parent(s, 10)
+8
+5000
+5 - Parent Test 5
+stmt s, s1, s2; while w;
+Select w such that Parent(w, 10)
+8
+5000
+6 - Parent Test 6
+stmt s, s1, s2; while w; if ifs;
+Select ifs such that Parent(ifs, 10)
+none
+5000
+7 - Parent Test 7
+stmt s, s1, s2; assign a, a1; while w; if ifs;
+Select ifs such that Parent*(ifs, 9)
+3
+5000
+8 - Parent Test 8
+stmt s, s1, s2;
+Select s1 such that Parent*(6, s1)
+7,8,9,10,11,12
+5000
+9 - Parent Test 9
+stmt s, s1, s2; assign a, a1;
+Select a such that Parent*(3, a)
+12
+5000
+10 - Parent Test 10
+stmt s;
+Select s such that Parent(s,3)
+none
+5000
+11 - Parent Test 11
+stmt s; print pn;
+Select s such that Parent(s,pn)
+3,8,13
+5000
+12 - Parent Test 12
+stmt s; print pn;
+Select s such that Parent*(s,pn)
+3,6,8,13
+5000
+13 - Modifies Test 1 (Find all variables modified on line)
+variable v;
+Select v such that Modifies (17, v)
+berry
+5000
+14 - Modifies Test 2 (Find all variables modified on line)
+variable v;
+Select v such that Modifies (2, v)
+none
+5000
+15 - Modifies Test 3 (Find all variables modified on line)
+variable v;
+Select v such that Modifies (6, v)
+durian, orange, plum, peach
+5000
+16 - Modifies Test 4 (Find all statements that modify a specific variable)
+stmt s;
+Select s such that Modifies (s, "apple")
+3,4,18
+5000
+17 - Modifies Test 5 (Find all if statements that modify a specific variable)
+if ifs;
+Select ifs such that Modifies (ifs, "durian")
+3
+5000
+18 - Modifies Test 6 (Find all statements that modify a specific variable)
+stmt s;
+Select s such that Modifies (s, _)
+1,3,4,6,7,8,9,10,12,13,15,16,17,18
+5000
+19 - Modifies Test 7 (Find all statements that modify a specific variable)
+stmt s; assign a; while w;
+Select w such that Modifies (w, _)
+6,8,15
+5000
+20 - Modifies Test 8 (Find all variables modified by while statements)
+stmt s; variable v; while w;
+Select v such that Modifies (w, v)
+durian, orange, plum, peach,grape
+5000
+21 - Modifies Test 9 (Find all variables modified by if statements)
+stmt s; assign a; while w; if ifs; variable v;
+Select v such that Modifies (ifs, v)
+apple, durian, orange, plum, peach, grape
+5000
+22 - Modifies Test 10 (Find all variables modified on line)
+stmt s; assign a; while w; if ifs; variable v;
+Select v such that Modifies (2, v)
+none
+5000
+23 - Modifies Test 11 (Find all print statements that modify a specific variable)
+stmt s; assign a; while w; if ifs; variable v; print pn;
+Select pn such that Modifies (pn, v)
+none
+5000
+24 - Uses Test 1 (Find all variables used on line)
+stmt s; assign a; while w; if ifs; variable v;
+Select v such that Uses (8, v)
+apple, pear, orange, berry, peach
+5000
+25 - Uses Test 2 (Find all variables used on line)
+stmt s; assign a; while w; if ifs; variable v;
+Select v such that Uses (4, v)
+none
+5000
+26 - Uses Test 3 (Find all statements that uses a specific variable)
+stmt s;
+Select s such that Uses (s, "berry")
+3, 6, 8, 12, 17
+5000
+27 - Uses Test 4 (Find all statements that uses a specific variable)
+stmt s; assign a; while w; if ifs;
+Select ifs such that Uses (ifs, "mango")
+none
+5000
+28 - Uses Test 5 (Find all statements that use any variable)
+stmt s;
+Select s such that Uses (s, _)
+1,2,3,5,6,8,11,12,13,14,15,17,18
+5000
+29 - Uses Test 6 (Find all if statements that use any variable)
+stmt s; assign a; while w; if ifs;
+Select ifs such that Uses (ifs, _)
+3,13
+5000
+30 - Uses Test 7 (Find all assign statements that use any variable)
+stmt s; assign a; while w; if ifs; variable v;
+Select a such that Uses (a, v)
+1,12,17,18
+5000
+31 -  Uses Test 8 (Find all variables used by assign statements)
+stmt s; assign a; while w; if ifs; variable v;
+Select v such that Uses (a, v)
+apple, berry, avocado, peach
+5000
+32 -  Uses Test 9 (Find all variables used by print statements)
+stmt s; assign a; while w; if ifs; variable v; print pn;
+Select v such that Uses (pn, v)
+apple, peach
+5000
+33 -  Uses Test 10 (Find all print statements that use a variable)
+stmt s; assign a; while w; if ifs; variable v; print pn;
+Select pn such that Uses (pn, "avocado")
+none
+5000
+34 -  Uses Test 11 (Find all variables used on line)
+stmt s; assign a; while w; if ifs; variable v; print pn;
+Select v such that Uses (6, v)
+banana, papaya, apple, pear, orange, peach, berry
+5000
+35 - Follows Test 1
+stmt s, s1, s2;
+Select s such that Follows*(s, 16)
+none
+5000
+36 - Follows Test 2
+stmt s, s1, s2;
+Select s such that Follows(9, s)
+10
+5000
+37 - Follows Test 3
+stmt s;
+Select s such that Follows*(13, s)
+17,18
+5000
+38 - Follows Test 4
+stmt s, s1, s2; assign a, a1;
+Select a such that Follows(s, a)
+12,17,18
+5000
+39 - Follows Test 5
+stmt s, s1, s2; assign a, a1; while w;
+Select w such that Follows(s, w)
+6,8
+5000
+40 - Follows Test 6
+stmt s, s1, s2; assign a, a1; while w;
+Select s such that Follows(16, s)
+none
+5000
+41 - Follows Test 7
+stmt s, s1, s2; assign a, a1; while w;
+Select s such that Follows(8, s)
+none
+5000
+42 - Follows Test 8
+stmt s, s1, s2; assign a, a1; while w; print pn;
+Select s such that Follows(pn, s)
+3,6,12
+5000
+43 - Pattern Test 1
+assign a;
+Select a pattern a ( _ , _"peach"_)
+17,18
+5000
+44 - Pattern Test 2
+assign a;
+Select a pattern a ( _ , _"3"_)
+12,17
+5000
+45 - Pattern Test 3
+assign a;
+Select a pattern a(_, _)
+1,12,16,17,18
+5000
+46 - Pattern Test 4
+assign a;
+Select a pattern a ( "berry" , _"avocado"_)
+17
+5000
+47 - Pattern Test 5
+assign a;
+Select a pattern a ( _, _"pear"_)
+none
+5000
+48 - Pattern Test 6
+assign a; variable v;
+Select v pattern a (v, _"berry"_)
+peach,berry
+5000
+49 - Pattern Test 7
+assign a; variable v;
+Select v pattern a (v, _)
+durian, peach, grape, berry, apple
+5000
+50 - Mix Test 1
+stmt s; assign a, a1; variable v, v1;
+Select a such that Parent*(6, a) pattern a(v1, _"3"_)
+12
+5000
+51 - Mix Test 2
+stmt s; assign a, a1; variable v, v1; if ifs;
+Select ifs such that Follows(s, ifs) pattern a1(v,  _)
+3,13
+5000
+52 - Mix Test 3
+stmt s; assign a, a1; variable v, v1; if ifs;
+Select s such that Follows*(s, a) pattern a(v1, _)
+1,2,3,9,10,11,13,17
+5000
+53 - Mix Test 4
+stmt s; assign a, a1; variable v, v1;
+Select a such that Uses(a, "berry") pattern a(v, _"avocado"_)
+17
+5000
+54 - Mix Test 5
+stmt s; assign a, a1; variable v, v1;
+Select v such that Uses(a, v) pattern a(v, _)
+berry
+5000
+55 - Mix Test 6
+stmt s; assign a, a1; variable v, v1;
+Select v such that Uses(a, "apple") pattern a(v, _"3"_)
+none
+5000
+56 - Mix Test 7
+stmt s; assign a, a1; variable v, v1; while w; if ifs;
+Select w such that Parent*(w, a) pattern a(v, _)
+6,8,15
+5000
+57 - Mix Test 8
+stmt s; assign a, a1; variable v, v1;
+Select v such that Uses(a, _) pattern a(_, _)
+durian, apple, banana, papaya, pear, orange, plum, peach, berry, carrot, grape, avocado
+5000
+58 - Mix Test 9
+stmt s; assign a, a1; variable v, v1; while w;
+Select w such that Parent(w, s) pattern a(v1, _)
+6,8,15
+5000
+59 - Mix Test 10
+stmt s; assign a, a1; variable v, v1; while w; if ifs; print pn;
+Select a such that Uses(s, v) pattern a1(v, _)
+1,12,16,17,18
+5000
+60 - Mix Test 11
+stmt s; assign a, a1; variable v, v1; while w; if ifs; print pn;
+Select pn such that Uses(pn, v) pattern a1(_, _)
+2,5,11,14
+5000
+61 - Mix Test 12
+stmt s; assign a, a1; variable v, v1; while w; if ifs; print pn; read re;
+Select re such that Modifies(re, v) pattern a1(_, _)
+4,7,9,10
+5000
+62 - Edge Case 1
+stmt s;
+Select a
+none
+5000
+63 - Edge Case 2
+stmt s;
+Select s1
+none
+5000

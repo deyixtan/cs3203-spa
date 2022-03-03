@@ -3,11 +3,29 @@
 ModifyStore::ModifyStore() {}
 
 void ModifyStore::AddStmtVar(std::string stmt, std::string var) {
-  stmt_var_pairs.insert(std::make_pair(stmt, var));
+  all_stmt_modify.insert({stmt});
+  stmt_var_pairs.emplace(std::pair<std::string, std::string>(stmt, var));
+
+  if (!stmt_var_map.emplace(stmt, std::unordered_set<std::string>{ var }).second) {
+    stmt_var_map.at(stmt).emplace(var);
+  }
+
+  if (!var_stmt_map.emplace(var, std::unordered_set<std::string>{ stmt }).second) {
+    var_stmt_map.at(var).emplace(stmt);
+  }
 }
 
 void ModifyStore::AddProcVar(std::string proc, std::string var) {
-  proc_var_pairs.insert(std::make_pair(proc, var));
+  all_proc_modify.insert({proc});
+  proc_var_pairs.emplace(std::pair<std::string, std::string>(proc, var));
+
+  if (!proc_var_map.emplace(proc, std::unordered_set<std::string>{ var }).second) {
+    proc_var_map.at(proc).emplace(var);
+  }
+
+  if (!var_proc_map.emplace(var, std::unordered_set<std::string>{ proc }).second) {
+    var_proc_map.at(var).emplace(proc);
+  }
 }
 
 bool ModifyStore::StmtVarExists(std::pair<std::string, std::string> pair) {
@@ -44,6 +62,14 @@ std::unordered_set<std::string> ModifyStore::GetProcModByVar(std::string var) {
     return var_proc_map.at(var);
   }
   return {};
+}
+
+std::unordered_set<std::string> ModifyStore::GetAllStmtModify() {
+  return all_stmt_modify;
+}
+
+std::unordered_set<std::string> ModifyStore::GetAllProcModify() {
+  return all_proc_modify;
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ModifyStore::GetAllStmtVar() {

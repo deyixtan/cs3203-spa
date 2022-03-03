@@ -26,49 +26,86 @@ std::unordered_set<std::string> QueryResult::GetResult(PqlToken selected_synonym
       }
     }
   } else {
-    int synonym_count = 0;
-    if (first_condition_pair.first.first_arg == selected_synonym) {
-      for (auto result_pair : first_condition_pair.second) {
-        result_list.push_back(result_pair.first);
-      }
-      synonym_count++;
-    }
-    if (first_condition_pair.first.second_arg == selected_synonym) {
-      for (auto result_pair : first_condition_pair.second) {
-        result_list.push_back(result_pair.second);
-      }
-      synonym_count++;
-    }
-    if (second_condition_pair.first.first_arg == selected_synonym) {
-      for (auto result_pair : second_condition_pair.second) {
-        result_list.push_back(result_pair.first);
-      }
-      synonym_count++;
-    }
-    if (second_condition_pair.first.second_arg == selected_synonym) {
-      for (auto result_pair : second_condition_pair.second) {
-        result_list.push_back(result_pair.second);
-      }
-      synonym_count++;
+    std::unordered_set<std::string> synonym_set;
+    std::string duplicated_synonym;
+
+    if (!synonym_set.count(first_condition_pair.first.first_arg.value)) {
+      synonym_set.insert(first_condition_pair.first.first_arg.value);
+    } else {
+      duplicated_synonym = first_condition_pair.first.first_arg.value;
     }
 
-    if (synonym_count > 1) {
-      std::unordered_map<std::string, int> result_map;
+    if (!synonym_set.count(first_condition_pair.first.second_arg.value)) {
+      synonym_set.insert(first_condition_pair.first.second_arg.value);
+    } else {
+      duplicated_synonym = first_condition_pair.first.second_arg.value;
+    }
 
-      for (auto result_string : result_list) {
-        if (result_map.find(result_string) == result_map.end()) {
-          result_map.insert(make_pair(result_string, 1));
-        } else {
-          result_map.find(result_string)->second = result_map.at(result_string) + 1;
-        }
-      }
+    if (!synonym_set.count(second_condition_pair.first.first_arg.value)) {
+      synonym_set.insert(second_condition_pair.first.first_arg.value);
+    } else {
+      duplicated_synonym = second_condition_pair.first.first_arg.value;
+    }
 
-      for (auto key_value_pair : result_map) {
-        if (key_value_pair.second > 1) {
-          result.insert(key_value_pair.first);
+    if (!synonym_set.count(second_condition_pair.first.second_arg.value)) {
+      synonym_set.insert(second_condition_pair.first.second_arg.value);
+    } else {
+      duplicated_synonym = second_condition_pair.first.second_arg.value;
+    }
+
+    std::unordered_set<std::string> single_value_set;
+    if (synonym_set.size() < 4 && duplicated_synonym != "_") {
+      single_value_set = GetIntersectionSet(first_condition_pair, second_condition_pair, duplicated_synonym);
+      if (selected_synonym.value == duplicated_synonym) {
+        return single_value_set;
+      } else {
+        if (first_condition_pair.first.first_arg == selected_synonym) {
+          for (auto result_pair : first_condition_pair.second) {
+            if (single_value_set.count(result_pair.second)) {
+              result.insert(result_pair.first);
+            }
+          }
+        } else if (first_condition_pair.first.second_arg == selected_synonym) {
+          for (auto result_pair : first_condition_pair.second) {
+            if (single_value_set.count(result_pair.first)) {
+              result.insert(result_pair.second);
+            }
+          }
+        } else if (second_condition_pair.first.first_arg == selected_synonym) {
+          for (auto result_pair : second_condition_pair.second) {
+            if (single_value_set.count(result_pair.second)) {
+              result.insert(result_pair.first);
+            }
+          }
+        } else if (second_condition_pair.first.second_arg == selected_synonym) {
+          for (auto result_pair : second_condition_pair.second) {
+            if (single_value_set.count(result_pair.first)) {
+              result.insert(result_pair.second);
+            }
+          }
         }
       }
     } else {
+      if (first_condition_pair.first.first_arg == selected_synonym) {
+        for (auto result_pair : first_condition_pair.second) {
+          result_list.push_back(result_pair.first);
+        }
+      }
+      if (first_condition_pair.first.second_arg == selected_synonym) {
+        for (auto result_pair : first_condition_pair.second) {
+          result_list.push_back(result_pair.second);
+        }
+      }
+      if (second_condition_pair.first.first_arg == selected_synonym) {
+        for (auto result_pair : second_condition_pair.second) {
+          result_list.push_back(result_pair.first);
+        }
+      }
+      if (second_condition_pair.first.second_arg == selected_synonym) {
+        for (auto result_pair : second_condition_pair.second) {
+          result_list.push_back(result_pair.second);
+        }
+      }
       for (auto key_value_pair : result_list) {
         result.insert(key_value_pair);
       }
@@ -89,4 +126,69 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> QueryResult::
     }
   }
   return intersection;
+}
+
+std::unordered_set<std::string> QueryResult::GetIntersectionSet(
+    std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> first_condition_pair,
+    std::pair<QueryCondition, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> second_condition_pair,
+    std::string synonym) {
+
+  std::vector<std::string> result_list;
+  std::unordered_set<std::string> result_set_one;
+  std::unordered_set<std::string> result_set_two;
+
+  int synonym_count = 0;
+  if (first_condition_pair.first.first_arg.value == synonym) {
+    for (auto result_pair : first_condition_pair.second) {
+      result_set_one.insert(result_pair.first);
+    }
+    synonym_count++;
+  }
+  if (first_condition_pair.first.second_arg.value == synonym) {
+    for (auto result_pair : first_condition_pair.second) {
+      result_set_one.insert(result_pair.second);
+    }
+    synonym_count++;
+  }
+  if (second_condition_pair.first.first_arg.value == synonym) {
+    for (auto result_pair : second_condition_pair.second) {
+      result_set_two.insert(result_pair.first);
+    }
+    synonym_count++;
+  }
+  if (second_condition_pair.first.second_arg.value == synonym) {
+    for (auto result_pair : second_condition_pair.second) {
+      result_set_two.insert(result_pair.second);
+    }
+    synonym_count++;
+  }
+
+  for (auto result : result_set_one) {
+    result_list.push_back(result);
+  }
+
+  for (auto result : result_set_two) {
+    result_list.push_back(result);
+  }
+
+  std::unordered_set<std::string> result;
+
+  if (synonym_count > 1) {
+    std::unordered_map<std::string, int> result_map;
+    for (auto result_string : result_list) {
+      if (result_map.find(result_string) == result_map.end()) {
+        result_map.insert(make_pair(result_string, 1));
+      } else {
+        result_map.find(result_string)->second = result_map.at(result_string) + 1;
+      }
+    }
+
+    for (auto key_value_pair : result_map) {
+      if (key_value_pair.second > 1) {
+        result.insert(key_value_pair.first);
+      }
+    }
+
+    return result;
+  }
 }

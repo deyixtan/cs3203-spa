@@ -5,13 +5,14 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "hash.h"
+#include <vector>
 
 // A struct to maintain every node's relationships
 struct parent_child {
-  int parent;
-  int child;
-  std::unordered_set<int> ance;
-  std::unordered_set<int> desc;
+  std::string parent;
+  std::unordered_set<std::string> child;
+  std::unordered_set<std::string> ance;
+  std::unordered_set<std::string> desc;
 };
 
 // A store class that maintains all Parent APIs and relationships
@@ -19,40 +20,47 @@ class ParentStore {
  public:
   ParentStore();
 
-  bool is_parent(int stmt);
+  bool IsParent(std::string stmt);
 
-  bool is_child(int stmt);
+  bool IsChild(std::string stmt);
 
-  bool is_ance(int stmt);
+  bool IsAnce(std::string stmt);
 
-  bool is_desc(int stmt);
+  bool IsDesc(std::string stmt);
 
-  bool parent_child_exists(int stmt1, int stmt2);
+  bool ParentChildExists(std::string stmt1, std::string stmt2);
 
-  bool ance_exists(int curr, int ance);
+  bool AnceExists(std::string curr, std::string ance);
 
-  bool desc_exists(int curr, int desc);
+  bool DescExists(std::string curr, std::string desc);
 
-  void rs_init(int num_stmts);
+  void Init(int num_stmts);
 
-  void add_parent_stmt(int parent, int child);
+  void AddParentStmt(std::string parent, std::string child);
 
-  int get_parent_of(int stmt);
+  void AddParentStarStmt(std::string stmt, std::vector<std::string> visited);
 
-  int get_child_of(int stmt);
+  std::unordered_set<std::string> GetAllParents();
 
-  std::unordered_set<int> get_all_ance_of(int stmt);
+  std::string GetParentOf(std::string stmt);
 
-  std::unordered_set<int> get_all_desc_of(int stmt);
+  std::unordered_set<std::string> GetChildOf(std::string stmt);
 
-  std::unordered_set<std::pair<int, int>, pair_hash> get_parent_child_pairs();
+  std::unordered_set<std::string> GetAllAnceOf(std::string stmt);
+
+  std::unordered_set<std::string> GetAllDescOf(std::string stmt);
+
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetParentChildPairs();
+
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAnceDescPairs();
 
  private:
-  std::unordered_map<int, parent_child> rs_map;
-  std::unordered_set<std::pair<int, int>, pair_hash> parent_child_set;
-  std::unordered_set<int> ance_set;
-  std::unordered_set<int> desc_set;
-  std::unordered_set<int> parent_set;
-  std::unordered_set<int> child_set;
+  std::unordered_map<std::string, parent_child> rs_map;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> parent_child_set;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> ance_desc_set;
+  std::unordered_set<std::string> ance_set;
+  std::unordered_set<std::string> desc_set;
+  std::unordered_set<std::string> parent_set;
+  std::unordered_set<std::string> child_set;
 };
 #endif //PARENT_STORE_H

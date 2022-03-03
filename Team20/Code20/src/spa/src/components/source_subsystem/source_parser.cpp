@@ -6,12 +6,12 @@ SourceParser::SourceParser(std::vector<std::shared_ptr<SourceToken>> tokens_ptr)
     : m_cursor(0), m_curr_stmt_no(0), m_tokens_ptr(std::move(tokens_ptr)) {}
 
 bool SourceParser::AreTokensProcessed() {
-  return m_cursor >= m_tokens_ptr.size() - 1;
+  return m_cursor >= m_tokens_ptr.size();
 }
 
 std::shared_ptr<SourceToken> SourceParser::FetchToken(int tokens_ahead) {
   if (m_cursor + tokens_ahead >= m_tokens_ptr.size()) {
-    return nullptr;
+    throw EndOfStreamException();
   }
   return m_tokens_ptr[m_cursor + tokens_ahead];
 }
@@ -22,20 +22,60 @@ std::shared_ptr<SourceToken> SourceParser::FetchCurrentToken() {
 
 std::shared_ptr<SourceToken> SourceParser::ProcessToken(TokenType type) {
   std::shared_ptr<SourceToken> token_ptr = FetchCurrentToken();
-  if (token_ptr == nullptr) {
-    throw UnexpectedTokenException();
-  }
 
   if (token_ptr->GetType() != type) {
     throw MismatchedTokenException();
   }
 
-  if (m_cursor >= m_tokens_ptr.size()) {
-    throw EndOfStreamException();
-  }
   m_cursor++;
-
   return token_ptr;
+}
+
+bool SourceParser::IsConditionalOperand(int &cursor) {
+  int nest = 0;
+
+  while (cursor < m_tokens_ptr.size()) {
+    TokenType type = m_tokens_ptr[cursor]->GetType();
+
+    if (type == TokenType::OPENED_PARENTHESIS) {
+      nest++;
+    } else if (type == TokenType::CLOSED_PARENTHESIS) {
+      if (nest > 0) {
+        nest--;
+      } else if (nest == 0) {
+        cursor++;
+        break;
+      } else {
+        return false;
+      }
+    }
+
+    cursor++;
+  }
+
+  return cursor < m_tokens_ptr.size();
+}
+
+bool SourceParser::IsConditionalExpression() {
+  int tmp_cursor = m_cursor;
+
+  // check for valid start to conditional expression
+  if (m_tokens_ptr[tmp_cursor++]->GetType() != TokenType::OPENED_PARENTHESIS) {
+    return false;
+  }
+
+  // check left operand is valid
+  if (!IsConditionalOperand(tmp_cursor)) {
+    return false;
+  }
+
+  // check if boolean operator is valid
+  if (m_tokens_ptr[tmp_cursor]->GetType() != TokenType::AND && m_tokens_ptr[tmp_cursor]->GetType() != TokenType::OR) {
+    return false;
+  }
+
+  // check right operand is valid
+  return IsConditionalOperand(tmp_cursor);
 }
 
 std::shared_ptr<ProgramNode> SourceParser::ParseProgram() {
@@ -82,7 +122,7 @@ std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
     case TokenType::PRINT:return ParsePrintStatement();
     case TokenType::WHILE:return ParseWhileStatement();
     case TokenType::IF:return ParseIfStatement();
-    default:throw InvalidParseException("Parsing invalid statement.");
+    default:throw InvalidParseStatementException();
   }
 }
 
@@ -151,7 +191,7 @@ std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpress
     std::shared_ptr<ConditionalExpressionNode> expression = ParseConditionalExpression();
     ProcessToken(TokenType::CLOSED_PARENTHESIS);
     return std::make_shared<NotExpressionNode>(expression);
-  } else if (type == TokenType::OPENED_PARENTHESIS) {
+  } else if (IsConditionalExpression()) {
     ProcessToken(TokenType::OPENED_PARENTHESIS);
     std::shared_ptr<ConditionalExpressionNode> left_expression = ParseConditionalExpression();
     ProcessToken(TokenType::CLOSED_PARENTHESIS);
@@ -163,17 +203,17 @@ std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpress
       case TokenType::OR:ProcessToken(TokenType::OR);
         boolean_operator = BooleanOperator::OR;
         break;
-      default:throw InvalidParseException("Parsing invalid conditional expression operator.");
+      default:throw InvalidParseConditionException();
     }
     ProcessToken(TokenType::OPENED_PARENTHESIS);
     std::shared_ptr<ConditionalExpressionNode> right_expression = ParseConditionalExpression();
     ProcessToken(TokenType::CLOSED_PARENTHESIS);
     return std::make_shared<BooleanExpressionNode>(boolean_operator, left_expression, right_expression);
-  } else if (type == TokenType::NAME || type == TokenType::DIGIT) {
+  } else if (type == TokenType::OPENED_PARENTHESIS || type == TokenType::NAME || type == TokenType::INTEGER) {
     // 'rel_expr' grammar can be reduced to 'factor'
     return ParseRelationalExpression();
   }
-  throw InvalidParseException("Unable to parse conditional expression.");
+  throw InvalidParseConditionException();
 }
 
 std::shared_ptr<RelationalExpressionNode> SourceParser::ParseRelationalExpression() {
@@ -198,7 +238,7 @@ std::shared_ptr<RelationalExpressionNode> SourceParser::ParseRelationalExpressio
     case TokenType::IS_NOT_EQUAL:ProcessToken(TokenType::IS_NOT_EQUAL);
       relation_operator = RelationOperator::NOT_EQUALS;
       break;
-    default:throw InvalidParseException("Parsing invalid relational expression.");
+    default:throw InvalidParseRelationException();
   }
   std::shared_ptr<ExpressionNode> right_relation_factor = ParseRelationalFactor();
   return std::make_shared<RelationalExpressionNode>(relation_operator, left_relation_factor, right_relation_factor);
@@ -262,14 +302,14 @@ std::shared_ptr<ExpressionNode> SourceParser::ParseFactor() {
   TokenType type = FetchCurrentToken()->GetType();
   switch (type) {
     case TokenType::NAME:return std::make_shared<VariableNode>(ProcessToken(TokenType::NAME)->GetValue());
-    case TokenType::DIGIT:return std::make_shared<ConstantNode>(ProcessToken(TokenType::DIGIT)->GetValue());
+    case TokenType::INTEGER:return std::make_shared<ConstantNode>(ProcessToken(TokenType::INTEGER)->GetValue());
     case TokenType::OPENED_PARENTHESIS: {
       ProcessToken(TokenType::OPENED_PARENTHESIS);
       std::shared_ptr<ExpressionNode> expression = ParseExpression();
       ProcessToken(TokenType::CLOSED_PARENTHESIS);
       return expression;
     }
-    default:throw InvalidParseException("Unable to parse factor.");
+    default:throw InvalidParseFactorException();
   }
 }
 

@@ -14,6 +14,7 @@ class QueryValidator {
   void IsValidDeclaration(std::vector<PqlToken> declaration_query);
   void IsValidPatternClause(std::vector<PqlToken> pattern_clause);
   void IsValidSelectClause(std::vector<PqlToken> select_clause);
+  void ConvertTokenType(std::vector<PqlToken>&);
  public:
   QueryValidator(std::vector<PqlToken>);
   std::vector<PqlToken> CheckValidation();

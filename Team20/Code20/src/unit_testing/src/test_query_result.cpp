@@ -2,7 +2,6 @@
 #include "components/query_subsystem/pql_evaluator/query_condition.h"
 #include "components/query_subsystem/pql_evaluator/query_result.h"
 
-#include <string>
 #include <vector>
 #include <utility>
 #include <unordered_set>
@@ -104,7 +103,7 @@ TEST_CASE("Test 3 synonyms 1 common synonym") {
    *  ------------------------------------
    *   (1, x)  |  (1, x)  |  1
    *   (2, x)  |  (2, x)  |  2
-   *   (3, x)  |  (3, y)  |  3
+   *   (3, x)  |  (3, y)  |
    */
 
   QueryCondition first_condition = QueryCondition(a1_token, v_token);
@@ -124,8 +123,7 @@ TEST_CASE("Test 3 synonyms 1 common synonym") {
 
   std::unordered_set<std::string> expected_result = {
       "1",
-      "2",
-      "3"
+      "2"
   };
 
   QueryResult query_result = QueryResult(result_table);

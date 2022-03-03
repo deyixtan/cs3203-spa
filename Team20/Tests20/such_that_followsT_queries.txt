@@ -1,0 +1,225 @@
+1 - comment
+stmt s1; assign a;
+Select s1 such that Follows*(s1, a)
+1, 2, 3, 4, 5, 15, 16, 24, 28, 6, 13, 17, 18, 22, 25, 37, 38, 39
+5000
+2 - comment
+stmt s1; read r;
+Select s1 such that Follows*(s1, r)
+1, 7, 8
+5000
+3 - comment
+stmt s1; print pn;
+Select s1 such that Follows*(s1, pn)
+1, 2, 3, 4, 5, 15, 16, 24, 28, 34, 7, 10, 11, 19, 25, 26, 30, 37
+5000
+4 - comment
+stmt s1; if ifs;
+Select s1 such that Follows*(s1, ifs)
+1, 2, 3, 4, 5, 15, 16, 24
+5000
+5 - comment
+stmt s1; while w;
+Select s1 such that Follows*(s1, w)
+1, 2, 3, 4, 5, 15, 16, 24, 28, 34, 35, 17
+5000
+6 - comment
+assign a; stmt s2;
+Select a such that Follows*(a, s2)
+3, 13, 19, 26, 34, 39
+5000
+7 - comment
+assign a;
+Select a such that Follows*(a, 4)
+3
+5000
+8 - comment
+assign a;
+Select a such that Follows*(a, _)
+3, 13, 19, 26, 34, 39
+5000
+9 - comment
+assign a, a1;
+Select a such that Follows*(a, a1)
+3, 13, 39
+5000
+10 - comment
+assign a; read r;
+Select a such that Follows*(a, r)
+none
+5000
+11 - comment
+assign a; print pn;
+Select a such that Follows*(a, pn)
+3, 34, 19, 26
+5000
+12 - comment
+assign a; if ifs;
+Select a such that Follows*(a, ifs)
+3
+5000
+13 - comment
+assign a; while w;
+Select a such that Follows*(a, w)
+3, 34
+5000
+14 - comment
+read r; stmt s2;
+Select r such that Follows*(r, s2)
+1, 2, 25
+5000
+15 - comment
+read r;
+Select r such that Follows*(r, 4)
+1, 2
+5000
+16 - comment
+read r;
+Select r such that Follows*(r, _)
+1, 2, 25
+5000
+17 - comment
+read r; assign a;
+Select r such that Follows*(r, a)
+1, 2, 25
+5000
+18 - comment
+read r, r2;
+Select r such that Follows*(r, r2)
+1
+5000
+19 - comment
+read r; print pn;
+Select r such that Follows*(r, pn)
+1, 2, 25
+5000
+20 - comment
+read r; if ifs;
+Select r such that Follows*(r, ifs)
+1, 2
+5000
+21 - comment
+read r; while w;
+Select r such that Follows*(r, w)
+1, 2
+5000
+22 - comment
+print pn; stmt s2;
+Select pn such that Follows*(pn, s2)
+4, 7, 8, 10, 11, 15, 17, 22, 30, 35, 37, 38
+5000
+23 - comment
+print pn;
+Select pn such that Follows*(pn, 4)
+none
+5000
+24 - comment
+print pn;
+Select pn such that Follows*(pn, _)
+4, 7, 8, 10, 11, 15, 17, 22, 30, 35, 37, 38
+5000
+25 - comment
+print pn; assign a;
+Select pn such that Follows*(pn, a)
+4, 15, 17, 22, 37, 38
+5000
+26 - comment
+print pn; read r;
+Select pn such that Follows*(pn, r)
+7, 8
+5000
+27 - comment
+print pn, pn2;
+Select pn such that Follows*(pn, pn2)
+4, 7, 10, 11, 15, 30, 37
+5000
+28 - comment
+print pn; if ifs;
+Select pn such that Follows*(pn, ifs)
+4, 15
+5000
+29 - comment
+print pn; while w;
+Select pn such that Follows*(pn, w)
+4, 15, 17, 35
+5000
+30 - comment
+if ifs; stmt s2;
+Select ifs such that Follows*(ifs, s2)
+6, 16, 28
+5000
+31 - comment
+if ifs;
+Select ifs such that Follows*(ifs, 4)
+none
+5000
+32 - comment
+if ifs;
+Select ifs such that Follows*(ifs, _)
+6, 16, 28
+5000
+33 - comment
+if ifs; assign a;
+Select ifs such that Follows*(ifs, a)
+6, 16, 28
+5000
+34 - comment
+if ifs; read r;
+Select ifs such that Follows*(ifs, r)
+none
+5000
+35 - comment
+if ifs; print pn;
+Select ifs such that Follows*(ifs, pn)
+16, 28
+5000
+36 - comment
+if ifs, ifs2;
+Select ifs such that Follows*(ifs, ifs2)
+16
+5000
+37 - comment
+if ifs; while w;
+Select ifs such that Follows*(ifs, w)
+16, 28
+5000
+38 - comment
+while w; stmt s2;
+Select w such that Follows*(w, s2)
+5, 18, 24
+5000
+39 - comment
+while w;
+Select w such that Follows*(w, 4)
+none
+5000
+40 - comment
+while w;
+Select w such that Follows*(w, _)
+5, 18, 24
+5000
+41 - comment
+while w; assign a;
+Select w such that Follows*(w, a)
+5, 18, 24
+5000
+42 - comment
+while w; read r;
+Select w such that Follows*(w, r)
+none
+5000
+43 - comment
+while w; print pn;
+Select w such that Follows*(w, pn)
+5, 24
+5000
+44 - comment
+while w; if ifs;
+Select w such that Follows*(w, ifs)
+5, 24
+5000
+45 - comment
+while w, w2;
+Select w such that Follows*(w, w2)
+5, 24
+5000

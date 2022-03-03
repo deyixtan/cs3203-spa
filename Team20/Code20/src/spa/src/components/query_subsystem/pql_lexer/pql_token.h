@@ -17,6 +17,7 @@ enum class PqlTokenType {
   MINUS,
   MULTIPLY,
   DIVIDE,
+  EQUAL,
   DOUBLE_QUOTE,
   NUMBER,
 
@@ -35,6 +36,8 @@ enum class PqlTokenType {
   SELECT,
   SUCH,
   THAT,
+  WITH,
+  AND,
 
   FOLLOWS,
   FOLLOWS_T,
@@ -42,11 +45,20 @@ enum class PqlTokenType {
   PARENT_T,
   USES,
   MODIFIES,
+  NEXT,
+  NEXT_T,
+  CALLS,
+  CALLS_T,
+  AFFECTS,
+  AFFECTS_T,
   PATTERN,
 
   EXPR,
   IDENT_WITH_QUOTES,
   SUB_EXPRESSION,
+
+  ATTRIBUTE,
+  TUPLE
 };
 
 class PqlToken {
@@ -66,5 +78,8 @@ extern std::unordered_set<PqlTokenType> design_entities;
 extern std::unordered_set<PqlTokenType> expression_spec;
 extern std::unordered_set<PqlTokenType> ent_ref;
 extern std::unordered_set<PqlTokenType> stmt_ref;
+extern std::unordered_set<PqlTokenType> line_no_set;
+extern std::unordered_set<PqlTokenType> var_set;
+extern std::unordered_set<PqlTokenType> allowed_synonyms;
 
 #endif

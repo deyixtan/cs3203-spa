@@ -6,7 +6,10 @@
 #include "source_token.h"
 #include "exceptions/empty_statement_list.h"
 #include "exceptions/end_of_stream.h"
-#include "exceptions/invalid_parse.h"
+#include "exceptions/invalid_parse_condition.h"
+#include "exceptions/invalid_parse_factor.h"
+#include "exceptions/invalid_parse_relation.h"
+#include "exceptions/invalid_parse_statement.h"
 #include "exceptions/mismatch_token.h"
 #include "exceptions/unexpected_token.h"
 #include "ast/node_program.h"
@@ -33,6 +36,8 @@ class SourceParser {
   [[nodiscard]] std::shared_ptr<SourceToken> FetchToken(int tokens_ahead);
   [[nodiscard]] std::shared_ptr<SourceToken> FetchCurrentToken();
   std::shared_ptr<SourceToken> ProcessToken(TokenType type);
+  [[nodiscard]] bool IsConditionalOperand(int &cursor);
+  [[nodiscard]] bool IsConditionalExpression();
   [[nodiscard]] std::shared_ptr<ProcedureNode> ParseProcedure();
   [[nodiscard]] std::shared_ptr<StatementListNode> ParseStatementList();
   [[nodiscard]] std::shared_ptr<StatementNode> ParseStatement();
