@@ -62,6 +62,9 @@ bool PqlLexer::StartsWithAlphabet(const std::string &s) {
 }
 
 bool PqlLexer::IsDigits(const std::string &s) {
+  if(s.length() > 1 && s[0] == '0') {
+    return false;
+  }
   for (const auto c : s) {
     if (!isdigit(c)) {
       return false;
