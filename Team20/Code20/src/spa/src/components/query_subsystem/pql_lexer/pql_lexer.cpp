@@ -35,8 +35,6 @@ std::vector<PqlToken> PqlLexer::Lex() {
       }
     } else if (IsSubExpressionToken(token)) {
       tokens.push_back(PqlToken{PqlTokenType::SUB_EXPRESSION, RemoveSpace(token)});
-    } else if (token == "=") {
-      tokens.push_back(PqlToken{PqlTokenType::EQUAL, token});
     } else {
       throw "ERROR: Unrecognised token " + token + "\n";
     }
