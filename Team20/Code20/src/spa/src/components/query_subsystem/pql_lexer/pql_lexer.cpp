@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <vector>
 #include <stack>
+#include <sstream>
 
 // public
 PqlLexer::PqlLexer(std::string query) { this->query = query; }
@@ -15,12 +16,17 @@ std::vector<PqlToken> PqlLexer::Lex() {
     if (token.size() == 0) {
       continue;
     }
+    std::string getTuple = GetValidTuple(token);
     if (string_token_map.find(token) != string_token_map.end()) {
       tokens.push_back(PqlToken{string_token_map[token], token});
     } else if (IsIdent(token)) {
       tokens.push_back(PqlToken{PqlTokenType::SYNONYM, token});
     } else if (IsDigits(token)) {
       tokens.push_back(PqlToken{PqlTokenType::NUMBER, token});
+    } else if (IsValidAttribute(token)) {
+      tokens.push_back(PqlToken{PqlTokenType::ATTRIBUTE, token});
+    } else if (getTuple.length() > 0) {
+      tokens.push_back(PqlToken{PqlTokenType::TUPLE, getTuple});
     } else if (IsValidString(token)) {
       if (IsEntRef(token)) {
         tokens.push_back(PqlToken{PqlTokenType::IDENT_WITH_QUOTES, RemoveSpace(token)});
@@ -29,6 +35,8 @@ std::vector<PqlToken> PqlLexer::Lex() {
       }
     } else if (IsSubExpressionToken(token)) {
       tokens.push_back(PqlToken{PqlTokenType::SUB_EXPRESSION, RemoveSpace(token)});
+    } else if (token == "=") {
+      tokens.push_back(PqlToken{PqlTokenType::EQUAL, token});
     } else {
       throw "ERROR: Unrecognised token " + token + "\n";
     }
@@ -132,7 +140,7 @@ bool PqlLexer::IsValidSynonym(const std::string &s) {
   return true;
 }
 
-bool PqlLexer::isValidAttribute(const std::string &s) {
+bool PqlLexer::IsValidAttribute(const std::string &s) {
   std::unordered_set<std::string> attr_name = {"procName", "varName", "value", "stmt#"};
   size_t dot = s.find('.');
   std::string attr = s.substr(dot + 1, s.length() - dot - 1);
@@ -142,7 +150,7 @@ bool PqlLexer::isValidAttribute(const std::string &s) {
   return true;
 }
 
-std::string PqlLexer::getValidTuple(const std::string &s) {
+std::string PqlLexer::GetValidTuple(const std::string &s) {
   int len = s.length();
   if(!(s[0] == '<' && s[len - 1] == '>')) {
     return "";
@@ -195,7 +203,7 @@ bool PqlLexer::IsValidString(const std::string &s) {
   }
   // trim the double quote
   std::string expression = s.substr(1, s.size() - 2);
-  std::unordered_set<char> mathematical_signs = {'*', '/', '+', '-', '%'};
+  std::unordered_set<char> mathematical_signs = {'*', '/', '+', '-', '%', '='};
   std::vector<std::string> string_tokens = BreakString(expression);
   // checks for 1 and 3
   if(mathematical_signs.count(string_tokens[0][0])) {
@@ -276,90 +284,68 @@ bool PqlLexer::IsValidString(const std::string &s) {
   return true;
 }
 
-std::unordered_set<char> stickChar = {
-    ';', ',', '(', ')', '"', '+', '*', '/', '%', '-', '_'
-};
+std::vector<std::string> PqlLexer::Format(const std::string &s, char delimeter) {
+  std::vector<std::string> result;
+  std::stringstream ss(s);
+  std::string token;
 
-std::unordered_set<std::string> relationship = {
-    "Follows", "Parent"
-};
+  while (getline(ss, token, delimeter)) {
+    result.push_back(token);
+  }
 
-std::vector<std::string> PqlLexer::Split(std::string s) {
-  std::vector<std::string> raw_tokens;
-  std::string single_raw_token;
-  int double_quote_count = 0;
-  int underscore_count = 0;
-  for (int i = 0; i < s.size(); i++) {
-    const char c = s[i];
-    if (i >= 1 && i == s.size() - 1 && double_quote_count == 1){
-      single_raw_token.push_back(c);
-      raw_tokens.push_back(single_raw_token);
-      break;
-    }
-    if (isspace(c)) {
-      if (double_quote_count == 1) {
-        single_raw_token.push_back(c);
-      } else if (!single_raw_token.empty()) {
-          raw_tokens.push_back(single_raw_token);
-          single_raw_token.clear();
-      }
-    } else if (stickChar.count(c)) {
-      if (c == '*' && relationship.count(single_raw_token)) {
-        single_raw_token.push_back(c);
-      } else if (c == '_') {
-        if (underscore_count == 0) { // encountering first _
-          if (!single_raw_token.empty()) {
-            raw_tokens.push_back(single_raw_token);
-            single_raw_token.clear();
-          }
-          single_raw_token.push_back(c);
-          underscore_count += 1;
-        } else { // sub_expression complete
-          single_raw_token.push_back(c);
-          underscore_count = 0;
-          raw_tokens.push_back(single_raw_token);
-          single_raw_token.clear();
-        }
-      } else if (c == '"') {
-        if (double_quote_count == 0) {
-          if (i >= 1 && s[i - 1] != '_' && !single_raw_token.empty()) { // (_, "
-              underscore_count = 0;
-              raw_tokens.push_back(single_raw_token);
-              single_raw_token.clear();
-          } else if(i >= 1 && s[i - 1] != '_') {
-            underscore_count = 0;
-          }
-          single_raw_token.push_back(c);
-          double_quote_count += 1;
-        } else if (underscore_count == 1) { // _"x": string complete, sub-expression incomplete
-          single_raw_token.push_back(c);
-          double_quote_count = 0;
-        } else { // "x"
-          single_raw_token.push_back(c);
-          raw_tokens.push_back(single_raw_token);
-          single_raw_token.clear();
-          double_quote_count = 0;
-        }
-      } else if (double_quote_count == 1) {
-          single_raw_token.push_back(c);
-      } else {
-        underscore_count = 0;
-        double_quote_count = 0;
-        if (!single_raw_token.empty()) {
-          raw_tokens.push_back(single_raw_token);
-          single_raw_token.clear();
-        }
-        raw_tokens.push_back(std::string(1, c));
-      }
-    } else {
-      single_raw_token.push_back(c);
-    }
-  }
-  if (!single_raw_token.empty()) {
-    raw_tokens.push_back(single_raw_token);
-    single_raw_token.clear();
-  }
-  return raw_tokens;
+  return result;
 }
 
-
+std::vector<std::string> PqlLexer::Split(std::string s) {
+  std::vector<char> charArr;
+  const char delimiter = '^';
+  bool isString = false;
+  for (const char c : s) {
+    switch (c) {
+      // Check for string literals
+      case '"':
+        isString = !isString;
+        break;
+        // Replace spaces w delimiter
+      case ' ':
+      case '\n':
+      case '\t':
+        if (!isString) {
+          charArr.push_back(delimiter);
+          continue;
+        }
+        break;
+        // Characters that will not appear in string
+      case ',':
+      case ';':
+      case '=':
+        charArr.push_back(delimiter);
+        break;
+      case ')':
+      case '(':
+        if (!isString) {
+          charArr.push_back(delimiter);
+        }
+        break;
+      default:
+        break;
+    }
+    charArr.push_back(c);
+    switch (c) {
+      case ';':
+      case ',':
+      case '=':
+        charArr.push_back(delimiter);
+        break;
+      case '(':
+      case ')':
+        if (!isString) {
+          charArr.push_back(delimiter);
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  return Format(std::string(charArr.begin(), charArr.end()), delimiter);
+}
