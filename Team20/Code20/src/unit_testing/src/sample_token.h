@@ -59,5 +59,8 @@ extern PqlToken parent_t_token;
 extern PqlToken use_token;
 extern PqlToken modify_token;
 extern PqlToken pattern_token;
+extern PqlToken valid_tuple_token_1;
+extern PqlToken valid_tuple_token_2;
+extern PqlToken attribute_statement_token;
 
 #endif

@@ -19,10 +19,14 @@ class PqlLexer {
   bool IsSubExpressionToken(const std::string &token);
   bool IsIdent(const std::string &s);
   bool IsValidSynonym(const std::string &s);
+  bool IsValidAttribute(const std::string &s);
+  std::string GetValidTuple(const std::string &s);
   std::string RemoveSpace(const std::string &s);
+  std::string Trim(const std::string &s);
   std::vector<std::string> BreakString(const std::string &s);
   bool IsValidString(const std::string &s);
   std::vector<std::string> Split(std::string s);
+  std::vector<std::string> Format(const std::string &s, char delim);
 };
 
 #endif
