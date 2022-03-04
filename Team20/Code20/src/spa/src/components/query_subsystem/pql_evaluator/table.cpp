@@ -74,6 +74,7 @@ void Table::NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t
     attributes.emplace_back(other_table.attributes.at(i));
   }
 
+  Records new_records;
   for (auto record_it = records.begin(); record_it != records.end(); ++record_it) {
     for (auto other_record_it = other_table.records.begin(); other_record_it != other_table.records.end(); ++other_record_it) {
       bool record_match_on_common_attribute_indices = true;
@@ -85,14 +86,15 @@ void Table::NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t
       }
 
       if (record_match_on_common_attribute_indices) {
+        auto new_record = *record_it;
         for (auto other_attribute_index : other_attribute_indices) {
-          record_it->emplace_back(other_record_it->at(other_attribute_index));
+          new_record.emplace_back(other_record_it->at(other_attribute_index));
         }
-      } else {
-        records.erase(record_it);
+        new_records.emplace_back(new_record);
       }
     }
   }
+  records = std::move(new_records);
 }
 void Table::CrossJoin(Table &other_table) {
   attributes.insert(attributes.end(), other_table.attributes.begin(), other_table.attributes.end());
