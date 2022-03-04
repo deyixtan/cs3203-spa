@@ -174,6 +174,9 @@ std::string PqlLexer::GetValidTuple(const std::string &s) {
       res += Trim(temp);
       return res + '>';
     }
+    else {
+      return "";
+    }
   }
   return "";
 }
@@ -285,15 +288,12 @@ bool PqlLexer::IsValidString(const std::string &s) {
   return true;
 }
 
-#include <iostream>
 std::vector<std::string> PqlLexer::Format(const std::string &s, char delimeter) {
   std::vector<std::string> result;
   std::stringstream ss(s);
   std::string token;
 
   while (getline(ss, token, delimeter)) {
-    std::cout << token;
-    std::cout << '^';
     result.push_back(token);
   }
 
