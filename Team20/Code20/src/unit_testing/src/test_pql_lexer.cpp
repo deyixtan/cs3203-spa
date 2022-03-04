@@ -535,8 +535,8 @@ TEST_CASE("Test invalid tuple") {
 }
 
 TEST_CASE("Test invalid tuple 2") {
-  PqlLexer pql_lexer = PqlLexer("Select <s, t, >");
-  std::string expected_wrong_token = "<s, t, >";
+  PqlLexer pql_lexer = PqlLexer("Select <a, b, c, d, e,       >");
+  std::string expected_wrong_token = "<a, b, c, d, e,       >";
   REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token +  "\n");
 }
 
