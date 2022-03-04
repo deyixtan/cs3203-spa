@@ -65,8 +65,8 @@ void QueryValidator::IsValidRelRefArg(std::vector<PqlToken> rel_ref_tokens, PqlT
   }
 }
 
-void QueryValidator::IsValidDeclaration(std::vector<PqlToken> declaration_query) {
-  if (declaration_query.size() < 3) {
+void QueryValidator::ValidateDeclaration(std::vector<PqlToken> declaration_query) {
+  if (declaration_query.size() < MINIMUM_DECLARATION_SIZE) {
     throw MISSING_TOKEN_IN_DECLARATION;
   }
   PqlToken design_entities_token = declaration_query[0];
@@ -134,62 +134,214 @@ void QueryValidator::IsValidPatternClause(std::vector<PqlToken> pattern_clause) 
   }
 }
 
-void QueryValidator::IsValidSelectClause(std::vector<PqlToken> select_clause) {
-  if (select_clause.size() < 2) {
+void QueryValidator::ValidateResultClause(int result_clause_starting_index) {
+  PqlToken result = tokens_[result_clause_starting_index];
+  if (IsValidSynonym(result)) {
+    tokens_[result_clause_starting_index].type = PqlTokenType::SYNONYM;
+  } else if (!result_cl_excluding_synonym.count(result.type)) {
+    throw INVALID_SELECT_RESULT;
+  }
+}
+
+void QueryValidator::ValidateRelRefClause(int rel_ref_clause_starting_index) {
+  PqlToken rel_ref_token = tokens_[rel_ref_clause_starting_index];
+  if (!IsValidRelRefToken(rel_ref_token)) {
+    throw INVALID_REL_REF_TOKEN;
+  }
+  if (tokens_[rel_ref_clause_starting_index + RELATIONSHIP_CLAUSE_OPEN_PARENTHESIS_POSITION].type !=
+      PqlTokenType::OPEN_PARENTHESIS ||
+      tokens_[rel_ref_clause_starting_index + RELATIONSHIP_CLAUSE_COMMA_POSITION].type != PqlTokenType::COMMA ||
+      tokens_[rel_ref_clause_starting_index + RELATIONSHIP_CLAUSE_CLOSED_PARENTHESIS_POSITION].type !=
+      PqlTokenType::CLOSED_PARENTHESIS) {
+    throw INVALID_REL_REF_FORMAT;
+  }
+  // check first_argument
+  int first_arg_position = rel_ref_clause_starting_index + RELATIONSHIP_CLAUSE_FIRST_ARG_POSITION;
+  ValidateRelRefFirstArg(first_arg_position);
+  // check second_argument
+  int second_arg_position = rel_ref_clause_starting_index + RELATIONSHIP_CLAUSE_SECOND_ARG_POSITION;
+  ValidateRelRefSecondArg(second_arg_position);
+}
+
+void QueryValidator::ValidateRelRefFirstArg(int first_arg_position) {
+  PqlToken rel_ref_token = tokens_[first_arg_position - RELATIONSHIP_CLAUSE_FIRST_ARG_POSITION];
+
+  if (rel_ref_token.type == PqlTokenType::USES || rel_ref_token.type == PqlTokenType::MODIFIES) {
+    if (allowed_synonyms.count(tokens_[first_arg_position].type)) {
+      tokens_[first_arg_position].type = PqlTokenType::SYNONYM;
+    } else if (tokens_[first_arg_position].type == PqlTokenType::UNDERSCORE ||
+        (!stmt_ref.count(tokens_[first_arg_position].type) &&
+            !ent_ref.count(tokens_[first_arg_position].type))) {
+      throw INVALID_REL_REF_ARGUMENTS;
+    }
+  } else if (rel_ref_token.type == PqlTokenType::FOLLOWS ||
+      rel_ref_token.type == PqlTokenType::FOLLOWS_T ||
+      rel_ref_token.type == PqlTokenType::PARENT ||
+      rel_ref_token.type == PqlTokenType::PARENT_T ||
+      rel_ref_token.type == PqlTokenType::NEXT ||
+      rel_ref_token.type == PqlTokenType::NEXT_T ||
+      rel_ref_token.type == PqlTokenType::AFFECTS ||
+      rel_ref_token.type == PqlTokenType::AFFECTS_T) {
+    if (allowed_synonyms.count(tokens_[first_arg_position].type)) {
+      tokens_[first_arg_position].type = PqlTokenType::SYNONYM;
+    } else if (!stmt_ref.count(tokens_[first_arg_position].type)) {
+      throw INVALID_REL_REF_ARGUMENTS;
+    }
+  } else if (rel_ref_token.type == PqlTokenType::CALLS ||
+      rel_ref_token.type == PqlTokenType::CALLS_T) {
+    if (allowed_synonyms.count(tokens_[first_arg_position].type)) {
+      tokens_[first_arg_position].type = PqlTokenType::SYNONYM;
+    } else if (!ent_ref.count(tokens_[first_arg_position].type)) {
+      throw INVALID_REL_REF_ARGUMENTS;
+    }
+  }
+}
+
+void QueryValidator::ValidateRelRefSecondArg(int second_arg_position) {
+  PqlToken rel_ref_token = tokens_[second_arg_position - RELATIONSHIP_CLAUSE_SECOND_ARG_POSITION];
+
+  if (rel_ref_token.type == PqlTokenType::USES ||
+      rel_ref_token.type == PqlTokenType::MODIFIES ||
+      rel_ref_token.type == PqlTokenType::CALLS ||
+      rel_ref_token.type == PqlTokenType::CALLS_T) {
+    if (allowed_synonyms.count(tokens_[second_arg_position].type)) {
+      tokens_[second_arg_position].type = PqlTokenType::SYNONYM;
+    } else if (!ent_ref.count(tokens_[second_arg_position].type)) {
+      throw INVALID_REL_REF_ARGUMENTS;
+    }
+  } else {
+    if (allowed_synonyms.count(tokens_[second_arg_position].type)) {
+      tokens_[second_arg_position].type = PqlTokenType::SYNONYM;
+    } else if (!stmt_ref.count(tokens_[second_arg_position].type)) {
+      throw INVALID_REL_REF_ARGUMENTS;
+    }
+  }
+}
+
+int QueryValidator::ValidateSuchThatClause(int such_that_clause_starting_index) {
+  if (such_that_clause_starting_index + SUCH_THAT_WORD_COUNT + RELATIONSHIP_CLAUSE_SIZE > tokens_.size() ||
+      tokens_[such_that_clause_starting_index + 1].type != PqlTokenType::THAT) {
+    throw INVALID_REL_REF_FORMAT;
+  }
+
+  int current_index = such_that_clause_starting_index;
+  while (current_index < tokens_.size()) {
+    if (current_index == such_that_clause_starting_index) {
+      int rel_ref_clause_starting_index = current_index + SUCH_THAT_WORD_COUNT;
+      ValidateRelRefClause(rel_ref_clause_starting_index);
+      current_index += SUCH_THAT_WORD_COUNT + RELATIONSHIP_CLAUSE_SIZE;
+    } else if (tokens_[current_index].type == PqlTokenType::AND) {
+      // and clause
+      int rel_ref_clause_starting_index = current_index + 1;
+      ValidateRelRefClause(rel_ref_clause_starting_index);
+      current_index += 1 + RELATIONSHIP_CLAUSE_SIZE;
+    } else {
+      break;
+    }
+  }
+  return current_index;
+}
+
+int QueryValidator::ValidatePatternArg(int pattern_arg_index) {
+  if (tokens_[pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_SHORT].type
+      == PqlTokenType::CLOSED_PARENTHESIS) {
+    // while and assign pattern
+    // TODO
+    return pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_SHORT + 1;
+
+  } else if (tokens_[pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_LONG].type
+      == PqlTokenType::CLOSED_PARENTHESIS) {
+    // if pattern
+    // TODO
+    return pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_LONG + 1;
+  } else {
+    throw INVALID_PATTERN_CLAUSE_FORMAT;
+  }
+}
+
+int QueryValidator::ValidatePatternClause(int pattern_clause_starting_index) {
+  if (pattern_clause_starting_index + 1 + PATTERN_CLAUSE_SIZE_SHORT > tokens_.size()) {
+    throw INVALID_PATTERN_CLAUSE_FORMAT;
+  }
+  if (tokens_[pattern_clause_starting_index].type != PqlTokenType::PATTERN) {
+    throw INVALID_PATTERN_KEYWORD;
+  }
+  int current_index = pattern_clause_starting_index;
+  while (current_index < tokens_.size()) {
+    if (!allowed_synonyms.count(tokens_[current_index + 1].type)) {
+      throw INVALID_PATTERN_SYNONYM;
+    }
+    if (current_index == pattern_clause_starting_index) {
+      int pattern_arg_index = current_index + PATTERN_CLAUSE_ARG_POSITION;
+      current_index = ValidatePatternArg(pattern_arg_index);
+    } else if (tokens_[current_index].type == PqlTokenType::AND) {
+      // and clause
+      int pattern_arg_index = current_index + PATTERN_CLAUSE_ARG_POSITION;
+      current_index = ValidatePatternArg(pattern_arg_index);
+    } else {
+      break;
+    }
+  }
+  return current_index;
+}
+int QueryValidator::ValidateWithClause(int with_clause_starting_index) {
+  // TODO
+}
+
+void QueryValidator::ValidateSelectClause(int select_clause_starting_index) {
+  int select_clause_size = tokens_.size() - select_clause_starting_index;
+  if (select_clause_size < MINIMUM_SELECT_CLAUSE_SIZE) {
     throw INVALID_SELECT_CLAUSE_FORMAT;
   }
-  PqlToken select_token = select_clause[0];
+
+  PqlToken select_token = tokens_[select_clause_starting_index];
   if (select_token.type != PqlTokenType::SELECT) {
     throw INVALID_SELECT_KEYWORD;
   }
-  // Select v;
 
-  PqlToken synonym_token = select_clause[1];
-  if (!IsValidSynonym(synonym_token)) {
-    throw INVALID_SELECT_SYNONYM;
-  } else {
-    select_clause[1].type = PqlTokenType::SYNONYM;
-  }
+  // Result clause;
+  int result_clause_starting_index = select_clause_starting_index + 1;
+  ValidateResultClause(result_clause_starting_index);
 
-  if (select_clause.size() > 2) { // Select s such that Follows (s, s1)
+  // (suchthat-cl | pattern-cl | with-cl)*
+  int current_checking_index = select_clause_starting_index + MINIMUM_SELECT_CLAUSE_SIZE;
 
-    PqlToken third_token = select_clause[2];
-    if (third_token.type == PqlTokenType::SUCH) {  // such that
-      PqlToken that_token = select_clause[3];
-      if (that_token.type != PqlTokenType::THAT) {
+  while (current_checking_index < tokens_.size()) {
+    PqlToken first_clause_token = tokens_[current_checking_index];
+    switch (first_clause_token.type) {
+      case PqlTokenType::SUCH: {
+        current_checking_index = ValidateSuchThatClause(current_checking_index);
+        break;
+      }
+      case PqlTokenType::PATTERN: {
+        current_checking_index = ValidatePatternClause(current_checking_index);
+        break;
+      }
+      case PqlTokenType::WITH: {
+        current_checking_index = ValidateWithClause(current_checking_index);
+        break;
+      }
+      default: {
         throw INVALID_SELECT_CLAUSE_FORMAT;
       }
-      std::vector<PqlToken> rel_ref_tokens;
-      for (int index = 4; index < 10; index++) {
-        rel_ref_tokens.push_back(select_clause[index]);
-      }
-      if (IsValidRelRefClause(rel_ref_tokens)) {
-        IsValidRelRefArg(rel_ref_tokens, rel_ref_tokens[0].type);
-      } else {
-        throw INVALID_REL_REF_FORMAT;
-      }
-    } else if (third_token.type == PqlTokenType::PATTERN) {
-      std::vector<PqlToken> pattern_tokens;
-      for (int index = 2; index < select_clause.size(); index++) {
-        pattern_tokens.push_back(select_clause[index]);
-      }
-      IsValidPatternClause(pattern_tokens);
-    } else {
-      throw INVALID_SELECT_CLAUSE_FORMAT;
     }
-  }
-
-  if (select_clause.size() > 10) { // Select s such that Follows (s, s1) pattern a (a, "x")
-    std::vector<PqlToken> pattern_tokens;
-    for (int index = 10; index < select_clause.size(); index++) {
-      pattern_tokens.push_back(select_clause[index]);
-    }
-    IsValidPatternClause(pattern_tokens);
   }
 }
 
 
 std::vector<PqlToken> QueryValidator::CheckValidation() {
+  // populate token table
+  // assign a1, a2; variable v1; Select a1
+  /*
+   ____________________
+   | assign a1 , a2 ; |
+   ____________________
+   | variable v1 ;    |
+   ____________________
+   | Select a1;       |
+   ____________________
+   */
+
   std::vector<std::vector<PqlToken>> token_table;
   std::vector<PqlToken> single_query;
   for (PqlToken single_token : tokens_) {
@@ -207,24 +359,26 @@ std::vector<PqlToken> QueryValidator::CheckValidation() {
 
   int last_declaration_index;
   if (contain_select_clause) {
-    if (token_table.size() < 2) {
+    if (token_table.size() < MINIMUM_TOKEN_TABLE_SIZE_FOR_SELECT_CLAUSE) {
       throw MISSING_TOKEN_IN_DECLARATION;
     }
-    last_declaration_index = token_table.size() - 2;
+    last_declaration_index = token_table.size() - MINIMUM_TOKEN_TABLE_SIZE_FOR_SELECT_CLAUSE;
   } else {
     last_declaration_index = token_table.size() - 1;
   }
 
-  // check declaration query (excluding the last vector in the table)
+  // validate declaration query (excluding the last vector in the table)
   for (int i = 0; i < last_declaration_index + 1; i++) {
     std::vector<PqlToken> declaration_query = token_table[i];
-    IsValidDeclaration(declaration_query);
+    ValidateDeclaration(declaration_query);
   }
 
+  // validate select clause if query has select clause
   if (contain_select_clause) {
-    std::vector<PqlToken> select_clause = token_table[token_table.size() - 1];
-    IsValidSelectClause(select_clause);
+    int select_clause_length = token_table[token_table.size() - 1].size();
+    ValidateSelectClause(tokens_.size() - select_clause_length);
   }
+  // TODO: delete this method
   ConvertTokenType(tokens_);
   return tokens_;
 }

@@ -8,7 +8,7 @@ std::string INVALID_DECLARATION_SYNONYM = "ERROR: Invalid Declaration synonym! \
 
 // Select Clause
 std::string INVALID_SELECT_KEYWORD = "ERROR: Invalid Select keyword! \n";
-std::string INVALID_SELECT_SYNONYM = "ERROR: Invalid synonym to be selected! \n";
+std::string INVALID_SELECT_RESULT = "ERROR: Invalid result clause to be selected! \n";
 std::string INVALID_SELECT_CLAUSE_FORMAT = "ERROR: Invalid Select Clause format! \n";
 
 // Rel Ref

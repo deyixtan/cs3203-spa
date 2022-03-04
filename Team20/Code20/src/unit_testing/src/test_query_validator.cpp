@@ -72,7 +72,7 @@ TEST_CASE("Test invalid select synonym") {
   std::string query = "procedure p; Select 1";
   PqlLexer pql_lexer = PqlLexer(query);
   QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
-  std::string error = INVALID_SELECT_SYNONYM;
+  std::string error = INVALID_SELECT_RESULT;
 
   REQUIRE_THROWS_WITH(query_validator.CheckValidation(), error);
 }
@@ -81,7 +81,7 @@ TEST_CASE("Test invalid select synonym 2") {
   std::string query = "procedure p; Select _\"x\"_";
   PqlLexer pql_lexer = PqlLexer(query);
   QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
-  std::string error = INVALID_SELECT_SYNONYM;
+  std::string error = INVALID_SELECT_RESULT;
 
   REQUIRE_THROWS_WITH(query_validator.CheckValidation(), error);
 }
