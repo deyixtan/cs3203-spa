@@ -285,12 +285,15 @@ bool PqlLexer::IsValidString(const std::string &s) {
   return true;
 }
 
+#include <iostream>
 std::vector<std::string> PqlLexer::Format(const std::string &s, char delimeter) {
   std::vector<std::string> result;
   std::stringstream ss(s);
   std::string token;
 
   while (getline(ss, token, delimeter)) {
+    std::cout << token;
+    std::cout << '^';
     result.push_back(token);
   }
 
@@ -301,9 +304,16 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
   std::vector<char> charArr;
   const char delimiter = '^';
   bool isString = false;
+  bool isTuple = false;
   for (const char c : s) {
     switch (c) {
       // Check for string literals
+      case '<':
+        isTuple = !isTuple;
+        break;
+      case '>':
+        isTuple = !isTuple;
+        break;
       case '"':
         isString = !isString;
         break;
@@ -311,16 +321,18 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
       case ' ':
       case '\n':
       case '\t':
-        if (!isString) {
+        if (!isString && !isTuple) {
           charArr.push_back(delimiter);
           continue;
         }
         break;
         // Characters that will not appear in string
-      case ',':
-      case ';':
       case '=':
-        charArr.push_back(delimiter);
+      case ';':
+      case ',':
+        if(!isTuple) {
+          charArr.push_back(delimiter);
+        }
         break;
       case ')':
       case '(':
@@ -334,9 +346,11 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
     charArr.push_back(c);
     switch (c) {
       case ';':
-      case ',':
       case '=':
-        charArr.push_back(delimiter);
+      case ',':
+        if(!isTuple) {
+          charArr.push_back(delimiter);
+        }
         break;
       case '(':
       case ')':

@@ -57,3 +57,6 @@ PqlToken parent_t_token = PqlToken(PqlTokenType::PARENT_T, "Parent*");
 PqlToken use_token = PqlToken(PqlTokenType::USES, "Uses");
 PqlToken modify_token = PqlToken(PqlTokenType::MODIFIES, "Modifies");
 PqlToken pattern_token = PqlToken(PqlTokenType::PATTERN, "pattern");
+PqlToken valid_tuple_token_1 = PqlToken(PqlTokenType::TUPLE, "<s,t>");
+PqlToken valid_tuple_token_2 = PqlToken(PqlTokenType::TUPLE, "<s,t,v>");
+PqlToken attribute_statement_token = PqlToken(PqlTokenType::ATTRIBUTE, "s.stmt#");
