@@ -121,7 +121,7 @@ TEST_CASE("Test merge two non-empty tables with one common attribute") {
   REQUIRE(single_attribute_table.records.size()==5);
 }
 
-TEST_CASE("Test merge two tables with two common attributes") {
+TEST_CASE("Test merge two non-empty tables with two common attributes") {
   std::string test_first_synonym = "s";
   std::string test_second_synonym = "v";
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> test_pair_constraints{
@@ -147,4 +147,27 @@ TEST_CASE("Test merge two tables with two common attributes") {
 //  std::cout << two_attribute_table;
   REQUIRE(two_attribute_table.attributes.size()==2);
   REQUIRE(two_attribute_table.records.size()==4);
+}
+
+TEST_CASE("Merge two non-empty tables with no common attributes") {
+  std::string test_first_synonym = "s";
+  std::string test_second_synonym = "v";
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> test_pair_constraints{
+      {"1", "a"},
+      {"2", "b"},
+      {"3", "c"},
+  };
+  std::string test_first_synonym_alt = "s1";
+  std::string test_second_synonym_alt = "v1";
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> test_pair_constraints_alt{
+      {"4", "d"},
+      {"5", "e"},
+      {"6", "f"},
+  };
+  pql::Table test_table{test_first_synonym, test_second_synonym, test_pair_constraints};
+  pql::Table test_table_alt{test_first_synonym_alt, test_second_synonym_alt, test_pair_constraints_alt};
+  test_table.Merge(test_table_alt);
+//  std::cout << test_table;
+  REQUIRE(test_table.attributes.size()==4);
+  REQUIRE(test_table.records.size()==9);
 }
