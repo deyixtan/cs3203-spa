@@ -1,6 +1,7 @@
 #ifndef TABLE_H_
 #define TABLE_H_
 
+#include "../../pkb/hash.h"
 #include <iostream>
 #include <utility>
 #include <string>
@@ -26,9 +27,10 @@ class Table {
   Attributes attributes;
   Records records;
 
+  Table();
   Table(const std::string& synonym, std::unordered_set<std::string>& single_constraint);
-  Table(std::string& first_synonym, std::string& second_synonym,
-        std::unordered_set<std::pair<std::string, std::string>>& pair_constraints);
+  Table(const std::string& first_synonym, const std::string& second_synonym,
+        std::unordered_set<std::pair<std::string, std::string>, pair_hash>& pair_constraints);
   [[nodiscard]] bool IsEmpty() const;
   void Merge(Table& other_table);
   friend std::ostream& operator<<(std::ostream& os, const Table& table);

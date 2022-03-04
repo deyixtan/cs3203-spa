@@ -4,15 +4,18 @@
 
 namespace pql {
 
-Table::Table(const std::string &synonym, std::unordered_set<std::string> &single_constraints) {
+Table::Table(): attributes({}), records({}) {}
+
+Table::Table(const std::string& synonym, std::unordered_set<std::string>& single_constraints) {
   attributes.emplace_back(synonym);
   for (const auto& single_constraint : single_constraints) {
     records.emplace_back(std::initializer_list<std::string>{single_constraint});
   }
 }
-Table::Table(std::string &first_synonym,
-             std::string &second_synonym,
-             std::unordered_set<std::pair<std::string, std::string>> &pair_constraints) {
+
+Table::Table(const std::string &first_synonym,
+             const std::string &second_synonym,
+             std::unordered_set<std::pair<std::string, std::string>, pair_hash> &pair_constraints) {
   attributes.emplace_back(first_synonym);
   attributes.emplace_back(second_synonym);
   for (const auto& pair_constraint : pair_constraints) {
