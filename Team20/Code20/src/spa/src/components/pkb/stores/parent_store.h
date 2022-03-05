@@ -36,9 +36,9 @@ class ParentStore {
 
   void Init(int num_stmts);
 
-  void AddParentStmt(std::string parent, std::string child);
+  void AddParent(std::string parent, std::string child);
 
-  void AddParentStarStmt(std::string stmt, std::vector<std::string> visited);
+  void AddParentStar(std::string stmt, std::vector<std::string> visited);
 
   std::unordered_set<std::string> GetAllParents();
 

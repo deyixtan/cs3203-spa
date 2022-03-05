@@ -26,7 +26,7 @@ void ParentStore::Init(int num_stmts) {
   }
 }
 
-void ParentStore::AddParentStmt(std::string parent, std::string child) {
+void ParentStore::AddParent(std::string parent, std::string child) {
   if (rs_map.find(parent) == rs_map.end()) {
     rs_map.insert({parent, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
   }
@@ -42,7 +42,7 @@ void ParentStore::AddParentStmt(std::string parent, std::string child) {
   rs_map.at(child).parent = parent;
 }
 
-void ParentStore::AddParentStarStmt(std::string stmt, std::vector<std::string> visited) {
+void ParentStore::AddParentStar(std::string stmt, std::vector<std::string> visited) {
   for (std::string s : visited) {
     if (rs_map.find(stmt) == rs_map.end()) {
       rs_map.insert({stmt, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()}});

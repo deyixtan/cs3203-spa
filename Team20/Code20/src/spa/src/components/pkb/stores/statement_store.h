@@ -7,10 +7,10 @@ class StatementStore : public Store {
  private:
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> stmt_var_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
-  std::unordered_map<std::string, std::unordered_set<std::string> > stmt_var_map;
-  std::unordered_map<std::string, std::unordered_set<std::string> > var_stmt_map;
-  std::unordered_map<std::string, std::unordered_set<std::string> > proc_var_map;
-  std::unordered_map<std::string, std::unordered_set<std::string> > var_proc_map;
+  std::unordered_map<std::string, std::unordered_set<std::string>> stmt_var_map;
+  std::unordered_map<std::string, std::unordered_set<std::string>> var_stmt_map;
+  std::unordered_map<std::string, std::unordered_set<std::string>> proc_var_map;
+  std::unordered_map<std::string, std::unordered_set<std::string>> var_proc_map;
   std::unordered_set<std::string> all_stmt;
   std::unordered_set<std::string> all_proc;
 
