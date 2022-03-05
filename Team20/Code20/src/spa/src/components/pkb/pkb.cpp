@@ -3,32 +3,7 @@
 #include "pkb.h"
 #include <string>
 
-PKB *PKB::instance = NULL;
-
-PKB::PKB() {}
-
-PKB *PKB::GetInstance() {
-  if (!instance) {
-    instance = new PKB;
-  }
-  return instance;
-}
-
-void PKB::Clear() {
-  // purge all data
-  stmt_list.clear();
-  while_stmt_list.clear();
-  read_stmt_list.clear();
-  print_stmt_list.clear();
-  call_stmt_list.clear();
-  if_stmt_list.clear();
-  assign_stmt_list.clear();
-  proc_list.clear();
-  var_list.clear();
-  const_list.clear();
-  pattern_map.clear();
-
-  // re-init stores
+PKB::PKB() {
   follow_store = FollowStore();
   parent_store = ParentStore();
   usage_store = UsageStore();

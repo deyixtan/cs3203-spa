@@ -7,10 +7,8 @@
 #include "components/query_subsystem/pql_parser/query_validator.h"
 #include "components/query_subsystem/pql_evaluator/query_evaluator.h"
 
-using namespace source;
-
-void set_up_pkb() {
-  PKB *pkb = PKB::GetInstance();
+PKB *set_up_pkb() {
+  PKB *pkb = new PKB();
   pkb->AddStmt("main", PROC);
   pkb->AddStmt("foo", PROC);
   pkb->AddStmt("bar", PROC);
@@ -128,13 +126,13 @@ void set_up_pkb() {
   pkb->AddFollowStarStmt("1", "3");
   pkb->AddFollowStarStmt("1", "4");
   pkb->AddFollowStarStmt("1", "5");
-  pkb->AddFollowStarStmt("2", "3"),
-  pkb->AddFollowStarStmt("2", "4"),
-  pkb->AddFollowStarStmt("2", "5"),
-  pkb->AddFollowStarStmt("3", "4"),
-  pkb->AddFollowStarStmt("3", "5"),
-  pkb->AddFollowStarStmt("4", "5"),
-  pkb->AddFollowStarStmt("8", "9"),
+  pkb->AddFollowStarStmt("2", "3");
+  pkb->AddFollowStarStmt("2", "4");
+  pkb->AddFollowStarStmt("2", "5");
+  pkb->AddFollowStarStmt("3", "4");
+  pkb->AddFollowStarStmt("3", "5");
+  pkb->AddFollowStarStmt("4", "5");
+  pkb->AddFollowStarStmt("8", "9");
   pkb->AddFollowStarStmt("10", "11");
   pkb->AddFollowStarStmt("13", "14");
 
@@ -149,11 +147,12 @@ void set_up_pkb() {
   pkb->AddPattern("8", "dragon", "((dog*rabbit)/mouse)");
   pkb->AddPattern("10", "snake", "(dog+rabbit)");
   pkb->AddPattern("15", "monkey", "(tiger+dog)");
+
+  return pkb;
 }
 
 TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
   pql_evaluator::QueryEvaluator *evaluator = new pql_evaluator::QueryEvaluator(pkb);
 
   SECTION("Test if-statement count and their statement number") {

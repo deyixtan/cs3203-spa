@@ -32,8 +32,8 @@
 	}
 */
 
-void set_up_pkb() {
-  PKB *pkb = PKB::GetInstance();
+PKB *set_up_pkb() {
+  PKB *pkb = new PKB();
   pkb->AddStmt("main", PROC);
   pkb->AddStmt("foo", PROC);
   pkb->AddStmt("bar", PROC);
@@ -151,13 +151,13 @@ void set_up_pkb() {
   pkb->AddFollowStarStmt("1", "3");
   pkb->AddFollowStarStmt("1", "4");
   pkb->AddFollowStarStmt("1", "5");
-  pkb->AddFollowStarStmt("2", "3"),
-  pkb->AddFollowStarStmt("2", "4"),
-  pkb->AddFollowStarStmt("2", "5"),
-  pkb->AddFollowStarStmt("3", "4"),
-  pkb->AddFollowStarStmt("3", "5"),
-  pkb->AddFollowStarStmt("4", "5"),
-  pkb->AddFollowStarStmt("8", "9"),
+  pkb->AddFollowStarStmt("2", "3");
+  pkb->AddFollowStarStmt("2", "4");
+  pkb->AddFollowStarStmt("2", "5");
+  pkb->AddFollowStarStmt("3", "4");
+  pkb->AddFollowStarStmt("3", "5");
+  pkb->AddFollowStarStmt("4", "5");
+  pkb->AddFollowStarStmt("8", "9");
   pkb->AddFollowStarStmt("8", "9");
   pkb->AddFollowStarStmt("10", "11");
   pkb->AddFollowStarStmt("13", "14");
@@ -173,18 +173,20 @@ void set_up_pkb() {
   pkb->AddPattern("8", "dragon", "((dog*rabbit)/mouse)");
   pkb->AddPattern("10", "snake", "(dog+rabbit)");
   pkb->AddPattern("15", "monkey", "(tiger+dog)");
+
+  return pkb;
 }
 
 TEST_CASE("PKB instance") {
-  PKB *pkb1 = PKB::GetInstance();
-  PKB *pkb2 = PKB::GetInstance();
+  PKB *pkb1 = new PKB();
+  PKB *pkb2 = new PKB();
 
-  REQUIRE(pkb1 == pkb2);
+  REQUIRE(pkb1 != pkb2);
 }
 
 TEST_CASE("proc p; select p") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmt(PROC);
   auto expected = proc_list;
 
@@ -192,8 +194,8 @@ TEST_CASE("proc p; select p") {
 }
 
 TEST_CASE("stmt s; select s") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmt(STMT);
   auto expected = stmt_list;
 
@@ -201,8 +203,8 @@ TEST_CASE("stmt s; select s") {
 }
 
 TEST_CASE("variable v; select v") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmt(VARS);
   auto expected = var_list;
 
@@ -210,8 +212,8 @@ TEST_CASE("variable v; select v") {
 }
 
 TEST_CASE("assign a; select a") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmt(ASSIGN);
   auto expected = assign_list;
 
@@ -219,8 +221,8 @@ TEST_CASE("assign a; select a") {
 }
 
 TEST_CASE("if ifs; select ifs") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmt(IF);
   auto expected = if_list;
 
@@ -228,8 +230,8 @@ TEST_CASE("if ifs; select ifs") {
 }
 
 TEST_CASE("while w; select w") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmt(WHILE);
   auto expected = while_list;
 
@@ -237,8 +239,8 @@ TEST_CASE("while w; select w") {
 }
 
 TEST_CASE("const c; select c") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmt(CONSTS);
   auto expected = const_list;
 
@@ -246,8 +248,8 @@ TEST_CASE("const c; select c") {
 }
 
 TEST_CASE("read r; select r") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmt(READ);
   auto expected = read_list;
 
@@ -255,8 +257,8 @@ TEST_CASE("read r; select r") {
 }
 
 TEST_CASE("print p; select p") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmt(PRINT);
   auto expected = print_list;
 
@@ -266,8 +268,8 @@ TEST_CASE("print p; select p") {
 /* USAGE STORE */
 
 TEST_CASE("Get var used by stmt (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetVarUsedByStmt("7");
   auto expected = uses_stmt_to_var.at("7");
 
@@ -275,8 +277,8 @@ TEST_CASE("Get var used by stmt (correct)") {
 }
 
 TEST_CASE("Get var used by stmt (invalid)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetVarUsedByStmt("20");
   std::unordered_set<std::string> expected = {};
 
@@ -284,8 +286,8 @@ TEST_CASE("Get var used by stmt (invalid)") {
 }
 
 TEST_CASE("Get stmt used by var (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmtUsedByVar("rabbit");
   auto expected = uses_var_to_stmt.at("rabbit");
 
@@ -293,8 +295,8 @@ TEST_CASE("Get stmt used by var (correct)") {
 }
 
 TEST_CASE("Get stmt used by var (invalid)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmtUsedByVar("horse");
   std::unordered_set<std::string> expected = {};
 
@@ -302,8 +304,8 @@ TEST_CASE("Get stmt used by var (invalid)") {
 }
 
 TEST_CASE("Get var used by proc (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetVarUsedByProc("main");
   auto expected = uses_proc_to_var.at("main");
 
@@ -311,8 +313,8 @@ TEST_CASE("Get var used by proc (correct)") {
 }
 
 TEST_CASE("Get var used by proc (invalid)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetVarUsedByProc("foobar");
   std::unordered_set<std::string> expected = {};
 
@@ -320,8 +322,8 @@ TEST_CASE("Get var used by proc (invalid)") {
 }
 
 TEST_CASE("Get proc used by var (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetProcUsedByVar("dog");
   auto expected = uses_var_to_proc.at("dog");
 
@@ -329,8 +331,8 @@ TEST_CASE("Get proc used by var (correct)") {
 }
 
 TEST_CASE("Get proc used by var (invalid)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetProcUsedByVar("horse");
   std::unordered_set<std::string> expected = {};
 
@@ -338,8 +340,8 @@ TEST_CASE("Get proc used by var (invalid)") {
 }
 
 TEST_CASE("Get all usage proc-var pairs") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetAllUsageProcVar();
   auto expected = uses_proc_var_pairs;
 
@@ -347,8 +349,8 @@ TEST_CASE("Get all usage proc-var pairs") {
 }
 
 TEST_CASE("Get all usage stmt-var pairs") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetAllUsageStmtVar();
   auto expected = uses_stmt_var_pairs;
 
@@ -356,8 +358,8 @@ TEST_CASE("Get all usage stmt-var pairs") {
 }
 
 TEST_CASE("Get all stmt using (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetAllStmtUsing();
   auto expected = all_stmt_using;
 
@@ -365,8 +367,8 @@ TEST_CASE("Get all stmt using (correct)") {
 }
 
 TEST_CASE("Get all proc using (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetAllProcUsing();
   auto expected = all_proc_using;
 
@@ -374,8 +376,8 @@ TEST_CASE("Get all proc using (correct)") {
 }
 
 TEST_CASE("Check if usage proc-var pair exists (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsUsageProcVarExist({"funcX", "c"});
   auto expected = uses_proc_var_pairs.find({"funcX", "c"}) != uses_proc_var_pairs.end();
 
@@ -383,8 +385,8 @@ TEST_CASE("Check if usage proc-var pair exists (correct)") {
 }
 
 TEST_CASE("Check if usage proc-var pair exists (wrong)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsUsageProcVarExist({"funcA", "2"});
   auto expected = uses_proc_var_pairs.find({"funcA", "2"}) != uses_proc_var_pairs.end();
 
@@ -393,8 +395,8 @@ TEST_CASE("Check if usage proc-var pair exists (wrong)") {
 }
 
 TEST_CASE("Check if usage stmt-var pair exists (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsUsageStmtVarExist({"4", "k"});
   auto expected = uses_stmt_var_pairs.find({"4", "k"}) != uses_stmt_var_pairs.end();
 
@@ -402,8 +404,8 @@ TEST_CASE("Check if usage stmt-var pair exists (correct)") {
 }
 
 TEST_CASE("Check if usage stmt-var pair exists (wrong)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsUsageStmtVarExist({"5", "j"});
   auto expected = uses_stmt_var_pairs.find({"5", "j"}) != uses_stmt_var_pairs.end();
 
@@ -414,8 +416,8 @@ TEST_CASE("Check if usage stmt-var pair exists (wrong)") {
 /* MODIFY STORE */
 
 TEST_CASE("Get var modified by stmt (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetVarModByStmt("7");
   auto expected = mod_stmt_to_var.at("7");
 
@@ -423,8 +425,8 @@ TEST_CASE("Get var modified by stmt (correct)") {
 }
 
 TEST_CASE("Get var modified by stmt (invalid)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetVarModByStmt("20");
   std::unordered_set<std::string> expected = {};
 
@@ -432,8 +434,8 @@ TEST_CASE("Get var modified by stmt (invalid)") {
 }
 
 TEST_CASE("Get stmt modified by var (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmtModByVar("dog");
   auto expected = mod_var_to_stmt.at("dog");
 
@@ -441,8 +443,8 @@ TEST_CASE("Get stmt modified by var (correct)") {
 }
 
 TEST_CASE("Get stmt modified by var (invalid)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetStmtModByVar("horse");
   std::unordered_set<std::string> expected = {};
 
@@ -450,8 +452,8 @@ TEST_CASE("Get stmt modified by var (invalid)") {
 }
 
 TEST_CASE("Get var modified by proc (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetVarModByProc("main");
   auto expected = mod_proc_to_var.at("main");
 
@@ -459,8 +461,8 @@ TEST_CASE("Get var modified by proc (correct)") {
 }
 
 TEST_CASE("Get var modified by proc (invalid)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetVarModByProc("foobar");
   std::unordered_set<std::string> expected = {};
 
@@ -468,8 +470,8 @@ TEST_CASE("Get var modified by proc (invalid)") {
 }
 
 TEST_CASE("Get proc modified by var (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetProcModByVar("dog");
   auto expected = mod_var_to_proc.at("dog");
 
@@ -477,8 +479,8 @@ TEST_CASE("Get proc modified by var (correct)") {
 }
 
 TEST_CASE("Get proc modified by var (invalid)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetProcModByVar("horse");
   std::unordered_set<std::string> expected = {};
 
@@ -486,8 +488,8 @@ TEST_CASE("Get proc modified by var (invalid)") {
 }
 
 TEST_CASE("Get all modifies proc-var pairs") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetAllModProcVar();
   auto expected = mod_proc_var_pairs;
 
@@ -495,8 +497,8 @@ TEST_CASE("Get all modifies proc-var pairs") {
 }
 
 TEST_CASE("Get all modifies stmt-var pairs") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetAllModStmtVar();
   auto expected = mod_stmt_var_pairs;
 
@@ -504,8 +506,8 @@ TEST_CASE("Get all modifies stmt-var pairs") {
 }
 
 TEST_CASE("Get all stmt modifies (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetAllStmtModify();
   auto expected = all_stmt_mod;
 
@@ -513,8 +515,8 @@ TEST_CASE("Get all stmt modifies (correct)") {
 }
 
 TEST_CASE("Get all proc modifies (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetAllProcModify();
   auto expected = all_proc_mod;
 
@@ -522,8 +524,8 @@ TEST_CASE("Get all proc modifies (correct)") {
 }
 
 TEST_CASE("Check if modifies proc-var pair exists (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsModifyProcVarExist({"main", "dragon"});
   auto expected = mod_proc_var_pairs.find({"main", "dragon"}) != mod_proc_var_pairs.end();
 
@@ -531,8 +533,8 @@ TEST_CASE("Check if modifies proc-var pair exists (correct)") {
 }
 
 TEST_CASE("Check if modifies proc-var pair exists (wrong)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsModifyProcVarExist({"funcA", "2"});
   auto expected = mod_proc_var_pairs.find({"funcA", "2"}) != mod_proc_var_pairs.end();
 
@@ -541,8 +543,8 @@ TEST_CASE("Check if modifies proc-var pair exists (wrong)") {
 }
 
 TEST_CASE("Check if modifies stmt-var pair exists (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsModifyStmtVarExist({"15", "monkey"});
   auto expected = mod_stmt_var_pairs.find({"15", "monkey"}) != mod_stmt_var_pairs.end();
 
@@ -550,8 +552,8 @@ TEST_CASE("Check if modifies stmt-var pair exists (correct)") {
 }
 
 TEST_CASE("Check if modifies stmt-var pair exists (wrong)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsModifyStmtVarExist({"5", "cat"});
   auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
 
@@ -562,8 +564,8 @@ TEST_CASE("Check if modifies stmt-var pair exists (wrong)") {
 /* FOLLOW STORE */
 
 TEST_CASE("Check if stmt is a follower") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsFollower("4");
   auto expected = followers.find("4") != followers.end();
 
@@ -571,8 +573,8 @@ TEST_CASE("Check if stmt is a follower") {
 }
 
 TEST_CASE("Check if stmt is a following") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsFollowing("4");
   auto expected = followings.find("4") != followings.end();
 
@@ -580,8 +582,8 @@ TEST_CASE("Check if stmt is a following") {
 }
 
 TEST_CASE("Check if stmt is a follower star") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsFollowerStar("4");
   auto expected = follower_stars.find("4") != follower_stars.end();
 
@@ -589,8 +591,8 @@ TEST_CASE("Check if stmt is a follower star") {
 }
 
 TEST_CASE("Check if stmt is a following star") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsFollowingStar("4");
   auto expected = following_stars.find("4") != following_stars.end();
 
@@ -598,8 +600,8 @@ TEST_CASE("Check if stmt is a following star") {
 }
 
 TEST_CASE("Check if follow pair exists") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsFollowExist({"8", "9"});
   auto expected = follow_pairs.find({"8", "9"}) != follow_pairs.end();
 
@@ -607,8 +609,8 @@ TEST_CASE("Check if follow pair exists") {
 }
 
 TEST_CASE("Check if follow star pair exists") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsFollowStarExist({"1", "4"});
   auto expected = follow_star_pairs.find({"1", "4"}) != follow_star_pairs.end();
 
@@ -616,8 +618,8 @@ TEST_CASE("Check if follow star pair exists") {
 }
 
 TEST_CASE("Get follows of a stmt") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetFollowingOf("2");
   auto expected = follows_rs.at("2").following;
 
@@ -625,8 +627,8 @@ TEST_CASE("Get follows of a stmt") {
 }
 
 TEST_CASE("Get follows star of a stmt") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->GetFollowingStarOf("2");
   auto expected = follows_rs.at("2").following_star;
 
@@ -634,8 +636,8 @@ TEST_CASE("Get follows star of a stmt") {
 }
 
 //TEST_CASE("Get all follow statements") {
-//  set_up_pkb();
-//  PKB *pkb = PKB::GetInstance();
+//  PKB *pkb = set_up_pkb();
+//  
 //  auto actual = pkb->GetAllFollowStmt(STMT);
 //  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
 //
@@ -644,8 +646,8 @@ TEST_CASE("Get follows star of a stmt") {
 //}
 //
 //TEST_CASE("Get all follow star statements") {
-//  set_up_pkb();
-//  PKB *pkb = PKB::GetInstance();
+//  PKB *pkb = set_up_pkb();
+//  
 //  auto actual = pkb->GetAllFollowStarStmt(STMT);
 //  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
 //
@@ -656,8 +658,8 @@ TEST_CASE("Get follows star of a stmt") {
 /* PARENT STORE */
 
 TEST_CASE("Checks if a stmt is a parent") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsParent("5");
   auto expected = parents.find("5") != parents.end();
 
@@ -665,8 +667,8 @@ TEST_CASE("Checks if a stmt is a parent") {
 }
 
 TEST_CASE("Checks if a stmt is a child") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->IsChild("7");
   auto expected = children.find("7") != children.end();
 
@@ -674,8 +676,8 @@ TEST_CASE("Checks if a stmt is a child") {
 }
 
 //TEST_CASE("Checks if a stmt is an ancestor") {
-//  set_up_pkb();
-//  PKB *pkb = PKB::GetInstance();
+//  PKB *pkb = set_up_pkb();
+//  
 //  auto actual = pkb->IsAnce("5");
 //  auto expected = ancestors.find("5") != ancestors.end();
 //
@@ -683,8 +685,8 @@ TEST_CASE("Checks if a stmt is a child") {
 //}
 
 //TEST_CASE("Checks if a stmt is a descendent") {
-//  set_up_pkb();
-//  PKB *pkb = PKB::GetInstance();
+//  PKB *pkb = set_up_pkb();
+//  
 //  auto actual = pkb->IsDesc("7");
 //  auto expected = descendants.find("7") != descendants.end();
 //
@@ -692,8 +694,8 @@ TEST_CASE("Checks if a stmt is a child") {
 //}
 
 TEST_CASE("Checks if a parent-child pair relationship exists") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   auto actual = pkb->ParentChildExists("5", "9");
   auto expected = parent_child_pairs.find({"5", "9"}) != parent_child_pairs.end();
 
@@ -701,8 +703,8 @@ TEST_CASE("Checks if a parent-child pair relationship exists") {
 }
 
 //TEST_CASE("Checks if a ance-desc pair relationship exists") {
-//  set_up_pkb();
-//  PKB *pkb = PKB::GetInstance();
+//  PKB *pkb = set_up_pkb();
+//  
 //  auto actual = pkb->AnceExists("5", "9");
 //  auto expected = ance_desc_pairs.find({"5", "9"}) != ance_desc_pairs.end();
 //
@@ -739,11 +741,11 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowStar
 /* PATTERN */
 
 TEST_CASE("Check pattern matching (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   std::unordered_set<std::string> actual = pkb->GetStmtWithPattern("pig", "_\"cat\"_");
   std::unordered_set<std::string> expected = {};
-  for (auto const& [key, val] : pattern_to_stmt) {
+  for (auto const&[key, val] : pattern_to_stmt) {
     if (key.first == "pig" && key.second.find("cat") != -1) {
       expected.insert(val);
     }
@@ -753,11 +755,11 @@ TEST_CASE("Check pattern matching (correct)") {
 }
 
 TEST_CASE("Check pattern matching (wrong)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   std::unordered_set<std::string> actual = pkb->GetStmtWithPattern("dog", "rabbit - cat");
   std::unordered_set<std::string> expected = {};
-  for (auto const& [key, val] : pattern_to_stmt) {
+  for (auto const&[key, val] : pattern_to_stmt) {
     if (key.first == "dog" && key.second.find("(rabbit-cat)") != -1) {
       expected.insert(val);
     }
@@ -768,8 +770,8 @@ TEST_CASE("Check pattern matching (wrong)") {
 }
 
 TEST_CASE("Check pattern synonym matching exact (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
+  PKB *pkb = set_up_pkb();
+  
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetStmtWithPatternSynonym("dog");
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected;
   for (auto i : pattern_pairs) {
@@ -782,9 +784,10 @@ TEST_CASE("Check pattern synonym matching exact (correct)") {
 }
 
 TEST_CASE("Check pattern synonym matching partial (correct)") {
-  set_up_pkb();
-  PKB *pkb = PKB::GetInstance();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetStmtWithPatternSynonym("_\"dog\"_");
+  PKB *pkb = set_up_pkb();
+  
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
+      actual = pkb->GetStmtWithPatternSynonym("_\"dog\"_");
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected;
   for (auto i : pattern_pairs) {
     if (i.second.find("dog") != std::string::npos) {

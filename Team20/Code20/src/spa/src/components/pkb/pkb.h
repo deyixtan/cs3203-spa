@@ -26,10 +26,27 @@ enum StmtType {
 };
 
 class PKB {
- public:
-  static PKB *GetInstance();
+ private:
+  FollowStore follow_store;
+  ParentStore parent_store;
+  UsageStore usage_store;
+  ModifyStore modify_store;
 
-  void Clear();
+  std::unordered_set<std::string> stmt_list;
+  std::unordered_set<std::string> while_stmt_list;
+  std::unordered_set<std::string> read_stmt_list;
+  std::unordered_set<std::string> print_stmt_list;
+  std::unordered_set<std::string> call_stmt_list;
+  std::unordered_set<std::string> if_stmt_list; //need to create separate else-then or treat this as a block?
+  std::unordered_set<std::string> assign_stmt_list;
+  std::unordered_set<std::string> proc_list;
+  std::unordered_set<std::string> var_list;
+  std::unordered_set<std::string> const_list;
+
+  std::unordered_map<std::string, std::pair<std::string, std::string>> pattern_map;
+
+ public:
+  PKB();
 
   /* Adders */
   void AddStmt(std::string name, StmtType type);
@@ -54,11 +71,13 @@ class PKB {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStmt(StmtType type);
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStmt(StmtType type1, StmtType type2);
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStarStmt(StmtType type);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStarStmt(StmtType type1, StmtType type2);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStarStmt(StmtType type1,
+                                                                                          StmtType type2);
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStmt(StmtType type);
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStmt(StmtType type1, StmtType type2);
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStarStmt(StmtType type);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStarStmt(StmtType type1, StmtType type2);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStarStmt(StmtType type1,
+                                                                                          StmtType type2);
 
   std::unordered_set<std::string> GetVarUsedByStmt(std::string stmt);
   std::unordered_set<std::string> GetStmtUsedByVar(std::string var);
@@ -111,28 +130,6 @@ class PKB {
   bool ParentChildExists(std::string stmt1, std::string stmt2);
   bool AnceExists(std::string curr, std::string ance);
   bool DescExists(std::string curr, std::string desc);
-
- private:
-  PKB();
-  static PKB *instance;
-
-  std::unordered_set<std::string> stmt_list;
-  std::unordered_set<std::string> while_stmt_list;
-  std::unordered_set<std::string> read_stmt_list;
-  std::unordered_set<std::string> print_stmt_list;
-  std::unordered_set<std::string> call_stmt_list;
-  std::unordered_set<std::string> if_stmt_list; //need to create separate else-then or treat this as a block?
-  std::unordered_set<std::string> assign_stmt_list;
-  std::unordered_set<std::string> proc_list;
-  std::unordered_set<std::string> var_list;
-  std::unordered_set<std::string> const_list;
-
-  std::unordered_map<std::string, std::pair<std::string, std::string>> pattern_map;
-
-  FollowStore follow_store;
-  ParentStore parent_store;
-  UsageStore usage_store;
-  ModifyStore modify_store;
 };
 
 #endif //PKB_H
