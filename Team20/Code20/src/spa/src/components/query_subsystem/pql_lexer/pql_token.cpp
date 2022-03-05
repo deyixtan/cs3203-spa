@@ -138,8 +138,7 @@ std::unordered_set<PqlTokenType> allowed_synonyms = {
     PqlTokenType::THAT,
     PqlTokenType::WITH,
     PqlTokenType::AND,
-    PqlTokenType::SELECT,
-    PqlTokenType::BOOLEAN,
+    PqlTokenType::SELECT
 };
 
 std::unordered_set<PqlTokenType> result_cl_excluding_synonym = {

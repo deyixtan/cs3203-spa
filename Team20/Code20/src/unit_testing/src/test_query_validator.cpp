@@ -175,7 +175,7 @@ TEST_CASE("Test invalid pattern keyword") {
   std::string query = "variable v; Select v such that Uses(1, v) pAttern a (_, _)";
   PqlLexer pql_lexer = PqlLexer(query);
   QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
-  std::string error = INVALID_PATTERN_KEYWORD;
+  std::string error = INVALID_SELECT_CLAUSE_FORMAT;
 
   REQUIRE_THROWS_WITH(query_validator.CheckValidation(), error);
 }
@@ -236,6 +236,279 @@ TEST_CASE("Test valid pattern clause without rel ref clause") {
       comma_token,
       underscore_token,
       closed_parenthesis_token
+  };
+
+  REQUIRE(query_validator.CheckValidation() == expected_tokens);
+}
+
+TEST_CASE("Test valid pattern clause with and") {
+  std::string query = "assign a, a1; variable v; Select v pattern a (_,_) and a1 (\"x\", _)";
+  PqlLexer pql_lexer = PqlLexer(query);
+  QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
+  std::vector<PqlToken> expected_tokens = {
+      assign_token,
+      a_token,
+      comma_token,
+      a1_token,
+      semicolon_token,
+      variable_token,
+      v_token,
+      semicolon_token,
+      select_token,
+      v_token,
+      pattern_token,
+      a_token,
+      open_parenthesis_token,
+      underscore_token,
+      comma_token,
+      underscore_token,
+      closed_parenthesis_token,
+      and_token,
+      a1_token,
+      open_parenthesis_token,
+      x_string_token,
+      comma_token,
+      underscore_token,
+      closed_parenthesis_token
+  };
+
+  REQUIRE(query_validator.CheckValidation() == expected_tokens);
+}
+
+TEST_CASE("Test valid relationship clause with and") {
+  std::string query = "assign a, a1; variable v; Select v such that Affects (a,a1) and Uses (a, v)";
+  PqlLexer pql_lexer = PqlLexer(query);
+  QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
+  std::vector<PqlToken> expected_tokens = {
+      assign_token,
+      a_token,
+      comma_token,
+      a1_token,
+      semicolon_token,
+      variable_token,
+      v_token,
+      semicolon_token,
+      select_token,
+      v_token,
+      such_token,
+      that_token,
+      affects_token,
+      open_parenthesis_token,
+      a_token,
+      comma_token,
+      a1_token,
+      closed_parenthesis_token,
+      and_token,
+      use_token,
+      open_parenthesis_token,
+      a_token,
+      comma_token,
+      v_token,
+      closed_parenthesis_token
+  };
+
+  REQUIRE(query_validator.CheckValidation() == expected_tokens);
+}
+
+TEST_CASE("Test valid with clause with and") {
+  std::string query = "assign a, a1; variable v; Select v with a.stmt# = 1 and v.varName = \"x\"";
+  PqlLexer pql_lexer = PqlLexer(query);
+  QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
+  std::vector<PqlToken> expected_tokens = {
+      assign_token,
+      a_token,
+      comma_token,
+      a1_token,
+      semicolon_token,
+      variable_token,
+      v_token,
+      semicolon_token,
+      select_token,
+      v_token,
+      with_token,
+      attribute_assign_token,
+      equal_sign_token,
+      number_value_token_1,
+      and_token,
+      attribute_var_token,
+      equal_sign_token,
+      x_string_token,
+  };
+
+  REQUIRE(query_validator.CheckValidation() == expected_tokens);
+}
+
+TEST_CASE("Test valid multi clause") {
+  std::string query = "assign a, a1; variable v; Select v such that Affects (a,a1) pattern a (_,_) with a.stmt# = 1 and v.varName = \"x\"";
+  PqlLexer pql_lexer = PqlLexer(query);
+  QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
+  std::vector<PqlToken> expected_tokens = {
+      assign_token,
+      a_token,
+      comma_token,
+      a1_token,
+      semicolon_token,
+      variable_token,
+      v_token,
+      semicolon_token,
+      select_token,
+      v_token,
+      such_token,
+      that_token,
+      affects_token,
+      open_parenthesis_token,
+      a_token,
+      comma_token,
+      a1_token,
+      closed_parenthesis_token,
+      pattern_token,
+      a_token,
+      open_parenthesis_token,
+      underscore_token,
+      comma_token,
+      underscore_token,
+      closed_parenthesis_token,
+      with_token,
+      attribute_assign_token,
+      equal_sign_token,
+      number_value_token_1,
+      and_token,
+      attribute_var_token,
+      equal_sign_token,
+      x_string_token,
+  };
+
+  REQUIRE(query_validator.CheckValidation() == expected_tokens);
+}
+
+TEST_CASE("Test valid select tuple clause") {
+  std::string query = "assign a, a1; variable v; Select <s, t> such that Affects (a,a1) pattern a (_,_) with a.stmt# = 1 and v.varName = \"x\"";
+  PqlLexer pql_lexer = PqlLexer(query);
+  QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
+  std::vector<PqlToken> expected_tokens = {
+      assign_token,
+      a_token,
+      comma_token,
+      a1_token,
+      semicolon_token,
+      variable_token,
+      v_token,
+      semicolon_token,
+      select_token,
+      valid_tuple_token_1,
+      such_token,
+      that_token,
+      affects_token,
+      open_parenthesis_token,
+      a_token,
+      comma_token,
+      a1_token,
+      closed_parenthesis_token,
+      pattern_token,
+      a_token,
+      open_parenthesis_token,
+      underscore_token,
+      comma_token,
+      underscore_token,
+      closed_parenthesis_token,
+      with_token,
+      attribute_assign_token,
+      equal_sign_token,
+      number_value_token_1,
+      and_token,
+      attribute_var_token,
+      equal_sign_token,
+      x_string_token,
+  };
+
+  REQUIRE(query_validator.CheckValidation() == expected_tokens);
+}
+
+TEST_CASE("Test valid select BOOLEAN clause") {
+  std::string query = "assign a, a1; variable v; Select BOOLEAN";
+  PqlLexer pql_lexer = PqlLexer(query);
+  QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
+  std::vector<PqlToken> expected_tokens = {
+      assign_token,
+      a_token,
+      comma_token,
+      a1_token,
+      semicolon_token,
+      variable_token,
+      v_token,
+      semicolon_token,
+      select_token,
+      boolean_token
+  };
+
+  REQUIRE(query_validator.CheckValidation() == expected_tokens);
+}
+
+TEST_CASE("Test valid with clause with and, special synonym name") {
+  std::string query = "assign a, Select; variable v; Select v with a.stmt# = 1 and v.varName = \"x\"";
+  PqlLexer pql_lexer = PqlLexer(query);
+  QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
+  std::vector<PqlToken> expected_tokens = {
+      assign_token,
+      a_token,
+      comma_token,
+      synonym_select_token,
+      semicolon_token,
+      variable_token,
+      v_token,
+      semicolon_token,
+      select_token,
+      v_token,
+      with_token,
+      attribute_assign_token,
+      equal_sign_token,
+      number_value_token_1,
+      and_token,
+      attribute_var_token,
+      equal_sign_token,
+      x_string_token,
+  };
+
+  REQUIRE(query_validator.CheckValidation() == expected_tokens);
+}
+
+TEST_CASE("Test valid select tuple clause with special synonym name") {
+  std::string query = "assign a, assign; variable Uses; Select <s, t> such that Affects (a,assign) pattern a (_,_) and assign (Uses, _)";
+  PqlLexer pql_lexer = PqlLexer(query);
+  QueryValidator query_validator = QueryValidator(pql_lexer.Lex());
+  std::vector<PqlToken> expected_tokens = {
+      assign_token,
+      a_token,
+      comma_token,
+      synonym_assign_token,
+      semicolon_token,
+      variable_token,
+      synonym_uses_token,
+      semicolon_token,
+      select_token,
+      valid_tuple_token_1,
+      such_token,
+      that_token,
+      affects_token,
+      open_parenthesis_token,
+      a_token,
+      comma_token,
+      synonym_assign_token,
+      closed_parenthesis_token,
+      pattern_token,
+      a_token,
+      open_parenthesis_token,
+      underscore_token,
+      comma_token,
+      underscore_token,
+      closed_parenthesis_token,
+      and_token,
+      synonym_assign_token,
+      open_parenthesis_token,
+      synonym_uses_token,
+      comma_token,
+      underscore_token,
+      closed_parenthesis_token,
   };
 
   REQUIRE(query_validator.CheckValidation() == expected_tokens);

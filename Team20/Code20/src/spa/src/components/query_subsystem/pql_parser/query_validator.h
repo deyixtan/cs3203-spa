@@ -10,24 +10,18 @@ class QueryValidator {
   bool IsValidRelRefToken(PqlToken rel_ref_token);
   bool IsValidDesignEntity(PqlToken design_entity_token);
 
-  bool IsValidRelRefClause(std::vector<PqlToken> rel_ref_tokens);
-
-  void IsValidRelRefArg(std::vector<PqlToken> rel_ref_tokens, PqlTokenType type);
-  void IsValidPatternClause(std::vector<PqlToken> pattern_clause);
-
   void ValidateRelRefClause(int rel_ref_clause_starting_index);
   void ValidateRelRefFirstArg(int first_arg_position);
   void ValidateRelRefSecondArg(int second_arg_position);
   int ValidatePatternArg(int pattern_arg_index);
 
-  void ValidateDeclaration(std::vector<PqlToken> declaration_query);
+  void ValidateDeclaration(int declaration_starting_index, int declaration_ended_index);
   void ValidateSelectClause(int select_clause_starting_index);
   void ValidateResultClause(int result_clause_starting_index);
   int ValidateSuchThatClause(int such_that_clause_starting_index);
   int ValidatePatternClause(int pattern_clause_starting_index);
   int ValidateWithClause(int with_clause_starting_index);
 
-  void ConvertTokenType(std::vector<PqlToken>&);
   int MINIMUM_TOKEN_TABLE_SIZE_FOR_SELECT_CLAUSE = 2;
   int MINIMUM_SELECT_CLAUSE_SIZE = 2;
   int MINIMUM_DECLARATION_SIZE = 3;

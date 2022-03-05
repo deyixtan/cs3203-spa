@@ -8,6 +8,7 @@ PqlToken closed_parenthesis_token = PqlToken(PqlTokenType::CLOSED_PARENTHESIS, "
 PqlToken double_quote_token = PqlToken(PqlTokenType::DOUBLE_QUOTE, "\"");
 PqlToken underscore_token = PqlToken(PqlTokenType::UNDERSCORE, "_");
 PqlToken plus_token = PqlToken(PqlTokenType::PLUS, "+");
+PqlToken equal_sign_token = PqlToken(PqlTokenType::EQUAL, "=");
 
 PqlToken stmt_token = PqlToken(PqlTokenType::STMT, "stmt");
 PqlToken assign_token = PqlToken(PqlTokenType::ASSIGN, "assign");
@@ -34,6 +35,9 @@ PqlToken c_token = PqlToken(PqlTokenType::SYNONYM, "c");
 PqlToken re_token = PqlToken(PqlTokenType::SYNONYM, "re");
 PqlToken pn_token = PqlToken(PqlTokenType::SYNONYM, "pn");
 PqlToken cl_token = PqlToken(PqlTokenType::SYNONYM, "cl");
+PqlToken synonym_select_token = PqlToken(PqlTokenType::SYNONYM, "Select");
+PqlToken synonym_uses_token = PqlToken(PqlTokenType::SYNONYM, "Uses");
+PqlToken synonym_assign_token = PqlToken(PqlTokenType::SYNONYM, "assign");
 
 PqlToken number_value_token_1 = PqlToken(PqlTokenType::NUMBER, "1");
 PqlToken number_value_token_2 = PqlToken(PqlTokenType::NUMBER, "2");
@@ -45,10 +49,18 @@ PqlToken y_token = PqlToken(PqlTokenType::SYNONYM, "y");
 PqlToken x_string_token = PqlToken(PqlTokenType::IDENT_WITH_QUOTES, "\"x\"");
 PqlToken x_plus_y_string_token = PqlToken(PqlTokenType::EXPR, "\"x+y\"");
 PqlToken sub_expression_token = PqlToken(PqlTokenType::SUB_EXPRESSION, "_\"x+y\"_");
+PqlToken valid_tuple_token_1 = PqlToken(PqlTokenType::TUPLE, "<s,t>");
+PqlToken valid_tuple_token_2 = PqlToken(PqlTokenType::TUPLE, "<s,t,v>");
+PqlToken attribute_statement_token = PqlToken(PqlTokenType::ATTRIBUTE, "s.stmt#");
+PqlToken attribute_assign_token = PqlToken(PqlTokenType::ATTRIBUTE, "a.stmt#");
+PqlToken attribute_var_token = PqlToken(PqlTokenType::ATTRIBUTE, "v.varName");
 
 PqlToken select_token = PqlToken(PqlTokenType::SELECT, "Select");
 PqlToken such_token = PqlToken(PqlTokenType::SUCH, "such");
 PqlToken that_token = PqlToken(PqlTokenType::THAT, "that");
+PqlToken and_token = PqlToken(PqlTokenType::AND, "and");
+PqlToken boolean_token = PqlToken(PqlTokenType::BOOLEAN, "BOOLEAN");
+
 
 PqlToken follow_token = PqlToken(PqlTokenType::FOLLOWS, "Follows");
 PqlToken follow_t_token = PqlToken(PqlTokenType::FOLLOWS_T, "Follows*");
@@ -56,7 +68,12 @@ PqlToken parent_token = PqlToken(PqlTokenType::PARENT, "Parent");
 PqlToken parent_t_token = PqlToken(PqlTokenType::PARENT_T, "Parent*");
 PqlToken use_token = PqlToken(PqlTokenType::USES, "Uses");
 PqlToken modify_token = PqlToken(PqlTokenType::MODIFIES, "Modifies");
+PqlToken pql_calls_token = PqlToken(PqlTokenType::CALLS, "Calls");
+PqlToken pql_calls_t_token = PqlToken(PqlTokenType::CALLS_T, "Calls*");
+PqlToken affects_token = PqlToken(PqlTokenType::AFFECTS, "Affects");
+PqlToken affects_t_token = PqlToken(PqlTokenType::AFFECTS_T, "Affects*");
+PqlToken next_token = PqlToken(PqlTokenType::NEXT, "Next");
+PqlToken next_t_token = PqlToken(PqlTokenType::NEXT_T, "Next*");
 PqlToken pattern_token = PqlToken(PqlTokenType::PATTERN, "pattern");
-PqlToken valid_tuple_token_1 = PqlToken(PqlTokenType::TUPLE, "<s,t>");
-PqlToken valid_tuple_token_2 = PqlToken(PqlTokenType::TUPLE, "<s,t,v>");
-PqlToken attribute_statement_token = PqlToken(PqlTokenType::ATTRIBUTE, "s.stmt#");
+
+PqlToken with_token = PqlToken(PqlTokenType::WITH, "with");
