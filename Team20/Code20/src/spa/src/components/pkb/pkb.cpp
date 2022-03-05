@@ -2,17 +2,6 @@
 
 #include "pkb.h"
 #include <string>
-//#include "components/source_subsystem/TNode.h"
-
-/*
-int PKB::setProcToAST(PROC p, TNode* r) {
-	return 0;
-}
-
-TNode* PKB::getRootAST (PROC p){
-	return nullptr;
-}
-*/
 
 PKB *PKB::instance = NULL;
 
