@@ -6,10 +6,10 @@
 #include <vector>
 #include <map>
 
-#include "usage_store.h"
-#include "modify_store.h"
-#include "follow_store.h"
-#include "parent_store.h"
+#include "stores/usage_store.h"
+#include "stores/modify_store.h"
+#include "stores/follow_store.h"
+#include "stores/parent_store.h"
 
 //typedef short PROC;
 

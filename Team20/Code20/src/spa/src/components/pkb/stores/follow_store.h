@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include "hash.h"
+#include "components/pkb/hash.h"
 
 // A store class that maintains all Parent APIs and relationships
 class FollowStore {

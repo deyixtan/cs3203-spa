@@ -4,7 +4,7 @@
 #include <unordered_set>
 
 #include "../pkb.h"
-#include "../usage_store.h"
+#include "components/pkb/stores/usage_store.h"
 #include "../../source_subsystem/ast/node_program.h"
 #include "../../source_subsystem/ast/node_read_statement.h"
 #include "../../source_subsystem/ast/node_print_statement.h"

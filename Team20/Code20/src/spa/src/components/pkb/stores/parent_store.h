@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include "hash.h"
+#include "components/pkb/hash.h"
 #include <vector>
 
 // A struct to maintain every node's relationships
