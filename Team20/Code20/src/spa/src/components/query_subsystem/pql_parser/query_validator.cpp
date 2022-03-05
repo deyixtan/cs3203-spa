@@ -46,7 +46,7 @@ void QueryValidator::ValidateDeclaration(int declaration_starting_index, int dec
 
 void QueryValidator::ValidateResultClause(int result_clause_starting_index) {
   PqlToken result = tokens_[result_clause_starting_index];
-  if (IsValidSynonym(result)) {
+  if (IsValidSynonym(result) && result.type != PqlTokenType::BOOLEAN) {
     tokens_[result_clause_starting_index].type = PqlTokenType::SYNONYM;
   } else if (!result_cl_excluding_synonym.count(result.type)) {
     throw INVALID_SELECT_RESULT;
