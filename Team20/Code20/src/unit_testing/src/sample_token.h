@@ -53,6 +53,8 @@ extern PqlToken x_plus_y_string_token;
 extern PqlToken sub_expression_token;
 extern PqlToken valid_tuple_token_1;
 extern PqlToken valid_tuple_token_2;
+extern PqlToken valid_tuple_token_3;
+extern PqlToken valid_tuple_token_4;
 extern PqlToken attribute_statement_token;
 extern PqlToken attribute_statement_token;
 extern PqlToken attribute_assign_token;
