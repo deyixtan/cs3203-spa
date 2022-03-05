@@ -3,20 +3,20 @@
 
 #include <unordered_set>
 
-#include "../pkb.h"
+#include "components/pkb/pkb.h"
 #include "components/pkb/stores/usage_store.h"
-#include "../../source_subsystem/ast/node_program.h"
-#include "../../source_subsystem/ast/node_read_statement.h"
-#include "../../source_subsystem/ast/node_print_statement.h"
-#include "../../source_subsystem/ast/node_while_statement.h"
-#include "../../source_subsystem/ast/node_if_statement.h"
-#include "../../source_subsystem/ast/node_assign_statement.h"
-#include "../../source_subsystem/ast/node_combination_expression.h"
-#include "../../source_subsystem/ast/node_constant.h"
-#include "../../source_subsystem/ast/node_boolean_expression.h"
-#include "../../source_subsystem/ast/node_not_expression.h"
-#include "../../source_subsystem/ast/node_relational_expression.h"
-#include "../../query_subsystem/pql_lexer/pql_token.h"
+#include "components/source_subsystem/ast/node_program.h"
+#include "components/source_subsystem/ast/node_read_statement.h"
+#include "components/source_subsystem/ast/node_print_statement.h"
+#include "components/source_subsystem/ast/node_while_statement.h"
+#include "components/source_subsystem/ast/node_if_statement.h"
+#include "components/source_subsystem/ast/node_assign_statement.h"
+#include "components/source_subsystem/ast/node_combination_expression.h"
+#include "components/source_subsystem/ast/node_constant.h"
+#include "components/source_subsystem/ast/node_boolean_expression.h"
+#include "components/source_subsystem/ast/node_not_expression.h"
+#include "components/source_subsystem/ast/node_relational_expression.h"
+#include "components/query_subsystem/pql_lexer/pql_token.h"
 
 class DesignExtractor {
  private:

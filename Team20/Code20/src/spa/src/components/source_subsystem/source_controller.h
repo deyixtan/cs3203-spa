@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "components/source_subsystem/source_lexer.h"
-#include "components/source_subsystem/source_parser.h"
-#include "components/pkb/design_extractor/design_extractor.h"
+#include "source_lexer.h"
+#include "source_parser.h"
+#include "design_extractor.h"
 #include "utils/file_util.h"
 
 namespace source {
