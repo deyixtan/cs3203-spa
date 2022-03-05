@@ -8,7 +8,7 @@
 #include <utility>
 
 #include "query_condition.h"
-#include "components/pkb/hash.h"
+#include "utils/pair_hash.h"
 
 class QueryResult {
  public:
