@@ -1,10 +1,10 @@
 #ifndef PKB_H
 #define PKB_H
 
+#include <map>
 #include <string>
 #include <unordered_set>
 #include <vector>
-#include <map>
 
 #include "stores/usage_store.h"
 #include "stores/modify_store.h"
@@ -27,9 +27,6 @@ enum StmtType {
 
 class PKB {
  public:
-  //VarTable* varTable;
-  //int setProcToAST(PROC p, TNode* r);
-  //TNode* getRootAST (PROC p);
   static PKB *GetInstance();
 
   void Clear();
