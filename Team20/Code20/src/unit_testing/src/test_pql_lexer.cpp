@@ -545,3 +545,55 @@ TEST_CASE("Test invalid attribute 2") {
   std::string expected_wrong_token = "a.val";
   REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token +  "\n");
 }
+
+TEST_CASE("Test pattern clause with and") {
+  std::string query = "assign a, a1; variable v; Select v pattern a (_,_) and a1 (\"x\", _)";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::vector<PqlToken> expected_tokens = {
+      assign_token,
+      a_token,
+      comma_token,
+      a1_token,
+      semicolon_token,
+      variable_token,
+      v_token,
+      semicolon_token,
+      select_token,
+      v_token,
+      pattern_token,
+      a_token,
+      open_parenthesis_token,
+      underscore_token,
+      comma_token,
+      underscore_token,
+      closed_parenthesis_token,
+      and_token,
+      a1_token,
+      open_parenthesis_token,
+      x_string_token,
+      comma_token,
+      underscore_token,
+      closed_parenthesis_token
+  };
+
+  REQUIRE(pql_lexer.Lex() == expected_tokens);
+}
+
+TEST_CASE("Test select BOOLEAN") {
+  std::string query = "assign a, a1; variable v; Select BOOLEAN";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::vector<PqlToken> expected_tokens = {
+      assign_token,
+      a_token,
+      comma_token,
+      a1_token,
+      semicolon_token,
+      variable_token,
+      v_token,
+      semicolon_token,
+      select_token,
+      boolean_token
+  };
+
+  REQUIRE(pql_lexer.Lex() == expected_tokens);
+}

@@ -11,7 +11,7 @@ extern std::string INVALID_DECLARATION_SYNONYM;
 
 // Select Clause
 extern std::string INVALID_SELECT_KEYWORD;
-extern std::string INVALID_SELECT_SYNONYM;
+extern std::string INVALID_SELECT_RESULT;
 extern std::string INVALID_SELECT_CLAUSE_FORMAT;
 
 // Rel Ref
@@ -24,5 +24,8 @@ extern std::string INVALID_PATTERN_CLAUSE_FORMAT;
 extern std::string INVALID_PATTERN_KEYWORD;
 extern std::string INVALID_PATTERN_SYNONYM;
 extern std::string INVALID_PATTERN_CLAUSE_ARGUMENT;
+
+// With Clause
+extern std::string INVALID_WITH_CLAUSE_FORMAT;
 
 #endif

@@ -10,6 +10,7 @@ extern PqlToken closed_parenthesis_token;
 extern PqlToken double_quote_token;
 extern PqlToken underscore_token;
 extern PqlToken plus_token;
+extern PqlToken equal_sign_token;
 
 extern PqlToken stmt_token;
 extern PqlToken assign_token;
@@ -36,6 +37,9 @@ extern PqlToken c_token;
 extern PqlToken re_token;
 extern PqlToken pn_token;
 extern PqlToken cl_token;
+extern PqlToken synonym_select_token;
+extern PqlToken synonym_uses_token;
+extern PqlToken synonym_assign_token;
 
 extern PqlToken number_value_token_1;
 extern PqlToken number_value_token_2;
@@ -47,10 +51,18 @@ extern PqlToken y_token;
 extern PqlToken x_string_token;
 extern PqlToken x_plus_y_string_token;
 extern PqlToken sub_expression_token;
+extern PqlToken valid_tuple_token_1;
+extern PqlToken valid_tuple_token_2;
+extern PqlToken attribute_statement_token;
+extern PqlToken attribute_statement_token;
+extern PqlToken attribute_assign_token;
+extern PqlToken attribute_var_token;
 
 extern PqlToken select_token;
 extern PqlToken such_token;
 extern PqlToken that_token;
+extern PqlToken and_token;
+extern PqlToken boolean_token;
 
 extern PqlToken follow_token;
 extern PqlToken follow_t_token;
@@ -58,9 +70,13 @@ extern PqlToken parent_token;
 extern PqlToken parent_t_token;
 extern PqlToken use_token;
 extern PqlToken modify_token;
+extern PqlToken pql_calls_token;
+extern PqlToken pql_calls_t_token;
+extern PqlToken affects_token;
+extern PqlToken affects_t_token;
+extern PqlToken next_token;
+extern PqlToken next_t_token;
 extern PqlToken pattern_token;
-extern PqlToken valid_tuple_token_1;
-extern PqlToken valid_tuple_token_2;
-extern PqlToken attribute_statement_token;
+extern PqlToken with_token;
 
 #endif

@@ -37,6 +37,7 @@ std::unordered_map<std::string, PqlTokenType> string_token_map = {
     {"that", PqlTokenType::THAT},
     {"with", PqlTokenType::WITH},
     {"and", PqlTokenType::AND},
+    {"BOOLEAN", PqlTokenType::BOOLEAN},
 
     {"Follows", PqlTokenType::FOLLOWS},
     {"Follows*", PqlTokenType::FOLLOWS_T},
@@ -59,7 +60,12 @@ std::unordered_set<PqlTokenType> rel_ref = {
     PqlTokenType::PARENT,
     PqlTokenType::PARENT_T,
     PqlTokenType::USES,
-    PqlTokenType::MODIFIES
+    PqlTokenType::MODIFIES,
+    PqlTokenType::NEXT,
+    PqlTokenType::NEXT_T,
+    PqlTokenType::CALLS,
+    PqlTokenType::CALLS_T,
+    PqlTokenType::AFFECTS,
 };
 
 std::unordered_set<PqlTokenType> design_entities = {
@@ -132,6 +138,28 @@ std::unordered_set<PqlTokenType> allowed_synonyms = {
     PqlTokenType::THAT,
     PqlTokenType::WITH,
     PqlTokenType::AND,
-    PqlTokenType::SELECT,
+    PqlTokenType::SELECT
+};
+
+std::unordered_set<PqlTokenType> result_cl_excluding_synonym = {
+    PqlTokenType::ATTRIBUTE,
+    PqlTokenType::TUPLE,
+    PqlTokenType::BOOLEAN
+};
+
+std::unordered_set<PqlTokenType> ent_ref_excluding_synonym = {
+    PqlTokenType::UNDERSCORE,
+    PqlTokenType::IDENT_WITH_QUOTES,
+};
+
+std::unordered_set<PqlTokenType> stmt_ref_excluding_synonym = {
+    PqlTokenType::UNDERSCORE,
+    PqlTokenType::NUMBER,
+};
+
+std::unordered_set<PqlTokenType> with_clause_ref = {
+    PqlTokenType::IDENT_WITH_QUOTES,
+    PqlTokenType::NUMBER,
+    PqlTokenType::ATTRIBUTE,
 };
 
