@@ -21,3 +21,6 @@ std::string INVALID_PATTERN_CLAUSE_FORMAT = "ERROR: Invalid Pattern Clause forma
 std::string INVALID_PATTERN_KEYWORD = "ERROR: Invalid Pattern keyword! \n";
 std::string INVALID_PATTERN_SYNONYM = "ERROR: Invalid synonym in pattern clause! \n";
 std::string INVALID_PATTERN_CLAUSE_ARGUMENT = "ERROR: Invalid Pattern Clause argument! \n";
+
+// With Clause
+std::string INVALID_WITH_CLAUSE_FORMAT = "ERROR: Invalid With Clause format! \n";

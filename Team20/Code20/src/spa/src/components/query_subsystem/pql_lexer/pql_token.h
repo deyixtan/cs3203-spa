@@ -85,5 +85,6 @@ extern std::unordered_set<PqlTokenType> allowed_synonyms;
 extern std::unordered_set<PqlTokenType> result_cl_excluding_synonym;
 extern std::unordered_set<PqlTokenType> ent_ref_excluding_synonym;
 extern std::unordered_set<PqlTokenType> stmt_ref_excluding_synonym;
+extern std::unordered_set<PqlTokenType> with_clause_ref;
 
 #endif

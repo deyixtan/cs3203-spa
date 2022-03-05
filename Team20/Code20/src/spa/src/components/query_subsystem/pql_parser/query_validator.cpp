@@ -243,16 +243,44 @@ int QueryValidator::ValidateSuchThatClause(int such_that_clause_starting_index) 
 }
 
 int QueryValidator::ValidatePatternArg(int pattern_arg_index) {
+  if (tokens_[pattern_arg_index].type != PqlTokenType::OPEN_PARENTHESIS) {
+    throw INVALID_PATTERN_CLAUSE_FORMAT;
+  }
+
+  if (allowed_synonyms.count(tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION].type)) {
+    tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION].type = PqlTokenType::SYNONYM;
+  } else if (!ent_ref_excluding_synonym.count(tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION].type)) {
+    throw INVALID_PATTERN_CLAUSE_FORMAT;
+  }
+
   if (tokens_[pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_SHORT].type
       == PqlTokenType::CLOSED_PARENTHESIS) {
     // while and assign pattern
-    // TODO
+
+    if (tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_COMMA_POSITION].type != PqlTokenType::COMMA) {
+      throw INVALID_PATTERN_CLAUSE_FORMAT;
+    }
+
+    if (!expression_spec.count(tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type) &&
+        tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type != PqlTokenType::UNDERSCORE) {
+      throw INVALID_PATTERN_CLAUSE_FORMAT;
+    }
+
     return pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_SHORT + 1;
 
   } else if (tokens_[pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_LONG].type
       == PqlTokenType::CLOSED_PARENTHESIS) {
     // if pattern
-    // TODO
+    if (tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_COMMA_POSITION].type != PqlTokenType::COMMA ||
+        tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_COMMA_POSITION].type != PqlTokenType::COMMA) {
+      throw INVALID_PATTERN_CLAUSE_FORMAT;
+    }
+
+    if (tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type != PqlTokenType::UNDERSCORE ||
+        tokens_[pattern_arg_index + PATTERN_CLAUSE_THIRD_ARG_POSITION].type != PqlTokenType::UNDERSCORE) {
+      throw INVALID_PATTERN_CLAUSE_FORMAT;
+    }
+
     return pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_LONG + 1;
   } else {
     throw INVALID_PATTERN_CLAUSE_FORMAT;
@@ -285,7 +313,20 @@ int QueryValidator::ValidatePatternClause(int pattern_clause_starting_index) {
   return current_index;
 }
 int QueryValidator::ValidateWithClause(int with_clause_starting_index) {
-  // TODO
+  int current_index = with_clause_starting_index;
+  while (current_index < tokens_.size()) {
+    if (current_index == with_clause_starting_index || tokens_[current_index].type == PqlTokenType::AND) {
+      if (!with_clause_ref.count(tokens_[with_clause_starting_index + WITH_CLAUSE_FIRST_ARG_POSITION].type) ||
+          !with_clause_ref.count(tokens_[with_clause_starting_index + WITH_CLAUSE_SECOND_ARG_POSITION].type) ||
+          tokens_[with_clause_starting_index + WITH_CLAUSE_EQUAL_POSITION].type != PqlTokenType::EQUAL) {
+        throw INVALID_WITH_CLAUSE_FORMAT;
+      }
+      current_index += WITH_CLAUSE_SIZE;
+    } else {
+      break;
+    }
+  }
+  return current_index;
 }
 
 void QueryValidator::ValidateSelectClause(int select_clause_starting_index) {
@@ -338,7 +379,7 @@ std::vector<PqlToken> QueryValidator::CheckValidation() {
    ____________________
    | variable v1 ;    |
    ____________________
-   | Select a1;       |
+   | Select a1        |
    ____________________
    */
 

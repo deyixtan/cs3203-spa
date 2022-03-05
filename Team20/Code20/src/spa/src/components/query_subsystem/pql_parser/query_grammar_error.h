@@ -25,4 +25,7 @@ extern std::string INVALID_PATTERN_KEYWORD;
 extern std::string INVALID_PATTERN_SYNONYM;
 extern std::string INVALID_PATTERN_CLAUSE_ARGUMENT;
 
+// With Clause
+extern std::string INVALID_WITH_CLAUSE_FORMAT;
+
 #endif

@@ -158,3 +158,9 @@ std::unordered_set<PqlTokenType> stmt_ref_excluding_synonym = {
     PqlTokenType::NUMBER,
 };
 
+std::unordered_set<PqlTokenType> with_clause_ref = {
+    PqlTokenType::IDENT_WITH_QUOTES,
+    PqlTokenType::NUMBER,
+    PqlTokenType::ATTRIBUTE,
+};
+
