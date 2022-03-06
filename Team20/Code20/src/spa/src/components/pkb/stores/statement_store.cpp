@@ -1,6 +1,6 @@
 #include "statement_store.h"
 
-StatementStore::StatementStore(std::vector<std::unordered_set<std::string>> &stmt_vector) : Store(stmt_vector) {}
+StatementStore::StatementStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(stmt_vector) {}
 
 void StatementStore::AddStmtVar(std::string stmt, std::string var) {
   all_stmt.insert({stmt});

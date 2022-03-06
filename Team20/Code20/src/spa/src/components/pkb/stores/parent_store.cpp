@@ -1,6 +1,46 @@
 #import "parent_store.h"
 
-ParentStore::ParentStore(std::vector<std::unordered_set<std::string>> &stmt_vector) : Store(stmt_vector) {}
+ParentStore::ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(stmt_vector) {}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStmt(StmtType type) {
+  std::vector<StmtType> supported_types;
+  supported_types.push_back(StmtType::STMT);
+  supported_types.push_back(StmtType::ASSIGN);
+  supported_types.push_back(StmtType::PRINT);
+  supported_types.push_back(StmtType::READ);
+  supported_types.push_back(StmtType::IF);
+  supported_types.push_back(StmtType::WHILE);
+  return GetAllStmt(type, supported_types, GetParentChildPairs(), false);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStmt(StmtType type1,
+                                                                                                 StmtType type2) {
+  std::vector<StmtType> supported_types;
+  supported_types.push_back(StmtType::STMT);
+  supported_types.push_back(StmtType::IF);
+  supported_types.push_back(StmtType::WHILE);
+  return GetAllStmt(type1, type2, supported_types, GetAllParentStmt(type2), true);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStarStmt(StmtType type) {
+  std::vector<StmtType> supported_types;
+  supported_types.push_back(StmtType::STMT);
+  supported_types.push_back(StmtType::ASSIGN);
+  supported_types.push_back(StmtType::PRINT);
+  supported_types.push_back(StmtType::READ);
+  supported_types.push_back(StmtType::IF);
+  supported_types.push_back(StmtType::WHILE);
+  return GetAllStmt(type, supported_types, GetAnceDescPairs(), false);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStarStmt(StmtType type1,
+                                                                                                     StmtType type2) {
+  std::vector<StmtType> supported_types;
+  supported_types.push_back(StmtType::STMT);
+  supported_types.push_back(StmtType::IF);
+  supported_types.push_back(StmtType::WHILE);
+  return GetAllStmt(type1, type2, supported_types, GetAllParentStarStmt(type2), true);
+}
 
 bool ParentStore::IsParent(std::string stmt) {
   return parent_set.find(stmt) != parent_set.end();
@@ -19,7 +59,8 @@ bool ParentStore::IsDesc(std::string stmt) {
 }
 
 void ParentStore::Init(int num_stmts) {
-  parent_child new_PC = {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()};
+  parent_child new_PC =
+      {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()};
 
   for (int i = 1; i <= num_stmts; i++) {
     rs_map[std::to_string(i)] = new_PC;
@@ -28,11 +69,13 @@ void ParentStore::Init(int num_stmts) {
 
 void ParentStore::AddParent(std::string parent, std::string child) {
   if (rs_map.find(parent) == rs_map.end()) {
-    rs_map.insert({parent, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
+    rs_map.insert({parent, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
+                            std::unordered_set<std::string>()}});
   }
 
   if (rs_map.find(child) == rs_map.end()) {
-    rs_map.insert({child, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
+    rs_map.insert({child, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
+                           std::unordered_set<std::string>()}});
   }
 
   parent_child_set.insert(std::make_pair(parent, child));
@@ -45,7 +88,8 @@ void ParentStore::AddParent(std::string parent, std::string child) {
 void ParentStore::AddParentStar(std::string stmt, std::vector<std::string> visited) {
   for (std::string s : visited) {
     if (rs_map.find(stmt) == rs_map.end()) {
-      rs_map.insert({stmt, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
+      rs_map.insert({stmt, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
+                            std::unordered_set<std::string>()}});
     }
 
     if (s != stmt) {

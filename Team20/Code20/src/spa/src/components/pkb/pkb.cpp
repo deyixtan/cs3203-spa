@@ -1,42 +1,45 @@
 #include "pkb.h"
 
-PKB::PKB()
-    : m_follow_store(FollowStore(m_stmt_vector)),
-      m_modify_store(ModifyStore(m_stmt_vector)),
-      m_parent_store(ParentStore(m_stmt_vector)),
-      m_usage_store(UsageStore(m_stmt_vector)) {
+PKB::PKB() : m_stmt_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)) {
   InitStatementVector();
-}
-
-FollowStore &PKB::GetFollowStore() {
-  return m_follow_store;
-}
-
-ModifyStore &PKB::GetModifyStore() {
-  return m_modify_store;
-}
-
-ParentStore &PKB::GetParentStore() {
-  return m_parent_store;
-}
-
-UsageStore &PKB::GetUsageStore() {
-  return m_usage_store;
+  InitRelationshipStores();
 }
 
 void PKB::InitStatementVector() {
   for (int i = 0; i < COUNT; i++) {
-    std::unordered_set<std::string> tmp_list;
-    m_stmt_vector.push_back(tmp_list);
+    m_stmt_vector->push_back(std::unordered_set<std::string>());
   }
 }
 
+void PKB::InitRelationshipStores() {
+  m_follow_store = std::make_shared<FollowStore>(m_stmt_vector);
+  m_modify_store = std::make_shared<ModifyStore>(m_stmt_vector);
+  m_parent_store = std::make_shared<ParentStore>(m_stmt_vector);
+  m_usage_store = std::make_shared<UsageStore>(m_stmt_vector);
+}
+
+std::shared_ptr<FollowStore> PKB::GetFollowStore() {
+  return m_follow_store;
+}
+
+std::shared_ptr<ModifyStore> PKB::GetModifyStore() {
+  return m_modify_store;
+}
+
+std::shared_ptr<ParentStore> PKB::GetParentStore() {
+  return m_parent_store;
+}
+
+std::shared_ptr<UsageStore> PKB::GetUsageStore() {
+  return m_usage_store;
+}
+
 std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
-  return m_stmt_vector.at(type);
+  return m_stmt_vector->at(type);
 }
 
 void PKB::AddStmt(std::string stmt, StmtType type) {
-  m_stmt_vector.at(type).insert(stmt);
+  m_stmt_vector->at(type).insert(stmt);
 }
 
 void PKB::AddPattern(std::string stmt, std::string lhs, std::string rhs) {
@@ -120,183 +123,5 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetStmtW
     }
   }
 
-  return result;
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllModStmt(StmtType type) {
-  if (type != STMT && type != READ && type != ASSIGN && type != IF && type != WHILE) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
-  }
-
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> mod_stmt_var_list = m_modify_store.GetAllStmtVar();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-  for (auto i : mod_stmt_var_list) {
-    for (auto j : m_stmt_vector.at(type)) {
-      if (i.first == j) {
-        result.insert(i);
-      }
-    }
-  }
-  return result;
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllUsesStmt(StmtType type) {
-  if (type != STMT && type != WHILE && type != PRINT && type != IF && type != ASSIGN) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
-  }
-
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> uses_stmt_list = m_usage_store.GetAllStmtVar();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-  for (auto i : uses_stmt_list) {
-    for (auto j : m_stmt_vector.at(type)) {
-      if (i.first == j) {
-        result.insert(i);
-      }
-    }
-  }
-  return result;
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFollowStmt(StmtType type) {
-  if (type != STMT && type != READ && type != ASSIGN && type != WHILE && type != PRINT && type != IF) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
-  }
-
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_stmt_list = m_follow_store.GetFollowPairs();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-  for (auto i : follow_stmt_list) {
-    for (auto j : m_stmt_vector.at(type)) {
-      if (i.second == j) {
-        result.insert(i);
-      }
-    }
-  }
-  return result;
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFollowStmt(StmtType type1,
-                                                                                         StmtType type2) {
-  if (type1 != STMT && type1 != READ && type1 != ASSIGN && type1 != WHILE && type1 != PRINT && type1 != IF) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
-  }
-
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_stmt_list = GetAllFollowStmt(type2);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-  for (auto i : follow_stmt_list) {
-    for (auto j : m_stmt_vector.at(type1)) {
-      if (i.first == j) {
-        result.insert(i);
-      }
-    }
-  }
-  return result;
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFollowStarStmt(StmtType type) {
-  if (type != STMT && type != READ && type != ASSIGN && type != WHILE && type != PRINT && type != IF) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
-  }
-
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
-      follow_star_stmt_list = m_follow_store.GetFollowStarPairs();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-  for (auto i : follow_star_stmt_list) {
-    for (auto j : m_stmt_vector.at(type)) {
-      if (i.second == j) {
-        result.insert(i);
-      }
-    }
-  }
-  return result;
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFollowStarStmt(StmtType type1,
-                                                                                             StmtType type2) {
-  if (type1 != STMT && type1 != READ && type1 != ASSIGN && type1 != WHILE && type1 != PRINT && type1 != IF) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
-  }
-
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
-      follow_star_stmt_list = GetAllFollowStarStmt(type2);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-  for (auto i : follow_star_stmt_list) {
-    for (auto j : m_stmt_vector.at(type1)) {
-      if (i.first == j) {
-        result.insert(i);
-      }
-    }
-  }
-  return result;
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllParentStmt(StmtType type) {
-  if (type != STMT && type != ASSIGN && type != PRINT && type != READ && type != IF && type != WHILE) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
-  }
-
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
-      parent_child_list = m_parent_store.GetParentChildPairs();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-  for (auto i : parent_child_list) {
-    for (auto j : m_stmt_vector.at(type)) {
-      if (i.second == j) {
-        result.insert(i);
-      }
-    }
-  }
-  return result;
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllParentStmt(StmtType type1,
-                                                                                         StmtType type2) {
-  if (type1 != STMT && type1 != IF && type1 != WHILE) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
-  }
-
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
-      parent_child_list = GetAllParentStmt(type2);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-  for (auto i : parent_child_list) {
-    for (auto j : m_stmt_vector.at(type1)) {
-      if (i.first == j) {
-        result.insert(i);
-      }
-    }
-  }
-  return result;
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllParentStarStmt(StmtType type) {
-  if (type != STMT && type != ASSIGN && type != PRINT && type != READ && type != IF && type != WHILE) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
-  }
-
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> ance_desc_list = m_parent_store.GetAnceDescPairs();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-  for (auto i : ance_desc_list) {
-    for (auto j : m_stmt_vector.at(type)) {
-      if (i.second == j) {
-        result.insert(i);
-      }
-    }
-  }
-  return result;
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllParentStarStmt(StmtType type1,
-                                                                                             StmtType type2) {
-  if (type1 != STMT && type1 != IF && type1 != WHILE) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
-  }
-
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> ance_desc_list = GetAllParentStarStmt(type2);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-  for (auto i : ance_desc_list) {
-    for (auto j : m_stmt_vector.at(type1)) {
-      if (i.first == j) {
-        result.insert(i);
-      }
-    }
-  }
   return result;
 }

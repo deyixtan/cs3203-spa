@@ -1,6 +1,52 @@
 #include "follow_store.h"
 
-FollowStore::FollowStore(std::vector<std::unordered_set<std::string>> &stmt_vector) : Store(stmt_vector) {}
+FollowStore::FollowStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(stmt_vector) {}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowStore::GetAllFollowStmt(StmtType type) {
+  std::vector<StmtType> supported_types;
+  supported_types.push_back(StmtType::STMT);
+  supported_types.push_back(StmtType::READ);
+  supported_types.push_back(StmtType::ASSIGN);
+  supported_types.push_back(StmtType::WHILE);
+  supported_types.push_back(StmtType::PRINT);
+  supported_types.push_back(StmtType::IF);
+  return Store::GetAllStmt(type, supported_types, GetFollowPairs(), false);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowStore::GetAllFollowStmt(StmtType type1,
+                                                                                                 StmtType type2) {
+  std::vector<StmtType> supported_types;
+  supported_types.push_back(StmtType::STMT);
+  supported_types.push_back(StmtType::READ);
+  supported_types.push_back(StmtType::ASSIGN);
+  supported_types.push_back(StmtType::WHILE);
+  supported_types.push_back(StmtType::PRINT);
+  supported_types.push_back(StmtType::IF);
+  return Store::GetAllStmt(type1, type2, supported_types, GetAllFollowStmt(type2), true);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowStore::GetAllFollowStarStmt(StmtType type) {
+  std::vector<StmtType> supported_types;
+  supported_types.push_back(StmtType::STMT);
+  supported_types.push_back(StmtType::READ);
+  supported_types.push_back(StmtType::ASSIGN);
+  supported_types.push_back(StmtType::WHILE);
+  supported_types.push_back(StmtType::PRINT);
+  supported_types.push_back(StmtType::IF);
+  return Store::GetAllStmt(type, supported_types, GetFollowStarPairs(), false);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowStore::GetAllFollowStarStmt(StmtType type1,
+                                                                                                     StmtType type2) {
+  std::vector<StmtType> supported_types;
+  supported_types.push_back(StmtType::STMT);
+  supported_types.push_back(StmtType::READ);
+  supported_types.push_back(StmtType::ASSIGN);
+  supported_types.push_back(StmtType::WHILE);
+  supported_types.push_back(StmtType::PRINT);
+  supported_types.push_back(StmtType::IF);
+  return Store::GetAllStmt(type1, type2, supported_types, GetAllFollowStarStmt(type2), true);
+}
 
 bool FollowStore::IsFollower(std::string stmt) {
   return follower_set.find(stmt) != follower_set.end();

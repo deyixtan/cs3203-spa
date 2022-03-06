@@ -15,7 +15,7 @@ class StatementStore : public Store {
   std::unordered_set<std::string> all_proc;
 
  public:
-  StatementStore(std::vector<std::unordered_set<std::string>> &stmt_vector);
+  StatementStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddStmtVar(std::string stmt, std::string var);
   void AddProcVar(std::string proc, std::string var);
   [[nodiscard]] bool StmtVarExists(std::pair<std::string, std::string> pair);

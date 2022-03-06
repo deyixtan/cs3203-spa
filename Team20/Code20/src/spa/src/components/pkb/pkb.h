@@ -11,56 +11,30 @@
 #include "stores/follow_store.h"
 #include "stores/parent_store.h"
 
-enum StmtType {
-  STMT,
-  READ,
-  PRINT,
-  WHILE,
-  IF,
-  ASSIGN,
-  VARS,
-  CONSTS,
-  PROC,
-  CALL,
-  COUNT = CALL // get max value of StmtType
-};
-
 class PKB {
  private:
-  FollowStore m_follow_store;
-  ParentStore m_parent_store;
-  UsageStore m_usage_store;
-  ModifyStore m_modify_store;
-
-  std::vector<std::unordered_set<std::string>> m_stmt_vector;
+  std::shared_ptr<FollowStore> m_follow_store;
+  std::shared_ptr<ParentStore> m_parent_store;
+  std::shared_ptr<UsageStore> m_usage_store;
+  std::shared_ptr<ModifyStore> m_modify_store;
+  std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;
   std::unordered_map<std::string, std::pair<std::string, std::string>> m_pattern_map;
 
  public:
   PKB();
-  [[nodiscard]] FollowStore &GetFollowStore();
-  [[nodiscard]] ModifyStore &GetModifyStore();
-  [[nodiscard]] ParentStore &GetParentStore();
-  [[nodiscard]] UsageStore &GetUsageStore();
   void InitStatementVector();
+  void InitRelationshipStores();
+  [[nodiscard]] std::shared_ptr<FollowStore> GetFollowStore();
+  [[nodiscard]] std::shared_ptr<ModifyStore> GetModifyStore();
+  [[nodiscard]] std::shared_ptr<ParentStore> GetParentStore();
+  [[nodiscard]] std::shared_ptr<UsageStore> GetUsageStore();
 
   void AddStmt(std::string name, StmtType type);
   void AddPattern(std::string stmt, std::string lhs, std::string rhs);
   [[nodiscard]] std::unordered_set<std::string> GetStmt(StmtType type);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllModStmt(StmtType type);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllUsesStmt(StmtType type);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStmt(StmtType type);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStmt(StmtType type1, StmtType type2);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStarStmt(StmtType type);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStarStmt(StmtType type1,
-                                                                                          StmtType type2);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStmt(StmtType type);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStmt(StmtType type1, StmtType type2);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStarStmt(StmtType type);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStarStmt(StmtType type1,
-                                                                                          StmtType type2);
-
   [[nodiscard]] std::unordered_set<std::string> GetStmtWithPattern(std::string lhs, std::string rhs);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonym(std::string rhs);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>,
+                                   pair_hash> GetStmtWithPatternSynonym(std::string rhs);
 };
 
 #endif //PKB_H

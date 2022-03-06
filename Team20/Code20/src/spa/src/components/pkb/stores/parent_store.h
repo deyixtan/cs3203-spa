@@ -14,8 +14,13 @@ struct parent_child {
 // A store class that maintains all Parent APIs and relationships
 class ParentStore : public Store {
  public:
-  ParentStore(std::vector<std::unordered_set<std::string>> &stmt_vector);
-
+  ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStmt(StmtType type);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStmt(StmtType type1,
+                                                                                                    StmtType type2);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStarStmt(StmtType type);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStarStmt(StmtType type1,
+                                                                                                        StmtType type2);
   bool IsParent(std::string stmt);
 
   bool IsChild(std::string stmt);

@@ -6,7 +6,7 @@
 // A store class that maintains all Parent APIs and relationships
 class FollowStore : public Store {
  public:
-  FollowStore(std::vector<std::unordered_set<std::string>> &stmt_vector);
+  FollowStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
 
   // A struct to maintain every node's relationships
   struct node {
@@ -15,6 +15,13 @@ class FollowStore : public Store {
     std::unordered_set<std::string> follower_star;
     std::unordered_set<std::string> following_star;
   };
+
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStmt(StmtType type);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStmt(StmtType type1,
+                                                                                                    StmtType type2);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStarStmt(StmtType type);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStarStmt(StmtType type1,
+                                                                                                        StmtType type2);
 
   bool IsFollower(std::string stmt);
 
@@ -54,8 +61,8 @@ class FollowStore : public Store {
   std::unordered_set<std::string> following_star_set;
   std::unordered_set<std::string> follower_set;
   std::unordered_set<std::string> following_set;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash > all_follow_pairs;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash > all_follow_star_pairs;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_follow_pairs;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_follow_star_pairs;
 };
 
 #endif //FOLLOW_STORE_H
