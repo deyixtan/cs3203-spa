@@ -1,6 +1,5 @@
 #include "catch.hpp"
 #include "components/pkb/pkb.h"
-#include "components/source_subsystem/design_extractor.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
 #include "components/query_subsystem/pql_lexer/pql_lexer.h"
 #include "components/query_subsystem/pql_parser/parsed_query_builder.h"
