@@ -46,6 +46,7 @@ class DesignExtractor {
  public:
   DesignExtractor(ProgramNode root_node, PKB *pkb);
   void TraverseAst();
+//  void PopulateStmt(std::string stmt);
 };
 
 #endif //DESIGN_EXTRACTOR_H
