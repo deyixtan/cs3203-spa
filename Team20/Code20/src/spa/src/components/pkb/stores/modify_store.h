@@ -6,6 +6,7 @@
 // proxy class
 class ModifyStore : public StatementStore {
  public:
+  ModifyStore(std::vector<std::unordered_set<std::string>> &stmt_vector);
   [[nodiscard]] std::unordered_set<std::string> GetVarModByStmt(std::string stmt);
   [[nodiscard]] std::unordered_set<std::string> GetStmtModByVar(std::string var);
   [[nodiscard]] std::unordered_set<std::string> GetVarModByProc(std::string proc);

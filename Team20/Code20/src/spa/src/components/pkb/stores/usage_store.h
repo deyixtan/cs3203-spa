@@ -6,6 +6,7 @@
 // proxy class
 class UsageStore : public StatementStore {
  public:
+  UsageStore(std::vector<std::unordered_set<std::string>> &stmt_vector);
   [[nodiscard]] std::unordered_set<std::string> GetVarUsedByStmt(std::string stmt);
   [[nodiscard]] std::unordered_set<std::string> GetStmtUsedByVar(std::string var);
   [[nodiscard]] std::unordered_set<std::string> GetVarUsedByProc(std::string proc);

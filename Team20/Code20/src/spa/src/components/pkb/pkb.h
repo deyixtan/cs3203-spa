@@ -27,13 +27,13 @@ enum StmtType {
 
 class PKB {
  private:
-  FollowStore follow_store;
-  ParentStore parent_store;
-  UsageStore usage_store;
-  ModifyStore modify_store;
+  FollowStore m_follow_store;
+  ParentStore m_parent_store;
+  UsageStore m_usage_store;
+  ModifyStore m_modify_store;
 
-  std::vector<std::unordered_set<std::string>> stmt_vector;
-  std::unordered_map<std::string, std::pair<std::string, std::string>> pattern_map;
+  std::vector<std::unordered_set<std::string>> m_stmt_vector;
+  std::unordered_map<std::string, std::pair<std::string, std::string>> m_pattern_map;
 
  public:
   PKB();

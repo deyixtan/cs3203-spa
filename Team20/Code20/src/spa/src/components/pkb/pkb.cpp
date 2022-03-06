@@ -1,46 +1,46 @@
 #include "pkb.h"
 
-PKB::PKB() {
-  follow_store = FollowStore();
-  modify_store = ModifyStore();
-  parent_store = ParentStore();
-  usage_store = UsageStore();
+PKB::PKB()
+    : m_follow_store(FollowStore(m_stmt_vector)),
+      m_modify_store(ModifyStore(m_stmt_vector)),
+      m_parent_store(ParentStore(m_stmt_vector)),
+      m_usage_store(UsageStore(m_stmt_vector)) {
   InitStatementVector();
 }
 
 FollowStore &PKB::GetFollowStore() {
-  return follow_store;
+  return m_follow_store;
 }
 
 ModifyStore &PKB::GetModifyStore() {
-  return modify_store;
+  return m_modify_store;
 }
 
 ParentStore &PKB::GetParentStore() {
-  return parent_store;
+  return m_parent_store;
 }
 
 UsageStore &PKB::GetUsageStore() {
-  return usage_store;
+  return m_usage_store;
 }
 
 void PKB::InitStatementVector() {
   for (int i = 0; i < COUNT; i++) {
     std::unordered_set<std::string> tmp_list;
-    stmt_vector.push_back(tmp_list);
+    m_stmt_vector.push_back(tmp_list);
   }
 }
 
 std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
-  return stmt_vector.at(type);
+  return m_stmt_vector.at(type);
 }
 
 void PKB::AddStmt(std::string stmt, StmtType type) {
-  stmt_vector.at(type).insert(stmt);
+  m_stmt_vector.at(type).insert(stmt);
 }
 
 void PKB::AddPattern(std::string stmt, std::string lhs, std::string rhs) {
-  pattern_map[stmt] = {lhs, rhs};
+  m_pattern_map[stmt] = {lhs, rhs};
 }
 
 std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::string rhs) {
@@ -49,7 +49,7 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
   //rhs = "(" + rhs + ")";
   //TODO: Tree builder and parser
 
-  for (auto const&[key, val] : pattern_map) {
+  for (auto const&[key, val] : m_pattern_map) {
     if (lhs == "_" && rhs == "_") {
       result.insert(key);
     }
@@ -97,7 +97,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetStmtW
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
 
-  for (auto const&[key, val] : pattern_map) {
+  for (auto const&[key, val] : m_pattern_map) {
     if (rhs == "_") {
       result.insert({key, val.first});
     }
@@ -128,10 +128,10 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllMo
     throw std::runtime_error("INVALID STATEMENT TYPE");
   }
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> mod_stmt_var_list = modify_store.GetAllStmtVar();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> mod_stmt_var_list = m_modify_store.GetAllStmtVar();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   for (auto i : mod_stmt_var_list) {
-    for (auto j : stmt_vector.at(type)) {
+    for (auto j : m_stmt_vector.at(type)) {
       if (i.first == j) {
         result.insert(i);
       }
@@ -145,10 +145,10 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllUs
     throw std::runtime_error("INVALID STATEMENT TYPE");
   }
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> uses_stmt_list = usage_store.GetAllStmtVar();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> uses_stmt_list = m_usage_store.GetAllStmtVar();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   for (auto i : uses_stmt_list) {
-    for (auto j : stmt_vector.at(type)) {
+    for (auto j : m_stmt_vector.at(type)) {
       if (i.first == j) {
         result.insert(i);
       }
@@ -162,10 +162,10 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
     throw std::runtime_error("INVALID STATEMENT TYPE");
   }
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_stmt_list = follow_store.GetFollowPairs();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_stmt_list = m_follow_store.GetFollowPairs();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   for (auto i : follow_stmt_list) {
-    for (auto j : stmt_vector.at(type)) {
+    for (auto j : m_stmt_vector.at(type)) {
       if (i.second == j) {
         result.insert(i);
       }
@@ -183,7 +183,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_stmt_list = GetAllFollowStmt(type2);
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   for (auto i : follow_stmt_list) {
-    for (auto j : stmt_vector.at(type1)) {
+    for (auto j : m_stmt_vector.at(type1)) {
       if (i.first == j) {
         result.insert(i);
       }
@@ -198,10 +198,10 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
   }
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
-      follow_star_stmt_list = follow_store.GetFollowStarPairs();
+      follow_star_stmt_list = m_follow_store.GetFollowStarPairs();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   for (auto i : follow_star_stmt_list) {
-    for (auto j : stmt_vector.at(type)) {
+    for (auto j : m_stmt_vector.at(type)) {
       if (i.second == j) {
         result.insert(i);
       }
@@ -220,7 +220,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllFo
       follow_star_stmt_list = GetAllFollowStarStmt(type2);
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   for (auto i : follow_star_stmt_list) {
-    for (auto j : stmt_vector.at(type1)) {
+    for (auto j : m_stmt_vector.at(type1)) {
       if (i.first == j) {
         result.insert(i);
       }
@@ -235,10 +235,10 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
   }
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
-      parent_child_list = parent_store.GetParentChildPairs();
+      parent_child_list = m_parent_store.GetParentChildPairs();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   for (auto i : parent_child_list) {
-    for (auto j : stmt_vector.at(type)) {
+    for (auto j : m_stmt_vector.at(type)) {
       if (i.second == j) {
         result.insert(i);
       }
@@ -257,7 +257,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
       parent_child_list = GetAllParentStmt(type2);
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   for (auto i : parent_child_list) {
-    for (auto j : stmt_vector.at(type1)) {
+    for (auto j : m_stmt_vector.at(type1)) {
       if (i.first == j) {
         result.insert(i);
       }
@@ -271,10 +271,10 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
     throw std::runtime_error("INVALID STATEMENT TYPE");
   }
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> ance_desc_list = parent_store.GetAnceDescPairs();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> ance_desc_list = m_parent_store.GetAnceDescPairs();
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   for (auto i : ance_desc_list) {
-    for (auto j : stmt_vector.at(type)) {
+    for (auto j : m_stmt_vector.at(type)) {
       if (i.second == j) {
         result.insert(i);
       }
@@ -292,7 +292,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetAllPa
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> ance_desc_list = GetAllParentStarStmt(type2);
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   for (auto i : ance_desc_list) {
-    for (auto j : stmt_vector.at(type1)) {
+    for (auto j : m_stmt_vector.at(type1)) {
       if (i.first == j) {
         result.insert(i);
       }

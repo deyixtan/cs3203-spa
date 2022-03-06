@@ -1,5 +1,7 @@
 #include "modify_store.h"
 
+ModifyStore::ModifyStore(std::vector<std::unordered_set<std::string>> &stmt_vector) : StatementStore(stmt_vector) {}
+
 std::unordered_set<std::string> ModifyStore::GetVarModByStmt(std::string stmt) {
   return GetVarByStmt(stmt);
 }

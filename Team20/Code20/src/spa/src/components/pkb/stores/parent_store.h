@@ -1,11 +1,7 @@
 #ifndef PARENT_STORE_H
 #define PARENT_STORE_H
 
-#include <string>
-#include <unordered_map>
-#include <unordered_set>
-#include "utils/pair_hash.h"
-#include <vector>
+#include "store.h"
 
 // A struct to maintain every node's relationships
 struct parent_child {
@@ -16,9 +12,9 @@ struct parent_child {
 };
 
 // A store class that maintains all Parent APIs and relationships
-class ParentStore {
+class ParentStore : public Store {
  public:
-  ParentStore();
+  ParentStore(std::vector<std::unordered_set<std::string>> &stmt_vector);
 
   bool IsParent(std::string stmt);
 

@@ -1,5 +1,7 @@
 #include "statement_store.h"
 
+StatementStore::StatementStore(std::vector<std::unordered_set<std::string>> &stmt_vector) : Store(stmt_vector) {}
+
 void StatementStore::AddStmtVar(std::string stmt, std::string var) {
   all_stmt.insert({stmt});
   stmt_var_pairs.emplace(std::pair<std::string, std::string>(stmt, var));

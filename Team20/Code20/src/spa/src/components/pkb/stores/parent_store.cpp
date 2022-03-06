@@ -1,6 +1,6 @@
 #import "parent_store.h"
 
-ParentStore::ParentStore() {}
+ParentStore::ParentStore(std::vector<std::unordered_set<std::string>> &stmt_vector) : Store(stmt_vector) {}
 
 bool ParentStore::IsParent(std::string stmt) {
   return parent_set.find(stmt) != parent_set.end();

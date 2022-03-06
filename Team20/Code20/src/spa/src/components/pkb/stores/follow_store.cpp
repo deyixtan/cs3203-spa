@@ -1,6 +1,6 @@
 #include "follow_store.h"
 
-FollowStore::FollowStore() {}
+FollowStore::FollowStore(std::vector<std::unordered_set<std::string>> &stmt_vector) : Store(stmt_vector) {}
 
 bool FollowStore::IsFollower(std::string stmt) {
   return follower_set.find(stmt) != follower_set.end();

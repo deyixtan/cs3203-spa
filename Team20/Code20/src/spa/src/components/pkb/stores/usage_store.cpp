@@ -1,5 +1,7 @@
 #include "usage_store.h"
 
+UsageStore::UsageStore(std::vector<std::unordered_set<std::string>> &stmt_vector) : StatementStore(stmt_vector) {}
+
 std::unordered_set<std::string> UsageStore::GetVarUsedByStmt(std::string stmt) {
   return GetVarByStmt(stmt);
 }
