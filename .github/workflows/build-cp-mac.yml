@@ -39,7 +39,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 3
     strategy:
-      fail-fast:true
+      fail-fast: true
 
     steps:
       - name: Run Unit Tests
