@@ -19,7 +19,7 @@ enum StmtType {
   CONSTS,
   PROC,
   CALL,
-  COUNT = CALL // get max value of StmtType
+  COUNT = CALL + 1 // get max value of StmtType
 };
 
 class Store {

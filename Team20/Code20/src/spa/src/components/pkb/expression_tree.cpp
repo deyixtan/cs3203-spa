@@ -10,16 +10,6 @@ nptr ExpressionTree::newNode(std::string c) {
   return n;
 }
 
-std::vector<std::string> ExpressionTree::split(const std::string &s, char delim) {
-  std::stringstream ss(s);
-  std::string item;
-  std::vector<std::string> tokens;
-  while (getline(ss, item, delim)) {
-    tokens.push_back(item);
-  }
-  return tokens;
-}
-
 // Function to build Expression Tree
 nptr ExpressionTree::build(std::string& s) {
   // Stack to hold nodes

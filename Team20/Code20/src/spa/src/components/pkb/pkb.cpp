@@ -1,22 +1,11 @@
 #include "pkb.h"
 
-PKB::PKB() : m_stmt_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)) {
-  InitStatementVector();
-  InitRelationshipStores();
-}
-
-void PKB::InitStatementVector() {
-  for (int i = 0; i < COUNT; i++) {
-    m_stmt_vector->push_back(std::unordered_set<std::string>());
-  }
-}
-
-void PKB::InitRelationshipStores() {
-  m_follow_store = std::make_shared<FollowStore>(m_stmt_vector);
-  m_modify_store = std::make_shared<ModifyStore>(m_stmt_vector);
-  m_parent_store = std::make_shared<ParentStore>(m_stmt_vector);
-  m_usage_store = std::make_shared<UsageStore>(m_stmt_vector);
-}
+PKB::PKB()
+    : m_stmt_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)),
+      m_follow_store(std::make_shared<FollowStore>(m_stmt_vector)),
+      m_modify_store(std::make_shared<ModifyStore>(m_stmt_vector)),
+      m_parent_store(std::make_shared<ParentStore>(m_stmt_vector)),
+      m_usage_store(std::make_shared<UsageStore>(m_stmt_vector)) {}
 
 void PKB::AddStmt(std::string const &stmt, StmtType type) {
   m_stmt_vector->at(type).insert(stmt);

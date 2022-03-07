@@ -22,7 +22,6 @@ class ExpressionTree
   void postorder(nptr root);
   nptr GetRoot();
   std::string GetPattern(nptr root);
-  std::vector<std::string> split(const std::string &s, char delim);
  private:
   nptr root;
 };
