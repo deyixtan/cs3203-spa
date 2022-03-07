@@ -1,16 +1,26 @@
-//
-// Created by Yu Heem Lai on 8/3/22.
-//
+#ifndef SELECT_CLAUSE_H_
+#define SELECT_CLAUSE_H_
 
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_QUERY_SUBSYSTEM_PQL_EVALUATOR_SELECT_CLAUSE_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_QUERY_SUBSYSTEM_PQL_EVALUATOR_SELECT_CLAUSE_H_
+#include "clause.h"
+#include "components/pkb/pkb.h"
+#include "components/query_subsystem/pql_lexer/pql_token.h"
+#include "components/query_subsystem/pql_parser/declaration.h"
 
+namespace pql {
 
-
-class select_clause {
+class SelectClause : public Clause {
+ public:
+  SelectClause(const PqlToken &selected_synonym, const std::vector<Declaration> &declarations, PKB *pkb);
+  Table Execute() override;
+ private:
+  PqlToken selected_synonym;
+  std::vector<Declaration> declarations;
+  PKB *pkb;
+  PqlTokenType GetSynonymDesignEntity(const PqlToken &arg);
+  StmtType GetStmtType(const PqlTokenType &design_entity);
 
 };
 
+}
 
-
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_QUERY_SUBSYSTEM_PQL_EVALUATOR_SELECT_CLAUSE_H_
+#endif //SELECT_CLAUSE_H_
