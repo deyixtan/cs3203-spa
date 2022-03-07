@@ -4,7 +4,7 @@
 #include "node_statement.h"
 #include "node_variable.h"
 
-class ReadStatementNode : public StatementNode{
+class ReadStatementNode : public StatementNode {
  private:
   std::shared_ptr<VariableNode> m_identifier;
 

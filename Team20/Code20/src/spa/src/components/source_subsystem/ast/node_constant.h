@@ -2,7 +2,6 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONSTANT_H_
 
 #include "node_expression.h"
-#include "components/pkb/design_extractor/populator.h"
 
 class ConstantNode : public ExpressionNode {
  private:
