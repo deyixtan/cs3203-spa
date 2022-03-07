@@ -489,6 +489,58 @@ TEST_CASE("Test attribute") {
   REQUIRE(test_token_vect == expected_token_vect);
 }
 
+TEST_CASE("Test attribute in tuple") {
+  PqlLexer pql_lexer = PqlLexer("stmt s;\n"
+                                "Select <s.stmt#> such that Modifies (s, \"x\")");
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  std::vector<PqlToken> expected_token_vect;
+
+  // stmt
+  expected_token_vect.push_back(stmt_token);
+  expected_token_vect.push_back(s_token);
+  expected_token_vect.push_back(semicolon_token);
+
+  // select clause
+  expected_token_vect.push_back(select_token);
+  expected_token_vect.push_back(valid_tuple_token_3);
+  expected_token_vect.push_back(such_token);
+  expected_token_vect.push_back(that_token);
+  expected_token_vect.push_back(modify_token);
+  expected_token_vect.push_back(open_parenthesis_token);
+  expected_token_vect.push_back(s_token);
+  expected_token_vect.push_back(comma_token);
+  expected_token_vect.push_back(x_string_token);
+  expected_token_vect.push_back(closed_parenthesis_token);
+
+  REQUIRE(test_token_vect == expected_token_vect);
+}
+
+TEST_CASE("Test tuple with attribute") {
+  PqlLexer pql_lexer = PqlLexer("stmt s;\n"
+                                "Select <s,t,s.stmt#> such that Modifies (s, \"x\")");
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  std::vector<PqlToken> expected_token_vect;
+
+  // stmt
+  expected_token_vect.push_back(stmt_token);
+  expected_token_vect.push_back(s_token);
+  expected_token_vect.push_back(semicolon_token);
+
+  // select clause
+  expected_token_vect.push_back(select_token);
+  expected_token_vect.push_back(valid_tuple_token_4);
+  expected_token_vect.push_back(such_token);
+  expected_token_vect.push_back(that_token);
+  expected_token_vect.push_back(modify_token);
+  expected_token_vect.push_back(open_parenthesis_token);
+  expected_token_vect.push_back(s_token);
+  expected_token_vect.push_back(comma_token);
+  expected_token_vect.push_back(x_string_token);
+  expected_token_vect.push_back(closed_parenthesis_token);
+
+  REQUIRE(test_token_vect == expected_token_vect);
+}
+
 TEST_CASE("Test declarations with incomplete double quote token") {
   PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
                                 "Select s such that Uses (s, \"x\") pattern a (\"x\", \"y)");
@@ -537,6 +589,12 @@ TEST_CASE("Test invalid tuple") {
 TEST_CASE("Test invalid tuple 2") {
   PqlLexer pql_lexer = PqlLexer("Select <a, b, c, d, e,       >");
   std::string expected_wrong_token = "<a, b, c, d, e,       >";
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token +  "\n");
+}
+
+TEST_CASE("Test invalid tuple 3") {
+  PqlLexer pql_lexer = PqlLexer("Select <s.t.stmt# >");
+  std::string expected_wrong_token = "<s.t.stmt# >";
   REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token +  "\n");
 }
 

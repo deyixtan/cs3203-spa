@@ -73,6 +73,8 @@ std::string SourceToken::ToString() {
       break;
     case TokenType::ELSE:type_str = "ELSE";
       break;
+    case TokenType::CALL:type_str = "CALL";
+      break;
     case TokenType::PROCEDURE:type_str = "PROCEDURE";
       break;
     default:type_str = "UNKNOWN";
