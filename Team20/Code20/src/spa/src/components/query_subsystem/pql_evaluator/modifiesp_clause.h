@@ -11,9 +11,9 @@ namespace pql {
 class ModifiesPClause : public Clause {
  public:
   ModifiesPClause(const std::vector<Declaration> &declarations,
-              const PqlToken &first_arg,
-              const PqlToken &second_arg,
-              PKB *pkb);
+                  const PqlToken &first_arg,
+                  const PqlToken &second_arg,
+                  PKB *pkb);
   Table Execute() override;
  private:
   std::vector<Declaration> declarations;
