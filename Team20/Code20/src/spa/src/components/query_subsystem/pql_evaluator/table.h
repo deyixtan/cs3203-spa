@@ -33,6 +33,7 @@ class Table {
         std::unordered_set<std::pair<std::string, std::string>, pair_hash>& pair_constraints);
   [[nodiscard]] bool IsEmpty() const;
   void Merge(Table& other_table);
+  std::unordered_set<std::string> GetResult(std::string& select_synonym, Table& table);
   friend std::ostream& operator<<(std::ostream& os, const Table& table);
 
  private:
