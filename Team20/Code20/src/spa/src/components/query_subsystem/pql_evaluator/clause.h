@@ -7,7 +7,7 @@ namespace pql {
 
 class Clause {
  public:
-  virtual Table Execute();
+  virtual Table Execute() = 0;
 };
 
 }
