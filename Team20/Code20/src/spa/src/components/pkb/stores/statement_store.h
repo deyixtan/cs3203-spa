@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STATEMENT_STORE_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STATEMENT_STORE_H_
+#ifndef STATEMENT_STORE_H_
+#define STATEMENT_STORE_H_
 
 #include "store.h"
 
@@ -18,6 +18,12 @@ class StatementStore : public Store {
   explicit StatementStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddStmtVar(std::string stmt, std::string var);
   void AddProcVar(std::string proc, std::string var);
+  void AddVarHelper(std::string index,
+                    std::string var,
+                    std::unordered_set<std::string> &index_set,
+                    std::unordered_set<std::pair<std::string, std::string>, pair_hash> &index_pair,
+                    std::unordered_map<std::string, std::unordered_set<std::string>> &var_map,
+                    std::unordered_map<std::string, std::unordered_set<std::string>> &reverse_var_map);
   [[nodiscard]] bool StmtVarExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool ProcVarExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetVarByStmt(std::string const &stmt);
@@ -30,4 +36,4 @@ class StatementStore : public Store {
   [[nodiscard]] std::unordered_set<std::string> GetAllProc();
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STATEMENT_STORE_H_
+#endif //STATEMENT_STORE_H_

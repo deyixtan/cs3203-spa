@@ -1,30 +1,31 @@
 #include "statement_store.h"
 
-StatementStore::StatementStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(move(stmt_vector)) {}
+StatementStore::StatementStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(move(
+    stmt_vector)) {}
 
 void StatementStore::AddStmtVar(std::string stmt, std::string var) {
-  all_stmt.insert({stmt});
-  stmt_var_pairs.emplace(std::pair<std::string, std::string>(stmt, var));
-
-  if (!stmt_var_map.emplace(stmt, std::unordered_set<std::string>{var}).second) {
-    stmt_var_map.at(stmt).emplace(var);
-  }
-
-  if (!var_stmt_map.emplace(var, std::unordered_set<std::string>{stmt}).second) {
-    var_stmt_map.at(var).emplace(stmt);
-  }
+  AddVarHelper(stmt, var, all_stmt, stmt_var_pairs, stmt_var_map, var_stmt_map);
 }
 
 void StatementStore::AddProcVar(std::string proc, std::string var) {
-  all_proc.insert({proc});
-  proc_var_pairs.emplace(std::pair<std::string, std::string>(proc, var));
+  AddVarHelper(proc, var, all_proc, proc_var_pairs, proc_var_map, var_proc_map);
+}
 
-  if (!proc_var_map.emplace(proc, std::unordered_set<std::string>{var}).second) {
-    proc_var_map.at(proc).emplace(var);
+void StatementStore::AddVarHelper(std::string index,
+                                  std::string var,
+                                  std::unordered_set<std::string> &index_set,
+                                  std::unordered_set<std::pair<std::string, std::string>, pair_hash> &index_pair,
+                                  std::unordered_map<std::string, std::unordered_set<std::string>> &var_map,
+                                  std::unordered_map<std::string, std::unordered_set<std::string>> &reverse_var_map) {
+  index_set.insert({index});
+  index_pair.emplace(std::pair<std::string, std::string>(index, var));
+
+  if (!var_map.emplace(index, std::unordered_set<std::string>{var}).second) {
+    var_map.at(index).emplace(var);
   }
 
-  if (!var_proc_map.emplace(var, std::unordered_set<std::string>{proc}).second) {
-    var_proc_map.at(var).emplace(proc);
+  if (!reverse_var_map.emplace(var, std::unordered_set<std::string>{index}).second) {
+    reverse_var_map.at(var).emplace(index);
   }
 }
 
