@@ -19,11 +19,12 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> Store::GetAll
                                                                                                                   std::string>,
                                                                                                         pair_hash> const &list,
                                                                                      bool checkPairFirst) {
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
+
   if (std::find(supported_types.begin(), supported_types.end(), type1) == supported_types.end()) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
+    return result;
   }
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   for (auto const &i : list) {
     for (auto const &j : m_stmt_vector->at(type1)) {
       if (checkPairFirst) {
