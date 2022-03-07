@@ -12,6 +12,7 @@ enum class ConditionalType {
 class ConditionalExpressionNode : public Node {
  public:
   [[nodiscard]] virtual ConditionalType GetConditionalType() = 0;
+  [[nodiscard]] virtual void Process(Populator populator, std::vector<std::string>* visited, std::string stmt);
   [[nodiscard]] virtual bool operator==(const ConditionalExpressionNode &other) const = 0;
 };
 

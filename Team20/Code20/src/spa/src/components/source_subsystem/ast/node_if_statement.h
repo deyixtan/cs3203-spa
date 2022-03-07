@@ -4,6 +4,7 @@
 #include "node_statement.h"
 #include "node_conditional_expression.h"
 #include "node_statement_list.h"
+#include "components/pkb/design_extractor/populator.h"
 
 class IfStatementNode : public StatementNode {
  private:
@@ -21,6 +22,7 @@ class IfStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<StatementListNode> GetElseStatementList();
   [[nodiscard]] std::vector<std::shared_ptr<StatementNode>> GetAllStatementList();
   [[nodiscard]] StmtType GetStatementType() override;
+  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited) override;
   [[nodiscard]] std::string ToString(int level) override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };

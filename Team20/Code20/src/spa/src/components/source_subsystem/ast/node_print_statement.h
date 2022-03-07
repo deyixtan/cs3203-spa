@@ -13,6 +13,7 @@ class PrintStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<VariableNode> GetIdentifier();
   [[nodiscard]] StmtType GetStatementType() override;
   [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited) override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };
 

@@ -3,6 +3,7 @@
 
 #include "node_combination_expression.h"
 #include "node_conditional_expression.h"
+#include "components/pkb/design_extractor/populator.h"
 
 enum class RelationOperator {
   LESS_THAN,
@@ -28,6 +29,7 @@ class RelationalExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::string GetRelationOperatorLabel(RelationOperator relation_operator);
   [[nodiscard]] ConditionalType GetConditionalType() override;
   [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited, std::string stmt);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

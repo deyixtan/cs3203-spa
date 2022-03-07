@@ -4,7 +4,7 @@
 #include "node_statement.h"
 #include "node_variable.h"
 
-class ReadStatementNode : public StatementNode {
+class ReadStatementNode : public StatementNode{
  private:
   std::shared_ptr<VariableNode> m_identifier;
 
@@ -12,6 +12,7 @@ class ReadStatementNode : public StatementNode {
   ReadStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier);
   [[nodiscard]] std::shared_ptr<VariableNode> GetIdentifier();
   [[nodiscard]] StmtType GetStatementType() override;
+  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited) override;
   [[nodiscard]] std::string ToString(int level) override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };

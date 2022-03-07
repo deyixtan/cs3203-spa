@@ -16,6 +16,7 @@ class AssignStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<VariableNode> GetIdentifier();
   [[nodiscard]] std::shared_ptr<ExpressionNode> GetExpression();
   [[nodiscard]] StmtType GetStatementType() override;
+  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited) override;
   [[nodiscard]] std::string ToString(int level) override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };

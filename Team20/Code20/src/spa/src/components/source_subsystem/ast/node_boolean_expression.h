@@ -2,6 +2,7 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
 
 #include "node_conditional_expression.h"
+#include "components/pkb/design_extractor/populator.h"
 
 enum class BooleanOperator {
   AND,
@@ -21,6 +22,7 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetLeftExpression();
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetRightExpression();
   [[nodiscard]] ConditionalType GetConditionalType() override;
+  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited, std::string stmt);
   [[nodiscard]] std::string ToString(int level) override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };

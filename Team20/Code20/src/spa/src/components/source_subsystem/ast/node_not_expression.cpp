@@ -19,3 +19,7 @@ bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const
   const auto casted_other = dynamic_cast<const NotExpressionNode *>(&other);
   return *m_expression == *(casted_other->m_expression);
 }
+
+void NotExpressionNode::Process(Populator populator, std::vector<std::string>* visited, std::string stmt) {
+  m_expression->Process(populator, visited, stmt);
+}
