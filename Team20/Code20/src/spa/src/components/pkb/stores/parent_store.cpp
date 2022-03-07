@@ -1,44 +1,7 @@
 #import "parent_store.h"
 
-ParentStore::ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(move(stmt_vector)) {}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
-  return GetAllStmt(type, supported_types, GetParentChildPairs(), false);
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStmt(StmtType type1,
-                                                                                                 StmtType type2) {
-  std::vector<StmtType> supported_types = {STMT, WHILE, IF};
-  return GetAllStmt(type1, type2, supported_types, GetAllParentStmt(type2), true);
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStarStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
-  return GetAllStmt(type, supported_types, GetAnceDescPairs(), false);
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStarStmt(StmtType type1,
-                                                                                                     StmtType type2) {
-  std::vector<StmtType> supported_types = {STMT, WHILE, IF};
-  return GetAllStmt(type1, type2, supported_types, GetAllParentStarStmt(type2), true);
-}
-
-bool ParentStore::IsParent(std::string const &stmt) {
-  return parent_set.find(stmt) != parent_set.end();
-}
-
-bool ParentStore::IsChild(std::string const &stmt) {
-  return child_set.find(stmt) != child_set.end();
-}
-
-bool ParentStore::IsAnce(std::string const &stmt) {
-  return ance_set.find(stmt) != ance_set.end();
-}
-
-bool ParentStore::IsDesc(std::string const &stmt) {
-  return desc_set.find(stmt) != desc_set.end();
-}
+ParentStore::ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
+    Store(move(stmt_vector)) {}
 
 void ParentStore::AddParent(std::string const &parent, std::string const &child) {
   if (rs_map.find(parent) == rs_map.end()) {
@@ -75,6 +38,22 @@ void ParentStore::AddParentStar(std::string const &stmt, std::vector<std::string
   }
 }
 
+bool ParentStore::IsParent(std::string const &stmt) {
+  return parent_set.find(stmt) != parent_set.end();
+}
+
+bool ParentStore::IsChild(std::string const &stmt) {
+  return child_set.find(stmt) != child_set.end();
+}
+
+bool ParentStore::IsAnce(std::string const &stmt) {
+  return ance_set.find(stmt) != ance_set.end();
+}
+
+bool ParentStore::IsDesc(std::string const &stmt) {
+  return desc_set.find(stmt) != desc_set.end();
+}
+
 // Used for Parent(s1, s2)
 bool ParentStore::ParentChildExists(std::string const &stmt1, std::string const &stmt2) {
   std::pair<std::string, std::string> p = std::make_pair(stmt1, stmt2);
@@ -99,13 +78,9 @@ bool ParentStore::DescExists(std::string const &curr, std::string const &desc) {
   return false;
 }
 
-std::unordered_set<std::string> ParentStore::GetAllParents() {
-  return parent_set;
-}
-
 std::string ParentStore::GetParentOf(std::string const &stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
-    parent_child pc = rs_map.at(stmt);
+    ParentChildNode pc = rs_map.at(stmt);
     return pc.parent;
   }
   return "0";
@@ -113,7 +88,7 @@ std::string ParentStore::GetParentOf(std::string const &stmt) {
 
 std::unordered_set<std::string> ParentStore::GetChildOf(std::string const &stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
-    parent_child pc = rs_map.at(stmt);
+    ParentChildNode pc = rs_map.at(stmt);
     return pc.child;
   }
   return {};
@@ -121,7 +96,7 @@ std::unordered_set<std::string> ParentStore::GetChildOf(std::string const &stmt)
 
 std::unordered_set<std::string> ParentStore::GetAllAnceOf(std::string const &stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
-    parent_child pc = rs_map.at(stmt);
+    ParentChildNode pc = rs_map.at(stmt);
     return pc.ance;
   }
   return {};
@@ -129,7 +104,7 @@ std::unordered_set<std::string> ParentStore::GetAllAnceOf(std::string const &stm
 
 std::unordered_set<std::string> ParentStore::GetAllDescOf(std::string const &stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
-    parent_child pc = rs_map.at(stmt);
+    ParentChildNode pc = rs_map.at(stmt);
     return pc.desc;
   }
   return {};
@@ -141,4 +116,26 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAnceDescPairs() {
   return ance_desc_set;
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStmt(StmtType type) {
+  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
+  return GetAllStmt(type, supported_types, GetParentChildPairs(), false);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStmt(StmtType type1,
+                                                                                                 StmtType type2) {
+  std::vector<StmtType> supported_types = {STMT, WHILE, IF};
+  return GetAllStmt(type1, type2, supported_types, GetAllParentStmt(type2), true);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStarStmt(StmtType type) {
+  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
+  return GetAllStmt(type, supported_types, GetAnceDescPairs(), false);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStarStmt(StmtType type1,
+                                                                                                     StmtType type2) {
+  std::vector<StmtType> supported_types = {STMT, WHILE, IF};
+  return GetAllStmt(type1, type2, supported_types, GetAllParentStarStmt(type2), true);
 }

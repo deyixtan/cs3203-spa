@@ -282,7 +282,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_star_p
     };
 
 /* PARENT STORE */
-std::unordered_map<std::string, parent_child> parent_rs =
+std::unordered_map<std::string, ParentChildNode> parent_rs =
     {
         {"1", {"0", {}, {}, {}}},
         {"2", {"0", {}, {}, {}}},
