@@ -30,7 +30,14 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
       int curr_stmt = stmt->GetStatementNumber();
       int next_stmt = stmts[i + 1]->GetStatementNumber();
       populator.PopulateFollows(std::to_string(curr_stmt), std::to_string(next_stmt));
-      populator.PopulateFollowsStar(stmts, i);
+
+      // PopulateFollowsStar
+      int curr_stmt_star = stmts[i]->GetStatementNumber();
+
+      for (int j = i + 1; j < stmts.size(); ++j) {
+        int next_stmt_star = stmts[j]->GetStatementNumber();
+        populator.PopulateFollowsStar(std::to_string(curr_stmt_star), std::to_string(next_stmt_star));
+      }
     }
 
     stmt->Process(populator, &visited);

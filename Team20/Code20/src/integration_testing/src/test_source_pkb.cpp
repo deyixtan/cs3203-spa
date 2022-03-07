@@ -25,7 +25,7 @@ PKB *GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
   PKB *pkb = PKB::GetInstance();
   pkb->Clear();
 
-  DesignExtractor *design_extractor = new DesignExtractor(*ast, pkb);
+  DesignExtractor *design_extractor = new DesignExtractor(*ast, Populator(pkb));
   design_extractor->TraverseAst();
   return pkb;
 }

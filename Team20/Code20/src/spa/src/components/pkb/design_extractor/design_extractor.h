@@ -3,6 +3,7 @@
 
 #include <unordered_set>
 
+#include "populator.h"
 #include "../pkb.h"
 #include "../usage_store.h"
 #include "../../source_subsystem/ast/node_program.h"

@@ -14,6 +14,8 @@ std::string ConstantNode::ToString(int level) {
   return m_value;
 }
 
+void ConstantNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {}
+
 bool ConstantNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const ConstantNode *>(&other);
   return m_value == casted_other->m_value;

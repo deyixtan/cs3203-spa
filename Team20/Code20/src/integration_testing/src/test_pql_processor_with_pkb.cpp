@@ -7,8 +7,6 @@
 #include "components/query_subsystem/pql_parser/query_validator.h"
 #include "components/query_subsystem/pql_evaluator/query_evaluator.h"
 
-using namespace source;
-
 void set_up_pkb() {
   PKB *pkb = PKB::GetInstance();
   pkb->AddStmt("main", PROC);

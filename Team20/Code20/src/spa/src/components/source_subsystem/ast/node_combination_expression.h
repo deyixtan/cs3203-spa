@@ -27,6 +27,7 @@ class CombinationExpressionNode : public ExpressionNode {
   [[nodiscard]] ArithmeticOperator GetArithmeticOperator();
   [[nodiscard]] std::string GetArithmeticOperatorLabel(ArithmeticOperator arithmetic_operator);
   [[nodiscard]] ExpressionType GetExpressionType() override;
+  void Process(Populator populator, std::vector<std::string>* visited, std::string stmt) override;
   [[nodiscard]] std::string ToString(int level) override;
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
