@@ -162,7 +162,7 @@ std::string PqlLexer::GetValidTuple(const std::string &s) {
     size_t comma = temp.find(',');
     if (comma != std::string::npos && comma > 0) {
       std::string str = Trim(temp.substr(0, comma));
-      if (IsIdent(str)) {
+      if (IsIdent(str) || IsValidAttribute(str)) {
         res += str;
         res += ",";
       } else {
@@ -170,7 +170,7 @@ std::string PqlLexer::GetValidTuple(const std::string &s) {
       }
       temp = temp.substr(comma + 1, temp.length() - comma - 1);
     }
-    else if (IsIdent(Trim(temp))) {
+    else if (IsIdent(Trim(temp)) || IsValidAttribute(Trim(temp))) {
       res += Trim(temp);
       return res + '>';
     }
