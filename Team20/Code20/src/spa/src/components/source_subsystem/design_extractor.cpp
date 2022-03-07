@@ -260,15 +260,15 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
 }
 
 void DesignExtractor::PopulateParent(std::string stmt1, std::string stmt2) {
-  this->pkb->AddParentStmt(stmt1, stmt2);
+  this->pkb->GetParentStore()->AddParent(stmt1, stmt2);
 }
 
 void DesignExtractor::PopulateParentStar(std::string stmt, std::vector<std::string> visited) {
-  this->pkb->AddParentStarStmt(stmt, visited);
+  this->pkb->GetParentStore()->AddParentStar(stmt, visited);
 }
 
 void DesignExtractor::PopulateFollows(std::string stmt1, std::string stmt2) {
-  this->pkb->AddFollowStmt(stmt1, stmt2);
+  this->pkb->GetFollowStore()->AddFollow(stmt1, stmt2);
 }
 
 void DesignExtractor::PopulateFollowsStar(std::vector<std::shared_ptr<StatementNode>> stmt_lst, int index) {
@@ -276,16 +276,16 @@ void DesignExtractor::PopulateFollowsStar(std::vector<std::shared_ptr<StatementN
 
   for (int i = index + 1; i < stmt_lst.size(); ++i) {
     int next_stmt = stmt_lst[i]->GetStatementNumber();
-    this->pkb->AddFollowStarStmt(std::to_string(curr_stmt), std::to_string(next_stmt));
+    this->pkb->GetFollowStore()->AddFollowStar(std::to_string(curr_stmt), std::to_string(next_stmt));
   }
 }
 
 void DesignExtractor::PopulateUses(std::string stmt, std::string var) {
-  this->pkb->AddUsageStmtVar(stmt, var);
+  this->pkb->GetUsageStore()->AddStmtVar(stmt, var);
 }
 
 void DesignExtractor::PopulateModifies(std::string stmt, std::string var) {
-  this->pkb->AddModifyStmtVar(stmt, var);
+  this->pkb->GetModifyStore()->AddStmtVar(stmt, var);
 }
 
 void DesignExtractor::PopulateProc(std::string name) {
