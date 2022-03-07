@@ -350,29 +350,29 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> print_pairs =
 
 std::unordered_map<std::string, std::pair<std::string, std::string> > stmt_to_pattern =
     {
-        {"4", {"dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))"}},
-        {"7", {"pig", "(ox+cat)"}},
-        {"8", {"dragon", "((dog*rabbit)/mouse)"}},
-        {"10", {"snake", "(dog+rabbit)"}},
-        {"15", {"monkey", "(tiger+dog)"}}
+        {"4", {"dog", "((((mouse)+((10)*(cat)))-(((dog)/(mouse))*(dragon)))+(((mouse)+(rabbit))-(cat)))"}},
+        {"7", {"pig", "((ox)+(cat))"}},
+        {"8", {"dragon", "(((dog)*(rabbit))/(mouse))"}},
+        {"10", {"snake", "((dog)+(rabbit))"}},
+        {"15", {"monkey", "((tiger)+(dog))"}}
     };
 
 std::unordered_map<std::pair<std::string, std::string>, std::string, pair_hash> pattern_to_stmt =
     {
-        {{"dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))"}, "4"},
-        {{"pig", "(ox+cat)"}, "7"},
-        {{"dragon", "((dog*rabbit)/mouse)"}, "8"},
-        {{"snake", "(dog+rabbit)"}, "10"},
-        {{"monkey", "(tiger+dog)"}, "15"}
+        {{"dog", "((((mouse)+((10)*(cat)))-(((dog)/(mouse))*(dragon)))+(((mouse)+(rabbit))-(cat)))"}, "4"},
+        {{"pig", "((ox)+(cat))"}, "7"},
+        {{"dragon", "(((dog)*(rabbit))/(mouse))"}, "8"},
+        {{"snake", "((dog)+(rabbit))"}, "10"},
+        {{"monkey", "((tiger)+(dog))"}, "15"}
     };
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_pairs =
     {
-        {"dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))"},
-        {"pig", "(ox+cat)"},
-        {"dragon", "((dog*rabbit)/mouse)"},
-        {"snake", "(dog+rabbit)"},
-        {"monkey", "(tiger+dog)"}
+        {"dog", "((((mouse)+((10)*(cat)))-(((dog)/(mouse))*(dragon)))+(((mouse)+(rabbit))-(cat)))"},
+        {"pig", "((ox)+(cat))"},
+        {"dragon", "(((dog)*(rabbit))/(mouse))"},
+        {"snake", "((dog)+(rabbit))"},
+        {"monkey", "((tiger)+(dog))"}
     };
 
 #endif //PKB_STUB_H

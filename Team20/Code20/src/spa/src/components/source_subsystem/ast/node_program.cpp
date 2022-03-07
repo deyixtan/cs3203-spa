@@ -9,16 +9,16 @@ std::vector<std::shared_ptr<ProcedureNode>> ProgramNode::GetProcedures() {
   return m_procedures;
 }
 
-std::string ProgramNode::ToString(int level) {
+std::string ProgramNode::ToString() {
   std::string str = "";
   for (std::shared_ptr<ProcedureNode> procedure : m_procedures) {
-    str += procedure->ToString(level) + "\n";
+    str += procedure->ToString() + "\n";
   }
   return str;
 }
 
-std::string ProgramNode::ToString() {
-  return this->ToString(0);
+std::string ProgramNode::GetPatternFormat() {
+  return "";
 }
 
 bool ProgramNode::operator==(const ProgramNode &other) const {

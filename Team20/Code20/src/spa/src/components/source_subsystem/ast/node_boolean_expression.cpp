@@ -17,9 +17,13 @@ ConditionalType BooleanExpressionNode::GetConditionalType() {
   return ConditionalType::BOOLEAN;
 }
 
-std::string BooleanExpressionNode::ToString(int level) {
-  return "(" + m_left_expression->ToString(level) + (m_boolean_operator == BooleanOperator::AND ? " && " : " || ")
-      + m_right_expression->ToString(level) + ")";
+std::string BooleanExpressionNode::ToString() {
+  return "(" + m_left_expression->ToString() + (m_boolean_operator == BooleanOperator::AND ? " && " : " || ")
+      + m_right_expression->ToString() + ")";
+}
+
+std::string BooleanExpressionNode::GetPatternFormat() {
+  return "";
 }
 
 bool BooleanExpressionNode::operator==(const ConditionalExpressionNode &other) const {

@@ -24,16 +24,18 @@ class DesignExtractor {
   PKB *pkb;
 
   void ProcNodeHandler(std::vector<std::string> visited, std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst);
-  void ExprNodeHandler(std::vector<std::string> visited, std::string stmt, std::shared_ptr<ExpressionNode> expr);
-  std::string ExprNodeHandler(std::vector<std::string> visited, std::string stmt, std::shared_ptr<ExpressionNode> expr, int direction, std::string pattern);
-  void CondExprNodeHandler(std::vector<std::string> visited, std::string stmt, std::shared_ptr<ConditionalExpressionNode> if_stmt_cond);
+  void ExprNodeHandler(std::vector<std::string> visited, std::shared_ptr<ProcedureNode> proc, std::string stmt, std::shared_ptr<ExpressionNode> expr);
+  std::string ExprNodeHandler(std::vector<std::string> visited, std::shared_ptr<ProcedureNode> proc, std::string stmt, std::shared_ptr<ExpressionNode> expr, int direction, std::string pattern);
+  void CondExprNodeHandler(std::vector<std::string> visited, std::shared_ptr<ProcedureNode> proc, std::string stmt, std::shared_ptr<ConditionalExpressionNode> if_stmt_cond);
 
   void PopulateParent(std::string stmt1, std::string stmt2);
   void PopulateParentStar(std::string stmt, std::vector<std::string> visited);
   void PopulateFollows(std::string stmt1, std::string stmt2);
   void PopulateFollowsStar(std::vector<std::shared_ptr<StatementNode>> stmts_lst, int index);
   void PopulateUses(std::string stmt, std::string var);
+  void PopulateUsesProc(std::string proc, std::string var);
   void PopulateModifies(std::string stmt, std::string var);
+  void PopulateModifiesProc(std::string proc, std::string var);
   void PopulateProc(std::string name);
   void PopulateAssign(std::string stmt);
   void PopulateStmt(std::string stmt);

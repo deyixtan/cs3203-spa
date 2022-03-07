@@ -21,7 +21,8 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetLeftExpression();
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetRightExpression();
   [[nodiscard]] ConditionalType GetConditionalType() override;
-  [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] std::string ToString() override;
+  [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

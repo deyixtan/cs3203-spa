@@ -12,7 +12,8 @@ class VariableNode : public ExpressionNode {
   VariableNode(std::string identifier);
   [[nodiscard]] std::string GetIdentifier();
   [[nodiscard]] ExpressionType GetExpressionType() override;
-  [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] std::string ToString() override;
+  [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 
