@@ -5,21 +5,26 @@
 #include "../../pkb/pkb.h"
 #include "query_condition.h"
 #include "query_result.h"
+#include "clause.h"
+#include "clause_factory.h"
 
 #include <string>
 #include <unordered_set>
 #include <memory>
 #include <list>
+#include <queue>
 
 namespace pql_evaluator {
 
 class QueryEvaluator {
  public:
-  QueryEvaluator(PKB* pkb): pkb{pkb} {};
+  explicit QueryEvaluator(PKB* pkb): pkb{pkb} {};
   void Evaluate(ParsedQuery&, std::list<std::string>&);
 
  private:
+  std::unordered_set<std::string> result;
   PKB *pkb;
+  std::queue<std::unique_ptr<pql::Clause> > ExtractClauses(ParsedQuery& query);
   void EvaluateSelectOnly(ParsedQuery&  query);
   void EvaluateSelectWithRelationship(ParsedQuery& query);
   void EvaluateSelectWithPattern(ParsedQuery& query);

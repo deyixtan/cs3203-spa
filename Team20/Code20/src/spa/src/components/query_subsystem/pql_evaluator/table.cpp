@@ -128,12 +128,12 @@ void Table::CrossJoin(Table &other_table) {
   records = std::move(new_records);
 }
 
-std::unordered_set<std::string> Table::GetResult(std::string& select_synonym, Table& table) {
+std::unordered_set<std::string> Table::GetResult(const std::string& select_synonym) {
   std::unordered_set<std::string> result({});
-  std::vector<std::string>::iterator itr = std::find(table.attributes.begin(), table.attributes.end(), select_synonym);
-  if (itr != table.attributes.cend()) {
-    int index = std::distance(table.attributes.begin(), itr);
-    for (auto row : table.records) {
+  std::vector<std::string>::iterator itr = std::find(attributes.begin(), attributes.end(), select_synonym);
+  if (itr != attributes.cend()) {
+    int index = std::distance(attributes.begin(), itr);
+    for (auto row : records) {
       result.insert(row[index]);
     }
   }

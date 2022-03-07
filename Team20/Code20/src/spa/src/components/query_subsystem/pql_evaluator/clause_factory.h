@@ -14,10 +14,9 @@ namespace pql {
 class ClauseFactory {
  public:
   ClauseFactory() = default;
-  ClauseFactory(PKB *pkb);
-  static std::unique_ptr<Clause> Create(Relationship relationship, std::vector<Declaration> declarations);
-  static std::unique_ptr<Clause> Create(Pattern pattern, std::vector<Declaration> declarations);
-  static std::unique_ptr<Clause> Create(PqlToken selected_synonym, std::vector<Declaration> declarations);
+  static std::unique_ptr<Clause> Create(Relationship relationship, std::vector<Declaration> declarations, PKB *pkb);
+  static std::unique_ptr<Clause> Create(Pattern pattern, std::vector<Declaration> declarations, PKB *pkb);
+  static std::unique_ptr<Clause> Create(PqlToken selected_synonym, std::vector<Declaration> declarations, PKB *pkb);
 
  private:
   static PKB *pkb;

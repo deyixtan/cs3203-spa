@@ -35,7 +35,7 @@ class Table {
   void Merge(Table& other_table);
   void EncounteredFalseClause();
   bool HasEncounteredFalseClause();
-  std::unordered_set<std::string> GetResult(std::string& select_synonym, Table& table);
+  std::unordered_set<std::string> GetResult(const std::string& select_synonym);
   friend std::ostream& operator<<(std::ostream& os, const Table& table);
 
  private:

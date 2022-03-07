@@ -3,14 +3,13 @@
 #include "modifiess_clause.h"
 #include "usesp_clause.h"
 #include "usess_clause.h"
+#include "select_clause.h"
 
 namespace pql {
 
-ClauseFactory::ClauseFactory(PKB *pkb_) {
-  pkb = pkb_;
-}
-
-std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship, std::vector<Declaration> declarations) {
+std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
+                                              std::vector<Declaration> declarations,
+                                              PKB *pkb) {
   switch (relationship.GetRelRef().type) {
     case PqlTokenType::MODIFIES: {
       if (IsArgInteger(relationship.GetFirst()) || IsArgProcSynonym(relationship.GetFirst(), declarations)) {
@@ -36,11 +35,13 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship, std::ve
   }
 }
 
-std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern, std::vector<Declaration> declarations) {
+std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern, std::vector<Declaration> declarations, PKB *pkb) {
   return std::unique_ptr<Clause>();
 }
-std::unique_ptr<Clause> ClauseFactory::Create(PqlToken selected_synonym, std::vector<Declaration> declarations) {
-  return std::unique_ptr<Clause>();
+std::unique_ptr<Clause> ClauseFactory::Create(PqlToken selected_synonym,
+                                              std::vector<Declaration> declarations,
+                                              PKB *pkb) {
+  return std::make_unique<SelectClause>(selected_synonym, declarations, pkb);
 }
 
 bool ClauseFactory::IsArgIdent(const PqlToken &arg) {

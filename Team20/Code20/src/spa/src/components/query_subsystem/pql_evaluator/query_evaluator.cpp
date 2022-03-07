@@ -3,7 +3,20 @@
 namespace pql_evaluator {
 
 void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &results) {
-  result.clear();
+  pql::Table table;
+  auto clauses = ExtractClauses(query);
+  while (!clauses.empty()) {
+    auto clause = std::move(clauses.front());
+    auto intermediate_table = clause->Execute();
+    table.Merge(intermediate_table);
+    clauses.pop();
+  }
+  auto projected_results = table.GetResult(query.GetSynonym().value);
+  for (auto result : projected_results) {
+    results.emplace_back(result);
+  }
+
+//  result.clear();
 
   // Evaluation has 4 cases
   // 1. Select
@@ -15,23 +28,36 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
   // eval(Relationship) * n -> Table has restrictions on synonym values (single or pair)
   // eval(Pattern) * n -> Table has restrictions on synonym values (single or pair)
   // Select should find tables with the synonyms and then merge the tables
-  if (query.GetRelationships().empty() && query.GetPatterns().empty()) {
-    // only select
-    EvaluateSelectOnly(query);
-  } else if (!query.GetRelationships().empty() && query.GetPatterns().empty()) {
-    // select + 1 relationship
-    EvaluateSelectWithRelationship(query);
-  } else if (query.GetRelationships().empty() && !query.GetPatterns().empty()) {
-    // select + 1 pattern
-    EvaluateSelectWithPattern(query);
-  } else {
-    // select + 1 relationship + 1 pattern
-    EvaluateSelectWithRelationshipAndPattern(query);
-  }
+//  if (query.GetRelationships().empty() && query.GetPatterns().empty()) {
+//    // only select
+//    EvaluateSelectOnly(query);
+//  } else if (!query.GetRelationships().empty() && query.GetPatterns().empty()) {
+//    // select + 1 relationship
+//    EvaluateSelectWithRelationship(query);
+//  } else if (query.GetRelationships().empty() && !query.GetPatterns().empty()) {
+//    // select + 1 pattern
+//    EvaluateSelectWithPattern(query);
+//  } else {
+//    // select + 1 relationship + 1 pattern
+//    EvaluateSelectWithRelationshipAndPattern(query);
+//  }
+//
+//  for (auto i = result.begin(); i!=result.end(); ++i) {
+//    results.emplace_back(*i);
+//  }
+}
 
-  for (auto i = result.begin(); i!=result.end(); ++i) {
-    results.emplace_back(*i);
+std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query) {
+  std::queue<std::unique_ptr<pql::Clause> > clauses;
+  for (const auto& relationship : query.GetRelationships()) {
+    auto clause = pql::ClauseFactory::Create(relationship, query.GetDeclaration(), pkb);
+    if (clause) {
+      clauses.push(std::move(clause));
+    }
   }
+  clauses.push(pql::ClauseFactory::Create(query.GetSynonym(), query.GetDeclaration(), pkb));
+
+  return clauses;
 }
 
 void QueryEvaluator::EvaluateSelectOnly(ParsedQuery &query) {
