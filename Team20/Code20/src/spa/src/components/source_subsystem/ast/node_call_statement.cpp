@@ -11,7 +11,7 @@ StmtType CallStatementNode::GetStatementType() {
   return StmtType::CALL;
 }
 
-std::string CallStatementNode::ToString(int level) {
+std::string CallStatementNode::ToString() {
   return "call " + m_identifier + ";\n";
 }
 

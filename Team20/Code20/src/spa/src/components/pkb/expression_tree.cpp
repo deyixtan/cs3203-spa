@@ -3,20 +3,32 @@
 ExpressionTree::ExpressionTree() {}
 
 // Function to create new node
-nptr ExpressionTree::newNode(char c) {
+nptr ExpressionTree::newNode(std::string c) {
   nptr n = new node;
   n->data = c;
   n->left = n->right = nullptr;
   return n;
 }
 
+std::vector<std::string> ExpressionTree::split(const std::string &s, char delim) {
+  std::stringstream ss(s);
+  std::string item;
+  std::vector<std::string> tokens;
+  while (getline(ss, item, delim)) {
+    tokens.push_back(item);
+  }
+  return tokens;
+}
+
 // Function to build Expression Tree
 nptr ExpressionTree::build(std::string& s) {
   // Stack to hold nodes
   std::stack<nptr> node_stack;
+  std::string data = "";
+  char prev = NULL;
 
   // Stack to hold chars
-  std::stack<char> char_stack;
+  std::stack<std::string> str_stack;
   nptr tree, tree1, tree2;
 
   // Prioritising the operators
@@ -25,30 +37,34 @@ nptr ExpressionTree::build(std::string& s) {
   p[')'] = 0;
 
   for (int i = 0; i < s.length(); i++) {
-    if (s[i] == '(') {
-
+    std::string str;
+    str.push_back(s[i]);
+    
+    if (str == "(") {
       // Push '(' in char stack
-      char_stack.push(s[i]);
-    }
-
-      // Push the operands in node stack
-    else if (isalnum(s[i])) {
-      tree = newNode(s[i]);
-      node_stack.push(tree);
+      str_stack.push(str);
+    } else if (isalnum(s[i])) { // Push the operands in node stack
+      if (isalnum(prev) || prev == NULL) {
+        data += str;
+      }
+      prev = s[i];
     } else if (p[s[i]] > 0) {
       // If an operator with lower or
       // same associativity appears
+      tree = newNode(data);
+      node_stack.push(tree);
+      data = "";
       while (
-          !char_stack.empty() && char_stack.top() != '('
-              && ((s[i] != '^' && p[char_stack.top()] >= p[s[i]])
-                  || (s[i] == '^'
-                      && p[char_stack.top()] > p[s[i]])))
+          !str_stack.empty() && str_stack.top() != "("
+              && ((str != "^" && p[str_stack.top()[0]] >= p[s[i]])
+                  || (str == "^"
+                      && p[str_stack.top()[0]] > p[s[i]])))
       {
 
         // Get and remove the top element
         // from the character stack
-        tree = newNode(char_stack.top());
-        char_stack.pop();
+        tree = newNode(str_stack.top());
+        str_stack.pop();
 
         // Get and remove the top element
         // from the node stack
@@ -68,14 +84,16 @@ nptr ExpressionTree::build(std::string& s) {
         node_stack.push(tree);
       }
 
-      // Push s[i] to char stack
-      char_stack.push(s[i]);
-    }
-    else if (s[i] == ')') {
-      while (!char_stack.empty() && char_stack.top() != '(')
+      // Push str to char stack
+      str_stack.push(str);
+    } else if (str == ")") {
+      tree = newNode(data);
+      node_stack.push(tree);
+      data = "";
+      while (!str_stack.empty() && str_stack.top() != "(")
       {
-        tree = newNode(char_stack.top());
-        char_stack.pop();
+        tree = newNode(str_stack.top());
+        str_stack.pop();
         tree1 = node_stack.top();
         node_stack.pop();
         tree2 = node_stack.top();
@@ -84,7 +102,7 @@ nptr ExpressionTree::build(std::string& s) {
         tree->right = tree1;
         node_stack.push(tree);
       }
-      char_stack.pop();
+      str_stack.pop();
     }
   }
   this->root = node_stack.top();
@@ -109,13 +127,11 @@ nptr ExpressionTree::GetRoot() {
 
 std::string ExpressionTree::GetPattern(nptr root) {
   std::string pattern = "";
-  std::string temp;
-  temp.push_back(root->data);
 
-  if (root->data == '-' || root->data == '+' || root->data == '*' || root->data == '/') {
-    pattern += "(" + GetPattern(root->left) + temp + GetPattern(root->right) + ")";
+  if (root->data == "-" || root->data == "+" || root->data == "*" || root->data == "/") {
+    pattern += "(" + GetPattern(root->left) + root->data + GetPattern(root->right) + ")";
   } else {
-    return "(" + temp + ")";
+    return "(" + root->data + ")";
   }
 
   return pattern;
