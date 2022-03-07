@@ -6,7 +6,7 @@
 // A store class that maintains all Parent APIs and relationships
 class FollowStore : public Store {
  public:
-  FollowStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  explicit FollowStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
 
   // A struct to maintain every node's relationships
   struct node {
@@ -23,33 +23,33 @@ class FollowStore : public Store {
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStarStmt(StmtType type1,
                                                                                                         StmtType type2);
 
-  bool IsFollower(std::string stmt);
+  bool IsFollower(std::string const &stmt);
 
-  bool IsFollowing(std::string stmt);
+  bool IsFollowing(std::string const &stmt);
 
-  bool IsFollowerStar(std::string stmt);
+  bool IsFollowerStar(std::string const &stmt);
 
-  bool IsFollowingStar(std::string stmt);
+  bool IsFollowingStar(std::string const &stmt);
 
-  bool FollowExists(std::pair<std::string, std::string> pair);
+  bool FollowExists(std::pair<std::string, std::string> const &pair);
 
-  bool FollowStarExists(std::pair<std::string, std::string> pair);
+  bool FollowStarExists(std::pair<std::string, std::string> const &pair);
 
   void Init(int num_stmts);
 
-  void AddFollow(std::string parent, std::string child);
+  void AddFollow(std::string const &parent, std::string const &child);
 
-  void AddFollowStar(std::string parent, std::string child);
+  void AddFollowStar(std::string const &parent, std::string const &child);
 
   std::unordered_set<std::string> GetAllFollowers();
 
-  std::string GetFollowerOf(std::string stmt);
+  std::string GetFollowerOf(std::string const &stmt);
 
-  std::string GetFollowingOf(std::string stmt);
+  std::string GetFollowingOf(std::string const &stmt);
 
-  std::unordered_set<std::string> GetFollowerStarOf(std::string stmt);
+  std::unordered_set<std::string> GetFollowerStarOf(std::string const &stmt);
 
-  std::unordered_set<std::string> GetFollowingStarOf(std::string stmt);
+  std::unordered_set<std::string> GetFollowingStarOf(std::string const &stmt);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowPairs();
 

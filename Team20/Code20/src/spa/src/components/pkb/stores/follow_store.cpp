@@ -1,6 +1,6 @@
 #include "follow_store.h"
 
-FollowStore::FollowStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(stmt_vector) {}
+FollowStore::FollowStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(move(stmt_vector)) {}
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowStore::GetAllFollowStmt(StmtType type) {
   std::vector<StmtType> supported_types;
@@ -48,19 +48,19 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowStore::
   return Store::GetAllStmt(type1, type2, supported_types, GetAllFollowStarStmt(type2), true);
 }
 
-bool FollowStore::IsFollower(std::string stmt) {
+bool FollowStore::IsFollower(std::string const &stmt) {
   return follower_set.find(stmt) != follower_set.end();
 }
 
-bool FollowStore::IsFollowing(std::string stmt) {
+bool FollowStore::IsFollowing(std::string const &stmt) {
   return following_set.find(stmt) != following_set.end();
 }
 
-bool FollowStore::IsFollowerStar(std::string stmt) {
+bool FollowStore::IsFollowerStar(std::string const &stmt) {
   return follower_star_set.find(stmt) != follower_star_set.end();
 }
 
-bool FollowStore::IsFollowingStar(std::string stmt) {
+bool FollowStore::IsFollowingStar(std::string const &stmt) {
   return following_star_set.find(stmt) != following_star_set.end();
 }
 
@@ -72,7 +72,7 @@ void FollowStore::Init(int num_stmts) {
   }
 }
 
-void FollowStore::AddFollow(std::string follower, std::string following) {
+void FollowStore::AddFollow(std::string const &follower, std::string const &following) {
   all_follow_pairs.emplace(std::pair<std::string, std::string>(follower, following));
 
   if (rs_map.find(follower) == rs_map.end()) {
@@ -89,7 +89,7 @@ void FollowStore::AddFollow(std::string follower, std::string following) {
   following_set.insert(following);
 }
 
-void FollowStore::AddFollowStar(std::string follower, std::string following) {
+void FollowStore::AddFollowStar(std::string const &follower, std::string const &following) {
   all_follow_star_pairs.emplace(std::pair<std::string, std::string>(follower, following));
 
   if (rs_map.find(follower) == rs_map.end()) {
@@ -107,12 +107,12 @@ void FollowStore::AddFollowStar(std::string follower, std::string following) {
 }
 
 // Used for follower(s1, s2)
-bool FollowStore::FollowExists(std::pair<std::string, std::string> pair) {
+bool FollowStore::FollowExists(std::pair<std::string, std::string> const &pair) {
   return all_follow_pairs.find(pair) != all_follow_pairs.end();
 }
 
 // Used for follower*(s1, s2)
-bool FollowStore::FollowStarExists(std::pair<std::string, std::string> pair) {
+bool FollowStore::FollowStarExists(std::pair<std::string, std::string> const &pair) {
   return all_follow_star_pairs.find(pair) != all_follow_star_pairs.end();
 }
 
@@ -120,28 +120,28 @@ std::unordered_set<std::string> FollowStore::GetAllFollowers() {
   return follower_set;
 }
 
-std::string FollowStore::GetFollowerOf(std::string stmt) {
+std::string FollowStore::GetFollowerOf(std::string const &stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     return rs_map.at(stmt).follower;
   }
   return "0";
 }
 
-std::string FollowStore::GetFollowingOf(std::string stmt) {
+std::string FollowStore::GetFollowingOf(std::string const &stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     return rs_map.at(stmt).following;
   }
   return "0";
 }
 
-std::unordered_set<std::string> FollowStore::GetFollowerStarOf(std::string stmt) {
+std::unordered_set<std::string> FollowStore::GetFollowerStarOf(std::string const &stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     return rs_map.at(stmt).follower_star;
   }
   return {};
 }
 
-std::unordered_set<std::string> FollowStore::GetFollowingStarOf(std::string stmt) {
+std::unordered_set<std::string> FollowStore::GetFollowingStarOf(std::string const &stmt) {
   if (rs_map.find(stmt) != rs_map.end()) {
     return rs_map.at(stmt).following_star;
   }

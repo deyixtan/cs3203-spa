@@ -14,42 +14,42 @@ struct parent_child {
 // A store class that maintains all Parent APIs and relationships
 class ParentStore : public Store {
  public:
-  ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  explicit ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStmt(StmtType type1,
                                                                                                     StmtType type2);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStarStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStarStmt(StmtType type1,
                                                                                                         StmtType type2);
-  bool IsParent(std::string stmt);
+  bool IsParent(std::string const &stmt);
 
-  bool IsChild(std::string stmt);
+  bool IsChild(std::string const &stmt);
 
-  bool IsAnce(std::string stmt);
+  bool IsAnce(std::string const &stmt);
 
-  bool IsDesc(std::string stmt);
+  bool IsDesc(std::string const &stmt);
 
-  bool ParentChildExists(std::string stmt1, std::string stmt2);
+  bool ParentChildExists(std::string const &stmt1, std::string const &stmt2);
 
-  bool AnceExists(std::string curr, std::string ance);
+  bool AnceExists(std::string const &curr, std::string const &ance);
 
-  bool DescExists(std::string curr, std::string desc);
+  bool DescExists(std::string const &curr, std::string const &desc);
 
   void Init(int num_stmts);
 
-  void AddParent(std::string parent, std::string child);
+  void AddParent(std::string const &parent, std::string const &child);
 
-  void AddParentStar(std::string stmt, std::vector<std::string> visited);
+  void AddParentStar(std::string const &stmt, std::vector<std::string> const &visited);
 
   std::unordered_set<std::string> GetAllParents();
 
-  std::string GetParentOf(std::string stmt);
+  std::string GetParentOf(std::string const &stmt);
 
-  std::unordered_set<std::string> GetChildOf(std::string stmt);
+  std::unordered_set<std::string> GetChildOf(std::string const &stmt);
 
-  std::unordered_set<std::string> GetAllAnceOf(std::string stmt);
+  std::unordered_set<std::string> GetAllAnceOf(std::string const &stmt);
 
-  std::unordered_set<std::string> GetAllDescOf(std::string stmt);
+  std::unordered_set<std::string> GetAllDescOf(std::string const &stmt);
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetParentChildPairs();
 

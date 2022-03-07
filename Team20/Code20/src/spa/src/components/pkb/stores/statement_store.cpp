@@ -1,6 +1,6 @@
 #include "statement_store.h"
 
-StatementStore::StatementStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(stmt_vector) {}
+StatementStore::StatementStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(move(stmt_vector)) {}
 
 void StatementStore::AddStmtVar(std::string stmt, std::string var) {
   all_stmt.insert({stmt});
@@ -28,36 +28,36 @@ void StatementStore::AddProcVar(std::string proc, std::string var) {
   }
 }
 
-bool StatementStore::StmtVarExists(std::pair<std::string, std::string> pair) {
+bool StatementStore::StmtVarExists(std::pair<std::string, std::string> const &pair) {
   return stmt_var_pairs.find(pair) != stmt_var_pairs.end();
 }
 
-bool StatementStore::ProcVarExists(std::pair<std::string, std::string> pair) {
+bool StatementStore::ProcVarExists(std::pair<std::string, std::string> const &pair) {
   return proc_var_pairs.find(pair) != proc_var_pairs.end();
 }
 
-std::unordered_set<std::string> StatementStore::GetVarByStmt(std::string stmt) {
+std::unordered_set<std::string> StatementStore::GetVarByStmt(std::string const &stmt) {
   if (stmt_var_map.find(stmt) != stmt_var_map.end()) {
     return stmt_var_map.at(stmt);
   }
   return {};
 }
 
-std::unordered_set<std::string> StatementStore::GetStmtByVar(std::string var) {
+std::unordered_set<std::string> StatementStore::GetStmtByVar(std::string const &var) {
   if (var_stmt_map.find(var) != var_stmt_map.end()) {
     return var_stmt_map.at(var);
   }
   return {};
 }
 
-std::unordered_set<std::string> StatementStore::GetVarByProc(std::string proc) {
+std::unordered_set<std::string> StatementStore::GetVarByProc(std::string const &proc) {
   if (proc_var_map.find(proc) != proc_var_map.end()) {
     return proc_var_map.at(proc);
   }
   return {};
 }
 
-std::unordered_set<std::string> StatementStore::GetProcByVar(std::string var) {
+std::unordered_set<std::string> StatementStore::GetProcByVar(std::string const &var) {
   if (var_proc_map.find(var) != var_proc_map.end()) {
     return var_proc_map.at(var);
   }

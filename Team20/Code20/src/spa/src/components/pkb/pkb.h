@@ -29,10 +29,10 @@ class PKB {
   [[nodiscard]] std::shared_ptr<ParentStore> GetParentStore();
   [[nodiscard]] std::shared_ptr<UsageStore> GetUsageStore();
 
-  void AddStmt(std::string name, StmtType type);
-  void AddPattern(std::string stmt, std::string lhs, std::string rhs);
+  void AddStmt(std::string const &name, StmtType type);
+  void AddPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs);
   [[nodiscard]] std::unordered_set<std::string> GetStmt(StmtType type);
-  [[nodiscard]] std::unordered_set<std::string> GetStmtWithPattern(std::string lhs, std::string rhs);
+  [[nodiscard]] std::unordered_set<std::string> GetStmtWithPattern(std::string const &lhs, std::string rhs);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>,
                                    pair_hash> GetStmtWithPatternSynonym(std::string rhs);
 };

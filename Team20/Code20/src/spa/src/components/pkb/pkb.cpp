@@ -38,15 +38,15 @@ std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
   return m_stmt_vector->at(type);
 }
 
-void PKB::AddStmt(std::string stmt, StmtType type) {
+void PKB::AddStmt(std::string const &stmt, StmtType type) {
   m_stmt_vector->at(type).insert(stmt);
 }
 
-void PKB::AddPattern(std::string stmt, std::string lhs, std::string rhs) {
+void PKB::AddPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs) {
   m_pattern_map[stmt] = {lhs, rhs};
 }
 
-std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::string rhs) {
+std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string const &lhs, std::string rhs) {
   std::unordered_set<std::string> result = {};
   rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
   //rhs = "(" + rhs + ")";
@@ -57,7 +57,7 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
       result.insert(key);
     }
 
-    if (lhs == "_" && rhs != "_" && rhs.find("_") != std::string::npos) {
+    if (lhs == "_" && rhs != "_" && rhs.find('_') != std::string::npos) {
       auto first = rhs.find("_\"");
       auto last = rhs.find("\"_");
       auto sub_pattern = rhs.substr(first + 2, last - 2);
@@ -66,7 +66,7 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
       }
     }
 
-    if (lhs == "_" && rhs != "_" && rhs.find("_") == std::string::npos) {
+    if (lhs == "_" && rhs != "_" && rhs.find('_') == std::string::npos) {
       if (val.second == rhs) {
         result.insert(key);
       }
@@ -78,7 +78,7 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
       }
     }
 
-    if (lhs != "_" && rhs != "_" && rhs.find("_") != std::string::npos) {
+    if (lhs != "_" && rhs != "_" && rhs.find('_') != std::string::npos) {
       auto first = rhs.find("_\"");
       auto last = rhs.find("\"_");
       auto sub_pattern = rhs.substr(first + 2, last - 2);
@@ -87,7 +87,7 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string lhs, std::st
       }
     }
 
-    if (lhs != "_" && rhs != "_" && rhs.find("_") == std::string::npos) {
+    if (lhs != "_" && rhs != "_" && rhs.find('_') == std::string::npos) {
       if (lhs == val.first && val.second == rhs) {
         result.insert(key);
       }
@@ -106,14 +106,14 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetStmtW
     }
 
     // Exact match
-    if (rhs != "_" && rhs.find("_") == std::string::npos) {
+    if (rhs != "_" && rhs.find('_') == std::string::npos) {
       if (val.second == rhs) {
         result.insert({key, val.first});
       }
     }
 
     // Partial match
-    if (rhs != "_" && rhs.find("_") != std::string::npos) {
+    if (rhs != "_" && rhs.find('_') != std::string::npos) {
       auto first = rhs.find("_\"");
       auto last = rhs.find("\"_");
       auto sub_pattern = rhs.substr(first + 2, last - 2);
