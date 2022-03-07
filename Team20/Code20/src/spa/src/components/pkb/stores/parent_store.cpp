@@ -3,42 +3,24 @@
 ParentStore::ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(move(stmt_vector)) {}
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStmt(StmtType type) {
-  std::vector<StmtType> supported_types;
-  supported_types.push_back(StmtType::STMT);
-  supported_types.push_back(StmtType::ASSIGN);
-  supported_types.push_back(StmtType::PRINT);
-  supported_types.push_back(StmtType::READ);
-  supported_types.push_back(StmtType::IF);
-  supported_types.push_back(StmtType::WHILE);
+  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
   return GetAllStmt(type, supported_types, GetParentChildPairs(), false);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStmt(StmtType type1,
                                                                                                  StmtType type2) {
-  std::vector<StmtType> supported_types;
-  supported_types.push_back(StmtType::STMT);
-  supported_types.push_back(StmtType::IF);
-  supported_types.push_back(StmtType::WHILE);
+  std::vector<StmtType> supported_types = {STMT, WHILE, IF};
   return GetAllStmt(type1, type2, supported_types, GetAllParentStmt(type2), true);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStarStmt(StmtType type) {
-  std::vector<StmtType> supported_types;
-  supported_types.push_back(StmtType::STMT);
-  supported_types.push_back(StmtType::ASSIGN);
-  supported_types.push_back(StmtType::PRINT);
-  supported_types.push_back(StmtType::READ);
-  supported_types.push_back(StmtType::IF);
-  supported_types.push_back(StmtType::WHILE);
+  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
   return GetAllStmt(type, supported_types, GetAnceDescPairs(), false);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStarStmt(StmtType type1,
                                                                                                      StmtType type2) {
-  std::vector<StmtType> supported_types;
-  supported_types.push_back(StmtType::STMT);
-  supported_types.push_back(StmtType::IF);
-  supported_types.push_back(StmtType::WHILE);
+  std::vector<StmtType> supported_types = {STMT, WHILE, IF};
   return GetAllStmt(type1, type2, supported_types, GetAllParentStarStmt(type2), true);
 }
 

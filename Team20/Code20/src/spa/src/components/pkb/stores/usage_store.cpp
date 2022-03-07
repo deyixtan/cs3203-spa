@@ -3,12 +3,7 @@
 UsageStore::UsageStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : StatementStore(move(stmt_vector)) {}
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> UsageStore::GetAllUsesStmt(StmtType type) {
-  std::vector<StmtType> supported_types;
-  supported_types.push_back(StmtType::STMT);
-  supported_types.push_back(StmtType::WHILE);
-  supported_types.push_back(StmtType::PRINT);
-  supported_types.push_back(StmtType::IF);
-  supported_types.push_back(StmtType::ASSIGN);
+  std::vector<StmtType> supported_types = {STMT, PRINT, WHILE, IF, ASSIGN};
   return Store::GetAllStmt(type, supported_types, GetAllStmtVar(), true);
 }
 
