@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "source_token.h"
+#include "source_parser_session.h"
 #include "exceptions/empty_statement_list.h"
 #include "exceptions/end_of_stream.h"
 #include "exceptions/invalid_parse_condition.h"
@@ -28,6 +29,7 @@ namespace source {
 
 class SourceParser {
  private:
+  SourceParserSession m_session;
   int m_cursor;
   int m_curr_stmt_no;
   std::vector<std::shared_ptr<SourceToken>> m_tokens_ptr;
