@@ -40,15 +40,6 @@ bool ParentStore::IsDesc(std::string const &stmt) {
   return desc_set.find(stmt) != desc_set.end();
 }
 
-void ParentStore::Init(int num_stmts) {
-  parent_child new_PC =
-      {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>()};
-
-  for (int i = 1; i <= num_stmts; i++) {
-    rs_map[std::to_string(i)] = new_PC;
-  }
-}
-
 void ParentStore::AddParent(std::string const &parent, std::string const &child) {
   if (rs_map.find(parent) == rs_map.end()) {
     rs_map.insert({parent, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),

@@ -40,14 +40,6 @@ bool FollowStore::IsFollowingStar(std::string const &stmt) {
   return following_star_set.find(stmt) != following_star_set.end();
 }
 
-void FollowStore::Init(int num_stmts) {
-  node n = {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()};
-
-  for (int i = 1; i <= num_stmts; i++) {
-    rs_map[std::to_string(i)] = n;
-  }
-}
-
 void FollowStore::AddFollow(std::string const &follower, std::string const &following) {
   all_follow_pairs.emplace(std::pair<std::string, std::string>(follower, following));
 

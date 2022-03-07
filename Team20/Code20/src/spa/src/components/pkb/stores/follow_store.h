@@ -35,8 +35,6 @@ class FollowStore : public Store {
 
   bool FollowStarExists(std::pair<std::string, std::string> const &pair);
 
-  void Init(int num_stmts);
-
   void AddFollow(std::string const &parent, std::string const &child);
 
   void AddFollowStar(std::string const &parent, std::string const &child);

@@ -35,8 +35,6 @@ class ParentStore : public Store {
 
   bool DescExists(std::string const &curr, std::string const &desc);
 
-  void Init(int num_stmts);
-
   void AddParent(std::string const &parent, std::string const &child);
 
   void AddParentStar(std::string const &stmt, std::vector<std::string> const &visited);

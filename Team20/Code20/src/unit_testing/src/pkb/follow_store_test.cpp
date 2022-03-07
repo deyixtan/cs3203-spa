@@ -10,7 +10,6 @@ FollowStore set_up_follow(int numStmts) {
   }
 
   FollowStore follow_store = FollowStore(std::make_shared<std::vector<std::unordered_set<std::string>>>(stmt_vector));
-  follow_store.Init(numStmts);
   follow_store.AddFollow(LINE_1, LINE_2);
   follow_store.AddFollow(LINE_2, LINE_3);
   follow_store.AddFollow(LINE_3, LINE_4);
