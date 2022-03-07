@@ -129,6 +129,11 @@ Table UsesSClause::HandleIntegerSynonym() {
 }
 
 Table UsesSClause::HandleIntegerWildcard() {
+  bool is_empty = pkb->GetUsageStore()->GetVarUsedByStmt(first_arg.value).empty();
+  Table table;
+  if (is_empty) {
+    table.EncounteredFalseClause();
+  }
 
 }
 
