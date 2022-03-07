@@ -3,7 +3,7 @@
 namespace source {
 
 SourceParser::SourceParser(std::vector<std::shared_ptr<SourceToken>> tokens_ptr)
-    : m_cursor(0), m_curr_stmt_no(0), m_tokens_ptr(std::move(tokens_ptr)) {}
+    : m_session(SourceParserSession()), m_cursor(0), m_curr_stmt_no(0), m_tokens_ptr(std::move(tokens_ptr)) {}
 
 bool SourceParser::AreTokensProcessed() {
   return m_cursor >= m_tokens_ptr.size();
@@ -96,6 +96,7 @@ std::shared_ptr<ProcedureNode> SourceParser::ParseProcedure() {
   std::shared_ptr<StatementListNode> stmt_list = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
   std::string procedure_name = identifier->GetValue();
+  m_session.AddProcedure(procedure_name); // throws ProcedureExistException
   return std::make_shared<ProcedureNode>(procedure_name, stmt_list);
 }
 

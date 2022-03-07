@@ -14,8 +14,8 @@ class ProgramNode : public Node {
   ProgramNode();
   ProgramNode(std::vector<std::shared_ptr<ProcedureNode>> procedures);
   [[nodiscard]] std::vector<std::shared_ptr<ProcedureNode>> GetProcedures();
-  [[nodiscard]] std::string ToString(int level) override;
-  [[nodiscard]] std::string ToString();
+  [[nodiscard]] std::string ToString() override;
+  [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ProgramNode &other) const;
 };
 

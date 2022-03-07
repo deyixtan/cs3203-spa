@@ -1,14 +1,7 @@
 #include "pkb.h"
 
 PKB::PKB() : m_stmt_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)) {
-  InitStatementVector();
   InitRelationshipStores();
-}
-
-void PKB::InitStatementVector() {
-  for (int i = 0; i < COUNT; i++) {
-    m_stmt_vector->push_back(std::unordered_set<std::string>());
-  }
 }
 
 void PKB::InitRelationshipStores() {
@@ -31,10 +24,21 @@ std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
 }
 
 std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string const &lhs, std::string rhs) {
+  ExpressionTree expr_tree = ExpressionTree();
   std::unordered_set<std::string> result = {};
   rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
-  //rhs = "(" + rhs + ")";
-  //TODO: Tree builder and parser
+  std::string temp = "";
+
+  if (rhs.find('_') != std::string::npos) {
+    auto first = rhs.find("_\"");
+    auto last = rhs.find("\"_");
+    temp = "(" + rhs.substr(first + 2, last - 2) + ")";
+  } else {
+    temp = "(" + rhs + ")";
+  }
+
+  expr_tree.build(temp);
+  std::string sub_pattern = expr_tree.GetPattern(expr_tree.GetRoot());
 
   for (auto const&[key, val] : m_pattern_map) {
     if (lhs == "_" && rhs == "_") {
@@ -42,9 +46,6 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string const &lhs, 
     }
 
     if (lhs == "_" && rhs != "_" && rhs.find('_') != std::string::npos) {
-      auto first = rhs.find("_\"");
-      auto last = rhs.find("\"_");
-      auto sub_pattern = rhs.substr(first + 2, last - 2);
       if (val.second.find(sub_pattern) != std::string::npos) {
         result.insert(key);
       }
@@ -63,9 +64,6 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string const &lhs, 
     }
 
     if (lhs != "_" && rhs != "_" && rhs.find('_') != std::string::npos) {
-      auto first = rhs.find("_\"");
-      auto last = rhs.find("\"_");
-      auto sub_pattern = rhs.substr(first + 2, last - 2);
       if (lhs == val.first && val.second.find(sub_pattern) != std::string::npos) {
         result.insert(key);
       }

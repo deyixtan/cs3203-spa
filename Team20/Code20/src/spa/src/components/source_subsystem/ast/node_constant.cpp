@@ -10,8 +10,12 @@ ExpressionType ConstantNode::GetExpressionType() {
   return ExpressionType::CONSTANT;
 }
 
-std::string ConstantNode::ToString(int level) {
+std::string ConstantNode::ToString() {
   return m_value;
+}
+
+std::string ConstantNode::GetPatternFormat() {
+  return "(" + m_value + ")";
 }
 
 bool ConstantNode::operator==(const ExpressionNode &other) const {

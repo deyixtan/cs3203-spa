@@ -15,6 +15,10 @@ std::string StatementNode::GetStatementLabel() {
   return std::string(3 - num.length(), ' ') + num;
 }
 
-std::string StatementNode::ToString(int level) {
+std::string StatementNode::ToString() {
   return GetStatementLabel();
+}
+
+std::string StatementNode::GetPatternFormat() {
+  return "";
 }

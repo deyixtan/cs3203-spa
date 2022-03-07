@@ -11,7 +11,7 @@ class CallStatementNode : public StatementNode {
   CallStatementNode(int stmt_no, std::string m_identifier);
   [[nodiscard]] std::string GetIdentifier();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] std::string ToString() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };
 

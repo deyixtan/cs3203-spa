@@ -10,6 +10,7 @@
 #include "stores/modify_store.h"
 #include "stores/follow_store.h"
 #include "stores/parent_store.h"
+#include "expression_tree.h"
 
 class PKB {
  private:
@@ -22,7 +23,6 @@ class PKB {
 
  public:
   PKB();
-  void InitStatementVector();
   void InitRelationshipStores();
   void AddStmt(std::string const &name, StmtType type);
   void AddPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs);
