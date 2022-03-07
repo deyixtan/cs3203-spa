@@ -10,6 +10,7 @@
 #include "stores/modify_store.h"
 #include "stores/follow_store.h"
 #include "stores/parent_store.h"
+#include "expression_tree.h"
 
 class PKB {
  private:
