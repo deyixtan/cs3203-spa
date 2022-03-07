@@ -13,11 +13,11 @@ nptr ExpressionTree::newNode(char c) {
 // Function to build Expression Tree
 nptr ExpressionTree::build(std::string& s) {
   // Stack to hold nodes
-  std::stack<nptr> stN;
+  std::stack<nptr> node_stack;
 
   // Stack to hold chars
-  std::stack<char> stC;
-  nptr t, t1, t2;
+  std::stack<char> char_stack;
+  nptr tree, tree1, tree2;
 
   // Prioritising the operators
   int p[123] = { 0 };
@@ -28,66 +28,66 @@ nptr ExpressionTree::build(std::string& s) {
     if (s[i] == '(') {
 
       // Push '(' in char stack
-      stC.push(s[i]);
+      char_stack.push(s[i]);
     }
 
       // Push the operands in node stack
     else if (isalnum(s[i])) {
-      t = newNode(s[i]);
-      stN.push(t);
+      tree = newNode(s[i]);
+      node_stack.push(tree);
     } else if (p[s[i]] > 0) {
       // If an operator with lower or
       // same associativity appears
       while (
-          !stC.empty() && stC.top() != '('
-              && ((s[i] != '^' && p[stC.top()] >= p[s[i]])
+          !char_stack.empty() && char_stack.top() != '('
+              && ((s[i] != '^' && p[char_stack.top()] >= p[s[i]])
                   || (s[i] == '^'
-                      && p[stC.top()] > p[s[i]])))
+                      && p[char_stack.top()] > p[s[i]])))
       {
 
         // Get and remove the top element
         // from the character stack
-        t = newNode(stC.top());
-        stC.pop();
+        tree = newNode(char_stack.top());
+        char_stack.pop();
 
         // Get and remove the top element
         // from the node stack
-        t1 = stN.top();
-        stN.pop();
+        tree1 = node_stack.top();
+        node_stack.pop();
 
         // Get and remove the currently top
         // element from the node stack
-        t2 = stN.top();
-        stN.pop();
+        tree2 = node_stack.top();
+        node_stack.pop();
 
         // Update the tree
-        t->left = t2;
-        t->right = t1;
+        tree->left = tree2;
+        tree->right = tree1;
 
         // Push the node to the node stack
-        stN.push(t);
+        node_stack.push(tree);
       }
 
       // Push s[i] to char stack
-      stC.push(s[i]);
+      char_stack.push(s[i]);
     }
     else if (s[i] == ')') {
-      while (!stC.empty() && stC.top() != '(')
+      while (!char_stack.empty() && char_stack.top() != '(')
       {
-        t = newNode(stC.top());
-        stC.pop();
-        t1 = stN.top();
-        stN.pop();
-        t2 = stN.top();
-        stN.pop();
-        t->left = t2;
-        t->right = t1;
-        stN.push(t);
+        tree = newNode(char_stack.top());
+        char_stack.pop();
+        tree1 = node_stack.top();
+        node_stack.pop();
+        tree2 = node_stack.top();
+        node_stack.pop();
+        tree->left = tree2;
+        tree->right = tree1;
+        node_stack.push(tree);
       }
-      stC.pop();
+      char_stack.pop();
     }
   }
-  this->root = stN.top();
+  this->root = node_stack.top();
   return this->root;
 }
 
