@@ -23,6 +23,7 @@ class PKB {
 
  public:
   PKB();
+  void InitRelationshipStores();
   void AddStmt(std::string const &name, StmtType type);
   void AddPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs);
   [[nodiscard]] std::unordered_set<std::string> GetStmt(StmtType type);
