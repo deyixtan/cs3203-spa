@@ -106,15 +106,14 @@ void Table::NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t
   records = std::move(new_records);
 }
 void Table::CrossJoin(Table &other_table) {
+  attributes.insert(attributes.end(), other_table.attributes.begin(), other_table.attributes.end());
   if (other_table.IsEmpty()) {
     return;
   } else if (IsEmpty()) {
-    attributes = std::move(other_table.attributes);
     records = std::move(other_table.records);
     return;
   }
 
-  attributes.insert(attributes.end(), other_table.attributes.begin(), other_table.attributes.end());
   Records new_records;
   for (const auto& record : records) {
     for (const auto& other_record : other_table.records) {
