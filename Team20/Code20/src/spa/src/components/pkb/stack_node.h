@@ -1,7 +1,3 @@
-//
-// Created by Jaryl Loh on 7/3/22.
-//
-
 #ifndef STACK_NODE_H
 #define STACK_NODE_H
 

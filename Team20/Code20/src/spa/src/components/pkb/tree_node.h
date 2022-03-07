@@ -1,9 +1,5 @@
-//
-// Created by Jaryl Loh on 7/3/22.
-//
-
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_PKB_TREE_NODE_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_PKB_TREE_NODE_H_
+#ifndef TREE_NODE_H
+#define TREE_NODE_H
 
 #include <cstdlib>
 
@@ -21,4 +17,4 @@ class TreeNode
   }
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_TREE_NODE_H_
+#endif //TREE_NODE_H

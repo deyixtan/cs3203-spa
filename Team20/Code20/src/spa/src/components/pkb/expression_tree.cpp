@@ -33,7 +33,7 @@ nptr ExpressionTree::build(std::string& s) {
 
   // Prioritising the operators
   int p[123] = { 0 };
-  p['+'] = p['-'] = 1, p['/'] = p['*'] = 2, p['^'] = 3,
+  p['+'] = p['-'] = 1, p['/'] = p['*'] = 2,
   p[')'] = 0;
 
   for (int i = 0; i < s.length(); i++) {
@@ -52,15 +52,15 @@ nptr ExpressionTree::build(std::string& s) {
     } else if (p[s[i]] > 0) {
       // If an operator with lower or
       // same associativity appears
-      tree = newNode(data);
-      node_stack.push(tree);
-      data = "";
-      while (
-          !str_stack.empty() && str_stack.top() != "("
-              && ((str != "^" && p[str_stack.top()[0]] >= p[s[i]])
-                  || (str == "^"
-                      && p[str_stack.top()[0]] > p[s[i]])))
-      {
+      if (data != "") {
+        tree = newNode(data);
+        node_stack.push(tree);
+        data = "";
+      }
+
+      while (!str_stack.empty()
+              && str_stack.top() != "("
+              && p[str_stack.top()[0]] >= p[s[i]]) {
 
         // Get and remove the top element
         // from the character stack
@@ -88,24 +88,24 @@ nptr ExpressionTree::build(std::string& s) {
       // Push str to char stack
       str_stack.push(str);
     } else if (str == ")") {
-      if (isalnum(prev)) {
+      if (isalnum(prev) && data != "") {
         tree = newNode(data);
         node_stack.push(tree);
         data = "";
-      } else {
-        while (!str_stack.empty() && str_stack.top() != "(") {
-          tree = newNode(str_stack.top());
-          str_stack.pop();
-          tree1 = node_stack.top();
-          node_stack.pop();
-          tree2 = node_stack.top();
-          node_stack.pop();
-          tree->left = tree2;
-          tree->right = tree1;
-          node_stack.push(tree);
-        }
-        str_stack.pop();
       }
+
+      while (!str_stack.empty() && str_stack.top() != "(") {
+        tree = newNode(str_stack.top());
+        str_stack.pop();
+        tree1 = node_stack.top();
+        node_stack.pop();
+        tree2 = node_stack.top();
+        node_stack.pop();
+        tree->left = tree2;
+        tree->right = tree1;
+        node_stack.push(tree);
+      }
+      str_stack.pop();
 
     }
     prev = s[i];
@@ -116,10 +116,8 @@ nptr ExpressionTree::build(std::string& s) {
 
 // Function to print the post order
 // traversal of the tree
-void ExpressionTree::postorder(nptr root)
-{
-  if (root)
-  {
+void ExpressionTree::postorder(nptr root) {
+  if (root) {
     postorder(root->left);
     std::cout << root->data;
     postorder(root->right);
