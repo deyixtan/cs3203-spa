@@ -28,6 +28,15 @@ bool Table::IsEmpty() const {
 }
 
 void Table::Merge(Table &other_table) {
+  if (HasEncounteredFalseClause()) {
+    return;
+  }
+
+  if (other_table.HasEncounteredFalseClause()) {
+    EncounteredFalseClause();
+    return;
+  }
+
   auto common_attribute_index_pairs = GetCommonAttributeIndexPairs(other_table.attributes);
   if (!common_attribute_index_pairs.empty()) {
     NaturalJoin(other_table, common_attribute_index_pairs);
@@ -138,6 +147,14 @@ std::ostream& operator<<(std::ostream& os, const Table& table) {
   }
 
   return os;
+}
+
+void Table::EncounteredFalseClause() {
+  encountered_false_clause = true;
+}
+
+bool Table::HasEncounteredFalseClause() {
+  return encountered_false_clause;
 }
 
 }

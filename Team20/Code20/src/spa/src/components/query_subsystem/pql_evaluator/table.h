@@ -33,10 +33,13 @@ class Table {
         std::unordered_set<std::pair<std::string, std::string>, pair_hash>& pair_constraints);
   [[nodiscard]] bool IsEmpty() const;
   void Merge(Table& other_table);
+  void EncounteredFalseClause();
+  bool HasEncounteredFalseClause();
   std::unordered_set<std::string> GetResult(std::string& select_synonym, Table& table);
   friend std::ostream& operator<<(std::ostream& os, const Table& table);
 
  private:
+  bool encountered_false_clause = false;
   std::vector<std::pair<size_t, size_t>> GetCommonAttributeIndexPairs(const Attributes& other_attributes);
   std::vector<size_t> GetOtherAttributeIndices(const Attributes& other_attributes);
   void NaturalJoin(Table& other_table, std::vector<std::pair<size_t, size_t>>& common_attribute_index_pairs);
