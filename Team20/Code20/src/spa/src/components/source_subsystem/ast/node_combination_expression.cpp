@@ -38,9 +38,9 @@ ExpressionType CombinationExpressionNode::GetExpressionType() {
   return ExpressionType::COMBINATION;
 }
 
-std::string CombinationExpressionNode::ToString(int level) {
-  return "(" + m_left_expression->ToString(level) + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
-      + m_right_expression->ToString(level) + ")";
+std::string CombinationExpressionNode::ToString() {
+  return "(" + m_left_expression->ToString() + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
+      + m_right_expression->ToString() + ")";
 }
 
 bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {

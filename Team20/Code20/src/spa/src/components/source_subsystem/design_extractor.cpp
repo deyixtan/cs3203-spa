@@ -210,13 +210,13 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
   switch (expr_type) {
     case ExpressionType::CONSTANT: {
       std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(expr);
-      std::string name = constant->GetValue();
+      std::string name = constant->ToString();
       if (direction == 1) {
         pattern = "(" + name;
       } else if (direction == 2) {
         pattern = name + ")";
       } else {
-        pattern = name;
+        pattern = "(" + name + ")";
       }
       PopulateConst(name);
       break;
@@ -245,7 +245,7 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
       } else if (direction == 2) {
         pattern = var_name + ")";
       } else {
-        pattern = var_name;
+        pattern = "(" + var_name + ")";
       }
       for (std::string s : visited) {
         PopulateUses(s, var_name);

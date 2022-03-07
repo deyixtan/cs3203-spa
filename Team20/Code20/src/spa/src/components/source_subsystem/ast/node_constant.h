@@ -8,10 +8,10 @@ class ConstantNode : public ExpressionNode {
   std::string m_value;
 
  public:
-  ConstantNode(std::string value);
+  explicit ConstantNode(std::string value);
   [[nodiscard]] std::string GetValue();
   [[nodiscard]] ExpressionType GetExpressionType() override;
-  [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] std::string ToString() override;
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

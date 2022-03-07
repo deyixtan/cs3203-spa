@@ -10,8 +10,8 @@ ExpressionType ConstantNode::GetExpressionType() {
   return ExpressionType::CONSTANT;
 }
 
-std::string ConstantNode::ToString(int level) {
-  return m_value;
+std::string ConstantNode::ToString() {
+  return "(" + m_value + ")";
 }
 
 bool ConstantNode::operator==(const ExpressionNode &other) const {

@@ -17,9 +17,9 @@ StmtType WhileStatementNode::GetStatementType() {
   return StmtType::WHILE;
 }
 
-std::string WhileStatementNode::ToString(int level) {
-  std::string str = StatementNode::ToString(level);
-  return str + "while (" + m_condition->ToString(level) + ") {\n" + m_stmt_list->ToString(level + 1) + str + "}\n";
+std::string WhileStatementNode::ToString() {
+  std::string str = StatementNode::ToString();
+  return str + "while (" + m_condition->ToString() + ") {\n" + m_stmt_list->ToString() + str + "}\n";
 }
 
 bool WhileStatementNode::operator==(const StatementNode &other) const {

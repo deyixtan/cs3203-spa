@@ -9,10 +9,10 @@ std::vector<std::shared_ptr<StatementNode>> StatementListNode::GetStatements() {
   return m_statements;
 }
 
-std::string StatementListNode::ToString(int level) {
+std::string StatementListNode::ToString() {
   std::string str = "";
   for (std::shared_ptr<StatementNode> statement : m_statements) {
-    str += statement->ToString(level);
+    str += statement->ToString();
   }
   return str;
 }

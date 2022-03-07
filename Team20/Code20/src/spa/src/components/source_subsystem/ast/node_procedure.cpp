@@ -11,8 +11,8 @@ std::shared_ptr<StatementListNode> ProcedureNode::GetStatementList() {
   return m_stmt_list;
 }
 
-std::string ProcedureNode::ToString(int level) {
-  return "procedure " + m_identifier + " {\n" + m_stmt_list->ToString(level + 1) + "}\n";
+std::string ProcedureNode::ToString() {
+  return "procedure " + m_identifier + " {\n" + m_stmt_list->ToString() + "}\n";
 }
 
 bool ProcedureNode::operator==(const ProcedureNode &other) const {

@@ -21,7 +21,7 @@ class IfStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<StatementListNode> GetElseStatementList();
   [[nodiscard]] std::vector<std::shared_ptr<StatementNode>> GetAllStatementList();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] std::string ToString() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };
 

@@ -13,7 +13,7 @@ class ProcedureNode : public Node {
   ProcedureNode(std::string identifier, std::shared_ptr<StatementListNode> stmt_list);
   [[nodiscard]] std::string GetIdentifier();
   [[nodiscard]] std::shared_ptr<StatementListNode> GetStatementList();
-  [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] std::string ToString() override;
   [[nodiscard]] bool operator==(const ProcedureNode &other) const;
 };
 

@@ -11,8 +11,8 @@ StmtType ReadStatementNode::GetStatementType() {
   return StmtType::READ;
 }
 
-std::string ReadStatementNode::ToString(int level) {
-  return StatementNode::ToString(level) + "read " + m_identifier->ToString(level) + ";\n";
+std::string ReadStatementNode::ToString() {
+  return StatementNode::ToString() + "read " + m_identifier->ToString() + ";\n";
 }
 
 bool ReadStatementNode::operator==(const StatementNode &other) const {

@@ -17,8 +17,8 @@ StmtType AssignStatementNode::GetStatementType() {
   return StmtType::ASSIGN;
 }
 
-std::string AssignStatementNode::ToString(int level) {
-  return StatementNode::ToString(level) + m_identifier->ToString(level) + " = " + m_expression->ToString(level) + ";\n";
+std::string AssignStatementNode::ToString() {
+  return StatementNode::ToString() + m_identifier->ToString() + " = " + m_expression->ToString() + ";\n";
 }
 
 bool AssignStatementNode::operator==(const StatementNode &other) const {

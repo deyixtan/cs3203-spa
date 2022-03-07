@@ -31,9 +31,9 @@ ConditionalType RelationalExpressionNode::GetConditionalType() {
   return ConditionalType::RELATIONAL;
 }
 
-std::string RelationalExpressionNode::ToString(int level) {
-  return "(" + m_left_expression->ToString(level) + " " + GetRelationOperatorLabel(m_relation_operator) + " "
-      + m_right_expression->ToString(level) + ")";
+std::string RelationalExpressionNode::ToString() {
+  return "(" + m_left_expression->ToString() + " " + GetRelationOperatorLabel(m_relation_operator) + " "
+      + m_right_expression->ToString() + ")";
 }
 
 bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other) const {

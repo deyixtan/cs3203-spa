@@ -17,7 +17,7 @@ class WhileStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetCondition();
   [[nodiscard]] std::shared_ptr<StatementListNode> GetStatementList();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] std::string ToString() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const;
 };
 

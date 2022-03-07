@@ -29,10 +29,10 @@ StmtType IfStatementNode::GetStatementType() {
   return StmtType::IF;
 }
 
-std::string IfStatementNode::ToString(int level) {
-  std::string str = StatementNode::ToString(level);
-  return str + "if (" + m_condition->ToString(level) + ") then {\n" + m_if_stmt_list->ToString(level + 1) + str +
-      "} else {\n" + m_else_stmt_list->ToString(level + 1) + str + "}\n";
+std::string IfStatementNode::ToString() {
+  std::string str = StatementNode::ToString();
+  return str + "if (" + m_condition->ToString() + ") then {\n" + m_if_stmt_list->ToString() + str +
+      "} else {\n" + m_else_stmt_list->ToString() + str + "}\n";
 }
 
 bool IfStatementNode::operator==(const StatementNode &other) const {

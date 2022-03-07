@@ -12,7 +12,7 @@ class ReadStatementNode : public StatementNode {
   ReadStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier);
   [[nodiscard]] std::shared_ptr<VariableNode> GetIdentifier();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] std::string ToString() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };
 

@@ -11,8 +11,8 @@ StmtType PrintStatementNode::GetStatementType() {
   return StmtType::PRINT;
 }
 
-std::string PrintStatementNode::ToString(int level) {
-  return StatementNode::ToString(level) + "print " + m_identifier->ToString(level) + ";\n";
+std::string PrintStatementNode::ToString() {
+  return StatementNode::ToString() + "print " + m_identifier->ToString() + ";\n";
 }
 
 bool PrintStatementNode::operator==(const StatementNode &other) const {

@@ -14,7 +14,7 @@ class StatementNode : public Node {
   StatementNode(int stmt_no);
   [[nodiscard]] int GetStatementNumber();
   [[nodiscard]] virtual StmtType GetStatementType() = 0;
-  [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] std::string ToString() override;
   virtual bool operator==(const StatementNode &other) const = 0;
 };
 

@@ -11,7 +11,7 @@ class NotExpressionNode : public ConditionalExpressionNode {
   NotExpressionNode(std::shared_ptr<ConditionalExpressionNode> expression);
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetExpression();
   [[nodiscard]] ConditionalType GetConditionalType() override;
-  [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] std::string ToString() override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 
