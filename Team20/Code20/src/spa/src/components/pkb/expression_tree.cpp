@@ -46,8 +46,9 @@ nptr ExpressionTree::build(std::string& s) {
     } else if (isalnum(s[i])) { // Push the operands in node stack
       if (isalnum(prev) || prev == NULL) {
         data += str;
+      } else {
+        data = str;
       }
-      prev = s[i];
     } else if (p[s[i]] > 0) {
       // If an operator with lower or
       // same associativity appears
@@ -87,23 +88,27 @@ nptr ExpressionTree::build(std::string& s) {
       // Push str to char stack
       str_stack.push(str);
     } else if (str == ")") {
-      tree = newNode(data);
-      node_stack.push(tree);
-      data = "";
-      while (!str_stack.empty() && str_stack.top() != "(")
-      {
-        tree = newNode(str_stack.top());
-        str_stack.pop();
-        tree1 = node_stack.top();
-        node_stack.pop();
-        tree2 = node_stack.top();
-        node_stack.pop();
-        tree->left = tree2;
-        tree->right = tree1;
+      if (isalnum(prev)) {
+        tree = newNode(data);
         node_stack.push(tree);
+        data = "";
+      } else {
+        while (!str_stack.empty() && str_stack.top() != "(") {
+          tree = newNode(str_stack.top());
+          str_stack.pop();
+          tree1 = node_stack.top();
+          node_stack.pop();
+          tree2 = node_stack.top();
+          node_stack.pop();
+          tree->left = tree2;
+          tree->right = tree1;
+          node_stack.push(tree);
+        }
+        str_stack.pop();
       }
-      str_stack.pop();
+
     }
+    prev = s[i];
   }
   this->root = node_stack.top();
   return this->root;

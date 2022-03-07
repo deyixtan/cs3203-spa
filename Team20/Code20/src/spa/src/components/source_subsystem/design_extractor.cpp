@@ -210,15 +210,16 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
   switch (expr_type) {
     case ExpressionType::CONSTANT: {
       std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(expr);
-      std::string name = constant->GetPatternFormat();
-      if (direction == 1) {
-        pattern = "(" + name;
-      } else if (direction == 2) {
-        pattern = name + ")";
-      } else {
-        pattern = name;
-      }
-      PopulateConst(name);
+      pattern = constant->GetPatternFormat();
+      std::string var_name = constant->GetValue();
+//      if (direction == 1) {
+//        pattern = "(" + var_name;
+//      } else if (direction == 2) {
+//        pattern = var_name + ")";
+//      } else {
+//        pattern = var_name;
+//      }
+      PopulateConst(var_name);
       break;
     }
     case ExpressionType::COMBINATION: {
@@ -228,19 +229,23 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
       ArithmeticOperator op = comb->GetArithmeticOperator();
       std::string op_label = comb->GetArithmeticOperatorLabel(op);
 
+      ExprNodeHandler(visited, stmt_num, lhs, 1, pattern);
+      ExprNodeHandler(visited, stmt_num, rhs, 2, pattern);
+
       pattern = comb->GetPatternFormat();
       break;
     }
     case ExpressionType::VARIABLE: {
       std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
-      std::string var_name = var->GetPatternFormat();
-      if (direction == 1) {
-        pattern = "(" + var_name;
-      } else if (direction == 2) {
-        pattern = var_name + ")";
-      } else {
-        pattern = "(" + var_name + ")";
-      }
+      std::string pattern = var->GetPatternFormat();
+      std::string var_name = var->GetIdentifier();
+//      if (direction == 1) {
+//        pattern = "(" + var_name;
+//      } else if (direction == 2) {
+//        pattern = var_name + ")";
+//      } else {
+//        pattern = var_name;
+//      }
       for (std::string s : visited) {
         PopulateUses(s, var_name);
       }
