@@ -17,6 +17,10 @@ std::string StatementListNode::ToString() {
   return str;
 }
 
+std::string StatementListNode::GetPatternFormat() {
+  return "";
+}
+
 bool StatementListNode::operator==(const StatementListNode &other) const {
   if (m_statements.size() != other.m_statements.size()) {
     return false;

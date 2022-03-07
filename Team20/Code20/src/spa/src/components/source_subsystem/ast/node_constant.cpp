@@ -11,6 +11,10 @@ ExpressionType ConstantNode::GetExpressionType() {
 }
 
 std::string ConstantNode::ToString() {
+  return m_value;
+}
+
+std::string ConstantNode::GetPatternFormat() {
   return "(" + m_value + ")";
 }
 

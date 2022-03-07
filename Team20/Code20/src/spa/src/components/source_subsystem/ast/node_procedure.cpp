@@ -15,6 +15,10 @@ std::string ProcedureNode::ToString() {
   return "procedure " + m_identifier + " {\n" + m_stmt_list->ToString() + "}\n";
 }
 
+std::string ProcedureNode::GetPatternFormat() {
+  return "";
+}
+
 bool ProcedureNode::operator==(const ProcedureNode &other) const {
   std::vector<std::shared_ptr<StatementNode>> this_stmt_list = m_stmt_list->GetStatements();
   std::vector<std::shared_ptr<StatementNode>> other_stmt_list = other.m_stmt_list->GetStatements();

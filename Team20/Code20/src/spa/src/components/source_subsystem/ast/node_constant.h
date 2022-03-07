@@ -12,6 +12,7 @@ class ConstantNode : public ExpressionNode {
   [[nodiscard]] std::string GetValue();
   [[nodiscard]] ExpressionType GetExpressionType() override;
   [[nodiscard]] std::string ToString() override;
+  [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

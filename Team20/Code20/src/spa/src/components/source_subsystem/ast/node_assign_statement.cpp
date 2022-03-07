@@ -21,6 +21,10 @@ std::string AssignStatementNode::ToString() {
   return StatementNode::ToString() + m_identifier->ToString() + " = " + m_expression->ToString() + ";\n";
 }
 
+std::string AssignStatementNode::GetPatternFormat() {
+  return "";
+}
+
 bool AssignStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const AssignStatementNode *>(&other);
   return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier)

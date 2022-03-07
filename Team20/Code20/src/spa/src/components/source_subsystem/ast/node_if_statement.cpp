@@ -35,6 +35,10 @@ std::string IfStatementNode::ToString() {
       "} else {\n" + m_else_stmt_list->ToString() + str + "}\n";
 }
 
+std::string IfStatementNode::GetPatternFormat() {
+  return "";
+}
+
 bool IfStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const IfStatementNode *>(&other);
   std::vector<std::shared_ptr<StatementNode>> if_this_stmt_list = m_if_stmt_list->GetStatements();

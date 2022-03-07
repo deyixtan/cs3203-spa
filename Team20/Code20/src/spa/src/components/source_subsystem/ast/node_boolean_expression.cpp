@@ -22,6 +22,10 @@ std::string BooleanExpressionNode::ToString() {
       + m_right_expression->ToString() + ")";
 }
 
+std::string BooleanExpressionNode::GetPatternFormat() {
+  return "";
+}
+
 bool BooleanExpressionNode::operator==(const ConditionalExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const BooleanExpressionNode *>(&other);
   return m_boolean_operator == casted_other->m_boolean_operator

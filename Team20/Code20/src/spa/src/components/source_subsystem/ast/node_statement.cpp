@@ -18,3 +18,7 @@ std::string StatementNode::GetStatementLabel() {
 std::string StatementNode::ToString() {
   return GetStatementLabel();
 }
+
+std::string StatementNode::GetPatternFormat() {
+  return "";
+}

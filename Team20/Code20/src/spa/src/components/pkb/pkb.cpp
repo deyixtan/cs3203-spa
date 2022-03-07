@@ -33,7 +33,7 @@ std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
 std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string const &lhs, std::string rhs) {
   std::unordered_set<std::string> result = {};
   rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
-  rhs = "(" + rhs + ")";
+  //rhs = "(" + rhs + ")";
   //TODO: Tree builder and parser
 
   for (auto const&[key, val] : m_pattern_map) {
@@ -44,7 +44,7 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string const &lhs, 
     if (lhs == "_" && rhs != "_" && rhs.find('_') != std::string::npos) {
       auto first = rhs.find("_\"");
       auto last = rhs.find("\"_");
-      auto sub_pattern = rhs.substr(first + 2, last - 2);
+      auto sub_pattern = "(" + rhs.substr(first + 2, last - 2) + ")";
       if (val.second.find(sub_pattern) != std::string::npos) {
         result.insert(key);
       }
@@ -65,7 +65,7 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string const &lhs, 
     if (lhs != "_" && rhs != "_" && rhs.find('_') != std::string::npos) {
       auto first = rhs.find("_\"");
       auto last = rhs.find("\"_");
-      auto sub_pattern = rhs.substr(first + 2, last - 2);
+      auto sub_pattern = "(" + rhs.substr(first + 2, last - 2) + ")";
       if (lhs == val.first && val.second.find(sub_pattern) != std::string::npos) {
         result.insert(key);
       }

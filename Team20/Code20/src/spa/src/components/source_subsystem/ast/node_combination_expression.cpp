@@ -43,6 +43,11 @@ std::string CombinationExpressionNode::ToString() {
       + m_right_expression->ToString() + ")";
 }
 
+std::string CombinationExpressionNode::GetPatternFormat() {
+  return "(" + m_left_expression->GetPatternFormat() + GetArithmeticOperatorLabel(m_arithmetic_operator)
+      + m_right_expression->GetPatternFormat() + ")";
+}
+
 bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const CombinationExpressionNode *>(&other);
   return m_arithmetic_operator == casted_other->m_arithmetic_operator

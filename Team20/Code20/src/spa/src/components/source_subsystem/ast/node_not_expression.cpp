@@ -15,6 +15,10 @@ std::string NotExpressionNode::ToString() {
   return "(!" + m_expression->ToString() + ")";
 }
 
+std::string NotExpressionNode::GetPatternFormat() {
+  return "";
+}
+
 bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const NotExpressionNode *>(&other);
   return *m_expression == *(casted_other->m_expression);

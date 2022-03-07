@@ -17,6 +17,10 @@ std::string ProgramNode::ToString() {
   return str;
 }
 
+std::string ProgramNode::GetPatternFormat() {
+  return "";
+}
+
 bool ProgramNode::operator==(const ProgramNode &other) const {
   if (m_procedures.size() != other.m_procedures.size()) {
     return false;

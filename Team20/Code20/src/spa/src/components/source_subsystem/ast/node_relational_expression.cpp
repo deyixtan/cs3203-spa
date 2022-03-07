@@ -36,6 +36,10 @@ std::string RelationalExpressionNode::ToString() {
       + m_right_expression->ToString() + ")";
 }
 
+std::string RelationalExpressionNode::GetPatternFormat() {
+  return "";
+}
+
 bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const RelationalExpressionNode *>(&other);
   return m_relation_operator == casted_other->m_relation_operator

@@ -15,6 +15,10 @@ std::string PrintStatementNode::ToString() {
   return StatementNode::ToString() + "print " + m_identifier->ToString() + ";\n";
 }
 
+std::string PrintStatementNode::GetPatternFormat() {
+  return "";
+}
+
 bool PrintStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const PrintStatementNode*>(&other);
   return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier);

@@ -22,6 +22,10 @@ std::string WhileStatementNode::ToString() {
   return str + "while (" + m_condition->ToString() + ") {\n" + m_stmt_list->ToString() + str + "}\n";
 }
 
+std::string WhileStatementNode::GetPatternFormat() {
+  return "";
+}
+
 bool WhileStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const WhileStatementNode *>(&other);
   std::vector<std::shared_ptr<StatementNode>> this_stmt_list = m_stmt_list->GetStatements();
