@@ -1,54 +1,52 @@
-#include "usess_clause.h"
-
-#include <stdexcept>
+#include "modifiess_clause.h"
 
 namespace pql {
 
-UsesSClause::UsesSClause(const std::vector<Declaration> &declarations_,
-                         const PqlToken &first_arg_,
-                         const PqlToken &second_arg_,
-                         PKB *pkb_) :
+ModifiesSClause::ModifiesSClause(const std::vector<Declaration> &declarations_,
+                                 const PqlToken &first_arg_,
+                                 const PqlToken &second_arg_,
+                                 PKB *pkb_) :
     declarations(declarations_), first_arg(first_arg_), second_arg(second_arg_), pkb(pkb_) {}
 
-Table UsesSClause::Execute() {
+Table ModifiesSClause::Execute() {
   if (IsArgSynonym(first_arg) && IsArgSynonym(second_arg)) {
-    // UsesS(s, v)
+    // ModifiesS(s, v)
     return HandleSynonymSynonym();
   } else if (IsArgSynonym(first_arg) && IsArgWildcard(second_arg)) {
-    // UsesS(s, _)
+    // ModifiesS(s, _)
     return HandleSynonymWildcard();
   } else if (IsArgSynonym(first_arg) && IsArgIdent(second_arg)) {
-    // UsesS(s, "x")
+    // ModifiesS(s, "x")
     return HandleSynonymIdent();
   } else if (IsArgInteger(first_arg) && IsArgSynonym(second_arg)) {
-    // UsesS(1, v)
+    // ModifiesS(1, v)
     return HandleIntegerSynonym();
   } else if (IsArgInteger(first_arg) && IsArgWildcard(second_arg)) {
-    // UsesS(1, _)
+    // ModifiesS(1, _)
     return HandleIntegerWildcard();
   } else if (IsArgInteger(first_arg) && IsArgIdent(second_arg)) {
-    // UsesS(1, "x")
+    // ModifiesS(1, "x")
     return HandleIntegerIdent();
   }
 }
 
-bool UsesSClause::IsArgSynonym(const PqlToken &arg) {
+bool ModifiesSClause::IsArgSynonym(const PqlToken &arg) {
   return arg.type==PqlTokenType::SYNONYM;
 }
 
-bool UsesSClause::IsArgWildcard(const PqlToken &arg) {
+bool ModifiesSClause::IsArgWildcard(const PqlToken &arg) {
   return arg.type==PqlTokenType::UNDERSCORE;
 }
 
-bool UsesSClause::IsArgIdent(const PqlToken &arg) {
+bool ModifiesSClause::IsArgIdent(const PqlToken &arg) {
   return arg.type==PqlTokenType::IDENT_WITH_QUOTES;
 }
 
-bool UsesSClause::IsArgInteger(const PqlToken &arg) {
+bool ModifiesSClause::IsArgInteger(const PqlToken &arg) {
   return arg.type==PqlTokenType::NUMBER;
 }
 
-PqlTokenType UsesSClause::GetSynonymDesignEntity(const PqlToken &arg) {
+PqlTokenType ModifiesSClause::GetSynonymDesignEntity(const PqlToken &arg) {
   assert(arg.type==PqlTokenType::SYNONYM);
   for (auto declaration : declarations) {
     if (arg.value==declaration.GetSynonym().value) {
@@ -58,7 +56,7 @@ PqlTokenType UsesSClause::GetSynonymDesignEntity(const PqlToken &arg) {
   throw std::out_of_range("Synonym not declared");
 }
 
-StmtType UsesSClause::GetStmtType(const PqlTokenType &design_entity) {
+StmtType ModifiesSClause::GetStmtType(const PqlTokenType &design_entity) {
   switch (design_entity) {
     case PqlTokenType::STMT: {
       return StmtType::STMT;
@@ -93,17 +91,17 @@ StmtType UsesSClause::GetStmtType(const PqlTokenType &design_entity) {
   }
 };
 
-std::string UsesSClause::GetIdentWithoutQuotes(const std::string &ident) {
+std::string ModifiesSClause::GetIdentWithoutQuotes(const std::string &ident) {
   return ident.substr(1, ident.length() - 2);
 }
 
-Table UsesSClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetUsageStore()->GetAllUsesStmt(GetStmtType(GetSynonymDesignEntity(first_arg)));
+Table ModifiesSClause::HandleSynonymSynonym() {
+  auto pair_constraints = pkb->GetModifyStore()->GetAllModStmt(GetStmtType(GetSynonymDesignEntity(first_arg)));
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
-Table UsesSClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetUsageStore()->GetAllUsesStmt(GetStmtType(GetSynonymDesignEntity(first_arg)));
+Table ModifiesSClause::HandleSynonymWildcard() {
+  auto pair_constraints = pkb->GetModifyStore()->GetAllModStmt(GetStmtType(GetSynonymDesignEntity(first_arg)));
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.first);
@@ -111,8 +109,8 @@ Table UsesSClause::HandleSynonymWildcard() {
   return {first_arg.value, single_constraints};
 }
 
-Table UsesSClause::HandleSynonymIdent() {
-  auto pair_constraints = pkb->GetUsageStore()->GetAllUsesStmt(GetStmtType(GetSynonymDesignEntity(first_arg)));
+Table ModifiesSClause::HandleSynonymIdent() {
+  auto pair_constraints = pkb->GetModifyStore()->GetAllModStmt(GetStmtType(GetSynonymDesignEntity(first_arg)));
   std::unordered_set<std::string> single_constraints;
   std::string ident_without_quotes = GetIdentWithoutQuotes(second_arg.value);
   for (const auto &pair_constraint : pair_constraints) {
@@ -123,13 +121,13 @@ Table UsesSClause::HandleSynonymIdent() {
   return {first_arg.value, single_constraints};
 }
 
-Table UsesSClause::HandleIntegerSynonym() {
-  auto single_constraints = pkb->GetUsageStore()->GetVarUsedByStmt(first_arg.value);
+Table ModifiesSClause::HandleIntegerSynonym() {
+  auto single_constraints = pkb->GetModifyStore()->GetVarModByStmt(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
-Table UsesSClause::HandleIntegerWildcard() {
-  bool is_empty = pkb->GetUsageStore()->GetVarUsedByStmt(first_arg.value).empty();
+Table ModifiesSClause::HandleIntegerWildcard() {
+  bool is_empty = pkb->GetModifyStore()->GetVarModByStmt(first_arg.value).empty();
   Table table;
   if (is_empty) {
     table.EncounteredFalseClause();
@@ -137,10 +135,10 @@ Table UsesSClause::HandleIntegerWildcard() {
   return table;
 }
 
-Table UsesSClause::HandleIntegerIdent() {
+Table ModifiesSClause::HandleIntegerIdent() {
   std::string ident_without_quotes = GetIdentWithoutQuotes(second_arg.value);
   std::pair arg_pair(first_arg.value, ident_without_quotes);
-  bool is_empty = pkb->GetUsageStore()->StmtVarExists(arg_pair);
+  bool is_empty = pkb->GetModifyStore()->StmtVarExists(arg_pair);
   Table table;
   if (is_empty) {
     table.EncounteredFalseClause();
