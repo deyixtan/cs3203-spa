@@ -1,17 +1,16 @@
-#ifndef USESS_CLAUSE_H_
-#define USESS_CLAUSE_H_
+#ifndef USESP_CLAUSE_H_
+#define USESP_CLAUSE_H_
 
 #include "clause.h"
+#include "components/pkb/pkb.h"
 #include "components/query_subsystem/pql_lexer/pql_token.h"
 #include "components/query_subsystem/pql_parser/declaration.h"
-#include "components/pkb/stores/store.h"
-#include "components/pkb/pkb.h"
 
 namespace pql {
 
-class UsesSClause : public Clause {
+class UsesPClause : public Clause {
  public:
-  UsesSClause(const std::vector<Declaration> &declarations,
+  UsesPClause(const std::vector<Declaration> &declarations,
               const PqlToken &first_arg,
               const PqlToken &second_arg,
               PKB *pkb);
@@ -31,11 +30,11 @@ class UsesSClause : public Clause {
   Table HandleSynonymSynonym();
   Table HandleSynonymWildcard();
   Table HandleSynonymIdent();
-  Table HandleIntegerSynonym();
-  Table HandleIntegerWildcard();
-  Table HandleIntegerIdent();
+  Table HandleIdentSynonym();
+  Table HandleIdentWildcard();
+  Table HandleIdentIdent();
 };
 
 }
 
-#endif //USESS_CLAUSE_H_
+#endif //USESP_CLAUSE_H_
