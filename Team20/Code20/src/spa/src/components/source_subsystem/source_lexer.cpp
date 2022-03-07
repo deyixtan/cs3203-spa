@@ -92,6 +92,8 @@ void SourceLexer::TranslateKeywordTokens(std::vector<std::shared_ptr<SourceToken
         *it = std::make_shared<SourceToken>(TokenType::THEN, "");
       } else if (value == "else" && next_type == TokenType::OPENED_BRACES) {
         *it = std::make_shared<SourceToken>(TokenType::ELSE, "");
+      } else if (value == "call" && next_type == TokenType::NAME) {
+        *it = std::make_shared<SourceToken>(TokenType::CALL, "");
       } else if (value == "procedure" && next_type == TokenType::NAME) {
         *it = std::make_shared<SourceToken>(TokenType::PROCEDURE, "");
       }

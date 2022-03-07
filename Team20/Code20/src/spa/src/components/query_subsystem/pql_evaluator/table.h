@@ -1,7 +1,7 @@
 #ifndef TABLE_H_
 #define TABLE_H_
 
-#include "../../pkb/hash.h"
+#include "utils/pair_hash.h"
 #include <iostream>
 #include <utility>
 #include <string>

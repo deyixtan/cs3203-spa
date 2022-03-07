@@ -227,7 +227,7 @@ std::unordered_set<std::string> all_proc_mod = {"main", "foo", "func"};
 
 /* FOLLOW STORE */
 
-std::unordered_map<std::string, FollowStore::node> follows_rs =
+std::unordered_map<std::string, FollowNode> follows_rs =
     {
         {"1", {"0", "2", {}, {"2", "3", "4", "5"}}},
         {"2", {"1", "3", {"1"}, {"3", "4", "5"}}},
@@ -254,7 +254,7 @@ std::unordered_set<std::string> followers = {"1", "2", "3", "4", "8", "10", "13"
 
 std::unordered_set<std::string> followings = {"2", "3", "4", "5", "9", "11", "14"};
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash > follow_pairs =
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_pairs =
     {
         {"1", "2"},
         {"2", "3"},
@@ -264,7 +264,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash > follow_pairs
         {"13", "14"},
     };
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash > follow_star_pairs =
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_star_pairs =
     {
         {"1", "2"},
         {"1", "3"},
@@ -282,7 +282,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash > follow_star_
     };
 
 /* PARENT STORE */
-std::unordered_map<std::string, parent_child> parent_rs =
+std::unordered_map<std::string, ParentChildNode> parent_rs =
     {
         {"1", {"0", {}, {}, {}}},
         {"2", {"0", {}, {}, {}}},
