@@ -8,25 +8,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> Store::GetAll
                                                                                                                   std::string>,
                                                                                                         pair_hash> const &list,
                                                                                      bool checkPairFirst) {
-  if (std::find(supported_types.begin(), supported_types.end(), type) == supported_types.end()) {
-    throw std::runtime_error("INVALID STATEMENT TYPE");
-  }
-
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-  for (auto const &i : list) {
-    for (auto const &j : m_stmt_vector->at(type)) {
-      if (checkPairFirst) {
-        if (i.first == j) {
-          result.insert(i);
-        }
-        continue;
-      }
-      if (i.second == j) {
-        result.insert(i);
-      }
-    }
-  }
-  return result;
+  return GetAllStmt(type, type, supported_types, list, checkPairFirst);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> Store::GetAllStmt(StmtType type1,
