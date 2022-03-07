@@ -122,6 +122,7 @@ std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
     case TokenType::PRINT:return ParsePrintStatement();
     case TokenType::WHILE:return ParseWhileStatement();
     case TokenType::IF:return ParseIfStatement();
+    case TokenType::CALL:return ParseCallStatement();
     default:throw InvalidParseStatementException();
   }
 }
@@ -181,6 +182,15 @@ std::shared_ptr<AssignStatementNode> SourceParser::ParseAssignStatement() {
   ProcessToken(TokenType::SEMI_COLON);
   std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue());
   return std::make_shared<AssignStatementNode>(stmt_no, variable, expression);
+}
+
+std::shared_ptr<CallStatementNode> SourceParser::ParseCallStatement() {
+  int stmt_no = ++m_curr_stmt_no;
+  ProcessToken(TokenType::CALL);
+  std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  ProcessToken(TokenType::SEMI_COLON);
+  std::string procedure_name = identifier->GetValue();
+  return std::make_shared<CallStatementNode>(stmt_no, procedure_name);
 }
 
 std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpression() {
