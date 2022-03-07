@@ -24,17 +24,16 @@ class PKB {
   PKB();
   void InitStatementVector();
   void InitRelationshipStores();
-  [[nodiscard]] std::shared_ptr<FollowStore> GetFollowStore();
-  [[nodiscard]] std::shared_ptr<ModifyStore> GetModifyStore();
-  [[nodiscard]] std::shared_ptr<ParentStore> GetParentStore();
-  [[nodiscard]] std::shared_ptr<UsageStore> GetUsageStore();
-
   void AddStmt(std::string const &name, StmtType type);
   void AddPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs);
   [[nodiscard]] std::unordered_set<std::string> GetStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::string> GetStmtWithPattern(std::string const &lhs, std::string rhs);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>,
                                    pair_hash> GetStmtWithPatternSynonym(std::string rhs);
+  [[nodiscard]] std::shared_ptr<FollowStore> GetFollowStore();
+  [[nodiscard]] std::shared_ptr<ModifyStore> GetModifyStore();
+  [[nodiscard]] std::shared_ptr<ParentStore> GetParentStore();
+  [[nodiscard]] std::shared_ptr<UsageStore> GetUsageStore();
 };
 
 #endif //PKB_H

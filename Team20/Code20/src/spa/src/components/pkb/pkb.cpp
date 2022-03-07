@@ -18,32 +18,16 @@ void PKB::InitRelationshipStores() {
   m_usage_store = std::make_shared<UsageStore>(m_stmt_vector);
 }
 
-std::shared_ptr<FollowStore> PKB::GetFollowStore() {
-  return m_follow_store;
-}
-
-std::shared_ptr<ModifyStore> PKB::GetModifyStore() {
-  return m_modify_store;
-}
-
-std::shared_ptr<ParentStore> PKB::GetParentStore() {
-  return m_parent_store;
-}
-
-std::shared_ptr<UsageStore> PKB::GetUsageStore() {
-  return m_usage_store;
-}
-
-std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
-  return m_stmt_vector->at(type);
-}
-
 void PKB::AddStmt(std::string const &stmt, StmtType type) {
   m_stmt_vector->at(type).insert(stmt);
 }
 
 void PKB::AddPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs) {
   m_pattern_map[stmt] = {lhs, rhs};
+}
+
+std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
+  return m_stmt_vector->at(type);
 }
 
 std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string const &lhs, std::string rhs) {
@@ -124,4 +108,20 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PKB::GetStmtW
   }
 
   return result;
+}
+
+std::shared_ptr<FollowStore> PKB::GetFollowStore() {
+  return m_follow_store;
+}
+
+std::shared_ptr<ModifyStore> PKB::GetModifyStore() {
+  return m_modify_store;
+}
+
+std::shared_ptr<ParentStore> PKB::GetParentStore() {
+  return m_parent_store;
+}
+
+std::shared_ptr<UsageStore> PKB::GetUsageStore() {
+  return m_usage_store;
 }
