@@ -22,12 +22,18 @@ std::shared_ptr<ProgramNode> SourceController::ParseTokenStream(std::vector<std:
   } catch (const ProcedureExistException &procedure_exist) {
     program_node = std::make_shared<ProgramNode>();
     std::cout << "ERROR: " << procedure_exist.what() << std::endl;
+  } catch (const CyclicCallException &cycle_call) {
+    program_node = std::make_shared<ProgramNode>();
+    std::cout << "ERROR: " << cycle_call.what() << std::endl;
   } catch (const EmptyStatementListException &empty_statement_list) {
     program_node = std::make_shared<ProgramNode>();
     std::cout << "ERROR: " << empty_statement_list.what() << std::endl;
   } catch (const EndOfStreamException &end_of_stream) {
     program_node = std::make_shared<ProgramNode>();
     std::cout << "ERROR: " << end_of_stream.what() << std::endl;
+  } catch (const InvalidCallException &invalid_call) {
+    program_node = std::make_shared<ProgramNode>();
+    std::cout << "ERROR: " << invalid_call.what() << std::endl;
   } catch (const InvalidParseException &invalid_parse) {
     program_node = std::make_shared<ProgramNode>();
     std::cout << "ERROR: " << invalid_parse.what() << std::endl;

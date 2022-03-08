@@ -86,17 +86,26 @@ std::shared_ptr<ProgramNode> SourceParser::ParseProgram() {
   if (procedures.size() == 0) {
     throw EmptyStatementListException();
   }
+  if (m_session.DoesInvalidCallExist()) {
+    throw InvalidCallException();
+  }
+  if (m_session.DoesCyclicCallExist()) {
+    throw CyclicCallException();
+  }
   return std::make_shared<ProgramNode>(procedures);
 }
 
 std::shared_ptr<ProcedureNode> SourceParser::ParseProcedure() {
   ProcessToken(TokenType::PROCEDURE);
   std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  std::string procedure_name = identifier->GetValue();
+
+  // check procedure name duplication, may throw ProcedureExistException
+  m_session.AddProcedure(procedure_name);
+
   ProcessToken(TokenType::OPENED_BRACES);
   std::shared_ptr<StatementListNode> stmt_list = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
-  std::string procedure_name = identifier->GetValue();
-  m_session.AddProcedure(procedure_name); // throws ProcedureExistException
   return std::make_shared<ProcedureNode>(procedure_name, stmt_list);
 }
 
@@ -189,8 +198,12 @@ std::shared_ptr<CallStatementNode> SourceParser::ParseCallStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::CALL);
   std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
-  ProcessToken(TokenType::SEMI_COLON);
   std::string procedure_name = identifier->GetValue();
+
+  // add function calls to session, check for cyclic calls
+  m_session.AddMethodCall(procedure_name);
+
+  ProcessToken(TokenType::SEMI_COLON);
   return std::make_shared<CallStatementNode>(stmt_no, procedure_name);
 }
 
