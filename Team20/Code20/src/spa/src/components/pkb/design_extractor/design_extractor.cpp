@@ -61,7 +61,7 @@ void DesignExtractor::ProcNodeHandler(std::vector<std::string> visited, std::sha
   }
 }
 
-void DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, std::string stmt, std::shared_ptr<ExpressionNode> expr) {
+/*void DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, std::string stmt, std::shared_ptr<ExpressionNode> expr) {
   ExpressionType expr_type = expr->GetExpressionType();
 
   switch (expr_type) {
@@ -146,4 +146,4 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
   }
 
   return pattern;
-}
+}*/

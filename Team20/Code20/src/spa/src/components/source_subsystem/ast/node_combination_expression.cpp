@@ -38,8 +38,6 @@ ExpressionType CombinationExpressionNode::GetExpressionType() {
   return ExpressionType::COMBINATION;
 }
 
-void CombinationExpressionNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {}
-
 std::string CombinationExpressionNode::ToString(int level) {
   return "(" + m_left_expression->ToString(level) + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
       + m_right_expression->ToString(level) + ")";

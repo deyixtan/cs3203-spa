@@ -8,7 +8,7 @@ class ConstantNode : public ExpressionNode {
   std::string m_value;
 
  public:
-  ConstantNode(std::string value);
+  explicit ConstantNode(std::string value);
   [[nodiscard]] std::string GetValue();
   [[nodiscard]] ExpressionType GetExpressionType() override;
   void Process(Populator populator, std::vector<std::string>* visited, std::string stmt) override;

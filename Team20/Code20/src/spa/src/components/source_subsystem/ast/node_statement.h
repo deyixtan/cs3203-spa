@@ -2,7 +2,7 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
 
 #include "node.h"
-#include "components/pkb/design_extractor/populator.h"
+#include "../../pkb/design_extractor/populator.h"
 
 class StatementNode : public Node {
  protected:
