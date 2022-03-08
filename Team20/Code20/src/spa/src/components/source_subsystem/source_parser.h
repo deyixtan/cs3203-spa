@@ -5,8 +5,10 @@
 
 #include "source_token.h"
 #include "source_parser_session.h"
+#include "exceptions/cyclic_call.h"
 #include "exceptions/empty_statement_list.h"
 #include "exceptions/end_of_stream.h"
+#include "exceptions/invalid_call.h"
 #include "exceptions/invalid_parse_condition.h"
 #include "exceptions/invalid_parse_factor.h"
 #include "exceptions/invalid_parse_relation.h"
