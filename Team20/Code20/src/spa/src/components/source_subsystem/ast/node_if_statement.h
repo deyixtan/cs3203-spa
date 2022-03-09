@@ -22,7 +22,9 @@ class IfStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<StatementListNode> GetElseStatementList();
   [[nodiscard]] std::vector<std::shared_ptr<StatementNode>> GetAllStatementList();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited) override;
+  void Process(Populator populator, std::vector<std::string> *visited) override;
+  void Process(Populator populator, std::vector<std::string> *visited, std::string stmt) override;
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) override;
   [[nodiscard]] std::string ToString(int level) override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };

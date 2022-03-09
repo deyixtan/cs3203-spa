@@ -2,7 +2,7 @@
 
 VariableNode::VariableNode() : m_identifier("") {}
 
-VariableNode::VariableNode(std::string identifier) : m_identifier(identifier) {}
+VariableNode::VariableNode(std::string identifier, std::string stmt) : m_identifier(identifier), m_stmt(stmt) {}
 
 std::string VariableNode::GetIdentifier() {
   return m_identifier;
@@ -21,11 +21,18 @@ bool VariableNode::operator==(const ExpressionNode &other) const {
   return m_identifier == casted_other->m_identifier;
 }
 
-void VariableNode::Process(Populator populator, std::vector<std::string>* visited, std::string stmt) {
+void VariableNode::Process(Populator populator, std::vector<std::string>* visited) {
   std::string var_name = m_identifier;
   for (std::string s : *visited) {
     populator.PopulateUses(s, var_name);
   }
-  populator.PopulateUses(stmt, var_name);
+  populator.PopulateUses(m_stmt, var_name);
   populator.PopulateVars(var_name);
 }
+
+/*
+void VariableNode::Process(std::vector<std::string> *visited, std::string stmt, std::shared_ptr<ExpressionNode> expr) {}
+
+std::string VariableNode::Process(std::vector<std::string> *visited, std::string stmt_num, std::shared_ptr<ExpressionNode> expr, int direction, std::string pattern) {
+  return "";
+}*/

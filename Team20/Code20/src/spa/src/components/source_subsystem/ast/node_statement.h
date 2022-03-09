@@ -2,7 +2,6 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
 
 #include "node.h"
-#include "../../pkb/design_extractor/populator.h"
 
 class StatementNode : public Node {
  protected:
@@ -15,8 +14,10 @@ class StatementNode : public Node {
   StatementNode(int stmt_no);
   [[nodiscard]] int GetStatementNumber();
   [[nodiscard]] virtual StmtType GetStatementType() = 0;
-  virtual void Process(Populator populator, std::vector<std::string>* visited) = 0;
   [[nodiscard]] std::string ToString(int level) override;
+  virtual void Process(Populator populator, std::vector<std::string> *visited) = 0;
+  virtual void Process(Populator populator, std::vector<std::string> *visited, std::string stmt) = 0;
+  [[nodiscard]] virtual std::string Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) = 0;
   virtual bool operator==(const StatementNode &other) const = 0;
 };
 

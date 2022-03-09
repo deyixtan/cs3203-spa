@@ -20,6 +20,6 @@ bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const
   return *m_expression == *(casted_other->m_expression);
 }
 
-void NotExpressionNode::Process(Populator populator, std::vector<std::string>* visited, std::string stmt) {
-  m_expression->Process(populator, visited, stmt);
+void NotExpressionNode::Process(Populator populator, std::vector<std::string>* visited) {
+  m_expression->Process(populator, visited);
 }

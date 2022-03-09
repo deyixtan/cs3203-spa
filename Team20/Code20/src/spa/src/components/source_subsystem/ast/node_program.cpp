@@ -21,6 +21,12 @@ std::string ProgramNode::ToString() {
   return this->ToString(0);
 }
 
+void ProgramNode::Process(Populator populator, std::vector<std::string> *visited) {
+  for (auto &procedure : m_procedures) {
+    procedure->Process(populator, visited);
+  }
+}
+
 bool ProgramNode::operator==(const ProgramNode &other) const {
   if (m_procedures.size() != other.m_procedures.size()) {
     return false;

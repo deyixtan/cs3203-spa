@@ -16,6 +16,7 @@ class ProgramNode : public Node {
   [[nodiscard]] std::vector<std::shared_ptr<ProcedureNode>> GetProcedures();
   [[nodiscard]] std::string ToString(int level) override;
   [[nodiscard]] std::string ToString();
+  void Process(Populator populator, std::vector<std::string> *visited) override;
   [[nodiscard]] bool operator==(const ProgramNode &other) const;
 };
 

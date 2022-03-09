@@ -18,7 +18,9 @@ class WhileStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<StatementListNode> GetStatementList();
   [[nodiscard]] StmtType GetStatementType() override;
   [[nodiscard]] std::string ToString(int level) override;
-  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited) override;
+  void Process(Populator populator, std::vector<std::string> *visited) override;
+  void Process(Populator populator, std::vector<std::string> *visited, std::string stmt) override;
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) override;
   [[nodiscard]] bool operator==(const StatementNode &other) const;
 };
 

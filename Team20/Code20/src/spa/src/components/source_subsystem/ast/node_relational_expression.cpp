@@ -43,7 +43,7 @@ bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other
       && *m_right_expression == *(casted_other->m_right_expression);
 }
 
-void RelationalExpressionNode::Process(Populator populator, std::vector<std::string>* visited, std::string stmt) {
-  m_left_expression->Process(populator, visited, stmt);
-  m_right_expression->Process(populator, visited, stmt);
+void RelationalExpressionNode::Process(Populator populator, std::vector<std::string>* visited) {
+  m_left_expression->Process(populator, visited);
+  m_right_expression->Process(populator, visited);
 }

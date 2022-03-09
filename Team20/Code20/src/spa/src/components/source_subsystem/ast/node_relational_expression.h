@@ -29,7 +29,7 @@ class RelationalExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::string GetRelationOperatorLabel(RelationOperator relation_operator);
   [[nodiscard]] ConditionalType GetConditionalType() override;
   [[nodiscard]] std::string ToString(int level) override;
-  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited, std::string stmt);
+  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

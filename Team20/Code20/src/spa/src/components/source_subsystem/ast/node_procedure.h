@@ -14,7 +14,7 @@ class ProcedureNode : public Node {
   [[nodiscard]] std::string GetIdentifier();
   [[nodiscard]] std::shared_ptr<StatementListNode> GetStatementList();
   [[nodiscard]] std::string ToString(int level) override;
-  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited);
+  void Process(Populator populator, std::vector<std::string> *visited) override;
   [[nodiscard]] bool operator==(const ProcedureNode &other) const;
 };
 

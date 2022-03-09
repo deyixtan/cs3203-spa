@@ -70,7 +70,7 @@ void IfStatementNode::Process(Populator populator, std::vector<std::string>* vis
   std::string if_stmt_num = std::to_string(GetStatementNumber());
   visited->push_back(if_stmt_num);
 
-  m_condition->Process(populator, visited, stmt_num);
+  m_condition->Process(populator, visited);
   std::vector<std::shared_ptr<StatementNode>> if_stmts = m_if_stmt_list->GetStatements();
   std::vector<std::shared_ptr<StatementNode>> else_stmts =  m_else_stmt_list->GetStatements();
 

@@ -44,7 +44,7 @@ void WhileStatementNode::Process(Populator populator, std::vector<std::string>* 
   std::string while_stmt_num = std::to_string(GetStatementNumber());
   visited->push_back(while_stmt_num);
 
-  m_condition->Process(populator, visited, stmt_num);
+  m_condition->Process(populator, visited);
 
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
@@ -53,8 +53,22 @@ void WhileStatementNode::Process(Populator populator, std::vector<std::string>* 
     int curr = while_stmts[j]->GetStatementNumber();
     populator.PopulateParent(stmt_num, std::to_string(curr));
   }
+
   populator.PopulateWhile(stmt_num);
   populator.PopulateParentStar(while_stmt_num, *visited);
   visited->pop_back();
   populator.PopulateParentStar(stmt_num, *visited);
 }
+
+/* procedure main {
+ *    while (a > b) {
+ *        a = 1;
+ *        b = 2;
+ *        while (a > b) {
+ *            x = y;
+ *        }
+ *        read x;
+ *    }
+ *    x = 1;
+ * }
+ */

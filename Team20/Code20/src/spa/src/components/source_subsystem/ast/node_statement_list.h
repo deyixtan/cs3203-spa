@@ -14,6 +14,7 @@ class StatementListNode : public Node {
   StatementListNode(std::vector<std::shared_ptr<StatementNode>> statements);
   [[nodiscard]] std::vector<std::shared_ptr<StatementNode>> GetStatements();
   [[nodiscard]] std::string ToString(int level) override;
+  void Process(Populator populator, std::vector<std::string> *visited) override;
   [[nodiscard]] bool operator==(const StatementListNode &other) const;
 };
 

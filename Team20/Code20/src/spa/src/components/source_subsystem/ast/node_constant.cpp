@@ -14,7 +14,7 @@ std::string ConstantNode::ToString(int level) {
   return m_value;
 }
 
-void ConstantNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {
+void ConstantNode::Process(Populator populator, std::vector<std::string> *visited) {
   populator.PopulateConst(m_value);
 }
 
