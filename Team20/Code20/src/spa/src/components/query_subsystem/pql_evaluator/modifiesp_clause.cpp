@@ -1,6 +1,10 @@
 #include "modifiesp_clause.h"
+#include "clause_util.h"
 
 namespace pql {
+
+using namespace clause_util;
+
 ModifiesPClause::ModifiesPClause(const std::vector<Declaration> &declarations_,
                                  const PqlToken &first_arg_,
                                  const PqlToken &second_arg_,
@@ -27,71 +31,6 @@ Table pql::ModifiesPClause::Execute() {
     // UsesP("main", "x")
     return HandleIdentIdent();
   }
-}
-
-bool ModifiesPClause::IsArgSynonym(const PqlToken &arg) {
-  return arg.type==PqlTokenType::SYNONYM;
-}
-
-bool ModifiesPClause::IsArgWildcard(const PqlToken &arg) {
-  return arg.type==PqlTokenType::UNDERSCORE;
-}
-
-bool ModifiesPClause::IsArgIdent(const PqlToken &arg) {
-  return arg.type==PqlTokenType::IDENT_WITH_QUOTES;
-}
-
-bool ModifiesPClause::IsArgInteger(const PqlToken &arg) {
-  return arg.type==PqlTokenType::NUMBER;
-}
-
-PqlTokenType ModifiesPClause::GetSynonymDesignEntity(const PqlToken &arg) {
-  assert(arg.type==PqlTokenType::SYNONYM);
-  for (auto declaration : declarations) {
-    if (arg.value==declaration.GetSynonym().value) {
-      return declaration.GetDesignEntity().type;
-    }
-  }
-  throw std::out_of_range("Synonym not declared");
-}
-
-StmtType ModifiesPClause::GetStmtType(const PqlTokenType &design_entity) {
-  switch (design_entity) {
-    case PqlTokenType::STMT: {
-      return StmtType::STMT;
-    }
-    case PqlTokenType::ASSIGN: {
-      return StmtType::ASSIGN;
-    }
-    case PqlTokenType::WHILE: {
-      return StmtType::WHILE;
-    }
-    case PqlTokenType::IF: {
-      return StmtType::IF;
-    }
-    case PqlTokenType::PRINT: {
-      return StmtType::PRINT;
-    }
-    case PqlTokenType::READ: {
-      return StmtType::READ;
-    }
-    case PqlTokenType::CALL: {
-      return StmtType::CALL;
-    }
-    case PqlTokenType::VARIABLE: {
-      return StmtType::VARS;
-    }
-    case PqlTokenType::CONSTANT: {
-      return StmtType::CONSTS;
-    }
-    case PqlTokenType::PROCEDURE: {
-      return StmtType::PROC;
-    }
-  }
-};
-
-std::string ModifiesPClause::GetIdentWithoutQuotes(const std::string &ident) {
-  return ident.substr(1, ident.length() - 2);
 }
 
 Table ModifiesPClause::HandleSynonymSynonym() {

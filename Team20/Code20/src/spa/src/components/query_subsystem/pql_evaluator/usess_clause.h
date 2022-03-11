@@ -21,13 +21,6 @@ class UsesSClause : public Clause {
   PqlToken first_arg;
   PqlToken second_arg;
   PKB *pkb;
-  static bool IsArgSynonym(const PqlToken &arg);
-  static bool IsArgWildcard(const PqlToken &arg);
-  static bool IsArgIdent(const PqlToken &arg);
-  static bool IsArgInteger(const PqlToken &arg);
-  PqlTokenType GetSynonymDesignEntity(const PqlToken &arg);
-  StmtType GetStmtType(const PqlTokenType &design_entity);
-  std::string GetIdentWithoutQuotes(const std::string &ident);
   Table HandleSynonymSynonym();
   Table HandleSynonymWildcard();
   Table HandleSynonymIdent();

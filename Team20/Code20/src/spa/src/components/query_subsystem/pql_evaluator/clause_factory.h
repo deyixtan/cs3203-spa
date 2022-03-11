@@ -20,11 +20,6 @@ class ClauseFactory {
 
  private:
   static PKB *pkb;
-  static bool IsArgInteger(const PqlToken &arg);
-  static bool IsArgIdent(const PqlToken &arg);
-  static bool IsArgProcSynonym(const PqlToken &arg, const std::vector<Declaration> &declarations);
-  static bool IsArgStmtSynonym(const PqlToken &arg, const std::vector<Declaration> &declarations);
-  static PqlTokenType GetSynonymDesignEntity(const PqlToken &arg, const std::vector<Declaration> &declarations);
 };
 
 }
