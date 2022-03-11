@@ -3,6 +3,7 @@
 #include "modifiess_clause.h"
 #include "usesp_clause.h"
 #include "usess_clause.h"
+#include "follows_clause.h"
 #include "select_clause.h"
 #include "clause_util.h"
 
@@ -31,6 +32,9 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
       } else {
         return nullptr;
       }
+    }
+    case PqlTokenType::FOLLOWS_T: {
+      return std::make_unique<FollowsClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     default: {
       return nullptr;
