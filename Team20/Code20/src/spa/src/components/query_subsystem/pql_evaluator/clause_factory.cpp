@@ -4,12 +4,13 @@
 #include "usesp_clause.h"
 #include "usess_clause.h"
 #include "follows_clause.h"
+#include "followst_clause.h"
 #include "select_clause.h"
 #include "clause_util.h"
 
 namespace pql {
 
-using namespace::clause_util;
+using namespace ::clause_util;
 
 std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
                                               std::vector<Declaration> declarations,
@@ -33,8 +34,11 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
         return nullptr;
       }
     }
-    case PqlTokenType::FOLLOWS_T: {
+    case PqlTokenType::FOLLOWS: {
       return std::make_unique<FollowsClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+    }
+    case PqlTokenType::FOLLOWS_T: {
+      return std::make_unique<FollowsTClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     default: {
       return nullptr;
