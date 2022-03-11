@@ -5,6 +5,7 @@
 #include "usess_clause.h"
 #include "follows_clause.h"
 #include "followst_clause.h"
+#include "parent_clause.h"
 #include "select_clause.h"
 #include "clause_util.h"
 
@@ -39,6 +40,9 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
     }
     case PqlTokenType::FOLLOWS_T: {
       return std::make_unique<FollowsTClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+    }
+    case PqlTokenType::PARENT: {
+      return std::make_unique<ParentClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     default: {
       return nullptr;
