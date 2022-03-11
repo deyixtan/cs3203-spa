@@ -4,7 +4,6 @@
 #include "../pql_parser/parsed_query.h"
 #include "../../pkb/pkb.h"
 #include "query_condition.h"
-#include "query_result.h"
 #include "clause.h"
 #include "clause_factory.h"
 
@@ -25,14 +24,6 @@ class QueryEvaluator {
   std::unordered_set<std::string> result;
   PKB *pkb;
   std::queue<std::unique_ptr<pql::Clause> > ExtractClauses(ParsedQuery& query);
-  void EvaluateSelectOnly(ParsedQuery&  query);
-  void EvaluateSelectWithRelationship(ParsedQuery& query);
-  void EvaluateSelectWithPattern(ParsedQuery& query);
-  void EvaluateSelectWithRelationshipAndPattern(ParsedQuery& query);
-  StmtType GetStmtType(PqlTokenType token_type);
-  bool IsValidStmtForUse(PqlTokenType token_type);
-  bool IsValidStmtForModify(PqlTokenType token_type);
-  bool IsValidStmtForParent(PqlTokenType token_type);
 };
 
 }

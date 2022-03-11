@@ -31,11 +31,12 @@ PqlTokenType clause_util::GetSynonymDesignEntity(const PqlToken &arg, const std:
 }
 
 bool clause_util::IsArgProcSynonym(const PqlToken &arg, const std::vector<Declaration> &declarations) {
-  return GetSynonymDesignEntity(arg, declarations)==PqlTokenType::PROCEDURE;
+  return IsArgSynonym(arg) && GetSynonymDesignEntity(arg, declarations)==PqlTokenType::PROCEDURE;
 }
 
 bool clause_util::IsArgStmtSynonym(const PqlToken &arg, const std::vector<Declaration> &declarations) {
-  return GetSynonymDesignEntity(arg, declarations)==PqlTokenType::STMT ||
+  return IsArgSynonym(arg) &&
+      GetSynonymDesignEntity(arg, declarations)==PqlTokenType::STMT ||
       GetSynonymDesignEntity(arg, declarations)==PqlTokenType::ASSIGN ||
       GetSynonymDesignEntity(arg, declarations)==PqlTokenType::CALL ||
       GetSynonymDesignEntity(arg, declarations)==PqlTokenType::READ ||

@@ -20,18 +20,18 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
                                               PKB *pkb) {
   switch (relationship.GetRelRef().type) {
     case PqlTokenType::MODIFIES: {
-      if (IsArgInteger(relationship.GetFirst()) || IsArgProcSynonym(relationship.GetFirst(), declarations)) {
+      if (IsArgIdent(relationship.GetFirst()) || IsArgProcSynonym(relationship.GetFirst(), declarations)) {
         return std::make_unique<ModifiesPClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
-      } else if (IsArgIdent(relationship.GetFirst()) || IsArgStmtSynonym(relationship.GetFirst(), declarations)) {
+      } else if (IsArgInteger(relationship.GetFirst()) || IsArgStmtSynonym(relationship.GetFirst(), declarations)) {
         return std::make_unique<ModifiesSClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
       } else {
         return nullptr;
       }
     }
     case PqlTokenType::USES: {
-      if (IsArgInteger(relationship.GetFirst()) || IsArgProcSynonym(relationship.GetFirst(), declarations)) {
+      if (IsArgIdent(relationship.GetFirst()) || IsArgProcSynonym(relationship.GetFirst(), declarations)) {
         return std::make_unique<UsesPClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
-      } else if (IsArgIdent(relationship.GetFirst()) || IsArgStmtSynonym(relationship.GetFirst(), declarations)) {
+      } else if (IsArgInteger(relationship.GetFirst()) || IsArgStmtSynonym(relationship.GetFirst(), declarations)) {
         return std::make_unique<UsesSClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
       } else {
         return nullptr;
