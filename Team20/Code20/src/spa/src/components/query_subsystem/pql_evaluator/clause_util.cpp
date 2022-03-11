@@ -16,6 +16,10 @@ bool clause_util::IsArgInteger(const PqlToken &arg) {
   return arg.type==PqlTokenType::NUMBER;
 }
 
+bool clause_util::IsArgPartialMatch(const PqlToken &arg) {
+  return arg.type==PqlTokenType::SUB_EXPRESSION;
+}
+
 PqlTokenType clause_util::GetSynonymDesignEntity(const PqlToken &arg, const std::vector<Declaration> &declarations) {
   assert(arg.type==PqlTokenType::SYNONYM);
   for (auto declaration : declarations) {

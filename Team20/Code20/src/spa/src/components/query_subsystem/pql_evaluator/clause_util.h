@@ -10,6 +10,7 @@ bool IsArgSynonym(const PqlToken &arg);
 bool IsArgWildcard(const PqlToken &arg);
 bool IsArgIdent(const PqlToken &arg);
 bool IsArgInteger(const PqlToken &arg);
+bool IsArgPartialMatch(const PqlToken &arg);
 PqlTokenType GetSynonymDesignEntity(const PqlToken &arg, const std::vector<Declaration> &declarations);
 bool IsArgProcSynonym(const PqlToken &arg, const std::vector<Declaration> &declarations);
 bool IsArgStmtSynonym(const PqlToken &arg, const std::vector<Declaration> &declarations);

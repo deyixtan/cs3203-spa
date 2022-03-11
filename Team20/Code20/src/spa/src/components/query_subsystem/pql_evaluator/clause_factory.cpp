@@ -7,6 +7,7 @@
 #include "followst_clause.h"
 #include "parent_clause.h"
 #include "parentt_clause.h"
+#include "pattern_assign_clause.h"
 #include "select_clause.h"
 #include "clause_util.h"
 
@@ -55,8 +56,9 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
 }
 
 std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern, std::vector<Declaration> declarations, PKB *pkb) {
-  return std::unique_ptr<Clause>();
+  return std::make_unique<PatternAssignClause>(pattern.GetSynAssign().value, pattern.GetFirst(), pattern.GetSecond(), pkb);
 }
+
 std::unique_ptr<Clause> ClauseFactory::Create(PqlToken selected_synonym,
                                               std::vector<Declaration> declarations,
                                               PKB *pkb) {
