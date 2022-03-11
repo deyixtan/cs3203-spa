@@ -64,7 +64,7 @@ TEST_CASE("Test merge empty table with non-empty table") {
   pql::Table single_attribute_table{test_synonym, test_single_constraints};
   empty_table.Merge(single_attribute_table);
 //  std::cout << empty_table;
-  REQUIRE(empty_table.records.empty()==true);
+  REQUIRE(empty_table.records.empty()==false);
 }
 
 TEST_CASE("Test merge non-empty table with empty table") {
@@ -84,7 +84,7 @@ TEST_CASE("Test merge non-empty table with empty table") {
   pql::Table single_attribute_table{test_synonym, test_single_constraints};
   single_attribute_table.Merge(empty_table);
 //  std::cout << single_attribute_table;
-  REQUIRE(single_attribute_table.records.empty()==true);
+  REQUIRE(single_attribute_table.records.empty()==false);
 }
 
 TEST_CASE("Test merge two non-empty tables with one common attribute") {
