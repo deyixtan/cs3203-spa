@@ -19,7 +19,7 @@ class FollowsClause : public Clause {
   PqlToken first_arg;
   PqlToken second_arg;
   PKB *pkb;
-  Table HandleSynonymSynoym();
+  Table HandleSynonymSynonym();
   Table HandleSynonymWildcard();
   Table HandleSynonymInteger();
   Table HandleWildcardSynonym();

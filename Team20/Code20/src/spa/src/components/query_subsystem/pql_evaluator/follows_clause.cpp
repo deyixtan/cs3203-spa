@@ -14,7 +14,7 @@ FollowsClause::FollowsClause(const std::vector<Declaration> &declarations,
 Table FollowsClause::Execute() {
   if (IsArgSynonym(first_arg) && IsArgSynonym(second_arg)) {
     // Follows(s1, s2)
-    return HandleSynonymSynoym();
+    return HandleSynonymSynonym();
   } else if (IsArgSynonym(first_arg) && IsArgWildcard(second_arg)) {
     // Follows(s, _)
     return HandleSynonymWildcard();
@@ -46,7 +46,7 @@ Table FollowsClause::Execute() {
   }
 }
 
-Table FollowsClause::HandleSynonymSynoym() {
+Table FollowsClause::HandleSynonymSynonym() {
   auto pair_constraints = pkb->GetFollowStore()->GetAllFollowStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
