@@ -3,15 +3,27 @@
 
 #include "../pql_lexer/pql_token.h"
 #include "relationship.h"
-#include "declaration.h"
 #include "pattern.h"
 
 #include <optional>
 
+enum class DesignEntityType {
+  STMT,
+  READ,
+  PRINT,
+  CALL,
+  WHILE,
+  IF,
+  ASSIGN,
+  VARIABLE,
+  CONSTANT,
+  PROCEDURE
+};
+
 class ParsedQuery {
  private:
   PqlToken selected_synonym;
-  std::vector<Declaration> declarations;
+  std::unordered_map<std::string, DesignEntityType> declarations;
   std::vector<Relationship> relationships;
   std::vector<Pattern> patterns;
 
@@ -20,9 +32,9 @@ class ParsedQuery {
   void SetSynonym(PqlToken);
   void AddPattern(Pattern);
   void AddRelationship(Relationship);
-  void SetDeclarations(std::vector<Declaration>);
+  void SetDeclarations(std::unordered_map<std::string, DesignEntityType>);
   PqlToken GetSynonym();
-  std::vector<Declaration> GetDeclaration();
+  std::unordered_map<std::string, DesignEntityType> GetDeclaration();
   std::vector<Relationship> GetRelationships();
   std::vector<Pattern> GetPatterns();
 };
