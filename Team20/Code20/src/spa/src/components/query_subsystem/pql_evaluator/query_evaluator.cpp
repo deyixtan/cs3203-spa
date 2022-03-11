@@ -5,6 +5,8 @@ namespace pql_evaluator {
 void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &results) {
   pql::Table table;
   auto clauses = ExtractClauses(query);
+  // extract clause -> optimizer -> sort clauses?
+  // or insert a new sorter in here after extracting?
   while (!clauses.empty()) {
     auto clause = std::move(clauses.front());
     auto intermediate_table = clause->Execute();
