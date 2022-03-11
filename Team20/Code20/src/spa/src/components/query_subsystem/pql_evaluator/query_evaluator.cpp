@@ -11,6 +11,9 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
     auto clause = std::move(clauses.front());
     auto intermediate_table = clause->Execute();
     table.Merge(intermediate_table);
+    if (table.IsEmpty()){
+      table.EncounteredFalseClause();
+    }
     clauses.pop();
   }
   auto projected_results = table.GetResult(query.GetSynonym().value);
@@ -27,6 +30,14 @@ std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQ
       clauses.push(std::move(clause));
     }
   }
+
+  for (const auto& pattern : query.GetPatterns()) {
+    auto clause = pql::ClauseFactory::Create(pattern, pkb);
+    if (clause) {
+      clauses.push(std::move(clause));
+    }
+  }
+
   clauses.push(pql::ClauseFactory::Create(query.GetSynonym(), query.GetDeclaration(), pkb));
 
   return clauses;

@@ -234,7 +234,7 @@ std::string DesignExtractor::ExprNodeHandler(std::vector<std::string> visited, s
     }
     case ExpressionType::VARIABLE: {
       std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(expr);
-      std::string pattern = var->GetPatternFormat();
+      pattern = var->GetPatternFormat();
       std::string var_name = var->GetIdentifier();
       for (std::string s : visited) {
         PopulateUses(s, var_name);

@@ -15,7 +15,7 @@ class ClauseFactory {
  public:
   ClauseFactory() = default;
   static std::unique_ptr<Clause> Create(Relationship relationship, std::vector<Declaration> declarations, PKB *pkb);
-  static std::unique_ptr<Clause> Create(Pattern pattern, std::vector<Declaration> declarations, PKB *pkb);
+  static std::unique_ptr<Clause> Create(Pattern pattern, PKB *pkb);
   static std::unique_ptr<Clause> Create(PqlToken selected_synonym, std::vector<Declaration> declarations, PKB *pkb);
 
  private:
