@@ -10,13 +10,14 @@
 #include "pattern_assign_clause.h"
 #include "select_clause.h"
 #include "clause_util.h"
+#include "components/query_subsystem/pql_parser/parsed_query.h"
 
 namespace pql {
 
 using namespace ::clause_util;
 
 std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
-                                              std::vector<Declaration> declarations,
+                                              std::unordered_map<std::string, DesignEntityType> declarations,
                                               PKB *pkb) {
   switch (relationship.GetRelRef().type) {
     case PqlTokenType::MODIFIES: {
@@ -60,7 +61,7 @@ std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern, PKB *pkb) {
 }
 
 std::unique_ptr<Clause> ClauseFactory::Create(PqlToken selected_synonym,
-                                              std::vector<Declaration> declarations,
+                                              std::unordered_map<std::string, DesignEntityType> declarations,
                                               PKB *pkb) {
   return std::make_unique<SelectClause>(selected_synonym, declarations, pkb);
 }

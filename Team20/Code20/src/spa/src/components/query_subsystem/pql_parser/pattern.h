@@ -8,13 +8,16 @@ class Pattern {
   PqlToken syn_assign_;
   PqlToken first_;
   PqlToken second_;
+  PqlToken third_;
 
  public:
   Pattern();
   Pattern(PqlToken, PqlToken, PqlToken);
+  Pattern(PqlToken, PqlToken, PqlToken, PqlToken); // For ifs only
   PqlToken GetSynAssign();
   PqlToken GetFirst();
   PqlToken GetSecond();
+  PqlToken GetThird();
 };
 
 #endif
