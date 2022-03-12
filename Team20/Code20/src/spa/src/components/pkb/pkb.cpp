@@ -28,6 +28,7 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string const &lhs, 
   std::unordered_set<std::string> result = {};
   rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
   std::string temp = "";
+  std::string sub_pattern;
 
   if (rhs.find('_') != std::string::npos) {
     auto first = rhs.find("_\"");
@@ -37,8 +38,10 @@ std::unordered_set<std::string> PKB::GetStmtWithPattern(std::string const &lhs, 
     temp = "(" + rhs + ")";
   }
 
-  expr_tree.build(temp);
-  std::string sub_pattern = expr_tree.GetPattern(expr_tree.GetRoot());
+  if (temp!="()") {
+    expr_tree.build(temp);
+    sub_pattern = expr_tree.GetPattern(expr_tree.GetRoot());
+  }
 
   for (auto const&[key, val] : m_pattern_map) {
     if (lhs == "_" && rhs == "_") {
