@@ -36,57 +36,50 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
 
 void QueryEvaluator::EvaluateSelectOnly(ParsedQuery &query) {
   const PqlToken select_synonym = query.GetSynonym();
-  PqlTokenType select_synonym_design_entity;
   const auto declarations = query.GetDeclaration();
-
-  // assume semantically valid and declaration must contain the select_synonym
-  for (auto declaration : declarations) {
-    if (declaration.GetSynonym().value==select_synonym.value) {
-      select_synonym_design_entity = declaration.GetDesignEntity().type;
-    }
-  }
+  DesignEntityType select_synonym_design_entity = declarations.find(select_synonym.value)->second;
 
   // assume that only select
   // evaluation with relationship and pattern may default to this in case of true boolean
   std::unordered_set<std::string> result_to_add;
   switch (select_synonym_design_entity) {
-    case PqlTokenType::STMT: {
+    case DesignEntityType::STMT: {
       result_to_add = pkb->GetStmt(StmtType::STMT);
       break;
     }
-    case PqlTokenType::READ: {
+    case DesignEntityType::READ: {
       result_to_add = pkb->GetStmt(StmtType::READ);
       break;
     }
-    case PqlTokenType::PRINT: {
+    case DesignEntityType::PRINT: {
       result_to_add = pkb->GetStmt(StmtType::PRINT);
       break;
     }
-    case PqlTokenType::CALL: {
+    case DesignEntityType::CALL: {
       result_to_add = pkb->GetStmt(StmtType::CALL);
       break;
     }
-    case PqlTokenType::WHILE: {
+    case DesignEntityType::WHILE: {
       result_to_add = pkb->GetStmt(StmtType::WHILE);
       break;
     }
-    case PqlTokenType::IF: {
+    case DesignEntityType::IF: {
       result_to_add = pkb->GetStmt(StmtType::IF);
       break;
     }
-    case PqlTokenType::ASSIGN: {
+    case DesignEntityType::ASSIGN: {
       result_to_add = pkb->GetStmt(StmtType::ASSIGN);
       break;
     }
-    case PqlTokenType::VARIABLE: {
+    case DesignEntityType::VARIABLE: {
       result_to_add = pkb->GetStmt(StmtType::VARS);
       break;
     }
-    case PqlTokenType::CONSTANT: {
+    case DesignEntityType::CONSTANT: {
       result_to_add = pkb->GetStmt(StmtType::CONSTS);
       break;
     }
-    case PqlTokenType::PROCEDURE: {
+    case DesignEntityType::PROCEDURE: {
       result_to_add = pkb->GetStmt(StmtType::PROC);
       break;
     }
@@ -102,17 +95,11 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
   // assume only select with 1 relationship
   PqlToken select_synonym = query.GetSynonym();
   const auto declarations = query.GetDeclaration();
-  PqlTokenType select_synonym_design_entity;
+  DesignEntityType select_synonym_design_entity = declarations.find(select_synonym.value)->second;
   Relationship relationship = query.GetRelationships().front();
   PqlTokenType rel_ref = relationship.GetRelRef().type;
   PqlToken first_arg = relationship.GetFirst();
   PqlToken second_arg = relationship.GetSecond();
-
-  for (auto declaration : declarations) {
-    if (declaration.GetSynonym().value==select_synonym.value) {
-      select_synonym_design_entity = declaration.GetDesignEntity().type;
-    }
-  }
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> pair_result;
   std::unordered_set<std::string> result_to_add;
@@ -127,23 +114,23 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         if (select_synonym.value==first_arg.value) {
           // Select s such that Uses(s, v)
           switch (select_synonym_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::PRINT: {
+            case DesignEntityType::PRINT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::PRINT);
               break;
             }
@@ -157,31 +144,25 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         } else if (select_synonym.value==second_arg.value) {
           // Select v such that Uses(s, v)
-          PqlTokenType first_arg_design_entity;
-          for (auto declaration : declarations) {
-            if (declaration.GetSynonym().value==first_arg.value) {
-              first_arg_design_entity = declaration.GetDesignEntity().type;
-            }
-          }
-
+          DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
           switch (first_arg_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::PRINT: {
+            case DesignEntityType::PRINT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::PRINT);
               break;
             }
@@ -198,31 +179,26 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           // is empty -> return None
           // else -> Evaluate the select
 
-          PqlTokenType first_arg_design_entity;
-          for (auto declaration : declarations) {
-            if (declaration.GetSynonym().value==first_arg.value) {
-              first_arg_design_entity = declaration.GetDesignEntity().type;
-            }
-          }
+          DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
           switch (first_arg_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::PRINT: {
+            case DesignEntityType::PRINT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::PRINT);
               break;
             }
@@ -241,23 +217,23 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         // 2. Uses(s, _)
         if (select_synonym.value==first_arg.value) {
           switch (select_synonym_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::PRINT: {
+            case DesignEntityType::PRINT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::PRINT);
               break;
             }
@@ -272,31 +248,26 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         } else {
           // Check is Uses(s, _) is non-empty
 
-          PqlTokenType first_arg_design_entity;
-          for (auto declaration : declarations) {
-            if (declaration.GetSynonym().value==first_arg.value) {
-              first_arg_design_entity = declaration.GetDesignEntity().type;
-            }
-          }
+          DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
           switch (first_arg_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::PRINT: {
+            case DesignEntityType::PRINT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::PRINT);
               break;
             }
@@ -316,23 +287,23 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         std::string ident_without_quotes = second_arg.value.substr(1, second_arg.value.length() - 2);
         if (select_synonym.value==first_arg.value) {
           switch (select_synonym_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::PRINT: {
+            case DesignEntityType::PRINT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::PRINT);
               break;
             }
@@ -352,31 +323,26 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           // selected synonym is not in the Uses clause
           // Check if Uses(s, "x") is non-empty
 
-          PqlTokenType first_arg_design_entity;
-          for (auto declaration : declarations) {
-            if (declaration.GetSynonym().value==first_arg.value) {
-              first_arg_design_entity = declaration.GetDesignEntity().type;
-            }
-          }
+          DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
           switch (first_arg_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::PRINT: {
+            case DesignEntityType::PRINT: {
               pair_result = pkb->GetUsageStore()->GetAllUsesStmt(StmtType::PRINT);
               break;
             }
@@ -443,23 +409,23 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         if (select_synonym.value==first_arg.value) {
           // Select s such that Modifies(s, v)
           switch (select_synonym_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::READ: {
+            case DesignEntityType::READ: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::READ);
               break;
             }
@@ -473,31 +439,26 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           }
         } else if (select_synonym.value==second_arg.value) {
           // Select v such that Modifies(s, v)
-          PqlTokenType first_arg_design_entity;
-          for (auto declaration : declarations) {
-            if (declaration.GetSynonym().value==first_arg.value) {
-              first_arg_design_entity = declaration.GetDesignEntity().type;
-            }
-          }
+          DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
           switch (first_arg_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::READ: {
+            case DesignEntityType::READ: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::READ);
               break;
             }
@@ -514,31 +475,26 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           // is empty -> return None
           // else -> Evaluate the select
 
-          PqlTokenType first_arg_design_entity;
-          for (auto declaration : declarations) {
-            if (declaration.GetSynonym().value==first_arg.value) {
-              first_arg_design_entity = declaration.GetDesignEntity().type;
-            }
-          }
+          DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
           switch (first_arg_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::READ: {
+            case DesignEntityType::READ: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::READ);
               break;
             }
@@ -557,23 +513,23 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         // 2. Modifies(s, _)
         if (select_synonym.value==first_arg.value) {
           switch (select_synonym_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::READ: {
+            case DesignEntityType::READ: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::READ);
               break;
             }
@@ -588,31 +544,26 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         } else {
           // Check is Modifies(s, _) is non-empty
 
-          PqlTokenType first_arg_design_entity;
-          for (auto declaration : declarations) {
-            if (declaration.GetSynonym().value==first_arg.value) {
-              first_arg_design_entity = declaration.GetDesignEntity().type;
-            }
-          }
+          DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
           switch (first_arg_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::READ: {
+            case DesignEntityType::READ: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::READ);
               break;
             }
@@ -632,23 +583,23 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         std::string ident_without_quotes = second_arg.value.substr(1, second_arg.value.length() - 2);
         if (select_synonym.value==first_arg.value) {
           switch (select_synonym_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::READ: {
+            case DesignEntityType::READ: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::READ);
               break;
             }
@@ -668,31 +619,26 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
           // selected synonym is not in the Modifies clause
           // Check if Modifies(s, "x") is non-empty
 
-          PqlTokenType first_arg_design_entity;
-          for (auto declaration : declarations) {
-            if (declaration.GetSynonym().value==first_arg.value) {
-              first_arg_design_entity = declaration.GetDesignEntity().type;
-            }
-          }
+          DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
           switch (first_arg_design_entity) {
-            case PqlTokenType::STMT: {
+            case DesignEntityType::STMT: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::STMT);
               break;
             }
-            case PqlTokenType::ASSIGN: {
+            case DesignEntityType::ASSIGN: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::ASSIGN);
               break;
             }
-            case PqlTokenType::WHILE: {
+            case DesignEntityType::WHILE: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::WHILE);
               break;
             }
-            case PqlTokenType::IF: {
+            case DesignEntityType::IF: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::IF);
               break;
             }
-            case PqlTokenType::READ: {
+            case DesignEntityType::READ: {
               pair_result = pkb->GetModifyStore()->GetAllModStmt(StmtType::READ);
               break;
             }
@@ -766,12 +712,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
         // 3. Follows(9, s)
 
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result = pkb->GetFollowStore()->GetAllFollowStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
         bool is_empty = true;
@@ -813,12 +754,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         }
       } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SYNONYM) {
         // 6. Follows(_, s)
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result = pkb->GetFollowStore()->GetAllFollowStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
         if (select_synonym.value==second_arg.value) {
@@ -831,12 +767,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::NUMBER) {
         // 7. Follows(s, 8)
-        PqlTokenType first_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
         pair_result = pkb->GetFollowStore()->GetAllFollowStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
         bool is_empty = true;
@@ -860,12 +791,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 8. Follows(s, _)
-        PqlTokenType first_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
         pair_result = pkb->GetFollowStore()->GetAllFollowStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
         if (select_synonym.value==first_arg.value) {
@@ -878,16 +804,8 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
         // 9. Follows(s1, s2)
-        PqlTokenType first_arg_design_entity;
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result =
             pkb->GetFollowStore()->GetAllFollowStmt(GetStmtType(first_arg_design_entity), GetStmtType(second_arg_design_entity));
@@ -929,12 +847,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
         // 3. Follows*(9, s)
 
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result = pkb->GetFollowStore()->GetAllFollowStarStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
         bool is_empty = true;
@@ -970,12 +883,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         }
       } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SYNONYM) {
         // 6. Follows*(_, s)
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result = pkb->GetFollowStore()->GetAllFollowStarStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
         if (select_synonym.value==second_arg.value) {
@@ -988,12 +896,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::NUMBER) {
         // 7. Follows*(s, 8)
-        PqlTokenType first_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
         pair_result = pkb->GetFollowStore()->GetAllFollowStarStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
         bool is_empty = true;
@@ -1017,12 +920,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 8. Follows*(s, _)
-        PqlTokenType first_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
         pair_result = pkb->GetFollowStore()->GetAllFollowStarStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
         if (select_synonym.value==first_arg.value) {
@@ -1035,16 +933,8 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
         // 9. Follows*(s1, s2)
-        PqlTokenType first_arg_design_entity;
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result =
             pkb->GetFollowStore()->GetAllFollowStarStmt(GetStmtType(first_arg_design_entity), GetStmtType(second_arg_design_entity));
@@ -1086,12 +976,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
         // 3. Parent*(9, s)
 
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result = pkb->GetParentStore()->GetAllParentStarStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
         bool is_empty = true;
@@ -1127,12 +1012,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         }
       } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SYNONYM) {
         // 6. Parent*(_, s)
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result = pkb->GetParentStore()->GetAllParentStarStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
         if (select_synonym.value==second_arg.value) {
@@ -1145,12 +1025,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::NUMBER) {
         // 7. Parent*(s, 8)
-        PqlTokenType first_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
         pair_result = pkb->GetParentStore()->GetAllParentStarStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
         bool is_empty = true;
@@ -1174,12 +1049,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 8. Parent*(s, _)
-        PqlTokenType first_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
         pair_result = pkb->GetParentStore()->GetAllParentStarStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
         if (select_synonym.value==first_arg.value) {
@@ -1192,16 +1062,8 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
         // 9. Parent*(s1, s2)
-        PqlTokenType first_arg_design_entity;
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result =
             pkb->GetParentStore()->GetAllParentStarStmt(GetStmtType(first_arg_design_entity), GetStmtType(second_arg_design_entity));
@@ -1238,12 +1100,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
       } else if (first_arg.type==PqlTokenType::NUMBER && second_arg.type==PqlTokenType::SYNONYM) {
         // 3. Parent(9, s)
 
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result = pkb->GetParentStore()->GetAllParentStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
         bool is_empty = true;
@@ -1278,12 +1135,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
         }
       } else if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::SYNONYM) {
         // 6. Parent(_, s)
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result = pkb->GetParentStore()->GetAllParentStmt(StmtType::STMT, GetStmtType(second_arg_design_entity));
         if (select_synonym.value==second_arg.value) {
@@ -1296,12 +1148,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::NUMBER) {
         // 7. Parent(s, 8)
-        PqlTokenType first_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
         pair_result = pkb->GetParentStore()->GetAllParentStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
         bool is_empty = true;
@@ -1325,12 +1172,7 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::UNDERSCORE) {
         // 8. Parent(s, _)
-        PqlTokenType first_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
 
         pair_result = pkb->GetParentStore()->GetAllParentStmt(GetStmtType(first_arg_design_entity), StmtType::STMT);
         if (select_synonym.value==first_arg.value) {
@@ -1343,16 +1185,8 @@ void QueryEvaluator::EvaluateSelectWithRelationship(ParsedQuery &query) {
 
       } else if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
         // 9. Parent(s1, s2)
-        PqlTokenType first_arg_design_entity;
-        PqlTokenType second_arg_design_entity;
-        for (auto declaration : declarations) {
-          if (declaration.GetSynonym().value==first_arg.value) {
-            first_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-          if (declaration.GetSynonym().value==second_arg.value) {
-            second_arg_design_entity = declaration.GetDesignEntity().type;
-          }
-        }
+        DesignEntityType first_arg_design_entity = declarations.find(first_arg.value)->second;
+        DesignEntityType second_arg_design_entity = declarations.find(second_arg.value)->second;
 
         pair_result =
             pkb->GetParentStore()->GetAllParentStmt(GetStmtType(first_arg_design_entity), GetStmtType(second_arg_design_entity));
@@ -1386,17 +1220,11 @@ void QueryEvaluator::EvaluateSelectWithPattern(ParsedQuery &query) {
 
   PqlToken select_synonym = query.GetSynonym();
   const auto declarations = query.GetDeclaration();
-  PqlTokenType select_synonym_design_entity;
+  DesignEntityType select_synonym_design_entity = declarations.find(select_synonym.value)->second;
   Pattern pattern = query.GetPatterns().front();
   PqlToken pattern_synonym = pattern.GetSynAssign();
   PqlToken first_arg = pattern.GetFirst();
   PqlToken second_arg = pattern.GetSecond();
-
-  for (auto declaration : declarations) {
-    if (declaration.GetSynonym().value==select_synonym.value) {
-      select_synonym_design_entity = declaration.GetDesignEntity().type;
-    }
-  }
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> pair_result;
   std::unordered_set<std::string> result_to_add;
@@ -1494,7 +1322,7 @@ void QueryEvaluator::EvaluateSelectWithPattern(ParsedQuery &query) {
 
 void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query) {
   PqlToken selected_synonym = query.GetSynonym();
-  std::vector<Declaration> declarations = query.GetDeclaration();
+  const auto declarations = query.GetDeclaration();
   Relationship relationship = query.GetRelationships().front();
   Pattern pattern = query.GetPatterns().front();
 
@@ -1567,12 +1395,7 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
         such_that_bool_result = pkb->GetFollowStore()->FollowStarExists(std::make_pair(rel_first_arg.value, rel_second_arg.value));
       }
     }
-    PqlTokenType selected_synonym_design_entity;
-    for (auto declaration : declarations) {
-      if (declaration.GetSynonym().value==selected_synonym.value) {
-        selected_synonym_design_entity = declaration.GetDesignEntity().type;
-      }
-    }
+    DesignEntityType selected_synonym_design_entity = declarations.find(selected_synonym.value)->second;
 
     if (such_that_bool_result && (selected_synonym.value == pattern.GetSynAssign().value ||
                                   selected_synonym.value == pattern.GetFirst().value)) { // resort to select pattern
@@ -1599,12 +1422,7 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
         relationship.GetSecond().type != PqlTokenType::SYNONYM) {  // (s, "x")
       std::string second_arg = relationship.GetSecond().value;
 
-      PqlTokenType first_arg_design_entity;
-      for (auto declaration : declarations) {
-        if (declaration.GetSynonym().value==relationship.GetFirst().value) {
-          first_arg_design_entity = declaration.GetDesignEntity().type;
-        }
-      }
+      DesignEntityType first_arg_design_entity = declarations.find(relationship.GetFirst().value)->second;
 
       if (relationship_type == PqlTokenType::USES) {
         if (relationship.GetSecond().type != PqlTokenType::UNDERSCORE) {
@@ -1656,12 +1474,7 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
     } else if (relationship.GetFirst().type != PqlTokenType::SYNONYM &&
         relationship.GetSecond().type == PqlTokenType::SYNONYM) {  // (1, v)
 
-      PqlTokenType second_arg_design_entity;
-      for (auto declaration : declarations) {
-        if (declaration.GetSynonym().value==relationship.GetSecond().value) {
-          second_arg_design_entity = declaration.GetDesignEntity().type;
-        }
-      }
+      DesignEntityType second_arg_design_entity = declarations.find(relationship.GetSecond().value)->second;
 
       if (relationship_type == PqlTokenType::USES) {
         single_result_set = pkb->GetUsageStore()->GetVarUsedByStmt(relationship.GetFirst().value);
@@ -1694,16 +1507,8 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
         relationship.GetSecond().type == PqlTokenType::SYNONYM) {
       std::string second_arg = relationship.GetSecond().value;
 
-      PqlTokenType first_arg_design_entity;
-      PqlTokenType second_arg_design_entity;
-      for (auto declaration : declarations) {
-        if (declaration.GetSynonym().value==relationship.GetFirst().value) {
-          first_arg_design_entity = declaration.GetDesignEntity().type;
-        }
-        if (declaration.GetSynonym().value==relationship.GetSecond().value) {
-          second_arg_design_entity = declaration.GetDesignEntity().type;
-        }
-      }
+      DesignEntityType first_arg_design_entity = declarations.find(relationship.GetFirst().value)->second;
+      DesignEntityType second_arg_design_entity = declarations.find(relationship.GetSecond().value)->second;
 
       if (relationship_type == PqlTokenType::USES) {
         second_arg = second_arg.substr(1, second_arg.length() - 2);
@@ -1786,12 +1591,7 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
         {rel_column, pattern_column};
     std::unordered_set<std::string> add_result = QueryResult(result_table).GetResult(selected_synonym);
 
-    PqlTokenType selected_synonym_design_entity;
-    for (auto declaration : declarations) {
-      if (declaration.GetSynonym().value==selected_synonym.value) {
-        selected_synonym_design_entity = declaration.GetDesignEntity().type;
-      }
-    }
+    DesignEntityType selected_synonym_design_entity = declarations.find(selected_synonym.value)->second;
 
     // selected synonym not in clause
     if (rel_first_arg.value != selected_synonym.value &&
@@ -1809,67 +1609,67 @@ void QueryEvaluator::EvaluateSelectWithRelationshipAndPattern(ParsedQuery &query
   }
 }
 
-StmtType QueryEvaluator::GetStmtType(PqlTokenType token_type) {
+StmtType QueryEvaluator::GetStmtType(DesignEntityType token_type) {
   switch (token_type) {
-    case PqlTokenType::STMT: {
+    case DesignEntityType::STMT: {
       return StmtType::STMT;
     }
-    case PqlTokenType::ASSIGN: {
+    case DesignEntityType::ASSIGN: {
       return StmtType::ASSIGN;
     }
-    case PqlTokenType::WHILE: {
+    case DesignEntityType::WHILE: {
       return StmtType::WHILE;
     }
-    case PqlTokenType::IF: {
+    case DesignEntityType::IF: {
       return StmtType::IF;
     }
-    case PqlTokenType::PRINT: {
+    case DesignEntityType::PRINT: {
       return StmtType::PRINT;
     }
-    case PqlTokenType::READ: {
+    case DesignEntityType::READ: {
       return StmtType::READ;
     }
-    case PqlTokenType::CALL: {
+    case DesignEntityType::CALL: {
       return StmtType::CALL;
     }
-    case PqlTokenType::VARIABLE: {
+    case DesignEntityType::VARIABLE: {
       return StmtType::VARS;
     }
-    case PqlTokenType::CONSTANT: {
+    case DesignEntityType::CONSTANT: {
       return StmtType::CONSTS;
     }
-    case PqlTokenType::PROCEDURE: {
+    case DesignEntityType::PROCEDURE: {
       return StmtType::PROC;
     }
   }
 }
 
-bool QueryEvaluator::IsValidStmtForUse(PqlTokenType token_type) {
-  if (token_type == PqlTokenType::STMT ||
-      token_type == PqlTokenType::PRINT ||
-      token_type == PqlTokenType::WHILE ||
-      token_type == PqlTokenType::IF ||
-      token_type == PqlTokenType::ASSIGN) {
+bool QueryEvaluator::IsValidStmtForUse(DesignEntityType token_type) {
+  if (token_type == DesignEntityType::STMT ||
+      token_type == DesignEntityType::PRINT ||
+      token_type == DesignEntityType::WHILE ||
+      token_type == DesignEntityType::IF ||
+      token_type == DesignEntityType::ASSIGN) {
     return true;
   }
   return false;
 }
 
-bool QueryEvaluator::IsValidStmtForModify(PqlTokenType token_type) {
-  if (token_type == PqlTokenType::STMT ||
-      token_type == PqlTokenType::READ ||
-      token_type == PqlTokenType::WHILE ||
-      token_type == PqlTokenType::IF ||
-      token_type == PqlTokenType::ASSIGN) {
+bool QueryEvaluator::IsValidStmtForModify(DesignEntityType token_type) {
+  if (token_type == DesignEntityType::STMT ||
+      token_type == DesignEntityType::READ ||
+      token_type == DesignEntityType::WHILE ||
+      token_type == DesignEntityType::IF ||
+      token_type == DesignEntityType::ASSIGN) {
     return true;
   }
   return false;
 }
 
-bool QueryEvaluator::IsValidStmtForParent(PqlTokenType token_type) {
-  if (token_type == PqlTokenType::STMT ||
-      token_type == PqlTokenType::WHILE ||
-      token_type == PqlTokenType::IF) {
+bool QueryEvaluator::IsValidStmtForParent(DesignEntityType token_type) {
+  if (token_type == DesignEntityType::STMT ||
+      token_type == DesignEntityType::WHILE ||
+      token_type == DesignEntityType::IF) {
     return true;
   }
   return false;

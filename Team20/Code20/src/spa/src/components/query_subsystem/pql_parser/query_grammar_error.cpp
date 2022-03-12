@@ -5,6 +5,7 @@ std::string MISSING_TOKEN_IN_DECLARATION = "ERROR: Missing token in declaration!
 std::string INVALID_DESIGN_ENTITY_IN_DECLARATION = "ERROR: Invalid Design Entity in declaration! \n";
 std::string INVALID_DECLARATION_FORMAT = "ERROR: Invalid Declaration format! \n";
 std::string INVALID_DECLARATION_SYNONYM = "ERROR: Invalid Declaration synonym! \n";
+std::string DUPLICATE_DECLARATION_SYNONYM = "ERROR: Duplicate synonym! \n";
 
 // Select Clause
 std::string INVALID_SELECT_KEYWORD = "ERROR: Invalid Select keyword! \n";

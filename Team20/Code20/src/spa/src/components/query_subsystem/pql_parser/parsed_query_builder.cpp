@@ -1,12 +1,10 @@
-//
-// Created by Yu Heem Lai on 13/2/22.
-//
-
 #include "parsed_query_builder.h"
+#include "components/query_subsystem/pql_parser/query_grammar_error.h"
+#include <unordered_map>
 
 ParsedQuery ParsedQueryBuilder::Build(std::vector<PqlToken> &tokens) {
   ParsedQuery pq = ParsedQuery();
-  std::vector<Declaration> declarations;
+  std::unordered_map<std::string, DesignEntityType> declarations;
   PqlToken prev = tokens[0];
   int pos = 0;
   // Add declaration
@@ -14,6 +12,11 @@ ParsedQuery ParsedQueryBuilder::Build(std::vector<PqlToken> &tokens) {
     PqlToken token = tokens[pos];
     if(token.type == PqlTokenType::SELECT) {
       PqlToken selected_synonym = tokens[++pos];
+      if(selected_synonym.type != PqlTokenType::SYNONYM) {
+        if(declarations.count(selected_synonym.value)) {
+          selected_synonym = PqlToken(reverse_token_design_map[declarations[selected_synonym.value]], selected_synonym.value);
+        }
+      }
       pq.SetSynonym(selected_synonym);
       // skip such that tokens
       pos += 1;
@@ -26,8 +29,12 @@ ParsedQuery ParsedQueryBuilder::Build(std::vector<PqlToken> &tokens) {
       while(tokens[pos].type != PqlTokenType::SEMICOLON) {
         // another synonym
         if(tokens[pos].type == PqlTokenType::SYNONYM) {
-          Declaration decl = Declaration(tokens[pos], entity);
-          declarations.push_back(decl);
+          if(declarations.count(tokens[pos].value)) {
+            throw DUPLICATE_DECLARATION_SYNONYM;
+          } else {
+            DesignEntityType design_entity = token_design_map[entity.type];
+            declarations.insert({ tokens[pos].value, design_entity });
+          }
           pos++;
           // skip commas
         } else {
@@ -54,6 +61,12 @@ ParsedQuery ParsedQueryBuilder::Build(std::vector<PqlToken> &tokens) {
       Pattern patt = Pattern(syn, first, second);
       pq.AddPattern(patt);
       pos++;
+    } else if(token.type == PqlTokenType::WITH) {
+      PqlToken attr = tokens[++pos];
+      pos += 2;
+      PqlToken comparator = tokens[pos];
+      With with_clause = With(attr, comparator);
+      pq.AddWithClause(with_clause);
     } else {
       pos++;
     }

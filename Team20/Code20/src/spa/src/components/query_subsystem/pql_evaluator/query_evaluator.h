@@ -25,10 +25,10 @@ class QueryEvaluator {
   void EvaluateSelectWithRelationship(ParsedQuery& query);
   void EvaluateSelectWithPattern(ParsedQuery& query);
   void EvaluateSelectWithRelationshipAndPattern(ParsedQuery& query);
-  StmtType GetStmtType(PqlTokenType token_type);
-  bool IsValidStmtForUse(PqlTokenType token_type);
-  bool IsValidStmtForModify(PqlTokenType token_type);
-  bool IsValidStmtForParent(PqlTokenType token_type);
+  StmtType GetStmtType(DesignEntityType token_type);
+  bool IsValidStmtForUse(DesignEntityType token_type);
+  bool IsValidStmtForModify(DesignEntityType token_type);
+  bool IsValidStmtForParent(DesignEntityType token_type);
 };
 
 }
