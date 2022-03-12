@@ -1,119 +1,129 @@
 1 - Wildcard select if
 if ifs;
 Select ifs pattern ifs(_,_,_)
-none
+1,2,3,10
 5000
 2 - Literal select if
 if ifs;
 Select ifs pattern ifs("y",_,_)
-none
+10
 5000
 3 - Literal select if
 if ifs;
 Select ifs pattern ifs("x",_,_)
-none
+10
 5000
 4 - Synonym select variable
 if ifs; variable v;
 Select v pattern ifs(v,_,_)
-none
+a,b,x,y
 5000
-5 - Synonym select constant (irregular notation)
+5 - Wildcard with random spaces
+if ifs; variable v;
+Select ifs pattern ifs(        _,        _,        _      )
+1,2,3,10
+5000
+6 - Invalid synonym (negative)
 if ifs; constant v;
 Select v pattern ifs(v,_,_)
-none
+1,2,3,5,7,10101010
 5000
-6 - Synonym select stmt (irregular notation)
+7 - Invalid synonym (negative)
 if ifs; stmt v;
 Select v pattern ifs(v,_,_)
 none
 5000
-7 - Synonym select if (irregular notation)
+8 - Invalid synonym (negative)
 if ifs; if v;
 Select v pattern ifs(v,_,_)
 none
 5000
-8 - Synonym select assign (irregular notation)
+9 - Invalid synonym (negative)
 if ifs; assign v;
 Select v pattern ifs(v,_,_)
 none
 5000
-9 - Synonym select while (irregular notation)
+10 - Invalid synonym (negative)
 if ifs; while v;
 Select v pattern ifs(v,_,_)
 none
 5000
-10 - Negative
+11 - Invalid declaration (negative)
 if ifs; variable "v";
 Select v pattern ifs(v,_,_)
 none
 5000
-11 - Negative
+12 - Invalid argument (negative)
 if ifs; variable v;
 Select v pattern ifs(_,v,_)
 none
 5000
-12 - Invalid argument (negative)
+13 - Invalid argument (negative)
 if ifs; variable v;
 Select v pattern ifs(_,_,v)
 none
 5000
-13 - Invalid argument (negative)
+14 - Invalid argument (negative)
 if ifs;
 Select ifs pattern ifs(_,"x",_)
 none
 5000
-14 - Invalid argument (negative)
+15 - Invalid argument (negative)
 if ifs;
 Select ifs pattern ifs(_,_,"x")
 none
 5000
-15 - Missing argument (negative)
+16 - Missing argument (negative)
 if ifs;
 Select ifs pattern ifs(_,_)
 none
 5000
-16 - Missing argument (negative)
+17 - Missing argument (negative)
 if ifs;
 Select ifs pattern ifs(_)
 none
 5000
-17 - Missing argument (negative)
+18 - Additional argument (negative)
+if ifs;
+Select ifs pattern ifs(_,_,_,_)
+none
+5000
+19 - Missing argument (negative)
 if ifs;
 Select ifs pattern ifs(,_,_)
 none
 5000
-18 - Wildcard select while
+20 - Wildcard select while
 while w;
 Select w pattern w(_,_)
-none
-5000
-19 - Literal select while
-while w;
-Select w pattern w("x",_)
-none
-5000
-20 - Literal select while
-while w;
-Select w pattern w("y",_)
-none
+5,9,13
 5000
 21 - Literal select while
+while w;
+Select w pattern w("x",_)
+5,13
+5000
+22 - Literal select while
+while w;
+Select w pattern w("y",_)
+5
+5000
+23 - Literal select while
 while w;
 Select w pattern w("z",_)
 none
 5000
-22 - Synonym select while
+24 - Synonym select while
 while w; variable v;
 Select v pattern w(v,_)
-none
+a,c,d,x,y
 5000
-23 - Additional argument (negative)
+25 - Additional argument (negative)
 while w;
 Select w pattern w(_,_,_)
 none
 5000
-24 - Missing argument (negative)
+26 - Missing argument (negative)
 while w;
 Select w pattern w(_)
 none
