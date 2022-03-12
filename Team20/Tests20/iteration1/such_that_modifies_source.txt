@@ -16,3 +16,10 @@ procedure Modifies {
   }
   p = 2;
 }
+
+procedure foo {
+  read q;
+  read p;
+  print r;
+  s = 100;
+}
