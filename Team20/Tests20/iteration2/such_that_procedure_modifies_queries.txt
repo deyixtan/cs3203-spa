@@ -34,8 +34,8 @@ Select v such that Modifies("Modifies", "a")
 none
 5000
 8
-variable v;
-Select v such that Modifies("Modifies", "p")
+procedure v;
+Select v such that Modifies(v, "p")
 Modifies
 5000
 9

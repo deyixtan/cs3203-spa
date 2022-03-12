@@ -1,0 +1,55 @@
+1
+procedure p; variable v;
+Select p such that Uses(p, v)
+Uses, foo
+5000
+2
+procedure p; variable v
+Select v such that Uses(p, v)
+apple,banana,papaya,pear,orange,peach,berry,carrot,avocado,grape,mango
+5000
+3
+procedure p;
+Select p such that Uses(p, "seed")
+none
+5000
+4
+procedure p;
+Select p such that Uses(p, "plum")
+Uses, foo
+5000
+5
+variable v;
+Select v such that Uses("Uses", v)
+apple,banana,papaya,pear,orange,peach,berry,carrot,avocado,grape
+5000
+6
+variable v;
+Select v such that Uses("Uses", v)
+none
+5000
+7
+variable v;
+Select v such that Uses("uses", "a")
+none
+5000
+8
+procedure v;
+Select v such that Uses(p, "mango")
+foo
+5000
+9
+variable v;
+Select v such that Uses("Uses ", v)
+none
+5000
+10
+variable v;
+Select v such that Uses("main", v)
+none
+5000
+11
+variable v;
+Select v such that Uses("foo", v)
+apple,mango
+5000
