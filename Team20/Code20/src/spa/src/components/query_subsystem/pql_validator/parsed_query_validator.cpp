@@ -8,7 +8,6 @@ namespace pql_validator {
 
 bool ParsedQueryValidator::ValidateQuery(ParsedQuery query) {
   return ValidateSelectSynonymDeclared(query)
-      && ValidateNoDuplicateSynonymDeclared(query)
       && ValidateSuchThatClause(query)
       && ValidatePatternClause(query);
 }

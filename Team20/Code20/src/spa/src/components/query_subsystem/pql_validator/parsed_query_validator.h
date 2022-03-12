@@ -16,7 +16,6 @@ class ParsedQueryValidator {
   bool IsStmtRef(PqlTokenType);
   bool IsEntRef(PqlTokenType);
   bool IsExpressionSpec(PqlTokenType);
-  bool ValidateNoDuplicateSynonymDeclared(ParsedQuery);
   bool ValidateSelectSynonymDeclared(ParsedQuery);
   bool ValidateSuchThatClause(ParsedQuery);
   bool ValidateFollowsFollowsTArguments(ParsedQuery);
