@@ -5,7 +5,7 @@ namespace pql {
 
 using namespace clause_util;
 
-UsesSClause::UsesSClause(const std::vector<Declaration> &declarations_,
+UsesSClause::UsesSClause(const std::unordered_map<std::string, DesignEntityType> &declarations_,
                          const PqlToken &first_arg_,
                          const PqlToken &second_arg_,
                          PKB *pkb_) :

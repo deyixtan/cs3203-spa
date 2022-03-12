@@ -2,20 +2,20 @@
 #define FOLLOWS_CLAUSE_H_
 
 #include "clause.h"
-#include "components/query_subsystem/pql_parser/declaration.h"
 #include "components/pkb/pkb.h"
+#include "components/query_subsystem/pql_parser/parsed_query.h"
 
 namespace pql {
 
 class FollowsClause : public Clause {
  public:
-  FollowsClause(const std::vector<Declaration> &declarations,
+  FollowsClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
                 const PqlToken &first_arg,
                 const PqlToken &second_arg,
                 PKB *pkb);
   Table Execute() override;
  private:
-  std::vector<Declaration> declarations;
+  std::unordered_map<std::string, DesignEntityType> declarations;
   PqlToken first_arg;
   PqlToken second_arg;
   PKB *pkb;

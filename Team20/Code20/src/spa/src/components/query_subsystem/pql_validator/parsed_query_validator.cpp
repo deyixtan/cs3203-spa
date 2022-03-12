@@ -181,7 +181,7 @@ bool ParsedQueryValidator::ValidateUsesArguments(ParsedQuery query) {
     if (!found_first || !found_second) {
       return false;
     }
-    if (!IsStmt(first_arg_design_entity) && first_arg_design_entity != PqlTokenType::PROCEDURE) {
+    if (!IsStmt(first_arg_design_entity) && first_arg_design_entity != DesignEntityType::PROCEDURE) {
       return false;
     }
     if (second_arg_design_entity!=DesignEntityType::VARIABLE) {

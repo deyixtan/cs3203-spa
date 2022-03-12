@@ -2,7 +2,7 @@
 
 namespace pql {
 
-SelectClause::SelectClause(const PqlToken &selected_synonym_, const std::vector<Declaration> &declarations_, PKB *pkb_)
+SelectClause::SelectClause(const PqlToken &selected_synonym_, const std::unordered_map<std::string, DesignEntityType> &declarations_, PKB *pkb_)
     : selected_synonym(selected_synonym_), declarations(declarations_), pkb(pkb_) {}
 
 Table SelectClause::Execute() {
@@ -10,47 +10,47 @@ Table SelectClause::Execute() {
   return {selected_synonym.value, single_constraints};
 }
 
-PqlTokenType SelectClause::GetSynonymDesignEntity(const PqlToken &arg) {
+DesignEntityType SelectClause::GetSynonymDesignEntity(const PqlToken &arg) {
   assert(arg.type==PqlTokenType::SYNONYM);
   for (auto declaration : declarations) {
-    if (arg.value==declaration.GetSynonym().value) {
-      return declaration.GetDesignEntity().type;
+    if (arg.value==declaration.first) {
+      return declaration.second;
     }
   }
 
   throw std::out_of_range("Synonym not declared");
 }
 
-StmtType SelectClause::GetStmtType(const PqlTokenType &design_entity) {
+StmtType SelectClause::GetStmtType(const DesignEntityType &design_entity) {
   switch (design_entity) {
-    case PqlTokenType::STMT: {
+    case DesignEntityType::STMT: {
       return StmtType::STMT;
     }
-    case PqlTokenType::ASSIGN: {
+    case DesignEntityType::ASSIGN: {
       return StmtType::ASSIGN;
     }
-    case PqlTokenType::WHILE: {
+    case DesignEntityType::WHILE: {
       return StmtType::WHILE;
     }
-    case PqlTokenType::IF: {
+    case DesignEntityType::IF: {
       return StmtType::IF;
     }
-    case PqlTokenType::PRINT: {
+    case DesignEntityType::PRINT: {
       return StmtType::PRINT;
     }
-    case PqlTokenType::READ: {
+    case DesignEntityType::READ: {
       return StmtType::READ;
     }
-    case PqlTokenType::CALL: {
+    case DesignEntityType::CALL: {
       return StmtType::CALL;
     }
-    case PqlTokenType::VARIABLE: {
+    case DesignEntityType::VARIABLE: {
       return StmtType::VARS;
     }
-    case PqlTokenType::CONSTANT: {
+    case DesignEntityType::CONSTANT: {
       return StmtType::CONSTS;
     }
-    case PqlTokenType::PROCEDURE: {
+    case DesignEntityType::PROCEDURE: {
       return StmtType::PROC;
     }
   }

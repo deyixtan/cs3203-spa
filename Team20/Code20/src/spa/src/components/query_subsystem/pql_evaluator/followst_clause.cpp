@@ -5,7 +5,7 @@ namespace pql {
 
 using namespace clause_util;
 
-FollowsTClause::FollowsTClause(const std::vector<Declaration> &declarations,
+FollowsTClause::FollowsTClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
                                const PqlToken &first_arg,
                                const PqlToken &second_arg,
                                PKB *pkb)
