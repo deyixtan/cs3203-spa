@@ -1,0 +1,25 @@
+procedure Modifies {
+1  read d;
+2  print d;
+3  while (d > c) {
+4    read y;
+5    while (d > c) {
+6      read y;
+7      d = 3 + w;
+8      w = 4;
+    }
+  }
+9  if (d > c) then {
+10    read y;
+  } else {
+11    print y;
+  }
+12  p = 2;
+}
+
+procedure foo {
+13  read q;
+14  read p;
+15  print r;
+16  s = 100;
+}
