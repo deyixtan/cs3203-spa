@@ -1,0 +1,27 @@
+procedure Fruit {
+1	durian = apple + 2;
+2	print apple;
+3	if (apple > 1) then {
+4		read apple;
+	} else {
+5		print apple;
+6		while (banana < papaya) {
+7			read durian;
+8			while ((3 != apple) || (pear >= orange)) {
+9				read orange;
+10				read plum;
+11				print peach;
+12				peach = berry * 3;
+			}
+		}
+	}
+13	if (!(banana != carrot)) then {
+14		print apple;
+	} else {
+15		while (!(2 > grape)) {
+16			grape = 100;
+		}
+	}
+17	berry = avocado * (3 - peach) / berry;
+18	apple = peach;
+}
