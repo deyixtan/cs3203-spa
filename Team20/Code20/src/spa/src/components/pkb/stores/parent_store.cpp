@@ -28,6 +28,11 @@ void ParentStore::AddParentStar(std::string const &stmt, std::vector<std::string
                             std::unordered_set<std::string>()}});
     }
 
+    if (rs_map.find(s) == rs_map.end()) {
+      rs_map.insert({s, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
+                            std::unordered_set<std::string>()}});
+    }
+
     if (s != stmt) {
       ance_desc_set.insert(std::make_pair(s, stmt));
       rs_map.at(stmt).ance.insert(s);

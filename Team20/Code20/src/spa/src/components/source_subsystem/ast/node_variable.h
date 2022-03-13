@@ -6,14 +6,16 @@
 class VariableNode : public ExpressionNode {
  private:
   std::string m_identifier;
+  std::string m_stmt;
 
  public:
   VariableNode();
-  VariableNode(std::string identifier);
+  explicit VariableNode(std::string identifier, std::string stmt);
   [[nodiscard]] std::string GetIdentifier();
   [[nodiscard]] ExpressionType GetExpressionType() override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string>* visited) override;
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

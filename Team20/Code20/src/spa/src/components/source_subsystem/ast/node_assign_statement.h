@@ -3,6 +3,8 @@
 
 #include "node_statement.h"
 #include "node_variable.h"
+#include "node_constant.h"
+#include "node_combination_expression.h"
 
 class AssignStatementNode : public StatementNode {
  private:
@@ -16,6 +18,7 @@ class AssignStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<VariableNode> GetIdentifier();
   [[nodiscard]] std::shared_ptr<ExpressionNode> GetExpression();
   [[nodiscard]] StmtType GetStatementType() override;
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited) override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;

@@ -58,7 +58,7 @@ PKB *set_up_pkb() {
 
   pkb->AddStmt("3", PRINT);
   pkb->AddStmt("13", PRINT);
-  
+
   pkb->GetUsageStore()->AddProcVar("main", "dog");
   pkb->GetUsageStore()->AddProcVar("main", "cat");
   pkb->GetUsageStore()->AddProcVar("main", "mouse");

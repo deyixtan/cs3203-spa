@@ -46,3 +46,20 @@ bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other
       && *m_left_expression == *(casted_other->m_left_expression)
       && *m_right_expression == *(casted_other->m_right_expression);
 }
+
+std::string RelationalExpressionNode::Process(Populator populator, std::vector<std::string>* visited) {
+  switch (m_relation_operator) {
+    case RelationOperator::LESS_THAN:
+      return m_left_expression->Process(populator, visited) + "<" + m_right_expression->Process(populator, visited);
+    case RelationOperator::LESS_THAN_EQUALS:
+      return m_left_expression->Process(populator, visited) + "<=" + m_right_expression->Process(populator, visited);
+    case RelationOperator::GREATER_THAN:
+      return m_left_expression->Process(populator, visited) + ">" + m_right_expression->Process(populator, visited);
+    case RelationOperator::GREATER_THAN_EQUALS:
+      return m_left_expression->Process(populator, visited) + ">=" + m_right_expression->Process(populator, visited);
+    case RelationOperator::EQUALS:
+      return m_left_expression->Process(populator, visited) + "==" + m_right_expression->Process(populator, visited);
+    case RelationOperator::NOT_EQUALS:
+      return m_left_expression->Process(populator, visited) + "!=" + m_right_expression->Process(populator, visited);
+  }
+}

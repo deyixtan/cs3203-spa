@@ -38,6 +38,21 @@ ExpressionType CombinationExpressionNode::GetExpressionType() {
   return ExpressionType::COMBINATION;
 }
 
+std::string CombinationExpressionNode::Process(Populator populator, std::vector<std::string> *visited) {
+  switch (m_arithmetic_operator) {
+    case ArithmeticOperator::PLUS:
+      return m_left_expression->Process(populator, visited) + "+" + m_right_expression->Process(populator, visited);
+    case ArithmeticOperator::MINUS:
+      return m_left_expression->Process(populator, visited) + "-" + m_right_expression->Process(populator, visited);
+    case ArithmeticOperator::MULTIPLY:
+      return m_left_expression->Process(populator, visited) + "*" + m_right_expression->Process(populator, visited);
+    case ArithmeticOperator::DIVIDE:
+      return m_left_expression->Process(populator, visited) + "/" + m_right_expression->Process(populator, visited);
+    case ArithmeticOperator::MOD:
+      return m_left_expression->Process(populator, visited) + "%" + m_right_expression->Process(populator, visited);
+  }
+}
+
 std::string CombinationExpressionNode::ToString() {
   return "(" + m_left_expression->ToString() + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
       + m_right_expression->ToString() + ")";
