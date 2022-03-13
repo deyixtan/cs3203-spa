@@ -22,8 +22,16 @@ void Populator::PopulateUses(std::string stmt, std::string var) {
   pkb->GetUsageStore()->AddStmtVar(stmt, var);
 }
 
+void Populator::PopulateUsesProc(std::string proc, std::string var) {
+  pkb->GetUsageStore()->AddProcVar(proc, var);
+}
+
 void Populator::PopulateModifies(std::string stmt, std::string var) {
   pkb->GetModifyStore()->AddStmtVar(stmt, var);
+}
+
+void Populator::PopulateModifiesProc(std::string proc, std::string var) {
+  pkb->GetModifyStore()->AddProcVar(proc, var);
 }
 
 void Populator::PopulateProc(std::string name) {

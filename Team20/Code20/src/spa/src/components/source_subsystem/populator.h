@@ -14,7 +14,9 @@ class Populator {
   void PopulateFollows(std::string stmt1, std::string stmt2);
   void PopulateFollowsStar(std::string stmt1, std::string stmt2);
   void PopulateUses(std::string stmt, std::string var);
+  void PopulateUsesProc(std::string stmt, std::string var);
   void PopulateModifies(std::string stmt, std::string var);
+  void PopulateModifiesProc(std::string stmt, std::string var);
   void PopulateProc(std::string name);
   void PopulateAssign(std::string stmt);
   void PopulateStmt(std::string stmt);

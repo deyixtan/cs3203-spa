@@ -23,7 +23,6 @@ std::string StatementListNode::Process(Populator populator, std::vector<std::str
   for (int i = 0; i < stmts.size(); ++i) {
     std::shared_ptr<StatementNode> stmt = stmts[i];
     std::string stmt_num = std::to_string(stmt->GetStatementNumber());
-    StmtType stmt_type = stmt->GetStatementType();
     std::string var_name = "";
 
     if (stmt != stmts.back()) {
