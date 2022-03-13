@@ -38,7 +38,7 @@ ExpressionType CombinationExpressionNode::GetExpressionType() {
   return ExpressionType::COMBINATION;
 }
 
-std::string CombinationExpressionNode::Process(Populator populator, std::vector<std::string> *visited, source::CfgGroupNode &cfg_node) {
+std::string CombinationExpressionNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   switch (m_arithmetic_operator) {
     case ArithmeticOperator::PLUS:
       return m_left_expression->Process(populator, visited, cfg_node) + "+" + m_right_expression->Process(populator, visited, cfg_node);

@@ -17,7 +17,7 @@ std::string StatementListNode::ToString() {
   return str;
 }
 
-std::string StatementListNode::Process(Populator populator, std::vector<std::string> *visited, source::CfgGroupNode &cfg_node) {
+std::string StatementListNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   std::vector<std::shared_ptr<StatementNode>> stmts = m_statements;
 
   for (int i = 0; i < stmts.size(); ++i) {

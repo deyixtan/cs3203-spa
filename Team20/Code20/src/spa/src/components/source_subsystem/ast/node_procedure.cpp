@@ -32,7 +32,7 @@ bool ProcedureNode::operator==(const ProcedureNode &other) const {
   return m_identifier == other.m_identifier;
 }
 
-std::string ProcedureNode::Process(Populator populator, std::vector<std::string> *visited, source::CfgGroupNode &cfg_node) {
+std::string ProcedureNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   populator.PopulateProc(m_identifier);
   return m_stmt_list->Process(populator, visited, cfg_node);
 }

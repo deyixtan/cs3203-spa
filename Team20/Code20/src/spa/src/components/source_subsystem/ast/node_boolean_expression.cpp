@@ -33,7 +33,7 @@ bool BooleanExpressionNode::operator==(const ConditionalExpressionNode &other) c
       && *m_right_expression == *(casted_other->m_right_expression);
 }
 
-std::string BooleanExpressionNode::Process(Populator populator, std::vector<std::string>* visited, source::CfgGroupNode &cfg_node) {
+std::string BooleanExpressionNode::Process(Populator populator, std::vector<std::string>* visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   switch (m_boolean_operator) {
     case BooleanOperator::AND:
       return m_left_expression->Process(populator, visited, cfg_node) + "&&" + m_right_expression->Process(populator, visited, cfg_node);

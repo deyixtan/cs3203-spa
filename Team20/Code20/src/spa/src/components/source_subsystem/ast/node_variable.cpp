@@ -25,7 +25,7 @@ bool VariableNode::operator==(const ExpressionNode &other) const {
   return m_identifier == casted_other->m_identifier;
 }
 
-std::string VariableNode::Process(Populator populator, std::vector<std::string>* visited, source::CfgGroupNode &cfg_node) {
+std::string VariableNode::Process(Populator populator, std::vector<std::string>* visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   std::string var_name = m_identifier;
   for (std::string s : *visited) {
     populator.PopulateUses(s, var_name);

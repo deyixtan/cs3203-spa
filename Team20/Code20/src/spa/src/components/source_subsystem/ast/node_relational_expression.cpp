@@ -47,7 +47,7 @@ bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other
       && *m_right_expression == *(casted_other->m_right_expression);
 }
 
-std::string RelationalExpressionNode::Process(Populator populator, std::vector<std::string>* visited, source::CfgGroupNode &cfg_node) {
+std::string RelationalExpressionNode::Process(Populator populator, std::vector<std::string>* visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   switch (m_relation_operator) {
     case RelationOperator::LESS_THAN:
       return m_left_expression->Process(populator, visited, cfg_node) + "<" + m_right_expression->Process(populator, visited, cfg_node);

@@ -11,7 +11,7 @@ void DesignExtractor::TraverseAst() {
   for (auto &proc : proc_list) {
     std::vector<std::string> visited;
     source::CfgGroupNode cfg_root = source::CfgGroupNode();
-    proc->Process(populator, &visited, cfg_root);
+    proc->Process(populator, &visited, std::make_shared<source::CfgGroupNode>(cfg_root));
     procedure_map.insert({proc->GetIdentifier(), std::make_shared<source::CfgGroupNode>(cfg_root)});
   }
   source::ProgramCfg program_cfg = source::ProgramCfg(procedure_map);

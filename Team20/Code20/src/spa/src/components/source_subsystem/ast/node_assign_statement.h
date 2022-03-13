@@ -18,7 +18,7 @@ class AssignStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<VariableNode> GetIdentifier();
   [[nodiscard]] std::shared_ptr<ExpressionNode> GetExpression();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited, source::CfgGroupNode &cfg_node) override;
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;

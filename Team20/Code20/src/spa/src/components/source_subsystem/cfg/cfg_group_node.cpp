@@ -17,4 +17,8 @@ std::shared_ptr<CfgGroupNode> &CfgGroupNode::GetNext() {
   return m_next;
 }
 
+void CfgGroupNode::SetNext(std::shared_ptr<CfgGroupNode> next) {
+  m_next = next;
+}
+
 }

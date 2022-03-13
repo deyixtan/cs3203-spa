@@ -31,7 +31,7 @@ bool AssignStatementNode::operator==(const StatementNode &other) const {
       && *m_expression == *(casted_other->m_expression);
 }
 
-std::string AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, source::CfgGroupNode &cfg_node) {
+std::string AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   std::string var_name = "";
   populator.PopulateStmt(stmt_num);
@@ -47,6 +47,6 @@ std::string AssignStatementNode::Process(Populator populator, std::vector<std::s
 
   populator.PopulateAssign(stmt_num);
   populator.PopulateParentStar(stmt_num, *visited);
-  cfg_node.GetNodes().push_back(GetStatementNumber());
+  cfg_node->GetNodes().push_back(GetStatementNumber());
   return "";
 }

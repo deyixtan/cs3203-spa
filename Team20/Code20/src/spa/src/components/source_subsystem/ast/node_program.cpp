@@ -21,7 +21,7 @@ std::string ProgramNode::GetPatternFormat() {
   return "";
 }
 
-std::string ProgramNode::Process(Populator populator, std::vector<std::string> *visited, source::CfgGroupNode &cfg_node) {
+std::string ProgramNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   for (auto &procedure : m_procedures) {
     return procedure->Process(populator, visited, cfg_node);
   }
