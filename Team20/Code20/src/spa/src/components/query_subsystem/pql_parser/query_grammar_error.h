@@ -29,4 +29,7 @@ extern std::string INVALID_PATTERN_CLAUSE_ARGUMENT;
 // With clause
 extern std::string INVALID_WITH_CLAUSE_FORMAT;
 
+// And clause
+extern std::string INVALID_AND_CLAUSE_FORMAT;
+
 #endif

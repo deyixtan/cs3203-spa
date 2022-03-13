@@ -26,3 +26,5 @@ std::string INVALID_PATTERN_CLAUSE_ARGUMENT = "ERROR: Invalid Pattern clause arg
 // With Clause
 std::string INVALID_WITH_CLAUSE_FORMAT = "ERROR: Invalid With Clause format! \n";
 
+// And Clause
+std::string INVALID_AND_CLAUSE_FORMAT = "ERROR: Invalid And Clause format! \n";

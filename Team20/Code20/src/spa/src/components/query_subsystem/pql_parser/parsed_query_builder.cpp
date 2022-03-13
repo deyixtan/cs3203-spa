@@ -5,7 +5,7 @@
 ParsedQuery ParsedQueryBuilder::Build(std::vector<PqlToken> &tokens) {
   ParsedQuery pq = ParsedQuery();
   std::unordered_map<std::string, DesignEntityType> declarations;
-  PqlToken prev = tokens[0];
+  PqlTokenType prev = tokens[0].type;
   int pos = 0;
   // Add declaration
   while(pos < tokens.size()) {
@@ -44,6 +44,7 @@ ParsedQuery ParsedQueryBuilder::Build(std::vector<PqlToken> &tokens) {
       pq.SetDeclarations(declarations);
     } else if(rel_ref.count(token.type)) {
       PqlToken rlshp = token;
+      prev = token.type;
       // skip bracket
       pos += 2;
       PqlToken first = tokens[pos];
@@ -53,20 +54,37 @@ ParsedQuery ParsedQueryBuilder::Build(std::vector<PqlToken> &tokens) {
       pq.AddRelationship(relationship);
       pos += 2;
     } else if(token.type == PqlTokenType::PATTERN) {
+      prev = token.type;
       PqlToken syn = tokens[++pos];
       pos += 2;
       PqlToken first = tokens[pos];
       pos += 2;
       PqlToken second = tokens[pos];
-      Pattern patt = Pattern(syn, first, second);
+      Pattern patt;
+      if(pos + 1 < tokens.size() && tokens[pos + 1].value == ",") {
+        pos += 2;
+        PqlToken third = tokens[pos];
+        patt = Pattern(syn, first, second, third);
+      } else {
+        patt = Pattern(syn, first, second);
+      }
       pq.AddPattern(patt);
       pos++;
     } else if(token.type == PqlTokenType::WITH) {
       PqlToken attr = tokens[++pos];
+      prev = attr.type;
       pos += 2;
       PqlToken comparator = tokens[pos];
       With with_clause = With(attr, comparator);
       pq.AddWithClause(with_clause);
+    } else if(token.type == PqlTokenType::AND && tokens[pos + 1].type == PqlTokenType::SYNONYM) {
+      if(prev == PqlTokenType::PATTERN){
+        PqlToken dummy_token = PqlToken(PqlTokenType::PATTERN, "pattern");
+        auto itPos = tokens.begin() + pos + 1;
+        tokens.insert(itPos, dummy_token);
+      } else {
+        throw INVALID_AND_CLAUSE_FORMAT;
+      }
     } else {
       pos++;
     }
