@@ -2,6 +2,7 @@
 #define SPA_SRC_COMPONENTS_PKB_DESIGN_EXTRACTOR_POPULATOR_H_
 
 #include "../pkb/pkb.h"
+#include "cfg/cfg.h"
 
 class Populator {
  private:
@@ -27,6 +28,7 @@ class Populator {
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
   void AddPattern(std::string stmt, std::string lhs, std::string rhs);
+  void PopulateCfg(source::ProgramCfg &cfg);
 };
 
 #endif //SPA_SRC_COMPONENTS_PKB_DESIGN_EXTRACTOR_POPULATOR_H_

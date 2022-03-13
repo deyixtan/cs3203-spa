@@ -47,19 +47,19 @@ bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other
       && *m_right_expression == *(casted_other->m_right_expression);
 }
 
-std::string RelationalExpressionNode::Process(Populator populator, std::vector<std::string>* visited) {
+std::string RelationalExpressionNode::Process(Populator populator, std::vector<std::string>* visited, source::CfgGroupNode &cfg_node) {
   switch (m_relation_operator) {
     case RelationOperator::LESS_THAN:
-      return m_left_expression->Process(populator, visited) + "<" + m_right_expression->Process(populator, visited);
+      return m_left_expression->Process(populator, visited, cfg_node) + "<" + m_right_expression->Process(populator, visited, cfg_node);
     case RelationOperator::LESS_THAN_EQUALS:
-      return m_left_expression->Process(populator, visited) + "<=" + m_right_expression->Process(populator, visited);
+      return m_left_expression->Process(populator, visited, cfg_node) + "<=" + m_right_expression->Process(populator, visited, cfg_node);
     case RelationOperator::GREATER_THAN:
-      return m_left_expression->Process(populator, visited) + ">" + m_right_expression->Process(populator, visited);
+      return m_left_expression->Process(populator, visited, cfg_node) + ">" + m_right_expression->Process(populator, visited, cfg_node);
     case RelationOperator::GREATER_THAN_EQUALS:
-      return m_left_expression->Process(populator, visited) + ">=" + m_right_expression->Process(populator, visited);
+      return m_left_expression->Process(populator, visited, cfg_node) + ">=" + m_right_expression->Process(populator, visited, cfg_node);
     case RelationOperator::EQUALS:
-      return m_left_expression->Process(populator, visited) + "==" + m_right_expression->Process(populator, visited);
+      return m_left_expression->Process(populator, visited, cfg_node) + "==" + m_right_expression->Process(populator, visited, cfg_node);
     case RelationOperator::NOT_EQUALS:
-      return m_left_expression->Process(populator, visited) + "!=" + m_right_expression->Process(populator, visited);
+      return m_left_expression->Process(populator, visited, cfg_node) + "!=" + m_right_expression->Process(populator, visited, cfg_node);
   }
 }

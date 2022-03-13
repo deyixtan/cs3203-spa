@@ -73,3 +73,7 @@ void Populator::PopulateConst(std::string name) {
 void Populator::AddPattern(std::string stmt, std::string lhs, std::string rhs) {
   pkb->AddPattern(stmt, lhs, rhs);
 }
+
+void Populator::PopulateCfg(source::ProgramCfg &cfg) {
+  pkb->AddProgramCfg(std::make_shared<source::ProgramCfg>(cfg));
+}

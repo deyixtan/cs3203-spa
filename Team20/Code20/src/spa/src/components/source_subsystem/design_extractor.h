@@ -6,6 +6,7 @@
 #include "components/pkb/pkb.h"
 #include "populator.h"
 #include "components/source_subsystem/ast/node_program.h"
+#include "cfg/cfg.h"
 
 class DesignExtractor {
  private:
