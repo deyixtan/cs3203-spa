@@ -23,9 +23,8 @@ std::string ProgramNode::GetPatternFormat() {
 
 std::string ProgramNode::Process(Populator populator, std::vector<std::string> *visited) {
   for (auto &procedure : m_procedures) {
-    procedure->Process(populator, visited);
+    return procedure->Process(populator, visited);
   }
-  return "";
 }
 
 bool ProgramNode::operator==(const ProgramNode &other) const {
