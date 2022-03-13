@@ -5,7 +5,7 @@
 
 namespace source {
 
-class CfgIfNode {
+class CfgIfNode : public CfgGroupNode {
  private:
   CfgNode m_node;
   std::shared_ptr<CfgGroupNode> m_next;

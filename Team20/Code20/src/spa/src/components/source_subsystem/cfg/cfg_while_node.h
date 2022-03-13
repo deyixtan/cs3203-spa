@@ -5,7 +5,7 @@
 
 namespace source {
 
-class CfgWhileNode {
+class CfgWhileNode : public CfgGroupNode {
  private:
   CfgNode m_node;
   std::shared_ptr<CfgGroupNode> m_body;

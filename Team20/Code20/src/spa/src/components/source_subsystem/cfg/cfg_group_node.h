@@ -16,8 +16,9 @@ class CfgGroupNode {
   CfgGroupNode();
   CfgGroupNode(std::vector<CfgNode> nodes);
   CfgGroupNode(std::vector<CfgNode> nodes, std::shared_ptr<CfgGroupNode> next);
-  [[nodiscard]] std::vector<CfgNode> GetNodes();
-  [[nodiscard]] std::shared_ptr<CfgGroupNode> GetNext();
+  [[nodiscard]] std::vector<CfgNode> &GetNodes();
+  [[nodiscard]] std::shared_ptr<CfgGroupNode> &GetNext();
+  void SetNext(std::shared_ptr<CfgGroupNode> next);
 };
 
 }
