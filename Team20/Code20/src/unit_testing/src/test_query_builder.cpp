@@ -31,7 +31,6 @@ TEST_CASE("Test query parser with uses") {
   test_token_vect.push_back(v_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  //BuildParsedQuery(test_token_vect);
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
@@ -83,7 +82,6 @@ TEST_CASE("Test query parser with uses and pattern") {
   test_token_vect.push_back(underscore_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  //BuildParsedQuery(test_token_vect);
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
@@ -132,7 +130,6 @@ TEST_CASE("Test query parser with multiple variables") {
   test_token_vect.push_back(s_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  //BuildParsedQuery(test_token_vect);
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
@@ -268,7 +265,6 @@ TEST_CASE("Test query parser with with clause") {
   test_token_vect.push_back(equal_sign_token);
   test_token_vect.push_back(number_value_token_5);
 
-  //BuildParsedQuery(test_token_vect);
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
@@ -323,7 +319,6 @@ TEST_CASE("Test query parser with multiple with clauses") {
   test_token_vect.push_back(equal_sign_token);
   test_token_vect.push_back(v1_token);
 
-  //BuildParsedQuery(test_token_vect);
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
@@ -373,7 +368,6 @@ TEST_CASE("Test query parser with BOOLEAN var name") {
   test_token_vect.push_back(v_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  //BuildParsedQuery(test_token_vect);
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
@@ -386,4 +380,151 @@ TEST_CASE("Test query parser with BOOLEAN var name") {
   REQUIRE(synonym.value == "BOOLEAN");
   REQUIRE(decl.find("BOOLEAN")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+}
+
+TEST_CASE("Test query parser with ifs pattern") {
+  std::vector<PqlToken> test_token_vect;
+
+  // if
+  test_token_vect.push_back(if_token);
+  test_token_vect.push_back(ifs_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // assign
+  test_token_vect.push_back(assign_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // variable
+  test_token_vect.push_back(variable_token);
+  test_token_vect.push_back(v_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // select clause
+  test_token_vect.push_back(select_token);
+  test_token_vect.push_back(ifs_token);
+  test_token_vect.push_back(pattern_token);
+  test_token_vect.push_back(ifs_token);
+  test_token_vect.push_back(open_parenthesis_token);
+  test_token_vect.push_back(v_token);
+  test_token_vect.push_back(comma_token);
+  test_token_vect.push_back(underscore_token);
+  test_token_vect.push_back(comma_token);
+  test_token_vect.push_back(underscore_token);
+  test_token_vect.push_back(closed_parenthesis_token);
+
+  ParsedQueryBuilder pqb;
+  ParsedQuery pq = pqb.Build(test_token_vect);
+  PqlToken synonym = pq.GetSynonym();
+  Pattern patt_ifs = pq.GetPatterns().front();
+  const auto decl = pq.GetDeclaration();
+
+  REQUIRE(decl.find("ifs")->second == DesignEntityType::IF);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(patt_ifs.GetFirst().type == PqlTokenType::SYNONYM);
+  REQUIRE(patt_ifs.GetSecond().type == PqlTokenType::UNDERSCORE);
+  REQUIRE(patt_ifs.GetThird().type == PqlTokenType::UNDERSCORE);
+}
+
+TEST_CASE("Test query parser with And clause") {
+  std::vector<PqlToken> test_token_vect;
+
+  // if
+  test_token_vect.push_back(if_token);
+  test_token_vect.push_back(ifs_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // assign
+  test_token_vect.push_back(assign_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // variable
+  test_token_vect.push_back(variable_token);
+  test_token_vect.push_back(v_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // select clause
+  test_token_vect.push_back(select_token);
+  test_token_vect.push_back(ifs_token);
+  test_token_vect.push_back(pattern_token);
+  test_token_vect.push_back(ifs_token);
+  test_token_vect.push_back(open_parenthesis_token);
+  test_token_vect.push_back(v_token);
+  test_token_vect.push_back(comma_token);
+  test_token_vect.push_back(underscore_token);
+  test_token_vect.push_back(comma_token);
+  test_token_vect.push_back(underscore_token);
+  test_token_vect.push_back(closed_parenthesis_token);
+
+  // and clause
+  test_token_vect.push_back(and_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(open_parenthesis_token);
+  test_token_vect.push_back(v_token);
+  test_token_vect.push_back(comma_token);
+  test_token_vect.push_back(underscore_token);
+  test_token_vect.push_back(closed_parenthesis_token);
+
+  ParsedQueryBuilder pqb;
+  ParsedQuery pq = pqb.Build(test_token_vect);
+  PqlToken synonym = pq.GetSynonym();
+  Pattern patt_ifs = pq.GetPatterns().front();
+  Pattern patt_assign = pq.GetPatterns()[1];
+  const auto decl = pq.GetDeclaration();
+
+  REQUIRE(decl.find("ifs")->second == DesignEntityType::IF);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(patt_ifs.GetFirst().type == PqlTokenType::SYNONYM);
+  REQUIRE(patt_ifs.GetSecond().type == PqlTokenType::UNDERSCORE);
+  REQUIRE(patt_ifs.GetThird().type == PqlTokenType::UNDERSCORE);
+  REQUIRE(patt_assign.GetFirst().type == PqlTokenType::SYNONYM);
+  REQUIRE(patt_assign.GetSecond().type == PqlTokenType::UNDERSCORE);
+}
+
+TEST_CASE("Test query parser with invalid And clause") {
+  std::vector<PqlToken> test_token_vect;
+
+  // if
+  test_token_vect.push_back(if_token);
+  test_token_vect.push_back(ifs_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // assign
+  test_token_vect.push_back(assign_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // variable
+  test_token_vect.push_back(variable_token);
+  test_token_vect.push_back(v_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // select clause
+  test_token_vect.push_back(select_token);
+  test_token_vect.push_back(synonym_boolean_token);
+  test_token_vect.push_back(such_token);
+  test_token_vect.push_back(that_token);
+  test_token_vect.push_back(use_token);
+  test_token_vect.push_back(open_parenthesis_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(comma_token);
+  test_token_vect.push_back(v_token);
+  test_token_vect.push_back(closed_parenthesis_token);
+
+  // and clause
+  test_token_vect.push_back(and_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(open_parenthesis_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(comma_token);
+  test_token_vect.push_back(underscore_token);
+  test_token_vect.push_back(closed_parenthesis_token);
+
+  ParsedQueryBuilder pqb;
+  std::string error = INVALID_AND_CLAUSE_FORMAT;
+
+  REQUIRE_THROWS_WITH(pqb.Build(test_token_vect), error);
 }

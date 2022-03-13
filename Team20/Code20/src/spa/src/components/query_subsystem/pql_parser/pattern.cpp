@@ -9,7 +9,7 @@ Pattern::Pattern(PqlToken syn_assign, PqlToken first, PqlToken second, PqlToken 
     : syn_assign_(syn_assign),
       first_(first),
       second_(second),
-      third_(third){}
+      third_(third) {}
 
 PqlToken Pattern::GetSynAssign() {
   return syn_assign_;
