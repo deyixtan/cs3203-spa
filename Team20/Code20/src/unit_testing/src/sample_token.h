@@ -40,6 +40,7 @@ extern PqlToken cl_token;
 extern PqlToken synonym_select_token;
 extern PqlToken synonym_uses_token;
 extern PqlToken synonym_assign_token;
+extern PqlToken synonym_boolean_token;
 
 extern PqlToken number_value_token_1;
 extern PqlToken number_value_token_2;
