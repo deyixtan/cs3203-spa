@@ -3,7 +3,7 @@
 namespace source {
 
 SourceParser::SourceParser(std::vector<std::shared_ptr<SourceToken>> tokens_ptr)
-    : m_cursor(0), m_curr_stmt_no(0), m_tokens_ptr(std::move(tokens_ptr)) {}
+    : m_session(SourceParserSession()), m_cursor(0), m_curr_stmt_no(0), m_tokens_ptr(std::move(tokens_ptr)) {}
 
 bool SourceParser::AreTokensProcessed() {
   return m_cursor >= m_tokens_ptr.size();
@@ -86,16 +86,26 @@ std::shared_ptr<ProgramNode> SourceParser::ParseProgram() {
   if (procedures.size() == 0) {
     throw EmptyStatementListException();
   }
+  if (m_session.DoesInvalidCallExist()) {
+    throw InvalidCallException();
+  }
+  if (m_session.DoesCyclicCallExist()) {
+    throw CyclicCallException();
+  }
   return std::make_shared<ProgramNode>(procedures);
 }
 
 std::shared_ptr<ProcedureNode> SourceParser::ParseProcedure() {
   ProcessToken(TokenType::PROCEDURE);
   std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  std::string procedure_name = identifier->GetValue();
+
+  // check procedure name duplication, may throw ProcedureExistException
+  m_session.AddProcedure(procedure_name);
+
   ProcessToken(TokenType::OPENED_BRACES);
   std::shared_ptr<StatementListNode> stmt_list = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
-  std::string procedure_name = identifier->GetValue();
   return std::make_shared<ProcedureNode>(procedure_name, stmt_list);
 }
 
@@ -122,6 +132,7 @@ std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
     case TokenType::PRINT:return ParsePrintStatement();
     case TokenType::WHILE:return ParseWhileStatement();
     case TokenType::IF:return ParseIfStatement();
+    case TokenType::CALL:return ParseCallStatement();
     default:throw InvalidParseStatementException();
   }
 }
@@ -181,6 +192,19 @@ std::shared_ptr<AssignStatementNode> SourceParser::ParseAssignStatement() {
   ProcessToken(TokenType::SEMI_COLON);
   std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
   return std::make_shared<AssignStatementNode>(stmt_no, variable, expression);
+}
+
+std::shared_ptr<CallStatementNode> SourceParser::ParseCallStatement() {
+  int stmt_no = ++m_curr_stmt_no;
+  ProcessToken(TokenType::CALL);
+  std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  std::string procedure_name = identifier->GetValue();
+
+  // add function calls to session, check for cyclic calls
+  m_session.AddMethodCall(procedure_name);
+
+  ProcessToken(TokenType::SEMI_COLON);
+  return std::make_shared<CallStatementNode>(stmt_no, procedure_name);
 }
 
 std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpression() {

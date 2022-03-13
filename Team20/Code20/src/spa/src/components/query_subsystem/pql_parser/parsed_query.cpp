@@ -2,10 +2,9 @@
 #include <vector>
 
 ParsedQuery::ParsedQuery() {
-  std::vector<Declaration> vect;
-  vect.push_back(Declaration());
+  std::unordered_map<std::string, DesignEntityType> map;
   this->selected_synonym = PqlToken();
-  this->declarations = vect;
+  this->declarations = map;
 };
 
 void ParsedQuery::SetSynonym(PqlToken synonym) {
@@ -20,7 +19,11 @@ void ParsedQuery::AddRelationship(Relationship parsed_relationship) {
   relationships.push_back(parsed_relationship);
 }
 
-void ParsedQuery::SetDeclarations(std::vector<Declaration> parsed_declarations) {
+void ParsedQuery::AddWithClause(With parsed_with_clause) {
+  withs.push_back(parsed_with_clause);
+}
+
+void ParsedQuery::SetDeclarations(std::unordered_map<std::string, DesignEntityType> parsed_declarations) {
   declarations = parsed_declarations;
 }
 
@@ -36,6 +39,36 @@ std::vector<Pattern> ParsedQuery::GetPatterns() {
   return patterns;
 }
 
-std::vector<Declaration> ParsedQuery::GetDeclaration() {
+std::unordered_map<std::string, DesignEntityType> ParsedQuery::GetDeclaration() {
   return declarations;
 }
+
+std::vector<With> ParsedQuery::GetWithClause() {
+  return withs;
+}
+
+std::unordered_map<PqlTokenType, DesignEntityType> token_design_map {
+    {PqlTokenType::STMT, DesignEntityType::STMT},
+    {PqlTokenType::ASSIGN, DesignEntityType::ASSIGN},
+    {PqlTokenType::PRINT, DesignEntityType::PRINT},
+    {PqlTokenType::PROCEDURE, DesignEntityType::PROCEDURE},
+    {PqlTokenType::READ, DesignEntityType::READ},
+    {PqlTokenType::CALL, DesignEntityType::CALL},
+    {PqlTokenType::WHILE, DesignEntityType::WHILE},
+    {PqlTokenType::IF, DesignEntityType::IF},
+    {PqlTokenType::VARIABLE, DesignEntityType::VARIABLE},
+    {PqlTokenType::CONSTANT, DesignEntityType::CONSTANT},
+};
+
+std::unordered_map<DesignEntityType, PqlTokenType> reverse_token_design_map {
+    {DesignEntityType::STMT, PqlTokenType::STMT},
+    {DesignEntityType::ASSIGN, PqlTokenType::ASSIGN},
+    {DesignEntityType::PRINT, PqlTokenType::PRINT},
+    {DesignEntityType::PROCEDURE, PqlTokenType::PROCEDURE},
+    {DesignEntityType::READ, PqlTokenType::READ},
+    {DesignEntityType::CALL, PqlTokenType::CALL},
+    {DesignEntityType::WHILE, PqlTokenType::WHILE},
+    {DesignEntityType::IF, PqlTokenType::IF},
+    {DesignEntityType::VARIABLE, PqlTokenType::VARIABLE},
+    {DesignEntityType::CONSTANT, PqlTokenType::CONSTANT},
+};

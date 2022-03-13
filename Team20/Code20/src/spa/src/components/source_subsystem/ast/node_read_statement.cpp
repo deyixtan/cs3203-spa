@@ -12,8 +12,12 @@ StmtType ReadStatementNode::GetStatementType() {
   return StmtType::READ;
 }
 
-std::string ReadStatementNode::ToString(int level) {
-  return StatementNode::ToString(level) + "read " + m_identifier->ToString(level) + ";\n";
+std::string ReadStatementNode::ToString() {
+  return StatementNode::ToString() + "read " + m_identifier->ToString() + ";\n";
+}
+
+std::string ReadStatementNode::GetPatternFormat() {
+  return "";
 }
 
 bool ReadStatementNode::operator==(const StatementNode &other) const {
@@ -33,3 +37,7 @@ void ReadStatementNode::Process(Populator populator, std::vector<std::string>* v
   populator.PopulateModifies(stmt_num, var_name);
   populator.PopulateParentStar(stmt_num, *visited);
 }
+
+void ReadStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {}
+
+std::string ReadStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) {}

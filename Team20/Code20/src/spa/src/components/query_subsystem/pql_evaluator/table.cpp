@@ -28,6 +28,15 @@ bool Table::IsEmpty() const {
 }
 
 void Table::Merge(Table &other_table) {
+  if (HasEncounteredFalseClause()) {
+    return;
+  }
+
+  if (other_table.HasEncounteredFalseClause()) {
+    EncounteredFalseClause();
+    return;
+  }
+
   auto common_attribute_index_pairs = GetCommonAttributeIndexPairs(other_table.attributes);
   if (!common_attribute_index_pairs.empty()) {
     NaturalJoin(other_table, common_attribute_index_pairs);
@@ -98,6 +107,13 @@ void Table::NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t
 }
 void Table::CrossJoin(Table &other_table) {
   attributes.insert(attributes.end(), other_table.attributes.begin(), other_table.attributes.end());
+  if (other_table.IsEmpty()) {
+    return;
+  } else if (IsEmpty()) {
+    records = std::move(other_table.records);
+    return;
+  }
+
   Records new_records;
   for (const auto& record : records) {
     for (const auto& other_record : other_table.records) {
@@ -109,6 +125,18 @@ void Table::CrossJoin(Table &other_table) {
   }
 
   records = std::move(new_records);
+}
+
+std::unordered_set<std::string> Table::GetResult(const std::string& select_synonym) {
+  std::unordered_set<std::string> result({});
+  std::vector<std::string>::iterator itr = std::find(attributes.begin(), attributes.end(), select_synonym);
+  if (itr != attributes.cend()) {
+    int index = std::distance(attributes.begin(), itr);
+    for (auto row : records) {
+      result.insert(row[index]);
+    }
+  }
+  return result;
 }
 
 std::ostream& operator<<(std::ostream& os, const Table& table) {
@@ -126,6 +154,14 @@ std::ostream& operator<<(std::ostream& os, const Table& table) {
   }
 
   return os;
+}
+
+void Table::EncounteredFalseClause() {
+  encountered_false_clause = true;
+}
+
+bool Table::HasEncounteredFalseClause() {
+  return encountered_false_clause;
 }
 
 }

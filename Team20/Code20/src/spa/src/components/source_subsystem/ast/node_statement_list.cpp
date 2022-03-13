@@ -9,10 +9,10 @@ std::vector<std::shared_ptr<StatementNode>> StatementListNode::GetStatements() {
   return m_statements;
 }
 
-std::string StatementListNode::ToString(int level) {
+std::string StatementListNode::ToString() {
   std::string str = "";
   for (std::shared_ptr<StatementNode> statement : m_statements) {
-    str += statement->ToString(level);
+    str += statement->ToString();
   }
   return str;
 }
@@ -42,6 +42,10 @@ void StatementListNode::Process(Populator populator, std::vector<std::string> *v
 
     stmt->Process(populator, visited);
   }
+}
+
+std::string StatementListNode::GetPatternFormat() {
+  return "";
 }
 
 bool StatementListNode::operator==(const StatementListNode &other) const {

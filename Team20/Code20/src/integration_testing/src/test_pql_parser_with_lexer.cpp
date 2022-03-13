@@ -12,7 +12,7 @@ TEST_CASE("Test query with uses and pattern") {
   PqlToken synonym = pq.GetSynonym();
   Relationship rship = pq.GetRelationships().front();
   Pattern ptrn = pq.GetPatterns().front();
-  std::vector<Declaration> decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration();
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "\"x\"");
@@ -20,12 +20,9 @@ TEST_CASE("Test query with uses and pattern") {
   REQUIRE(ptrn.GetFirst().value == "v");
   REQUIRE(ptrn.GetSecond().value == "_");
   REQUIRE(synonym.value == "s");
-  REQUIRE(decl[0].GetSynonym().value == "s");
-  REQUIRE(decl[0].GetDesignEntity().value == "stmt");
-  REQUIRE(decl[1].GetDesignEntity().value == "variable");
-  REQUIRE(decl[1].GetSynonym().value == "v");
-  REQUIRE(decl[2].GetDesignEntity().value == "assign");
-  REQUIRE(decl[2].GetSynonym().value == "a");
+  REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
 }
 
 TEST_CASE("Test query parser with more than one synonym") {
@@ -37,7 +34,7 @@ TEST_CASE("Test query parser with more than one synonym") {
   PqlToken synonym = pq.GetSynonym();
   Relationship rship = pq.GetRelationships().front();
   Pattern ptrn = pq.GetPatterns().front();
-  std::vector<Declaration> decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration();
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "\"x\"");
@@ -45,20 +42,13 @@ TEST_CASE("Test query parser with more than one synonym") {
   REQUIRE(ptrn.GetFirst().value == "v");
   REQUIRE(ptrn.GetSecond().value == "_");
   REQUIRE(synonym.value == "s");
-  REQUIRE(decl[0].GetSynonym().value == "s1");
-  REQUIRE(decl[0].GetDesignEntity().value == "stmt");
-  REQUIRE(decl[1].GetSynonym().value == "s2");
-  REQUIRE(decl[1].GetDesignEntity().value == "stmt");
-  REQUIRE(decl[2].GetDesignEntity().value == "variable");
-  REQUIRE(decl[2].GetSynonym().value == "v1");
-  REQUIRE(decl[3].GetDesignEntity().value == "variable");
-  REQUIRE(decl[3].GetSynonym().value == "v2");
-  REQUIRE(decl[4].GetDesignEntity().value == "assign");
-  REQUIRE(decl[4].GetSynonym().value == "a1");
-  REQUIRE(decl[5].GetDesignEntity().value == "assign");
-  REQUIRE(decl[5].GetSynonym().value == "a2");
-  REQUIRE(decl[6].GetDesignEntity().value == "assign");
-  REQUIRE(decl[6].GetSynonym().value == "a3");
+  REQUIRE(decl.find("s1")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("s2")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v1")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("v2")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("a1")->second == DesignEntityType::ASSIGN);
+  REQUIRE(decl.find("a2")->second == DesignEntityType::ASSIGN);
+  REQUIRE(decl.find("a3")->second == DesignEntityType::ASSIGN);
 }
 
 TEST_CASE("Test query parser with no such that") {
@@ -68,19 +58,16 @@ TEST_CASE("Test query parser with no such that") {
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
-  std::vector<Declaration> decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration();
   std::vector<Relationship> rship = pq.GetRelationships();
   std::vector<Pattern> ptrns = pq.GetPatterns();
 //  test that no relationships or patterns have been added
   REQUIRE(rship.size() == 0);
   REQUIRE(ptrns.size() == 0);
   REQUIRE(synonym.value == "s");
-  REQUIRE(decl[0].GetSynonym().value == "s");
-  REQUIRE(decl[0].GetDesignEntity().value == "stmt");
-  REQUIRE(decl[1].GetDesignEntity().value == "variable");
-  REQUIRE(decl[1].GetSynonym().value == "v");
-  REQUIRE(decl[2].GetDesignEntity().value == "assign");
-  REQUIRE(decl[2].GetSynonym().value == "a");
+  REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
 }
 
 TEST_CASE("Test query parser with white spaces") {
@@ -90,7 +77,7 @@ TEST_CASE("Test query parser with white spaces") {
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
-  std::vector<Declaration> decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration();
   Relationship rship = pq.GetRelationships().front();
   std::vector<Pattern> ptrns = pq.GetPatterns();
 //  Test that no relationships or patterns have been added to query struct
@@ -99,12 +86,9 @@ TEST_CASE("Test query parser with white spaces") {
   REQUIRE(rship.GetFirst().value == "1");
   REQUIRE(rship.GetSecond().value == "v");
   REQUIRE(synonym.value == "s");
-  REQUIRE(decl[0].GetSynonym().value == "s");
-  REQUIRE(decl[0].GetDesignEntity().value == "stmt");
-  REQUIRE(decl[1].GetDesignEntity().value == "variable");
-  REQUIRE(decl[1].GetSynonym().value == "v");
-  REQUIRE(decl[2].GetDesignEntity().value == "assign");
-  REQUIRE(decl[2].GetSynonym().value == "a");
+  REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
 }
 
 TEST_CASE("Test query parser with same variable referenced") {
@@ -114,7 +98,7 @@ TEST_CASE("Test query parser with same variable referenced") {
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
   PqlToken synonym = pq.GetSynonym();
-  std::vector<Declaration> decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration();
   Relationship rship = pq.GetRelationships().front();
   std::vector<Pattern> ptrns = pq.GetPatterns();
 //  Test that no patterns have been added to query struct
@@ -123,10 +107,7 @@ TEST_CASE("Test query parser with same variable referenced") {
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "s");
   REQUIRE(synonym.value == "s");
-  REQUIRE(decl[0].GetSynonym().value == "s");
-  REQUIRE(decl[0].GetDesignEntity().value == "stmt");
-  REQUIRE(decl[1].GetDesignEntity().value == "variable");
-  REQUIRE(decl[1].GetSynonym().value == "v");
-  REQUIRE(decl[2].GetDesignEntity().value == "assign");
-  REQUIRE(decl[2].GetSynonym().value == "a");
+  REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
 }

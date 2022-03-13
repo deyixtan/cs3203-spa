@@ -17,8 +17,12 @@ StmtType AssignStatementNode::GetStatementType() {
   return StmtType::ASSIGN;
 }
 
-std::string AssignStatementNode::ToString(int level) {
-  return StatementNode::ToString(level) + m_identifier->ToString(level) + " = " + m_expression->ToString(level) + ";\n";
+std::string AssignStatementNode::ToString() {
+  return StatementNode::ToString() + m_identifier->ToString() + " = " + m_expression->ToString() + ";\n";
+}
+
+std::string AssignStatementNode::GetPatternFormat() {
+  return "";
 }
 
 bool AssignStatementNode::operator==(const StatementNode &other) const {
@@ -45,37 +49,7 @@ void AssignStatementNode::Process(Populator populator, std::vector<std::string> 
   populator.PopulateParentStar(stmt_num, *visited);
 }
 
-void AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {
-  ExpressionType expr_type = m_expression->GetExpressionType();
-
-  switch (expr_type) {
-    case ExpressionType::CONSTANT: {
-      std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(m_expression);
-      std::string name = constant->GetValue();
-      populator.PopulateConst(name);
-      break;
-    }
-    case ExpressionType::COMBINATION: {
-      std::shared_ptr<CombinationExpressionNode> comb = static_pointer_cast<CombinationExpressionNode>(m_expression);
-      std::shared_ptr<ExpressionNode> lhs = comb->GetLeftExpression();
-      std::shared_ptr<ExpressionNode> rhs = comb->GetRightExpression();
-      ArithmeticOperator op = comb->GetArithmeticOperator();
-      Process(populator, visited, stmt);
-      Process(populator, visited, stmt);
-      break;
-    }
-    case ExpressionType::VARIABLE: {
-      std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(m_expression);
-      std::string var_name = var->GetIdentifier();
-      for (std::string s : *visited) {
-        populator.PopulateUses(s, var_name);
-      }
-      populator.PopulateUses(stmt, var_name);
-      populator.PopulateVars(var_name);
-      break;
-    }
-  }
-}
+void AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {}
 
 std::string AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) {
   ExpressionType expr_type = m_expression->GetExpressionType();
@@ -84,13 +58,7 @@ std::string AssignStatementNode::Process(Populator populator, std::vector<std::s
     case ExpressionType::CONSTANT: {
       std::shared_ptr<ConstantNode> constant = static_pointer_cast<ConstantNode>(m_expression);
       std::string name = constant->GetValue();
-      if (direction == 1) {
-        pattern = "(" + name;
-      } else if (direction == 2) {
-        pattern = name + ")";
-      } else {
-        pattern = name;
-      }
+      pattern = constant->GetPatternFormat();
       populator.PopulateConst(name);
       break;
     }
@@ -101,25 +69,14 @@ std::string AssignStatementNode::Process(Populator populator, std::vector<std::s
       ArithmeticOperator op = comb->GetArithmeticOperator();
       std::string op_label = comb->GetArithmeticOperatorLabel(op);
 
-      pattern = Process(populator, visited, stmt_num, 1, pattern) + op_label + Process(populator, visited, stmt_num, 2, pattern);
-
-      if (direction == 1) {
-        pattern = "(" + pattern;
-      } else if (direction == 2) {
-        pattern = pattern + ")";
-      }
+      pattern = lhs->GetPatternFormat() + op_label + rhs->GetPatternFormat();
       break;
     }
     case ExpressionType::VARIABLE: {
       std::shared_ptr<VariableNode> var = static_pointer_cast<VariableNode>(m_expression);
       std::string var_name = var->GetIdentifier();
-      if (direction == 1) {
-        pattern = "(" + var_name;
-      } else if (direction == 2) {
-        pattern = var_name + ")";
-      } else {
-        pattern = var_name;
-      }
+      pattern = var->GetPatternFormat();
+
       for (std::string s : *visited) {
         populator.PopulateUses(s, var_name);
       }

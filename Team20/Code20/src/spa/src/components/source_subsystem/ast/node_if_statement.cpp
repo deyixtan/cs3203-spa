@@ -32,10 +32,14 @@ StmtType IfStatementNode::GetStatementType() {
   return StmtType::IF;
 }
 
-std::string IfStatementNode::ToString(int level) {
-  std::string str = StatementNode::ToString(level);
-  return str + "if (" + m_condition->ToString(level) + ") then {\n" + m_if_stmt_list->ToString(level + 1) + str +
-      "} else {\n" + m_else_stmt_list->ToString(level + 1) + str + "}\n";
+std::string IfStatementNode::ToString() {
+  std::string str = StatementNode::ToString();
+  return str + "if (" + m_condition->ToString() + ") then {\n" + m_if_stmt_list->ToString() + str +
+      "} else {\n" + m_else_stmt_list->ToString() + str + "}\n";
+}
+
+std::string IfStatementNode::GetPatternFormat() {
+  return "";
 }
 
 bool IfStatementNode::operator==(const StatementNode &other) const {
@@ -74,17 +78,25 @@ void IfStatementNode::Process(Populator populator, std::vector<std::string>* vis
   std::vector<std::shared_ptr<StatementNode>> if_stmts = m_if_stmt_list->GetStatements();
   std::vector<std::shared_ptr<StatementNode>> else_stmts =  m_else_stmt_list->GetStatements();
 
+  populator.PopulateIf(stmt_num);
+  populator.PopulateParentStar(if_stmt_num, *visited);
+
   for (int j = 0; j < if_stmts.size(); ++j) {
     int curr = if_stmts[j]->GetStatementNumber();
+    if_stmts[j]->Process(populator, visited);
     populator.PopulateParent(stmt_num, std::to_string(curr));
   }
 
   for (int j = 0; j < else_stmts.size(); ++j) {
     int curr = else_stmts[j]->GetStatementNumber();
+    else_stmts[j]->Process(populator, visited);
     populator.PopulateParent(stmt_num, std::to_string(curr));
   }
-  populator.PopulateIf(stmt_num);
-  populator.PopulateParentStar(if_stmt_num, *visited);
+
   visited->pop_back();
   populator.PopulateParentStar(stmt_num, *visited);
 }
+
+void IfStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {}
+
+std::string IfStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) {}

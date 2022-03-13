@@ -38,17 +38,16 @@ ExpressionType CombinationExpressionNode::GetExpressionType() {
   return ExpressionType::COMBINATION;
 }
 
-//void CombinationExpressionNode::Process(Populator populator, std::vector<std::string> *visited) {}
-//
-//void CombinationExpressionNode::Process(std::vector<std::string> *visited, std::string stmt, std::shared_ptr<ExpressionNode> expr) {}
-//
-//std::string CombinationExpressionNode::Process(std::vector<std::string> *visited, std::string stmt_num, std::shared_ptr<ExpressionNode> expr, int direction, std::string pattern) {
-//  return "";
-//}
+void CombinationExpressionNode::Process(Populator populator, std::vector<std::string> *visited) {}
 
-std::string CombinationExpressionNode::ToString(int level) {
-  return "(" + m_left_expression->ToString(level) + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
-      + m_right_expression->ToString(level) + ")";
+std::string CombinationExpressionNode::ToString() {
+  return "(" + m_left_expression->ToString() + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
+      + m_right_expression->ToString() + ")";
+}
+
+std::string CombinationExpressionNode::GetPatternFormat() {
+  return "(" + m_left_expression->GetPatternFormat() + GetArithmeticOperatorLabel(m_arithmetic_operator)
+      + m_right_expression->GetPatternFormat() + ")";
 }
 
 bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {

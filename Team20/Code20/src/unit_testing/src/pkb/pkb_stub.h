@@ -227,7 +227,7 @@ std::unordered_set<std::string> all_proc_mod = {"main", "foo", "func"};
 
 /* FOLLOW STORE */
 
-std::unordered_map<std::string, FollowStore::node> follows_rs =
+std::unordered_map<std::string, FollowNode> follows_rs =
     {
         {"1", {"0", "2", {}, {"2", "3", "4", "5"}}},
         {"2", {"1", "3", {"1"}, {"3", "4", "5"}}},
@@ -254,7 +254,7 @@ std::unordered_set<std::string> followers = {"1", "2", "3", "4", "8", "10", "13"
 
 std::unordered_set<std::string> followings = {"2", "3", "4", "5", "9", "11", "14"};
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash > follow_pairs =
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_pairs =
     {
         {"1", "2"},
         {"2", "3"},
@@ -264,7 +264,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash > follow_pairs
         {"13", "14"},
     };
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash > follow_star_pairs =
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_star_pairs =
     {
         {"1", "2"},
         {"1", "3"},
@@ -282,7 +282,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash > follow_star_
     };
 
 /* PARENT STORE */
-std::unordered_map<std::string, parent_child> parent_rs =
+std::unordered_map<std::string, ParentChildNode> parent_rs =
     {
         {"1", {"0", {}, {}, {}}},
         {"2", {"0", {}, {}, {}}},
@@ -350,29 +350,29 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> print_pairs =
 
 std::unordered_map<std::string, std::pair<std::string, std::string> > stmt_to_pattern =
     {
-        {"4", {"dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))"}},
-        {"7", {"pig", "(ox+cat)"}},
-        {"8", {"dragon", "((dog*rabbit)/mouse)"}},
-        {"10", {"snake", "(dog+rabbit)"}},
-        {"15", {"monkey", "(tiger+dog)"}}
+        {"4", {"dog", "((((mouse)+((10)*(cat)))-(((dog)/(mouse))*(dragon)))+(((mouse)+(rabbit))-(cat)))"}},
+        {"7", {"pig", "((ox)+(cat))"}},
+        {"8", {"dragon", "(((dog)*(rabbit))/(mouse))"}},
+        {"10", {"snake", "((dog)+(rabbit))"}},
+        {"15", {"monkey", "((tiger)+(dog))"}}
     };
 
 std::unordered_map<std::pair<std::string, std::string>, std::string, pair_hash> pattern_to_stmt =
     {
-        {{"dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))"}, "4"},
-        {{"pig", "(ox+cat)"}, "7"},
-        {{"dragon", "((dog*rabbit)/mouse)"}, "8"},
-        {{"snake", "(dog+rabbit)"}, "10"},
-        {{"monkey", "(tiger+dog)"}, "15"}
+        {{"dog", "((((mouse)+((10)*(cat)))-(((dog)/(mouse))*(dragon)))+(((mouse)+(rabbit))-(cat)))"}, "4"},
+        {{"pig", "((ox)+(cat))"}, "7"},
+        {{"dragon", "(((dog)*(rabbit))/(mouse))"}, "8"},
+        {{"snake", "((dog)+(rabbit))"}, "10"},
+        {{"monkey", "((tiger)+(dog))"}, "15"}
     };
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_pairs =
     {
-        {"dog", "(((mouse+(10*cat))-((dog/mouse)*dragon))+((mouse+rabbit)-cat))"},
-        {"pig", "(ox+cat)"},
-        {"dragon", "((dog*rabbit)/mouse)"},
-        {"snake", "(dog+rabbit)"},
-        {"monkey", "(tiger+dog)"}
+        {"dog", "((((mouse)+((10)*(cat)))-(((dog)/(mouse))*(dragon)))+(((mouse)+(rabbit))-(cat)))"},
+        {"pig", "((ox)+(cat))"},
+        {"dragon", "(((dog)*(rabbit))/(mouse))"},
+        {"snake", "((dog)+(rabbit))"},
+        {"monkey", "((tiger)+(dog))"}
     };
 
 #endif //PKB_STUB_H

@@ -4,8 +4,11 @@
 #include <vector>
 
 #include "source_token.h"
+#include "source_parser_session.h"
+#include "exceptions/cyclic_call.h"
 #include "exceptions/empty_statement_list.h"
 #include "exceptions/end_of_stream.h"
+#include "exceptions/invalid_call.h"
 #include "exceptions/invalid_parse_condition.h"
 #include "exceptions/invalid_parse_factor.h"
 #include "exceptions/invalid_parse_relation.h"
@@ -19,6 +22,7 @@
 #include "ast/node_if_statement.h"
 #include "ast/node_assign_statement.h"
 #include "ast/node_boolean_expression.h"
+#include "ast/node_call_statement.h"
 #include "ast/node_relational_expression.h"
 #include "ast/node_not_expression.h"
 #include "ast/node_constant.h"
@@ -27,6 +31,7 @@ namespace source {
 
 class SourceParser {
  private:
+  SourceParserSession m_session;
   int m_cursor;
   int m_curr_stmt_no;
   std::vector<std::shared_ptr<SourceToken>> m_tokens_ptr;
@@ -46,6 +51,7 @@ class SourceParser {
   [[nodiscard]] std::shared_ptr<WhileStatementNode> ParseWhileStatement();
   [[nodiscard]] std::shared_ptr<IfStatementNode> ParseIfStatement();
   [[nodiscard]] std::shared_ptr<AssignStatementNode> ParseAssignStatement();
+  [[nodiscard]] std::shared_ptr<CallStatementNode> ParseCallStatement();
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> ParseConditionalExpression();
   [[nodiscard]] std::shared_ptr<RelationalExpressionNode> ParseRelationalExpression();
   [[nodiscard]] std::shared_ptr<ExpressionNode> ParseRelationalFactor();

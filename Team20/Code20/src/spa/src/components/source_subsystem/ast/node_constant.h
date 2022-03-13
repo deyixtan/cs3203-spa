@@ -12,7 +12,8 @@ class ConstantNode : public ExpressionNode {
   [[nodiscard]] std::string GetValue();
   [[nodiscard]] ExpressionType GetExpressionType() override;
   void Process(Populator populator, std::vector<std::string>* visited) override;
-  [[nodiscard]] std::string ToString(int level) override;
+  [[nodiscard]] std::string ToString() override;
+  [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

@@ -17,9 +17,13 @@ StmtType WhileStatementNode::GetStatementType() {
   return StmtType::WHILE;
 }
 
-std::string WhileStatementNode::ToString(int level) {
-  std::string str = StatementNode::ToString(level);
-  return str + "while (" + m_condition->ToString(level) + ") {\n" + m_stmt_list->ToString(level + 1) + str + "}\n";
+std::string WhileStatementNode::ToString() {
+  std::string str = StatementNode::ToString();
+  return str + "while (" + m_condition->ToString() + ") {\n" + m_stmt_list->ToString() + str + "}\n";
+}
+
+std::string WhileStatementNode::GetPatternFormat() {
+  return "";
 }
 
 bool WhileStatementNode::operator==(const StatementNode &other) const {
@@ -48,27 +52,21 @@ void WhileStatementNode::Process(Populator populator, std::vector<std::string>* 
 
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
-
-  for (int j = 0; j < while_stmts.size(); ++j) {
-    int curr = while_stmts[j]->GetStatementNumber();
-    populator.PopulateParent(stmt_num, std::to_string(curr));
-  }
+  while_block->Process(populator, visited);
 
   populator.PopulateWhile(stmt_num);
   populator.PopulateParentStar(while_stmt_num, *visited);
+
+  for (int j = 0; j < while_stmts.size(); ++j) {
+    int curr = while_stmts[j]->GetStatementNumber();
+    while_stmts[j]->Process(populator, visited);
+    populator.PopulateParent(stmt_num, std::to_string(curr));
+  }
+
   visited->pop_back();
   populator.PopulateParentStar(stmt_num, *visited);
 }
 
-/* procedure main {
- *    while (a > b) {
- *        a = 1;
- *        b = 2;
- *        while (a > b) {
- *            x = y;
- *        }
- *        read x;
- *    }
- *    x = 1;
- * }
- */
+void WhileStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {}
+
+std::string WhileStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) {}

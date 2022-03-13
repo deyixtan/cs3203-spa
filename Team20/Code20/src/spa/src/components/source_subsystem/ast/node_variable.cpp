@@ -12,8 +12,12 @@ ExpressionType VariableNode::GetExpressionType() {
   return ExpressionType::VARIABLE;
 }
 
-std::string VariableNode::ToString(int level) {
+std::string VariableNode::ToString() {
   return "$" + m_identifier;
+}
+
+std::string VariableNode::GetPatternFormat() {
+  return "(" + m_identifier + ")";
 }
 
 bool VariableNode::operator==(const ExpressionNode &other) const {
