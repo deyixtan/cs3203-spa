@@ -14,9 +14,7 @@ class StatementNode : public Node {
   StatementNode(int stmt_no);
   [[nodiscard]] int GetStatementNumber();
   [[nodiscard]] virtual StmtType GetStatementType() = 0;
-  virtual void Process(Populator populator, std::vector<std::string> *visited) = 0;
-  virtual void Process(Populator populator, std::vector<std::string> *visited, std::string stmt) = 0;
-  [[nodiscard]] virtual std::string Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) = 0;
+  virtual std::string Process(Populator populator, std::vector<std::string> *visited) = 0;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   virtual bool operator==(const StatementNode &other) const = 0;

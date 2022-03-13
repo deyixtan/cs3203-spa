@@ -24,7 +24,7 @@ bool PrintStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier);
 }
 
-void PrintStatementNode::Process(Populator populator, std::vector<std::string>* visited) {
+std::string PrintStatementNode::Process(Populator populator, std::vector<std::string>* visited) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   populator.PopulateStmt(stmt_num);
   std::string var_name = m_identifier->GetIdentifier();
@@ -34,8 +34,5 @@ void PrintStatementNode::Process(Populator populator, std::vector<std::string>* 
     populator.PopulateUses(s, var_name);
   }
   populator.PopulateUses(stmt_num, var_name);
+  return "";
 }
-
-void PrintStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {}
-
-std::string PrintStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) {}

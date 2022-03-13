@@ -13,9 +13,7 @@ enum class ExpressionType {
 class ExpressionNode : public Node {
  public:
   [[nodiscard]] virtual ExpressionType GetExpressionType() = 0;
-  virtual void Process(Populator populator, std::vector<std::string>* visited) = 0;
-  //virtual void Process(std::vector<std::string> *visited, std::string stmt, std::shared_ptr<ExpressionNode> expr) = 0;
-  //virtual std::string Process(std::vector<std::string> *visited, std::string stmt_num, std::shared_ptr<ExpressionNode> expr, int direction, std::string pattern) = 0;
+  [[nodiscard]] virtual std::string Process(Populator populator, std::vector<std::string>* visited) = 0;
   [[nodiscard]] virtual bool operator==(const ExpressionNode &other) const = 0;
 };
 

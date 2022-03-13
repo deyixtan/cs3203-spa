@@ -22,7 +22,7 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetLeftExpression();
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetRightExpression();
   [[nodiscard]] ConditionalType GetConditionalType() override;
-  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited);
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string>* visited) override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;

@@ -14,8 +14,9 @@ std::string ConstantNode::ToString() {
   return m_value;
 }
 
-void ConstantNode::Process(Populator populator, std::vector<std::string> *visited) {
+std::string ConstantNode::Process(Populator populator, std::vector<std::string> *visited) {
   populator.PopulateConst(m_value);
+  return GetPatternFormat();
 }
 
 std::string ConstantNode::GetPatternFormat() {

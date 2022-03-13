@@ -15,9 +15,7 @@ class VariableNode : public ExpressionNode {
   [[nodiscard]] ExpressionType GetExpressionType() override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
-  void Process(Populator populator, std::vector<std::string>* visited) override;
-  //void Process(std::vector<std::string> *visited, std::string stmt, std::shared_ptr<ExpressionNode> expr) override;
-  //std::string Process(std::vector<std::string> *visited, std::string stmt_num, std::shared_ptr<ExpressionNode> expr, int direction, std::string pattern) override;
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string>* visited) override;
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

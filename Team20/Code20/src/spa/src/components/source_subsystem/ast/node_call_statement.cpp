@@ -15,11 +15,9 @@ std::string CallStatementNode::ToString() {
   return "call " + m_identifier + ";\n";
 }
 
-void CallStatementNode::Process(Populator populator, std::vector<std::string> *visited) {}
-
-void CallStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {}
-
-std::string CallStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) {}
+std::string CallStatementNode::Process(Populator populator, std::vector<std::string> *visited) {
+  return "";
+}
 
 bool CallStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const CallStatementNode*>(&other);

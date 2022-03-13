@@ -12,7 +12,7 @@ class NotExpressionNode : public ConditionalExpressionNode {
   NotExpressionNode(std::shared_ptr<ConditionalExpressionNode> expression);
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetExpression();
   [[nodiscard]] ConditionalType GetConditionalType() override;
-  [[nodiscard]] void Process(Populator populator, std::vector<std::string>* visited);
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string>* visited) override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;

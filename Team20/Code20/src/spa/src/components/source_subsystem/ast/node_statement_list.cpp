@@ -17,7 +17,7 @@ std::string StatementListNode::ToString() {
   return str;
 }
 
-void StatementListNode::Process(Populator populator, std::vector<std::string> *visited) {
+std::string StatementListNode::Process(Populator populator, std::vector<std::string> *visited) {
   std::vector<std::shared_ptr<StatementNode>> stmts = m_statements;
 
   for (int i = 0; i < stmts.size(); ++i) {
@@ -42,6 +42,7 @@ void StatementListNode::Process(Populator populator, std::vector<std::string> *v
 
     stmt->Process(populator, visited);
   }
+  return "";
 }
 
 std::string StatementListNode::GetPatternFormat() {

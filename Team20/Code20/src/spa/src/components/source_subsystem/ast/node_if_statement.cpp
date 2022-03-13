@@ -68,15 +68,19 @@ bool IfStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
 }
 
-void IfStatementNode::Process(Populator populator, std::vector<std::string>* visited) {
+std::string IfStatementNode::Process(Populator populator, std::vector<std::string>* visited) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   populator.PopulateStmt(stmt_num);
   std::string if_stmt_num = std::to_string(GetStatementNumber());
   visited->push_back(if_stmt_num);
 
   m_condition->Process(populator, visited);
+  std::shared_ptr<StatementListNode> if_block = m_if_stmt_list;
+  std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;
   std::vector<std::shared_ptr<StatementNode>> if_stmts = m_if_stmt_list->GetStatements();
   std::vector<std::shared_ptr<StatementNode>> else_stmts =  m_else_stmt_list->GetStatements();
+  if_block->Process(populator, visited);
+  else_block->Process(populator, visited);
 
   populator.PopulateIf(stmt_num);
   populator.PopulateParentStar(if_stmt_num, *visited);
@@ -95,8 +99,5 @@ void IfStatementNode::Process(Populator populator, std::vector<std::string>* vis
 
   visited->pop_back();
   populator.PopulateParentStar(stmt_num, *visited);
+  return "";
 }
-
-void IfStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {}
-
-std::string IfStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) {}

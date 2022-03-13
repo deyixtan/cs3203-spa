@@ -12,9 +12,7 @@ class ReadStatementNode : public StatementNode {
   ReadStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier);
   [[nodiscard]] std::shared_ptr<VariableNode> GetIdentifier();
   [[nodiscard]] StmtType GetStatementType() override;
-  void Process(Populator populator, std::vector<std::string> *visited) override;
-  void Process(Populator populator, std::vector<std::string> *visited, std::string stmt) override;
-  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) override;
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited) override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;

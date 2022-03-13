@@ -7,7 +7,7 @@
 
 class Node {
  public:
-  virtual void Process(Populator populator, std::vector<std::string> *visited) = 0;
+  virtual std::string Process(Populator populator, std::vector<std::string> *visited) = 0;
   [[nodiscard]] virtual std::string ToString() = 0;
   [[nodiscard]] virtual std::string GetPatternFormat() = 0;
 };

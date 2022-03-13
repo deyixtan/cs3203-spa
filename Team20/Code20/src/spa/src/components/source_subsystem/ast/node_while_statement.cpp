@@ -42,7 +42,7 @@ bool WhileStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
 }
 
-void WhileStatementNode::Process(Populator populator, std::vector<std::string>* visited) {
+std::string WhileStatementNode::Process(Populator populator, std::vector<std::string>* visited) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   populator.PopulateStmt(stmt_num);
   std::string while_stmt_num = std::to_string(GetStatementNumber());
@@ -65,8 +65,5 @@ void WhileStatementNode::Process(Populator populator, std::vector<std::string>* 
 
   visited->pop_back();
   populator.PopulateParentStar(stmt_num, *visited);
+  return "";
 }
-
-void WhileStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt) {}
-
-std::string WhileStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::string stmt_num, int direction, std::string pattern) {}
