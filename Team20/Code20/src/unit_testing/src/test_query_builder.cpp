@@ -33,14 +33,14 @@ TEST_CASE("Test query parser with uses") {
 
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
   const auto decl = pq.GetDeclaration();
 
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "v");
-  REQUIRE(synonym.value == "s");
+  REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
 }
@@ -84,7 +84,7 @@ TEST_CASE("Test query parser with uses and pattern") {
 
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
   Pattern patt = pq.GetPatterns().front();
   const auto decl = pq.GetDeclaration();
@@ -92,7 +92,7 @@ TEST_CASE("Test query parser with uses and pattern") {
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "\"x\"");
-  REQUIRE(synonym.value == "s");
+  REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(patt.GetSynAssign().value == "a");
   REQUIRE(patt.GetFirst().value == "v");
   REQUIRE(patt.GetSecond().value == "_");
@@ -132,14 +132,14 @@ TEST_CASE("Test query parser with multiple variables") {
 
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
   const auto decl = pq.GetDeclaration();
 
   REQUIRE(rship.GetRelRef().value == "Parent");
   REQUIRE(rship.GetFirst().value == "1");
   REQUIRE(rship.GetSecond().value == "s");
-  REQUIRE(synonym.value == "s");
+  REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
   REQUIRE(decl.find("v1")->second == DesignEntityType::VARIABLE);
@@ -160,10 +160,10 @@ TEST_CASE("Test select without such that") {
 
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();\
+  ResultClause result_clause = pq.GetResultClause();
   const auto decl = pq.GetDeclaration();
 
-  REQUIRE(synonym.value == "s");
+  REQUIRE(result_clause.GetValues()[0].value == "s");
 }
 
 TEST_CASE("Test query parser with pattern without such that") {
@@ -192,11 +192,11 @@ TEST_CASE("Test query parser with pattern without such that") {
 
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   std::optional<Pattern> patt = pq.GetPatterns().front();
   const auto decl = pq.GetDeclaration();
 
-  REQUIRE(synonym.value == "a");
+  REQUIRE(result_clause.GetValues()[0].value == "a");
   REQUIRE(patt->GetSynAssign().value == "a");
   REQUIRE(patt->GetFirst().value == "v");
   REQUIRE(patt->GetSecond().value == "_");
@@ -267,7 +267,7 @@ TEST_CASE("Test query parser with with clause") {
 
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
   const auto decl = pq.GetDeclaration();
   With with_clause = pq.GetWithClause().front();
@@ -275,7 +275,7 @@ TEST_CASE("Test query parser with with clause") {
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "v");
-  REQUIRE(synonym.value == "s");
+  REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
   REQUIRE(with_clause.GetFirst().type == PqlTokenType::ATTRIBUTE);
@@ -321,7 +321,7 @@ TEST_CASE("Test query parser with multiple with clauses") {
 
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
   const auto decl = pq.GetDeclaration();
   With first_with_clause = pq.GetWithClause().front();
@@ -330,7 +330,7 @@ TEST_CASE("Test query parser with multiple with clauses") {
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "v");
-  REQUIRE(synonym.value == "s");
+  REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
   REQUIRE(first_with_clause.GetFirst().type == PqlTokenType::ATTRIBUTE);
@@ -370,14 +370,14 @@ TEST_CASE("Test query parser with BOOLEAN var name") {
 
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
   const auto decl = pq.GetDeclaration();
 
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "v");
-  REQUIRE(synonym.value == "BOOLEAN");
+  REQUIRE(result_clause.GetValues()[0].value == "BOOLEAN");
   REQUIRE(decl.find("BOOLEAN")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
 }
@@ -415,7 +415,7 @@ TEST_CASE("Test query parser with ifs pattern") {
 
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   Pattern patt_ifs = pq.GetPatterns().front();
   const auto decl = pq.GetDeclaration();
 
@@ -469,7 +469,7 @@ TEST_CASE("Test query parser with And clause") {
 
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   Pattern patt_ifs = pq.GetPatterns().front();
   Pattern patt_assign = pq.GetPatterns()[1];
   const auto decl = pq.GetDeclaration();

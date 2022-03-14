@@ -5,6 +5,7 @@
 #include "relationship.h"
 #include "pattern.h"
 #include "with_clause.h"
+#include "result_clause.h"
 
 #include <optional>
 
@@ -23,7 +24,7 @@ enum class DesignEntityType {
 
 class ParsedQuery {
  private:
-  PqlToken selected_synonym;
+  ResultClause result_clause;
   std::unordered_map<std::string, DesignEntityType> declarations;
   std::vector<Relationship> relationships;
   std::vector<Pattern> patterns;
@@ -31,12 +32,12 @@ class ParsedQuery {
 
  public:
   ParsedQuery();
-  void SetSynonym(PqlToken);
+  void SetResultClause(ResultClause);
   void AddPattern(Pattern);
   void AddRelationship(Relationship);
   void AddWithClause(With);
   void SetDeclarations(std::unordered_map<std::string, DesignEntityType>);
-  PqlToken GetSynonym();
+  ResultClause GetResultClause();
   std::unordered_map<std::string, DesignEntityType> GetDeclaration();
   std::vector<Relationship> GetRelationships();
   std::vector<Pattern> GetPatterns();

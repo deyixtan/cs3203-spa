@@ -7,22 +7,22 @@
 namespace pql_validator {
 
 bool ParsedQueryValidator::ValidateQuery(ParsedQuery query) {
-  return ValidateSelectSynonymDeclared(query)
+  return ValidateResultClauseDeclared(query)
       && ValidateSuchThatClause(query)
       && ValidatePatternClause(query);
 }
 
-bool ParsedQueryValidator::ValidateSelectSynonymDeclared(ParsedQuery query) {
+bool ParsedQueryValidator::ValidateResultClauseDeclared(ParsedQuery query) {
   std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
-  std::string selected_synonym = query.GetSynonym().value;
-  bool found = false;
-  for (auto declaration : declarations) {
-    if (declaration.first == selected_synonym) {
-      found = true;
+  ResultClause result_clause = query.GetResultClause();
+
+  for (auto token : result_clause.GetValues()) {
+    if (declarations.find(token.value) == declarations.end()) {
+      return false;
     }
   }
 
-  return found;
+  return true;
 }
 
 bool ParsedQueryValidator::ValidateSuchThatClause(ParsedQuery query) {

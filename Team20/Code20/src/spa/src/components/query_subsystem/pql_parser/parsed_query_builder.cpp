@@ -2,6 +2,48 @@
 #include "components/query_subsystem/pql_parser/query_grammar_error.h"
 #include <unordered_map>
 
+ResultClause ParsedQueryBuilder::BuildResultClause(PqlToken& result_clause_token) {
+  ResultClause result_clause;
+  std::vector<PqlToken> values;
+  if (result_clause_token.type == PqlTokenType::SYNONYM) {
+    values.push_back(result_clause_token);
+    result_clause = ResultClause(ResultClauseType::SYNONYM, values);
+  } else if (result_clause_token.type == PqlTokenType::BOOLEAN) {
+    values.push_back(result_clause_token);
+    result_clause = ResultClause(ResultClauseType::BOOLEAN, values);
+  } else if (result_clause_token.type == PqlTokenType::TUPLE) {
+    SplitTuple(result_clause_token, values);
+    result_clause = ResultClause(ResultClauseType::TUPLE, values);
+  } else {
+    throw INVALID_SELECT_CLAUSE_FORMAT;
+  }
+
+  return result_clause;
+}
+
+void ParsedQueryBuilder::SplitTuple(PqlToken& tuple, std::vector<PqlToken>& values) {
+  std::string tuple_string = tuple.value.substr(1, tuple.value.length() - 2);
+  std::string temp_string;
+  for (auto c : tuple_string) {
+    if (c == ',') {
+      temp_string = Utils::RemoveSpace(temp_string);
+      if (Utils::ContainsDot(temp_string)) {
+        values.push_back(PqlToken(PqlTokenType::ATTRIBUTE, temp_string));
+      } else {
+        values.push_back(PqlToken(PqlTokenType::SYNONYM, temp_string));
+      }
+      temp_string.clear();
+    } else {
+      temp_string += c;
+    }
+  }
+  if (Utils::ContainsDot(temp_string)) {
+    values.push_back(PqlToken(PqlTokenType::ATTRIBUTE, temp_string));
+  } else {
+    values.push_back(PqlToken(PqlTokenType::SYNONYM, temp_string));
+  }
+}
+
 ParsedQuery ParsedQueryBuilder::Build(std::vector<PqlToken> &tokens) {
   ParsedQuery pq = ParsedQuery();
   std::unordered_map<std::string, DesignEntityType> declarations;
@@ -11,13 +53,14 @@ ParsedQuery ParsedQueryBuilder::Build(std::vector<PqlToken> &tokens) {
   while(pos < tokens.size()) {
     PqlToken token = tokens[pos];
     if(token.type == PqlTokenType::SELECT) {
-      PqlToken selected_synonym = tokens[++pos];
-      if(selected_synonym.type != PqlTokenType::SYNONYM) {
-        if(declarations.count(selected_synonym.value)) {
-          selected_synonym = PqlToken(reverse_token_design_map[declarations[selected_synonym.value]], selected_synonym.value);
+      PqlToken result_clause_token = tokens[++pos];
+      if(result_clause_token.type == PqlTokenType::BOOLEAN) {
+        if(declarations.count(result_clause_token.value)) {
+          result_clause_token.type = PqlTokenType::SYNONYM;
         }
       }
-      pq.SetSynonym(selected_synonym);
+      ResultClause result_clause = BuildResultClause(result_clause_token);
+      pq.SetResultClause(result_clause);
       // skip such that tokens
       pos += 1;
     } else if (token.type == PqlTokenType::SUCH) {
