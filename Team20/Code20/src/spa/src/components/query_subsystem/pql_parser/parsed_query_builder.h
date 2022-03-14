@@ -6,9 +6,16 @@
 
 class ParsedQueryBuilder {
  public:
-  ParsedQuery Build(std::vector<PqlToken>& tokens);
+  ParsedQueryBuilder(std::vector<PqlToken> tokens);
+  ParsedQuery Build();
   void SplitTuple(PqlToken& tuple, std::vector<PqlToken>& values);
+  int ParseSynonym(ParsedQuery &pq, std::unordered_map<std::string, DesignEntityType> &declarations, int pos);
+  int ParseDeclarations(ParsedQuery &pq, std::unordered_map<std::string, DesignEntityType> &declarations, int pos);
+  int ParsePattern(ParsedQuery &pq, int pos);
+  int ParseRelationship(ParsedQuery &pq, int pos);
+  int ParseWithClause(ParsedQuery &pq, int pos);
  private:
+  std::vector<PqlToken> tokens_;
   ResultClause BuildResultClause(PqlToken& result_clause_token);
   //void SplitTuple(PqlToken& tuple, std::vector<PqlToken>& values);
 };

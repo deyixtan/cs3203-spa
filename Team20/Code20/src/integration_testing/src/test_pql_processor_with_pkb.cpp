@@ -156,11 +156,11 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
 
   SECTION("Test if-statement count and their statement number") {
     PqlLexer lexer{"if ifs; Select ifs"};
-    ParsedQueryBuilder pqb;
     std::vector<PqlToken> tokens = lexer.Lex();
     QueryValidator query_validator = QueryValidator(tokens);
     std::vector<PqlToken> validated_tokens = query_validator.CheckValidation();
-    ParsedQuery parsed_query = pqb.Build(validated_tokens);
+    ParsedQueryBuilder pqb(validated_tokens);
+    ParsedQuery parsed_query = pqb.Build();
     std::list<std::string> results;
     evaluator->Evaluate(parsed_query, results);
     std::string result = results.front();
@@ -171,11 +171,11 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
 
   SECTION("Test assign statement count and their statement number") {
     PqlLexer lexer{"assign a; Select a"};
-    ParsedQueryBuilder pqb;
     std::vector<PqlToken> tokens = lexer.Lex();
     QueryValidator query_validator = QueryValidator(tokens);
     std::vector<PqlToken> validated_tokens = query_validator.CheckValidation();
-    ParsedQuery parsed_query = pqb.Build(validated_tokens);
+    ParsedQueryBuilder pqb(validated_tokens);
+    ParsedQuery parsed_query = pqb.Build();
     std::list<std::string> results;
     evaluator->Evaluate(parsed_query, results);
     std::list<std::string> expected_result = {"15", "10", "8", "7", "4"};
@@ -189,11 +189,11 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
     for (int i = 1; i < 9; i++) {
       std::string query = "stmt s ; Select s such that Follows(" + std::to_string(i) + " ,s)";
       PqlLexer lexer{query};
-      ParsedQueryBuilder pqb;
       std::vector<PqlToken> tokens = lexer.Lex();
       QueryValidator query_validator = QueryValidator(tokens);
       std::vector<PqlToken> validated_tokens = query_validator.CheckValidation();
-      ParsedQuery parsed_query = pqb.Build(validated_tokens);
+      ParsedQueryBuilder pqb(validated_tokens);
+      ParsedQuery parsed_query = pqb.Build();
       std::list<std::string> results;
       evaluator->Evaluate(parsed_query, results);
       REQUIRE(results.front() == expected_result[i - 1]);
@@ -207,11 +207,11 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
     for (int i = 1; i < 14; i++) {
       std::string query = "stmt s ; Select s such that Follows*(" + std::to_string(i) + " ,s)";
       PqlLexer lexer{query};
-      ParsedQueryBuilder pqb;
       std::vector<PqlToken> tokens = lexer.Lex();
       QueryValidator query_validator = QueryValidator(tokens);
       std::vector<PqlToken> validated_tokens = query_validator.CheckValidation();
-      ParsedQuery parsed_query = pqb.Build(validated_tokens);
+      ParsedQueryBuilder pqb(validated_tokens);
+      ParsedQuery parsed_query = pqb.Build();
       std::list<std::string> results;
       evaluator->Evaluate(parsed_query, results);
       REQUIRE(results == expected_result[i - 1]);
