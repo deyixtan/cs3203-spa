@@ -7,8 +7,8 @@ TEST_CASE("Test query with uses and pattern") {
   std::string query = "stmt s; variable v; assign a;\n Select s such that Uses (s, \"x\") pattern a (v, _)";
   PqlLexer pql_lexer = PqlLexer(query);
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
-  ParsedQueryBuilder pqb;
-  ParsedQuery pq = pqb.Build(test_token_vect);
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
   ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
   Pattern ptrn = pq.GetPatterns().front();
@@ -29,8 +29,8 @@ TEST_CASE("Test query parser with more than one synonym") {
   std::string query = "stmt s1, s2; variable v1, v2; assign a1, a2, a3;\n Select s such that Uses (s, \"x\") pattern a (v, _)";
   PqlLexer pql_lexer = PqlLexer(query);
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
-  ParsedQueryBuilder pqb;
-  ParsedQuery pq = pqb.Build(test_token_vect);
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
   ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
   Pattern ptrn = pq.GetPatterns().front();
@@ -55,8 +55,8 @@ TEST_CASE("Test query parser with no such that") {
   std::string query = "stmt s; variable v; assign a;\n Select s";
   PqlLexer pql_lexer = PqlLexer(query);
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
-  ParsedQueryBuilder pqb;
-  ParsedQuery pq = pqb.Build(test_token_vect);
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
   ResultClause result_clause = pq.GetResultClause();
   const auto decl = pq.GetDeclaration();
   std::vector<Relationship> rship = pq.GetRelationships();
@@ -74,8 +74,8 @@ TEST_CASE("Test query parser with white spaces") {
   std::string query = "stmt s; variable v; assign a;\n Select    s  such that Modifies( 1,       v)";
   PqlLexer pql_lexer = PqlLexer(query);
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
-  ParsedQueryBuilder pqb;
-  ParsedQuery pq = pqb.Build(test_token_vect);
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
   ResultClause result_clause = pq.GetResultClause();
   const auto decl = pq.GetDeclaration();
   Relationship rship = pq.GetRelationships().front();
@@ -95,8 +95,8 @@ TEST_CASE("Test query parser with same variable referenced") {
   std::string query = "stmt s; variable v; assign a;\n Select s such that Parent*(s, s)";
   PqlLexer pql_lexer = PqlLexer(query);
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
-  ParsedQueryBuilder pqb;
-  ParsedQuery pq = pqb.Build(test_token_vect);
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
   ResultClause result_clause = pq.GetResultClause();
   const auto decl = pq.GetDeclaration();
   Relationship rship = pq.GetRelationships().front();
