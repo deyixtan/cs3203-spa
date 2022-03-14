@@ -9,7 +9,7 @@ TEST_CASE("Test query with uses and pattern") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
   Pattern ptrn = pq.GetPatterns().front();
   const auto decl = pq.GetDeclaration();
@@ -19,7 +19,7 @@ TEST_CASE("Test query with uses and pattern") {
   REQUIRE(ptrn.GetSynAssign().value == "a");
   REQUIRE(ptrn.GetFirst().value == "v");
   REQUIRE(ptrn.GetSecond().value == "_");
-  REQUIRE(synonym.value == "s");
+  REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
   REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
@@ -31,7 +31,7 @@ TEST_CASE("Test query parser with more than one synonym") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
   Pattern ptrn = pq.GetPatterns().front();
   const auto decl = pq.GetDeclaration();
@@ -41,7 +41,7 @@ TEST_CASE("Test query parser with more than one synonym") {
   REQUIRE(ptrn.GetSynAssign().value == "a");
   REQUIRE(ptrn.GetFirst().value == "v");
   REQUIRE(ptrn.GetSecond().value == "_");
-  REQUIRE(synonym.value == "s");
+  REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(decl.find("s1")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("s2")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v1")->second == DesignEntityType::VARIABLE);
@@ -57,14 +57,14 @@ TEST_CASE("Test query parser with no such that") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   const auto decl = pq.GetDeclaration();
   std::vector<Relationship> rship = pq.GetRelationships();
   std::vector<Pattern> ptrns = pq.GetPatterns();
 //  test that no relationships or patterns have been added
   REQUIRE(rship.size() == 0);
   REQUIRE(ptrns.size() == 0);
-  REQUIRE(synonym.value == "s");
+  REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
   REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
@@ -76,7 +76,7 @@ TEST_CASE("Test query parser with white spaces") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   const auto decl = pq.GetDeclaration();
   Relationship rship = pq.GetRelationships().front();
   std::vector<Pattern> ptrns = pq.GetPatterns();
@@ -85,7 +85,7 @@ TEST_CASE("Test query parser with white spaces") {
   REQUIRE(rship.GetRelRef().value == "Modifies");
   REQUIRE(rship.GetFirst().value == "1");
   REQUIRE(rship.GetSecond().value == "v");
-  REQUIRE(synonym.value == "s");
+  REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
   REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
@@ -97,7 +97,7 @@ TEST_CASE("Test query parser with same variable referenced") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   ParsedQueryBuilder pqb;
   ParsedQuery pq = pqb.Build(test_token_vect);
-  PqlToken synonym = pq.GetSynonym();
+  ResultClause result_clause = pq.GetResultClause();
   const auto decl = pq.GetDeclaration();
   Relationship rship = pq.GetRelationships().front();
   std::vector<Pattern> ptrns = pq.GetPatterns();
@@ -106,7 +106,7 @@ TEST_CASE("Test query parser with same variable referenced") {
   REQUIRE(rship.GetRelRef().value == "Parent*");
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "s");
-  REQUIRE(synonym.value == "s");
+  REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
   REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
