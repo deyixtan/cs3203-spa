@@ -11,7 +11,7 @@
 #include "stores/follow_store.h"
 #include "stores/parent_store.h"
 #include "expression_tree.h"
-#include "components/source_subsystem/cfg/cfg.h"
+#include "components/source_subsystem/cfg/cfg_program_node.h"
 
 class PKB {
  private:

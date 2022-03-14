@@ -2,7 +2,7 @@
 #define SPA_SRC_COMPONENTS_PKB_DESIGN_EXTRACTOR_POPULATOR_H_
 
 #include "../pkb/pkb.h"
-#include "cfg/cfg.h"
+#include "cfg/cfg_program_node.h"
 
 class Populator {
  private:
