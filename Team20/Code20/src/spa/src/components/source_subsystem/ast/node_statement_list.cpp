@@ -24,6 +24,8 @@ std::string StatementListNode::Process(Populator populator, std::vector<std::str
     std::shared_ptr<StatementNode> stmt = stmts[i];
     std::string stmt_num = std::to_string(stmt->GetStatementNumber());
     std::string var_name = "";
+    if (visited->size() > 0)
+      populator.PopulateParent(visited->back(), stmt_num);
 
     if (stmt != stmts.back()) {
       int curr_stmt = stmt->GetStatementNumber();

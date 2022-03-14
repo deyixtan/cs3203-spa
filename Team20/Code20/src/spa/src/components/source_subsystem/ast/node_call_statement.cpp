@@ -16,7 +16,7 @@ std::string CallStatementNode::ToString() {
 }
 
 std::string CallStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
-  cfg_node->GetNodes().push_back(GetStatementNumber());
+  cfg_node->GetNodes().emplace_back(GetStatementNumber());
   return "";
 }
 

@@ -74,33 +74,33 @@ std::string IfStatementNode::Process(Populator populator, std::vector<std::strin
   std::string if_stmt_num = std::to_string(GetStatementNumber());
   visited->push_back(if_stmt_num);
 
-  m_condition->Process(populator, visited, cfg_node);
+  std::shared_ptr<source::CfgGroupNode> if_group_node = std::make_shared<source::CfgGroupNode>();
+  std::shared_ptr<source::CfgGroupNode> else_group_node = std::make_shared<source::CfgGroupNode>();
+  std::shared_ptr<source::CfgIfNode> if_node = std::make_shared<source::CfgIfNode>(source::CfgNode(GetStatementNumber()), if_group_node, else_group_node);
+  cfg_node->SetNext(if_node);
+
+  m_condition->Process(populator, visited, if_node);
   std::shared_ptr<StatementListNode> if_block = m_if_stmt_list;
   std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;
   std::vector<std::shared_ptr<StatementNode>> if_stmts = m_if_stmt_list->GetStatements();
   std::vector<std::shared_ptr<StatementNode>> else_stmts =  m_else_stmt_list->GetStatements();
-  if_block->Process(populator, visited, cfg_node);
-  else_block->Process(populator, visited, cfg_node);
+  if_block->Process(populator, visited, if_group_node);
+  else_block->Process(populator, visited, else_group_node);
 
   populator.PopulateIf(stmt_num);
   populator.PopulateParentStar(if_stmt_num, *visited);
 
-  std::shared_ptr<source::CfgGroupNode> if_group_node = std::make_shared<source::CfgGroupNode>();
-  std::shared_ptr<source::CfgGroupNode> else_group_node = std::make_shared<source::CfgGroupNode>();
-  source::CfgIfNode if_node = source::CfgIfNode(source::CfgNode(GetStatementNumber()), if_group_node, else_group_node);
-  cfg_node->SetNext(std::make_shared<source::CfgGroupNode>(if_node));
-
-  for (int j = 0; j < if_stmts.size(); ++j) {
-    int curr = if_stmts[j]->GetStatementNumber();
-    if_stmts[j]->Process(populator, visited, if_group_node);
-    populator.PopulateParent(stmt_num, std::to_string(curr));
-  }
-
-  for (int j = 0; j < else_stmts.size(); ++j) {
-    int curr = else_stmts[j]->GetStatementNumber();
-    else_stmts[j]->Process(populator, visited, else_group_node);
-    populator.PopulateParent(stmt_num, std::to_string(curr));
-  }
+//  for (int j = 0; j < if_stmts.size(); ++j) {
+//    int curr = if_stmts[j]->GetStatementNumber();
+//    if_stmts[j]->Process(populator, visited, if_group_node);
+//    populator.PopulateParent(stmt_num, std::to_string(curr));
+//  }
+//
+//  for (int j = 0; j < else_stmts.size(); ++j) {
+//    int curr = else_stmts[j]->GetStatementNumber();
+//    else_stmts[j]->Process(populator, visited, else_group_node);
+//    populator.PopulateParent(stmt_num, std::to_string(curr));
+//  }
 
   visited->pop_back();
   populator.PopulateParentStar(stmt_num, *visited);
