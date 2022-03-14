@@ -16,7 +16,7 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
     }
     clauses.pop();
   }
-  auto projected_results = table.GetResult(query.GetSynonym().value);
+  auto projected_results = table.GetResult(query.GetResultClause().GetValues()[0].value);
   for (auto result : projected_results) {
     results.emplace_back(result);
   }
@@ -38,7 +38,7 @@ std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQ
     }
   }
 
-  clauses.push(pql::ClauseFactory::Create(query.GetSynonym(), query.GetDeclaration(), pkb));
+  clauses.push(pql::ClauseFactory::Create(query.GetResultClause().GetValues()[0], query.GetDeclaration(), pkb));
 
   return clauses;
 }

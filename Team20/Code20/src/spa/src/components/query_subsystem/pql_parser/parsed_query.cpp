@@ -3,12 +3,12 @@
 
 ParsedQuery::ParsedQuery() {
   std::unordered_map<std::string, DesignEntityType> map;
-  this->selected_synonym = PqlToken();
+  this->result_clause = ResultClause();
   this->declarations = map;
 };
 
-void ParsedQuery::SetSynonym(PqlToken synonym) {
-  selected_synonym = synonym;
+void ParsedQuery::SetResultClause(ResultClause parsed_result_clause) {
+  result_clause = parsed_result_clause;
 }
 
 void ParsedQuery::AddPattern(Pattern parsed_pattern) {
@@ -27,8 +27,8 @@ void ParsedQuery::SetDeclarations(std::unordered_map<std::string, DesignEntityTy
   declarations = parsed_declarations;
 }
 
-PqlToken ParsedQuery::GetSynonym() {
-  return selected_synonym;
+ResultClause ParsedQuery::GetResultClause() {
+  return result_clause;
 }
 
 std::vector<Relationship> ParsedQuery::GetRelationships() {

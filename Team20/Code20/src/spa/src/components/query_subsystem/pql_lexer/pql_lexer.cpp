@@ -5,6 +5,7 @@
 #include <vector>
 #include <stack>
 #include <sstream>
+#include "../utils.h"
 
 // public
 PqlLexer::PqlLexer(std::string query) { this->query = query; }
@@ -29,12 +30,12 @@ std::vector<PqlToken> PqlLexer::Lex() {
       tokens.push_back(PqlToken{PqlTokenType::TUPLE, getTuple});
     } else if (IsValidString(token)) {
       if (IsEntRef(token)) {
-        tokens.push_back(PqlToken{PqlTokenType::IDENT_WITH_QUOTES, RemoveSpace(token)});
+        tokens.push_back(PqlToken{PqlTokenType::IDENT_WITH_QUOTES, Utils::RemoveSpace(token)});
       } else {
-        tokens.push_back(PqlToken{PqlTokenType::EXPR, RemoveSpace(token)});
+        tokens.push_back(PqlToken{PqlTokenType::EXPR, Utils::RemoveSpace(token)});
       }
     } else if (IsSubExpressionToken(token)) {
-      tokens.push_back(PqlToken{PqlTokenType::SUB_EXPRESSION, RemoveSpace(token)});
+      tokens.push_back(PqlToken{PqlTokenType::SUB_EXPRESSION, Utils::RemoveSpace(token)});
     } else {
       throw "ERROR: Unrecognised token " + token + "\n";
     }
@@ -96,12 +97,6 @@ bool PqlLexer::IsSubExpressionToken(const std::string &token) {
   std::string s = token.substr(1, token.size() - 2);
   bool is_valid_string = IsValidString(s);
   return token.at(0) == '_' && token.back() == '_' && is_valid_string;
-}
-
-std::string PqlLexer::RemoveSpace(const std::string &token) {
-  std::string token_no_space(token);
-  token_no_space.erase(std::remove_if(token_no_space.begin(), token_no_space.end(), isspace), token_no_space.end());
-  return token_no_space;
 }
 
 std::vector<std::string> PqlLexer::BreakString(const std::string &s) {
