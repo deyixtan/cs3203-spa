@@ -48,7 +48,8 @@ std::string WhileStatementNode::Process(Populator populator, std::vector<std::st
   std::string while_stmt_num = std::to_string(GetStatementNumber());
   visited->push_back(while_stmt_num);
 
-  m_condition->Process(populator, visited, cfg_node);
+  std::string cond_expr = m_condition->Process(populator, visited, cfg_node);
+  populator.AddWhilePattern(stmt_num, cond_expr);
 
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();

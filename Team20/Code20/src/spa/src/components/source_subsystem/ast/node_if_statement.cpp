@@ -74,7 +74,9 @@ std::string IfStatementNode::Process(Populator populator, std::vector<std::strin
   std::string if_stmt_num = std::to_string(GetStatementNumber());
   visited->push_back(if_stmt_num);
 
-  m_condition->Process(populator, visited, cfg_node);
+  std::string cond_expr = m_condition->Process(populator, visited, cfg_node);
+  populator.AddIfPattern(stmt_num, cond_expr);
+
   std::shared_ptr<StatementListNode> if_block = m_if_stmt_list;
   std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;
   std::vector<std::shared_ptr<StatementNode>> if_stmts = m_if_stmt_list->GetStatements();

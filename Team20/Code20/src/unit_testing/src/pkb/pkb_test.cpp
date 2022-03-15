@@ -168,11 +168,11 @@ PKB *set_up_pkb() {
   pkb->GetParentStore()->AddParent("6", "7");
   pkb->GetParentStore()->AddParent("11", "12");
 
-  pkb->GetPatternStore()->AddPattern("4", "dog", "((((mouse)+((10)*(cat)))-(((dog)/(mouse))*(dragon)))+(((mouse)+(rabbit))-(cat)))");
-  pkb->GetPatternStore()->AddPattern("7", "pig", "((ox)+(cat))");
-  pkb->GetPatternStore()->AddPattern("8", "dragon", "(((dog)*(rabbit))/(mouse))");
-  pkb->GetPatternStore()->AddPattern("10", "snake", "((dog)+(rabbit))");
-  pkb->GetPatternStore()->AddPattern("15", "monkey", "((tiger)+(dog))");
+  pkb->GetPatternStore()->AddStmtWithPattern("4", "dog", "((((mouse)+((10)*(cat)))-(((dog)/(mouse))*(dragon)))+(((mouse)+(rabbit))-(cat)))");
+  pkb->GetPatternStore()->AddStmtWithPattern("7", "pig", "((ox)+(cat))");
+  pkb->GetPatternStore()->AddStmtWithPattern("8", "dragon", "(((dog)*(rabbit))/(mouse))");
+  pkb->GetPatternStore()->AddStmtWithPattern("10", "snake", "((dog)+(rabbit))");
+  pkb->GetPatternStore()->AddStmtWithPattern("15", "monkey", "((tiger)+(dog))");
 
   return pkb;
 }

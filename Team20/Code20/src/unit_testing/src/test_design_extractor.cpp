@@ -151,7 +151,7 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   pkb->GetModifyStore()->AddProcVar("main", "x");
   pkb->GetUsageStore()->AddProcVar("main", "x");
   pkb->GetUsageStore()->AddStmtVar("1", "x");
-  pkb->GetPatternStore()->AddPattern("1", "x", "x + 1");
+  pkb->GetPatternStore()->AddStmtWithPattern("1", "x", "x + 1");
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
@@ -233,8 +233,8 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   pkb->GetParentStore()->AddParent("1", "3");
   pkb->GetUsageStore()->AddStmtVar("1", "a");
   pkb->GetModifyStore()->AddStmtVar("1", "a");
-  pkb->GetPatternStore()->AddPattern("2", "a", "(2)");
-  pkb->GetPatternStore()->AddPattern("3", "a", "(3)");
+  pkb->GetPatternStore()->AddStmtWithPattern("2", "a", "(2)");
+  pkb->GetPatternStore()->AddStmtWithPattern("3", "a", "(3)");
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
