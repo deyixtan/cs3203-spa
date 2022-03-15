@@ -111,3 +111,170 @@ TEST_CASE("Test query parser with same variable referenced") {
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
   REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
 }
+
+TEST_CASE("Test query parser with BOOLEAN as synonym name") {
+  std::string query = "stmt BOOLEAN; variable v; assign a;\n Select BOOLEAN such that Parent*(s, 5)";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
+  ResultClause result_clause = pq.GetResultClause();
+  const auto decl = pq.GetDeclaration();
+  Relationship rship = pq.GetRelationships().front();
+  std::vector<Pattern> ptrns = pq.GetPatterns();
+  std::vector<With> withs = pq.GetWithClause();
+  // Test that no patterns have been added to query struct
+  REQUIRE(ptrns.size() == 0);
+  // Test that no with clauses have been added
+  REQUIRE(withs.size() == 0);
+  REQUIRE(rship.GetRelRef().value == "Parent*");
+  REQUIRE(rship.GetFirst().value == "s");
+  REQUIRE(rship.GetSecond().value == "5");
+  REQUIRE(result_clause.GetValues()[0].value == "BOOLEAN");
+  REQUIRE(result_clause.GetType() == ResultClauseType::SYNONYM);
+  REQUIRE(decl.find("BOOLEAN")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
+}
+
+TEST_CASE("Test query parser with BOOLEAN and attributes") {
+  std::string query = "stmt s; variable v; assign a;\n Select BOOLEAN such that Uses(5, v) with v.varName = \"bleh\"";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
+  ResultClause result_clause = pq.GetResultClause();
+  const auto decl = pq.GetDeclaration();
+  Relationship rship = pq.GetRelationships().front();
+  std::vector<Pattern> ptrns = pq.GetPatterns();
+  std::vector<With> withs = pq.GetWithClause();
+  // Test that no patterns have been added to query struct
+  REQUIRE(ptrns.size() == 0);
+  REQUIRE(rship.GetRelRef().value == "Uses");
+  REQUIRE(rship.GetFirst().value == "5");
+  REQUIRE(rship.GetSecond().value == "v");
+  REQUIRE(result_clause.GetValues()[0].value == "BOOLEAN");
+  REQUIRE(withs[0].GetFirst().type == PqlTokenType::ATTRIBUTE);
+  REQUIRE(withs[0].GetFirst().value == "v.varName");
+  REQUIRE(withs[0].GetSecond().type == PqlTokenType::IDENT_WITH_QUOTES);
+  REQUIRE(withs[0].GetSecond().value == "\"bleh\"");
+  REQUIRE(result_clause.GetType() == ResultClauseType::BOOLEAN);
+  REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
+}
+
+TEST_CASE("Test query parser with attributes") {
+  std::string query = "stmt s; variable v; procedure p;\n Select BOOLEAN such that Uses(5, v) with v.varName = p.procName";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
+  ResultClause result_clause = pq.GetResultClause();
+  const auto decl = pq.GetDeclaration();
+  Relationship rship = pq.GetRelationships().front();
+  std::vector<Pattern> ptrns = pq.GetPatterns();
+  std::vector<With> withs = pq.GetWithClause();
+  // Test that no patterns have been added to query struct
+  REQUIRE(ptrns.size() == 0);
+  REQUIRE(rship.GetRelRef().value == "Uses");
+  REQUIRE(rship.GetFirst().value == "5");
+  REQUIRE(rship.GetSecond().value == "v");
+  REQUIRE(result_clause.GetValues()[0].value == "BOOLEAN");
+  REQUIRE(withs[0].GetFirst().type == PqlTokenType::ATTRIBUTE);
+  REQUIRE(withs[0].GetFirst().value == "v.varName");
+  REQUIRE(withs[0].GetSecond().type == PqlTokenType::ATTRIBUTE);
+  REQUIRE(withs[0].GetSecond().value == "p.procName");
+  REQUIRE(result_clause.GetType() == ResultClauseType::BOOLEAN);
+  REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("p")->second == DesignEntityType::PROCEDURE);
+}
+
+TEST_CASE("Test query parser with double pattern") {
+  std::string query = "stmt s; variable v; assign a;\n Select a pattern a(v,_) and s(v, _\"x\"_)";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
+  ResultClause result_clause = pq.GetResultClause();
+  const auto decl = pq.GetDeclaration();
+  std::vector<Relationship> rship = pq.GetRelationships();
+  std::vector<Pattern> ptrns = pq.GetPatterns();
+  Pattern ptrn_assign = ptrns[0];
+  Pattern ptrn_stmt = ptrns[1];
+  std::vector<With> withs = pq.GetWithClause();
+  // Test that no relationships have been added to query struct
+  REQUIRE(rship.size() == 0);
+  REQUIRE(ptrn_assign.GetSynAssign().value == "a");
+  REQUIRE(ptrn_assign.GetFirst().value == "v");
+  REQUIRE(ptrn_assign.GetSecond().value == "_");
+  REQUIRE(ptrn_stmt.GetSynAssign().value == "s");
+  REQUIRE(ptrn_stmt.GetFirst().value == "v");
+  REQUIRE(ptrn_stmt.GetSecond().value == "_\"x\"_");
+  REQUIRE(result_clause.GetValues()[0].value == "a");
+  REQUIRE(result_clause.GetType() == ResultClauseType::SYNONYM);
+  REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
+}
+
+TEST_CASE("Test query parser with 'with' clause and 'and'") {
+  std::string query = "stmt s; variable v; procedure p;\n Select a pattern a(v,_) with v.varName = p.procName and a.stmt# = 5";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
+  ResultClause result_clause = pq.GetResultClause();
+  const auto decl = pq.GetDeclaration();
+  std::vector<Relationship> rship = pq.GetRelationships();
+  Pattern ptrn = pq.GetPatterns().front();
+  std::vector<With> withs = pq.GetWithClause();
+  With with_first = withs.front();
+  With with_second = withs[1];
+  // Test that no relationships have been added to query struct
+  REQUIRE(rship.size() == 0);
+  REQUIRE(ptrn.GetSynAssign().value == "a");
+  REQUIRE(ptrn.GetFirst().value == "v");
+  REQUIRE(ptrn.GetSecond().value == "_");
+  REQUIRE(result_clause.GetValues()[0].value == "a");
+  REQUIRE(with_first.GetFirst().type == PqlTokenType::ATTRIBUTE);
+  REQUIRE(with_first.GetFirst().value == "v.varName");
+  REQUIRE(with_first.GetSecond().type == PqlTokenType::ATTRIBUTE);
+  REQUIRE(with_first.GetSecond().value == "p.procName");
+  REQUIRE(with_second.GetFirst().type == PqlTokenType::ATTRIBUTE);
+  REQUIRE(with_second.GetFirst().value == "a.stmt#");
+  REQUIRE(with_second.GetSecond().type == PqlTokenType::NUMBER);
+  REQUIRE(with_second.GetSecond().value == "5");
+  REQUIRE(ptrn.GetFirst().value == "v");
+  REQUIRE(ptrn.GetSecond().value == "_");
+  REQUIRE(result_clause.GetType() == ResultClauseType::SYNONYM);
+  REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("p")->second == DesignEntityType::PROCEDURE);
+}
+
+TEST_CASE("Test query parser with 'such that' clause and 'and'") {
+  std::string query = "stmt s; variable v; assign a;\n Select a such that Uses(s, v) and Parent(a, s)";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
+  ResultClause result_clause = pq.GetResultClause();
+  const auto decl = pq.GetDeclaration();
+  std::vector<Relationship> rship = pq.GetRelationships();
+  Relationship rship_uses = rship.front();
+  Relationship rship_parent = rship[1];
+  std::vector<With> withs = pq.GetWithClause();
+  // Test that no with clauses have been added to query struct
+  REQUIRE(withs.size() == 0);
+  REQUIRE(rship_uses.GetRelRef().value == "Uses");
+  REQUIRE(rship_uses.GetFirst().value == "s");
+  REQUIRE(rship_uses.GetSecond().value == "v");
+  REQUIRE(rship_parent.GetRelRef().value == "Parent");
+  REQUIRE(rship_parent.GetFirst().value == "a");
+  REQUIRE(rship_parent.GetSecond().value == "s");
+  REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
+}

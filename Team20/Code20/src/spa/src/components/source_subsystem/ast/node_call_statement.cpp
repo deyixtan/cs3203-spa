@@ -15,8 +15,12 @@ std::string CallStatementNode::ToString() {
   return "call " + m_identifier + ";\n";
 }
 
-std::string CallStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
-  cfg_node->GetNodes().push_back(GetStatementNumber());
+std::string CallStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+  if (cfg_node == nullptr) {
+    cfg_proc_node->GetLastNode()->GetNodes().emplace_back(GetStatementNumber());
+  } else {
+    cfg_node->GetNodes().emplace_back(GetStatementNumber());
+  }
   return "";
 }
 

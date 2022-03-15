@@ -14,7 +14,7 @@ class StatementListNode : public Node {
   StatementListNode();
   StatementListNode(std::vector<std::shared_ptr<StatementNode>> statements);
   [[nodiscard]] std::vector<std::shared_ptr<StatementNode>> GetStatements();
-  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) override;
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementListNode &other) const;

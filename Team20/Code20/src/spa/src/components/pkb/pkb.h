@@ -12,7 +12,7 @@
 #include "stores/parent_store.h"
 #include "stores/pattern_store.h"
 #include "expression_tree.h"
-#include "components/source_subsystem/cfg/cfg.h"
+#include "components/source_subsystem/cfg/cfg_program_node.h"
 
 class PKB {
  private:
@@ -22,13 +22,14 @@ class PKB {
   std::shared_ptr<ModifyStore> m_modify_store;
   std::shared_ptr<PatternStore> m_pattern_store;
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;
-  std::shared_ptr<source::ProgramCfg> m_program_cfg;
+  std::unordered_map<std::string, std::pair<std::string, std::string>> m_pattern_map;
+  std::shared_ptr<source::CfgProgramNode> m_program_cfg;
 
  public:
   PKB();
   void InitRelationshipStores();
   void AddStmt(std::string const &name, StmtType type);
-  void AddProgramCfg(std::shared_ptr<source::ProgramCfg> program_cfg);
+  void AddProgramCfg(std::shared_ptr<source::CfgProgramNode> program_cfg);
   [[nodiscard]] std::unordered_set<std::string> GetStmt(StmtType type);
   [[nodiscard]] std::shared_ptr<FollowStore> GetFollowStore();
   [[nodiscard]] std::shared_ptr<ModifyStore> GetModifyStore();
