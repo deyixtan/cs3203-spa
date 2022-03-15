@@ -5,7 +5,8 @@
 enum class ResultClauseType {
   BOOLEAN,
   TUPLE,
-  SYNONYM
+  SYNONYM,
+  ATTRIBUTE
 };
 
 class ResultClause {

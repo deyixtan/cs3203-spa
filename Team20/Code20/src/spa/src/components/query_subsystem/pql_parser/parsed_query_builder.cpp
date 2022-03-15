@@ -2,7 +2,6 @@
 #include "components/query_subsystem/pql_parser/query_grammar_error.h"
 #include <unordered_map>
 
-#include <iostream>
 ParsedQueryBuilder::ParsedQueryBuilder(std::vector<PqlToken> tokens) : tokens_(tokens){}
 
 ResultClause ParsedQueryBuilder::BuildResultClause(PqlToken& result_clause_token) {
@@ -11,6 +10,9 @@ ResultClause ParsedQueryBuilder::BuildResultClause(PqlToken& result_clause_token
   if (result_clause_token.type == PqlTokenType::SYNONYM) {
     values.push_back(result_clause_token);
     result_clause = ResultClause(ResultClauseType::SYNONYM, values);
+  } else if (result_clause_token.type == PqlTokenType::ATTRIBUTE) {
+    values.push_back(result_clause_token);
+    result_clause = ResultClause(ResultClauseType::ATTRIBUTE, values);
   } else if (result_clause_token.type == PqlTokenType::BOOLEAN) {
     values.push_back(result_clause_token);
     result_clause = ResultClause(ResultClauseType::BOOLEAN, values);
@@ -56,7 +58,7 @@ ParsedQuery ParsedQueryBuilder::Build() {
   while(pos < tokens_.size()) {
     PqlToken token = tokens_[pos];
     if(token.type == PqlTokenType::SELECT) {
-      pos = ParseSynonym(pq, declarations, pos);
+      pos = ParseResultClause(pq, declarations, pos);
     } else if (token.type == PqlTokenType::SUCH) {
       // skip the token following such
       tokens_.erase(tokens_.begin(), tokens_.begin() + 2);
@@ -88,12 +90,11 @@ ParsedQuery ParsedQueryBuilder::Build() {
   return pq;
 }
 
-int ParsedQueryBuilder::ParseSynonym(ParsedQuery &pq, std::unordered_map<std::string, DesignEntityType> &declarations, int pos) {
+int ParsedQueryBuilder::ParseResultClause(ParsedQuery &pq, std::unordered_map<std::string, DesignEntityType> &declarations, int pos) {
   PqlToken result_clause_token = tokens_[++pos];
   if(result_clause_token.type == PqlTokenType::BOOLEAN) {
     if(declarations.count(result_clause_token.value)) {
       result_clause_token.type = PqlTokenType::SYNONYM;
-      std::cout << result_clause_token.value;
     }
   }
   ResultClause result_clause = BuildResultClause(result_clause_token);
@@ -108,8 +109,6 @@ int ParsedQueryBuilder::ParseDeclarations(ParsedQuery &pq, std::unordered_map<st
   PqlToken entity = tokens_[pos];
   pos++;
   while(tokens_[pos].type != PqlTokenType::SEMICOLON) {
-    std::cout << tokens_[pos].value;
-    std::cout << '^';
     // another synonym
     if(tokens_[pos].type == PqlTokenType::SYNONYM) {
       if(declarations.count(tokens_[pos].value)) {
