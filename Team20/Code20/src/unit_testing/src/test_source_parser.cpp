@@ -126,7 +126,7 @@ TEST_CASE("Test single procedure with one read statement") {
   program_node = parser.ParseProgram();
 
   // set up expected
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ReadStatementNode>
       assign_stmt = std::make_shared<ReadStatementNode>(1, variable_node);
 
@@ -155,7 +155,7 @@ TEST_CASE("Test single procedure with one print statement") {
   program_node = parser.ParseProgram();
 
   // set up expected
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<PrintStatementNode>
       assign_stmt = std::make_shared<PrintStatementNode>(1, variable_node);
 
@@ -185,7 +185,7 @@ TEST_CASE("Test single procedure with one if statement (simple equal condition)"
 
   // set up expected
   // if's stmt_list
-  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2", "main");
   std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
       if_assign_stmt = std::make_shared<AssignStatementNode>(2, if_variable_node, if_constant_node);
@@ -195,7 +195,7 @@ TEST_CASE("Test single procedure with one if statement (simple equal condition)"
   std::shared_ptr<StatementListNode> if_stmt_list = std::make_shared<StatementListNode>(if_statements);
 
   // else's stmt_list
-  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3");
+  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3", "main");
   std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       else_assign_stmt = std::make_shared<AssignStatementNode>(3, else_variable_node, else_constant_node);
@@ -205,7 +205,7 @@ TEST_CASE("Test single procedure with one if statement (simple equal condition)"
   std::shared_ptr<StatementListNode> else_stmt_list = std::make_shared<StatementListNode>(else_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -242,7 +242,7 @@ TEST_CASE("Test single procedure with one if statement (simple not equal conditi
 
   // set up expected
   // if's stmt_list
-  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2", "main");
   std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
       if_assign_stmt = std::make_shared<AssignStatementNode>(2, if_variable_node, if_constant_node);
@@ -252,7 +252,7 @@ TEST_CASE("Test single procedure with one if statement (simple not equal conditi
   std::shared_ptr<StatementListNode> if_stmt_list = std::make_shared<StatementListNode>(if_statements);
 
   // else's stmt_list
-  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3");
+  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3", "main");
   std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       else_assign_stmt = std::make_shared<AssignStatementNode>(3, else_variable_node, else_constant_node);
@@ -262,7 +262,7 @@ TEST_CASE("Test single procedure with one if statement (simple not equal conditi
   std::shared_ptr<StatementListNode> else_stmt_list = std::make_shared<StatementListNode>(else_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node =
       std::make_shared<RelationalExpressionNode>(RelationOperator::NOT_EQUALS,
@@ -299,7 +299,7 @@ TEST_CASE("Test single procedure with one if statement (simple greater than cond
 
   // set up expected
   // if's stmt_list
-  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2", "main");
   std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
       if_assign_stmt = std::make_shared<AssignStatementNode>(2, if_variable_node, if_constant_node);
@@ -309,7 +309,7 @@ TEST_CASE("Test single procedure with one if statement (simple greater than cond
   std::shared_ptr<StatementListNode> if_stmt_list = std::make_shared<StatementListNode>(if_statements);
 
   // else's stmt_list
-  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3");
+  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3", "main");
   std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       else_assign_stmt = std::make_shared<AssignStatementNode>(3, else_variable_node, else_constant_node);
@@ -319,7 +319,7 @@ TEST_CASE("Test single procedure with one if statement (simple greater than cond
   std::shared_ptr<StatementListNode> else_stmt_list = std::make_shared<StatementListNode>(else_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node =
       std::make_shared<RelationalExpressionNode>(RelationOperator::GREATER_THAN,
@@ -356,7 +356,7 @@ TEST_CASE("Test single procedure with one if statement (simple greater than equa
 
   // set up expected
   // if's stmt_list
-  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2", "main");
   std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
       if_assign_stmt = std::make_shared<AssignStatementNode>(2, if_variable_node, if_constant_node);
@@ -366,7 +366,7 @@ TEST_CASE("Test single procedure with one if statement (simple greater than equa
   std::shared_ptr<StatementListNode> if_stmt_list = std::make_shared<StatementListNode>(if_statements);
 
   // else's stmt_list
-  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3");
+  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3", "main");
   std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       else_assign_stmt = std::make_shared<AssignStatementNode>(3, else_variable_node, else_constant_node);
@@ -376,7 +376,7 @@ TEST_CASE("Test single procedure with one if statement (simple greater than equa
   std::shared_ptr<StatementListNode> else_stmt_list = std::make_shared<StatementListNode>(else_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node =
       std::make_shared<RelationalExpressionNode>(RelationOperator::GREATER_THAN_EQUALS,
@@ -413,7 +413,7 @@ TEST_CASE("Test single procedure with one if statement (simple lesser than condi
 
   // set up expected
   // if's stmt_list
-  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2", "main");
   std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
       if_assign_stmt = std::make_shared<AssignStatementNode>(2, if_variable_node, if_constant_node);
@@ -423,7 +423,7 @@ TEST_CASE("Test single procedure with one if statement (simple lesser than condi
   std::shared_ptr<StatementListNode> if_stmt_list = std::make_shared<StatementListNode>(if_statements);
 
   // else's stmt_list
-  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3");
+  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3", "main");
   std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       else_assign_stmt = std::make_shared<AssignStatementNode>(3, else_variable_node, else_constant_node);
@@ -433,7 +433,7 @@ TEST_CASE("Test single procedure with one if statement (simple lesser than condi
   std::shared_ptr<StatementListNode> else_stmt_list = std::make_shared<StatementListNode>(else_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node =
       std::make_shared<RelationalExpressionNode>(RelationOperator::LESS_THAN,
@@ -470,7 +470,7 @@ TEST_CASE("Test single procedure with one if statement (simple lesser than equal
 
   // set up expected
   // if's stmt_list
-  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2", "main");
   std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
       if_assign_stmt = std::make_shared<AssignStatementNode>(2, if_variable_node, if_constant_node);
@@ -480,7 +480,7 @@ TEST_CASE("Test single procedure with one if statement (simple lesser than equal
   std::shared_ptr<StatementListNode> if_stmt_list = std::make_shared<StatementListNode>(if_statements);
 
   // else's stmt_list
-  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3");
+  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3", "main");
   std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       else_assign_stmt = std::make_shared<AssignStatementNode>(3, else_variable_node, else_constant_node);
@@ -490,7 +490,7 @@ TEST_CASE("Test single procedure with one if statement (simple lesser than equal
   std::shared_ptr<StatementListNode> else_stmt_list = std::make_shared<StatementListNode>(else_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node =
       std::make_shared<RelationalExpressionNode>(RelationOperator::LESS_THAN_EQUALS,
@@ -540,7 +540,7 @@ TEST_CASE("Test single procedure with one while statement (simple equal conditio
 
   // set up expected
   // while's stmt_list
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "2", "main");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(2, variable_node, constant_node);
@@ -550,7 +550,7 @@ TEST_CASE("Test single procedure with one while statement (simple equal conditio
   std::shared_ptr<StatementListNode> while_stmt_list = std::make_shared<StatementListNode>(while_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -587,7 +587,7 @@ TEST_CASE("Test single procedure with one while statement (logical AND 2 relatio
 
   // set up expected
   // while's stmt_list
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "3");
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "3", "main");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(2, variable_node, constant_node);
@@ -597,14 +597,14 @@ TEST_CASE("Test single procedure with one while statement (logical AND 2 relatio
   std::shared_ptr<StatementListNode> while_stmt_list = std::make_shared<StatementListNode>(while_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> condition_constant_node1 = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node1 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
                                                  condition_variable_node1,
                                                  condition_constant_node1);
 
-  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a", "2", "main");
   std::shared_ptr<ConstantNode> condition_constant_node2 = std::make_shared<ConstantNode>("2");
   std::shared_ptr<RelationalExpressionNode> condition_node2 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -644,7 +644,7 @@ TEST_CASE("Test single procedure with one while statement (logical OR 2 relation
 
   // set up expected
   // while's stmt_list
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "3");
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "3", "main");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(2, variable_node, constant_node);
@@ -654,14 +654,14 @@ TEST_CASE("Test single procedure with one while statement (logical OR 2 relation
   std::shared_ptr<StatementListNode> while_stmt_list = std::make_shared<StatementListNode>(while_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> condition_constant_node1 = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node1 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
                                                  condition_variable_node1,
                                                  condition_constant_node1);
 
-  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a", "2", "main");
   std::shared_ptr<ConstantNode> condition_constant_node2 = std::make_shared<ConstantNode>("2");
   std::shared_ptr<RelationalExpressionNode> condition_node2 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -701,7 +701,7 @@ TEST_CASE("Test single procedure with while statement (negate boolean expression
 
   // set up expected
   // while's stmt_list
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "2", "main");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(2, variable_node, constant_node);
@@ -711,7 +711,7 @@ TEST_CASE("Test single procedure with while statement (negate boolean expression
   std::shared_ptr<StatementListNode> while_stmt_list = std::make_shared<StatementListNode>(while_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> condition_constant_node1 = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node1 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -748,7 +748,7 @@ TEST_CASE("Test single procedure with one assign statement") {
   program_node = parser.ParseProgram();
 
   // set up expected
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(1, variable_node, constant_node);
@@ -778,12 +778,12 @@ TEST_CASE("Test single procedure with one assign statement (addition expression)
   program_node = parser.ParseProgram();
 
   // set up expected
-  std::shared_ptr<VariableNode> variable1_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable1_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<CombinationExpressionNode> combination_node =
       std::make_shared<CombinationExpressionNode>(ArithmeticOperator::PLUS, variable1_node, constant_node);
 
-  std::shared_ptr<VariableNode> variable2_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable2_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(1, variable2_node, combination_node);
 
@@ -813,12 +813,12 @@ TEST_CASE("Test single procedure with one assign statement (subtraction expressi
   program_node = parser.ParseProgram();
 
   // set up expected
-  std::shared_ptr<VariableNode> variable1_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable1_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<CombinationExpressionNode> combination_node =
       std::make_shared<CombinationExpressionNode>(ArithmeticOperator::MINUS, variable1_node, constant_node);
 
-  std::shared_ptr<VariableNode> variable2_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable2_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(1, variable2_node, combination_node);
 
@@ -847,12 +847,12 @@ TEST_CASE("Test single procedure with one assign statement (multiply expression)
   program_node = parser.ParseProgram();
 
   // set up expected
-  std::shared_ptr<VariableNode> variable1_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable1_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<CombinationExpressionNode> combination_node =
       std::make_shared<CombinationExpressionNode>(ArithmeticOperator::MULTIPLY, variable1_node, constant_node);
 
-  std::shared_ptr<VariableNode> variable2_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable2_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(1, variable2_node, combination_node);
 
@@ -881,12 +881,12 @@ TEST_CASE("Test single procedure with one assign statement (divide expression)")
   program_node = parser.ParseProgram();
 
   // set up expected
-  std::shared_ptr<VariableNode> variable1_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable1_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<CombinationExpressionNode> combination_node =
       std::make_shared<CombinationExpressionNode>(ArithmeticOperator::DIVIDE, variable1_node, constant_node);
 
-  std::shared_ptr<VariableNode> variable2_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable2_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(1, variable2_node, combination_node);
 
@@ -915,12 +915,12 @@ TEST_CASE("Test single procedure with one assign statement (mod expression)") {
   program_node = parser.ParseProgram();
 
   // set up expected
-  std::shared_ptr<VariableNode> variable1_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable1_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<CombinationExpressionNode> combination_node =
       std::make_shared<CombinationExpressionNode>(ArithmeticOperator::MOD, variable1_node, constant_node);
 
-  std::shared_ptr<VariableNode> variable2_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable2_node = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(1, variable2_node, combination_node);
 
@@ -988,8 +988,8 @@ TEST_CASE("Test single procedure with one assign statement (with combination exp
   program_node = parser.ParseProgram();
 
   // set up expected
-  std::shared_ptr<VariableNode> variable_a_node = std::make_shared<VariableNode>("a", "5");
-  std::shared_ptr<VariableNode> variable_b_node = std::make_shared<VariableNode>("b", "5");
+  std::shared_ptr<VariableNode> variable_a_node = std::make_shared<VariableNode>("a", "5", "main");
+  std::shared_ptr<VariableNode> variable_b_node = std::make_shared<VariableNode>("b", "5", "main");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("5");
   std::shared_ptr<CombinationExpressionNode> combination_node =
       std::make_shared<CombinationExpressionNode>(ArithmeticOperator::DIVIDE, variable_b_node, constant_node);
@@ -1022,7 +1022,7 @@ TEST_CASE("Test single procedure with one assign statement (with combination exp
   program_node = parser.ParseProgram();
 
   // set up expected
-  std::shared_ptr<VariableNode> variable_node1 = std::make_shared<VariableNode>("b", "5");
+  std::shared_ptr<VariableNode> variable_node1 = std::make_shared<VariableNode>("b", "5", "main");
   std::shared_ptr<ConstantNode> constant_node1 = std::make_shared<ConstantNode>("5");
   std::shared_ptr<CombinationExpressionNode> combination_node1 =
       std::make_shared<CombinationExpressionNode>(ArithmeticOperator::DIVIDE, variable_node1, constant_node1);
@@ -1031,7 +1031,7 @@ TEST_CASE("Test single procedure with one assign statement (with combination exp
   std::shared_ptr<CombinationExpressionNode> combination_node2 =
       std::make_shared<CombinationExpressionNode>(ArithmeticOperator::PLUS, combination_node1, constant_node2);
 
-  std::shared_ptr<VariableNode> variable_node2 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable_node2 = std::make_shared<VariableNode>("a", "1", "main");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(1, variable_node2, combination_node2);
 

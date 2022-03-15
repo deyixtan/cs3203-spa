@@ -17,7 +17,7 @@ std::string StatementListNode::ToString() {
   return str;
 }
 
-std::string StatementListNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+std::string StatementListNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   std::vector<std::shared_ptr<StatementNode>> stmts = m_statements;
 
   for (int i = 0; i < stmts.size(); ++i) {
@@ -41,7 +41,7 @@ std::string StatementListNode::Process(Populator populator, std::vector<std::str
       }
     }
 
-    stmt->Process(populator, visited, cfg_proc_node, cfg_node);
+    stmt->Process(populator, visited, false, cfg_proc_node, cfg_node);
   }
   return "";
 }

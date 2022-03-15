@@ -168,11 +168,11 @@ PKB *set_up_pkb() {
   pkb->GetParentStore()->AddParent("6", "7");
   pkb->GetParentStore()->AddParent("11", "12");
 
-  pkb->AddPattern("4", "dog", "((((mouse)+((10)*(cat)))-(((dog)/(mouse))*(dragon)))+(((mouse)+(rabbit))-(cat)))");
-  pkb->AddPattern("7", "pig", "((ox)+(cat))");
-  pkb->AddPattern("8", "dragon", "(((dog)*(rabbit))/(mouse))");
-  pkb->AddPattern("10", "snake", "((dog)+(rabbit))");
-  pkb->AddPattern("15", "monkey", "((tiger)+(dog))");
+  pkb->GetPatternStore()->AddStmtWithPattern("4", "dog", "((((mouse)+((10)*(cat)))-(((dog)/(mouse))*(dragon)))+(((mouse)+(rabbit))-(cat)))");
+  pkb->GetPatternStore()->AddStmtWithPattern("7", "pig", "((ox)+(cat))");
+  pkb->GetPatternStore()->AddStmtWithPattern("8", "dragon", "(((dog)*(rabbit))/(mouse))");
+  pkb->GetPatternStore()->AddStmtWithPattern("10", "snake", "((dog)+(rabbit))");
+  pkb->GetPatternStore()->AddStmtWithPattern("15", "monkey", "((tiger)+(dog))");
 
   return pkb;
 }
@@ -743,7 +743,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowStar
 TEST_CASE("Check pattern matching (correct)") {
   PKB *pkb = set_up_pkb();
   
-  std::unordered_set<std::string> actual = pkb->GetStmtWithPattern("pig", "_\"cat\"_");
+  std::unordered_set<std::string> actual = pkb->GetPatternStore()->GetStmtWithPattern("pig", "_\"cat\"_");
   std::unordered_set<std::string> expected = {};
   for (auto const&[key, val] : pattern_to_stmt) {
     if (key.first == "pig" && key.second.find("(cat)") != -1) {
@@ -757,7 +757,7 @@ TEST_CASE("Check pattern matching (correct)") {
 TEST_CASE("Check pattern matching (wrong)") {
   PKB *pkb = set_up_pkb();
   
-  std::unordered_set<std::string> actual = pkb->GetStmtWithPattern("dog", "rabbit - cat");
+  std::unordered_set<std::string> actual = pkb->GetPatternStore()->GetStmtWithPattern("dog", "rabbit - cat");
   std::unordered_set<std::string> expected = {};
   for (auto const&[key, val] : pattern_to_stmt) {
     if (key.first == "dog" && key.second.find("((rabbit)-(cat))") != -1) {
@@ -772,7 +772,7 @@ TEST_CASE("Check pattern matching (wrong)") {
 TEST_CASE("Check pattern synonym matching exact (correct)") {
   PKB *pkb = set_up_pkb();
   
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetStmtWithPatternSynonym("dog");
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetPatternStore()->GetStmtWithPatternSynonym("dog");
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected;
   for (auto i : pattern_pairs) {
     if (i.second == "(dog)") {
@@ -787,7 +787,7 @@ TEST_CASE("Check pattern synonym matching partial (correct)") {
   PKB *pkb = set_up_pkb();
   
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
-      actual = pkb->GetStmtWithPatternSynonym("_\"dog\"_");
+      actual = pkb->GetPatternStore()->GetStmtWithPatternSynonym("_\"dog\"_");
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected;
   for (auto i : pattern_pairs) {
     if (i.second.find("(dog)") != std::string::npos) {
