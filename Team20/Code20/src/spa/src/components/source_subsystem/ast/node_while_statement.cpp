@@ -56,6 +56,7 @@ std::string WhileStatementNode::Process(Populator populator, std::vector<std::st
 
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
+
   while_block->Process(populator, visited, cfg_proc_node, body_group_node);
 
   cfg_proc_node->AddNode(while_node);

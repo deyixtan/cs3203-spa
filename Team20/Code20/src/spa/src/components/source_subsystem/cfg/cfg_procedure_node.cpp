@@ -21,6 +21,10 @@ std::shared_ptr<CfgGroupNode> CfgProcedureNode::GetLastNode() {
 }
 
 void CfgProcedureNode::AddNode(std::shared_ptr<CfgGroupNode> cfg_node) {
+  if (m_root == nullptr || m_last == nullptr) {
+    m_root = cfg_node;
+    m_last = cfg_node;
+  }
   m_last->SetNext(cfg_node);
   m_last = cfg_node;
 }
