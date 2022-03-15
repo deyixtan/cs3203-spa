@@ -60,15 +60,3 @@ std::unordered_map<PqlTokenType, DesignEntityType> token_design_map {
     {PqlTokenType::CONSTANT, DesignEntityType::CONSTANT},
 };
 
-std::unordered_map<DesignEntityType, PqlTokenType> reverse_token_design_map {
-    {DesignEntityType::STMT, PqlTokenType::STMT},
-    {DesignEntityType::ASSIGN, PqlTokenType::ASSIGN},
-    {DesignEntityType::PRINT, PqlTokenType::PRINT},
-    {DesignEntityType::PROCEDURE, PqlTokenType::PROCEDURE},
-    {DesignEntityType::READ, PqlTokenType::READ},
-    {DesignEntityType::CALL, PqlTokenType::CALL},
-    {DesignEntityType::WHILE, PqlTokenType::WHILE},
-    {DesignEntityType::IF, PqlTokenType::IF},
-    {DesignEntityType::VARIABLE, PqlTokenType::VARIABLE},
-    {DesignEntityType::CONSTANT, PqlTokenType::CONSTANT},
-};
