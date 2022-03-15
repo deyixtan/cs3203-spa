@@ -12,7 +12,7 @@ class ReadStatementNode : public StatementNode {
   ReadStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier);
   [[nodiscard]] std::shared_ptr<VariableNode> GetIdentifier();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) override;
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
