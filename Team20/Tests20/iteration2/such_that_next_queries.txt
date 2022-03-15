@@ -1,0 +1,588 @@
+1 - Basic
+procedure p;
+Select p such that Next(1,2)
+main
+5000
+2 - Basic
+procedure p;
+Select p such that Next(1,3)
+main
+5000
+3 - Basic
+procedure p;
+Select p such that Next(3,4)
+main
+5000
+4 - Basic
+procedure p;
+Select p such that Next(6,5)
+main
+5000
+5 - Basic
+procedure p;
+Select p such that Next(2,4)
+main
+5000
+6 - Basic
+procedure p;
+Select p such that Next(5,8)
+main
+5000
+7 - Basic
+procedure p;
+Select p such that Next(4,7)
+main
+5000
+8 - Basic
+procedure p;
+Select p such that Next(5,6)
+main
+5000
+9 - Basic
+procedure p;
+Select p such that Next(8,9)
+main
+5000
+10 - Basic
+procedure p;
+Select p such that Next(8,10)
+main
+5000
+11 - Basic
+procedure p;
+Select p such that Next(9,12)
+main
+5000
+12 - Basic
+procedure p;
+Select p such that Next(10,12)
+main
+5000
+13 - Basic
+procedure p;
+Select p such that Next(10,11)
+main
+5000
+14 - Basic
+procedure p;
+Select p such that Next(11,10)
+main
+5000
+15 - Basic
+procedure p;
+Select p such that Next(9,12)
+main
+5000
+16 - Basic
+procedure p;
+Select p such that Next(10,12)
+main
+5000
+17 - Basic
+procedure p;
+Select p such that Next(12,13)
+main
+5000
+18 - Basic
+procedure p;
+Select p such that Next(12,15)
+main
+5000
+19 - Basic
+procedure p;
+Select p such that Next(13,14)
+main
+5000
+20 - Basic
+procedure p;
+Select p such that Next(13,17)
+main
+5000
+21 - Basic
+procedure p;
+Select p such that Next(14,13)
+main
+5000
+22 - Basic
+procedure p;
+Select p such that Next(15,16)
+main
+5000
+23 - Basic
+procedure p;
+Select p such that Next(15,17)
+main
+5000
+24 - Basic
+procedure p;
+Select p such that Next(16,15)
+main
+5000
+25 - Basic
+procedure p;
+Select p such that Next(17,18)
+main
+5000
+26 - Basic
+procedure p;
+Select p such that Next(17,21)
+main
+5000
+27 - Basic
+procedure p;
+Select p such that Next(18,19)
+main
+5000
+28 - Basic
+procedure p;
+Select p such that Next(18,20)
+main
+5000
+29 - Basic
+procedure p;
+Select p such that Next(21,22)
+main
+5000
+30 - Basic
+procedure p;
+Select p such that Next(21,23)
+main
+5000
+31 - Basic
+procedure p;
+Select p such that Next(57,59)
+main
+5000
+32 - Basic
+procedure p;
+Select p such that Next(19,24)
+main
+5000
+33 - Basic
+procedure p;
+Select p such that Next(20,24)
+main
+5000
+34 - Basic
+procedure p;
+Select p such that Next(22,24)
+main
+5000
+35 - Basic
+procedure p;
+Select p such that Next(23,24)
+main
+5000
+36 - Basic
+procedure p;
+Select p such that Next(24,25)
+main
+5000
+37 - Basic
+procedure p;
+Select p such that Next(24,26)
+main
+5000
+38 - Basic
+procedure p;
+Select p such that Next(26,27)
+main
+5000
+39 - Basic
+procedure p;
+Select p such that Next(26,28)
+main
+5000
+40 - Basic
+procedure p;
+Select p such that Next(25,29)
+main
+5000
+41 - Basic
+procedure p;
+Select p such that Next(27,29)
+main
+5000
+42 - Basic
+procedure p;
+Select p such that Next(28,29)
+main
+5000
+43 - Basic
+procedure p;
+Select p such that Next(29,30)
+main
+5000
+44 - Basic
+procedure p;
+Select p such that Next(29,33)
+main
+5000
+45 - Basic
+procedure p;
+Select p such that Next(30,31)
+main
+5000
+46 - Basic
+procedure p;
+Select p such that Next(30,32)
+main
+5000
+47 - Basic
+procedure p;
+Select p such that Next(33,34)
+main
+5000
+48 - Basic
+procedure p;
+Select p such that Next(31,34)
+main
+5000
+49 - Basic
+procedure p;
+Select p such that Next(32,34)
+main
+5000
+50 - Basic
+procedure p;
+Select p such that Next(34,35)
+main
+5000
+51 - Basic
+procedure p;
+Select p such that Next(34,38)
+main
+5000
+52 - Basic
+procedure p;
+Select p such that Next(35,36)
+main
+5000
+53 - Basic
+procedure p;
+Select p such that Next(35,37)
+main
+5000
+54 - Basic
+procedure p;
+Select p such that Next(38,39)
+main
+5000
+55 - Basic
+procedure p;
+Select p such that Next(38,40)
+main
+5000
+56 - Basic
+procedure p;
+Select p such that Next(61,62)
+main
+5000
+57 - Basic
+procedure p;
+Select p such that Next(61,85)
+main
+5000
+58 - Basic
+procedure p;
+Select p such that Next(64,65)
+main
+5000
+59 - Basic
+procedure p;
+Select p such that Next(64,82)
+main
+5000
+60 - Call back while loop
+procedure p;
+Select p such that Next(84,82)
+main
+5000
+61 - Skip nodes
+procedure p;
+Select p such that Next(127,133)
+none
+5000
+62 - Basic
+procedure p;
+Select p such that Next(67,68)
+main
+5000
+63 - Basic
+procedure p;
+Select p such that Next(67,73)
+main
+5000
+64 - Basic
+procedure p;
+Select p such that Next(69,70)
+main
+5000
+65 - Basic
+procedure p;
+Select p such that Next(69,72)
+main
+5000
+66 - Deep nest with many dummy nodes between
+procedure p;
+Select p such that Next(71,95)
+main
+5000
+67 - Deep nest with many dummy nodes between
+procedure p;
+Select p such that Next(72,95)
+main
+5000
+68 - Deep nest with many dummy nodes between
+procedure p;
+Select p such that Next(81,95)
+main
+5000
+69 - Single level dummy nodes
+procedure p;
+Select p such that Next(97,103)
+main
+5000
+70 - Single level dummy nodes
+procedure p;
+Select p such that Next(99,103)
+main
+5000
+71 - Single level dummy nodes
+procedure p;
+Select p such that Next(101,103)
+main
+5000
+72 - Single level dummy nodes
+procedure p;
+Select p such that Next(102,103)
+main
+5000
+73 - Deep nested while loop
+procedure p;
+Select p such that Next(107,106)
+main
+5000
+74 - Deep nested while loop
+procedure p;
+Select p such that Next(106,105)
+main
+5000
+75 - Deep nested while loop
+procedure p;
+Select p such that Next(105,104)
+main
+5000
+76 - Deep nested while loop
+procedure p;
+Select p such that Next(104,103)
+main
+5000
+77 - Exiting deep nested while loop
+procedure p;
+Select p such that Next(103,108)
+main
+5000
+78 - Same level
+procedure p;
+Select p such that Next(110,111)
+main
+5000
+79
+procedure p;
+Select p such that Next(111,112)
+main
+5000
+80 - Dummy to start of while loop
+procedure p;
+Select p such that Next(112,110)
+main
+5000
+81 - Dummy to start of while loop
+procedure p;
+Select p such that Next(113,110)
+main
+5000
+82 - Multiple dummies to start of while loop
+procedure p;
+Select p such that Next(117,114)
+main
+5000
+83 - Multiple dummies to start of while loop
+procedure p;
+Select p such that Next(118,114)
+main
+5000
+84 - Multiple dummies to start of while loop
+procedure p;
+Select p such that Next(132,127)
+main
+5000
+85 - Multiple dummies to start of while loop
+procedure p;
+Select p such that Next(136,134)
+main
+5000
+86 - Skip while loop body
+procedure p;
+Select p such that Next(134,142)
+main
+5000
+87 - Call on same node without while
+procedure p
+Select p such that Next(1,1)
+none
+5000
+88 - Call on same node with while
+procedure p
+Select p such that Next(92,92)
+none
+5000
+89 - Skip nodes
+procedure p
+Select p such that Next(1,4)
+none
+5000
+90 - Skip nodes
+procedure p
+Select p such that Next(2,5)
+none
+5000
+91 - Skip nodes
+procedure p
+Select p such that Next(2,7)
+none
+5000
+92 - Skip nodes
+procedure p
+Select p such that Next(1,6)
+none
+5000
+93 - Skip nodes
+procedure p
+Select p such that Next(3,8)
+none
+5000
+94 - Skip nodes with dummy between
+procedure p
+Select p such that Next(26,29)
+none
+5000
+95 - Skip nodes
+procedure p
+Select p such that Next(79,81)
+none
+5000
+96 - Skip nodes in deep nested while loop
+procedure p
+Select p such that Next(107,105)
+none
+5000
+97 - Skip nodes in deep nested while loop
+procedure p
+Select p such that Next(106,104)
+none
+5000
+98 - Skip nodes in deep nested while loop
+procedure p
+Select p such that Next(103,105)
+none
+5000
+99 - Skip nodes in deep nested while loop
+procedure p
+Select p such that Next(105,107)
+none
+5000
+100 - Skip nodes in deep nested while loop
+procedure p
+Select p such that Next(104,108)
+none
+101 - Skip while body and skip nodes
+procedure p
+Select p such that Next(120,128)
+none
+102 - Invalid
+procedure p;
+Select p such that Next(142,147)
+none
+5000
+103 - Invalid
+procedure p;
+Select p such that Next(0,1)
+none
+5000
+104 - Double wildcard
+procedure p;
+Select p such that Next(_,_)
+main
+5000
+105 - Synonym and wildcard
+procedure p; stmt s;
+Select p such that Next(s,_)
+main
+5000
+106 - Synonym and wildcard
+procedure p; stmt s;
+Select p such that Next(_,s)
+main
+5000
+107 - Double same synonym
+stmt s;
+Select s such that Next(s,s)
+none
+5000
+108 - Double same synonym
+procedure p; stmt s;
+Select p such that Next(s,s)
+none
+5000
+109 - Double same synonym
+assign a;
+Select s such that Next(a,a)
+none
+5000
+110 - Double same synonym
+procedure p; assign a;
+Select p such that Next(a,a)
+none
+5000
+111 - Double same synonym
+print pn;
+Select pn such that Next(pn,pn)
+none
+5000
+112 - Double same synonym
+procedure p; print pn;
+Select p such that Next(pn,pn)
+none
+5000
+113 - Double same synonym
+while w;
+Select w such that Next(w,w)
+none
+5000
+114 - Double same synonym
+procedure p; while w;
+Select p such that Next(w,w)
+none
+5000
+115 - Double same synonym
+read r;
+Select r such that Next(r,r)
+none
+5000
+116 - Double same synonym
+procedure p; read r;
+Select p such that Next(r,r)
+none
+5000
+117 - Double same synonym
+while w1, w2;
+Select w1 such that Next(w1,w2)
+97,103,104,105,106,107,108,109,110,114,120,124,127,130,134,145
+5000
+118 - Double same synonym
+procedure p; while w1, w2;
+Select p such that Next(w1,w2)
+main
+5000
