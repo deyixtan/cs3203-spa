@@ -21,14 +21,14 @@ class PKB {
   std::shared_ptr<ModifyStore> m_modify_store;
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;
   std::unordered_map<std::string, std::pair<std::string, std::string>> m_pattern_map;
-  std::shared_ptr<source::ProgramCfg> m_program_cfg;
+  std::shared_ptr<source::CfgProgramNode> m_program_cfg;
 
  public:
   PKB();
   void InitRelationshipStores();
   void AddStmt(std::string const &name, StmtType type);
   void AddPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs);
-  void AddProgramCfg(std::shared_ptr<source::ProgramCfg> program_cfg);
+  void AddProgramCfg(std::shared_ptr<source::CfgProgramNode> program_cfg);
   [[nodiscard]] std::unordered_set<std::string> GetStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::string> GetStmtWithPattern(std::string const &lhs, std::string rhs);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>,

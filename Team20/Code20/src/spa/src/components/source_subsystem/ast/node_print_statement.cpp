@@ -24,7 +24,7 @@ bool PrintStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier);
 }
 
-std::string PrintStatementNode::Process(Populator populator, std::vector<std::string>* visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+std::string PrintStatementNode::Process(Populator populator, std::vector<std::string>* visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   populator.PopulateStmt(stmt_num);
   std::string var_name = m_identifier->GetIdentifier();

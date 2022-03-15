@@ -2,10 +2,10 @@
 
 namespace source {
 
-ProgramCfg::ProgramCfg(std::unordered_map<std::string, std::shared_ptr<CfgGroupNode>> procedure_map) :
+CfgProgramNode::CfgProgramNode(std::unordered_map<std::string, std::shared_ptr<CfgProcedureNode>> procedure_map) :
     m_procedure_map(procedure_map) {}
 
-std::unordered_map<std::string, std::shared_ptr<CfgGroupNode>> ProgramCfg::GetProcedureCfg() {
+std::unordered_map<std::string, std::shared_ptr<CfgProcedureNode>> CfgProgramNode::GetProcedureCfg() {
   return m_procedure_map;
 }
 

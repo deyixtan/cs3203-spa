@@ -31,7 +31,7 @@ bool AssignStatementNode::operator==(const StatementNode &other) const {
       && *m_expression == *(casted_other->m_expression);
 }
 
-std::string AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+std::string AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   std::string var_name = "";
   populator.PopulateStmt(stmt_num);
@@ -42,7 +42,7 @@ std::string AssignStatementNode::Process(Populator populator, std::vector<std::s
   }
   populator.PopulateModifies(stmt_num, var_name);
 
-  std::string rhs_expr = m_expression->Process(populator, visited, cfg_node);
+  std::string rhs_expr = m_expression->Process(populator, visited, cfg_proc_node, cfg_node);
   populator.AddPattern(stmt_num, var_name, rhs_expr);
 
   populator.PopulateAssign(stmt_num);
