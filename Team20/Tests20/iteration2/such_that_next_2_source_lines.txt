@@ -1,0 +1,32 @@
+procedure main {
+  a = 2;
+  while (i != 0) {
+    a = a - 1;
+    if (a == 1) then {
+      z = z + 1 * 5;
+    } else {
+      a = z + a - 1;
+    }
+    z = z + a + i;
+    call bar;
+    i = i - 1;
+  }
+  call foo;
+  print x;
+  print y;
+  while (a < 0) {
+    while (x == y) {
+      b = x * 2;
+      x = a / 2;
+      read x;
+    }
+  }
+}
+
+procedure bar {
+  call foo;
+}
+
+procedure foo {
+  print lol;
+}

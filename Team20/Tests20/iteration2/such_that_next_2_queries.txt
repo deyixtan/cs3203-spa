@@ -1,0 +1,300 @@
+1
+stmt s1, s2;
+Select s1 such that Next(s1, s2)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+5000
+2
+stmt s1, s2;
+Select s1 such that Next(s2, s1)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+5000
+3
+stmt s1, s2;
+Select s2 such that Next(1, s2)
+2
+5000
+4
+stmt s1, s2;
+Select s1 such that Next(s1, 7)
+5, 6
+5000
+5
+stmt s1, s2;
+Select s1 such that Next(_, 5)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+6
+stmt s1, s2;
+Select s2 such that Next(5, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+7
+stmt s1, s2;
+Select s2 such that Next(_, s2)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+5000
+8
+stmt s1, s2;
+Select s1 such that Next(s1, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+5000
+9
+stmt s1, s2;
+Select s1 such that Next(_, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+10
+assign a; stmt s1, s2;
+Select a such that Next(s1, s2)
+1, 3, 5, 6, 7, 9, 15, 16
+5000
+11
+read r; stmt s1, s2;
+Select r such that Next(s1, s2)
+17
+5000
+12
+print pn; stmt s1, s2;
+Select pn such that Next(s1, s2)
+11, 12, 19
+5000
+13
+if ifs; stmt s1, s2;
+Select ifs such that Next(s1, s2)
+4
+5000
+14
+while w; stmt s1, s2;
+Select w such that Next(s1, s2)
+2, 13, 14
+5000
+15
+variable v; stmt s1, s2;
+Select v such that Next(s1, s2)
+x, i, z, a, b, y, help
+5000
+16
+constant c; stmt s1, s2;
+Select c such that Next(s1, s2)
+2, 0, 1, 5
+5000
+17
+stmt s1, s2;
+Select BOOLEAN such that Next(s1, s2)
+TRUE
+5000
+18
+stmt s1, s2;
+Select s1 such that Next(s1, s2)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+19
+call cl; stmt s1, s2;
+Select cl such that Next(s1, s2)
+8, 10, 18
+5000
+20
+procedure p; stmt s1, s2;
+Select p such that Next(s1, s2)
+main, foo, bar
+5000
+21
+assign a; stmt s1, s2;
+Select a such that Next(3, 1)
+none
+5000
+22
+assign a; stmt s1, s2;
+Select a such that Next(1, 3)
+none
+5000
+23
+stmt s1, s2;
+Select s1 such that Next(1, 2)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+24
+stmt s1, s2;
+Select s1 such that Next(2, 1)
+none
+5000
+25
+stmt s1, s2;
+Select s1 such that Next(1, 1)
+none
+5000
+26
+stmt s1, s2;
+Select s1 such that Next(s1, s1)
+none
+5000
+27
+call cl; stmt s1, s2;
+Select s2 such that Next(cl, cl)
+none
+5000
+28
+assign a; stmt s1, s2;
+Select s2 such that Next(a, a)
+none
+5000
+29
+read r; stmt s1, s2;
+Select s1 such that Next(r, r)
+none
+5000
+30
+print pn; stmt s1, s2;
+Select s1 such that Next(pn, pn)
+none
+5000
+31
+if ifs; stmt s1, s2;
+Select s1 such that Next(ifs, ifs)
+none
+5000
+32
+while w; stmt s1, s2;
+Select s2 such that Next(w, w)
+none
+5000
+33
+variable v; stmt s1, s2;
+Select s2 such that Next(v, v)
+none
+5000
+34
+constant c; stmt s1, s2;
+Select s2 such that Next(c, c)
+none
+5000
+35
+stmt s1, s2;
+Select s2 such that Next(s1, s1)
+none
+5000
+36
+procedure p; stmt s1, s2;
+Select s1 such that Next(p, p)
+none
+5000
+37
+stmt s1, s2;
+Select s such that Next(1, 2)
+none
+5000
+38
+stmt s1, s2;
+Select s such that Next(s1, s2)
+none
+5000
+39 - Negative Select 1 such that Next(1, 2) wrong select synonym
+read r; stmt s1, s2;
+Select 0 such that Next(1, 2)
+none
+5000
+40 - Negative Select 1 such that Next(s1, s2) wrong select synonym
+read r; stmt s1, s2;
+Select 0 such that Next(s1, s2)
+none
+5000
+41
+constant c; stmt s1, s2;
+Select s2 such that Next(c, s2)
+none
+5000
+42
+read r; stmt s1, s2;
+Select s1 such that Next(s1, n3)
+none
+5000
+43
+read r; stmt s1, s2;
+Select s1 such that Next(s1, s1)
+none
+5000
+44
+stmt s1, s2;
+Select s2 such that Next(n3, s2)
+none
+5000
+45
+stmt s1, s2;
+Select s1 such that Next("w", s2)
+none
+5000
+46
+stmt s1, s2;
+Select s2 such that Next(s1, "w")
+none
+5000
+47
+stmt s1, s2;
+Select s1 such that Next("s1", "s2")
+none
+5000
+48
+stmt s1, s2;
+Select a such that Next("s1", "s2")
+none
+5000
+49
+stmt s1, s2;
+Select s1 suc that Next(s1, s2)
+none
+5000
+50
+stmt s1, s2;
+Select s1 suchthat Next(s1, s2)
+none
+5000
+51
+stmt s1, s2;
+Select s1 such that Next(s1, 5)
+4
+5000
+52
+stmt s1, s2;
+Select s2 such that Next(5, s2)
+7
+5000
+53
+assign a; stmt s1, s2;
+Select s2 such that Next(a, s2)
+2, 4, 7, 8, 16, 17
+5000
+54
+call cl; stmt s1, s2;
+Select s2 such that Next(cl, s2)
+9, 11
+5000
+55
+while w; stmt s1, s2;
+Select s2 such that Next(w, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+56
+constant c; stmt s1, s2;
+Select s2 such that Next(c, 6)
+none
+5000
+57
+assign a; stmt s1, s2;
+Select s1 such that Next(s1, a)
+2, 4, 5, 6, 8, 14, 15
+5000
+58
+call cl; stmt s1, s2;
+Select s1 such that Next(s1, cl)
+7, 2
+5000
+59
+while w; stmt s1, s2;
+Select s1 such that Next(_, w)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+5000
+60
+constant c; stmt s1, s2;
+Select s1 such that Next(6, c)
+none
+5000
