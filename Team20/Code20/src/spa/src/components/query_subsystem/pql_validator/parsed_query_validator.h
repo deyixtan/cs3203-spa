@@ -25,6 +25,7 @@ class ParsedQueryValidator {
   bool ValidatePatternClause(ParsedQuery);
   bool ValidatePatternSynonymIsAssigned(ParsedQuery);
   bool ValidatePatternArguments(ParsedQuery);
+  bool ValidateAttribute(PqlToken, std::unordered_map<std::string, DesignEntityType>);
 };
 
 };

@@ -12,16 +12,54 @@ bool ParsedQueryValidator::ValidateQuery(ParsedQuery query) {
       && ValidatePatternClause(query);
 }
 
+bool ParsedQueryValidator::ValidateAttribute(PqlToken token, std::unordered_map<std::string, DesignEntityType> declarations) {
+  static std::pair<std::pair<DesignEntityType, std::string>, AtrriName> parsed_attribute = Utils::ParseAttributeRef(token, declarations);
+  if (parsed_attribute.first.first == DesignEntityType::PROCEDURE) {
+    if (parsed_attribute.second != AtrriName::PROCNAME) {
+      return false;
+    }
+  } else if (parsed_attribute.first.first == DesignEntityType::STMT ||
+      parsed_attribute.first.first == DesignEntityType::WHILE ||
+      parsed_attribute.first.first == DesignEntityType::IF ||
+      parsed_attribute.first.first == DesignEntityType::ASSIGN) {
+    if (parsed_attribute.second != AtrriName::STMTNO) {
+      return false;
+    }
+  } else if (parsed_attribute.first.first == DesignEntityType::CONSTANT) {
+    if (parsed_attribute.second != AtrriName::VALUE) {
+      return false;
+    }
+  } else if (parsed_attribute.first.first == DesignEntityType::READ ||
+      parsed_attribute.first.first == DesignEntityType::PRINT) {
+    if (parsed_attribute.second != AtrriName::VARNAME &&
+        parsed_attribute.second != AtrriName::STMTNO) {
+      return false;
+    }
+  } else if (parsed_attribute.first.first == DesignEntityType::CALL) {
+    if (parsed_attribute.second != AtrriName::PROCNAME &&
+        parsed_attribute.second != AtrriName::STMTNO) {
+      return false;
+    }
+  }
+}
+
 bool ParsedQueryValidator::ValidateResultClauseDeclared(ParsedQuery query) {
   std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
   ResultClause result_clause = query.GetResultClause();
 
   for (auto token : result_clause.GetValues()) {
-    if (declarations.find(token.value) == declarations.end()) {
-      return false;
+    if (token.type == PqlTokenType::SYNONYM) {
+      if (declarations.find(token.value) == declarations.end()) {
+        return false;
+      }
+    } else if (token.type == PqlTokenType::ATTRIBUTE) {
+      std::pair<std::string, AtrriName> parsedAttribute = Utils::ParseAttributeRef(token);
+      if (declarations.find(parsedAttribute.first) == declarations.end()) {
+        return false;
+      }
+      return ValidateAttribute(token, declarations);
     }
   }
-
   return true;
 }
 

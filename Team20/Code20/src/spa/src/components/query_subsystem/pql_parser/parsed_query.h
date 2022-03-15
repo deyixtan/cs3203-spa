@@ -6,21 +6,9 @@
 #include "pattern.h"
 #include "with_clause.h"
 #include "result_clause.h"
+#include "../utils.h"
 
 #include <optional>
-
-enum class DesignEntityType {
-  STMT,
-  READ,
-  PRINT,
-  CALL,
-  WHILE,
-  IF,
-  ASSIGN,
-  VARIABLE,
-  CONSTANT,
-  PROCEDURE
-};
 
 class ParsedQuery {
  private:
@@ -45,6 +33,5 @@ class ParsedQuery {
 };
 
 extern std::unordered_map<PqlTokenType, DesignEntityType> token_design_map;
-extern std::unordered_map<DesignEntityType, PqlTokenType> reverse_token_design_map;
 
 #endif
