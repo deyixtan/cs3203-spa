@@ -9,10 +9,12 @@ namespace source {
 
 class CfgProcedureNode {
  private:
-  std::vector<std::shared_ptr<CfgGroupNode>> m_nodes;
+  std::shared_ptr<CfgGroupNode> m_root;
+  std::shared_ptr<CfgGroupNode> m_last;
 
  public:
   CfgProcedureNode();
+  [[ndiscard]] std::shared_ptr<CfgGroupNode> GetRootNode();
   [[ndiscard]] std::shared_ptr<CfgGroupNode> GetLastNode();
   void AddNode(std::shared_ptr<CfgGroupNode> cfg_node);
 };

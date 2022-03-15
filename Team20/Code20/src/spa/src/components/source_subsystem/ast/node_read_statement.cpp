@@ -36,6 +36,10 @@ std::string ReadStatementNode::Process(Populator populator, std::vector<std::str
   }
   populator.PopulateModifies(stmt_num, var_name);
   populator.PopulateParentStar(stmt_num, *visited);
-  cfg_node->GetNodes().push_back(GetStatementNumber());
+  if (cfg_node == nullptr) {
+    cfg_proc_node->GetLastNode()->GetNodes().emplace_back(GetStatementNumber());
+  } else {
+    cfg_node->GetNodes().emplace_back(GetStatementNumber());
+  }
   return "";
 }

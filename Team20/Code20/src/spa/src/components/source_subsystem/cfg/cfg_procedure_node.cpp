@@ -2,17 +2,27 @@
 
 namespace source {
 
-CfgProcedureNode::CfgProcedureNode() : m_nodes(std::vector<std::shared_ptr<CfgGroupNode>>()) {}
+CfgProcedureNode::CfgProcedureNode() : m_root() {}
+
+std::shared_ptr<CfgGroupNode> CfgProcedureNode::GetRootNode() {
+  if (m_root == nullptr) {
+    m_root = std::make_shared<CfgGroupNode>();
+    m_last = m_root;
+  }
+  return m_root;
+}
 
 std::shared_ptr<CfgGroupNode> CfgProcedureNode::GetLastNode() {
-  if (m_nodes.size() == 0) {
-    throw std::runtime_error("Unable to get last node.");
+  if (m_last == nullptr) {
+    m_last = std::make_shared<CfgGroupNode>();
+    m_root = m_last;
   }
-  return m_nodes.back();
+  return m_last;
 }
 
 void CfgProcedureNode::AddNode(std::shared_ptr<CfgGroupNode> cfg_node) {
-  m_nodes.emplace_back(cfg_node);
+  m_last->SetNext(cfg_node);
+  m_last = cfg_node;
 }
 
 }

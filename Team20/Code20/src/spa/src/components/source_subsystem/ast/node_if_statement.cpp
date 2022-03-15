@@ -77,15 +77,22 @@ std::string IfStatementNode::Process(Populator populator, std::vector<std::strin
   std::shared_ptr<source::CfgGroupNode> if_group_node = std::make_shared<source::CfgGroupNode>();
   std::shared_ptr<source::CfgGroupNode> else_group_node = std::make_shared<source::CfgGroupNode>();
   std::shared_ptr<source::CfgIfNode> if_node = std::make_shared<source::CfgIfNode>(source::CfgNode(GetStatementNumber()), if_group_node, else_group_node);
-  cfg_node->SetNext(if_node);
 
   m_condition->Process(populator, visited, cfg_proc_node, if_node);
+
   std::shared_ptr<StatementListNode> if_block = m_if_stmt_list;
   std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;
   std::vector<std::shared_ptr<StatementNode>> if_stmts = m_if_stmt_list->GetStatements();
   std::vector<std::shared_ptr<StatementNode>> else_stmts =  m_else_stmt_list->GetStatements();
   if_block->Process(populator, visited, cfg_proc_node, if_group_node);
   else_block->Process(populator, visited, cfg_proc_node, else_group_node);
+
+  std::shared_ptr<source::CfgGroupNode> dest_node = std::make_shared<source::CfgGroupNode>();
+  if_group_node->SetNext(dest_node);
+  else_group_node->SetNext(dest_node);
+
+  cfg_proc_node->AddNode(if_node);
+  cfg_proc_node->AddNode(dest_node);
 
   populator.PopulateIf(stmt_num);
   populator.PopulateParentStar(if_stmt_num, *visited);

@@ -12,8 +12,7 @@ void DesignExtractor::TraverseAst() {
     std::vector<std::string> visited;
     source::CfgGroupNode cfg_root = source::CfgGroupNode();
     std::shared_ptr<source::CfgProcedureNode> cfg_proc_node_ptr = std::make_shared<source::CfgProcedureNode>();
-    std::shared_ptr<source::CfgGroupNode> cfg_node_ptr = std::make_shared<source::CfgGroupNode>(cfg_root);
-    proc->Process(populator, &visited, cfg_proc_node_ptr, cfg_node_ptr);
+    proc->Process(populator, &visited, cfg_proc_node_ptr, nullptr);
     procedure_map.insert({proc->GetIdentifier(), cfg_proc_node_ptr});
   }
 
