@@ -17,13 +17,15 @@ std::string StatementListNode::ToString() {
   return str;
 }
 
-std::string StatementListNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+std::string StatementListNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   std::vector<std::shared_ptr<StatementNode>> stmts = m_statements;
 
   for (int i = 0; i < stmts.size(); ++i) {
     std::shared_ptr<StatementNode> stmt = stmts[i];
     std::string stmt_num = std::to_string(stmt->GetStatementNumber());
     std::string var_name = "";
+    if (visited->size() > 0)
+      populator.PopulateParent(visited->back(), stmt_num);
 
     if (stmt != stmts.back()) {
       int curr_stmt = stmt->GetStatementNumber();
@@ -39,7 +41,7 @@ std::string StatementListNode::Process(Populator populator, std::vector<std::str
       }
     }
 
-    stmt->Process(populator, visited, cfg_node);
+    stmt->Process(populator, visited, cfg_proc_node, cfg_node);
   }
   return "";
 }
