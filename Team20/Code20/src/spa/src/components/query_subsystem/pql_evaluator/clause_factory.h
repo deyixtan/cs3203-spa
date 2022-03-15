@@ -17,7 +17,7 @@ class ClauseFactory {
   static std::unique_ptr<Clause> Create(Relationship relationship, std::unordered_map<std::string, DesignEntityType> declarations, PKB *pkb);
   static std::unique_ptr<Clause> Create(Pattern pattern, PKB *pkb);
   static std::unique_ptr<Clause> Create(PqlToken selected_synonym, std::unordered_map<std::string, DesignEntityType> declarations, PKB *pkb);
-
+  static std::unique_ptr<Clause> Create(With with, std::unordered_map<std::string, DesignEntityType> declarations, PKB *pkb);
  private:
   static PKB *pkb;
 };
