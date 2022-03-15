@@ -4,49 +4,17 @@
 #include <unordered_set>
 
 #include "components/pkb/pkb.h"
-#include "components/pkb/stores/usage_store.h"
+#include "populator.h"
 #include "components/source_subsystem/ast/node_program.h"
-#include "components/source_subsystem/ast/node_read_statement.h"
-#include "components/source_subsystem/ast/node_print_statement.h"
-#include "components/source_subsystem/ast/node_while_statement.h"
-#include "components/source_subsystem/ast/node_if_statement.h"
-#include "components/source_subsystem/ast/node_assign_statement.h"
-#include "components/source_subsystem/ast/node_combination_expression.h"
-#include "components/source_subsystem/ast/node_constant.h"
-#include "components/source_subsystem/ast/node_boolean_expression.h"
-#include "components/source_subsystem/ast/node_not_expression.h"
-#include "components/source_subsystem/ast/node_relational_expression.h"
-#include "components/query_subsystem/pql_lexer/pql_token.h"
+#include "cfg/cfg_program_node.h"
 
 class DesignExtractor {
  private:
   ProgramNode root_node;
-  PKB *pkb;
+  Populator populator;
 
-  void ProcNodeHandler(std::vector<std::string> visited, std::shared_ptr<ProcedureNode> proc, std::shared_ptr<StatementListNode> stmtLst);
-  void ExprNodeHandler(std::vector<std::string> visited, std::shared_ptr<ProcedureNode> proc, std::string stmt, std::shared_ptr<ExpressionNode> expr);
-  std::string ExprNodeHandler(std::vector<std::string> visited, std::shared_ptr<ProcedureNode> proc, std::string stmt, std::shared_ptr<ExpressionNode> expr, int direction, std::string pattern);
-  void CondExprNodeHandler(std::vector<std::string> visited, std::shared_ptr<ProcedureNode> proc, std::string stmt, std::shared_ptr<ConditionalExpressionNode> if_stmt_cond);
-
-  void PopulateParent(std::string stmt1, std::string stmt2);
-  void PopulateParentStar(std::string stmt, std::vector<std::string> visited);
-  void PopulateFollows(std::string stmt1, std::string stmt2);
-  void PopulateFollowsStar(std::vector<std::shared_ptr<StatementNode>> stmts_lst, int index);
-  void PopulateUses(std::string stmt, std::string var);
-  void PopulateUsesProc(std::string proc, std::string var);
-  void PopulateModifies(std::string stmt, std::string var);
-  void PopulateModifiesProc(std::string proc, std::string var);
-  void PopulateProc(std::string name);
-  void PopulateAssign(std::string stmt);
-  void PopulateStmt(std::string stmt);
-  void PopulateRead(std::string stmt);
-  void PopulatePrint(std::string stmt);
-  void PopulateVars(std::string var);
-  void PopulateWhile(std::string stmt);
-  void PopulateIf(std::string stmt);
-  void PopulateConst(std::string name);
  public:
-  DesignExtractor(ProgramNode root_node, PKB *pkb);
+  DesignExtractor(ProgramNode root_node, Populator populator);
   void TraverseAst();
 };
 

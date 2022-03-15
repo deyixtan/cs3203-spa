@@ -29,6 +29,20 @@ void StatementStore::AddVarHelper(std::string index,
   }
 }
 
+void StatementStore::AddPattern(StmtType type, std::string const &stmt, std::string const &first, std::string const &second) {
+  switch (type) {
+    case StmtType::STMT:
+      m_stmt_pattern_map[stmt] = {first, second};
+      break;
+    case StmtType::WHILE:
+      m_while_pattern_map[stmt] = {first};
+      break;
+    case StmtType::IF:
+      m_if_pattern_map[stmt] = {first};
+      break;
+  }
+}
+
 bool StatementStore::StmtVarExists(std::pair<std::string, std::string> const &pair) {
   return stmt_var_pairs.find(pair) != stmt_var_pairs.end();
 }
@@ -71,6 +85,128 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StatementStor
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> StatementStore::GetAllProcVar() {
   return proc_var_pairs;
+}
+
+std::unordered_set<std::string> StatementStore::GetPattern(StmtType type, std::string const &lhs, std::string rhs) {
+  ExpressionTree expr_tree = ExpressionTree();
+  std::unordered_set<std::string> result = {};
+  rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
+  std::string temp = "";
+  std::string sub_pattern;
+
+  switch (type) {
+    case StmtType::STMT:
+      if (rhs.find('_') != std::string::npos) {
+        auto first = rhs.find("_\"");
+        auto last = rhs.find("\"_");
+        temp = "(" + rhs.substr(first + 2, last - 2) + ")";
+      } else {
+        temp = "(" + rhs + ")";
+      }
+
+      if (temp != "()") {
+        expr_tree.build(temp);
+        sub_pattern = expr_tree.GetPattern(expr_tree.GetRoot());
+      }
+
+      for (auto const&[key, val] : m_stmt_pattern_map) {
+        if (lhs == "_" && rhs == "_") {
+          result.insert(key);
+        }
+
+        if (lhs == "_" && rhs != "_" && rhs.find('_') != std::string::npos) {
+          if (val.second.find(sub_pattern) != std::string::npos) {
+            result.insert(key);
+          }
+        }
+
+        if (lhs == "_" && rhs != "_" && rhs.find('_') == std::string::npos) {
+          if (val.second == rhs) {
+            result.insert(key);
+          }
+        }
+
+        if (lhs != "_" && rhs == "_") {
+          if (lhs == val.first) {
+            result.insert(key);
+          }
+        }
+
+        if (lhs != "_" && rhs != "_" && rhs.find('_') != std::string::npos) {
+          if (lhs == val.first && val.second.find(sub_pattern) != std::string::npos) {
+            result.insert(key);
+          }
+        }
+
+        if (lhs != "_" && rhs != "_" && rhs.find('_') == std::string::npos) {
+          if (lhs == val.first && val.second == rhs) {
+            result.insert(key);
+          }
+        }
+      }
+      break;
+    case StmtType::WHILE:
+      for (auto const&[key, val] : m_while_pattern_map) {
+        if (lhs == "_") {
+          result.insert(key);
+        }
+
+        if (lhs != "_" && lhs == val && val.find(sub_pattern) != std::string::npos) {
+          result.insert(key);
+        }
+
+        if (lhs != "_" && lhs == val) {
+          result.insert(key);
+        }
+      }
+      break;
+    case StmtType::IF:
+      for (auto const&[key, val] : m_if_pattern_map) {
+        if (lhs == "_") {
+          result.insert(key);
+        }
+
+        if (lhs != "_" && lhs == val && val.find(sub_pattern) != std::string::npos) {
+          result.insert(key);
+        }
+
+        if (lhs != "_" && lhs == val) {
+          result.insert(key);
+        }
+      }
+      break;
+  }
+  return result;
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> StatementStore::GetPatternSynonym(std::string rhs) {
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
+  rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
+
+  for (auto const&[key, val] : m_stmt_pattern_map) {
+    if (rhs == "_") {
+      result.insert({key, val.first});
+    }
+
+    // Exact match
+    if (rhs != "_" && rhs.find('_') == std::string::npos) {
+      if (val.second == rhs) {
+        result.insert({key, val.first});
+      }
+    }
+
+    // Partial match
+    if (rhs != "_" && rhs.find('_') != std::string::npos) {
+      auto first = rhs.find("_\"");
+      auto last = rhs.find("\"_");
+      auto sub_pattern = rhs.substr(first + 2, last - 2);
+      if (val.second.find(sub_pattern) != std::string::npos) {
+        result.insert({key, val.first});
+      }
+    }
+  }
+
+  return result;
 }
 
 std::unordered_set<std::string> StatementStore::GetAllStmt() {

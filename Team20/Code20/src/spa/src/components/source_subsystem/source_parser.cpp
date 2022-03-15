@@ -142,7 +142,7 @@ std::shared_ptr<ReadStatementNode> SourceParser::ParseReadStatement() {
   ProcessToken(TokenType::READ);
   std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
   ProcessToken(TokenType::SEMI_COLON);
-  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue());
+  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no), "main");
   return std::make_shared<ReadStatementNode>(stmt_no, variable);
 }
 
@@ -151,7 +151,7 @@ std::shared_ptr<PrintStatementNode> SourceParser::ParsePrintStatement() {
   ProcessToken(TokenType::PRINT);
   std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
   ProcessToken(TokenType::SEMI_COLON);
-  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue());
+  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no), "main");
   return std::make_shared<PrintStatementNode>(stmt_no, variable);
 }
 
@@ -190,7 +190,7 @@ std::shared_ptr<AssignStatementNode> SourceParser::ParseAssignStatement() {
   ProcessToken(TokenType::EQUAL);
   std::shared_ptr<ExpressionNode> expression = ParseExpression();
   ProcessToken(TokenType::SEMI_COLON);
-  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue());
+  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no), "main");
   return std::make_shared<AssignStatementNode>(stmt_no, variable, expression);
 }
 
@@ -325,7 +325,7 @@ std::shared_ptr<ExpressionNode> SourceParser::ParseTerm(std::shared_ptr<Expressi
 std::shared_ptr<ExpressionNode> SourceParser::ParseFactor() {
   TokenType type = FetchCurrentToken()->GetType();
   switch (type) {
-    case TokenType::NAME:return std::make_shared<VariableNode>(ProcessToken(TokenType::NAME)->GetValue());
+    case TokenType::NAME:return std::make_shared<VariableNode>(ProcessToken(TokenType::NAME)->GetValue(), std::to_string(m_curr_stmt_no), "main");
     case TokenType::INTEGER:return std::make_shared<ConstantNode>(ProcessToken(TokenType::INTEGER)->GetValue());
     case TokenType::OPENED_PARENTHESIS: {
       ProcessToken(TokenType::OPENED_PARENTHESIS);

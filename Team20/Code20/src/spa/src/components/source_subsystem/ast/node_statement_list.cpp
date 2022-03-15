@@ -17,6 +17,35 @@ std::string StatementListNode::ToString() {
   return str;
 }
 
+std::string StatementListNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+  std::vector<std::shared_ptr<StatementNode>> stmts = m_statements;
+
+  for (int i = 0; i < stmts.size(); ++i) {
+    std::shared_ptr<StatementNode> stmt = stmts[i];
+    std::string stmt_num = std::to_string(stmt->GetStatementNumber());
+    std::string var_name = "";
+    if (visited->size() > 0)
+      populator.PopulateParent(visited->back(), stmt_num);
+
+    if (stmt != stmts.back()) {
+      int curr_stmt = stmt->GetStatementNumber();
+      int next_stmt = stmts[i + 1]->GetStatementNumber();
+      populator.PopulateFollows(std::to_string(curr_stmt), std::to_string(next_stmt));
+
+      // PopulateFollowsStar
+      int curr_stmt_star = stmts[i]->GetStatementNumber();
+
+      for (int j = i + 1; j < stmts.size(); ++j) {
+        int next_stmt_star = stmts[j]->GetStatementNumber();
+        populator.PopulateFollowsStar(std::to_string(curr_stmt_star), std::to_string(next_stmt_star));
+      }
+    }
+
+    stmt->Process(populator, visited, false, cfg_proc_node, cfg_node);
+  }
+  return "";
+}
+
 std::string StatementListNode::GetPatternFormat() {
   return "";
 }

@@ -41,3 +41,38 @@ bool WhileStatementNode::operator==(const StatementNode &other) const {
 
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
 }
+
+std::string WhileStatementNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+  std::string stmt_num = std::to_string(GetStatementNumber());
+  populator.PopulateStmt(stmt_num);
+  std::string while_stmt_num = std::to_string(GetStatementNumber());
+  visited->push_back(while_stmt_num);
+
+  std::shared_ptr<source::CfgGroupNode> body_group_node = std::make_shared<source::CfgGroupNode>();
+  std::shared_ptr<source::CfgGroupNode> next_group_node = std::make_shared<source::CfgGroupNode>();
+  std::shared_ptr<source::CfgWhileNode> while_node = std::make_shared<source::CfgWhileNode>(source::CfgNode(GetStatementNumber()), body_group_node, next_group_node);
+
+  std::string cond_expr = m_condition->Process(populator, visited, true, cfg_proc_node, while_node);
+  populator.AddWhilePattern(stmt_num, cond_expr);
+
+  std::shared_ptr<StatementListNode> while_block = GetStatementList();
+  std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
+
+  while_block->Process(populator, visited, false, cfg_proc_node, body_group_node);
+
+  cfg_proc_node->AddNode(while_node);
+  cfg_proc_node->AddNode(next_group_node);
+
+  populator.PopulateWhile(stmt_num);
+  populator.PopulateParentStar(while_stmt_num, *visited);
+
+//  for (int j = 0; j < while_stmts.size(); ++j) {
+//    int curr = while_stmts[j]->GetStatementNumber();
+//    while_stmts[j]->Process(populator, visited, cfg_proc_node, body_group_node);
+//    populator.PopulateParent(stmt_num, std::to_string(curr));
+//  }
+
+  visited->pop_back();
+  populator.PopulateParentStar(stmt_num, *visited);
+  return "";
+}

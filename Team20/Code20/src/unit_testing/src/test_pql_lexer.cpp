@@ -655,3 +655,29 @@ TEST_CASE("Test select BOOLEAN") {
 
   REQUIRE(pql_lexer.Lex() == expected_tokens);
 }
+
+TEST_CASE("Test pattern clause for ifs with 3 args") {
+  std::string query = "if ifs; variable v; Select ifs pattern ifs (v,_,_)";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::vector<PqlToken> expected_tokens = {
+      if_token,
+      ifs_token,
+      semicolon_token,
+      variable_token,
+      v_token,
+      semicolon_token,
+      select_token,
+      ifs_token,
+      pattern_token,
+      ifs_token,
+      open_parenthesis_token,
+      v_token,
+      comma_token,
+      underscore_token,
+      comma_token,
+      underscore_token,
+      closed_parenthesis_token,
+  };
+
+  REQUIRE(pql_lexer.Lex() == expected_tokens);
+}
