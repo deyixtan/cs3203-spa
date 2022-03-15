@@ -20,61 +20,61 @@ bool clause_util::IsArgPartialMatch(const PqlToken &arg) {
   return arg.type==PqlTokenType::SUB_EXPRESSION;
 }
 
-PqlTokenType clause_util::GetSynonymDesignEntity(const PqlToken &arg, const std::vector<Declaration> &declarations) {
+DesignEntityType clause_util::GetSynonymDesignEntity(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations) {
   assert(arg.type==PqlTokenType::SYNONYM);
   for (auto declaration : declarations) {
-    if (arg.value==declaration.GetSynonym().value) {
-      return declaration.GetDesignEntity().type;
+    if (arg.value==declaration.first) {
+      return declaration.second;
     }
   }
   throw std::out_of_range("Synonym not declared");
 }
 
-bool clause_util::IsArgProcSynonym(const PqlToken &arg, const std::vector<Declaration> &declarations) {
-  return IsArgSynonym(arg) && GetSynonymDesignEntity(arg, declarations)==PqlTokenType::PROCEDURE;
+bool clause_util::IsArgProcSynonym(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations) {
+  return IsArgSynonym(arg) && GetSynonymDesignEntity(arg, declarations)==DesignEntityType::PROCEDURE;
 }
 
-bool clause_util::IsArgStmtSynonym(const PqlToken &arg, const std::vector<Declaration> &declarations) {
+bool clause_util::IsArgStmtSynonym(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations) {
   return IsArgSynonym(arg) &&
-      GetSynonymDesignEntity(arg, declarations)==PqlTokenType::STMT ||
-      GetSynonymDesignEntity(arg, declarations)==PqlTokenType::ASSIGN ||
-      GetSynonymDesignEntity(arg, declarations)==PqlTokenType::CALL ||
-      GetSynonymDesignEntity(arg, declarations)==PqlTokenType::READ ||
-      GetSynonymDesignEntity(arg, declarations)==PqlTokenType::PRINT ||
-      GetSynonymDesignEntity(arg, declarations)==PqlTokenType::WHILE ||
-      GetSynonymDesignEntity(arg, declarations)==PqlTokenType::IF;
+      GetSynonymDesignEntity(arg, declarations)==DesignEntityType::STMT ||
+      GetSynonymDesignEntity(arg, declarations)==DesignEntityType::ASSIGN ||
+      GetSynonymDesignEntity(arg, declarations)==DesignEntityType::CALL ||
+      GetSynonymDesignEntity(arg, declarations)==DesignEntityType::READ ||
+      GetSynonymDesignEntity(arg, declarations)==DesignEntityType::PRINT ||
+      GetSynonymDesignEntity(arg, declarations)==DesignEntityType::WHILE ||
+      GetSynonymDesignEntity(arg, declarations)==DesignEntityType::IF;
 }
 
-StmtType clause_util::GetStmtType(const PqlTokenType &design_entity) {
+StmtType clause_util::GetStmtType(const DesignEntityType &design_entity) {
   switch (design_entity) {
-    case PqlTokenType::STMT: {
+    case DesignEntityType::STMT: {
       return StmtType::STMT;
     }
-    case PqlTokenType::ASSIGN: {
+    case DesignEntityType::ASSIGN: {
       return StmtType::ASSIGN;
     }
-    case PqlTokenType::WHILE: {
+    case DesignEntityType::WHILE: {
       return StmtType::WHILE;
     }
-    case PqlTokenType::IF: {
+    case DesignEntityType::IF: {
       return StmtType::IF;
     }
-    case PqlTokenType::PRINT: {
+    case DesignEntityType::PRINT: {
       return StmtType::PRINT;
     }
-    case PqlTokenType::READ: {
+    case DesignEntityType::READ: {
       return StmtType::READ;
     }
-    case PqlTokenType::CALL: {
+    case DesignEntityType::CALL: {
       return StmtType::CALL;
     }
-    case PqlTokenType::VARIABLE: {
+    case DesignEntityType::VARIABLE: {
       return StmtType::VARS;
     }
-    case PqlTokenType::CONSTANT: {
+    case DesignEntityType::CONSTANT: {
       return StmtType::CONSTS;
     }
-    case PqlTokenType::PROCEDURE: {
+    case DesignEntityType::PROCEDURE: {
       return StmtType::PROC;
     }
     default: {

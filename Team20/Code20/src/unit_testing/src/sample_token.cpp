@@ -38,6 +38,7 @@ PqlToken cl_token = PqlToken(PqlTokenType::SYNONYM, "cl");
 PqlToken synonym_select_token = PqlToken(PqlTokenType::SYNONYM, "Select");
 PqlToken synonym_uses_token = PqlToken(PqlTokenType::SYNONYM, "Uses");
 PqlToken synonym_assign_token = PqlToken(PqlTokenType::SYNONYM, "assign");
+PqlToken synonym_boolean_token = PqlToken(PqlTokenType::SYNONYM, "BOOLEAN");
 
 PqlToken number_value_token_1 = PqlToken(PqlTokenType::NUMBER, "1");
 PqlToken number_value_token_2 = PqlToken(PqlTokenType::NUMBER, "2");

@@ -5,6 +5,7 @@ std::string MISSING_TOKEN_IN_DECLARATION = "ERROR: Missing token in declaration!
 std::string INVALID_DESIGN_ENTITY_IN_DECLARATION = "ERROR: Invalid Design Entity in declaration! \n";
 std::string INVALID_DECLARATION_FORMAT = "ERROR: Invalid Declaration format! \n";
 std::string INVALID_DECLARATION_SYNONYM = "ERROR: Invalid Declaration synonym! \n";
+std::string DUPLICATE_DECLARATION_SYNONYM = "ERROR: Duplicate synonym! \n";
 
 // Select clause
 std::string INVALID_SELECT_KEYWORD = "ERROR: Invalid Select keyword! \n";
@@ -22,5 +23,8 @@ std::string INVALID_PATTERN_KEYWORD = "ERROR: Invalid Pattern keyword! \n";
 std::string INVALID_PATTERN_SYNONYM = "ERROR: Invalid synonym in pattern clause! \n";
 std::string INVALID_PATTERN_CLAUSE_ARGUMENT = "ERROR: Invalid Pattern clause argument! \n";
 
-// With clause
-std::string INVALID_WITH_CLAUSE_FORMAT = "ERROR: Invalid With clause format! \n";
+// With Clause
+std::string INVALID_WITH_CLAUSE_FORMAT = "ERROR: Invalid With Clause format! \n";
+
+// And Clause
+std::string INVALID_AND_CLAUSE_FORMAT = "ERROR: Invalid And Clause format! \n";

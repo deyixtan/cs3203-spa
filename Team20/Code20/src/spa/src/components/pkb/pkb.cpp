@@ -19,6 +19,10 @@ void PKB::AddPattern(std::string const &stmt, std::string const &lhs, std::strin
   m_pattern_map[stmt] = {lhs, rhs};
 }
 
+void PKB::AddProgramCfg(std::shared_ptr<source::CfgProgramNode> program_cfg) {
+  m_program_cfg = move(program_cfg);
+}
+
 std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
   return m_stmt_vector->at(type);
 }

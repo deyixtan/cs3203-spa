@@ -3,6 +3,7 @@
 
 #include "node.h"
 #include "node_statement_list.h"
+#include "../cfg/cfg_group_node.h"
 
 class ProcedureNode : public Node {
  private:
@@ -13,6 +14,7 @@ class ProcedureNode : public Node {
   ProcedureNode(std::string identifier, std::shared_ptr<StatementListNode> stmt_list);
   [[nodiscard]] std::string GetIdentifier();
   [[nodiscard]] std::shared_ptr<StatementListNode> GetStatementList();
+  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ProcedureNode &other) const;
