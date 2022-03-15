@@ -92,7 +92,7 @@ int ParsedQueryBuilder::ParseSynonym(ParsedQuery &pq, std::unordered_map<std::st
   PqlToken result_clause_token = tokens_[++pos];
   if(result_clause_token.type == PqlTokenType::BOOLEAN) {
     if(declarations.count(result_clause_token.value)) {
-      result_clause_token.type = PqlTokenType::SYNONYM;
+      result_clause_token = PqlToken(PqlTokenType::SYNONYM, result_clause_token.value);
       std::cout << result_clause_token.value;
     }
   }

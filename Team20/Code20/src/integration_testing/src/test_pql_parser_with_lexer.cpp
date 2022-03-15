@@ -111,3 +111,28 @@ TEST_CASE("Test query parser with same variable referenced") {
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
   REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
 }
+
+TEST_CASE("Test query parser with BOOLEAN as synonym name") {
+  std::string query = "stmt BOOLEAN; variable v; assign a;\n Select BOOLEAN such that Parent*(s, 5)";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
+  ResultClause result_clause = pq.GetResultClause();
+  const auto decl = pq.GetDeclaration();
+  Relationship rship = pq.GetRelationships().front();
+  std::vector<Pattern> ptrns = pq.GetPatterns();
+  std::vector<With> withs = pq.GetWithClause();
+  // Test that no patterns have been added to query struct
+  REQUIRE(ptrns.size() == 0);
+  // Test that no with clauses have been added
+  REQUIRE(withs.size() == 0);
+  REQUIRE(rship.GetRelRef().value == "Parent*");
+  REQUIRE(rship.GetFirst().value == "s");
+  REQUIRE(rship.GetSecond().value == "5");
+  REQUIRE(result_clause.GetValues()[0].value == "BOOLEAN");
+  REQUIRE(result_clause.GetType() == ResultClauseType::BOOLEAN);
+//  REQUIRE(decl.find("BOOLEAN")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
+}
