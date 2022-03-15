@@ -332,7 +332,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
     std::unordered_set<std::string> expected_result1 = {};
     std::unordered_set<std::string> expected_result2 = {};
     std::unordered_set<std::string> expected_result3 = {};
-    std::unordered_set<std::string> expected_result4 = {"x", "y", "count", "cenX", "x", "cenY", "y"};
+    std::unordered_set<std::string> expected_result4 = {"x", "y", "count", "cenX", "cenY"};
     std::unordered_set<std::string> expected_result5 = {"count"};
     std::unordered_set<std::string> expected_result6 = {"cenX", "x"};
     std::unordered_set<std::string> expected_result7 = {"cenY", "y"};

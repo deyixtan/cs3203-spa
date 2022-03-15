@@ -39,8 +39,8 @@ ExpressionType CombinationExpressionNode::GetExpressionType() {
 }
 
 std::string CombinationExpressionNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
-  return "(" + m_left_expression->GetPatternFormat() + GetArithmeticOperatorLabel(m_arithmetic_operator)
-      + m_right_expression->GetPatternFormat() + ")";
+  return "(" + m_left_expression->Process(populator, visited, cfg_node) + GetArithmeticOperatorLabel(m_arithmetic_operator)
+      + m_right_expression->Process(populator, visited, cfg_node) + ")";
 }
 
 std::string CombinationExpressionNode::ToString() {
