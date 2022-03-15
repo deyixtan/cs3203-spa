@@ -29,7 +29,6 @@ class CombinationExpressionNode : public ExpressionNode {
   [[nodiscard]] ExpressionType GetExpressionType() override;
   [[nodiscard]] std::string Process(Populator populator, std::vector<std::string>* visited, std::shared_ptr<source::CfgGroupNode> cfg_node) override;
   [[nodiscard]] std::string ToString() override;
-  [[nodiscard]] std::string GetPatternFormat();
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 
