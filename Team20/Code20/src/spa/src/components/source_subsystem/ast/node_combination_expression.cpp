@@ -41,12 +41,16 @@ ExpressionType CombinationExpressionNode::GetExpressionType() {
 std::string CombinationExpressionNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   return "(" + m_left_expression->GetPatternFormat() + GetArithmeticOperatorLabel(m_arithmetic_operator)
       + m_right_expression->GetPatternFormat() + ")";
-  }
 }
 
 std::string CombinationExpressionNode::ToString() {
   return "(" + m_left_expression->ToString() + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
       + m_right_expression->ToString() + ")";
+}
+
+std::string CombinationExpressionNode::GetPatternFormat() {
+  return "(" + m_left_expression->GetPatternFormat() + GetArithmeticOperatorLabel(m_arithmetic_operator)
+      + m_right_expression->GetPatternFormat() + ")";
 }
 
 bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
