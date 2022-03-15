@@ -71,12 +71,11 @@ ParsedQuery ParsedQueryBuilder::Build() {
     } else if(token.type == PqlTokenType::PATTERN) {
       prev = token.type;
       pos = ParsePattern(pq, pos);
-    } else if(token.type == PqlTokenType::WITH) {
-      PqlToken attr = tokens_[1];
-      prev = attr.type;
+    } else if(token.type == PqlTokenType::ATTRIBUTE) {
+      prev = token.type;
       pos = ParseWithClause(pq, pos);
     } else if(token.type == PqlTokenType::AND && tokens_[pos + 1].type == PqlTokenType::SYNONYM) {
-      if(prev == PqlTokenType::PATTERN){
+      if (prev == PqlTokenType::PATTERN) {
         PqlToken dummy_token = PqlToken(PqlTokenType::PATTERN, "pattern");
         auto itPos = tokens_.begin() + pos + 1;
         tokens_.insert(itPos, dummy_token);
@@ -84,7 +83,7 @@ ParsedQuery ParsedQueryBuilder::Build() {
         throw INVALID_AND_CLAUSE_FORMAT;
       }
     } else {
-      tokens_.erase(tokens_.begin());
+      pos++;
     }
   }
   return pq;
@@ -110,7 +109,7 @@ int ParsedQueryBuilder::ParseDeclarations(ParsedQuery &pq, std::unordered_map<st
   pos++;
   while(tokens_[pos].type != PqlTokenType::SEMICOLON) {
     // another synonym
-    if(tokens_[pos].type == PqlTokenType::SYNONYM) {
+    if(tokens_[pos].type == PqlTokenType::SYNONYM || tokens_[pos].type == PqlTokenType::BOOLEAN) {
       if(declarations.count(tokens_[pos].value)) {
         throw DUPLICATE_DECLARATION_SYNONYM;
       } else {
@@ -159,10 +158,11 @@ int ParsedQueryBuilder::ParseRelationship(ParsedQuery &pq, int pos) {
 }
 
 int ParsedQueryBuilder::ParseWithClause(ParsedQuery &pq, int pos) {
-  PqlToken attr = tokens_[++pos];
+  PqlToken attr = tokens_[pos];
   pos += 2;
   PqlToken comparator = tokens_[pos];
   With with_clause = With(attr, comparator);
   pq.AddWithClause(with_clause);
+  pos += 1;
   return pos;
 }
