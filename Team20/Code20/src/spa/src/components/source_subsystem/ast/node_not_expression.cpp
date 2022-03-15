@@ -24,6 +24,6 @@ bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const
   return *m_expression == *(casted_other->m_expression);
 }
 
-std::string NotExpressionNode::Process(Populator populator, std::vector<std::string>* visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
-  return m_expression->Process(populator, visited, cfg_proc_node, cfg_node);
+std::string NotExpressionNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+  return m_expression->Process(populator, visited, is_uses, cfg_proc_node, cfg_node);
 }

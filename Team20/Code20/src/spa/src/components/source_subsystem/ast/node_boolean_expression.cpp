@@ -33,11 +33,11 @@ bool BooleanExpressionNode::operator==(const ConditionalExpressionNode &other) c
       && *m_right_expression == *(casted_other->m_right_expression);
 }
 
-std::string BooleanExpressionNode::Process(Populator populator, std::vector<std::string>* visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+std::string BooleanExpressionNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   switch (m_boolean_operator) {
     case BooleanOperator::AND:
-      return m_left_expression->Process(populator, visited, cfg_proc_node, cfg_node) + "&&" + m_right_expression->Process(populator, visited, cfg_proc_node, cfg_node);
+      return m_left_expression->Process(populator, visited, is_uses, cfg_proc_node, cfg_node) + "&&" + m_right_expression->Process(populator, visited, is_uses, cfg_proc_node, cfg_node);
     case BooleanOperator::OR:
-      return m_left_expression->Process(populator, visited, cfg_proc_node, cfg_node) + "||" + m_right_expression->Process(populator, visited, cfg_proc_node, cfg_node);
+      return m_left_expression->Process(populator, visited, is_uses, cfg_proc_node, cfg_node) + "||" + m_right_expression->Process(populator, visited, is_uses, cfg_proc_node, cfg_node);
   }
 }

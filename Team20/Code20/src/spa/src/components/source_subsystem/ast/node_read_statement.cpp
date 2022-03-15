@@ -25,16 +25,12 @@ bool ReadStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier);
 }
 
-std::string ReadStatementNode::Process(Populator populator, std::vector<std::string>* visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+std::string ReadStatementNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   populator.PopulateStmt(stmt_num);
   std::string var_name = m_identifier->GetIdentifier();
-  populator.PopulateVars(var_name);
   populator.PopulateRead(stmt_num);
-  for (std::string s : *visited) {
-    populator.PopulateModifies(s, var_name);
-  }
-  populator.PopulateModifies(stmt_num, var_name);
+  m_identifier->Process(populator, visited, false, cfg_proc_node, cfg_node);
   populator.PopulateParentStar(stmt_num, *visited);
   if (cfg_node == nullptr) {
     cfg_proc_node->GetLastNode()->GetNodes().emplace_back(GetStatementNumber());

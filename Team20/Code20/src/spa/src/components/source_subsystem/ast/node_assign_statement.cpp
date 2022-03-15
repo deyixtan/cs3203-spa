@@ -31,20 +31,14 @@ bool AssignStatementNode::operator==(const StatementNode &other) const {
       && *m_expression == *(casted_other->m_expression);
 }
 
-std::string AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+std::string AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   std::string var_name = "";
   populator.PopulateStmt(stmt_num);
   var_name = m_identifier->GetIdentifier();
-  populator.PopulateVars(var_name);
-  for (std::string s : *visited) {
-    populator.PopulateModifies(s, var_name);
-  }
-  populator.PopulateModifies(stmt_num, var_name);
-
-  std::string rhs_expr = m_expression->Process(populator, visited, cfg_proc_node, cfg_node);
+  m_identifier->Process(populator, visited, false, cfg_proc_node, cfg_node);
+  std::string rhs_expr = m_expression->Process(populator, visited, true, cfg_proc_node, cfg_node);
   populator.AddStmtPattern(stmt_num, var_name, rhs_expr);
-
   populator.PopulateAssign(stmt_num);
   populator.PopulateParentStar(stmt_num, *visited);
   if (cfg_node == nullptr) {
