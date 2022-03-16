@@ -32,7 +32,7 @@ jobs:
       - name: Build Project
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake -G "Ninja" . --config $BUILD_TYPE -- -j 24
+        run: cmake -G "Ninja" . --config $BUILD_TYPE
 
       - name: Run Unit Tests
         working-directory: ${{runner.workspace}}/build
