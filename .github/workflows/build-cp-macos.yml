@@ -32,7 +32,7 @@ jobs:
       - name: Build Project
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target spa -- -j 8
+        run: cmake --build . --config $BUILD_TYPE -- -j 8
 
       - name: Run Unit Tests
         working-directory: ${{runner.workspace}}/build
