@@ -1,8 +1,8 @@
 #include "catch.hpp"
 #include "components/pkb/pkb.h"
-#include "components/source_subsystem/design_extractor.h"
-#include "components/source_subsystem/source_lexer.h"
-#include "components/source_subsystem/source_parser.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
+#include "components/source_subsystem/lexer/source_lexer.h"
+#include "components/source_subsystem/parser/source_parser.h"
 #include "components/source_subsystem/exceptions/empty_statement_list.h"
 
 using namespace source;

@@ -5,9 +5,9 @@
 #include <string>
 #include <vector>
 
-#include "source_token.h"
-#include "exceptions/end_of_stream.h"
-#include "exceptions/unexpected_token.h"
+#include "../types/source_token/source_token.h"
+#include "components/source_subsystem/exceptions/end_of_stream.h"
+#include "components/source_subsystem/exceptions/unexpected_token.h"
 
 namespace source {
 
