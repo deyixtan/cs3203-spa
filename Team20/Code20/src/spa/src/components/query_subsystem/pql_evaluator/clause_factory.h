@@ -15,19 +15,17 @@ class ClauseFactory {
  public:
   ClauseFactory() = default;
   static std::unique_ptr<Clause> Create(Relationship relationship,
-                                        std::unordered_map<std::string, DesignEntityType> declarations,
+                                        const std::unordered_map<std::string, DesignEntityType>& declarations,
                                         PKB *pkb);
   static std::unique_ptr<Clause> Create(Pattern pattern,
-                                        std::unordered_map<std::string, DesignEntityType> declarations,
+                                        const std::unordered_map<std::string, DesignEntityType>& declarations,
                                         PKB *pkb);
-  static std::unique_ptr<Clause> Create(PqlToken selected_synonym,
-                                        std::unordered_map<std::string, DesignEntityType> declarations,
+  static std::unique_ptr<Clause> Create(const PqlToken& selected_synonym,
+                                        const std::unordered_map<std::string, DesignEntityType>& declarations,
                                         PKB *pkb);
   static std::unique_ptr<Clause> Create(With with,
-                                        std::unordered_map<std::string, DesignEntityType> declarations,
+                                        const std::unordered_map<std::string, DesignEntityType>& declarations,
                                         PKB *pkb);
- private:
-  static PKB *pkb;
 };
 
 }

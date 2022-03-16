@@ -1,0 +1,39 @@
+#include "pattern_if_clause.h"
+#include "clause_util.h"
+
+namespace pql {
+
+using namespace clause_util;
+
+PatternIfClause::PatternIfClause(const std::string &if_synonym, const PqlToken &first_arg, PKB *pkb) : if_synonym(
+    if_synonym), first_arg(first_arg), pkb(pkb) {}
+
+Table PatternIfClause::Execute() {
+  if (IsArgSynonym(first_arg)) {
+    return HandleSynonym();
+  } else if (IsArgWildcard(first_arg)) {
+    return HandleWildcard();
+  } else if (IsArgIdent(first_arg)) {
+    return HandleIdent();
+  } else {
+    // no type safety because of PqlTokenType
+    // should refactor
+    return {};
+  }
+}
+
+Table PatternIfClause::HandleSynonym() {
+  // TODO: wait for Jaryl to implement
+}
+
+Table PatternIfClause::HandleWildcard() {
+  auto single_constraints = pkb->GetPatternStore()->GetIfWithPattern("_");
+  return {if_synonym, single_constraints};
+}
+
+Table PatternIfClause::HandleIdent() {
+  auto single_constraints = pkb->GetPatternStore()->GetIfWithPattern(first_arg.value);
+  return {if_synonym, single_constraints};
+}
+
+}
