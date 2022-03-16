@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "exceptions/procedure_exist.h"
+#include "components/source_subsystem/exceptions/procedure_exist.h"
 
 namespace source {
 
