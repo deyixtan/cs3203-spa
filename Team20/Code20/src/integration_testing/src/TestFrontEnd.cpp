@@ -1,4 +1,4 @@
-#include "components/source_subsystem/ast/node.h"
+#include "components/source_subsystem/types/ast/node.h"
 #include "catch.hpp"
 using namespace std;
 void require(bool b) {

@@ -4,7 +4,7 @@
 #include "node_statement.h"
 #include "node_conditional_expression.h"
 #include "node_statement_list.h"
-#include "components/source_subsystem/cfg/cfg_if_node.h"
+#include "components/source_subsystem/types/cfg/cfg_if_node.h"
 #include "components/source_subsystem/populator.h"
 
 class IfStatementNode : public StatementNode {
