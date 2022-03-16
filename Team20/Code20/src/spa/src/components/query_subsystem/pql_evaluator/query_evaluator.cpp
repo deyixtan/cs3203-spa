@@ -32,7 +32,7 @@ std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQ
   }
 
   for (const auto& pattern : query.GetPatterns()) {
-    auto clause = pql::ClauseFactory::Create(pattern, pkb);
+    auto clause = pql::ClauseFactory::Create(pattern, query.GetDeclaration(), pkb);
     if (clause) {
       clauses.push(std::move(clause));
     }

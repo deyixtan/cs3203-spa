@@ -61,7 +61,7 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
 std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern,
                                               std::unordered_map<std::string, DesignEntityType> declarations,
                                               PKB *pkb) {
-  auto pattern_synonym_design_entity_type = declarations.at(pattern.GetSynonym().value);
+  auto pattern_synonym_design_entity_type = GetSynonymDesignEntity(pattern.GetSynonym(), declarations);
   switch (pattern_synonym_design_entity_type) {
     case DesignEntityType::ASSIGN: {
       return std::make_unique<PatternAssignClause>(pattern.GetSynonym().value,
