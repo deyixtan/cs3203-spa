@@ -41,6 +41,7 @@ bool ParsedQueryValidator::ValidateAttribute(PqlToken token, std::unordered_map<
       return false;
     }
   }
+  return true;
 }
 
 bool ParsedQueryValidator::ValidateResultClauseDeclared(ParsedQuery query) {
