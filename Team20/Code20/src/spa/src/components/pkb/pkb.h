@@ -13,6 +13,7 @@
 #include "stores/pattern_store.h"
 #include "expression_tree.h"
 #include "components/source_subsystem/cfg/cfg_program_node.h"
+#include "components/pkb/stores/call_store.h"
 
 class PKB {
  private:
@@ -21,6 +22,7 @@ class PKB {
   std::shared_ptr<UsageStore> m_usage_store;
   std::shared_ptr<ModifyStore> m_modify_store;
   std::shared_ptr<PatternStore> m_pattern_store;
+  std::shared_ptr<CallStore> m_call_store;
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;
   std::unordered_map<std::string, std::pair<std::string, std::string>> m_pattern_map;
   std::shared_ptr<source::CfgProgramNode> m_program_cfg;
@@ -36,6 +38,7 @@ class PKB {
   [[nodiscard]] std::shared_ptr<ParentStore> GetParentStore();
   [[nodiscard]] std::shared_ptr<UsageStore> GetUsageStore();
   [[nodiscard]] std::shared_ptr<PatternStore> GetPatternStore();
+  [[nodiscard]] std::shared_ptr<CallStore> GetCallStore();
 };
 
 #endif //PKB_H
