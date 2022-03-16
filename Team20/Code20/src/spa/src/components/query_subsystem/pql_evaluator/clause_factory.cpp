@@ -8,6 +8,7 @@
 #include "parent_clause.h"
 #include "parentt_clause.h"
 #include "pattern_assign_clause.h"
+#include "pattern_while_clause.h"
 #include "with_clause.h"
 #include "select_clause.h"
 #include "clause_util.h"
@@ -57,8 +58,26 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
   }
 }
 
-std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern, PKB *pkb) {
-  return std::make_unique<PatternAssignClause>(pattern.GetSynonym().value, pattern.GetFirst(), pattern.GetSecond(), pkb);
+std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern,
+                                              std::unordered_map<std::string, DesignEntityType> declarations,
+                                              PKB *pkb) {
+  auto pattern_synonym_design_entity_type = declarations.at(pattern.GetSynonym().value);
+  switch (pattern_synonym_design_entity_type) {
+    case DesignEntityType::ASSIGN: {
+      return std::make_unique<PatternAssignClause>(pattern.GetSynonym().value,
+                                                   pattern.GetFirst(),
+                                                   pattern.GetSecond(),
+                                                   pkb);
+    }
+    case DesignEntityType::WHILE: {
+      return std::make_unique<PatternWhileClause>(pattern.GetSynonym().value,
+                                                  pattern.GetFirst(),
+                                                  pkb);
+    }
+    default: {
+      return nullptr;
+    }
+  }
 }
 
 std::unique_ptr<Clause> ClauseFactory::Create(PqlToken selected_synonym,
@@ -67,8 +86,10 @@ std::unique_ptr<Clause> ClauseFactory::Create(PqlToken selected_synonym,
   return std::make_unique<SelectClause>(selected_synonym, declarations, pkb);
 }
 
-std::unique_ptr<Clause> ClauseFactory::Create(With with, std::unordered_map<std::string, DesignEntityType> declarations, PKB *pkb) {
-  return std::make_unique<WithClause>(declarations, with.GetFirst(),with.GetSecond(), pkb);
+std::unique_ptr<Clause> ClauseFactory::Create(With with,
+                                              std::unordered_map<std::string, DesignEntityType> declarations,
+                                              PKB *pkb) {
+  return std::make_unique<WithClause>(declarations, with.GetFirst(), with.GetSecond(), pkb);
 }
 
 }
