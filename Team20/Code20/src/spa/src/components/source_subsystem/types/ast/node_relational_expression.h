@@ -3,7 +3,7 @@
 
 #include "node_combination_expression.h"
 #include "node_conditional_expression.h"
-#include "../populator.h"
+#include "components/source_subsystem/populator.h"
 
 enum class RelationOperator {
   LESS_THAN,

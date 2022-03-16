@@ -1,4 +1,4 @@
-#include "components/source_subsystem/source_token.h"
+#include "components/source_subsystem/types/source_token/source_token.h"
 #include "catch.hpp"
 
 TEST_CASE("Test source WHITESPACE token") {
