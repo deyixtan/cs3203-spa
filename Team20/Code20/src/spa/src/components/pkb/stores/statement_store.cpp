@@ -110,34 +110,40 @@ std::unordered_set<std::string> StatementStore::GetPattern(StmtType type, std::s
       }
 
       for (auto const&[key, val] : m_stmt_pattern_map) {
+        //pattern a(_, _)
         if (lhs == "_" && rhs == "_") {
           result.insert(key);
         }
 
+        //pattern a(_, _"x+1"_)
         if (lhs == "_" && rhs != "_" && rhs.find('_') != std::string::npos) {
           if (val.second.find(sub_pattern) != std::string::npos) {
             result.insert(key);
           }
         }
 
+        //pattern a(_, "x+1")
         if (lhs == "_" && rhs != "_" && rhs.find('_') == std::string::npos) {
           if (val.second == rhs) {
             result.insert(key);
           }
         }
 
+        //pattern a("x", _)
         if (lhs != "_" && rhs == "_") {
           if (lhs == val.first) {
             result.insert(key);
           }
         }
 
+        //pattern a("x", _"x+1"_)
         if (lhs != "_" && rhs != "_" && rhs.find('_') != std::string::npos) {
           if (lhs == val.first && val.second.find(sub_pattern) != std::string::npos) {
             result.insert(key);
           }
         }
 
+        //pattern a("x", "x+1")
         if (lhs != "_" && rhs != "_" && rhs.find('_') == std::string::npos) {
           if (lhs == val.first && val.second == rhs) {
             result.insert(key);
@@ -147,30 +153,26 @@ std::unordered_set<std::string> StatementStore::GetPattern(StmtType type, std::s
       break;
     case StmtType::WHILE:
       for (auto const&[key, val] : m_while_pattern_map) {
+        //pattern w(_, _)
         if (lhs == "_") {
           result.insert(key);
         }
 
-        if (lhs != "_" && lhs == val && val.find(sub_pattern) != std::string::npos) {
-          result.insert(key);
-        }
-
-        if (lhs != "_" && lhs == val) {
+        //pattern w("x", _)
+        if (lhs != "_" && val.find(sub_pattern) != std::string::npos) {
           result.insert(key);
         }
       }
       break;
     case StmtType::IF:
       for (auto const&[key, val] : m_if_pattern_map) {
+        //pattern ifs(_, _)
         if (lhs == "_") {
           result.insert(key);
         }
 
-        if (lhs != "_" && lhs == val && val.find(sub_pattern) != std::string::npos) {
-          result.insert(key);
-        }
-
-        if (lhs != "_" && lhs == val) {
+        //pattern ifs("x", _)
+        if (lhs != "_" && val.find(sub_pattern) != std::string::npos) {
           result.insert(key);
         }
       }
@@ -184,18 +186,19 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StatementStor
   rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
 
   for (auto const&[key, val] : m_stmt_pattern_map) {
+    //pattern a(v, _)
     if (rhs == "_") {
       result.insert({key, val.first});
     }
 
-    // Exact match
+    //pattern a(v, "x+1")
     if (rhs != "_" && rhs.find('_') == std::string::npos) {
       if (val.second == rhs) {
         result.insert({key, val.first});
       }
     }
 
-    // Partial match
+    //pattern a(v, _"x+1"_)
     if (rhs != "_" && rhs.find('_') != std::string::npos) {
       auto first = rhs.find("_\"");
       auto last = rhs.find("\"_");
