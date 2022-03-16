@@ -29,12 +29,17 @@ jobs:
         working-directory: ${{runner.workspace}}/build
         run: cmake $GITHUB_WORKSPACE/Team20/Code20/ -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
+      - name: Build Project
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE --target spa -- -j 8
+
       - name: Run Unit Tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target unit_testing
+        run: cmake --build . --config $BUILD_TYPE --target unit_testing -- -j 8
 
       - name: Run Integration Tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target integration_testing
+        run: cmake --build . --config $BUILD_TYPE --target integration_testing -- -j 8
