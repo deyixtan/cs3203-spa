@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "components/source_subsystem/source_token.h"
+#include "../types/source_token/source_token.h"
 #include "source_parser_session.h"
 #include "components/source_subsystem/exceptions/cyclic_call.h"
 #include "components/source_subsystem/exceptions/empty_statement_list.h"

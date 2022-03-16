@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "components/source_subsystem/source_token.h"
+#include "../types/source_token/source_token.h"
 #include "components/source_subsystem/exceptions/end_of_stream.h"
 #include "components/source_subsystem/exceptions/unexpected_token.h"
 
