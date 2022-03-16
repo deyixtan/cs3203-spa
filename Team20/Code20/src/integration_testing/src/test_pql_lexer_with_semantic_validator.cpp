@@ -211,7 +211,7 @@ TEST_CASE("Test query wrong attribute in with clause") {
   REQUIRE(is_query_valid == false);
 }
 
-TEST_CASE("Test query correct multi with clause") {
+//TEST_CASE("Test query correct multi with clause") {
 //  std::string query = "stmt s, s1; variable v; constant c; assign a;\n Select s with s.stmt# = c.value and s1.stmt# = 2 and \"varName\" = v.varName";
 //  PqlLexer pql_lexer = PqlLexer(query);
 //  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
@@ -223,9 +223,9 @@ TEST_CASE("Test query correct multi with clause") {
 //  bool is_query_valid = pqv.ValidateQuery(pq);
 //
 //  REQUIRE(is_query_valid == true);
-}
+//}
 
-TEST_CASE("Test query wrong with clause 1") {
+//TEST_CASE("Test query wrong with clause 1") {
 //  std::string query = "stmt s, s1; variable v; constant c; assign a;\n Select s with 2 = v.varName;
 //  PqlLexer pql_lexer = PqlLexer(query);
 //  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
@@ -237,9 +237,9 @@ TEST_CASE("Test query wrong with clause 1") {
 //  bool is_query_valid = pqv.ValidateQuery(pq);
 //
 //  REQUIRE(is_query_valid == wrong);
-}
+//}
 
-TEST_CASE("Test query wrong with clause 2") {
+//TEST_CASE("Test query wrong with clause 2") {
 //  std::string query = "stmt s, s1; variable v; constant c; assign a;\n Select s with 2 = v.varName and s.stmt# = 1;
 //  PqlLexer pql_lexer = PqlLexer(query);
 //  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
@@ -251,9 +251,9 @@ TEST_CASE("Test query wrong with clause 2") {
 //  bool is_query_valid = pqv.ValidateQuery(pq);
 //
 //  REQUIRE(is_query_valid == false);
-}
+//}
 
-TEST_CASE("Test query wrong with clause 3") {
+//TEST_CASE("Test query wrong with clause 3") {
 //  std::string query = "stmt s, s1; variable v; constant c; assign a;\n Select s with s.stmt# = 1 and 2 = v.varName;
 //  PqlLexer pql_lexer = PqlLexer(query);
 //  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
@@ -265,7 +265,7 @@ TEST_CASE("Test query wrong with clause 3") {
 //  bool is_query_valid = pqv.ValidateQuery(pq);
 //
 //  REQUIRE(is_query_valid == false);
-}
+//}
 
 TEST_CASE("Test query wrong Uses clause argument") {
   std::string query = "stmt s; variable v; assign a;\n Select s such that Uses (s, a)";
