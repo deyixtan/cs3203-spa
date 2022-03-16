@@ -32,14 +32,14 @@ jobs:
       - name: Build Project
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target spa -- -j 24
+        run: cmake -G "Ninja" . --config $BUILD_TYPE -- -j 24
 
       - name: Run Unit Tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target unit_testing -- -j 24
+        run: ${{runner.workspace}}/build/src/unit_testing/unit_testing
 
       - name: Run Integration Tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target integration_testing -- -j 24
+        run: ${{runner.workspace}}/build/src/integration_testing/integration_testing
