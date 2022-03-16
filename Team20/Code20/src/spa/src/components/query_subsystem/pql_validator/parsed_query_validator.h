@@ -17,6 +17,8 @@ class ParsedQueryValidator {
   bool IsProc(DesignEntityType);
   bool IsEntRef(PqlTokenType);
   bool IsExpressionSpec(PqlTokenType);
+  bool IsNameAttribute(AtrriName attri_name);
+  bool IsIntegerAttribute(AtrriName attri_name);
   bool ValidateAttribute(PqlToken, std::unordered_map<std::string, DesignEntityType>);
 
   bool ValidateResultClauseDeclared(ParsedQuery);
@@ -34,6 +36,8 @@ class ParsedQueryValidator {
   bool ValidateAssignPatternArguments(Pattern, std::unordered_map<std::string, DesignEntityType>);
   bool ValidateWhilePatternArguments(Pattern, std::unordered_map<std::string, DesignEntityType>);
   bool ValidateIfPatternArguments(Pattern, std::unordered_map<std::string, DesignEntityType>);
+
+  bool ValidateWithClause(ParsedQuery);
 };
 
 };

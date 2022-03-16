@@ -1,7 +1,6 @@
 #include "parsed_query_validator.h"
 
 #include <string>
-#include <unordered_set>
 #include <vector>
 
 namespace pql_validator {
@@ -9,7 +8,8 @@ namespace pql_validator {
 bool ParsedQueryValidator::ValidateQuery(ParsedQuery query) {
   return ValidateResultClauseDeclared(query)
       && ValidateSuchThatClause(query)
-      && ValidatePatternClause(query);
+      && ValidatePatternClause(query)
+      && ValidateWithClause(query);
 }
 
 bool ParsedQueryValidator::ValidateAttribute(PqlToken token, std::unordered_map<std::string, DesignEntityType> declarations) {
@@ -327,6 +327,34 @@ bool ParsedQueryValidator::ValidateIfPatternArguments(Pattern pattern, std::unor
   return true;
 }
 
+bool ParsedQueryValidator::ValidateWithClause(ParsedQuery query) {
+  std::vector<With> withs = query.GetWithClause();
+  std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
+
+  for (auto with : withs) {
+    PqlToken first_arg = with.GetFirst();
+    PqlToken second_arg = with.GetSecond();
+
+    if (!ValidateAttribute(first_arg, declarations) || !ValidateAttribute(second_arg, declarations)) {
+      return false;
+    }
+
+    std::pair<std::pair<DesignEntityType, std::string>, AtrriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+    std::pair<std::pair<DesignEntityType, std::string>, AtrriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+
+    if (IsNameAttribute(first_attribute.second)) {
+      if (!IsNameAttribute(second_attribute.second)) {
+        return false;
+      }
+    } else if (IsIntegerAttribute(first_attribute.second)) {
+      if (!IsIntegerAttribute(second_attribute.second)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 bool ParsedQueryValidator::IsProc(DesignEntityType token_type) {
   return token_type==DesignEntityType::PROCEDURE;
 }
@@ -357,6 +385,16 @@ bool ParsedQueryValidator::IsExpressionSpec(PqlTokenType token_type) {
   // exact match not in iter 1
   return token_type==PqlTokenType::UNDERSCORE
       || token_type==PqlTokenType::SUB_EXPRESSION;
+}
+
+bool ParsedQueryValidator::IsNameAttribute(AtrriName attri_name) {
+  return attri_name==AtrriName::PROCNAME
+      || attri_name==AtrriName::VARNAME;
+}
+
+bool ParsedQueryValidator::IsIntegerAttribute(AtrriName attri_name) {
+  return attri_name==AtrriName::VALUE
+      || attri_name==AtrriName::STMTNO;
 }
 
 }
