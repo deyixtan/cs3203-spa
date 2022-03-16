@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "source_lexer.h"
+#include "lexer/source_lexer.h"
 #include "source_parser.h"
 #include "design_extractor.h"
 #include "utils/file_util.h"
