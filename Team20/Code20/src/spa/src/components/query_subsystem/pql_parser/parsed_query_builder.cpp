@@ -71,17 +71,13 @@ ParsedQuery ParsedQueryBuilder::Build() {
     } else if(token.type == PqlTokenType::PATTERN) {
       prev = token.type;
       pos = ParsePattern(pq, pos);
-    } else if(token.type == PqlTokenType::ATTRIBUTE) {
+    } else if(token.type == PqlTokenType::EQUAL) {
       prev = token.type;
       pos = ParseWithClause(pq, pos);
-    } else if(token.type == PqlTokenType::AND && tokens_[pos + 1].type == PqlTokenType::SYNONYM) {
-      if (prev == PqlTokenType::PATTERN) {
+    } else if(token.type == PqlTokenType::AND && tokens_[pos + 1].type == PqlTokenType::SYNONYM && prev == PqlTokenType::PATTERN) {
         PqlToken dummy_token = PqlToken(PqlTokenType::PATTERN, "pattern");
         auto itPos = tokens_.begin() + pos + 1;
         tokens_.insert(itPos, dummy_token);
-      } else {
-        throw INVALID_AND_CLAUSE_FORMAT;
-      }
     } else {
       pos++;
     }
@@ -158,10 +154,10 @@ int ParsedQueryBuilder::ParseRelationship(ParsedQuery &pq, int pos) {
 }
 
 int ParsedQueryBuilder::ParseWithClause(ParsedQuery &pq, int pos) {
-  PqlToken attr = tokens_[pos];
-  pos += 2;
-  PqlToken comparator = tokens_[pos];
-  With with_clause = With(attr, comparator);
+  PqlToken first_token = tokens_[pos - 1];
+  pos += 1;
+  PqlToken second_token = tokens_[pos];
+  With with_clause = With(first_token, second_token);
   pq.AddWithClause(with_clause);
   pos += 1;
   return pos;
