@@ -22,9 +22,18 @@ std::string ProgramNode::GetPatternFormat() {
 }
 
 std::string ProgramNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+  std::unordered_map<std::string, std::shared_ptr<source::CfgProcedureNode>> procedure_map;
+
   for (auto &procedure : m_procedures) {
-    return procedure->Process(populator, visited, is_uses, cfg_proc_node, cfg_node);
+    source::CfgGroupNode cfg_root = source::CfgGroupNode();
+    std::shared_ptr<source::CfgProcedureNode> cfg_proc_node_ptr = std::make_shared<source::CfgProcedureNode>();
+    procedure->Process(populator, visited, false, cfg_proc_node_ptr, nullptr);
+    procedure_map.insert({procedure->GetIdentifier(), cfg_proc_node_ptr});
   }
+
+  source::CfgProgramNode program_cfg = source::CfgProgramNode(procedure_map);
+  populator.PopulateCfg(program_cfg);
+  return "";
 }
 
 bool ProgramNode::operator==(const ProgramNode &other) const {
