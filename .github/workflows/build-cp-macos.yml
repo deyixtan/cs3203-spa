@@ -14,7 +14,7 @@ env:
 jobs:
   build-and-test:
     runs-on: macos-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     strategy:
       fail-fast: true
 
@@ -32,14 +32,14 @@ jobs:
       - name: Build Project
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE -- -j 8
+        run: cmake --build . --config $BUILD_TYPE --target spa -- -j 24
 
       - name: Run Unit Tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: ${{runner.workspace}}/build/src/unit_testing/unit_testing
+        run: cmake --build . --config $BUILD_TYPE --target unit_testing -- -j 24
 
       - name: Run Integration Tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: ${{runner.workspace}}/build/src/integration_testing/integration_testing
+        run: cmake --build . --config $BUILD_TYPE --target integration_testing -- -j 24
