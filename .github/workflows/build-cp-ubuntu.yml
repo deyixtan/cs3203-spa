@@ -9,7 +9,7 @@ on:
       - master
 
 env:
-    BUILD_TYPE: Release
+  BUILD_TYPE: Release
 
 jobs:
   build-and-test:
@@ -29,18 +29,12 @@ jobs:
         working-directory: ${{runner.workspace}}/build
         run: cmake $GITHUB_WORKSPACE/Team20/Code20/ -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
-      - name: Build Project
-        working-directory: ${{runner.workspace}}/build
-        shell: bash
-        run: cmake --build . --config $BUILD_TYPE
-
       - name: Run Unit Tests
-        shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: ${{runner.workspace}}/build/src/unit_testing/unit_testing
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE --target unit_testing
 
       - name: Run Integration Tests
-        shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: ${{runner.workspace}}/build/src/integration_testing/integration_testing
-
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE --target integration_testing
