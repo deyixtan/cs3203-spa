@@ -2,7 +2,7 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
 
 #include "node_conditional_expression.h"
-#include "../populator.h"
+#include "components/source_subsystem/populator.h"
 
 enum class BooleanOperator {
   AND,
