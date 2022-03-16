@@ -31,5 +31,5 @@ procedure Uses {
 procedure foo {
 19  print apple;
 20  read avocado;
-21  grape = mango;
+21  grape = peach * banana;
 }

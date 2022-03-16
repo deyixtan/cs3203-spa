@@ -1,17 +1,17 @@
 1 - Wildcard select if
 if ifs;
 Select ifs pattern ifs(_,_,_)
-1,2,3,10
+1,2,3,9
 5000
 2 - Literal select if
 if ifs;
 Select ifs pattern ifs("y",_,_)
-10
+9
 5000
 3 - Literal select if
 if ifs;
 Select ifs pattern ifs("x",_,_)
-10
+9
 5000
 4 - Synonym select variable
 if ifs; variable v;
@@ -21,12 +21,12 @@ a,b,x,y
 5 - Wildcard with random spaces
 if ifs; variable v;
 Select ifs pattern ifs(        _,        _,        _      )
-1,2,3,10
+1,2,3,9
 5000
 6 - Invalid synonym (negative)
 if ifs; constant v;
 Select v pattern ifs(v,_,_)
-1,2,3,5,7,10101010
+none
 5000
 7 - Invalid synonym (negative)
 if ifs; stmt v;
@@ -96,17 +96,17 @@ none
 20 - Wildcard select while
 while w;
 Select w pattern w(_,_)
-5,9,13
+5,8,12
 5000
 21 - Literal select while
 while w;
 Select w pattern w("x",_)
-5,13
+5,12
 5000
 22 - Literal select while
 while w;
 Select w pattern w("y",_)
-5
+12
 5000
 23 - Literal select while
 while w;
@@ -116,7 +116,7 @@ none
 24 - Synonym select while
 while w; variable v;
 Select v pattern w(v,_)
-a,c,d,x,y
+c,d,x,y
 5000
 25 - Additional argument (negative)
 while w;

@@ -4,9 +4,9 @@ Select p such that Modifies(p, v)
 Modifies, foo
 5000
 2
-procedure p; variable v
+procedure p; variable v;
 Select v such that Modifies(p, v)
-d,p,x,z,q,s
+d,p,x,z,p,q
 5000
 3
 procedure p;
@@ -21,7 +21,7 @@ Modifies, foo
 5
 variable v;
 Select v such that Modifies("Modifies", v)
-d,p,x,y
+d,p,x,z
 5000
 6
 variable v;
@@ -36,12 +36,12 @@ none
 8
 procedure v;
 Select v such that Modifies(v, "p")
-Modifies
+foo
 5000
 9
 variable v;
 Select v such that Modifies("Modifies ", v)
-none
+d,p,x,z
 5000
 10
 variable v;

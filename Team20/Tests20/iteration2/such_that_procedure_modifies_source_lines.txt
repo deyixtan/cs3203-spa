@@ -1,18 +1,18 @@
 procedure Modifies {
 1  read d;
 2  print d;
-3  while (d > c) {
-4    read y;
-5    while (d > c) {
-6      read y;
-7      d = 3 + w;
-8      w = 4;
+3  while (d > y) {
+4    read x;
+5    while (d > y) {
+6      read x;
+7      d = 3 + z;
+8      z = 4;
     }
   }
-9  if (d > c) then {
-10    read y;
+9  if (d > y) then {
+10    read x;
   } else {
-11    print y;
+11    print x;
   }
 12  p = 2;
 }
