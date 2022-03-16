@@ -9,7 +9,7 @@ on:
       - master
 
 env:
-    BUILD_TYPE: Release
+  BUILD_TYPE: Release
 
 jobs:
   build-and-test:
@@ -32,15 +32,14 @@ jobs:
       - name: Build Project
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE
+        run: cmake --build . --config $BUILD_TYPE -- -j 8
 
       - name: Run Unit Tests
-        shell: bash
         working-directory: ${{runner.workspace}}/build
+        shell: bash
         run: ${{runner.workspace}}/build/src/unit_testing/unit_testing
 
       - name: Run Integration Tests
-        shell: bash
         working-directory: ${{runner.workspace}}/build
+        shell: bash
         run: ${{runner.workspace}}/build/src/integration_testing/integration_testing
-
