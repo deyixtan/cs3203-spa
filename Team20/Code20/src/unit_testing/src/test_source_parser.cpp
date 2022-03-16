@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "components/source_subsystem/lexer/source_lexer.h"
-#include "components/source_subsystem/source_parser.h"
+#include "components/source_subsystem/parser/source_parser.h"
 #include "components/source_subsystem/exceptions/empty_statement_list.h"
 #include "components/source_subsystem/exceptions/invalid_parse_condition.h"
 #include "components/source_subsystem/exceptions/invalid_parse_factor.h"
