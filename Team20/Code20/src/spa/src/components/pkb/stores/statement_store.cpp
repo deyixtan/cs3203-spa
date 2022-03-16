@@ -87,12 +87,12 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StatementStor
   return proc_var_pairs;
 }
 
-std::unordered_set<std::string> StatementStore::GetPattern(StmtType type, std::string const &lhs, std::string rhs) {
+std::unordered_set<std::string> StatementStore::GetPattern(StmtType type, std::string lhs, std::string rhs) {
   ExpressionTree expr_tree = ExpressionTree();
   std::unordered_set<std::string> result = {};
+  lhs.erase(remove(lhs.begin(), lhs.end(), ' '), lhs.end());
   rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
-  std::string temp = "";
-  std::string sub_pattern;
+  std::string temp, sub_pattern;
 
   switch (type) {
     case StmtType::STMT:
@@ -166,12 +166,12 @@ std::unordered_set<std::string> StatementStore::GetPattern(StmtType type, std::s
       break;
     case StmtType::IF:
       for (auto const&[key, val] : m_if_pattern_map) {
-        //pattern ifs(_, _)
+        //pattern ifs(_, _, _)
         if (lhs == "_") {
           result.insert(key);
         }
 
-        //pattern ifs("x", _)
+        //pattern ifs("x", _, _)
         if (lhs != "_" && val.find(sub_pattern) != std::string::npos) {
           result.insert(key);
         }
@@ -181,34 +181,53 @@ std::unordered_set<std::string> StatementStore::GetPattern(StmtType type, std::s
   return result;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> StatementStore::GetPatternSynonym(std::string rhs) {
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> StatementStore::GetPatternSynonym(StmtType type, std::string rhs) {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
   rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
 
-  for (auto const&[key, val] : m_stmt_pattern_map) {
-    //pattern a(v, _)
-    if (rhs == "_") {
-      result.insert({key, val.first});
-    }
+  switch (type) {
+    case StmtType::STMT:
+      for (auto const&[key, val] : m_stmt_pattern_map) {
+        //pattern a(v, _)
+        if (rhs == "_") {
+          result.insert({key, val.first});
+        }
 
-    //pattern a(v, "x+1")
-    if (rhs != "_" && rhs.find('_') == std::string::npos) {
-      if (val.second == rhs) {
-        result.insert({key, val.first});
-      }
-    }
+        //pattern a(v, "x+1")
+        if (rhs != "_" && rhs.find('_') == std::string::npos) {
+          if (val.second == rhs) {
+            result.insert({key, val.first});
+          }
+        }
 
-    //pattern a(v, _"x+1"_)
-    if (rhs != "_" && rhs.find('_') != std::string::npos) {
-      auto first = rhs.find("_\"");
-      auto last = rhs.find("\"_");
-      auto sub_pattern = rhs.substr(first + 2, last - 2);
-      if (val.second.find(sub_pattern) != std::string::npos) {
-        result.insert({key, val.first});
+        //pattern a(v, _"x+1"_)
+        if (rhs != "_" && rhs.find('_') != std::string::npos) {
+          auto first = rhs.find("_\"");
+          auto last = rhs.find("\"_");
+          auto sub_pattern = rhs.substr(first + 2, last - 2);
+          if (val.second.find(sub_pattern) != std::string::npos) {
+            result.insert({key, val.first});
+          }
+        }
       }
-    }
+      break;
+    case StmtType::WHILE:
+      for (auto const&[key, val] : m_while_pattern_map) {
+        //pattern w(v, _)
+        if (rhs == "_") {
+          result.insert({key, val});
+        }
+      }
+      break;
+    case StmtType::IF:
+      for (auto const&[key, val] : m_if_pattern_map) {
+        //pattern ifs(v, _, _)
+        if (rhs == "_") {
+          result.insert({key, val});
+        }
+      }
+      break;
   }
-
   return result;
 }
 

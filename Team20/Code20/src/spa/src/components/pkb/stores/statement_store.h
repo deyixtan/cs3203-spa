@@ -37,8 +37,8 @@ class StatementStore : public Store {
   [[nodiscard]] std::unordered_set<std::string> GetProcByVar(std::string const &var);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStmtVar();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllProcVar();
-  [[nodiscard]] std::unordered_set<std::string> GetPattern(StmtType type, std::string const &lhs, std::string rhs);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetPatternSynonym(std::string rhs);
+  [[nodiscard]] std::unordered_set<std::string> GetPattern(StmtType type, std::string lhs, std::string rhs);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetPatternSynonym(StmtType type, std::string rhs);
   [[nodiscard]] std::unordered_set<std::string> GetAllStmt();
   [[nodiscard]] std::unordered_set<std::string> GetAllProc();
 };
