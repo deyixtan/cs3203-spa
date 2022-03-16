@@ -86,6 +86,24 @@ bool ParsedQueryValidator::ValidateSuchThatClause(ParsedQuery query) {
       case PqlTokenType::MODIFIES: {
         return ValidateModifiesArguments(query);
       }
+      case PqlTokenType::CALLS: {
+        return ValidateCallsCallsTArguments(query);
+      }
+      case PqlTokenType::CALLS_T: {
+        return ValidateCallsCallsTArguments(query);
+      }
+      case PqlTokenType::NEXT: {
+        return ValidateNextNextTArguments(query);
+      }
+      case PqlTokenType::NEXT_T: {
+        return ValidateNextNextTArguments(query);
+      }
+      case PqlTokenType::AFFECTS: {
+        return ValidateAffectsAffectsTArguments(query);
+      }
+      case PqlTokenType::AFFECTS_T: {
+        return ValidateAffectsAffectsTArguments(query);
+      }
       default: {
         return false;
       }
@@ -100,79 +118,15 @@ bool ParsedQueryValidator::ValidateFollowsFollowsTArguments(ParsedQuery query) {
   Relationship relationship = query.GetRelationships().front();
   PqlToken first_arg = relationship.GetFirst();
   PqlToken second_arg = relationship.GetSecond();
-
-  if (!IsStmtRef(first_arg.type)) {
-    return false;
-  }
-  if (!IsStmtRef(second_arg.type)) {
-    return false;
-  }
+  std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
 
   if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
     if (first_arg.value==second_arg.value) {
       // Follows(s, s) is semantically invalid
       return false;
     }
-
-    bool found_first = false;
-    DesignEntityType first_arg_design_entity;
-    bool found_second = false;
-    DesignEntityType second_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first == first_arg.value) {
-        found_first = true;
-        first_arg_design_entity = declaration.second;
-      }
-      if (declaration.first == second_arg.value) {
-        found_second = true;
-        second_arg_design_entity = declaration.second;
-      }
-    }
-
-    if (!found_first || !found_second) {
-      return false;
-    }
-    if (!IsStmt(first_arg_design_entity)) {
-      return false;
-    }
-    if (!IsStmt(second_arg_design_entity)) {
-      return false;
-    }
-  } else if (first_arg.type==PqlTokenType::SYNONYM) {
-    bool found_first = false;
-    DesignEntityType first_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first == first_arg.value) {
-        found_first = true;
-        first_arg_design_entity = declaration.second;
-      }
-    }
-
-    if (!found_first) {
-      return false;
-    }
-    if (!IsStmt(first_arg_design_entity)) {
-      return false;
-    }
-  } else if (second_arg.type==PqlTokenType::SYNONYM) {
-    bool found_second = false;
-    DesignEntityType second_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first == second_arg.value) {
-        found_second = true;
-        second_arg_design_entity = declaration.second;
-      }
-    }
-
-    if (!found_second) {
-      return false;
-    }
-    if (!IsStmt(second_arg_design_entity)) {
-      return false;
-    }
   }
-
-  return true;
+  return ValidateNextNextTArguments(query);
 }
 
 bool ParsedQueryValidator::ValidateParentParentTArguments(ParsedQuery query) {
@@ -185,14 +139,7 @@ bool ParsedQueryValidator::ValidateUsesArguments(ParsedQuery query) {
   Relationship relationship = query.GetRelationships().front();
   PqlToken first_arg = relationship.GetFirst();
   PqlToken second_arg = relationship.GetSecond();
-
-  if (first_arg.type!=PqlTokenType::SYNONYM
-      && first_arg.type!=PqlTokenType::NUMBER) {
-    return false;
-  }
-  if (!IsEntRef(second_arg.type)) {
-    return false;
-  }
+  std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
 
   if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
     if (first_arg.value==second_arg.value) {
@@ -200,60 +147,18 @@ bool ParsedQueryValidator::ValidateUsesArguments(ParsedQuery query) {
       return false;
     }
 
-    bool found_first = false;
-    DesignEntityType first_arg_design_entity;
-    bool found_second = false;
-    DesignEntityType second_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first==first_arg.value) {
-        found_first = true;
-        first_arg_design_entity = declaration.second;
-      }
-      if (declaration.first == second_arg.value) {
-        found_second = true;
-        second_arg_design_entity = declaration.second;
-      }
-    }
-
-    if (!found_first || !found_second) {
+    if (!IsStmt(declarations.at(first_arg.value)) && declarations.at(first_arg.value) != DesignEntityType::PROCEDURE) {
       return false;
     }
-    if (!IsStmt(first_arg_design_entity) && first_arg_design_entity != DesignEntityType::PROCEDURE) {
+    if (declarations.at(second_arg.value) !=DesignEntityType::VARIABLE) {
       return false;
     }
-    if (second_arg_design_entity!=DesignEntityType::VARIABLE) {
+  } else if (first_arg.type == PqlTokenType::SYNONYM) {
+    if (!IsStmt(declarations.at(first_arg.value))) {
       return false;
     }
-  } else if (first_arg.type==PqlTokenType::SYNONYM) {
-    bool found_first = false;
-    DesignEntityType first_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first == first_arg.value) {
-        found_first = true;
-        first_arg_design_entity = declaration.second;
-      }
-    }
-
-    if (!found_first) {
-      return false;
-    }
-    if (!IsStmt(first_arg_design_entity)) {
-      return false;
-    }
-  } else if (second_arg.type==PqlTokenType::SYNONYM) {
-    bool found_second = false;
-    DesignEntityType second_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first == second_arg.value) {
-        found_second = true;
-        second_arg_design_entity = declaration.second;
-      }
-    }
-
-    if (!found_second) {
-      return false;
-    }
-    if (second_arg_design_entity!=DesignEntityType::VARIABLE) {
+  } else if (second_arg.type == PqlTokenType::SYNONYM) {
+    if (declarations.at(second_arg.value)!= DesignEntityType::VARIABLE) {
       return false;
     }
   }
@@ -264,6 +169,65 @@ bool ParsedQueryValidator::ValidateUsesArguments(ParsedQuery query) {
 bool ParsedQueryValidator::ValidateModifiesArguments(ParsedQuery query) {
   // same validation as Uses
   return ValidateUsesArguments(query);
+}
+
+bool ParsedQueryValidator::ValidateCallsCallsTArguments(ParsedQuery query) {
+  assert(!query.GetRelationships().empty());
+  Relationship relationship = query.GetRelationships().front();
+  PqlToken first_arg = relationship.GetFirst();
+  PqlToken second_arg = relationship.GetSecond();
+  std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
+
+  if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+    if (first_arg.value==second_arg.value) {
+      // Calls(p, p) is semantically invalid due to cyclic call
+      return false;
+    }
+    if (!IsProc(declarations.at(first_arg.value))) {
+      return false;
+    }
+    if (!IsProc(declarations.at(second_arg.value))) {
+      return false;
+    }
+  } else if (first_arg.type==PqlTokenType::SYNONYM) {
+    if (!IsProc(declarations.at(first_arg.value))) {
+      return false;
+    }
+  } else if (second_arg.type==PqlTokenType::SYNONYM) {
+    if (!IsProc(declarations.at(second_arg.value))) {
+      return false;
+    }
+  }
+  return true;
+}
+bool ParsedQueryValidator::ValidateNextNextTArguments(ParsedQuery query) {
+  assert(!query.GetRelationships().empty());
+  Relationship relationship = query.GetRelationships().front();
+  PqlToken first_arg = relationship.GetFirst();
+  PqlToken second_arg = relationship.GetSecond();
+  std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
+
+  if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+    if (!IsStmt(declarations.at(first_arg.value))) {
+      return false;
+    }
+    if (!IsStmt(declarations.at(second_arg.value))) {
+      return false;
+    }
+  } else if (first_arg.type==PqlTokenType::SYNONYM) {
+    if (!IsStmt(declarations.at(first_arg.value))) {
+      return false;
+    }
+  } else if (second_arg.type==PqlTokenType::SYNONYM) {
+    if (!IsStmt(declarations.at(second_arg.value))) {
+      return false;
+    }
+  }
+  return true;
+}
+bool ParsedQueryValidator::ValidateAffectsAffectsTArguments(ParsedQuery query) {
+  // same validation as Next.Next*
+  return ValidateNextNextTArguments(query);
 }
 
 bool ParsedQueryValidator::ValidatePatternClause(ParsedQuery query) {
@@ -325,6 +289,10 @@ bool ParsedQueryValidator::ValidatePatternArguments(ParsedQuery query) {
   }
 
   return true;
+}
+
+bool ParsedQueryValidator::IsProc(DesignEntityType token_type) {
+  return token_type==DesignEntityType::PROCEDURE;
 }
 
 bool ParsedQueryValidator::IsStmt(DesignEntityType token_type) {
