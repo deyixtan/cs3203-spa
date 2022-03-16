@@ -1,32 +1,32 @@
 procedure main {
-1  a = 2;
-2  while (i != 0) {
-3    a = a - 1;
-4    if (a == 1) then {
-5      z = z + 1 * 5;
+  a = 2;
+  while (i != 0) {
+    a = a - 1;
+    if (a == 1) then {
+      z = z + 1 * 5;
     } else {
-6      a = z + a - 1;
+      a = z + a - 1;
     }
-7    z = z + a + i;
-8    call bar;
-9    i = i - 1;
+    z = z + a + i;
+    call bar;
+    i = i - 1;
   }
-10  call foo;
-11  print x;
-12  print y;
-13  while (a < 0) {
-14    while (x == y) {
-15      b = x * 2;
-16      x = a / 2;
-17      read x;
+  call foo;
+  print x;
+  print y;
+  while (a < 0) {
+    while (x == y) {
+      b = x * 2;
+      x = a / 2;
+      read x;
     }
   }
 }
 
 procedure bar {
-18  call foo;
+  call foo;
 }
 
 procedure foo {
-19  print lol;
+  print lol;
 }

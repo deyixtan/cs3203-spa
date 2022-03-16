@@ -150,7 +150,7 @@ main
 5000
 31 - Basic
 procedure p;
-Select p such that Next(57,59)
+Select p such that Next(57,58)
 main
 5000
 32 - Basic
@@ -326,17 +326,17 @@ main
 66 - Deep nest with many dummy nodes between
 procedure p;
 Select p such that Next(71,95)
-main
+none
 5000
 67 - Deep nest with many dummy nodes between
 procedure p;
 Select p such that Next(72,95)
-main
+none
 5000
 68 - Deep nest with many dummy nodes between
 procedure p;
 Select p such that Next(81,95)
-main
+none
 5000
 69 - Single level dummy nodes
 procedure p;
@@ -500,6 +500,7 @@ none
 101 - Skip while body and skip nodes
 procedure p
 Select p such that Next(120,128)
+5000
 none
 102 - Invalid
 procedure p;
@@ -579,7 +580,7 @@ none
 117 - Double same synonym
 while w1, w2;
 Select w1 such that Next(w1,w2)
-97,103,104,105,106,107,108,109,110,114,120,124,127,130,134,145
+66,68,73,82,97,103,104,105,106,108,110,114,120,124,127,130,134,145
 5000
 118 - Double same synonym
 procedure p; while w1, w2;
