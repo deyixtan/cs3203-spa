@@ -13,7 +13,7 @@ env:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 20
     strategy:
       fail-fast: true
@@ -32,17 +32,17 @@ jobs:
       - name: Build Project
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target spa
+        run: cmake -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra" --build . --config $BUILD_TYPE --target spa
 
       - name: Build Unit Tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target unit_testing
+        run: cmake -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra" --build . --config $BUILD_TYPE --target unit_testing
 
       - name: Build Integration Tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target integration_testing
+        run: cmake -DCMAKE_CXX_FLAGS="-Werror -Wall -Wextra" --build . --config $BUILD_TYPE --target integration_testing
 
       - name: Run Unit Tests
         working-directory: ${{runner.workspace}}/build
