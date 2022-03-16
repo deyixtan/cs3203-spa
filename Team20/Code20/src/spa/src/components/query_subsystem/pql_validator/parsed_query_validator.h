@@ -17,19 +17,23 @@ class ParsedQueryValidator {
   bool IsProc(DesignEntityType);
   bool IsEntRef(PqlTokenType);
   bool IsExpressionSpec(PqlTokenType);
-  bool ValidateResultClauseDeclared(ParsedQuery);
-  bool ValidateSuchThatClause(ParsedQuery);
-  bool ValidateFollowsFollowsTArguments(ParsedQuery);
-  bool ValidateParentParentTArguments(ParsedQuery);
-  bool ValidateCallsCallsTArguments(ParsedQuery);
-  bool ValidateNextNextTArguments(ParsedQuery);
-  bool ValidateAffectsAffectsTArguments(ParsedQuery);
-  bool ValidateUsesArguments(ParsedQuery);
-  bool ValidateModifiesArguments(ParsedQuery);
-  bool ValidatePatternClause(ParsedQuery);
-  bool ValidatePatternSynonymIsAssigned(ParsedQuery);
-  bool ValidatePatternArguments(ParsedQuery);
   bool ValidateAttribute(PqlToken, std::unordered_map<std::string, DesignEntityType>);
+
+  bool ValidateResultClauseDeclared(ParsedQuery);
+
+  bool ValidateSuchThatClause(ParsedQuery);
+  bool ValidateFollowsFollowsTArguments(Relationship, std::unordered_map<std::string, DesignEntityType>);
+  bool ValidateParentParentTArguments(Relationship, std::unordered_map<std::string, DesignEntityType>);
+  bool ValidateCallsCallsTArguments(Relationship, std::unordered_map<std::string, DesignEntityType>);
+  bool ValidateNextNextTArguments(Relationship, std::unordered_map<std::string, DesignEntityType>);
+  bool ValidateAffectsAffectsTArguments(Relationship, std::unordered_map<std::string, DesignEntityType>);
+  bool ValidateUsesArguments(Relationship, std::unordered_map<std::string, DesignEntityType>);
+  bool ValidateModifiesArguments(Relationship, std::unordered_map<std::string, DesignEntityType>);
+
+  bool ValidatePatternClause(ParsedQuery);
+  bool ValidateAssignPatternArguments(Pattern, std::unordered_map<std::string, DesignEntityType>);
+  bool ValidateWhilePatternArguments(Pattern, std::unordered_map<std::string, DesignEntityType>);
+  bool ValidateIfPatternArguments(Pattern, std::unordered_map<std::string, DesignEntityType>);
 };
 
 };

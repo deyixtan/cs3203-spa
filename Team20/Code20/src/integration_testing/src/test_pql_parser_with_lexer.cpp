@@ -16,7 +16,7 @@ TEST_CASE("Test query with uses and pattern") {
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "\"x\"");
-  REQUIRE(ptrn.GetSynAssign().value == "a");
+  REQUIRE(ptrn.GetSynonym().value == "a");
   REQUIRE(ptrn.GetFirst().value == "v");
   REQUIRE(ptrn.GetSecond().value == "_");
   REQUIRE(result_clause.GetValues()[0].value == "s");
@@ -38,7 +38,7 @@ TEST_CASE("Test query parser with more than one synonym") {
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "\"x\"");
-  REQUIRE(ptrn.GetSynAssign().value == "a");
+  REQUIRE(ptrn.GetSynonym().value == "a");
   REQUIRE(ptrn.GetFirst().value == "v");
   REQUIRE(ptrn.GetSecond().value == "_");
   REQUIRE(result_clause.GetValues()[0].value == "s");
@@ -206,10 +206,10 @@ TEST_CASE("Test query parser with double pattern") {
   std::vector<With> withs = pq.GetWithClause();
   // Test that no relationships have been added to query struct
   REQUIRE(rship.size() == 0);
-  REQUIRE(ptrn_assign.GetSynAssign().value == "a");
+  REQUIRE(ptrn_assign.GetSynonym().value == "a");
   REQUIRE(ptrn_assign.GetFirst().value == "v");
   REQUIRE(ptrn_assign.GetSecond().value == "_");
-  REQUIRE(ptrn_stmt.GetSynAssign().value == "s");
+  REQUIRE(ptrn_stmt.GetSynonym().value == "s");
   REQUIRE(ptrn_stmt.GetFirst().value == "v");
   REQUIRE(ptrn_stmt.GetSecond().value == "_\"x\"_");
   REQUIRE(result_clause.GetValues()[0].value == "a");
@@ -234,7 +234,7 @@ TEST_CASE("Test query parser with 'with' clause and 'and'") {
   With with_second = withs[1];
   // Test that no relationships have been added to query struct
   REQUIRE(rship.size() == 0);
-  REQUIRE(ptrn.GetSynAssign().value == "a");
+  REQUIRE(ptrn.GetSynonym().value == "a");
   REQUIRE(ptrn.GetFirst().value == "v");
   REQUIRE(ptrn.GetSecond().value == "_");
   REQUIRE(result_clause.GetValues()[0].value == "a");

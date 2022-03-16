@@ -94,7 +94,7 @@ TEST_CASE("Test query parser with uses and pattern") {
   REQUIRE(rship.GetFirst().value == "s");
   REQUIRE(rship.GetSecond().value == "\"x\"");
   REQUIRE(result_clause.GetValues()[0].value == "s");
-  REQUIRE(patt.GetSynAssign().value == "a");
+  REQUIRE(patt.GetSynonym().value == "a");
   REQUIRE(patt.GetFirst().value == "v");
   REQUIRE(patt.GetSecond().value == "_");
   REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
@@ -198,7 +198,7 @@ TEST_CASE("Test query parser with pattern without such that") {
   const auto decl = pq.GetDeclaration();
 
   REQUIRE(result_clause.GetValues()[0].value == "a");
-  REQUIRE(patt->GetSynAssign().value == "a");
+  REQUIRE(patt->GetSynonym().value == "a");
   REQUIRE(patt->GetFirst().value == "v");
   REQUIRE(patt->GetSecond().value == "_");
   REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);

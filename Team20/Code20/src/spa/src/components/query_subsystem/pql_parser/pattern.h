@@ -5,7 +5,7 @@
 
 class Pattern {
  private:
-  PqlToken syn_assign_;
+  PqlToken synonym_;
   PqlToken first_;
   PqlToken second_;
   PqlToken third_;
@@ -14,7 +14,7 @@ class Pattern {
   Pattern();
   Pattern(PqlToken, PqlToken, PqlToken);
   Pattern(PqlToken, PqlToken, PqlToken, PqlToken); // For ifs only
-  PqlToken GetSynAssign();
+  PqlToken GetSynonym();
   PqlToken GetFirst();
   PqlToken GetSecond();
   PqlToken GetThird();
