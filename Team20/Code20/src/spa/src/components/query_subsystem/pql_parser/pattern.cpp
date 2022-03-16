@@ -2,17 +2,17 @@
 
 Pattern::Pattern() {}
 Pattern::Pattern(PqlToken syn_assign, PqlToken first, PqlToken second)
-    : syn_assign_(syn_assign),
+    : synonym_(syn_assign),
       first_(first),
       second_(second) {}
 Pattern::Pattern(PqlToken syn_assign, PqlToken first, PqlToken second, PqlToken third)
-    : syn_assign_(syn_assign),
+    : synonym_(syn_assign),
       first_(first),
       second_(second),
       third_(third) {}
 
-PqlToken Pattern::GetSynAssign() {
-  return syn_assign_;
+PqlToken Pattern::GetSynonym() {
+  return synonym_;
 }
 
 PqlToken Pattern::GetFirst() {
