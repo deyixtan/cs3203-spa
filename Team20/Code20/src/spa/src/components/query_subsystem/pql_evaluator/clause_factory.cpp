@@ -58,7 +58,7 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
 }
 
 std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern, PKB *pkb) {
-  return std::make_unique<PatternAssignClause>(pattern.GetSynAssign().value, pattern.GetFirst(), pattern.GetSecond(), pkb);
+  return std::make_unique<PatternAssignClause>(pattern.GetSynonym().value, pattern.GetFirst(), pattern.GetSecond(), pkb);
 }
 
 std::unique_ptr<Clause> ClauseFactory::Create(PqlToken selected_synonym,
