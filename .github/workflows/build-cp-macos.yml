@@ -32,7 +32,7 @@ jobs:
       - name: Build Project
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE -- -quiet
+        run: cmake --build . --silent --config $BUILD_TYPE
 
       - name: Run Unit Tests
         working-directory: ${{runner.workspace}}/build
