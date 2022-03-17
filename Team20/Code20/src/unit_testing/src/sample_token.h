@@ -60,6 +60,7 @@ extern PqlToken attribute_statement_token;
 extern PqlToken attribute_statement_token;
 extern PqlToken attribute_assign_token;
 extern PqlToken attribute_var_token;
+extern PqlToken attribute_const_token;
 
 extern PqlToken select_token;
 extern PqlToken such_token;

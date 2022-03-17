@@ -364,7 +364,7 @@ bool ParsedQueryValidator::ValidateWithClause(ParsedQuery query) {
       if (!ValidateAttribute(second_arg, declarations)) {
         return false;
       }
-      std::pair<std::pair<DesignEntityType, std::string>, AtrriName> second_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+      std::pair<std::pair<DesignEntityType, std::string>, AtrriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
 
       if (IsNameAttribute(second_attribute.second)) {
         if (first_arg.type != PqlTokenType::IDENT_WITH_QUOTES) {
