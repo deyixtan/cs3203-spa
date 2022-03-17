@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "../pkb/stores/store.h"
+
 class PKB;
 class Cfg;
 
@@ -30,9 +32,7 @@ class PkbClient {
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
   void PopulateCfg(Cfg &cfg);
-  void AddStmtPattern(std::string stmt, std::string lhs, std::string rhs);
-  void AddWhilePattern(std::string stmt, std::string expr);
-  void AddIfPattern(std::string stmt, std::string expr);
+  void AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_

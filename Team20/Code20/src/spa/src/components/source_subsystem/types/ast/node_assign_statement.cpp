@@ -41,7 +41,7 @@ void AssignStatementNode::Accept(DesignExtractor *de) {
   var_name = m_identifier->GetIdentifier();
   de->Visit(m_identifier, false);
   std::string rhs_expr = de->Visit(m_expression, true);
-  de->GetPkbClient()->AddStmtPattern(stmt_num, var_name, rhs_expr);
+  de->GetPkbClient()->AddPattern(STMT, stmt_num, var_name, rhs_expr);
   de->GetPkbClient()->PopulateAssign(stmt_num);
   de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
 }

@@ -772,14 +772,8 @@ TEST_CASE("Check pattern matching (wrong)") {
 TEST_CASE("Check pattern synonym matching exact (correct)") {
   PKB *pkb = set_up_pkb();
   
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetPatternStore()->GetStmtWithPatternSynonym("dog");
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected;
-  for (auto i : pattern_pairs) {
-    if (i.second == "(dog)") {
-      expected.insert({pattern_to_stmt.at(i), i.first});
-    }
-  }
-
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetPatternStore()->GetStmtWithPatternSynonym();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected = pattern_pairs_synonym;
   REQUIRE(actual == expected);
 }
 
@@ -787,13 +781,8 @@ TEST_CASE("Check pattern synonym matching partial (correct)") {
   PKB *pkb = set_up_pkb();
   
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
-      actual = pkb->GetPatternStore()->GetStmtWithPatternSynonym("_\"dog\"_");
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected;
-  for (auto i : pattern_pairs) {
-    if (i.second.find("(dog)") != std::string::npos) {
-      expected.insert({pattern_to_stmt.at(i), i.first});
-    }
-  }
+      actual = pkb->GetPatternStore()->GetStmtWithPatternSynonym();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected = pattern_pairs_synonym;
 
   REQUIRE(actual == expected);
 }
