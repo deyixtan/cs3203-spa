@@ -1,19 +1,22 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_CFG_CFGNODE_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_CFG_CFGNODE_H_
+#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_TYPES_CFG_CFG_NODE_H_
+#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_TYPES_CFG_CFG_NODE_H_
 
+#include <string>
 #include <vector>
-
-namespace source {
 
 class CfgNode {
  private:
-  int m_stmt_no;
+  std::vector<std::string> m_stmt_no_list;
+  std::vector<std::shared_ptr<CfgNode>> m_next_list;
 
  public:
-  CfgNode(int stmt_no);
-  [[nodiscard]] int GetStatementNumber();
+  CfgNode();
+  std::vector<std::string> GetStatementList();
+  void AddStatement(std::string stmt_no);
+  void AddNext(std::shared_ptr<CfgNode> cfg_node);
 };
 
-};
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_CFG_CFGNODE_H_
+
+
+#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_TYPES_CFG_CFG_NODE_H_
