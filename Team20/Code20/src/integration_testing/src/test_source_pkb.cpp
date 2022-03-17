@@ -9,6 +9,8 @@ using namespace source;
 
 extern std::string sample_source1;
 extern std::string sample_source2;
+extern std::string sample_source3;
+
 
 std::shared_ptr<ProgramNode> GenerateAbstractSyntaxTree(std::string source) {
   std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
@@ -936,5 +938,36 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
     REQUIRE(result4 == expected_result4);
     REQUIRE(result5 == expected_result5);
     REQUIRE(result6 == expected_result6);
+  }
+}
+
+TEST_CASE("Test components between Source and PKB (Sample source 3)") {
+  std::shared_ptr<ProgramNode> ast = GenerateAbstractSyntaxTree(sample_source3);
+  PKB *pkb = GetPopulatedPkbInstance(ast);
+
+  SECTION("Test Calls") {
+    std::unordered_set<std::string> result1 = pkb->GetCallStore()->GetCallersOf("fizz");
+    std::unordered_set<std::string> result2 = pkb->GetCallStore()->GetCallersOf("foo");
+    std::unordered_set<std::string> result3 = pkb->GetCallStore()->GetCallersStarOf("fizz");
+    std::unordered_set<std::string> result4 = pkb->GetCallStore()->GetCalleesStarOf("bar");
+    std::unordered_set<std::string> result5 = pkb->GetCallStore()->GetCallersOf("buzz");
+    std::unordered_set<std::string> result6 = pkb->GetCallStore()->GetCallersStarOf("buzz");
+    std::unordered_set<std::string> result7 = pkb->GetCallStore()->GetCalleesStarOf("buzz");
+
+    std::unordered_set<std::string> expected_result1 = {"foo"};
+    std::unordered_set<std::string> expected_result2 = {"bar"};
+    std::unordered_set<std::string> expected_result3 = {"foo", "bar"};
+    std::unordered_set<std::string> expected_result4 = {"foo", "fizz", "buzz"};
+    std::unordered_set<std::string> expected_result5 = {"bar", "fizz"};
+    std::unordered_set<std::string> expected_result6 = {"bar", "fizz", "foo"};
+    std::unordered_set<std::string> expected_result7 = {};
+
+    REQUIRE(result1 == expected_result1);
+    REQUIRE(result2 == expected_result2);
+    REQUIRE(result3 == expected_result3);
+    REQUIRE(result4 == expected_result4);
+    REQUIRE(result5 == expected_result5);
+    REQUIRE(result6 == expected_result6);
+    REQUIRE(result7 == expected_result7);
   }
 }

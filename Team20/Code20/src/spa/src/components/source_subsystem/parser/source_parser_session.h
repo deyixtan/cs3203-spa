@@ -23,6 +23,7 @@ class SourceParserSession {
   [[nodiscard]] bool DoesCyclicCallExist();
   void AddProcedure(std::string procedure_name);
   void AddMethodCall(std::string callee_name);
+  std::string GetCurrProcedure();
 };
 
 }

@@ -35,6 +35,10 @@ void PkbClient::PopulateModifiesProc(std::string proc, std::string var) {
   pkb->GetModifyStore()->AddProcVar(proc, var);
 }
 
+void PkbClient::PopulateCalls(std::string caller, std::string callee) {
+  pkb->GetCallStore()->AddCallerHelper(caller, callee);
+}
+
 void PkbClient::PopulateProc(std::string name) {
   pkb->AddStmt(name, PROC);
 }
@@ -69,6 +73,10 @@ void PkbClient::PopulateIf(std::string stmt) {
 
 void PkbClient::PopulateConst(std::string name) {
   pkb->AddStmt(name, CONSTS);
+}
+
+void PkbClient::PopulateCall(std::string stmt) {
+  pkb->AddStmt(stmt, CALL);
 }
 
 void PkbClient::PopulateCfg(Cfg &cfg) {
