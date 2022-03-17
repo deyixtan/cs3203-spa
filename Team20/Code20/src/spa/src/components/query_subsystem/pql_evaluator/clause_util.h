@@ -12,6 +12,7 @@ bool IsArgWildcard(const PqlToken &arg);
 bool IsArgIdent(const PqlToken &arg);
 bool IsArgInteger(const PqlToken &arg);
 bool IsArgPartialMatch(const PqlToken &arg);
+bool IsArgAttribute(const PqlToken &arg);
 DesignEntityType GetSynonymDesignEntity(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations);
 bool IsArgProcSynonym(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations);
 bool IsArgStmtSynonym(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations);
