@@ -13,6 +13,8 @@ class PatternStore : public StatementStore {
   [[nodiscard]] std::unordered_set<std::string> GetWhileWithPattern(std::string const &expr);
   [[nodiscard]] std::unordered_set<std::string> GetIfWithPattern(std::string const &expr);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonym(std::string rhs);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetWhileWithPatternSynonym(std::string rhs);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetIfWithPatternSynonym(std::string rhs);
 };
 
 #endif //PATTERN_STORE_H
