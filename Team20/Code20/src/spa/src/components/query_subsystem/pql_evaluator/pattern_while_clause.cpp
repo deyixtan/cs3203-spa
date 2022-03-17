@@ -23,7 +23,8 @@ Table PatternWhileClause::Execute() {
 }
 
 Table PatternWhileClause::HandleSynonym() {
-  // TODO: wait for Jaryl to implement
+  auto pair_constraints = pkb->GetPatternStore()->GetWhileWithPatternSynonym();
+  return {while_synonym, first_arg.value, pair_constraints};
 }
 
 Table PatternWhileClause::HandleWildcard() {

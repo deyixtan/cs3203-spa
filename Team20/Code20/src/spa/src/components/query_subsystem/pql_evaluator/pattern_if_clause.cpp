@@ -23,7 +23,8 @@ Table PatternIfClause::Execute() {
 }
 
 Table PatternIfClause::HandleSynonym() {
-  // TODO: wait for Jaryl to implement
+  auto pair_constraints = pkb->GetPatternStore()->GetIfWithPatternSynonym();
+  return {if_synonym, first_arg.value, pair_constraints};
 }
 
 Table PatternIfClause::HandleWildcard() {
