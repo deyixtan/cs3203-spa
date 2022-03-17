@@ -38,6 +38,13 @@ std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQ
     }
   }
 
+  for (const auto& with : query.GetWithClause()) {
+    auto clause = pql::ClauseFactory::Create(with, query.GetDeclaration(), pkb);
+    if (clause) {
+      clauses.push(std::move(clause));
+    }
+  }
+
   clauses.push(pql::ClauseFactory::Create(query.GetResultClause().GetValues()[0], query.GetDeclaration(), pkb));
 
   return clauses;

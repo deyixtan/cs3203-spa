@@ -1,4 +1,7 @@
 #include "node_assign_statement.h"
+#include "../../iterator/design_extractor.h"
+#include "../../iterator/cfg_builder.h"
+#include "../cfg/cfg_node.h"
 
 AssignStatementNode::AssignStatementNode(int stmt_no,
                                          std::shared_ptr<VariableNode> identifier,
@@ -31,20 +34,19 @@ bool AssignStatementNode::operator==(const StatementNode &other) const {
       && *m_expression == *(casted_other->m_expression);
 }
 
-std::string AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+void AssignStatementNode::Accept(DesignExtractor *de) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   std::string var_name = "";
-  populator.PopulateStmt(stmt_num);
+  de->GetPkbClient()->PopulateStmt(stmt_num);
   var_name = m_identifier->GetIdentifier();
-  m_identifier->Process(populator, visited, false, cfg_proc_node, cfg_node);
-  std::string rhs_expr = m_expression->Process(populator, visited, true, cfg_proc_node, cfg_node);
-  populator.AddStmtPattern(stmt_num, var_name, rhs_expr);
-  populator.PopulateAssign(stmt_num);
-  populator.PopulateParentStar(stmt_num, *visited);
-  if (cfg_node == nullptr) {
-    cfg_proc_node->GetLastNode()->GetNodes().emplace_back(GetStatementNumber());
-  } else {
-    cfg_node->GetNodes().emplace_back(GetStatementNumber());
-  }
-  return "";
+  de->Visit(m_identifier, false);
+  std::string rhs_expr = de->Visit(m_expression, true);
+  de->GetPkbClient()->AddStmtPattern(stmt_num, var_name, rhs_expr);
+  de->GetPkbClient()->PopulateAssign(stmt_num);
+  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
+}
+
+std::shared_ptr<CfgNode> AssignStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
+  cfg_node->AddStatement(std::to_string(GetStatementNumber()));
+  return cfg_node;
 }

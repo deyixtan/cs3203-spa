@@ -1,4 +1,5 @@
 #include "node_combination_expression.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
 
 CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator,
                                                      std::shared_ptr<ExpressionNode> right_expression)
@@ -38,11 +39,6 @@ ExpressionType CombinationExpressionNode::GetExpressionType() {
   return ExpressionType::COMBINATION;
 }
 
-std::string CombinationExpressionNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
-  return "(" + m_left_expression->Process(populator, visited, true, cfg_proc_node, cfg_node) + GetArithmeticOperatorLabel(m_arithmetic_operator)
-      + m_right_expression->Process(populator, visited, true, cfg_proc_node, cfg_node) + ")";
-}
-
 std::string CombinationExpressionNode::ToString() {
   return "(" + m_left_expression->ToString() + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
       + m_right_expression->ToString() + ")";
@@ -58,4 +54,9 @@ bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
   return m_arithmetic_operator == casted_other->m_arithmetic_operator
       && *m_left_expression == *(casted_other->m_left_expression)
       && *m_right_expression == *(casted_other->m_right_expression);
+}
+
+std::string CombinationExpressionNode::Accept(DesignExtractor *de, bool is_uses) {
+  return "(" + de->Visit(m_left_expression, is_uses) + GetArithmeticOperatorLabel(m_arithmetic_operator)
+      + de->Visit(m_right_expression, is_uses) + ")";
 }

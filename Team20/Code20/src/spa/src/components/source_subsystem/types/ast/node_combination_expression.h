@@ -11,6 +11,8 @@ enum class ArithmeticOperator {
   MOD,
 };
 
+class DesignExtractor;
+
 class CombinationExpressionNode : public ExpressionNode {
  private:
   ArithmeticOperator m_arithmetic_operator;
@@ -27,10 +29,10 @@ class CombinationExpressionNode : public ExpressionNode {
   [[nodiscard]] ArithmeticOperator GetArithmeticOperator();
   [[nodiscard]] std::string GetArithmeticOperatorLabel(ArithmeticOperator arithmetic_operator);
   [[nodiscard]] ExpressionType GetExpressionType() override;
-  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat();
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
+  std::string Accept(DesignExtractor *de, bool is_uses);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_

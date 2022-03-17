@@ -1,4 +1,5 @@
 #include "node_statement.h"
+#include "../../iterator/design_extractor.h"
 
 StatementNode::StatementNode(int stmt_no) : m_stmt_no(stmt_no) {}
 

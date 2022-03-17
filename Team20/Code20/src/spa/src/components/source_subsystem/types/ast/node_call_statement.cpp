@@ -1,4 +1,7 @@
 #include "node_call_statement.h"
+#include "../../iterator/design_extractor.h"
+#include "../../iterator/cfg_builder.h"
+#include "../cfg/cfg_node.h"
 
 CallStatementNode::CallStatementNode(int stmt_no, std::string identifier)
     : StatementNode(stmt_no), m_identifier(identifier) {}
@@ -15,16 +18,16 @@ std::string CallStatementNode::ToString() {
   return "call " + m_identifier + ";\n";
 }
 
-std::string CallStatementNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
-  if (cfg_node == nullptr) {
-    cfg_proc_node->GetLastNode()->GetNodes().emplace_back(GetStatementNumber());
-  } else {
-    cfg_node->GetNodes().emplace_back(GetStatementNumber());
-  }
-  return "";
-}
-
 bool CallStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const CallStatementNode*>(&other);
   return m_stmt_no == casted_other->m_stmt_no && m_identifier == casted_other->m_identifier;
+}
+
+void CallStatementNode::Accept(DesignExtractor *de) {
+
+}
+
+std::shared_ptr<CfgNode> CallStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
+  cfg_node->AddStatement(std::to_string(GetStatementNumber()));
+  return cfg_node;
 }
