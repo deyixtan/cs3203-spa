@@ -1,3 +1,4 @@
+#include <queue>
 #include "design_extractor.h"
 #include "../types/ast/node_program.h"
 #include "../types/ast/node_procedure.h"
@@ -19,6 +20,13 @@ std::vector<std::string> &DesignExtractor::GetVisited() {
 
 void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node) {
   Visit(std::move(node));
+}
+
+void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
+  std::queue<std::string> nodeQueue;
+  for (auto const& proc : root->GetCfgMap()) {
+
+  }
 }
 
 void DesignExtractor::Visit(std::shared_ptr<ProgramNode> node) {

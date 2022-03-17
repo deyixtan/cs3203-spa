@@ -24,6 +24,7 @@ class DesignExtractor {
   [[nodiscard]] std::shared_ptr<PkbClient> GetPkbClient();
   [[nodiscard]] std::vector<std::string> &GetVisited();
   void IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node);
+  void IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root);
   void Visit(std::shared_ptr<ProgramNode> node);
   void Visit(std::shared_ptr<ProcedureNode> node);
   void Visit(std::shared_ptr<StatementListNode> node);
