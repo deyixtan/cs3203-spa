@@ -53,7 +53,7 @@ std::string WhileStatementNode::Process(Populator populator, std::vector<std::st
   std::shared_ptr<source::CfgWhileNode> while_node = std::make_shared<source::CfgWhileNode>(source::CfgNode(GetStatementNumber()), body_group_node, next_group_node);
 
   std::string cond_expr = m_condition->Process(populator, visited, true, cfg_proc_node, while_node);
-  populator.AddWhilePattern(stmt_num, cond_expr);
+  populator.AddPattern(WHILE, stmt_num, cond_expr, "");
 
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();

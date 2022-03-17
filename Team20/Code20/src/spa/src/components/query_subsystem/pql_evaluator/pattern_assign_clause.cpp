@@ -37,12 +37,12 @@ Table PatternAssignClause::Execute() {
 }
 
 Table PatternAssignClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonym("_");
+  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonym();
   return {assign_synonym, first_arg.value, pair_constraints};
 }
 
 Table PatternAssignClause::HandleSynonymPartial() {
-  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonym(second_arg.value);
+  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonym();
   return {assign_synonym, first_arg.value, pair_constraints};
 }
 

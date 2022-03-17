@@ -38,7 +38,7 @@ std::string AssignStatementNode::Process(Populator populator, std::vector<std::s
   var_name = m_identifier->GetIdentifier();
   m_identifier->Process(populator, visited, false, cfg_proc_node, cfg_node);
   std::string rhs_expr = m_expression->Process(populator, visited, true, cfg_proc_node, cfg_node);
-  populator.AddStmtPattern(stmt_num, var_name, rhs_expr);
+  populator.AddPattern(STMT, stmt_num, var_name, rhs_expr);
   populator.PopulateAssign(stmt_num);
   populator.PopulateParentStar(stmt_num, *visited);
   if (cfg_node == nullptr) {

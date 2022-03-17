@@ -70,16 +70,14 @@ void Populator::PopulateConst(std::string name) {
   pkb->AddStmt(name, CONSTS);
 }
 
-void Populator::AddStmtPattern(std::string stmt, std::string lhs, std::string rhs) {
-  pkb->GetPatternStore()->AddStmtWithPattern(stmt, lhs, rhs);
-}
-
-void Populator::AddWhilePattern(std::string stmt, std::string expr) {
-  pkb->GetPatternStore()->AddWhileWithPattern(stmt, expr, "");
-}
-
-void Populator::AddIfPattern(std::string stmt, std::string expr) {
-  pkb->GetPatternStore()->AddIfWithPattern(stmt, expr, "");
+void Populator::AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs) {
+  if (type == StmtType::STMT) {
+    pkb->GetPatternStore()->AddStmtWithPattern(stmt, lhs, rhs);
+  } else if (type == StmtType::WHILE) {
+    pkb->GetPatternStore()->AddWhileWithPattern(stmt, lhs);
+  } else if (type == StmtType::IF) {
+    pkb->GetPatternStore()->AddIfWithPattern(stmt, lhs);
+  }
 }
 
 void Populator::PopulateCfg(source::CfgProgramNode &cfg) {

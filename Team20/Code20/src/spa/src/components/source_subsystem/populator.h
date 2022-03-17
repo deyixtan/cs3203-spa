@@ -27,9 +27,7 @@ class Populator {
   void PopulateWhile(std::string stmt);
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
-  void AddStmtPattern(std::string stmt, std::string lhs, std::string rhs);
-  void AddWhilePattern(std::string stmt, std::string expr);
-  void AddIfPattern(std::string stmt, std::string expr);
+  void AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs);
   void PopulateCfg(source::CfgProgramNode &cfg);
 };
 

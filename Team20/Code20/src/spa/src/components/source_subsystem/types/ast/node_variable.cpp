@@ -33,9 +33,7 @@ std::string VariableNode::Process(Populator populator, std::vector<std::string>*
     }
     populator.PopulateModifiesProc(m_proc, var_name);
     populator.PopulateModifies(m_stmt, var_name);
-  }
-
-  if (is_uses) {
+  } else {
     for (std::string s : *visited) {
       populator.PopulateUses(s, var_name);
     }

@@ -22,7 +22,6 @@ class PKB {
   std::shared_ptr<ModifyStore> m_modify_store;
   std::shared_ptr<PatternStore> m_pattern_store;
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;
-  std::unordered_map<std::string, std::pair<std::string, std::string>> m_pattern_map;
   std::shared_ptr<source::CfgProgramNode> m_program_cfg;
 
  public:

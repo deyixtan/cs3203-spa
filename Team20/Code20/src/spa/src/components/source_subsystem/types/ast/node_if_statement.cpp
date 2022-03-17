@@ -79,7 +79,7 @@ std::string IfStatementNode::Process(Populator populator, std::vector<std::strin
   std::shared_ptr<source::CfgIfNode> if_node = std::make_shared<source::CfgIfNode>(source::CfgNode(GetStatementNumber()), if_group_node, else_group_node);
 
   std::string cond_expr =  m_condition->Process(populator, visited, true, cfg_proc_node, if_node);
-  populator.AddIfPattern(stmt_num, cond_expr);
+  populator.AddPattern(IF, stmt_num, cond_expr, "");
 
   std::shared_ptr<StatementListNode> if_block = m_if_stmt_list;
   std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;
