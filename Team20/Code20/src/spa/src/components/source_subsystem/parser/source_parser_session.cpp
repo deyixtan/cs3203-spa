@@ -17,8 +17,6 @@ bool SourceParserSession::DoesInvalidCallExist() {
 
 bool SourceParserSession::DoesCyclicCallExist() {
   // using Kahn algorithm to check for cycles
-  // NOTE1: may need to optimise/abstract to another class.
-  // NOTE2: perhaps should convert to Tarjan's algorithm for better efficiency
 
   // init in-degree map
   std::unordered_map<std::string, int> in_degree_map;

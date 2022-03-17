@@ -1,4 +1,7 @@
 #include "node_read_statement.h"
+#include "../../iterator/design_extractor.h"
+#include "../../iterator/cfg_builder.h"
+#include "../cfg/cfg_node.h"
 
 ReadStatementNode::ReadStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier)
     : StatementNode(stmt_no),
@@ -25,17 +28,16 @@ bool ReadStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier);
 }
 
-std::string ReadStatementNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+void ReadStatementNode::Accept(DesignExtractor *de) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  populator.PopulateStmt(stmt_num);
+  de->GetPkbClient()->PopulateStmt(stmt_num);
   std::string var_name = m_identifier->GetIdentifier();
-  populator.PopulateRead(stmt_num);
-  m_identifier->Process(populator, visited, false, cfg_proc_node, cfg_node);
-  populator.PopulateParentStar(stmt_num, *visited);
-  if (cfg_node == nullptr) {
-    cfg_proc_node->GetLastNode()->GetNodes().emplace_back(GetStatementNumber());
-  } else {
-    cfg_node->GetNodes().emplace_back(GetStatementNumber());
-  }
-  return "";
+  de->GetPkbClient()->PopulateRead(stmt_num);
+  de->Visit(m_identifier, false);
+  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
+}
+
+std::shared_ptr<CfgNode> ReadStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
+  cfg_node->AddStatement(std::to_string(GetStatementNumber()));
+  return cfg_node;
 }
