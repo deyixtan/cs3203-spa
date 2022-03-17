@@ -375,4 +375,13 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_pairs
         {"monkey", "((tiger)+(dog))"}
     };
 
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_pairs_synonym =
+    {
+        {"4", "dog"},
+        {"7", "pig"},
+        {"8", "dragon"},
+        {"10", "snake"},
+        {"15", "monkey"}
+    };
+
 #endif //PKB_STUB_H

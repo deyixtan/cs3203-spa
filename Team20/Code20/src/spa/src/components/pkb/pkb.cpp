@@ -17,7 +17,7 @@ void PKB::AddStmt(std::string const &stmt, StmtType type) {
   m_stmt_vector->at(type).insert(stmt);
 }
 
-void PKB::AddProgramCfg(std::shared_ptr<source::CfgProgramNode> program_cfg) {
+void PKB::AddProgramCfg(std::shared_ptr<Cfg> program_cfg) {
   m_program_cfg = move(program_cfg);
 }
 

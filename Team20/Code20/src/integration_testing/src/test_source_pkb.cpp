@@ -26,8 +26,9 @@ std::shared_ptr<ProgramNode> GenerateAbstractSyntaxTree(std::string source) {
 PKB *GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
   PKB *pkb = new PKB();
 
-  DesignExtractor *design_extractor = new DesignExtractor(*ast, Populator(pkb));
-  design_extractor->TraverseAst();
+  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
+  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  design_extractor->IterateAstAndPopulatePkb(ast);
   return pkb;
 }
 
@@ -939,6 +940,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
     REQUIRE(result6 == expected_result6);
   }
 }
+
 TEST_CASE("Test components between Source and PKB (Sample source 3)") {
   std::shared_ptr<ProgramNode> ast = GenerateAbstractSyntaxTree(sample_source3);
   PKB *pkb = GetPopulatedPkbInstance(ast);

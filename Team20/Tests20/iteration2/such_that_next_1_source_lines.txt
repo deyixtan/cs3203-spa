@@ -1,0 +1,261 @@
+procedure main {
+1   if (a == 5) then {
+2        a = 5;
+    } else {
+3        a = 5;
+    }
+4   if (a == 5) then {
+5        while (a == 5) {
+6            a = 5;
+        }
+    } else {
+7        a = 5;
+    }
+8   if (a == 5) then {
+9        a = 5;
+    } else {
+10        while (a == 5) {
+11            read a;
+        }
+    }
+12    if (a == 5) then {
+13        while (a == 5) {
+14            a = 5;
+        }
+    } else {
+15        while (a == 5) {
+16            print a;
+        }
+    }
+17    if (a == 5) then {
+18        if (a == 5) then {
+19            a = 5;
+        } else {
+20            a = 5;
+        }
+    } else {
+21        if (a == 5) then {
+22            read a;
+        } else {
+23            a = 5;
+        }
+    }
+24    if (a == 5) then {
+25        a = 5;
+    } else {
+26        if (a == 5) then {
+27            a = 5;
+        } else {
+28            print a;
+        }
+    }
+29    if (a == 5) then {
+30        if (a == 5) then {
+31            a = 5;
+        } else {
+32            a = 5;
+        }
+    } else {
+33        a = 5;
+    }
+34    if (a == 5) then {
+35        if (a == 5) then {
+36            a = 5;
+        } else {
+37            a = 5;
+        }
+    } else {
+38        if (a == 5) then {
+39            a = 5;
+        } else {
+40            while (a == 5) {
+41                a = 5;
+            }
+        }
+    }
+42    if (a == 5) then {
+43        if (a == 5) then {
+44            read a;
+        } else {
+45            a = 5;
+        }
+    } else {
+46        if (a == 5) then {
+47            while (a == 5) {
+48                print a;
+            }
+        } else {
+49            a = 5;
+        }
+    }
+50    if (a == 5) then {
+51        if (a == 5) then {
+52            a = 5;
+        } else {
+53            while (a == 5) {
+54                a = 5;
+            }
+        }
+    } else {
+55        if (a == 5) then {
+56            print a;
+        } else {
+57            a = 5;
+        }
+    }
+58    if (a == 5) then {
+59        read a;
+    } else {
+60        print a;
+    }
+61    if (a == 5) then {
+62        while (a == 5) {
+63            read a;
+64            if (a == 5) then {
+65                print a;
+66                while (a == 5) {
+67                    if (a == 5) then {
+68                        while (a == 5) {
+69                            if (a == 5) then {
+70                                read a;
+71                                a = 5;
+                            } else {
+72                                a = 5;
+                            }
+                        }
+                    } else {
+73                        while (a == 5) {
+74                            a = 5;
+75                            a = 6;
+76                            if (a == 5) then {
+77                                a = 5;
+                            } else {
+78                                a = 5;
+                            }
+79                            a = 7;
+80                            a = 8;
+81                            a = 9;
+                        }
+                    }
+                }
+            } else {
+82                while (a == 5) {
+83                    print a;
+84                    a = 5;
+                }
+            }
+        }
+    } else {
+85        if (a == 5) then {
+86            a = 5;
+        } else {
+87            read a;
+88            while (a == 5) {
+89                a = 5;
+            }
+        }
+90        if (a == 5) then {
+91            while (a == 5) {
+92                a = 5;
+            }
+93            a = 5;
+        } else {
+94            a = 5;
+        }
+    }
+95    if (a == 5) then {
+96        if (a == 5) then {
+97           while (a == 5) {
+98                a = 5;
+            }
+        } else {
+99            a = 5;
+        }
+    } else {
+100        if (a == 5) then {
+101            a = 5;
+        } else {
+102            a = 5;
+        }
+    }
+103    while (a == 5) {
+104        while (a == 5) {
+105            while (a == 5) {
+106                while (a == 5) {
+107                    read a;
+                }
+            }
+        }
+    }
+108    while (a == 5) {
+109        a = 5;
+    }
+110    while (a == 5) {
+111        if (a == 5) then {
+112            a = 5;
+        } else {
+113            a = 5;
+        }
+    }
+114    while (a == 5) {
+115        if (a == 5) then {
+116            if (a == 5) then {
+117                print a;
+            } else {
+118                a = 5;
+            }
+        } else {
+119            a = 5;
+        }
+    }
+120    while (a == 5) {
+121        if (a == 5) then {
+122            if (a == 5) then {
+123                read a;
+            } else {
+124                while (a == 5) {
+125                    a = 5;
+                }
+            }
+        } else {
+126            read a;
+        }
+    }
+127    while (a == 5) {
+128        if (a == 5) then {
+129            if (a == 5) then {
+130                while (a == 5) {
+131                    a = 5;
+                }
+            } else {
+132                a = 5;
+            }
+       } else {
+133            a = 5;
+        }
+    }
+134    while (a == 5) {
+135       if (a == 5) then {
+136            print a;
+        } else {
+137            if (a == 5) then {
+138                if (a == 5) then {
+139                    print a;
+               } else {
+140                    a = 5;
+               }
+           } else {
+141                a = 5;
+           }
+        }
+    }
+142    while (a == 5) {
+143        if (a == 5) then {
+144            print a;
+        } else {
+145            while (a == 5) {
+146                a = 5;
+            }
+        }
+    }
+}

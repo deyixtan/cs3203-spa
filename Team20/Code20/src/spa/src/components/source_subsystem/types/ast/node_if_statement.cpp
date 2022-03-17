@@ -1,4 +1,7 @@
 #include "node_if_statement.h"
+#include "../../iterator/design_extractor.h"
+#include "../../iterator/cfg_builder.h"
+#include "../cfg/cfg_node.h"
 
 IfStatementNode::IfStatementNode(int stmt_no,
                                  std::shared_ptr<ConditionalExpressionNode> condition,
@@ -68,37 +71,41 @@ bool IfStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
 }
 
-std::string IfStatementNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+void IfStatementNode::Accept(DesignExtractor *de) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  populator.PopulateStmt(stmt_num);
+  de->GetPkbClient()->PopulateStmt(stmt_num);
   std::string if_stmt_num = std::to_string(GetStatementNumber());
-  visited->push_back(if_stmt_num);
+  de->GetVisited().push_back(if_stmt_num);
 
-  std::shared_ptr<source::CfgGroupNode> if_group_node = std::make_shared<source::CfgGroupNode>();
-  std::shared_ptr<source::CfgGroupNode> else_group_node = std::make_shared<source::CfgGroupNode>();
-  std::shared_ptr<source::CfgIfNode> if_node = std::make_shared<source::CfgIfNode>(source::CfgNode(GetStatementNumber()), if_group_node, else_group_node);
-
-  std::string cond_expr =  m_condition->Process(populator, visited, true, cfg_proc_node, if_node);
-  populator.AddIfPattern(stmt_num, cond_expr);
+  std::string cond_expr = de->Visit(m_condition, true);
+  de->GetPkbClient()->AddPattern(IF, stmt_num, cond_expr, "");
 
   std::shared_ptr<StatementListNode> if_block = m_if_stmt_list;
   std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;
   std::vector<std::shared_ptr<StatementNode>> if_stmts = m_if_stmt_list->GetStatements();
   std::vector<std::shared_ptr<StatementNode>> else_stmts =  m_else_stmt_list->GetStatements();
-  if_block->Process(populator, visited, false, cfg_proc_node, if_group_node);
-  else_block->Process(populator, visited, false, cfg_proc_node, else_group_node);
+  de->Visit(if_block);
+  de->Visit(else_block);
 
-  std::shared_ptr<source::CfgGroupNode> dest_node = std::make_shared<source::CfgGroupNode>();
-  if_group_node->SetNext(dest_node);
-  else_group_node->SetNext(dest_node);
+  de->GetPkbClient()->PopulateIf(stmt_num);
+  de->GetPkbClient()->PopulateParentStar(if_stmt_num, de->GetVisited());
 
-  cfg_proc_node->AddNode(if_node);
-  cfg_proc_node->AddNode(dest_node);
+  de->GetVisited().pop_back();
+  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
+}
 
-  populator.PopulateIf(stmt_num);
-  populator.PopulateParentStar(if_stmt_num, *visited);
-
-  visited->pop_back();
-  populator.PopulateParentStar(stmt_num, *visited);
-  return "";
+std::shared_ptr<CfgNode> IfStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
+  std::shared_ptr<CfgNode> condition_node = std::make_shared<CfgNode>();
+  std::shared_ptr<CfgNode> if_node = std::make_shared<CfgNode>();
+  std::shared_ptr<CfgNode> else_node = std::make_shared<CfgNode>();
+  std::shared_ptr<CfgNode> next_node = std::make_shared<CfgNode>();
+  cfg_node->AddNext(condition_node);
+  condition_node->AddStatement(std::to_string(GetStatementNumber()));
+  condition_node->AddNext(if_node);
+  condition_node->AddNext(else_node);
+  if_node = cb->Visit(m_if_stmt_list, if_node);
+  if_node->AddNext(next_node);
+  else_node = cb->Visit(m_else_stmt_list, else_node);
+  else_node->AddNext(next_node);
+  return next_node;
 }
