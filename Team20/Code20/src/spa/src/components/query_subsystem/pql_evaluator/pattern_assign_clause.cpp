@@ -15,18 +15,27 @@ Table PatternAssignClause::Execute() {
   if (IsArgSynonym(first_arg) && IsArgWildcard(second_arg)) {
     // pattern a(v, _)
     return HandleSynonymWildcard();
+  } else if (IsArgSynonym(first_arg) && IsArgExactMatch(second_arg)) {
+    // pattern a(v, "x")
+    return HandleSynonymExact();
   } else if (IsArgSynonym(first_arg) && IsArgPartialMatch(second_arg)) {
     // pattern a(v, _"x"_)
     return HandleSynonymPartial();
   } else if (IsArgWildcard(first_arg) && IsArgWildcard(second_arg)) {
     // pattern a(_, _)
     return HandleWildcardWildcard();
+  } else if (IsArgWildcard(first_arg) && IsArgExactMatch(second_arg)) {
+    // pattern a(_, "x")
+    return HandleWildcardExact();
   } else if (IsArgWildcard(first_arg) && IsArgPartialMatch(second_arg)) {
     // pattern a(_, _"x"_)
     return HandleWildcardPartial();
   } else if (IsArgIdent(first_arg) && IsArgWildcard(second_arg)) {
     // pattern a("x", _)
     return HandleIdentWildcard();
+  } else if (IsArgIdent(first_arg) && IsArgExactMatch(second_arg)) {
+    // pattern a("x", "y")
+    return HandleIdentExact();
   } else if (IsArgIdent(first_arg) && IsArgPartialMatch(second_arg)) {
     // pattern a("x", _"y"_)
     return HandleIdentPartial();
@@ -41,6 +50,11 @@ Table PatternAssignClause::HandleSynonymWildcard() {
   return {assign_synonym, first_arg.value, pair_constraints};
 }
 
+Table PatternAssignClause::HandleSynonymExact() {
+  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonym(second_arg.value);
+  return {assign_synonym, first_arg.value, pair_constraints};
+}
+
 Table PatternAssignClause::HandleSynonymPartial() {
   auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonym(second_arg.value);
   return {assign_synonym, first_arg.value, pair_constraints};
@@ -48,6 +62,12 @@ Table PatternAssignClause::HandleSynonymPartial() {
 
 Table PatternAssignClause::HandleWildcardWildcard() {
   auto single_constraints = pkb->GetPatternStore()->GetStmtWithPattern("_", "_");
+  return {assign_synonym, single_constraints};
+}
+
+Table PatternAssignClause::HandleWildcardExact() {
+  // need to strip quotes?
+  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPattern("_", second_arg.value);
   return {assign_synonym, single_constraints};
 }
 
@@ -61,8 +81,15 @@ Table PatternAssignClause::HandleIdentWildcard() {
   return {assign_synonym, single_constraints};
 }
 
+Table PatternAssignClause::HandleIdentExact() {
+  auto single_constraints =
+      pkb->GetPatternStore()->GetStmtWithPattern(GetIdentWithoutQuotes(first_arg.value), second_arg.value);
+  return {assign_synonym, single_constraints}
+}
+
 Table PatternAssignClause::HandleIdentPartial() {
-  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPattern(GetIdentWithoutQuotes(first_arg.value), second_arg.value);
+  auto single_constraints =
+      pkb->GetPatternStore()->GetStmtWithPattern(GetIdentWithoutQuotes(first_arg.value), second_arg.value);
   return {assign_synonym, single_constraints};
 }
 
