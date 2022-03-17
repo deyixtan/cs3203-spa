@@ -34,6 +34,10 @@ void Populator::PopulateModifiesProc(std::string proc, std::string var) {
   pkb->GetModifyStore()->AddProcVar(proc, var);
 }
 
+void Populator::PopulateCalls(std::string caller, std::string callee) {
+  pkb->GetCallStore()->AddCallerHelper(caller, callee);
+}
+
 void Populator::PopulateProc(std::string name) {
   pkb->AddStmt(name, PROC);
 }
@@ -68,6 +72,10 @@ void Populator::PopulateIf(std::string stmt) {
 
 void Populator::PopulateConst(std::string name) {
   pkb->AddStmt(name, CONSTS);
+}
+
+void Populator::PopulateCall(std::string stmt) {
+  pkb->AddStmt(stmt, CALL);
 }
 
 void Populator::AddStmtPattern(std::string stmt, std::string lhs, std::string rhs) {

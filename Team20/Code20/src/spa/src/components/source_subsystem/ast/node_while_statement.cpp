@@ -42,7 +42,7 @@ bool WhileStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
 }
 
-std::string WhileStatementNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+std::string WhileStatementNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   populator.PopulateStmt(stmt_num);
   std::string while_stmt_num = std::to_string(GetStatementNumber());
@@ -58,7 +58,7 @@ std::string WhileStatementNode::Process(Populator populator, std::vector<std::st
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
 
-  while_block->Process(populator, visited, false, cfg_proc_node, body_group_node);
+  while_block->Process(populator, visited, false, cfg_proc_node, body_group_node, proc_name);
 
   cfg_proc_node->AddNode(while_node);
   cfg_proc_node->AddNode(next_group_node);

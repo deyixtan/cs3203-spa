@@ -31,7 +31,7 @@ bool AssignStatementNode::operator==(const StatementNode &other) const {
       && *m_expression == *(casted_other->m_expression);
 }
 
-std::string AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+std::string AssignStatementNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   std::string var_name = "";
   populator.PopulateStmt(stmt_num);

@@ -68,7 +68,7 @@ bool IfStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
 }
 
-std::string IfStatementNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+std::string IfStatementNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   populator.PopulateStmt(stmt_num);
   std::string if_stmt_num = std::to_string(GetStatementNumber());
@@ -85,8 +85,8 @@ std::string IfStatementNode::Process(Populator populator, std::vector<std::strin
   std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;
   std::vector<std::shared_ptr<StatementNode>> if_stmts = m_if_stmt_list->GetStatements();
   std::vector<std::shared_ptr<StatementNode>> else_stmts =  m_else_stmt_list->GetStatements();
-  if_block->Process(populator, visited, false, cfg_proc_node, if_group_node);
-  else_block->Process(populator, visited, false, cfg_proc_node, else_group_node);
+  if_block->Process(populator, visited, false, cfg_proc_node, if_group_node, proc_name);
+  else_block->Process(populator, visited, false, cfg_proc_node, else_group_node, proc_name);
 
   std::shared_ptr<source::CfgGroupNode> dest_node = std::make_shared<source::CfgGroupNode>();
   if_group_node->SetNext(dest_node);

@@ -18,6 +18,8 @@ class Populator {
   void PopulateUsesProc(std::string stmt, std::string var);
   void PopulateModifies(std::string stmt, std::string var);
   void PopulateModifiesProc(std::string stmt, std::string var);
+  void PopulateCalls(std::string caller, std::string callee);
+  void PopulateCallsStar(std::string caller, std::string callee);
   void PopulateProc(std::string name);
   void PopulateAssign(std::string stmt);
   void PopulateStmt(std::string stmt);
@@ -27,6 +29,7 @@ class Populator {
   void PopulateWhile(std::string stmt);
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
+  void PopulateCall(std::string name);
   void AddStmtPattern(std::string stmt, std::string lhs, std::string rhs);
   void AddWhilePattern(std::string stmt, std::string expr);
   void AddIfPattern(std::string stmt, std::string expr);
