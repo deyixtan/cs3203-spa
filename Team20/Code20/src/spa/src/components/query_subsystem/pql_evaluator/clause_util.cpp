@@ -20,12 +20,14 @@ bool clause_util::IsArgPartialMatch(const PqlToken &arg) {
   return arg.type==PqlTokenType::SUB_EXPRESSION;
 }
 
+bool clause_util::IsArgAttribute(const PqlToken &arg) {
+  return arg.type==PqlTokenType::ATTRIBUTE;
+}
+
 DesignEntityType clause_util::GetSynonymDesignEntity(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations) {
   assert(arg.type==PqlTokenType::SYNONYM);
-  for (auto declaration : declarations) {
-    if (arg.value==declaration.first) {
-      return declaration.second;
-    }
+  if (declarations.count(arg.value) != 0) {
+    return declarations.at(arg.value);
   }
   throw std::out_of_range("Synonym not declared");
 }
