@@ -3,7 +3,7 @@
 
 #include "node.h"
 #include "node_statement_list.h"
-#include "../cfg/cfg_group_node.h"
+#include "components/source_subsystem/types/cfg/cfg_group_node.h"
 
 class ProcedureNode : public Node {
  private:

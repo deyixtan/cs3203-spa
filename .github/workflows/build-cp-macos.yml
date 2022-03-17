@@ -9,12 +9,12 @@ on:
       - master
 
 env:
-    BUILD_TYPE: Release
+  BUILD_TYPE: Release
 
 jobs:
   build-and-test:
     runs-on: macos-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     strategy:
       fail-fast: true
 
@@ -32,15 +32,24 @@ jobs:
       - name: Build Project
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE
+        run: cmake --build . --config $BUILD_TYPE --target spa
+
+      - name: Build Unit Tests
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE --target unit_testing
+
+      - name: Build Integration Tests
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE --target integration_testing
 
       - name: Run Unit Tests
-        shell: bash
         working-directory: ${{runner.workspace}}/build
+        shell: bash
         run: ${{runner.workspace}}/build/src/unit_testing/unit_testing
 
       - name: Run Integration Tests
-        shell: bash
         working-directory: ${{runner.workspace}}/build
+        shell: bash
         run: ${{runner.workspace}}/build/src/integration_testing/integration_testing
-

@@ -2,8 +2,8 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_H_
 
 // TODO: remove dependence on PKB's StmtType
-#include "../../pkb/pkb.h"
-#include "../populator.h"
+#include "components/pkb/pkb.h"
+#include "components/source_subsystem/populator.h"
 
 class Node {
  public:

@@ -4,7 +4,7 @@
 #include "node_statement.h"
 #include "node_conditional_expression.h"
 #include "node_statement_list.h"
-#include "../cfg/cfg_while_node.h"
+#include "components/source_subsystem/types/cfg/cfg_while_node.h"
 
 class WhileStatementNode : public StatementNode {
  private:

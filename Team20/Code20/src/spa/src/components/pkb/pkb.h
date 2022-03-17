@@ -12,8 +12,9 @@
 #include "stores/parent_store.h"
 #include "stores/pattern_store.h"
 #include "expression_tree.h"
-#include "components/source_subsystem/cfg/cfg_program_node.h"
+#include "components/source_subsystem/types/cfg/cfg_program_node.h"
 #include "components/pkb/stores/call_store.h"
+
 
 class PKB {
  private:

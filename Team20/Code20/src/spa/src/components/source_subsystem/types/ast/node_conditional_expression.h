@@ -2,7 +2,7 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONDITIONAL_EXPRESSION_H_
 
 #include "node.h"
-#include "../populator.h"
+#include "components/source_subsystem/populator.h"
 
 enum class ConditionalType {
   BOOLEAN,

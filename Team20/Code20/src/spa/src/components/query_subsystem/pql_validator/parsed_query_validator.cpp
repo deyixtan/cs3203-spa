@@ -1,7 +1,6 @@
 #include "parsed_query_validator.h"
 
 #include <string>
-#include <unordered_set>
 #include <vector>
 
 namespace pql_validator {
@@ -9,284 +8,380 @@ namespace pql_validator {
 bool ParsedQueryValidator::ValidateQuery(ParsedQuery query) {
   return ValidateResultClauseDeclared(query)
       && ValidateSuchThatClause(query)
-      && ValidatePatternClause(query);
+      && ValidatePatternClause(query)
+      && ValidateWithClause(query);
+}
+
+bool ParsedQueryValidator::ValidateAttribute(PqlToken token, std::unordered_map<std::string, DesignEntityType> declarations) {
+  std::pair<std::string, AtrriName> parsed_attribute_raw = Utils::ParseAttributeRef(token);
+
+  if (declarations.count(parsed_attribute_raw.first) == 0) {
+    return false;
+  }
+  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> parsed_attribute = Utils::ParseAttributeRef(token, declarations);
+
+  if (parsed_attribute.first.first == DesignEntityType::PROCEDURE) {
+    if (parsed_attribute.second != AtrriName::PROCNAME) {
+      return false;
+    }
+  } else if (parsed_attribute.first.first == DesignEntityType::STMT ||
+      parsed_attribute.first.first == DesignEntityType::WHILE ||
+      parsed_attribute.first.first == DesignEntityType::IF ||
+      parsed_attribute.first.first == DesignEntityType::ASSIGN) {
+    if (parsed_attribute.second != AtrriName::STMTNO) {
+      return false;
+    }
+  } else if (parsed_attribute.first.first == DesignEntityType::CONSTANT) {
+    if (parsed_attribute.second != AtrriName::VALUE) {
+      return false;
+    }
+  } else if (parsed_attribute.first.first == DesignEntityType::READ ||
+      parsed_attribute.first.first == DesignEntityType::PRINT) {
+    if (parsed_attribute.second != AtrriName::VARNAME &&
+        parsed_attribute.second != AtrriName::STMTNO) {
+      return false;
+    }
+  } else if (parsed_attribute.first.first == DesignEntityType::CALL) {
+    if (parsed_attribute.second != AtrriName::PROCNAME &&
+        parsed_attribute.second != AtrriName::STMTNO) {
+      return false;
+    }
+  }
+  return true;
 }
 
 bool ParsedQueryValidator::ValidateResultClauseDeclared(ParsedQuery query) {
   std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
   ResultClause result_clause = query.GetResultClause();
-
+  bool is_valid = true;
   for (auto token : result_clause.GetValues()) {
-    if (declarations.find(token.value) == declarations.end()) {
-      return false;
+    if (token.type == PqlTokenType::SYNONYM) {
+      if (declarations.count(token.value) == 0) {
+        return false;
+      }
+    } else if (token.type == PqlTokenType::ATTRIBUTE) {
+      std::pair<std::string, AtrriName> parsedAttribute = Utils::ParseAttributeRef(token);
+      if (declarations.count(parsedAttribute.first) == 0) {
+        return false;
+      }
+      is_valid = is_valid && ValidateAttribute(token, declarations);
     }
   }
-
-  return true;
+  return is_valid;
 }
 
 bool ParsedQueryValidator::ValidateSuchThatClause(ParsedQuery query) {
+  std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
+  bool is_valid = true;
   if (!query.GetRelationships().empty()) {
-    Relationship relationship = query.GetRelationships().front();
-    PqlTokenType rel_ref = relationship.GetRelRef().type;
-    switch (rel_ref) {
-      case PqlTokenType::FOLLOWS: {
-        return ValidateFollowsFollowsTArguments(query);
-      }
-      case PqlTokenType::PARENT: {
-        return ValidateParentParentTArguments(query);
-      }
-      case PqlTokenType::FOLLOWS_T: {
-        return ValidateFollowsFollowsTArguments(query);
-      }
-      case PqlTokenType::PARENT_T: {
-        return ValidateParentParentTArguments(query);
-      }
-      case PqlTokenType::USES: {
-        return ValidateUsesArguments(query);
-      }
-      case PqlTokenType::MODIFIES: {
-        return ValidateModifiesArguments(query);
-      }
-      default: {
+    for (auto relationship : query.GetRelationships()) {
+      PqlTokenType rel_ref = relationship.GetRelRef().type;
+      if (rel_ref == PqlTokenType::FOLLOWS) {
+        is_valid = is_valid && ValidateFollowsFollowsTArguments(relationship, declarations);
+      } else if (rel_ref == PqlTokenType::PARENT) {
+        is_valid = is_valid && ValidateParentParentTArguments(relationship, declarations);
+      } else if (rel_ref == PqlTokenType::FOLLOWS_T) {
+        is_valid = is_valid && ValidateFollowsFollowsTArguments(relationship, declarations);
+      } else if (rel_ref == PqlTokenType::PARENT_T) {
+        is_valid = is_valid && ValidateParentParentTArguments(relationship, declarations);
+      } else if (rel_ref == PqlTokenType::USES) {
+        is_valid = is_valid && ValidateUsesArguments(relationship, declarations);
+      } else if (rel_ref == PqlTokenType::MODIFIES) {
+        is_valid = is_valid && ValidateModifiesArguments(relationship, declarations);
+      } else if (rel_ref == PqlTokenType::CALLS) {
+        is_valid = is_valid && ValidateCallsCallsTArguments(relationship, declarations);
+      } else if (rel_ref == PqlTokenType::CALLS_T) {
+        is_valid = is_valid && ValidateCallsCallsTArguments(relationship, declarations);
+      } else if (rel_ref == PqlTokenType::NEXT) {
+        is_valid = is_valid && ValidateNextNextTArguments(relationship, declarations);
+      } else if (rel_ref == PqlTokenType::NEXT_T) {
+        is_valid = is_valid && ValidateNextNextTArguments(relationship, declarations);
+      } else if (rel_ref == PqlTokenType::AFFECTS) {
+        is_valid = is_valid && ValidateAffectsAffectsTArguments(relationship, declarations);
+      } else if (rel_ref == PqlTokenType::AFFECTS_T) {
+        is_valid = is_valid && ValidateAffectsAffectsTArguments(relationship, declarations);
+      } else {
         return false;
       }
     }
   }
-
-  return true;
+  return is_valid;
 }
 
-bool ParsedQueryValidator::ValidateFollowsFollowsTArguments(ParsedQuery query) {
-  assert(!query.GetRelationships().empty());
-  Relationship relationship = query.GetRelationships().front();
+bool ParsedQueryValidator::ValidateFollowsFollowsTArguments(Relationship relationship, std::unordered_map<std::string, DesignEntityType> declarations) {
   PqlToken first_arg = relationship.GetFirst();
   PqlToken second_arg = relationship.GetSecond();
-
-  if (!IsStmtRef(first_arg.type)) {
-    return false;
-  }
-  if (!IsStmtRef(second_arg.type)) {
-    return false;
-  }
 
   if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
     if (first_arg.value==second_arg.value) {
       // Follows(s, s) is semantically invalid
       return false;
     }
-
-    bool found_first = false;
-    DesignEntityType first_arg_design_entity;
-    bool found_second = false;
-    DesignEntityType second_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first == first_arg.value) {
-        found_first = true;
-        first_arg_design_entity = declaration.second;
-      }
-      if (declaration.first == second_arg.value) {
-        found_second = true;
-        second_arg_design_entity = declaration.second;
-      }
-    }
-
-    if (!found_first || !found_second) {
-      return false;
-    }
-    if (!IsStmt(first_arg_design_entity)) {
-      return false;
-    }
-    if (!IsStmt(second_arg_design_entity)) {
-      return false;
-    }
-  } else if (first_arg.type==PqlTokenType::SYNONYM) {
-    bool found_first = false;
-    DesignEntityType first_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first == first_arg.value) {
-        found_first = true;
-        first_arg_design_entity = declaration.second;
-      }
-    }
-
-    if (!found_first) {
-      return false;
-    }
-    if (!IsStmt(first_arg_design_entity)) {
-      return false;
-    }
-  } else if (second_arg.type==PqlTokenType::SYNONYM) {
-    bool found_second = false;
-    DesignEntityType second_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first == second_arg.value) {
-        found_second = true;
-        second_arg_design_entity = declaration.second;
-      }
-    }
-
-    if (!found_second) {
-      return false;
-    }
-    if (!IsStmt(second_arg_design_entity)) {
-      return false;
-    }
   }
-
-  return true;
+  return ValidateNextNextTArguments(relationship, declarations);
 }
 
-bool ParsedQueryValidator::ValidateParentParentTArguments(ParsedQuery query) {
+bool ParsedQueryValidator::ValidateParentParentTArguments(Relationship relationship, std::unordered_map<std::string, DesignEntityType> declarations) {
   // since Parent/Parent* parallels Follows/Follows* we use the same validation
-  return ValidateFollowsFollowsTArguments(query);
+  return ValidateFollowsFollowsTArguments(relationship, declarations);
 }
 
-bool ParsedQueryValidator::ValidateUsesArguments(ParsedQuery query) {
-  assert(!query.GetRelationships().empty());
-  Relationship relationship = query.GetRelationships().front();
+bool ParsedQueryValidator::ValidateUsesArguments(Relationship relationship, std::unordered_map<std::string, DesignEntityType> declarations) {
   PqlToken first_arg = relationship.GetFirst();
   PqlToken second_arg = relationship.GetSecond();
 
-  if (first_arg.type!=PqlTokenType::SYNONYM
-      && first_arg.type!=PqlTokenType::NUMBER) {
-    return false;
-  }
-  if (!IsEntRef(second_arg.type)) {
-    return false;
-  }
-
   if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+    if (declarations.count(first_arg.value) == 0) {
+      return false;
+    }
+    if (declarations.count(second_arg.value) == 0) {
+      return false;
+    }
+
     if (first_arg.value==second_arg.value) {
       // Uses(s, s) is semantically invalid
       return false;
     }
 
-    bool found_first = false;
-    DesignEntityType first_arg_design_entity;
-    bool found_second = false;
-    DesignEntityType second_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first==first_arg.value) {
-        found_first = true;
-        first_arg_design_entity = declaration.second;
-      }
-      if (declaration.first == second_arg.value) {
-        found_second = true;
-        second_arg_design_entity = declaration.second;
-      }
+    if (!IsStmt(declarations.at(first_arg.value)) && declarations.at(first_arg.value) != DesignEntityType::PROCEDURE) {
+      return false;
+    }
+    if (declarations.at(second_arg.value) !=DesignEntityType::VARIABLE) {
+      return false;
+    }
+  } else if (first_arg.type == PqlTokenType::SYNONYM) {
+    if (!IsStmt(declarations.at(first_arg.value))) {
+      return false;
+    }
+  } else if (second_arg.type == PqlTokenType::SYNONYM) {
+    if (declarations.at(second_arg.value)!= DesignEntityType::VARIABLE) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool ParsedQueryValidator::ValidateModifiesArguments(Relationship relationship, std::unordered_map<std::string, DesignEntityType> declarations) {
+  // same validation as Uses
+  return ValidateUsesArguments(relationship, declarations);
+}
+
+bool ParsedQueryValidator::ValidateCallsCallsTArguments(Relationship relationship, std::unordered_map<std::string, DesignEntityType> declarations) {
+  PqlToken first_arg = relationship.GetFirst();
+  PqlToken second_arg = relationship.GetSecond();
+
+  if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+    if (declarations.count(first_arg.value) == 0) {
+      return false;
+    }
+    if (declarations.count(second_arg.value) == 0) {
+      return false;
     }
 
-    if (!found_first || !found_second) {
+    if (first_arg.value==second_arg.value) {
+      // Calls(p, p) is semantically invalid due to cyclic call
       return false;
     }
-    if (!IsStmt(first_arg_design_entity) && first_arg_design_entity != DesignEntityType::PROCEDURE) {
+    if (!IsProc(declarations.at(first_arg.value))) {
       return false;
     }
-    if (second_arg_design_entity!=DesignEntityType::VARIABLE) {
+    if (!IsProc(declarations.at(second_arg.value))) {
       return false;
     }
   } else if (first_arg.type==PqlTokenType::SYNONYM) {
-    bool found_first = false;
-    DesignEntityType first_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first == first_arg.value) {
-        found_first = true;
-        first_arg_design_entity = declaration.second;
-      }
-    }
-
-    if (!found_first) {
-      return false;
-    }
-    if (!IsStmt(first_arg_design_entity)) {
+    if (!IsProc(declarations.at(first_arg.value))) {
       return false;
     }
   } else if (second_arg.type==PqlTokenType::SYNONYM) {
-    bool found_second = false;
-    DesignEntityType second_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first == second_arg.value) {
-        found_second = true;
-        second_arg_design_entity = declaration.second;
-      }
-    }
-
-    if (!found_second) {
-      return false;
-    }
-    if (second_arg_design_entity!=DesignEntityType::VARIABLE) {
+    if (!IsProc(declarations.at(second_arg.value))) {
       return false;
     }
   }
-
   return true;
 }
+bool ParsedQueryValidator::ValidateNextNextTArguments(Relationship relationship, std::unordered_map<std::string, DesignEntityType> declarations) {
+  PqlToken first_arg = relationship.GetFirst();
+  PqlToken second_arg = relationship.GetSecond();
 
-bool ParsedQueryValidator::ValidateModifiesArguments(ParsedQuery query) {
-  // same validation as Uses
-  return ValidateUsesArguments(query);
+  if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+    if (declarations.count(first_arg.value) == 0) {
+      return false;
+    }
+    if (declarations.count(second_arg.value) == 0) {
+      return false;
+    }
+
+    if (!IsStmt(declarations.at(first_arg.value))) {
+      return false;
+    }
+    if (!IsStmt(declarations.at(second_arg.value))) {
+      return false;
+    }
+  } else if (first_arg.type==PqlTokenType::SYNONYM) {
+    if (!IsStmt(declarations.at(first_arg.value))) {
+      return false;
+    }
+  } else if (second_arg.type==PqlTokenType::SYNONYM) {
+    if (!IsStmt(declarations.at(second_arg.value))) {
+      return false;
+    }
+  }
+  return true;
+}
+bool ParsedQueryValidator::ValidateAffectsAffectsTArguments(Relationship relationship, std::unordered_map<std::string, DesignEntityType> declarations) {
+  // same validation as Next.Next*
+  return ValidateNextNextTArguments(relationship, declarations);
 }
 
 bool ParsedQueryValidator::ValidatePatternClause(ParsedQuery query) {
-  if (!query.GetPatterns().empty()) {
-    return ValidatePatternSynonymIsAssigned(query)
-        && ValidatePatternArguments(query);
-  }
-
-  return true;
-}
-
-bool ParsedQueryValidator::ValidatePatternSynonymIsAssigned(ParsedQuery query) {
-  assert(!query.GetPatterns().empty());
-  Pattern pattern = query.GetPatterns().front();
-  std::string pattern_synonym = pattern.GetSynAssign().value; // only assign for now
-  std::unordered_set<std::string> assign_synonyms_declared;
-
-  for (auto declaration : query.GetDeclaration()) {
-    if (declaration.second == DesignEntityType::ASSIGN) {
-      assign_synonyms_declared.insert(declaration.first);
-    }
-  }
-
-  const bool is_in = assign_synonyms_declared.find(pattern_synonym)!=assign_synonyms_declared.end();
-
-  return is_in;
-}
-
-bool ParsedQueryValidator::ValidatePatternArguments(ParsedQuery query) {
-  assert(!query.GetPatterns().empty());
-  PqlToken first_arg = query.GetPatterns().front().GetFirst();
-  PqlToken second_arg = query.GetPatterns().front().GetSecond();
-
-  if (!IsEntRef(first_arg.type)) {
-    return false;
-  }
-  if (!IsExpressionSpec(second_arg.type)) {
-    return false;
-  }
-  if (first_arg.type==PqlTokenType::SYNONYM) {
-    bool found = false;
-    DesignEntityType first_arg_design_entity;
-    for (auto declaration : query.GetDeclaration()) {
-      if (declaration.first == first_arg.value) {
-        found = true;
-        first_arg_design_entity = declaration.second;
+  std::vector<Pattern> patterns = query.GetPatterns();
+  std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
+  bool is_valid = true;
+  if (!patterns.empty()) {
+    for (auto pattern : patterns) {
+      PqlToken pattern_syn = pattern.GetSynonym();
+      if (declarations.count(pattern_syn.value) == 0) {
+        return false;
+      }
+      DesignEntityType design_entity_type = declarations.at(pattern_syn.value);
+      if (design_entity_type == DesignEntityType::ASSIGN) {
+        is_valid = is_valid && ValidateAssignPatternArguments(pattern, declarations);
+      } else if (design_entity_type == DesignEntityType::WHILE) {
+        is_valid = is_valid && ValidateWhilePatternArguments(pattern, declarations);
+      } else if (design_entity_type == DesignEntityType::IF) {
+        is_valid = is_valid && ValidateIfPatternArguments(pattern, declarations);
+      } else {
+        return false;
       }
     }
+  }
 
-    if (!found) {
-      // synonym not declared
+  return is_valid;
+}
+
+bool ParsedQueryValidator::ValidateAssignPatternArguments(Pattern pattern, std::unordered_map<std::string, DesignEntityType> declarations) {
+  PqlToken first_arg = pattern.GetFirst();
+  PqlToken second_arg = pattern.GetSecond();
+
+  if (first_arg.type==PqlTokenType::SYNONYM) {
+    if (declarations.count(first_arg.value) == 0) {
       return false;
     }
 
-    if (first_arg_design_entity != DesignEntityType::VARIABLE) {
+    if (declarations.at(first_arg.value) != DesignEntityType::VARIABLE) {
+      // pattern first argument synonym must be of type variable
+      return false;
+    }
+  }
+  return true;
+}
+
+bool ParsedQueryValidator::ValidateWhilePatternArguments(Pattern pattern, std::unordered_map<std::string, DesignEntityType> declarations) {
+  PqlToken first_arg = pattern.GetFirst();
+  PqlToken second_arg = pattern.GetSecond();
+
+  if (first_arg.type==PqlTokenType::SYNONYM) {
+    if (declarations.count(first_arg.value) == 0) {
+      return false;
+    }
+
+    if (declarations.at(first_arg.value) != DesignEntityType::VARIABLE) {
       // pattern first argument synonym must be of type variable
       return false;
     }
   }
 
+  if (second_arg.type != PqlTokenType::UNDERSCORE) {
+    return false;
+  }
   return true;
+}
+
+bool ParsedQueryValidator::ValidateIfPatternArguments(Pattern pattern, std::unordered_map<std::string, DesignEntityType> declarations) {
+  PqlToken first_arg = pattern.GetFirst();
+  PqlToken second_arg = pattern.GetSecond();
+  PqlToken third_arg = pattern.GetThird();
+
+  if (first_arg.type==PqlTokenType::SYNONYM) {
+    if (declarations.count(first_arg.value) == 0) {
+      return false;
+    }
+
+    if (declarations.at(first_arg.value) != DesignEntityType::VARIABLE) {
+      // pattern first argument synonym must be of type variable
+      return false;
+    }
+  }
+
+  if (second_arg.type != PqlTokenType::UNDERSCORE || third_arg.type != PqlTokenType::UNDERSCORE) {
+    return false;
+  }
+  return true;
+}
+
+bool ParsedQueryValidator::ValidateWithClause(ParsedQuery query) {
+  std::vector<With> withs = query.GetWithClause();
+  std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
+  for (auto with : withs) {
+    PqlToken first_arg = with.GetFirst();
+    PqlToken second_arg = with.GetSecond();
+
+    if (first_arg.type == PqlTokenType::ATTRIBUTE && second_arg.type == PqlTokenType::ATTRIBUTE) {
+      if (!ValidateAttribute(first_arg, declarations) || !ValidateAttribute(second_arg, declarations)) {
+        return false;
+      }
+
+      std::pair<std::pair<DesignEntityType, std::string>, AtrriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+      std::pair<std::pair<DesignEntityType, std::string>, AtrriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+
+      if (IsNameAttribute(first_attribute.second)) {
+        if (!IsNameAttribute(second_attribute.second)) {
+          return false;
+        }
+      } else if (IsIntegerAttribute(first_attribute.second)) {
+        if (!IsIntegerAttribute(second_attribute.second)) {
+          return false;
+        }
+      }
+    } else if (first_arg.type == PqlTokenType::ATTRIBUTE) {
+      if (!ValidateAttribute(first_arg, declarations)) {
+        return false;
+      }
+
+      std::pair<std::pair<DesignEntityType, std::string>, AtrriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+
+      if (IsNameAttribute(first_attribute.second)) {
+        if (second_arg.type != PqlTokenType::IDENT_WITH_QUOTES) {
+          return false;
+        }
+      } else if (IsIntegerAttribute(first_attribute.second)) {
+        if (second_arg.type != PqlTokenType::NUMBER) {
+          return false;
+        }
+      }
+    } else if (second_arg.type == PqlTokenType::ATTRIBUTE) {
+      if (!ValidateAttribute(second_arg, declarations)) {
+        return false;
+      }
+      std::pair<std::pair<DesignEntityType, std::string>, AtrriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+
+      if (IsNameAttribute(second_attribute.second)) {
+        if (first_arg.type != PqlTokenType::IDENT_WITH_QUOTES) {
+          return false;
+        }
+      } else if (IsIntegerAttribute(second_attribute.second)) {
+        if (first_arg.type != PqlTokenType::NUMBER) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+}
+
+bool ParsedQueryValidator::IsProc(DesignEntityType token_type) {
+  return token_type==DesignEntityType::PROCEDURE;
 }
 
 bool ParsedQueryValidator::IsStmt(DesignEntityType token_type) {
@@ -315,6 +410,16 @@ bool ParsedQueryValidator::IsExpressionSpec(PqlTokenType token_type) {
   // exact match not in iter 1
   return token_type==PqlTokenType::UNDERSCORE
       || token_type==PqlTokenType::SUB_EXPRESSION;
+}
+
+bool ParsedQueryValidator::IsNameAttribute(AtrriName attri_name) {
+  return attri_name==AtrriName::PROCNAME
+      || attri_name==AtrriName::VARNAME;
+}
+
+bool ParsedQueryValidator::IsIntegerAttribute(AtrriName attri_name) {
+  return attri_name==AtrriName::VALUE
+      || attri_name==AtrriName::STMTNO;
 }
 
 }
