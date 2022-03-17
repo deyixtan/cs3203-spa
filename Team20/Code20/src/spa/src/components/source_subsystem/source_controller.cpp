@@ -57,7 +57,7 @@ void SourceController::PopulatePKB(PKB *pkb, std::shared_ptr<ProgramNode> ast) {
   design_extractor.Visit(ast);
 
   CfgBuilder cfg_builder = CfgBuilder(pkb_client);
-  cfg_builder.Visit(ast);
+  cfg_builder.IterateAstAndPopulateCfg(ast);
 }
 
 }

@@ -43,7 +43,7 @@ void ProgramNode::Accept(DesignExtractor *de) {
   }
 }
 
-void ProgramNode::Accept(CfgBuilder *cb) {
+std::unordered_map<std::string, std::shared_ptr<CfgNode>> ProgramNode::Accept(CfgBuilder *cb) {
   std::unordered_map<std::string, std::shared_ptr<CfgNode>> heads;
   for (std::shared_ptr<ProcedureNode> &procedure : m_procedures) {
     std::shared_ptr<CfgNode> node = std::make_shared<CfgNode>();
@@ -53,6 +53,5 @@ void ProgramNode::Accept(CfgBuilder *cb) {
     endProcBlock->AddStatement("");
     heads.insert({procedure->GetIdentifier(), node});
   }
-  std::shared_ptr<Cfg> program_cfg = std::make_shared<Cfg>(heads);
-  cb->GetPkbClient()->PopulateCfg(*program_cfg);
+  return heads;
 }
