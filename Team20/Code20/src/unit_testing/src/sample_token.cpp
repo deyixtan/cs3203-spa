@@ -57,6 +57,7 @@ PqlToken valid_tuple_token_4 = PqlToken(PqlTokenType::TUPLE, "<s,t,s.stmt#>");
 PqlToken attribute_statement_token = PqlToken(PqlTokenType::ATTRIBUTE, "s.stmt#");
 PqlToken attribute_assign_token = PqlToken(PqlTokenType::ATTRIBUTE, "a.stmt#");
 PqlToken attribute_var_token = PqlToken(PqlTokenType::ATTRIBUTE, "v.varName");
+PqlToken attribute_const_token = PqlToken(PqlTokenType::ATTRIBUTE, "c.value");
 
 PqlToken select_token = PqlToken(PqlTokenType::SELECT, "Select");
 PqlToken such_token = PqlToken(PqlTokenType::SUCH, "such");
