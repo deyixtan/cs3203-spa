@@ -24,9 +24,9 @@ std::shared_ptr<ProgramNode> GenerateAbstractSyntaxTree(std::string source) {
 PKB *GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
   PKB *pkb = new PKB();
 
-  PkbClient *pkb_client = new PkbClient(pkb);
+  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
   DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
-  design_extractor->Visit(ast);
+  design_extractor->IterateAstAndPopulatePkb(ast);
   return pkb;
 }
 

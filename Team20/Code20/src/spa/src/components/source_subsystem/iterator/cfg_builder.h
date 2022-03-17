@@ -15,15 +15,16 @@ class CfgNode;
 
 class CfgBuilder {
  private:
-  PkbClient *m_pkb_client;
+  std::shared_ptr<PkbClient> m_pkb_client;
 
  public:
-  CfgBuilder(PkbClient *m_pkb_client);
-  [[nodiscard]] PkbClient *GetPkbClient();
-  void IterateAstAndPopulateCfg(std::shared_ptr<ProgramNode> node);
+  explicit CfgBuilder(std::shared_ptr<PkbClient> m_pkb_client);
+  [[nodiscard]] std::shared_ptr<PkbClient> GetPkbClient();
+  void IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node);
   [[nodiscard]] std::unordered_map<std::string, std::shared_ptr<CfgNode>> Visit(std::shared_ptr<ProgramNode> node);
   [[nodiscard]] std::shared_ptr<CfgNode> Visit(std::shared_ptr<ProcedureNode> node, std::shared_ptr<CfgNode> cfg_node);
-  [[nodiscard]] std::shared_ptr<CfgNode> Visit(std::shared_ptr<StatementListNode> node, std::shared_ptr<CfgNode> cfg_node);
+  [[nodiscard]] std::shared_ptr<CfgNode> Visit(std::shared_ptr<StatementListNode> node,
+                                               std::shared_ptr<CfgNode> cfg_node);
   [[nodiscard]] std::shared_ptr<CfgNode> Visit(std::shared_ptr<StatementNode> node, std::shared_ptr<CfgNode> cfg_node);
 };
 

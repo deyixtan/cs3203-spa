@@ -10,10 +10,6 @@ ProgramNode::ProgramNode() {}
 ProgramNode::ProgramNode(std::vector<std::shared_ptr<ProcedureNode>> procedures) :
     m_procedures(procedures) {}
 
-std::vector<std::shared_ptr<ProcedureNode>> ProgramNode::GetProcedures() {
-  return m_procedures;
-}
-
 std::string ProgramNode::ToString() {
   std::string str = "";
   for (std::shared_ptr<ProcedureNode> procedure : m_procedures) {
@@ -45,7 +41,7 @@ void ProgramNode::Accept(DesignExtractor *de) {
 
 std::unordered_map<std::string, std::shared_ptr<CfgNode>> ProgramNode::Accept(CfgBuilder *cb) {
   std::unordered_map<std::string, std::shared_ptr<CfgNode>> heads;
-  for (std::shared_ptr<ProcedureNode> &procedure : m_procedures) {
+  for (std::shared_ptr<ProcedureNode> const &procedure : m_procedures) {
     std::shared_ptr<CfgNode> node = std::make_shared<CfgNode>();
     std::shared_ptr<CfgNode> dummy_node = cb->Visit(procedure, node);
     std::shared_ptr<CfgNode> endProcBlock = std::make_shared<CfgNode>();

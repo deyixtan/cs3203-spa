@@ -1,6 +1,7 @@
 #ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_DESIGN_EXTRACTOR_H_
 #define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_DESIGN_EXTRACTOR_H_
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -15,13 +16,14 @@ class VariableNode;
 
 class DesignExtractor {
  private:
-  PkbClient *m_pkb_client;
+  std::shared_ptr<PkbClient> m_pkb_client;
   std::vector<std::string> m_visited;
 
  public:
-  DesignExtractor(PkbClient *pkb_client);
-  [[nodiscard]] PkbClient *GetPkbClient();
+  explicit DesignExtractor(std::shared_ptr<PkbClient> pkb_client);
+  [[nodiscard]] std::shared_ptr<PkbClient> GetPkbClient();
   [[nodiscard]] std::vector<std::string> &GetVisited();
+  void IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node);
   void Visit(std::shared_ptr<ProgramNode> node);
   void Visit(std::shared_ptr<ProcedureNode> node);
   void Visit(std::shared_ptr<StatementListNode> node);
