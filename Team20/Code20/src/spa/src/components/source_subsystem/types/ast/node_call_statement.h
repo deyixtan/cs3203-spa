@@ -6,9 +6,10 @@
 class CallStatementNode : public StatementNode {
  private:
   std::string m_identifier;
+  std::string proc_name;
 
  public:
-  CallStatementNode(int stmt_no, std::string m_identifier);
+  CallStatementNode(int stmt_no, std::string proc_name, std::string m_identifier);
   [[nodiscard]] std::string GetIdentifier();
   [[nodiscard]] StmtType GetStatementType() override;
   [[nodiscard]] std::string ToString() override;
