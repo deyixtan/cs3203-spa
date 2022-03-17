@@ -3,7 +3,7 @@
 
 #include "node.h"
 #include "node_statement.h"
-#include "../cfg/cfg_group_node.h"
+#include "components/source_subsystem/types/cfg/cfg_group_node.h"
 #include <iostream>
 
 class StatementListNode : public Node {

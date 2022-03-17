@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "components/source_subsystem/source_lexer.h"
+#include "components/source_subsystem/lexer/source_lexer.h"
 #include "components/source_subsystem/exceptions/unexpected_token.h"
 
 using namespace source;
