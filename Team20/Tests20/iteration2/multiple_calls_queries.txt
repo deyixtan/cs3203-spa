@@ -1,0 +1,100 @@
+1
+procedure p1, p2;
+Select p1 such that Calls(p1, p2)
+ProcA, ProcC, ProcB, ProcD, ProcE
+5000
+2
+procedure p1, p2;
+Select p2 such that Calls(p1, p2)
+ProcB, ProcD, ProcE, ProcF, ProcA
+5000
+3
+procedure p1, p2;
+Select p2 such that Calls("ProcA", p2)
+ProcB
+5000
+4
+procedure p1, p2;
+Select p1 such that Calls(p1, "ProcE")
+ProcB, ProcD
+5000
+5
+procedure p1, p2;
+Select p1 such that Calls(_, "ProcB")
+ProcA, ProcB, ProcC, ProcD, ProcE, ProcF
+5000
+6
+procedure p1, p2;
+Select p2 such that Calls("ProcB", _)
+ProcA, ProcB, ProcC, ProcD, ProcE, ProcF
+5000
+7
+procedure p1, p2;
+Select p1 such that Calls(_, _)
+ProcA, ProcB, ProcC, ProcD, ProcE, ProcF
+5000
+8
+procedure p1, p2;
+Select p1 such that Calls(_, p1)
+ProcB, ProcD, ProcE, ProcF, ProcA
+5000
+9
+procedure p1, p2;
+Select p2 such that Calls(p2, _)
+ProcA, ProcC, ProcB, ProcD, ProcE
+5000
+10
+assign a; procedure p1, p2;
+Select a such that Calls(p1, p1)
+none
+5000
+11
+read r; procedure p1, p2;
+Select r such that Calls(p1, p2)
+10
+5000
+12
+print pn; procedure p1, p2;
+Select pn such that Calls(p1, p2)
+5, 13
+5000
+13
+if ifs; procedure p1, p2;
+Select ifs such that Calls(p1, p2)
+3
+5000
+14
+while w; procedure p1, p2;
+Select w such that Calls(p1, p2)
+1
+5000
+15
+variable v; procedure p1, p2;
+Select v such that Calls(p1, p2)
+x, y
+5000
+16
+constant c; procedure p1, p2;
+Select c such that Calls(p1, p2)
+1, 4
+5000
+17
+stmt s; procedure p1, p2;
+Select s such that Calls(p1, p2)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+5000
+18
+call cl; procedure p1, p2;
+Select cl such that Calls(p1, p2)
+2, 4, 7, 9, 11, 12
+5000
+19
+procedure p1, p2;
+Select p1 such that Calls(" ProcA", p1)
+ProcB
+5000
+20
+procedure p1, p2;
+Select p2 such that Calls(p2, "ProcB ")
+ProcA
+5000
