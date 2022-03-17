@@ -1,4 +1,5 @@
 #include "node_variable.h"
+#include "../../iterator/design_extractor.h"
 
 VariableNode::VariableNode() : m_identifier("") {}
 
@@ -25,22 +26,22 @@ bool VariableNode::operator==(const ExpressionNode &other) const {
   return m_identifier == casted_other->m_identifier;
 }
 
-std::string VariableNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+std::string VariableNode::Accept(DesignExtractor *de, bool is_uses) {
   std::string var_name = m_identifier;
   if (!is_uses) {
-    for (std::string s : *visited) {
-      populator.PopulateModifies(s, var_name);
+    for (std::string s : de->GetVisited()) {
+      de->GetPkbClient()->PopulateModifies(s, var_name);
     }
-    populator.PopulateModifiesProc(m_proc, var_name);
-    populator.PopulateModifies(m_stmt, var_name);
+    de->GetPkbClient()->PopulateModifiesProc(m_proc, var_name);
+    de->GetPkbClient()->PopulateModifies(m_stmt, var_name);
   } else {
-    for (std::string s : *visited) {
-      populator.PopulateUses(s, var_name);
+    for (std::string s : de->GetVisited()) {
+      de->GetPkbClient()->PopulateUses(s, var_name);
     }
-    populator.PopulateUsesProc(m_proc, var_name);
-    populator.PopulateUses(m_stmt, var_name);
+    de->GetPkbClient()->PopulateUsesProc(m_proc, var_name);
+    de->GetPkbClient()->PopulateUses(m_stmt, var_name);
   }
 
-  populator.PopulateVars(var_name);
+  de->GetPkbClient()->PopulateVars(var_name);
   return GetPatternFormat();
 }

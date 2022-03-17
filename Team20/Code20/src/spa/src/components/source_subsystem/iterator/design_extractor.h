@@ -1,21 +1,36 @@
-#ifndef DESIGN_EXTRACTOR_H
-#define DESIGN_EXTRACTOR_H
+#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_DESIGN_EXTRACTOR_H_
+#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_DESIGN_EXTRACTOR_H_
 
-#include <unordered_set>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "components/pkb/pkb.h"
-#include "components/source_subsystem/populator.h"
-#include "components/source_subsystem/types/ast/node_program.h"
-#include "components/source_subsystem/types/cfg/cfg_program_node.h"
+class PkbClient;
+class ProgramNode;
+class ProcedureNode;
+class StatementListNode;
+class StatementNode;
+class ExpressionNode;
+class ConditionalExpressionNode;
+class VariableNode;
 
 class DesignExtractor {
  private:
-  ProgramNode root_node;
-  Populator populator;
+  std::shared_ptr<PkbClient> m_pkb_client;
+  std::vector<std::string> m_visited;
 
  public:
-  DesignExtractor(ProgramNode root_node, Populator populator);
-  void TraverseAst();
+  explicit DesignExtractor(std::shared_ptr<PkbClient> pkb_client);
+  [[nodiscard]] std::shared_ptr<PkbClient> GetPkbClient();
+  [[nodiscard]] std::vector<std::string> &GetVisited();
+  void IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node);
+  void Visit(std::shared_ptr<ProgramNode> node);
+  void Visit(std::shared_ptr<ProcedureNode> node);
+  void Visit(std::shared_ptr<StatementListNode> node);
+  void Visit(std::shared_ptr<StatementNode> node);
+  [[nodiscard]] std::string Visit(std::shared_ptr<ExpressionNode> node, bool is_uses);
+  [[nodiscard]] std::string Visit(std::shared_ptr<ConditionalExpressionNode> node, bool is_uses);
+  void Visit(std::shared_ptr<VariableNode> node, bool is_uses);
 };
 
-#endif //DESIGN_EXTRACTOR_H
+#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_DESIGN_EXTRACTOR_H_

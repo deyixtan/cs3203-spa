@@ -6,6 +6,7 @@
 #include "lexer/source_lexer.h"
 #include "parser/source_parser.h"
 #include "iterator/design_extractor.h"
+#include "iterator/cfg_builder.h"
 #include "utils/file_util.h"
 
 namespace source {
