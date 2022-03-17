@@ -78,7 +78,7 @@ void IfStatementNode::Accept(DesignExtractor *de) {
   de->GetVisited().push_back(if_stmt_num);
 
   std::string cond_expr = de->Visit(m_condition, true);
-  de->GetPkbClient()->AddIfPattern(stmt_num, cond_expr);
+  de->GetPkbClient()->AddPattern(IF, stmt_num, cond_expr, "");
 
   std::shared_ptr<StatementListNode> if_block = m_if_stmt_list;
   std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;

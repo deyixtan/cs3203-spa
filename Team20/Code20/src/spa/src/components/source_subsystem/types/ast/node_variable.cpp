@@ -34,9 +34,7 @@ std::string VariableNode::Accept(DesignExtractor *de, bool is_uses) {
     }
     de->GetPkbClient()->PopulateModifiesProc(m_proc, var_name);
     de->GetPkbClient()->PopulateModifies(m_stmt, var_name);
-  }
-
-  if (is_uses) {
+  } else {
     for (std::string s : de->GetVisited()) {
       de->GetPkbClient()->PopulateUses(s, var_name);
     }
