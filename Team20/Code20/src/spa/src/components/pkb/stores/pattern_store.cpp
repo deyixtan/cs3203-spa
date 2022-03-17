@@ -143,7 +143,6 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore:
   } else {
     for (auto const&[key, val] : m_stmt_pattern_map) {
       ExpressionTree expr_tree = ExpressionTree();
-      std::unordered_set<std::string> result = {};
       expr.erase(remove(expr.begin(), expr.end(), ' '), expr.end());
       std::string temp, sub_pattern;
 
@@ -151,7 +150,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore:
       if (expr.find('_') == std::string::npos) {
         expr_tree.build(expr);
         sub_pattern = expr_tree.GetPattern(expr_tree.GetRoot());
-        if (val.second.find(sub_pattern)) {
+        if (val.second == sub_pattern) {
           result.insert({key, val.first});
         }
       }
@@ -169,7 +168,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore:
         expr_tree.build(temp);
         sub_pattern = expr_tree.GetPattern(expr_tree.GetRoot());
 
-        if (val.second.find(sub_pattern)) {
+        if (val.second.find(sub_pattern) != std::string::npos) {
           result.insert({key, val.first});
         }
       }
