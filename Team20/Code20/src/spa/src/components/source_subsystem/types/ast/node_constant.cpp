@@ -15,11 +15,6 @@ std::string ConstantNode::ToString() {
   return m_value;
 }
 
-std::string ConstantNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
-  populator.PopulateConst(m_value);
-  return GetPatternFormat();
-}
-
 std::string ConstantNode::GetPatternFormat() {
   return "(" + m_value + ")";
 }

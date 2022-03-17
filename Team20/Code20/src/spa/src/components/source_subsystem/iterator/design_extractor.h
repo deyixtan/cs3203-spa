@@ -1,8 +1,8 @@
-#ifndef DESIGN_EXTRACTOR_H
-#define DESIGN_EXTRACTOR_H
+#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_DESIGN_EXTRACTOR_H_
+#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_DESIGN_EXTRACTOR_H_
 
-#include <vector>
 #include <string>
+#include <vector>
 
 class Populator;
 class ProgramNode;
@@ -31,4 +31,4 @@ class DesignExtractor {
   void Visit(std::shared_ptr<VariableNode> node, bool is_uses);
 };
 
-#endif //DESIGN_EXTRACTOR_H
+#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_DESIGN_EXTRACTOR_H_

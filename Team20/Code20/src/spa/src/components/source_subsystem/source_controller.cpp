@@ -55,6 +55,9 @@ void SourceController::PopulatePKB(PKB *pkb, std::shared_ptr<ProgramNode> ast) {
   Populator* populator = new Populator(pkb);
   DesignExtractor design_extractor = DesignExtractor(populator);
   design_extractor.Visit(ast);
+
+  CfgBuilder cfg_builder = CfgBuilder(populator);
+  cfg_builder.Visit(ast);
 }
 
 }

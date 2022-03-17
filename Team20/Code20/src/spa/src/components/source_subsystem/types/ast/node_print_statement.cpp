@@ -1,5 +1,7 @@
 #include "node_print_statement.h"
 #include "../../iterator/design_extractor.h"
+#include "../../iterator/cfg_builder.h"
+#include "../cfg/cfg_node.h"
 
 PrintStatementNode::PrintStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier)
     : StatementNode(stmt_no), m_identifier(identifier) {}
@@ -25,25 +27,15 @@ bool PrintStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier);
 }
 
-std::string PrintStatementNode::Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
-  std::string stmt_num = std::to_string(GetStatementNumber());
-  populator.PopulateStmt(stmt_num);
-  std::string var_name = m_identifier->GetIdentifier();
-  populator.PopulatePrint(stmt_num);
-  m_identifier->Process(populator, visited, true, cfg_proc_node, cfg_node);
-  if (cfg_node == nullptr) {
-    cfg_proc_node->GetLastNode()->GetNodes().emplace_back(GetStatementNumber());
-  } else {
-    cfg_node->GetNodes().emplace_back(GetStatementNumber());
-  }
-  return "";
-}
-
 void PrintStatementNode::Accept(DesignExtractor *de) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   de->GetPopulator()->PopulateStmt(stmt_num);
   std::string var_name = m_identifier->GetIdentifier();
   de->GetPopulator()->PopulatePrint(stmt_num);
   de->Visit(m_identifier, true);
-//  m_identifier->Process(populator, visited, true, cfg_proc_node, cfg_node);
+}
+
+std::shared_ptr<CfgNode> PrintStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
+  cfg_node->AddStatement(std::to_string(GetStatementNumber()));
+  return cfg_node;
 }

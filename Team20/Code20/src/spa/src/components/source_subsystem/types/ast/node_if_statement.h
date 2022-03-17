@@ -4,7 +4,6 @@
 #include "node_statement.h"
 #include "node_conditional_expression.h"
 #include "node_statement_list.h"
-#include "components/source_subsystem/types/cfg/cfg_if_node.h"
 #include "components/source_subsystem/populator.h"
 
 class IfStatementNode : public StatementNode {
@@ -23,11 +22,11 @@ class IfStatementNode : public StatementNode {
   [[nodiscard]] std::shared_ptr<StatementListNode> GetElseStatementList();
   [[nodiscard]] std::vector<std::shared_ptr<StatementNode>> GetAllStatementList();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
   void Accept(DesignExtractor *de);
+  std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_IF_STATEMENT_H_

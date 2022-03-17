@@ -1,6 +1,8 @@
 #include "node_program.h"
 #include "node_procedure.h"
+#include "../cfg/cfg_node.h"
 #include "../../iterator/design_extractor.h"
+#include "../../iterator/cfg_builder.h"
 
 ProgramNode::ProgramNode() {}
 
@@ -23,21 +25,6 @@ std::string ProgramNode::GetPatternFormat() {
   return "";
 }
 
-std::string ProgramNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
-  std::unordered_map<std::string, std::shared_ptr<source::CfgProcedureNode>> procedure_map;
-
-  for (auto &procedure : m_procedures) {
-    source::CfgGroupNode cfg_root = source::CfgGroupNode();
-    std::shared_ptr<source::CfgProcedureNode> cfg_proc_node_ptr = std::make_shared<source::CfgProcedureNode>();
-    procedure->Process(populator, visited, false, cfg_proc_node_ptr, nullptr);
-    procedure_map.insert({procedure->GetIdentifier(), cfg_proc_node_ptr});
-  }
-
-  source::CfgProgramNode program_cfg = source::CfgProgramNode(procedure_map);
-  populator.PopulateCfg(program_cfg);
-  return "";
-}
-
 bool ProgramNode::operator==(const ProgramNode &other) const {
   if (m_procedures.size() != other.m_procedures.size()) {
     return false;
@@ -53,4 +40,18 @@ void ProgramNode::Accept(DesignExtractor *de) {
   for (auto &procedure : m_procedures) {
     de->Visit(procedure);
   }
+}
+
+void ProgramNode::Accept(CfgBuilder *cb) {
+  std::unordered_map<std::string, std::shared_ptr<CfgNode>> heads;
+  for (std::shared_ptr<ProcedureNode> &procedure : m_procedures) {
+    std::shared_ptr<CfgNode> node = std::make_shared<CfgNode>();
+    std::shared_ptr<CfgNode> dummy_node = cb->Visit(procedure, node);
+    std::shared_ptr<CfgNode> endProcBlock = std::make_shared<CfgNode>();
+    dummy_node->AddNext(endProcBlock);
+    endProcBlock->AddStatement("");
+    heads.insert({procedure->GetIdentifier(), node});
+  }
+  std::shared_ptr<Cfg> program_cfg = std::make_shared<Cfg>(heads);
+  cb->GetPopulator()->PopulateCfg(*program_cfg);
 }

@@ -82,6 +82,6 @@ void Populator::AddIfPattern(std::string stmt, std::string expr) {
   pkb->GetPatternStore()->AddIfWithPattern(stmt, expr, "");
 }
 
-void Populator::PopulateCfg(source::CfgProgramNode &cfg) {
-  pkb->AddProgramCfg(std::make_shared<source::CfgProgramNode>(cfg));
+void Populator::PopulateCfg(Cfg &cfg) {
+  pkb->AddProgramCfg(std::make_shared<Cfg>(cfg));
 }
