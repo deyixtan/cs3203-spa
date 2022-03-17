@@ -113,6 +113,7 @@ std::unordered_set<std::string> PatternStore::GetIfWithPattern(std::string var) 
       result.insert(pair.first);
     }
   }
+  return result;
 }
 
 std::unordered_set<std::string> PatternStore::GetWhileWithPattern(std::string var) {
@@ -130,10 +131,51 @@ std::unordered_set<std::string> PatternStore::GetWhileWithPattern(std::string va
       result.insert(pair.first);
     }
   }
+  return result;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetStmtWithPatternSynonym() {
-  return m_stmt_pattern_pairs;
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetStmtWithPatternSynonym(std::string expr) {
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result = {};
+
+  //pattern a(v, _)
+  if (expr == "_") {
+    result = m_stmt_pattern_pairs;
+  } else {
+    for (auto const&[key, val] : m_stmt_pattern_map) {
+      ExpressionTree expr_tree = ExpressionTree();
+      std::unordered_set<std::string> result = {};
+      expr.erase(remove(expr.begin(), expr.end(), ' '), expr.end());
+      std::string temp, sub_pattern;
+
+      //pattern a(v, "x")
+      if (expr.find('_') == std::string::npos) {
+        expr_tree.build(expr);
+        sub_pattern = expr_tree.GetPattern(expr_tree.GetRoot());
+        if (val.second.find(sub_pattern)) {
+          result.insert({key, val.first});
+        }
+      }
+
+      //pattern a(v, _"x"_)
+      if (expr.find('_') != std::string::npos) {
+        if (expr.find('_') != std::string::npos) {
+          auto first = expr.find("_\"");
+          auto last = expr.find("\"_");
+          temp = "(" + expr.substr(first + 2, last - 2) + ")";
+        } else {
+          temp = "(" + expr + ")";
+        }
+
+        expr_tree.build(temp);
+        sub_pattern = expr_tree.GetPattern(expr_tree.GetRoot());
+
+        if (val.second.find(sub_pattern)) {
+          result.insert({key, val.first});
+        }
+      }
+    }
+  }
+  return result;
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetIfWithPatternSynonym() {

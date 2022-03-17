@@ -10,6 +10,7 @@
 #include "stores/modify_store.h"
 #include "stores/follow_store.h"
 #include "stores/parent_store.h"
+#include "stores/call_store.h"
 #include "stores/pattern_store.h"
 #include "expression_tree.h"
 #include "../source_subsystem/types/cfg/cfg.h"
@@ -20,6 +21,7 @@ class PKB {
   std::shared_ptr<ParentStore> m_parent_store;
   std::shared_ptr<UsageStore> m_usage_store;
   std::shared_ptr<ModifyStore> m_modify_store;
+  std::shared_ptr<CallStore> m_call_store;
   std::shared_ptr<PatternStore> m_pattern_store;
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;
   std::shared_ptr<Cfg> m_program_cfg;
@@ -30,6 +32,7 @@ class PKB {
   void AddStmt(std::string const &name, StmtType type);
   void AddProgramCfg(std::shared_ptr<Cfg> program_cfg);
   [[nodiscard]] std::unordered_set<std::string> GetStmt(StmtType type);
+  [[nodiscard]] std::shared_ptr<CallStore> GetCallStore();
   [[nodiscard]] std::shared_ptr<FollowStore> GetFollowStore();
   [[nodiscard]] std::shared_ptr<ModifyStore> GetModifyStore();
   [[nodiscard]] std::shared_ptr<ParentStore> GetParentStore();

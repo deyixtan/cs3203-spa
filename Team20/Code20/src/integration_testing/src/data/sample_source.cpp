@@ -42,3 +42,21 @@ std::string sample_source2 =
     "        length = x * x + y * y;" // 15
     "    }"
     "}";
+
+std::string sample_source3 =
+    "procedure bar {"
+    "    read x;" // 1
+    "    call foo;" // 2
+    "    call buzz;" // 3
+    "}"
+    "procedure foo {"
+    "    read x;" // 4
+    "    call fizz;" // 5
+    "}"
+    "procedure fizz {"
+    "    read x;" // 6
+    "    call buzz;" // 7
+    "}"
+    "procedure buzz {"
+    "    read x;" // 8
+    "}";
