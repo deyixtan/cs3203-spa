@@ -11,9 +11,6 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
     auto clause = std::move(clauses.front());
     auto intermediate_table = clause->Execute();
     table.Merge(intermediate_table);
-    if (table.IsEmpty()){
-      table.EncounteredFalseClause();
-    }
     clauses.pop();
   }
   auto projected_results = table.GetResult(query.GetResultClause().GetValues()[0].value);
