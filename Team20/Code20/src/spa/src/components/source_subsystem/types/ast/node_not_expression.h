@@ -4,6 +4,8 @@
 #include "node_conditional_expression.h"
 #include "components/source_subsystem/populator.h"
 
+class DesignExtractor;
+
 class NotExpressionNode : public ConditionalExpressionNode {
  private:
   std::shared_ptr<ConditionalExpressionNode> m_expression;
@@ -16,6 +18,7 @@ class NotExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
+  std::string Accept(DesignExtractor *de, bool is_uses);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_NOT_EXPRESSION_H_

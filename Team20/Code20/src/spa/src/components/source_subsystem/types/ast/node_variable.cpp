@@ -1,4 +1,5 @@
 #include "node_variable.h"
+#include "../../iterator/design_extractor.h"
 
 VariableNode::VariableNode() : m_identifier("") {}
 
@@ -44,5 +45,27 @@ std::string VariableNode::Process(Populator populator, std::vector<std::string>*
   }
 
   populator.PopulateVars(var_name);
+  return GetPatternFormat();
+}
+
+std::string VariableNode::Accept(DesignExtractor *de, bool is_uses) {
+  std::string var_name = m_identifier;
+  if (!is_uses) {
+    for (std::string s : de->GetVisited()) {
+      de->GetPopulator()->PopulateModifies(s, var_name);
+    }
+    de->GetPopulator()->PopulateModifiesProc(m_proc, var_name);
+    de->GetPopulator()->PopulateModifies(m_stmt, var_name);
+  }
+
+  if (is_uses) {
+    for (std::string s : de->GetVisited()) {
+      de->GetPopulator()->PopulateUses(s, var_name);
+    }
+    de->GetPopulator()->PopulateUsesProc(m_proc, var_name);
+    de->GetPopulator()->PopulateUses(m_stmt, var_name);
+  }
+
+  de->GetPopulator()->PopulateVars(var_name);
   return GetPatternFormat();
 }

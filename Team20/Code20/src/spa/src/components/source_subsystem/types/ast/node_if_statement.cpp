@@ -1,4 +1,5 @@
 #include "node_if_statement.h"
+#include "../../iterator/design_extractor.h"
 
 IfStatementNode::IfStatementNode(int stmt_no,
                                  std::shared_ptr<ConditionalExpressionNode> condition,
@@ -101,4 +102,41 @@ std::string IfStatementNode::Process(Populator populator, std::vector<std::strin
   visited->pop_back();
   populator.PopulateParentStar(stmt_num, *visited);
   return "";
+}
+
+void IfStatementNode::Accept(DesignExtractor *de) {
+  std::string stmt_num = std::to_string(GetStatementNumber());
+  de->GetPopulator()->PopulateStmt(stmt_num);
+  std::string if_stmt_num = std::to_string(GetStatementNumber());
+  de->GetVisited().push_back(if_stmt_num);
+
+  std::shared_ptr<source::CfgGroupNode> if_group_node = std::make_shared<source::CfgGroupNode>();
+  std::shared_ptr<source::CfgGroupNode> else_group_node = std::make_shared<source::CfgGroupNode>();
+  std::shared_ptr<source::CfgIfNode> if_node = std::make_shared<source::CfgIfNode>(source::CfgNode(GetStatementNumber()), if_group_node, else_group_node);
+
+//  std::string cond_expr =  m_condition->Process(populator, visited, true, cfg_proc_node, if_node);
+  std::string cond_expr = de->Visit(m_condition, true);
+  de->GetPopulator()->AddIfPattern(stmt_num, cond_expr);
+
+  std::shared_ptr<StatementListNode> if_block = m_if_stmt_list;
+  std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;
+  std::vector<std::shared_ptr<StatementNode>> if_stmts = m_if_stmt_list->GetStatements();
+  std::vector<std::shared_ptr<StatementNode>> else_stmts =  m_else_stmt_list->GetStatements();
+//  if_block->Process(populator, visited, false, cfg_proc_node, if_group_node);
+//  else_block->Process(populator, visited, false, cfg_proc_node, else_group_node);
+  de->Visit(if_block);
+  de->Visit(else_block);
+
+//  std::shared_ptr<source::CfgGroupNode> dest_node = std::make_shared<source::CfgGroupNode>();
+//  if_group_node->SetNext(dest_node);
+//  else_group_node->SetNext(dest_node);
+//
+//  cfg_proc_node->AddNode(if_node);
+//  cfg_proc_node->AddNode(dest_node);
+
+  de->GetPopulator()->PopulateIf(stmt_num);
+  de->GetPopulator()->PopulateParentStar(if_stmt_num, de->GetVisited());
+
+  de->GetVisited().pop_back();
+  de->GetPopulator()->PopulateParentStar(stmt_num, de->GetVisited());
 }

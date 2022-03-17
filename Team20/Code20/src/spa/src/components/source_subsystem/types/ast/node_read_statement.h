@@ -16,6 +16,7 @@ class ReadStatementNode : public StatementNode {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
+  void Accept(DesignExtractor *de);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_READ_STATEMENT_H_

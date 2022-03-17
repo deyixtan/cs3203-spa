@@ -52,8 +52,9 @@ std::string SourceController::RetrieveFileContent(std::string file_path) {
 }
 
 void SourceController::PopulatePKB(PKB *pkb, std::shared_ptr<ProgramNode> ast) {
-  DesignExtractor design_extractor = DesignExtractor(*ast, Populator(pkb));
-  design_extractor.TraverseAst();
+  Populator* populator = new Populator(pkb);
+  DesignExtractor design_extractor = DesignExtractor(populator);
+  design_extractor.Visit(ast);
 }
 
 }

@@ -2,8 +2,9 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROCEDURE_H_
 
 #include "node.h"
-#include "node_statement_list.h"
-#include "components/source_subsystem/types/cfg/cfg_group_node.h"
+
+class DesignExtractor;
+class StatementListNode;
 
 class ProcedureNode : public Node {
  private:
@@ -18,6 +19,7 @@ class ProcedureNode : public Node {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ProcedureNode &other) const;
+  void Accept(DesignExtractor *de);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROCEDURE_H_

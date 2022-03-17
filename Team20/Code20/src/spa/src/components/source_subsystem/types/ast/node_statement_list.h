@@ -2,9 +2,9 @@
 #define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_LIST_H_
 
 #include "node.h"
-#include "node_statement.h"
-#include "components/source_subsystem/types/cfg/cfg_group_node.h"
-#include <iostream>
+
+class StatementNode;
+class DesignExtractor;
 
 class StatementListNode : public Node {
  private:
@@ -18,6 +18,7 @@ class StatementListNode : public Node {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementListNode &other) const;
+  void Accept(DesignExtractor *de);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_LIST_H_

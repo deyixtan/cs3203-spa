@@ -1,4 +1,5 @@
 #include "node_while_statement.h"
+#include "../../iterator/design_extractor.h"
 
 WhileStatementNode::WhileStatementNode(int stmt_no,
                                        std::shared_ptr<ConditionalExpressionNode> cond,
@@ -75,4 +76,38 @@ std::string WhileStatementNode::Process(Populator populator, std::vector<std::st
   visited->pop_back();
   populator.PopulateParentStar(stmt_num, *visited);
   return "";
+}
+
+void WhileStatementNode::Accept(DesignExtractor *de) {
+  std::string stmt_num = std::to_string(GetStatementNumber());
+  de->GetPopulator()->PopulateStmt(stmt_num);
+  std::string while_stmt_num = std::to_string(GetStatementNumber());
+  de->GetVisited().push_back(while_stmt_num);
+
+  std::shared_ptr<source::CfgGroupNode> body_group_node = std::make_shared<source::CfgGroupNode>();
+  std::shared_ptr<source::CfgGroupNode> next_group_node = std::make_shared<source::CfgGroupNode>();
+  std::shared_ptr<source::CfgWhileNode> while_node = std::make_shared<source::CfgWhileNode>(source::CfgNode(GetStatementNumber()), body_group_node, next_group_node);
+
+//  std::string cond_expr = m_condition->Process(populator, visited, true, cfg_proc_node, while_node);
+  std::string cond_expr = de->Visit(m_condition, true);
+  de->GetPopulator()->AddWhilePattern(stmt_num, cond_expr);
+
+  std::shared_ptr<StatementListNode> while_block = GetStatementList();
+  std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
+
+//  while_block->Process(populator, visited, false, cfg_proc_node, body_group_node);
+  de->Visit(while_block);
+
+
+  de->GetPopulator()->PopulateWhile(stmt_num);
+  de->GetPopulator()->PopulateParentStar(while_stmt_num, de->GetVisited());
+
+//  for (int j = 0; j < while_stmts.size(); ++j) {
+//    int curr = while_stmts[j]->GetStatementNumber();
+//    while_stmts[j]->Process(populator, visited, cfg_proc_node, body_group_node);
+//    populator.PopulateParent(stmt_num, std::to_string(curr));
+//  }
+
+  de->GetVisited().pop_back();
+  de->GetPopulator()->PopulateParentStar(stmt_num, de->GetVisited());
 }

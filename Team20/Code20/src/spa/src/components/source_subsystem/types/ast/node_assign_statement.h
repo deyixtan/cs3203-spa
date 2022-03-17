@@ -6,6 +6,8 @@
 #include "node_constant.h"
 #include "node_combination_expression.h"
 
+class DesignExtractor;
+
 class AssignStatementNode : public StatementNode {
  private:
   std::shared_ptr<VariableNode> m_identifier;
@@ -22,6 +24,7 @@ class AssignStatementNode : public StatementNode {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
+  void Accept(DesignExtractor *de);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_ASSIGN_STATEMENT_H_

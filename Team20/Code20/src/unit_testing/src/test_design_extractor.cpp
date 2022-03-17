@@ -1,8 +1,9 @@
 #include "catch.hpp"
-#include "components/source_subsystem/lexer/source_lexer.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
 #include "components/source_subsystem/populator.h"
 #include "components/source_subsystem/exceptions/unexpected_token.h"
+#include "components/source_subsystem/types/ast/node_program.h"
+#include "components/source_subsystem/types/ast/node_procedure.h"
 #include "components/source_subsystem/types/ast/node_variable.h"
 #include "components/source_subsystem/types/ast/node_read_statement.h"
 #include "components/source_subsystem/types/ast/node_print_statement.h"
@@ -43,8 +44,8 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  DesignExtractor *design_extractor = new DesignExtractor(populator);
+  design_extractor->Visit(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -97,8 +98,8 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  DesignExtractor *design_extractor = new DesignExtractor(populator);
+  design_extractor->Visit(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -156,8 +157,8 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  DesignExtractor *design_extractor = new DesignExtractor(populator);
+  design_extractor->Visit(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -239,8 +240,8 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  DesignExtractor *design_extractor = new DesignExtractor(populator);
+  design_extractor->Visit(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -315,8 +316,8 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  DesignExtractor *design_extractor = new DesignExtractor(populator);
+  design_extractor->Visit(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -437,8 +438,8 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  DesignExtractor *design_extractor = new DesignExtractor(populator);
+  design_extractor->Visit(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -548,8 +549,8 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  DesignExtractor *design_extractor = new DesignExtractor(populator);
+  design_extractor->Visit(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));

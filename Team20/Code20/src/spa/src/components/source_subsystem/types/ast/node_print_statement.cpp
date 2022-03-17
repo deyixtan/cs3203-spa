@@ -1,4 +1,5 @@
 #include "node_print_statement.h"
+#include "../../iterator/design_extractor.h"
 
 PrintStatementNode::PrintStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier)
     : StatementNode(stmt_no), m_identifier(identifier) {}
@@ -36,4 +37,13 @@ std::string PrintStatementNode::Process(Populator populator, std::vector<std::st
     cfg_node->GetNodes().emplace_back(GetStatementNumber());
   }
   return "";
+}
+
+void PrintStatementNode::Accept(DesignExtractor *de) {
+  std::string stmt_num = std::to_string(GetStatementNumber());
+  de->GetPopulator()->PopulateStmt(stmt_num);
+  std::string var_name = m_identifier->GetIdentifier();
+  de->GetPopulator()->PopulatePrint(stmt_num);
+  de->Visit(m_identifier, true);
+//  m_identifier->Process(populator, visited, true, cfg_proc_node, cfg_node);
 }

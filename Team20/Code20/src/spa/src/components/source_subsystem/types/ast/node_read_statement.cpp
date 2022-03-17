@@ -1,4 +1,5 @@
 #include "node_read_statement.h"
+#include "../../iterator/design_extractor.h"
 
 ReadStatementNode::ReadStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier)
     : StatementNode(stmt_no),
@@ -38,4 +39,19 @@ std::string ReadStatementNode::Process(Populator populator, std::vector<std::str
     cfg_node->GetNodes().emplace_back(GetStatementNumber());
   }
   return "";
+}
+
+void ReadStatementNode::Accept(DesignExtractor *de) {
+  std::string stmt_num = std::to_string(GetStatementNumber());
+  de->GetPopulator()->PopulateStmt(stmt_num);
+  std::string var_name = m_identifier->GetIdentifier();
+  de->GetPopulator()->PopulateRead(stmt_num);
+//  m_identifier->Process(populator, visited, false, cfg_proc_node, cfg_node);
+  de->Visit(m_identifier, false);
+  de->GetPopulator()->PopulateParentStar(stmt_num, de->GetVisited());
+//  if (cfg_node == nullptr) {
+//    cfg_proc_node->GetLastNode()->GetNodes().emplace_back(GetStatementNumber());
+//  } else {
+//    cfg_node->GetNodes().emplace_back(GetStatementNumber());
+//  }
 }

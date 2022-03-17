@@ -11,6 +11,8 @@ enum class ArithmeticOperator {
   MOD,
 };
 
+class DesignExtractor;
+
 class CombinationExpressionNode : public ExpressionNode {
  private:
   ArithmeticOperator m_arithmetic_operator;
@@ -31,6 +33,7 @@ class CombinationExpressionNode : public ExpressionNode {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat();
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
+  std::string Accept(DesignExtractor *de, bool is_uses);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_

@@ -3,7 +3,7 @@
 
 #include "node_conditional_expression.h"
 #include "components/source_subsystem/populator.h"
-
+class DesignExtractor;
 enum class BooleanOperator {
   AND,
   OR
@@ -26,6 +26,7 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
+  std::string Accept(DesignExtractor *de, bool is_uses);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_

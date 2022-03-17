@@ -3,6 +3,8 @@
 
 #include "node.h"
 
+class DesignExtractor;
+
 class StatementNode : public Node {
  protected:
   int m_stmt_no;
@@ -18,6 +20,7 @@ class StatementNode : public Node {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   virtual bool operator==(const StatementNode &other) const = 0;
+  virtual void Accept(DesignExtractor *de) = 0;
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_

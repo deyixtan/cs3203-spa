@@ -1,4 +1,5 @@
 #include "node_boolean_expression.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
 
 BooleanExpressionNode::BooleanExpressionNode(BooleanOperator boolean_operator,
                                              std::shared_ptr<ConditionalExpressionNode> left_expression,
@@ -40,4 +41,11 @@ std::string BooleanExpressionNode::Process(Populator populator, std::vector<std:
     case BooleanOperator::OR:
       return m_left_expression->Process(populator, visited, is_uses, cfg_proc_node, cfg_node) + "||" + m_right_expression->Process(populator, visited, is_uses, cfg_proc_node, cfg_node);
   }
+}
+
+std::string BooleanExpressionNode::Accept(DesignExtractor *de, bool is_uses) {
+  if (m_boolean_operator == BooleanOperator::AND) {
+    return de->Visit(m_left_expression, is_uses) + "&&" + de->Visit(m_right_expression, is_uses);
+  }
+  return de->Visit(m_left_expression, is_uses) + "||" + de->Visit(m_right_expression, is_uses);
 }

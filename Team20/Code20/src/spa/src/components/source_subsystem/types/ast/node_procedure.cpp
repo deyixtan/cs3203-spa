@@ -1,4 +1,8 @@
 #include "node_procedure.h"
+#include "../../iterator/design_extractor.h"
+#include "node_statement_list.h"
+#include "components/source_subsystem/types/cfg/cfg_group_node.h"
+#include "node_statement.h"
 
 ProcedureNode::ProcedureNode(std::string identifier, std::shared_ptr<StatementListNode> stmt_list) :
     m_identifier(identifier), m_stmt_list(stmt_list) {}
@@ -35,4 +39,9 @@ bool ProcedureNode::operator==(const ProcedureNode &other) const {
 std::string ProcedureNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   populator.PopulateProc(m_identifier);
   return m_stmt_list->Process(populator, visited, is_uses, cfg_proc_node, cfg_node);
+}
+
+void ProcedureNode::Accept(DesignExtractor *de) {
+  de->GetPopulator()->PopulateProc(m_identifier);
+  de->Visit(m_stmt_list);
 }

@@ -1,4 +1,6 @@
 #include "node_program.h"
+#include "node_procedure.h"
+#include "../../iterator/design_extractor.h"
 
 ProgramNode::ProgramNode() {}
 
@@ -45,4 +47,10 @@ bool ProgramNode::operator==(const ProgramNode &other) const {
     else { return false; }
   }
   return true;
+}
+
+void ProgramNode::Accept(DesignExtractor *de) {
+  for (auto &procedure : m_procedures) {
+    de->Visit(procedure);
+  }
 }

@@ -1,4 +1,5 @@
 #include "node_statement.h"
+#include "../../iterator/design_extractor.h"
 
 StatementNode::StatementNode(int stmt_no) : m_stmt_no(stmt_no) {}
 
@@ -22,3 +23,19 @@ std::string StatementNode::ToString() {
 std::string StatementNode::GetPatternFormat() {
   return "";
 }
+
+//StmtType GetStatementType() {
+//  return STMT;
+//}
+//
+//std::string StatementNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
+//  return "";
+//}
+//
+//bool StatementNode::operator==(const StatementNode &other) const {
+//  return false;
+//}
+//
+//void StatementNode::Accept(DesignExtractor *de) {
+//
+//}

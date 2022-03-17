@@ -4,7 +4,9 @@
 #include <vector>
 
 #include "node.h"
-#include "node_procedure.h"
+
+class ProcedureNode;
+class DesignExtractor;
 
 class ProgramNode : public Node {
  private:
@@ -18,6 +20,7 @@ class ProgramNode : public Node {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ProgramNode &other) const;
+  void Accept(DesignExtractor *de);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROGRAM_H_
