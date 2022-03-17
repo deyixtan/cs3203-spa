@@ -1,0 +1,47 @@
+procedure ProcA {
+  call ProcB;
+  call ProcC;
+  if (0 == 0) then {
+    print x;
+    read y;
+    call ProcD;
+  } else {
+    call ProcE;
+  }
+  x = y;
+  y = z;
+  call ProcF;
+  z = 0;
+  while (z != 5) {
+    call ProcG;
+  }
+  call ProcH;
+}
+
+procedure ProcB {
+  read x;
+}
+
+procedure ProcC {
+  print y;
+}
+
+procedure ProcD {
+  x = y;
+}
+
+procedure ProcE {
+  y = z;
+}
+
+procedure ProcF {
+  y = 1 + 1;
+}
+
+procedure ProcG {
+  read b;
+}
+
+procedure ProcH {
+  print y;
+}
