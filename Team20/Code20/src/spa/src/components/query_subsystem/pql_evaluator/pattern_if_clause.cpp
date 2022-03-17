@@ -10,10 +10,13 @@ PatternIfClause::PatternIfClause(const std::string &if_synonym, const PqlToken &
 
 Table PatternIfClause::Execute() {
   if (IsArgSynonym(first_arg)) {
+    // pattern ifs(v, _, _)
     return HandleSynonym();
   } else if (IsArgWildcard(first_arg)) {
+    // pattern ifs(_, _, _)
     return HandleWildcard();
   } else if (IsArgIdent(first_arg)) {
+    // pattern ifs("x", _, _)
     return HandleIdent();
   } else {
     // no type safety because of PqlTokenType
