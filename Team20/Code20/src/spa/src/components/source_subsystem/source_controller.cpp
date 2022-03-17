@@ -52,11 +52,11 @@ std::string SourceController::RetrieveFileContent(std::string file_path) {
 }
 
 void SourceController::PopulatePKB(PKB *pkb, std::shared_ptr<ProgramNode> ast) {
-  Populator* populator = new Populator(pkb);
-  DesignExtractor design_extractor = DesignExtractor(populator);
+  PkbClient* pkb_client = new PkbClient(pkb);
+  DesignExtractor design_extractor = DesignExtractor(pkb_client);
   design_extractor.Visit(ast);
 
-  CfgBuilder cfg_builder = CfgBuilder(populator);
+  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
   cfg_builder.Visit(ast);
 }
 

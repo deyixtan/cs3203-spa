@@ -44,19 +44,19 @@ void StatementListNode::Accept(DesignExtractor *de) {
     std::string stmt_num = std::to_string(stmt->GetStatementNumber());
     std::string var_name = "";
     if (de->GetVisited().size() > 0)
-      de->GetPopulator()->PopulateParent(de->GetVisited().back(), stmt_num);
+      de->GetPkbClient()->PopulateParent(de->GetVisited().back(), stmt_num);
 
     if (stmt != stmts.back()) {
       int curr_stmt = stmt->GetStatementNumber();
       int next_stmt = stmts[i + 1]->GetStatementNumber();
-      de->GetPopulator()->PopulateFollows(std::to_string(curr_stmt), std::to_string(next_stmt));
+      de->GetPkbClient()->PopulateFollows(std::to_string(curr_stmt), std::to_string(next_stmt));
 
       // PopulateFollowsStar
       int curr_stmt_star = stmts[i]->GetStatementNumber();
 
       for (int j = i + 1; j < stmts.size(); ++j) {
         int next_stmt_star = stmts[j]->GetStatementNumber();
-        de->GetPopulator()->PopulateFollowsStar(std::to_string(curr_stmt_star), std::to_string(next_stmt_star));
+        de->GetPkbClient()->PopulateFollowsStar(std::to_string(curr_stmt_star), std::to_string(next_stmt_star));
       }
     }
 

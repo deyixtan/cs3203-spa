@@ -1,5 +1,6 @@
 #include "node_program.h"
 #include "node_procedure.h"
+#include "../cfg/cfg.h"
 #include "../cfg/cfg_node.h"
 #include "../../iterator/design_extractor.h"
 #include "../../iterator/cfg_builder.h"
@@ -53,5 +54,5 @@ void ProgramNode::Accept(CfgBuilder *cb) {
     heads.insert({procedure->GetIdentifier(), node});
   }
   std::shared_ptr<Cfg> program_cfg = std::make_shared<Cfg>(heads);
-  cb->GetPopulator()->PopulateCfg(*program_cfg);
+  cb->GetPkbClient()->PopulateCfg(*program_cfg);
 }

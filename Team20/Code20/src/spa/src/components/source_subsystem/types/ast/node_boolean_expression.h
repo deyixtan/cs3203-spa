@@ -2,7 +2,7 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
 
 #include "node_conditional_expression.h"
-#include "components/source_subsystem/populator.h"
+#include "components/source_subsystem/pkb_client.h"
 class DesignExtractor;
 enum class BooleanOperator {
   AND,

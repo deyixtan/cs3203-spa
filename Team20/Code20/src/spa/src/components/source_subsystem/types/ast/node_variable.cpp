@@ -30,20 +30,20 @@ std::string VariableNode::Accept(DesignExtractor *de, bool is_uses) {
   std::string var_name = m_identifier;
   if (!is_uses) {
     for (std::string s : de->GetVisited()) {
-      de->GetPopulator()->PopulateModifies(s, var_name);
+      de->GetPkbClient()->PopulateModifies(s, var_name);
     }
-    de->GetPopulator()->PopulateModifiesProc(m_proc, var_name);
-    de->GetPopulator()->PopulateModifies(m_stmt, var_name);
+    de->GetPkbClient()->PopulateModifiesProc(m_proc, var_name);
+    de->GetPkbClient()->PopulateModifies(m_stmt, var_name);
   }
 
   if (is_uses) {
     for (std::string s : de->GetVisited()) {
-      de->GetPopulator()->PopulateUses(s, var_name);
+      de->GetPkbClient()->PopulateUses(s, var_name);
     }
-    de->GetPopulator()->PopulateUsesProc(m_proc, var_name);
-    de->GetPopulator()->PopulateUses(m_stmt, var_name);
+    de->GetPkbClient()->PopulateUsesProc(m_proc, var_name);
+    de->GetPkbClient()->PopulateUses(m_stmt, var_name);
   }
 
-  de->GetPopulator()->PopulateVars(var_name);
+  de->GetPkbClient()->PopulateVars(var_name);
   return GetPatternFormat();
 }

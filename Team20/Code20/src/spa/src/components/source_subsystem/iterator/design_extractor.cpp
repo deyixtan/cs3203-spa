@@ -6,11 +6,11 @@
 #include "components/source_subsystem/types/ast/node_conditional_expression.h"
 #include "components/source_subsystem/types/ast/node_variable.h"
 
-DesignExtractor::DesignExtractor(Populator *populator)
-    : m_populator(populator), m_visited(std::vector<std::string>()) {}
+DesignExtractor::DesignExtractor(PkbClient *pkb_client)
+    : m_pkb_client(pkb_client), m_visited(std::vector<std::string>()) {}
 
-Populator *DesignExtractor::GetPopulator() {
-  return m_populator;
+PkbClient *DesignExtractor::GetPkbClient() {
+  return m_pkb_client;
 }
 
 std::vector<std::string> &DesignExtractor::GetVisited() {

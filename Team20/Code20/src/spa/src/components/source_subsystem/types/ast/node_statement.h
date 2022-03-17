@@ -2,6 +2,7 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
 
 #include "node.h"
+#include "../../../pkb/stores/store.h"
 
 class DesignExtractor;
 class CfgBuilder;

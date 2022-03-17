@@ -2,7 +2,7 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONDITIONAL_EXPRESSION_H_
 
 #include "node.h"
-#include "components/source_subsystem/populator.h"
+#include "components/source_subsystem/pkb_client.h"
 
 class DesignExtractor;
 

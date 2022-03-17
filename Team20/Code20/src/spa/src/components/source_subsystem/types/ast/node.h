@@ -3,9 +3,9 @@
 
 // TODO: remove dependence on PKB's StmtType
 
-#include "components/source_subsystem/populator.h"
+#include "components/source_subsystem/pkb_client.h"
 
-class Populator;
+class PkbClient;
 
 class Node {
  public:

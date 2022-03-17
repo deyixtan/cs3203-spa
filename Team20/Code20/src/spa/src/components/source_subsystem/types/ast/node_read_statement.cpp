@@ -30,17 +30,11 @@ bool ReadStatementNode::operator==(const StatementNode &other) const {
 
 void ReadStatementNode::Accept(DesignExtractor *de) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  de->GetPopulator()->PopulateStmt(stmt_num);
+  de->GetPkbClient()->PopulateStmt(stmt_num);
   std::string var_name = m_identifier->GetIdentifier();
-  de->GetPopulator()->PopulateRead(stmt_num);
-//  m_identifier->Process(populator, visited, false, cfg_proc_node, cfg_node);
+  de->GetPkbClient()->PopulateRead(stmt_num);
   de->Visit(m_identifier, false);
-  de->GetPopulator()->PopulateParentStar(stmt_num, de->GetVisited());
-//  if (cfg_node == nullptr) {
-//    cfg_proc_node->GetLastNode()->GetNodes().emplace_back(GetStatementNumber());
-//  } else {
-//    cfg_node->GetNodes().emplace_back(GetStatementNumber());
-//  }
+  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
 }
 
 std::shared_ptr<CfgNode> ReadStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {

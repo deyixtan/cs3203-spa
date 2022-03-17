@@ -4,16 +4,10 @@
 #include "components/source_subsystem/types/ast/node_statement_list.h"
 #include "components/source_subsystem/types/ast/node_statement.h"
 
-CfgBuilder::CfgBuilder(Populator *populator)
-    : m_populator(populator),
-      m_visited(std::vector<std::string>()) {}
+CfgBuilder::CfgBuilder(PkbClient *pkb_client) : m_pkb_client(pkb_client) {}
 
-Populator *CfgBuilder::GetPopulator() {
-  return m_populator;
-}
-
-std::vector<std::string> &CfgBuilder::GetVisited() {
-  return m_visited;
+PkbClient *CfgBuilder::GetPkbClient() {
+  return m_pkb_client;
 }
 
 void CfgBuilder::Visit(std::shared_ptr<ProgramNode> node) {

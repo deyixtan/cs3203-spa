@@ -3,7 +3,7 @@
 
 #include "node_combination_expression.h"
 #include "node_conditional_expression.h"
-#include "components/source_subsystem/populator.h"
+#include "components/source_subsystem/pkb_client.h"
 
 class DesignExtractor;
 

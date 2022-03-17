@@ -47,23 +47,23 @@ bool WhileStatementNode::operator==(const StatementNode &other) const {
 
 void WhileStatementNode::Accept(DesignExtractor *de) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  de->GetPopulator()->PopulateStmt(stmt_num);
+  de->GetPkbClient()->PopulateStmt(stmt_num);
   std::string while_stmt_num = std::to_string(GetStatementNumber());
   de->GetVisited().push_back(while_stmt_num);
 
   std::string cond_expr = de->Visit(m_condition, true);
-  de->GetPopulator()->AddWhilePattern(stmt_num, cond_expr);
+  de->GetPkbClient()->AddWhilePattern(stmt_num, cond_expr);
 
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
 
   de->Visit(while_block);
 
-  de->GetPopulator()->PopulateWhile(stmt_num);
-  de->GetPopulator()->PopulateParentStar(while_stmt_num, de->GetVisited());
+  de->GetPkbClient()->PopulateWhile(stmt_num);
+  de->GetPkbClient()->PopulateParentStar(while_stmt_num, de->GetVisited());
 
   de->GetVisited().pop_back();
-  de->GetPopulator()->PopulateParentStar(stmt_num, de->GetVisited());
+  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
 }
 
 std::shared_ptr<CfgNode> WhileStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {

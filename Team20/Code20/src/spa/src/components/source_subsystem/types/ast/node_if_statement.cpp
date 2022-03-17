@@ -73,12 +73,12 @@ bool IfStatementNode::operator==(const StatementNode &other) const {
 
 void IfStatementNode::Accept(DesignExtractor *de) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  de->GetPopulator()->PopulateStmt(stmt_num);
+  de->GetPkbClient()->PopulateStmt(stmt_num);
   std::string if_stmt_num = std::to_string(GetStatementNumber());
   de->GetVisited().push_back(if_stmt_num);
 
   std::string cond_expr = de->Visit(m_condition, true);
-  de->GetPopulator()->AddIfPattern(stmt_num, cond_expr);
+  de->GetPkbClient()->AddIfPattern(stmt_num, cond_expr);
 
   std::shared_ptr<StatementListNode> if_block = m_if_stmt_list;
   std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;
@@ -87,11 +87,11 @@ void IfStatementNode::Accept(DesignExtractor *de) {
   de->Visit(if_block);
   de->Visit(else_block);
 
-  de->GetPopulator()->PopulateIf(stmt_num);
-  de->GetPopulator()->PopulateParentStar(if_stmt_num, de->GetVisited());
+  de->GetPkbClient()->PopulateIf(stmt_num);
+  de->GetPkbClient()->PopulateParentStar(if_stmt_num, de->GetVisited());
 
   de->GetVisited().pop_back();
-  de->GetPopulator()->PopulateParentStar(stmt_num, de->GetVisited());
+  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
 }
 
 std::shared_ptr<CfgNode> IfStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {

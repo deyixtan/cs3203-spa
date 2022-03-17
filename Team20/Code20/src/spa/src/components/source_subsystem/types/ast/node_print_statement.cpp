@@ -29,9 +29,9 @@ bool PrintStatementNode::operator==(const StatementNode &other) const {
 
 void PrintStatementNode::Accept(DesignExtractor *de) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  de->GetPopulator()->PopulateStmt(stmt_num);
+  de->GetPkbClient()->PopulateStmt(stmt_num);
   std::string var_name = m_identifier->GetIdentifier();
-  de->GetPopulator()->PopulatePrint(stmt_num);
+  de->GetPkbClient()->PopulatePrint(stmt_num);
   de->Visit(m_identifier, true);
 }
 

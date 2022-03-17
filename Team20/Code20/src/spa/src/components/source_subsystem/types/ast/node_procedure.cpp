@@ -38,7 +38,7 @@ bool ProcedureNode::operator==(const ProcedureNode &other) const {
 }
 
 void ProcedureNode::Accept(DesignExtractor *de) {
-  de->GetPopulator()->PopulateProc(m_identifier);
+  de->GetPkbClient()->PopulateProc(m_identifier);
   de->Visit(m_stmt_list);
 }
 

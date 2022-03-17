@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-class Populator;
+class PkbClient;
 class ProgramNode;
 class ProcedureNode;
 class StatementListNode;
@@ -15,19 +15,19 @@ class VariableNode;
 
 class DesignExtractor {
  private:
-  Populator *m_populator;
+  PkbClient *m_pkb_client;
   std::vector<std::string> m_visited;
 
  public:
-  DesignExtractor(Populator *populator);
-  [[nodiscard]] Populator *GetPopulator();
+  DesignExtractor(PkbClient *pkb_client);
+  [[nodiscard]] PkbClient *GetPkbClient();
   [[nodiscard]] std::vector<std::string> &GetVisited();
   void Visit(std::shared_ptr<ProgramNode> node);
   void Visit(std::shared_ptr<ProcedureNode> node);
   void Visit(std::shared_ptr<StatementListNode> node);
   void Visit(std::shared_ptr<StatementNode> node);
-  std::string Visit(std::shared_ptr<ExpressionNode> node, bool is_uses);
-  std::string Visit(std::shared_ptr<ConditionalExpressionNode> node, bool is_uses);
+  [[nodiscard]] std::string Visit(std::shared_ptr<ExpressionNode> node, bool is_uses);
+  [[nodiscard]] std::string Visit(std::shared_ptr<ConditionalExpressionNode> node, bool is_uses);
   void Visit(std::shared_ptr<VariableNode> node, bool is_uses);
 };
 
