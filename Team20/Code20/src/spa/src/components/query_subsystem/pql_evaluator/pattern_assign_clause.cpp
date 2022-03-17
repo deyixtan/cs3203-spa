@@ -84,7 +84,7 @@ Table PatternAssignClause::HandleIdentWildcard() {
 Table PatternAssignClause::HandleIdentExact() {
   auto single_constraints =
       pkb->GetPatternStore()->GetStmtWithPattern(GetIdentWithoutQuotes(first_arg.value), second_arg.value);
-  return {assign_synonym, single_constraints}
+  return {assign_synonym, single_constraints};
 }
 
 Table PatternAssignClause::HandleIdentPartial() {
