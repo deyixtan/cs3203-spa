@@ -14,7 +14,7 @@ class StatementNode : public Node {
   StatementNode(int stmt_no);
   [[nodiscard]] int GetStatementNumber();
   [[nodiscard]] virtual StmtType GetStatementType() = 0;
-  virtual std::string Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node, std::string proc_name) = 0;
+  virtual std::string Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) = 0;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   virtual bool operator==(const StatementNode &other) const = 0;

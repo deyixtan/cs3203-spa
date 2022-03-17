@@ -198,13 +198,15 @@ std::shared_ptr<CallStatementNode> SourceParser::ParseCallStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::CALL);
   std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
-  std::string procedure_name = identifier->GetValue();
+  std::string callee_name = identifier->GetValue();
 
   // add function calls to session, check for cyclic calls
-  m_session.AddMethodCall(procedure_name);
+  m_session.AddMethodCall(callee_name);
+
+  std::string proc_name = m_session.GetCurrProcedure();
 
   ProcessToken(TokenType::SEMI_COLON);
-  return std::make_shared<CallStatementNode>(stmt_no, procedure_name);
+  return std::make_shared<CallStatementNode>(stmt_no, proc_name, callee_name);
 }
 
 std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpression() {

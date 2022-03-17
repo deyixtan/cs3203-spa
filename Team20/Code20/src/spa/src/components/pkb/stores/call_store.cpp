@@ -28,5 +28,48 @@ void CallStore::AddCallerHelper(std::string const &caller, std::string const &ca
         rs_map.at(callerStar).callees_star_set.insert(callee);
       }
     }
+}
 
+bool CallStore::IsCallsPairExists(std::string const &first_proc, std::string const &second_proc) {
+  return all_calls_pairs.find({first_proc, second_proc}) != all_calls_pairs.end();
+}
+
+bool CallStore::IsCallsStarPairExists(const std::string &first_proc, const std::string &second_proc) {
+  return all_calls_star_pairs.find({first_proc, second_proc}) != all_calls_star_pairs.end();
+}
+
+std::unordered_set<std::string> CallStore::GetCallersOf(std::string const &proc){
+  if (rs_map.find(proc) != rs_map.end()) {
+    return rs_map.at(proc).callers_set;
+  }
+  return {};
+}
+
+std::unordered_set<std::string> CallStore::GetCalleesOf(std::string const &proc) {
+  if (rs_map.find(proc) != rs_map.end()) {
+    return rs_map.at(proc).callees_set;
+  }
+  return {};
+}
+
+std::unordered_set<std::string> CallStore::GetCallersStarOf(std::string const &proc) {
+  if (rs_map.find(proc) != rs_map.end()) {
+    return rs_map.at(proc).callers_star_set;
+  }
+  return {};
+}
+
+std::unordered_set<std::string> CallStore::GetCalleesStarOf(std::string const &proc) {
+  if (rs_map.find(proc) != rs_map.end()) {
+    return rs_map.at(proc).callees_star_set;
+  }
+  return {};
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> CallStore::GetAllCalls() {
+  return all_calls_pairs;
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> CallStore::GetAllCallsStar(){
+  return all_calls_star_pairs;
 }

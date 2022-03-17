@@ -1,7 +1,7 @@
 #include "node_call_statement.h"
 
-CallStatementNode::CallStatementNode(int stmt_no, std::string identifier)
-    : StatementNode(stmt_no), m_identifier(identifier) {}
+CallStatementNode::CallStatementNode(int stmt_no, std::string proc, std::string identifier)
+    : StatementNode(stmt_no), proc_name(proc), m_identifier(identifier) {}
 
 std::string CallStatementNode::GetIdentifier() {
   return m_identifier;
@@ -15,7 +15,7 @@ std::string CallStatementNode::ToString() {
   return "call " + m_identifier + ";\n";
 }
 
-std::string CallStatementNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node, std::string proc_name) {
+std::string CallStatementNode::Process(Populator populator, std::vector<std::string> *visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   populator.PopulateStmt(stmt_num);
   std::string callee_name = m_identifier;

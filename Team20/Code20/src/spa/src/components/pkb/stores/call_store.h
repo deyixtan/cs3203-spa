@@ -18,8 +18,6 @@ class CallStore : public Store {
 
  public:
   explicit CallStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
-//  void AddCaller(std::string const &caller, std::string const &callee);
-//  void AddCallerStar(std::string const &caller, std::string const &callee);
   void AddCallerHelper(std::string const &caller, std::string const &callee);
   [[nodiscard]] bool IsCallsPairExists(std::string const &first_proc, std::string const &second_proc);
   [[nodiscard]] bool IsCallsStarPairExists(std::string const &first_proc, std::string const &second_proc);

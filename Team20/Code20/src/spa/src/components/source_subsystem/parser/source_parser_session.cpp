@@ -79,4 +79,8 @@ void SourceParserSession::AddMethodCall(std::string callee_name) {
   m_call_map.at(m_curr_parsed_procedure).insert(callee_name);
 }
 
+std::string SourceParserSession::GetCurrProcedure() {
+  return m_curr_parsed_procedure;
+}
+
 }
