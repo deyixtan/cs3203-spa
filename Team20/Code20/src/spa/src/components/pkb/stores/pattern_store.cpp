@@ -28,5 +28,13 @@ std::unordered_set<std::string> PatternStore::GetIfWithPattern(std::string const
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetStmtWithPatternSynonym(std::string rhs) {
-  return GetPatternSynonym(rhs);
+  return GetPatternSynonym(STMT, rhs);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetWhileWithPatternSynonym(std::string rhs) {
+  return GetPatternSynonym(WHILE, rhs);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetIfWithPatternSynonym(std::string rhs) {
+  return GetPatternSynonym(IF, rhs);
 }
