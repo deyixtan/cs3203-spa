@@ -1,11 +1,15 @@
 #include "cfg_node.h"
 
-namespace source {
+CfgNode::CfgNode() {}
 
-CfgNode::CfgNode(int stmt_no) : m_stmt_no(stmt_no) {}
-
-int CfgNode::GetStatementNumber() {
-  return m_stmt_no;
+std::vector<std::string> CfgNode::GetStatementList() {
+  return m_stmt_no_list;
 }
 
-};
+void CfgNode::AddStatement(std::string stmt_no) {
+  m_stmt_no_list.push_back(stmt_no);
+}
+
+void CfgNode::AddNext(std::shared_ptr<CfgNode> cfg_node) {
+  m_next_list.push_back(cfg_node);
+}
