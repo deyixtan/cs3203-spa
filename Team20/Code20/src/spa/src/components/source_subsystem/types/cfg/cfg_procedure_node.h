@@ -14,8 +14,8 @@ class CfgProcedureNode {
 
  public:
   CfgProcedureNode();
-  [[ndiscard]] std::shared_ptr<CfgGroupNode> GetRootNode();
-  [[ndiscard]] std::shared_ptr<CfgGroupNode> GetLastNode();
+  [[nodiscard]] std::shared_ptr<CfgGroupNode> GetRootNode();
+  [[nodiscard]] std::shared_ptr<CfgGroupNode> GetLastNode();
   void AddNode(std::shared_ptr<CfgGroupNode> cfg_node);
 };
 
