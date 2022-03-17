@@ -52,7 +52,7 @@ void WhileStatementNode::Accept(DesignExtractor *de) {
   de->GetVisited().push_back(while_stmt_num);
 
   std::string cond_expr = de->Visit(m_condition, true);
-  de->GetPkbClient()->AddWhilePattern(stmt_num, cond_expr);
+  de->GetPkbClient()->AddPattern(WHILE, stmt_num, cond_expr, "");
 
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
