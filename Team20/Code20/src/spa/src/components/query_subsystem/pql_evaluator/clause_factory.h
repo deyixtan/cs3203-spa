@@ -14,12 +14,18 @@ namespace pql {
 class ClauseFactory {
  public:
   ClauseFactory() = default;
-  static std::unique_ptr<Clause> Create(Relationship relationship, std::unordered_map<std::string, DesignEntityType> declarations, PKB *pkb);
-  static std::unique_ptr<Clause> Create(Pattern pattern, PKB *pkb);
-  static std::unique_ptr<Clause> Create(PqlToken selected_synonym, std::unordered_map<std::string, DesignEntityType> declarations, PKB *pkb);
-  static std::unique_ptr<Clause> Create(With with, std::unordered_map<std::string, DesignEntityType> declarations, PKB *pkb);
- private:
-  static PKB *pkb;
+  static std::unique_ptr<Clause> Create(Relationship relationship,
+                                        const std::unordered_map<std::string, DesignEntityType>& declarations,
+                                        PKB *pkb);
+  static std::unique_ptr<Clause> Create(Pattern pattern,
+                                        const std::unordered_map<std::string, DesignEntityType>& declarations,
+                                        PKB *pkb);
+  static std::unique_ptr<Clause> Create(const PqlToken& selected_synonym,
+                                        const std::unordered_map<std::string, DesignEntityType>& declarations,
+                                        PKB *pkb);
+  static std::unique_ptr<Clause> Create(With with,
+                                        const std::unordered_map<std::string, DesignEntityType>& declarations,
+                                        PKB *pkb);
 };
 
 }

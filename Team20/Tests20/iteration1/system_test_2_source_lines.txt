@@ -1,0 +1,22 @@
+procedure bar {
+1  read x;
+2  read y;
+3  if ((x >= 0) && (y >= 0)) then {
+4    while (x != 0) {
+5      tan = y / x;
+6      sin = y / length;
+7      cos = x / length;
+8      if (((sin * sin + cos * cos) == 1) || (!(tan != (sin / cos)))) then {
+9        x = y / 2;
+10        y = x / 2;
+      } else {
+11        x = 0;
+      }
+12      length = x * x + y * y;
+    }
+  } else {
+13    x = 10;
+14    y = 10;
+15    length = x * x + y * y;
+  }
+}
