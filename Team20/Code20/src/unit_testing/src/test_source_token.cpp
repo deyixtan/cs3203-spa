@@ -320,6 +320,17 @@ TEST_CASE("Test source ELSE token") {
   REQUIRE(typeStr == "{ type: ELSE, value: }");
 }
 
+TEST_CASE("Test source CALL token") {
+  source::SourceToken token = source::SourceToken(source::TokenType::CALL, "");
+  source::TokenType type = token.GetType();
+  std::string value = token.GetValue();
+  std::string typeStr = token.ToString();
+
+  REQUIRE(type == source::TokenType::CALL);
+  REQUIRE(std::empty(value));
+  REQUIRE(typeStr == "{ type: CALL, value: }");
+}
+
 TEST_CASE("Test source PROCEDURE token") {
   source::SourceToken token = source::SourceToken(source::TokenType::PROCEDURE, "main");
   source::TokenType type = token.GetType();
