@@ -48,7 +48,7 @@ Table WithClause::HandleAttributeAttribute() {
     return table;
   }
 
-  return {first_arg.value, second_arg.value, intersection_pair};
+  return {first_attribute.first.second, second_attribute.first.second, intersection_pair};
 }
 
 Table WithClause::HandleAttributeInteger() {
@@ -61,12 +61,21 @@ Table WithClause::HandleAttributeInteger() {
   }
   std::unordered_set<std::string> result_set;
   result_set.insert(second_arg.value);
-  return {first_arg.value, result_set};
+  return {first_attribute.first.second, result_set};
 }
 
 Table WithClause::HandleAttributeIdent() {
-  // same logic as HandleAttributeInteger
-  HandleAttributeInteger();
+  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+  auto single_constraints = pkb->GetStmt(GetStmtType(first_attribute.first.first));
+  std::string ident_without_quotes = GetIdentWithoutQuotes(second_arg.value);
+  Table table;
+  if (single_constraints.count(ident_without_quotes) == 0) {
+    table.EncounteredFalseClause();
+    return table;
+  }
+  std::unordered_set<std::string> result_set;
+  result_set.insert(ident_without_quotes);
+  return {first_attribute.first.second, result_set};
 }
 
 Table WithClause::HandleIntegerAttribute() {
@@ -79,7 +88,7 @@ Table WithClause::HandleIntegerAttribute() {
   }
   std::unordered_set<std::string> result_set;
   result_set.insert(first_arg.value);
-  return {second_arg.value, result_set};
+  return {second_attribute.first.second, result_set};
 }
 
 Table WithClause::HandleIntegerInteger() {
@@ -91,8 +100,17 @@ Table WithClause::HandleIntegerInteger() {
 }
 
 Table WithClause::HandleIdentAttribute() {
-  // same logic as HandleIntegerAttribute
-  HandleIntegerAttribute();
+  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+  auto single_constraints = pkb->GetStmt(GetStmtType(second_attribute.first.first));
+  std::string ident_without_quotes = GetIdentWithoutQuotes(first_arg.value);
+  Table table;
+  if (single_constraints.count(ident_without_quotes) == 0) {
+    table.EncounteredFalseClause();
+    return table;
+  }
+  std::unordered_set<std::string> result_set;
+  result_set.insert(ident_without_quotes);
+  return {second_attribute.first.second, result_set};
 }
 
 Table WithClause::HandleIdentIdent() {
