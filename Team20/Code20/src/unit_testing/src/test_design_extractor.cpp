@@ -1,8 +1,10 @@
 #include "catch.hpp"
-#include "components/source_subsystem/lexer/source_lexer.h"
+#include "components/pkb/pkb.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
-#include "components/source_subsystem/populator.h"
+#include "components/source_subsystem/pkb_client.h"
 #include "components/source_subsystem/exceptions/unexpected_token.h"
+#include "components/source_subsystem/types/ast/node_program.h"
+#include "components/source_subsystem/types/ast/node_procedure.h"
 #include "components/source_subsystem/types/ast/node_variable.h"
 #include "components/source_subsystem/types/ast/node_read_statement.h"
 #include "components/source_subsystem/types/ast/node_print_statement.h"
@@ -42,9 +44,9 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
-  Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
+  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -96,9 +98,9 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
-  Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
+  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -155,9 +157,9 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
-  Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
+  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -238,9 +240,9 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
-  Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
+  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -314,9 +316,9 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
-  Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
+  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -436,9 +438,9 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
-  Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
+  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -547,9 +549,9 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
-  Populator *populator = new Populator(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(*expected_program_node, *populator);
-  design_extractor->TraverseAst();
+  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
+  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -586,4 +588,3 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   REQUIRE(test_pkb->GetFollowStore()->GetAllFollowStarStmt(STMT) == pkb->GetFollowStore()->GetAllFollowStarStmt(STMT));
   REQUIRE(test_pkb->GetFollowStore()->GetAllFollowStarStmt(STMT, STMT) == pkb->GetFollowStore()->GetAllFollowStarStmt(STMT, STMT));
 }
-

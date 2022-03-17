@@ -3,7 +3,9 @@
 
 #include "node_combination_expression.h"
 #include "node_conditional_expression.h"
-#include "components/source_subsystem/populator.h"
+#include "components/source_subsystem/pkb_client.h"
+
+class DesignExtractor;
 
 enum class RelationOperator {
   LESS_THAN,
@@ -28,10 +30,10 @@ class RelationalExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::shared_ptr<ExpressionNode> GetRightExpression();
   [[nodiscard]] std::string GetRelationOperatorLabel(RelationOperator relation_operator);
   [[nodiscard]] ConditionalType GetConditionalType() override;
-  [[nodiscard]] std::string Process(Populator populator, std::vector<std::string>* visited, bool is_uses, std::shared_ptr<source::CfgProcedureNode> cfg_proc_node, std::shared_ptr<source::CfgGroupNode> cfg_node);
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
+  std::string Accept(DesignExtractor *de, bool is_uses);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_RELATIONAL_EXPRESSION_H_

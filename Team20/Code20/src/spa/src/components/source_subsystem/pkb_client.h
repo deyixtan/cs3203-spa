@@ -1,15 +1,19 @@
-#ifndef SPA_SRC_COMPONENTS_PKB_DESIGN_EXTRACTOR_POPULATOR_H_
-#define SPA_SRC_COMPONENTS_PKB_DESIGN_EXTRACTOR_POPULATOR_H_
+#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
+#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
 
-#include "../pkb/pkb.h"
-#include "types/cfg/cfg_program_node.h"
+#include <string>
 
-class Populator {
+#include "../pkb/stores/store.h"
+
+class PKB;
+class Cfg;
+
+class PkbClient {
  private:
   PKB *pkb;
 
  public:
-  explicit Populator(PKB *pkb);
+  explicit PkbClient(PKB *pkb);
   void PopulateParent(std::string stmt1, std::string stmt2);
   void PopulateParentStar(std::string stmt, std::vector<std::string> visited);
   void PopulateFollows(std::string stmt1, std::string stmt2);
@@ -27,10 +31,8 @@ class Populator {
   void PopulateWhile(std::string stmt);
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
-  void AddStmtPattern(std::string stmt, std::string lhs, std::string rhs);
-  void AddWhilePattern(std::string stmt, std::string expr);
-  void AddIfPattern(std::string stmt, std::string expr);
-  void PopulateCfg(source::CfgProgramNode &cfg);
+  void PopulateCfg(Cfg &cfg);
+  void AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs);
 };
 
-#endif //SPA_SRC_COMPONENTS_PKB_DESIGN_EXTRACTOR_POPULATOR_H_
+#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
