@@ -1049,3 +1049,43 @@ TEST_CASE("Test single procedure with one assign statement (with combination exp
   // test
   REQUIRE(*program_node == *expected_program_node);
 }
+
+TEST_CASE("Test single procedure with one call statement") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure foo { a = b / 5; } procedure main { call foo; }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+  program_node = parser.ParseProgram();
+
+  // set up expected
+  std::shared_ptr<VariableNode> variable_a_node = std::make_shared<VariableNode>("a", "5", "foo");
+  std::shared_ptr<VariableNode> variable_b_node = std::make_shared<VariableNode>("b", "5", "foo");
+  std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("5");
+  std::shared_ptr<CombinationExpressionNode> combination_node =
+      std::make_shared<CombinationExpressionNode>(ArithmeticOperator::DIVIDE, variable_b_node, constant_node);
+  std::shared_ptr<AssignStatementNode>
+      assign_stmt = std::make_shared<AssignStatementNode>(1, variable_a_node, combination_node);
+
+  std::vector<std::shared_ptr<StatementNode>> statements;
+  statements.emplace_back(assign_stmt);
+  std::shared_ptr<StatementListNode> stmt_list = std::make_shared<StatementListNode>(statements);
+
+  std::shared_ptr<ProcedureNode> procedure = std::make_shared<ProcedureNode>("foo", stmt_list);
+  std::shared_ptr<CallStatementNode> call_stmt = std::make_shared<CallStatementNode>(2, "main", "foo");
+  std::vector<std::shared_ptr<StatementNode>> statements_main;
+  statements_main.emplace_back(call_stmt);
+  std::shared_ptr<StatementListNode> stmt_list_main = std::make_shared<StatementListNode>(statements_main);
+
+  std::shared_ptr<ProcedureNode> procedure_main = std::make_shared<ProcedureNode>("main", stmt_list_main);
+
+  std::vector<std::shared_ptr<ProcedureNode>> procedures;
+  procedures.emplace_back(procedure);
+  procedures.emplace_back(procedure_main);
+  std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
+
+  // test
+  REQUIRE(*program_node == *expected_program_node);
+}
