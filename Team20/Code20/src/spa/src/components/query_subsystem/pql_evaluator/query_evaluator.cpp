@@ -42,7 +42,7 @@ std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQ
     }
   }
 
-  clauses.push(pql::ClauseFactory::Create(query.GetResultClause().GetValues()[0], query.GetDeclaration(), pkb));
+  clauses.push(pql::ClauseFactory::Create(query.GetResultClause(), query.GetDeclaration(), pkb));
 
   return clauses;
 }
