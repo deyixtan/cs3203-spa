@@ -71,12 +71,12 @@ Select w such that Calls(p1, p2)
 15
 variable v; procedure p1, p2;
 Select v such that Calls(p1, p2)
-a, b, c
+b, x, y, z
 5000
 16
 constant c; procedure p1, p2;
 Select c such that Calls(p1, p2)
-1, 5
+0, 1, 5
 5000
 17
 stmt s; procedure p1, p2;
