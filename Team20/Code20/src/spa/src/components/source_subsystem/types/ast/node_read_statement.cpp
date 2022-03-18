@@ -28,12 +28,12 @@ bool ReadStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier);
 }
 
-void ReadStatementNode::Accept(DesignExtractor *de) {
+void ReadStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   de->GetPkbClient()->PopulateStmt(stmt_num);
   std::string var_name = m_identifier->GetIdentifier();
   de->GetPkbClient()->PopulateRead(stmt_num);
-  de->Visit(m_identifier, false);
+  de->Visit(m_identifier, proc_name, false);
   de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
 }
 

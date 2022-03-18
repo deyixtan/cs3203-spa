@@ -17,7 +17,7 @@ class NotExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
-  std::string Accept(DesignExtractor *de, bool is_uses);
+  std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_NOT_EXPRESSION_H_
