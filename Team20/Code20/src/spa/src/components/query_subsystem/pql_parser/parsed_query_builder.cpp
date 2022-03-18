@@ -1,6 +1,7 @@
 #include "parsed_query_builder.h"
 #include "components/query_subsystem/pql_parser/query_grammar_error.h"
 #include <unordered_map>
+#include <stdexcept>
 
 ParsedQueryBuilder::ParsedQueryBuilder(std::vector<PqlToken> tokens) : tokens_(tokens){}
 
@@ -131,7 +132,8 @@ int ParsedQueryBuilder::ParsePattern(ParsedQuery &pq, std::unordered_map<std::st
   Pattern patt;
   if(pos + 1 < tokens_.size() && tokens_[pos + 1].value == ",") {
     if(declarations.find(syn.value) != declarations.end() && declarations[syn.value] != DesignEntityType::IF) {
-      throw "ERROR: Extra pattern argument!";
+      // TODO: hacky fix for now
+      throw std::runtime_error("ERROR: Extra pattern argument!");
     }
     pos += 2;
     PqlToken third = tokens_[pos];

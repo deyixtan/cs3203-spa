@@ -154,7 +154,7 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   pkb->GetModifyStore()->AddProcVar("main", "x");
   pkb->GetUsageStore()->AddProcVar("main", "x");
   pkb->GetUsageStore()->AddStmtVar("1", "x");
-  pkb->GetPatternStore()->AddStmtWithPattern("1", "x", "x + 1");
+  pkb->GetPatternStore()->AddStmtWithPattern("1", "x", "((x)+(1))");
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
@@ -175,7 +175,7 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   REQUIRE(test_pkb->GetUsageStore()->GetStmtUsedByVar("x") == pkb->GetUsageStore()->GetStmtUsedByVar("x"));
   REQUIRE(test_pkb->GetUsageStore()->GetVarUsedByProc("main") == pkb->GetUsageStore()->GetVarUsedByProc("main"));
   REQUIRE(test_pkb->GetUsageStore()->GetProcUsedByVar("x") == pkb->GetUsageStore()->GetProcUsedByVar("x"));
-  REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPattern("x", "x + 1") == pkb->GetPatternStore()->GetStmtWithPattern("x", "x + 1"));
+  REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPatternExact("x", "x + 1") == pkb->GetPatternStore()->GetStmtWithPatternExact("x", "x + 1"));
 }
 
 TEST_CASE("Test DE population for single procedure with one if statement (simple equal condition)") {
@@ -252,9 +252,9 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   REQUIRE(test_pkb->GetStmt(PROC) == pkb->GetStmt(PROC));
   REQUIRE(test_pkb->GetParentStore()->GetParentOf("2") == pkb->GetParentStore()->GetParentOf("2"));
   REQUIRE(test_pkb->GetParentStore()->GetParentOf("3") == pkb->GetParentStore()->GetParentOf("3"));
-  REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPattern("a", "2") == pkb->GetPatternStore()->GetStmtWithPattern("a", "2"));
-  REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPattern("a", "3") == pkb->GetPatternStore()->GetStmtWithPattern("a", "3"));
-  REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPattern("a", "_") == pkb->GetPatternStore()->GetStmtWithPattern("a", "_"));
+  REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPatternExact("a", "2") == pkb->GetPatternStore()->GetStmtWithPatternExact("a", "2"));
+  REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPatternExact("a", "3") == pkb->GetPatternStore()->GetStmtWithPatternExact("a", "3"));
+  REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPatternWildcard("a") == pkb->GetPatternStore()->GetStmtWithPatternWildcard("a"));
   REQUIRE(test_pkb->GetUsageStore()->GetVarUsedByStmt("1") == pkb->GetUsageStore()->GetVarUsedByStmt("1"));
   REQUIRE(test_pkb->GetModifyStore()->GetVarModByStmt("1") == pkb->GetModifyStore()->GetVarModByStmt("1"));
 }

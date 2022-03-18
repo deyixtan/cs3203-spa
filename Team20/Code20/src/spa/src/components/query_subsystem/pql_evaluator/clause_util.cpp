@@ -20,6 +20,10 @@ bool clause_util::IsArgPartialMatch(const PqlToken &arg) {
   return arg.type==PqlTokenType::SUB_EXPRESSION;
 }
 
+bool clause_util::IsArgExactMatch(const PqlToken &arg) {
+  return arg.type==PqlTokenType::EXPR;
+}
+
 bool clause_util::IsArgAttribute(const PqlToken &arg) {
   return arg.type==PqlTokenType::ATTRIBUTE;
 }

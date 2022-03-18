@@ -21,10 +21,13 @@ class PatternAssignClause : public Clause {
   PqlToken second_arg;
   PKB *pkb;
   Table HandleSynonymWildcard();
+  Table HandleSynonymExact();
   Table HandleSynonymPartial();
   Table HandleWildcardWildcard();
+  Table HandleWildcardExact();
   Table HandleWildcardPartial();
   Table HandleIdentWildcard();
+  Table HandleIdentExact();
   Table HandleIdentPartial();
 };
 

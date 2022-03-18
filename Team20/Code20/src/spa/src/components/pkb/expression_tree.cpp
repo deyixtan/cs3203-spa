@@ -23,7 +23,7 @@ nptr ExpressionTree::build(std::string& s) {
 
   // Prioritising the operators
   int p[123] = { 0 };
-  p['+'] = p['-'] = 1, p['/'] = p['*'] = 2,
+  p['+'] = p['-'] = 1, p['/'] = p['*'] = p['%'] = 2,
   p[')'] = 0;
 
   for (int i = 0; i < s.length(); i++) {
