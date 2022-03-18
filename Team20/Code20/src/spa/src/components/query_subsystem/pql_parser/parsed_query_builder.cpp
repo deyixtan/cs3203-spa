@@ -70,7 +70,7 @@ ParsedQuery ParsedQueryBuilder::Build() {
       pos = ParseRelationship(pq, pos);
     } else if(token.type == PqlTokenType::PATTERN) {
       prev = token.type;
-      pos = ParsePattern(pq, pos);
+      pos = ParsePattern(pq, declarations, pos);
     } else if(token.type == PqlTokenType::EQUAL) {
       prev = token.type;
       pos = ParseWithClause(pq, pos);
@@ -122,7 +122,7 @@ int ParsedQueryBuilder::ParseDeclarations(ParsedQuery &pq, std::unordered_map<st
   return pos;
 }
 
-int ParsedQueryBuilder::ParsePattern(ParsedQuery &pq, int pos) {
+int ParsedQueryBuilder::ParsePattern(ParsedQuery &pq, std::unordered_map<std::string, DesignEntityType> &declarations, int pos) {
   PqlToken syn = tokens_[++pos];
   pos += 2;
   PqlToken first = tokens_[pos];
@@ -130,6 +130,9 @@ int ParsedQueryBuilder::ParsePattern(ParsedQuery &pq, int pos) {
   PqlToken second = tokens_[pos];
   Pattern patt;
   if(pos + 1 < tokens_.size() && tokens_[pos + 1].value == ",") {
+    if(declarations.find(syn.value) != declarations.end() && declarations[syn.value] != DesignEntityType::IF) {
+      throw "ERROR: Extra pattern argument!";
+    }
     pos += 2;
     PqlToken third = tokens_[pos];
     patt = Pattern(syn, first, second, third);
