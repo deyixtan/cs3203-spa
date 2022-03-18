@@ -1,0 +1,25 @@
+procedure rainbow {
+  red = 2;
+  while (orange != 0) {
+    yellow = yellow - 1;
+    if (green == 1) then {
+      blue = blue + 1 * red;
+    } else {
+      yellow = red + green - 1;
+    }
+    read purple;
+    blue = 3;
+    call pink;
+  }
+  call yellow;
+  print orange;
+  print red;
+}
+
+procedure pink {
+  call yellow;
+}
+
+procedure yellow {
+  print green;
+}

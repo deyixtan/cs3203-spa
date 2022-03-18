@@ -5,6 +5,7 @@
 #include "../types/ast/node_statement.h"
 #include "../types/ast/node_conditional_expression.h"
 #include "../types/ast/node_variable.h"
+#include "../types/ast/node_constant.h"
 
 DesignExtractor::DesignExtractor(std::shared_ptr<PkbClient> pkb_client)
     : m_pkb_client(std::move(pkb_client)), m_visited(std::vector<std::string>()) {}
@@ -49,5 +50,10 @@ std::string DesignExtractor::Visit(std::shared_ptr<ConditionalExpressionNode> no
 }
 
 void DesignExtractor::Visit(std::shared_ptr<VariableNode> node, bool is_uses) {
+  node->Accept(this, is_uses);
+}
+
+void DesignExtractor::Visit(std::shared_ptr<ConstantNode> node, bool is_uses) {
+  // ignores is_uses
   node->Accept(this, is_uses);
 }
