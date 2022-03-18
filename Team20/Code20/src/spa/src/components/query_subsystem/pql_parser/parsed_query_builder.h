@@ -14,7 +14,7 @@ class ParsedQueryBuilder {
   void SplitTuple(PqlToken& tuple, std::vector<PqlToken>& values);
   int ParseResultClause(ParsedQuery &pq, std::unordered_map<std::string, DesignEntityType> &declarations, int pos);
   int ParseDeclarations(ParsedQuery &pq, std::unordered_map<std::string, DesignEntityType> &declarations, int pos);
-  int ParsePattern(ParsedQuery &pq, int pos);
+  int ParsePattern(ParsedQuery &pq, std::unordered_map<std::string, DesignEntityType> &declarations, int pos);
   int ParseRelationship(ParsedQuery &pq, int pos);
   int ParseWithClause(ParsedQuery &pq, int pos);
 };
