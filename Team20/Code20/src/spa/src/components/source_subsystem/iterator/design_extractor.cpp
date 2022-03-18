@@ -1,4 +1,5 @@
 #include <queue>
+#include <iostream>
 #include "design_extractor.h"
 #include "../types/ast/node_program.h"
 #include "../types/ast/node_procedure.h"
@@ -24,38 +25,46 @@ void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node
 }
 
 void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
-  std::queue<std::shared_ptr<CfgNode>> nodeQueue;
-  std::vector<std::string> prevStmts;
-  std::unordered_map<std::string, std::unordered_set<std::string>> rs_map;
-  for (auto const& proc : root->GetCfgMap()) {
-    std::shared_ptr<CfgNode> currProc = proc.second;
-    nodeQueue.push(currProc);
-    while(nodeQueue.size() > 0) {
-      std::shared_ptr<CfgNode> curr = nodeQueue.front();
-      std::vector<std::string> currStmts = curr->GetStatementList();
-      if(currStmts.front() == "") {
+  std::queue<std::shared_ptr<CfgNode>> node_queue;
+  std::vector<std::string> prev_stmts;
+  std::unordered_map<std::string, std::unordered_set<std::string>> next_map;
+  std::unordered_map<std::string, std::shared_ptr<CfgNode>> prog = root->GetCfgMap();
+  for (auto proc : prog) {
+    std::shared_ptr<CfgNode> curr_proc = proc.second;
+    node_queue.push(curr_proc);
+    while(node_queue.size() > 0) {
+      std::shared_ptr<CfgNode> curr = node_queue.front();
+      node_queue.pop();
+      std::vector<std::string> curr_stmts = curr->GetStatementList();
+      std::vector<std::shared_ptr<CfgNode>> next_nodes = curr->GetDescendants();
+      if(curr_stmts.size() > 0 && curr_stmts.front() == "") {
         break;
       }
       int start = 0;
       int next = 1;
-      while(next < currStmts.size()) {
-        if(rs_map.find(currStmts[start]) == rs_map.end()) {
-          rs_map.insert(currStmts[start], currStmts[next]);
+      while(next < curr_stmts.size()) {
+        if(next_map.find(curr_stmts[start]) == next_map.end()) {
+          std::unordered_set<std::string> nextSet = std::unordered_set<std::string>();
+          nextSet.insert(curr_stmts[next]);
+          next_map.insert({curr_stmts[start], nextSet});
+        } else {
+          std::unordered_set<std::string> vals = next_map[curr_stmts[start]];
+          vals.insert(curr_stmts[next]);
         }
         start++;
         next++;
       }
-      std::vector<std::shared_ptr<CfgNode>> next_nodes = curr->GetDescendants();
-      for(auto desc : next_nodes) {
-        std::vector<std::string> nextStmts = desc->GetStatementList();
-        std::unordered_set<std::string> vals = rs_map[currStmts[currStmts.size() - 1]];
-        if(nextStmts.front() != "") {
-          vals.insert(nextStmts.front());
+      for(auto const &desc : next_nodes) {
+        std::vector<std::string> next_stmts = desc->GetStatementList();
+        std::unordered_set<std::string> vals = next_map[curr_stmts[curr_stmts.size() - 1]];
+        if(next_stmts.front() != "") {
+          vals.insert(next_stmts.front());
         }
-        nodeQueue.push(desc);
+        node_queue.push(desc);
       }
     }
   }
+  m_pkb_client->PopulateNext(next_map);
 }
 
 void DesignExtractor::Visit(std::shared_ptr<ProgramNode> node) {
