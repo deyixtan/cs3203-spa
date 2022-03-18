@@ -18,7 +18,7 @@ class CallsClause : public Clause {
   PqlToken second_arg;
   PKB *pkb;
   Table HandleSynonymSynonym();
-  Table HandleSyonymWildcard();
+  Table HandleSynonymWildcard();
   Table HandleSynonymIdent();
   Table HandleWildcardSynonym();
   Table HandleWildcardWildcard();
