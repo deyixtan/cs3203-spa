@@ -7,6 +7,8 @@
 #include "followst_clause.h"
 #include "parent_clause.h"
 #include "parentt_clause.h"
+#include "calls_clause.h"
+#include "callst_clause.h"
 #include "pattern_assign_clause.h"
 #include "pattern_while_clause.h"
 #include "pattern_if_clause.h"
@@ -52,6 +54,12 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
     }
     case PqlTokenType::PARENT_T: {
       return std::make_unique<ParentTClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+    }
+    case PqlTokenType::CALLS: {
+      return std::make_unique<CallsClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
+    }
+    case PqlTokenType::CALLS_T: {
+      return std::make_unique<CallsTClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     default: {
       return nullptr;
