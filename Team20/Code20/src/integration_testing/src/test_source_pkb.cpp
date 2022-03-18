@@ -4,12 +4,15 @@
 #include "components/source_subsystem/lexer/source_lexer.h"
 #include "components/source_subsystem/parser/source_parser.h"
 #include "components/source_subsystem/exceptions/empty_statement_list.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
 
 using namespace source;
 
 extern std::string sample_source1;
 extern std::string sample_source2;
 extern std::string sample_source3;
+extern std::string sample_source4;
+extern std::string sample_source5;
 
 
 std::shared_ptr<ProgramNode> GenerateAbstractSyntaxTree(std::string source) {
@@ -971,3 +974,16 @@ TEST_CASE("Test components between Source and PKB (Sample source 3)") {
     REQUIRE(result7 == expected_result7);
   }
 }
+
+// TODO: Add test cases for cfg traversing and Next Store
+//TEST_CASE("Test") {
+//  std::shared_ptr<ProgramNode> ast = GenerateAbstractSyntaxTree(sample_source2);
+//  PKB *pkb = GetPopulatedPkbInstance(ast);
+//  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
+//  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+//  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
+//  cfg_builder.IterateAstAndPopulatePkb(ast);
+//  design_extractor->IterateAstAndPopulatePkb(ast);
+//  design_extractor->IterateCfgAndPopulatePkb(pkb->GetProgCfg());
+//  REQUIRE("" == "");
+//}

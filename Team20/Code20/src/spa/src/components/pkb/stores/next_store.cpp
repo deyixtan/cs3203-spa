@@ -103,9 +103,9 @@ void NextStore::FindBeforeStarOf(std::string const &stmt, std::unordered_set<std
     return;
   }
   std::unordered_set<std::string> before_set = before_map[stmt];
-  for(auto stmt : before_set) {
-    res.insert(stmt);
-    FindBeforeStarOf(stmt, res);
+  for(auto before : before_set) {
+    res.insert(before);
+    FindBeforeStarOf(before, res);
   }
 }
 
@@ -120,9 +120,9 @@ void NextStore::FindNextStarOf(std::string const &stmt, std::unordered_set<std::
     return;
   }
   std::unordered_set<std::string> next_set = next_map[stmt];
-  for(auto stmt : next_set) {
-    res.insert(stmt);
-    FindNextStarOf(stmt, res);
+  for(auto next : next_set) {
+    res.insert(next);
+    FindNextStarOf(next, res);
   }
 }
 
@@ -131,6 +131,19 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::Ge
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetNextStarPairs() {
-//  return all_next_pairs;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> res;
+  for(auto pair : next_map) {
+    AddNextStarPairs(pair.first, pair.first, res);
+  }
 }
 
+void NextStore::AddNextStarPairs(std::string first, std::string curr, std::unordered_set<std::pair<std::string, std::string>, pair_hash> res) {
+  if(next_map.find(curr) == next_map.end()) {
+    return;
+  }
+  std::unordered_set<std::string> next_set = next_map[first];
+  for(auto next : next_set) {
+    res.insert({ first, next});
+    AddNextStarPairs(first, next, res);
+  }
+}

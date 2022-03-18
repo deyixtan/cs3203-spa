@@ -16,6 +16,7 @@ class NextStore : public Store {
   void AddNextPair(std::string const &before, std::string const &next);
   void FindNextStarOf(std::string const &stmt, std::unordered_set<std::string>);
   void FindBeforeStarOf(std::string const &stmt, std::unordered_set<std::string> res);
+  void AddNextStarPairs(std::string first, std::string stmt, std::unordered_set<std::pair<std::string, std::string>, pair_hash>);
   [[nodiscard]] bool IsNext(std::string const &stmt);
   [[nodiscard]] bool IsBefore(std::string const &stmt);
   [[nodiscard]] bool IsNextStar(std::string const &stmt);

@@ -1,5 +1,5 @@
 #include <queue>
-#include <iostream>
+#include <stack>
 #include "design_extractor.h"
 #include "../types/ast/node_program.h"
 #include "../types/ast/node_procedure.h"
@@ -27,20 +27,26 @@ void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node
 }
 
 void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
-  std::queue<std::shared_ptr<CfgNode>> node_queue;
+  std::stack<std::shared_ptr<CfgNode>> node_stack;
   std::vector<std::string> prev_stmts;
+  std::unordered_set<std::shared_ptr<CfgNode>> visited;
   std::unordered_map<std::string, std::unordered_set<std::string>> next_map;
   std::unordered_map<std::string, std::shared_ptr<CfgNode>> prog = root->GetCfgMap();
   for (auto proc : prog) {
     std::shared_ptr<CfgNode> curr_proc = proc.second;
-    node_queue.push(curr_proc);
-    while(node_queue.size() > 0) {
-      std::shared_ptr<CfgNode> curr = node_queue.front();
-      node_queue.pop();
+    node_stack.push(curr_proc);
+    while(node_stack.size() > 0) {
+      std::shared_ptr<CfgNode> curr = node_stack.top();
+      node_stack.pop();
+      visited.insert(curr);
       std::vector<std::string> curr_stmts = curr->GetStatementList();
       std::vector<std::shared_ptr<CfgNode>> next_nodes = curr->GetDescendants();
-      if(curr_stmts.size() > 0 && curr_stmts.front() == "") {
-        break;
+      if(curr_stmts.size() == 0 && next_nodes.size() == 0) {
+        if(node_stack.size() == 0) {
+          break;
+        } else {
+          continue;
+        }
       }
       int start = 0;
       int next = 1;
@@ -56,13 +62,22 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
         start++;
         next++;
       }
+      while(next_nodes.size() > 0 && next_nodes.front()->GetStatementList().size() == 0) {
+        next_nodes = next_nodes.front()->GetDescendants();
+      }
       for(auto const &desc : next_nodes) {
+        if(next_map.find(curr_stmts[curr_stmts.size() - 1]) == next_map.end()) {
+          next_map.insert({curr_stmts[curr_stmts.size() - 1], std::unordered_set<std::string>()});
+        }
         std::vector<std::string> next_stmts = desc->GetStatementList();
         std::unordered_set<std::string> vals = next_map[curr_stmts[curr_stmts.size() - 1]];
-        if(next_stmts.front() != "") {
+        if(next_stmts.size() > 0 ) {
           vals.insert(next_stmts.front());
+          next_map[curr_stmts[curr_stmts.size() - 1]] = vals;
         }
-        node_queue.push(desc);
+        if(visited.find(desc) == visited.end()) {
+          node_stack.push(desc);
+        }
       }
     }
   }
