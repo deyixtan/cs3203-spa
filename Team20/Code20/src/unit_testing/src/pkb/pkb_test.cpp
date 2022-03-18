@@ -772,7 +772,7 @@ TEST_CASE("Check pattern matching (wrong)") {
 TEST_CASE("Check pattern synonym matching exact (correct)") {
   PKB *pkb = set_up_pkb();
   
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetPatternStore()->GetStmtWithPatternSynonym();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetPatternStore()->GetStmtWithPatternSynonym("_");
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected = pattern_pairs_synonym;
   REQUIRE(actual == expected);
 }
@@ -781,7 +781,7 @@ TEST_CASE("Check pattern synonym matching partial (correct)") {
   PKB *pkb = set_up_pkb();
   
   std::unordered_set<std::pair<std::string, std::string>, pair_hash>
-      actual = pkb->GetPatternStore()->GetStmtWithPatternSynonym();
+      actual = pkb->GetPatternStore()->GetStmtWithPatternSynonym("_");
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected = pattern_pairs_synonym;
 
   REQUIRE(actual == expected);

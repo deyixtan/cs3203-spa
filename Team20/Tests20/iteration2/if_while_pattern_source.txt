@@ -1,0 +1,28 @@
+procedure main {
+    if (a == b) then {
+        if ((3 + 5) % 2 / (2 + 3) == 1) then {
+            if (((a == 10101010) || (2 == 2)) && (a != 7)) then {
+                y = 0;
+            } else {
+                while ((y == x) && (5 == 5)) {
+                    z = 0;
+                }
+            }
+        } else {
+            y = 2;
+        }
+    } else {
+        while (c == d) {
+            if (x != y) {
+                y = 4;
+            } else {
+                x = 1;
+                while ((x + y == 3) || (2 == 3)) {
+                    x = 0;
+                }
+                x = 2;
+            }
+            y = 3;
+        }
+    }
+}

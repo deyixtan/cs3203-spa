@@ -1,0 +1,60 @@
+1
+procedure p; variable v;
+Select p such that Modifies(p, v)
+Modifies, foo
+5000
+2
+procedure p; variable v;
+Select v such that Modifies(p, v)
+d,p,x,z,p,q
+5000
+3
+procedure p;
+Select p such that Modifies(p, "a")
+none
+5000
+4
+procedure p;
+Select p such that Modifies(p, "p")
+Modifies, foo
+5000
+5
+variable v;
+Select v such that Modifies("Modifies", v)
+d,p,x,z
+5000
+6
+variable v;
+Select v such that Modifies("modifies", v)
+none
+5000
+7
+variable v;
+Select v such that Modifies("Modifies", "a")
+none
+5000
+8
+procedure v;
+Select v such that Modifies(v, "p")
+foo
+5000
+9
+variable v;
+Select v such that Modifies("Modifies ", v)
+d,p,x,z
+5000
+10
+variable v;
+Select v such that Modifies("main", v)
+none
+5000
+11
+variable v;
+Select v such that Modifies("foo", v)
+q,s,p
+5000
+12
+procedure v;
+Select v such that Modifies(v, "q")
+foo
+5000
