@@ -1,0 +1,260 @@
+1 - Modifies no synonym true
+assign a; variable v;
+Select BOOLEAN such that Modifies(1, "red")
+TRUE
+5000
+2 - Modifies no synonym false
+assign a; variable v;
+Select BOOLEAN such that Modifies(1, "re")
+FALSE
+5000
+3 - Modifies 1 assign synonym true
+assign a; variable v;
+Select BOOLEAN such that Modifies(a, "red")
+TRUE
+5000
+4 - Modifies 1 assign synonym false
+assign a; variable v;
+Select BOOLEAN such that Modifies(a, "re")
+FALSE
+5000
+5 - Modifies 1 var synonym true
+assign a; variable v;
+Select BOOLEAN such that Modifies(1, v)
+TRUE
+5000
+6 - Modifies 2 synonym true
+assign a; variable v;
+Select BOOLEAN such that Modifies(a, v)
+TRUE
+5000
+7 - Modifies 2 synonym false
+assign a; variable v;
+Select BOOLEAN such that Modifies(a, v) with v.varName = "happy"
+FALSE
+5000
+8 - assign pattern no synonym true 1
+assign a; variable v;
+Select BOOLEAN pattern a ("red", "2")
+TRUE
+5000
+9 - assign pattern no synonym true 2
+assign a; variable v;
+Select BOOLEAN pattern a ("red", _)
+TRUE
+5000
+10 - assign pattern no synonym true 3
+assign a; variable v;
+Select BOOLEAN pattern a (_, "yellow - 1")
+TRUE
+5000
+11 - assign pattern no synonym true 4
+assign a; variable v;
+Select BOOLEAN pattern a (_, "_yellow_")
+TRUE
+5000
+12 - assign pattern no synonym true 5
+assign a; variable v;
+Select BOOLEAN pattern a ("yellow", "_yellow_")
+TRUE
+5000
+13 - assign pattern no synonym false 1
+assign a; variable v;
+Select BOOLEAN pattern a ("yellow", "_blue_")
+FALSE
+5000
+14 - assign pattern no synonym false 2
+assign a; variable v;
+Select BOOLEAN pattern a (_, _"blue"_)
+FALSE
+5000
+15 - assign pattern no synonym false 3
+assign a; variable v;
+Select BOOLEAN pattern a ("gold", _)
+FALSE
+5000
+16 - assign pattern 1 synonym true 1
+assign a; variable v;
+Select BOOLEAN pattern a (v, _)
+TRUE
+5000
+17 - assign pattern 1 synonym true 2
+assign a; variable v;
+Select BOOLEAN pattern a (v, "red + green - 1")
+TRUE
+5000
+18 - assign pattern 1 synonym true 3
+assign a; variable v;
+Select BOOLEAN pattern a (v, "red +     green -      1")
+TRUE
+5000
+19 - assign pattern 1 synonym true 4
+assign a; variable v;
+Select BOOLEAN pattern a (v, _"1 * red"_)
+TRUE
+5000
+20 - assign pattern 1 synonym false 1
+assign a; variable v;
+Select BOOLEAN pattern a (v, "red +     gre    en -  1")
+FALSE
+5000
+21 - assign pattern 1 synonym false 2
+assign a; variable v;
+Select BOOLEAN pattern a (v, _  "1 * red"_)
+FALSE
+5000
+22 - assign pattern 1 synonym false 3
+assign a; variable v;
+Select BOOLEAN pattern a (v, _"1 * r  ed"_)
+FALSE
+5000
+23 - if pattern 0 synonym true 1
+if ifs; variable v;
+Select BOOLEAN pattern ifs (_, _, _)
+TRUE
+5000
+24 - if pattern 0 synonym true 2
+if ifs; variable v;
+Select BOOLEAN pattern ifs ("green", _, _)
+TRUE
+5000
+25 - if pattern 0 synonym false 1
+if ifs; variable v;
+Select BOOLEAN pattern ifs (_,_,"green")
+FALSE
+5000
+26 - if pattern 0 synonym false 2
+if ifs; variable v;
+Select BOOLEAN pattern ifs ("greener",_,_)
+FALSE
+5000
+27 - if pattern 1 synonym true 1
+if ifs; variable v;
+Select BOOLEAN pattern ifs (v,_,_)
+TRUE
+5000
+28 - if pattern 1 synonym false 1
+if ifs; variable v;
+Select BOOLEAN pattern ifs (v,_,_) with v.varName = "happy"
+FALSE
+5000
+29 - if pattern 1 synonym false 2
+if ifs; variable v;
+Select BOOLEAN pattern ifs (v,_)
+FALSE
+5000
+30 - while pattern 0 synonym true 1
+while w; variable v;
+Select BOOLEAN pattern w ("orange",_)
+TRUE
+5000
+31 - while pattern 0 synonym true 2
+while w; variable v;
+Select BOOLEAN pattern w (_,_)
+TRUE
+5000
+32 - while pattern 0 synonym false 1
+while w; variable v;
+Select BOOLEAN pattern w ("silver",_)
+FALSE
+5000
+33 - while pattern 1 synonym true 1
+while w; variable v;
+Select BOOLEAN pattern w (v,_)
+TRUE
+5000
+34 - while pattern 1 synonym false 1
+while w; variable v;
+Select BOOLEAN pattern w (v,_,_)
+TRUE
+5000
+35 - while pattern 1 synonym false 2
+while w; variable v;
+Select BOOLEAN pattern w (v,_) with v.varName = "happy"
+TRUE
+5000
+36 - while pattern 1 synonym false 2
+while w; variable v;
+Select BOOLEAN pattern w (v,_) with v.varName = "happy"
+TRUE
+5000
+37 - with clause no attribute true 1
+while w; variable v;
+Select BOOLEAN with 1 = 1
+TRUE
+5000
+38 - with clause no attribute true 2
+while w; variable v;
+Select BOOLEAN with "happy" = "happy"
+TRUE
+5000
+39 - with clause no attribute false 1
+while w; variable v;
+Select BOOLEAN with 1 = 2
+FALSE
+5000
+40 - with clause no attribute false 2
+while w; variable v;
+Select BOOLEAN with "pink" = "black"
+FALSE
+5000
+41 - with clause 1 attribute true 1
+assign a; variable v;
+Select BOOLEAN with a.stmt# = 1
+TRUE
+5000
+42 - with clause 1 attribute true 2
+assign a; variable v; constant c;
+Select BOOLEAN with c.value = 1
+TRUE
+5000
+43 - with clause 1 attribute true 3
+assign a; variable v; constant c; procedure p;
+Select BOOLEAN with p.procName = "rainbow"
+TRUE
+5000
+44 - with clause 1 attribute true 4
+assign a; variable v; constant c;
+Select BOOLEAN with v.varName = "yellow"
+TRUE
+5000
+45 - with clause 1 attribute false 1
+assign a; variable v; constant c;
+Select BOOLEAN with v.varName = "yello  w"
+FALSE
+5000
+46 - with clause 1 attribute false 2
+assign a; variable v; constant c; procedure p;
+Select BOOLEAN with p.procName = "yello  w"
+FALSE
+5000
+47 - with clause 1 attribute false 3
+assign a; variable v; constant c; procedure p;
+Select BOOLEAN with a.stmt# = 4
+FALSE
+5000
+48 - with clause 1 attribute false 4
+assign a; variable v; constant c; procedure p;
+Select BOOLEAN with c.value = 5
+FALSE
+5000
+49 - with clause 2 attributes true 1
+assign a; variable v; constant c; procedure p;
+Select BOOLEAN with c.value = a.stmt#
+TRUE
+5000
+50 - with clause 2 attributes true 2
+assign a; variable v; constant c; procedure p;
+Select BOOLEAN with p.procName = v.varName
+TRUE
+5000
+50 - with clause 2 attributes false 1
+assign a; variable v; constant c; procedure p; read rd;
+Select BOOLEAN with rd.stmt# = c.value
+FALSE
+5000
+50 - with clause 2 attributes false 2
+assign a; variable v; constant c; procedure p; read rd;
+Select BOOLEAN with v.varName = p.procName and v.varName = "green"
+FALSE
+5000
