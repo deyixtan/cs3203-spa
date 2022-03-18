@@ -1,0 +1,34 @@
+procedure ProcA {
+  while (0 != 0) {
+    call ProcB;
+  }
+}
+
+procedure ProcC {
+  if (a >= 0) then {
+    call ProcA;
+  } else {
+    print a;
+  }
+}
+
+procedure ProcB {
+  a = 4;
+  call ProcD;
+  b = a;
+  call ProcE;
+}
+
+procedure ProcD {
+  read b;
+  call ProcE;
+}
+
+procedure ProcE {
+  call ProcF;
+  print a;
+}
+
+procedure ProcF {
+  a = b;
+}
