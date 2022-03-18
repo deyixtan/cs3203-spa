@@ -91,7 +91,7 @@ TEST_CASE("Test query parser with uses and pattern") {
 
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
-  REQUIRE(rship.GetSecond().value == "\"x\"");
+  REQUIRE(rship.GetSecond().value == "x");
   REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(patt.GetSynonym().value == "a");
   REQUIRE(patt.GetFirst().value == "v");

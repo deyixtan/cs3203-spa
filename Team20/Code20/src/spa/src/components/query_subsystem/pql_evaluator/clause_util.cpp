@@ -85,6 +85,6 @@ StmtType clause_util::GetStmtType(const DesignEntityType &design_entity) {
   }
 }
 
-std::string clause_util::GetIdentWithoutQuotes(const std::string &ident) {
-  return ident.substr(1, ident.length() - 2);
-}
+//std::string clause_util::GetIdentWithoutQuotes(const std::string &ident) {
+//  return ident.substr(1, ident.length() - 2);
+//}

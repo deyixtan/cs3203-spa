@@ -58,12 +58,12 @@ Table PatternAssignClause::HandleWildcardPartial() {
 }
 
 Table PatternAssignClause::HandleIdentWildcard() {
-  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPattern(GetIdentWithoutQuotes(first_arg.value), "_");
+  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPattern(first_arg.value, "_");
   return {assign_synonym, single_constraints};
 }
 
 Table PatternAssignClause::HandleIdentPartial() {
-  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPattern(GetIdentWithoutQuotes(first_arg.value), second_arg.value);
+  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPattern(first_arg.value, second_arg.value);
   return {assign_synonym, single_constraints};
 }
 
