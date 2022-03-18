@@ -95,14 +95,12 @@ void IfStatementNode::Accept(DesignExtractor *de) {
 }
 
 std::shared_ptr<CfgNode> IfStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
-  std::shared_ptr<CfgNode> condition_node = std::make_shared<CfgNode>();
   std::shared_ptr<CfgNode> if_node = std::make_shared<CfgNode>();
   std::shared_ptr<CfgNode> else_node = std::make_shared<CfgNode>();
   std::shared_ptr<CfgNode> next_node = std::make_shared<CfgNode>();
-  cfg_node->AddNext(condition_node);
-  condition_node->AddStatement(std::to_string(GetStatementNumber()));
-  condition_node->AddNext(if_node);
-  condition_node->AddNext(else_node);
+  cfg_node->AddStatement(std::to_string(GetStatementNumber()));
+  cfg_node->AddNext(if_node);
+  cfg_node->AddNext(else_node);
   if_node = cb->Visit(m_if_stmt_list, if_node);
   if_node->AddNext(next_node);
   else_node = cb->Visit(m_else_stmt_list, else_node);

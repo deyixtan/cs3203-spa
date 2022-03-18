@@ -44,20 +44,17 @@ Table UsesPClause::HandleSynonymWildcard() {
 }
 
 Table UsesPClause::HandleSynonymIdent() {
-  std::string ident_without_quotes = GetIdentWithoutQuotes(second_arg.value);
-  auto single_constraints = pkb->GetUsageStore()->GetProcUsedByVar(ident_without_quotes);
+  auto single_constraints = pkb->GetUsageStore()->GetProcUsedByVar(second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
 Table UsesPClause::HandleIdentSynonym() {
-  std::string ident_without_quotes = GetIdentWithoutQuotes(first_arg.value);
-  auto single_constraints = pkb->GetUsageStore()->GetVarUsedByProc(ident_without_quotes);
+  auto single_constraints = pkb->GetUsageStore()->GetVarUsedByProc(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table UsesPClause::HandleIdentWildcard() {
-  std::string ident_without_quotes = GetIdentWithoutQuotes(first_arg.value);
-  bool is_empty = pkb->GetUsageStore()->GetVarUsedByProc(ident_without_quotes).empty();
+  bool is_empty = pkb->GetUsageStore()->GetVarUsedByProc(first_arg.value).empty();
   Table table;
   if (is_empty) {
     table.EncounteredFalseClause();
@@ -66,9 +63,7 @@ Table UsesPClause::HandleIdentWildcard() {
 }
 
 Table UsesPClause::HandleIdentIdent() {
-  std::string first_arg_without_quotes = GetIdentWithoutQuotes(first_arg.value);
-  std::string second_arg_without_quotes = GetIdentWithoutQuotes(second_arg.value);
-  std::pair arg_pair(first_arg_without_quotes, second_arg_without_quotes);
+  std::pair arg_pair(first_arg.value, second_arg.value);
   bool is_empty = pkb->GetUsageStore()->ProcVarExists(arg_pair);
   Table table;
   if (is_empty) {

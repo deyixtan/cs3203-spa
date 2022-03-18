@@ -30,12 +30,15 @@ std::vector<PqlToken> PqlLexer::Lex() {
       tokens.push_back(PqlToken{PqlTokenType::TUPLE, getTuple});
     } else if (IsValidString(token)) {
       if (IsEntRef(token)) {
-        tokens.push_back(PqlToken{PqlTokenType::IDENT_WITH_QUOTES, Utils::RemoveSpace(token)});
+        std::string no_space_token = Utils::RemoveSpace(token);
+        tokens.push_back(PqlToken{PqlTokenType::IDENT_WITH_QUOTES, Utils::TrimQuotes(no_space_token)});
       } else {
-        tokens.push_back(PqlToken{PqlTokenType::EXPR, Utils::RemoveSpace(token)});
+        std::string no_space_token = Utils::RemoveSpace(token);
+        tokens.push_back(PqlToken{PqlTokenType::EXPR, Utils::TrimQuotes(no_space_token)});
       }
     } else if (IsSubExpressionToken(token)) {
-      tokens.push_back(PqlToken{PqlTokenType::SUB_EXPRESSION, Utils::RemoveSpace(token)});
+      std::string no_space_token = Utils::RemoveSpace(token);
+      tokens.push_back(PqlToken{PqlTokenType::SUB_EXPRESSION, Utils::TrimUnderscoreAndQuotes(no_space_token)});
     } else {
       throw "ERROR: Unrecognised token " + token + "\n";
     }

@@ -13,6 +13,7 @@ class StatementNode;
 class ExpressionNode;
 class ConditionalExpressionNode;
 class VariableNode;
+class ConstantNode;
 
 class DesignExtractor {
  private:
@@ -31,6 +32,7 @@ class DesignExtractor {
   [[nodiscard]] std::string Visit(std::shared_ptr<ExpressionNode> node, bool is_uses);
   [[nodiscard]] std::string Visit(std::shared_ptr<ConditionalExpressionNode> node, bool is_uses);
   void Visit(std::shared_ptr<VariableNode> node, bool is_uses);
+  void Visit(std::shared_ptr<ConstantNode> node, bool is_uses);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_DESIGN_EXTRACTOR_H_

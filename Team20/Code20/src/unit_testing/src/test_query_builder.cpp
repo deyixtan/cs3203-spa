@@ -91,7 +91,7 @@ TEST_CASE("Test query parser with uses and pattern") {
 
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
-  REQUIRE(rship.GetSecond().value == "\"x\"");
+  REQUIRE(rship.GetSecond().value == "x");
   REQUIRE(result_clause.GetValues()[0].value == "s");
   REQUIRE(patt.GetSynonym().value == "a");
   REQUIRE(patt.GetFirst().value == "v");
@@ -717,4 +717,40 @@ TEST_CASE("Test query parser with multiple And clauses") {
   REQUIRE(rship_second.GetRelRef().value == "Parent");
   REQUIRE(rship_second.GetFirst().value == "s");
   REQUIRE(rship_second.GetSecond().value == "s1");
+}
+
+TEST_CASE("Test invalid pattern with extra args") {
+  std::vector<PqlToken> test_token_vect;
+
+  // if
+  test_token_vect.push_back(if_token);
+  test_token_vect.push_back(ifs_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // assign
+  test_token_vect.push_back(assign_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // variable
+  test_token_vect.push_back(variable_token);
+  test_token_vect.push_back(v_token);
+  test_token_vect.push_back(semicolon_token);
+
+  // select clause
+  test_token_vect.push_back(select_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(pattern_token);
+  test_token_vect.push_back(a_token);
+  test_token_vect.push_back(open_parenthesis_token);
+  test_token_vect.push_back(v_token);
+  test_token_vect.push_back(comma_token);
+  test_token_vect.push_back(underscore_token);
+  test_token_vect.push_back(comma_token);
+  test_token_vect.push_back(underscore_token);
+  test_token_vect.push_back(closed_parenthesis_token);
+
+  ParsedQueryBuilder pqb(test_token_vect);
+
+  REQUIRE_THROWS_WITH(pqb.Build(), "ERROR: Extra pattern argument!");
 }
