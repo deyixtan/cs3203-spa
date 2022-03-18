@@ -15,12 +15,12 @@ class PatternStore : Store {
   void AddStmtWithPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs);
   void AddWhileWithPattern(std::string const &stmt, std::string const &expr);
   void AddIfWithPattern(std::string const &stmt, std::string const &expr);
-  [[nodiscard]] std::unordered_set<std::string> GetStmtWithPatternExact(std::string lhs, std::string rhs);
-  [[nodiscard]] std::unordered_set<std::string> GetStmtWithPatternPartial(std::string lhs, std::string rhs);
-  [[nodiscard]] std::unordered_set<std::string> GetStmtWithPatternWildcard(std::string lhs);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonymExact(std::string expr);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonymPartial(std::string expr);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonymWildcard();
+  [[nodiscard]] std::unordered_set<std::string> GetStmtWithPatternExact(std::string lhs, std::string rhs); // a("x" / _ , "x")
+  [[nodiscard]] std::unordered_set<std::string> GetStmtWithPatternPartial(std::string lhs, std::string rhs); // a("x"/ _, _"x"_)
+  [[nodiscard]] std::unordered_set<std::string> GetStmtWithPatternWildcard(std::string lhs); // a("x"/ _, _)
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonymExact(std::string expr); // a(v, "x")
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonymPartial(std::string expr); //a(v, _"x"_)
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonymWildcard(); // a(v, _)
   [[nodiscard]] std::unordered_set<std::string> GetIfWithPattern(std::string var);
   [[nodiscard]] std::unordered_set<std::string> GetWhileWithPattern(std::string var);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetIfWithPatternSynonym();
