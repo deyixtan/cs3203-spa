@@ -373,3 +373,28 @@ assign a, a1; var v; print pn; read rd; call c; if ifs; while w; procedure p, p1
 Select <ifs, v> pattern ifs (v, _, _)
 4 c, 14 a, 14 b
 5000
+76 - double tuple true multi relationship clauses 1
+assign a, a1; var v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <a, v> such that Uses (a, v) such that Modifies (a, v)
+8 b, 16 c, 19 a, 20 b
+5000
+77 - double tuple true multi relationship clauses 2
+assign a, a1; var v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <w, v> such that Uses (a, v) such that Parent (w, a)
+2 b, 15 c, 17 c
+5000
+78 - double tuple true multi relationship and pattern
+assign a, a1; var v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <a, v> such that Uses (a, v) pattern a (v, _)
+8 b, 16 c, 19 a, 20 b
+5000
+79 - double tuple true multi relationship and with
+assign a, a1; var v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <a, v> such that Uses (a, v) with v.varName = "a"
+6 a, 19 a
+5000
+80 - double tuple true multi relationship pattern and with
+assign a, a1; var v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <ifs, v> such that Uses (ifs, v) pattern ifs ("a",_,_) with v.varName = v1.varName
+14 a
+5000
