@@ -10,8 +10,8 @@ namespace pql {
 class CallsTClause : public Clause {
  public:
   CallsTClause(const PqlToken &first_arg,
-              const PqlToken &second_arg,
-              PKB *pkb);
+               const PqlToken &second_arg,
+               PKB *pkb);
   Table Execute() override;
  private:
   PqlToken first_arg;
