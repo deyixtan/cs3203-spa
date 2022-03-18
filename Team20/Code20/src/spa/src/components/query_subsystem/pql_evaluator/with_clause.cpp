@@ -65,17 +65,7 @@ Table WithClause::HandleAttributeInteger() {
 }
 
 Table WithClause::HandleAttributeIdent() {
-  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
-  auto single_constraints = pkb->GetStmt(GetStmtType(first_attribute.first.first));
-  std::string ident_without_quotes = GetIdentWithoutQuotes(second_arg.value);
-  Table table;
-  if (single_constraints.count(ident_without_quotes) == 0) {
-    table.EncounteredFalseClause();
-    return table;
-  }
-  std::unordered_set<std::string> result_set;
-  result_set.insert(ident_without_quotes);
-  return {first_attribute.first.second, result_set};
+  return HandleAttributeInteger();
 }
 
 Table WithClause::HandleIntegerAttribute() {
@@ -100,17 +90,7 @@ Table WithClause::HandleIntegerInteger() {
 }
 
 Table WithClause::HandleIdentAttribute() {
-  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
-  auto single_constraints = pkb->GetStmt(GetStmtType(second_attribute.first.first));
-  std::string ident_without_quotes = GetIdentWithoutQuotes(first_arg.value);
-  Table table;
-  if (single_constraints.count(ident_without_quotes) == 0) {
-    table.EncounteredFalseClause();
-    return table;
-  }
-  std::unordered_set<std::string> result_set;
-  result_set.insert(ident_without_quotes);
-  return {second_attribute.first.second, result_set};
+ return HandleIntegerAttribute();
 }
 
 Table WithClause::HandleIdentIdent() {

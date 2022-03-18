@@ -30,6 +30,8 @@ class Utils {
   static AtrriName convertAttriName(std::string attriName);
   static std::pair<std::pair<DesignEntityType, std::string>, AtrriName> ParseAttributeRef(PqlToken &token, std::unordered_map<std::string, DesignEntityType> declarations);
   static std::pair<std::string, AtrriName> ParseAttributeRef(PqlToken &token);
+  static std::string TrimQuotes(std::string&);
+  static std::string TrimUnderscoreAndQuotes(std::string&);
 };
 
 #endif //UTILS_H
