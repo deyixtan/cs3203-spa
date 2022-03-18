@@ -743,7 +743,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowStar
 TEST_CASE("Check pattern matching (correct)") {
   PKB *pkb = set_up_pkb();
   
-  std::unordered_set<std::string> actual = pkb->GetPatternStore()->GetStmtWithPatternPartial("pig", "_\"cat\"_");
+  std::unordered_set<std::string> actual = pkb->GetPatternStore()->GetStmtWithPatternPartial("pig", "cat");
   std::unordered_set<std::string> expected = {};
   for (auto const&[key, val] : pattern_to_stmt) {
     if (key.first == "pig" && key.second.find("(cat)") != -1) {
