@@ -67,14 +67,12 @@ void WhileStatementNode::Accept(DesignExtractor *de) {
 }
 
 std::shared_ptr<CfgNode> WhileStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
-  std::shared_ptr<CfgNode> condition_node = std::make_shared<CfgNode>();
   std::shared_ptr<CfgNode> body_node = std::make_shared<CfgNode>();
   std::shared_ptr<CfgNode> next_node = std::make_shared<CfgNode>();
-  cfg_node->AddNext(condition_node);
-  condition_node->AddStatement(std::to_string(GetStatementNumber()));
-  condition_node->AddNext(body_node);
-  condition_node->AddNext(next_node);
+  cfg_node->AddStatement(std::to_string(GetStatementNumber()));
+  cfg_node->AddNext(body_node);
+  cfg_node->AddNext(next_node);
   body_node = cb->Visit(m_stmt_list, body_node);
-  body_node->AddNext(condition_node);
+  body_node->AddNext(cfg_node);
   return next_node;
 }

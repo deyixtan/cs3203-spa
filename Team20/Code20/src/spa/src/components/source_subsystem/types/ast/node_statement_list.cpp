@@ -66,6 +66,12 @@ void StatementListNode::Accept(DesignExtractor *de) {
 
 std::shared_ptr<CfgNode> StatementListNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
   for (std::shared_ptr<StatementNode> stmt : m_statements) {
+    bool is_empty_cfg_node = cfg_node->GetStatementList().size() == 0;
+    if ((stmt->GetStatementType() == IF || stmt->GetStatementType() == WHILE) && !is_empty_cfg_node) {
+        std::shared_ptr<CfgNode> condition_node = std::make_shared<CfgNode>();
+        cfg_node->AddNext(condition_node);
+        cfg_node = condition_node;
+    }
     cfg_node = cb->Visit(stmt, cfg_node);
   }
   return cfg_node;
