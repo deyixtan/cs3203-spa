@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "components/source_subsystem/types/cfg/cfg.h"
 
 class PkbClient;
 class ProgramNode;
