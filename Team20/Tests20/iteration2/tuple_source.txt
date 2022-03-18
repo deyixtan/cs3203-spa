@@ -1,0 +1,35 @@
+procedure main {
+  a = 2;
+  while (b != 0) {
+    c = b - 1;
+    if (c == 1) then {
+      d = d + 1 * b;
+    } else {
+      e = a + b - 1;
+    }
+    read f;
+    b = b % 2;
+    call bar;
+  }
+  call bar;
+  print e;
+}
+
+procedure bar {
+  call car;
+}
+
+procedure car {
+  print a;
+  if (a < b) then {
+    while (b == 2) {
+        c = c / 2;
+        while (c == 1) {
+            e = c * 2;
+        }
+    }
+  } else {
+    a = a + 1;
+    b = b + 1;
+  }
+}
