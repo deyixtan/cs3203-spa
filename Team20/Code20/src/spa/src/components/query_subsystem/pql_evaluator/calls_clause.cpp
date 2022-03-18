@@ -60,7 +60,7 @@ Table CallsClause::HandleWildcardSynonym() {
     single_constraints.insert(pair_constraint.second);
   }
 
-  return {first_arg.value, single_constraints};
+  return {second_arg.value, single_constraints};
 }
 
 Table CallsClause::HandleWildcardWildcard() {
