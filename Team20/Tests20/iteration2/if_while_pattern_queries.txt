@@ -106,7 +106,7 @@ Select w pattern w("x",_)
 22 - Literal select while
 while w;
 Select w pattern w("y",_)
-12
+5, 12
 5000
 23 - Literal select while
 while w;

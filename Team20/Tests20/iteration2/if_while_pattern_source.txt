@@ -13,7 +13,7 @@ procedure main {
         }
     } else {
         while (c == d) {
-            if (x != y) {
+            if (x != y) then {
                 y = 4;
             } else {
                 x = 1;
