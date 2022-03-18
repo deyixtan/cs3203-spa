@@ -50,9 +50,8 @@ Table UsesSClause::HandleSynonymWildcard() {
 Table UsesSClause::HandleSynonymIdent() {
   auto pair_constraints = pkb->GetUsageStore()->GetAllUsesStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
   std::unordered_set<std::string> single_constraints;
-  std::string ident_without_quotes = GetIdentWithoutQuotes(second_arg.value);
   for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==ident_without_quotes) {
+    if (pair_constraint.second==second_arg.value) {
       single_constraints.insert(pair_constraint.first);
     }
   }
@@ -74,8 +73,7 @@ Table UsesSClause::HandleIntegerWildcard() {
 }
 
 Table UsesSClause::HandleIntegerIdent() {
-  std::string ident_without_quotes = GetIdentWithoutQuotes(second_arg.value);
-  std::pair arg_pair(first_arg.value, ident_without_quotes);
+  std::pair arg_pair(first_arg.value, second_arg.value);
   bool is_empty = pkb->GetUsageStore()->StmtVarExists(arg_pair);
   Table table;
   if (is_empty) {
