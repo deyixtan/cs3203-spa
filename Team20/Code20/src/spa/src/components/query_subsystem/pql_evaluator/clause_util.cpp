@@ -20,6 +20,10 @@ bool clause_util::IsArgPartialMatch(const PqlToken &arg) {
   return arg.type==PqlTokenType::SUB_EXPRESSION;
 }
 
+bool clause_util::IsArgExactMatch(const PqlToken &arg) {
+  return arg.type==PqlTokenType::EXPR;
+}
+
 bool clause_util::IsArgAttribute(const PqlToken &arg) {
   return arg.type==PqlTokenType::ATTRIBUTE;
 }
@@ -85,6 +89,6 @@ StmtType clause_util::GetStmtType(const DesignEntityType &design_entity) {
   }
 }
 
-std::string clause_util::GetIdentWithoutQuotes(const std::string &ident) {
-  return ident.substr(1, ident.length() - 2);
-}
+//std::string clause_util::GetIdentWithoutQuotes(const std::string &ident) {
+//  return ident.substr(1, ident.length() - 2);
+//}

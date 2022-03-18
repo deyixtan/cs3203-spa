@@ -44,20 +44,17 @@ Table ModifiesPClause::HandleSynonymWildcard() {
 }
 
 Table ModifiesPClause::HandleSynonymIdent() {
-  std::string ident_without_quotes = GetIdentWithoutQuotes(second_arg.value);
-  auto single_constraints = pkb->GetModifyStore()->GetProcModByVar(ident_without_quotes);
+  auto single_constraints = pkb->GetModifyStore()->GetProcModByVar(second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
 Table ModifiesPClause::HandleIdentSynonym() {
-  std::string ident_without_quotes = GetIdentWithoutQuotes(first_arg.value);
-  auto single_constraints = pkb->GetModifyStore()->GetVarModByProc(ident_without_quotes);
+  auto single_constraints = pkb->GetModifyStore()->GetVarModByProc(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table ModifiesPClause::HandleIdentWildcard() {
-  std::string ident_without_quotes = GetIdentWithoutQuotes(first_arg.value);
-  bool is_empty = pkb->GetModifyStore()->GetVarModByProc(ident_without_quotes).empty();
+  bool is_empty = pkb->GetModifyStore()->GetVarModByProc(first_arg.value).empty();
   Table table;
   if (is_empty) {
     table.EncounteredFalseClause();
@@ -66,9 +63,7 @@ Table ModifiesPClause::HandleIdentWildcard() {
 }
 
 Table ModifiesPClause::HandleIdentIdent() {
-  std::string first_arg_without_quotes = GetIdentWithoutQuotes(first_arg.value);
-  std::string second_arg_without_quotes = GetIdentWithoutQuotes(second_arg.value);
-  std::pair arg_pair(first_arg_without_quotes, second_arg_without_quotes);
+  std::pair arg_pair(first_arg.value, second_arg.value);
   bool is_empty = pkb->GetModifyStore()->ProcVarExists(arg_pair);
   Table table;
   if (is_empty) {

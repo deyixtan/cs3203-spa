@@ -42,12 +42,13 @@ void ProgramNode::Accept(DesignExtractor *de) {
 std::unordered_map<std::string, std::shared_ptr<CfgNode>> ProgramNode::Accept(CfgBuilder *cb) {
   std::unordered_map<std::string, std::shared_ptr<CfgNode>> heads;
   for (std::shared_ptr<ProcedureNode> const &procedure : m_procedures) {
-    std::shared_ptr<CfgNode> node = std::make_shared<CfgNode>();
-    std::shared_ptr<CfgNode> dummy_node = cb->Visit(procedure, node);
-    std::shared_ptr<CfgNode> endProcBlock = std::make_shared<CfgNode>();
-    dummy_node->AddNext(endProcBlock);
-    endProcBlock->AddStatement("");
-    heads.insert({procedure->GetIdentifier(), node});
+    std::shared_ptr<CfgNode> head = std::make_shared<CfgNode>();
+    std::shared_ptr<CfgNode> tail = cb->Visit(procedure, head);
+    if (tail->GetStatementList().size() != 0) {
+      std::shared_ptr<CfgNode> dummy = std::make_shared<CfgNode>();
+      tail->AddNext(dummy);
+    }
+    heads.insert({procedure->GetIdentifier(), head});
   }
   return heads;
 }

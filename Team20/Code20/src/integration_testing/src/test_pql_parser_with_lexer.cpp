@@ -18,7 +18,7 @@ TEST_CASE("Test query with uses and pattern") {
   const auto decl = pq.GetDeclaration();
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
-  REQUIRE(rship.GetSecond().value == "\"x\"");
+  REQUIRE(rship.GetSecond().value == "x");
   REQUIRE(ptrn.GetSynonym().value == "a");
   REQUIRE(ptrn.GetFirst().value == "v");
   REQUIRE(ptrn.GetSecond().value == "_");
@@ -42,7 +42,7 @@ TEST_CASE("Test query parser with more than one synonym") {
   const auto decl = pq.GetDeclaration();
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
-  REQUIRE(rship.GetSecond().value == "\"x\"");
+  REQUIRE(rship.GetSecond().value == "x");
   REQUIRE(ptrn.GetSynonym().value == "a");
   REQUIRE(ptrn.GetFirst().value == "v");
   REQUIRE(ptrn.GetSecond().value == "_");
@@ -170,7 +170,7 @@ TEST_CASE("Test query parser with BOOLEAN and attributes") {
   REQUIRE(withs[0].GetFirst().type == PqlTokenType::ATTRIBUTE);
   REQUIRE(withs[0].GetFirst().value == "v.varName");
   REQUIRE(withs[0].GetSecond().type == PqlTokenType::IDENT_WITH_QUOTES);
-  REQUIRE(withs[0].GetSecond().value == "\"bleh\"");
+  REQUIRE(withs[0].GetSecond().value == "bleh");
   REQUIRE(result_clause.GetType() == ResultClauseType::BOOLEAN);
   REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
@@ -228,7 +228,7 @@ TEST_CASE("Test query parser with double pattern") {
   REQUIRE(ptrn_assign.GetSecond().value == "_");
   REQUIRE(ptrn_stmt.GetSynonym().value == "s");
   REQUIRE(ptrn_stmt.GetFirst().value == "v");
-  REQUIRE(ptrn_stmt.GetSecond().value == "_\"x\"_");
+  REQUIRE(ptrn_stmt.GetSecond().value == "x");
   REQUIRE(result_clause.GetValues()[0].value == "a");
   REQUIRE(result_clause.GetType() == ResultClauseType::SYNONYM);
   REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
