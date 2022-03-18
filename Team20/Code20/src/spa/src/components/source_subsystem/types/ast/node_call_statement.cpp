@@ -23,7 +23,7 @@ bool CallStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && m_identifier == casted_other->m_identifier;
 }
 
-void CallStatementNode::Accept(DesignExtractor *de) {
+void CallStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   de->GetPkbClient()->PopulateStmt(stmt_num);
   std::string callee_name = m_identifier;

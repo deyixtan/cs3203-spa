@@ -20,7 +20,7 @@ class WhileStatementNode : public StatementNode {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const;
-  void Accept(DesignExtractor *de);
+  void Accept(DesignExtractor *de, std::string proc_name);
   std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
 

@@ -1,0 +1,53 @@
+procedure How {
+    read coffee;
+    read tea;
+    call Now;
+}
+
+procedure Now {
+    read eggs;
+    read bacon;
+    if ((((eggs != bacon) && (!(bacon > eggs))) || (beans == 0)) && (salt < 0)) then {
+        print coffee;
+        while (!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(beans > 1337))))))))))))))))))) {
+            print breakfast;
+            tea = 2;
+        }
+        call Brown;
+    } else {
+        eggs = 1000 % 10 + beans               * bacon % eggs;
+        beans = (12345 % ((10 + beans) * bacon)) % eggs;
+    }
+    while (!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!((((tea <= 3) || (coffee == 10)) && (salt == 1)) || (sugar == 2))))))))))))))))))) {
+        print breakfast;
+        tea = 7777990798706080970970962;
+    }
+    call Brown;
+}
+
+procedure Brown {
+    if (coffee == 10) then {
+        eggs = coffee + ((tea / bacon) % salt - pepper);
+    } else {
+        tea = 123456789012345678;
+        while (tea != (bacon + 52324 + salt)) {
+            print eggs;print tea;
+            if ((tea > 133333333) && (coffee < 7777777)) then {
+                tea = 10;
+            } else {
+                coffee = 99;
+                tea = 0;
+                pepper = 1;
+            }
+            print tea;
+            print pepper;
+        }
+        read eggs;
+        print pepper;
+        call Cow;
+    }
+}
+
+procedure Cow {
+    eggs = 1 + 1 + 1 + 1 + 1 + 10 + 1 + 1 + 0 + 1 + 0 + 1;
+}

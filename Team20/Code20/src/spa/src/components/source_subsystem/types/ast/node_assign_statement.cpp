@@ -34,13 +34,13 @@ bool AssignStatementNode::operator==(const StatementNode &other) const {
       && *m_expression == *(casted_other->m_expression);
 }
 
-void AssignStatementNode::Accept(DesignExtractor *de) {
+void AssignStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   std::string var_name = "";
   de->GetPkbClient()->PopulateStmt(stmt_num);
   var_name = m_identifier->GetIdentifier();
-  de->Visit(m_identifier, false);
-  std::string rhs_expr = de->Visit(m_expression, true);
+  de->Visit(m_identifier, proc_name, false);
+  std::string rhs_expr = de->Visit(m_expression, proc_name, true);
   de->GetPkbClient()->AddPattern(STMT, stmt_num, var_name, rhs_expr);
   de->GetPkbClient()->PopulateAssign(stmt_num);
   de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
