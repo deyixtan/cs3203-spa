@@ -12,7 +12,7 @@ void PatternStore::AddWhileWithPattern(std::string const &stmt, std::string cons
   std::string var;
 
   for (char const &c : expr) {
-    if (isalpha(c)) {
+    if (isalnum(c)) {
       var += c;
     } else if (!var.empty()) {
       m_while_pattern_pairs.insert({stmt, var});
@@ -25,7 +25,7 @@ void PatternStore::AddIfWithPattern(std::string const &stmt, std::string const &
   std::string var;
 
   for (char const &c : expr) {
-    if (isalpha(c)) {
+    if (isalnum(c)) {
       var += c;
     } else if (!var.empty()) {
       m_if_pattern_pairs.insert({stmt, var});
@@ -146,7 +146,6 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore:
 
 std::unordered_set<std::string> PatternStore::GetIfWithPattern(std::string var) {
   std::unordered_set<std::string> result = {};
-  std::string sub_pattern = "(" + var + ")";
 
   for (auto pair : m_if_pattern_pairs) {
     //pattern ifs(_, _, _)
@@ -155,7 +154,7 @@ std::unordered_set<std::string> PatternStore::GetIfWithPattern(std::string var) 
     }
 
     //pattern ifs("x", _, _)
-    if (var != "_" && pair.second.find(sub_pattern) != std::string::npos) {
+    if (var != "_" && pair.second.find(var) != std::string::npos) {
       result.insert(pair.first);
     }
   }
@@ -164,7 +163,6 @@ std::unordered_set<std::string> PatternStore::GetIfWithPattern(std::string var) 
 
 std::unordered_set<std::string> PatternStore::GetWhileWithPattern(std::string var) {
   std::unordered_set<std::string> result = {};
-  std::string sub_pattern = "(" + var + ")";
 
   for (auto pair : m_while_pattern_pairs) {
     //pattern w(_, _)
@@ -173,7 +171,7 @@ std::unordered_set<std::string> PatternStore::GetWhileWithPattern(std::string va
     }
 
     //pattern w("x", _)
-    if (var != "_" && pair.second.find(sub_pattern) != std::string::npos) {
+    if (var != "_" && pair.second.find(var) != std::string::npos) {
       result.insert(pair.first);
     }
   }

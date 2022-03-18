@@ -153,7 +153,7 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   pkb->GetModifyStore()->AddProcVar("main", "x");
   pkb->GetUsageStore()->AddProcVar("main", "x");
   pkb->GetUsageStore()->AddStmtVar("1", "x");
-  pkb->GetPatternStore()->AddStmtWithPattern("1", "x", "x + 1");
+  pkb->GetPatternStore()->AddStmtWithPattern("1", "x", "((x)+(1))");
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
