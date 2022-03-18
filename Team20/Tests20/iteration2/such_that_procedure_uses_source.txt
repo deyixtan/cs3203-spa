@@ -1,0 +1,35 @@
+procedure Uses {
+	durian = apple + 2;
+	print apple;
+	if (apple > 1) then {
+		read apple;
+	} else {
+		print apple;
+		while (banana < papaya) {
+			read durian;
+			while ((3 != apple) || (pear >= orange)) {
+				read orange;
+				read plum;
+				print peach;
+				peach = berry * 3;
+			}
+		}
+	}
+
+	if (!(banana != carrot)) then {
+		print apple;
+	} else {
+		while (!(2 > grape)) {
+			grape = 100;
+		}
+	}
+
+	berry = avocado * (3 - peach) / berry;
+	apple = peach;
+}
+
+procedure foo {
+  print apple;
+  read avocado;
+  grape = peach * banana;
+}

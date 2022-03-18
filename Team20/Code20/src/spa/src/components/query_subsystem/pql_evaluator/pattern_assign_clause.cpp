@@ -12,6 +12,7 @@ PatternAssignClause::PatternAssignClause(const std::string &assign_synonym,
     : assign_synonym(assign_synonym), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table PatternAssignClause::Execute() {
+  // TODO: update for exact match
   if (IsArgSynonym(first_arg) && IsArgWildcard(second_arg)) {
     // pattern a(v, _)
     return HandleSynonymWildcard();
@@ -37,12 +38,12 @@ Table PatternAssignClause::Execute() {
 }
 
 Table PatternAssignClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonym();
+  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonym("_");
   return {assign_synonym, first_arg.value, pair_constraints};
 }
 
 Table PatternAssignClause::HandleSynonymPartial() {
-  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonym();
+  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonym(second_arg.value);
   return {assign_synonym, first_arg.value, pair_constraints};
 }
 
@@ -57,12 +58,12 @@ Table PatternAssignClause::HandleWildcardPartial() {
 }
 
 Table PatternAssignClause::HandleIdentWildcard() {
-  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPattern(GetIdentWithoutQuotes(first_arg.value), "_");
+  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPattern(first_arg.value, "_");
   return {assign_synonym, single_constraints};
 }
 
 Table PatternAssignClause::HandleIdentPartial() {
-  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPattern(GetIdentWithoutQuotes(first_arg.value), second_arg.value);
+  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPattern(first_arg.value, second_arg.value);
   return {assign_synonym, single_constraints};
 }
 

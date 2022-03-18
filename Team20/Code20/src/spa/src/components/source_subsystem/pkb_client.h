@@ -22,6 +22,7 @@ class PkbClient {
   void PopulateUsesProc(std::string stmt, std::string var);
   void PopulateModifies(std::string stmt, std::string var);
   void PopulateModifiesProc(std::string stmt, std::string var);
+  void PopulateCalls(std::string caller, std::string callee);
   void PopulateProc(std::string name);
   void PopulateAssign(std::string stmt);
   void PopulateStmt(std::string stmt);
@@ -31,6 +32,7 @@ class PkbClient {
   void PopulateWhile(std::string stmt);
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
+  void PopulateCall(std::string name);
   void PopulateCfg(Cfg &cfg);
   void AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs);
 };

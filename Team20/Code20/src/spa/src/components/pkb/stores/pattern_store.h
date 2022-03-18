@@ -18,7 +18,7 @@ class PatternStore : Store {
   [[nodiscard]] std::unordered_set<std::string> GetStmtWithPattern(std::string lhs, std::string rhs);
   [[nodiscard]] std::unordered_set<std::string> GetIfWithPattern(std::string var);
   [[nodiscard]] std::unordered_set<std::string> GetWhileWithPattern(std::string var);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonym();
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStmtWithPatternSynonym(std::string expr);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetIfWithPatternSynonym();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetWhileWithPatternSynonym();
 };

@@ -47,3 +47,11 @@ AtrriName Utils::convertAttriName(std::string attriName) {
     throw "Invalid Attribute Name";
   }
 }
+
+std::string Utils::TrimQuotes(std::string& s) {
+  return s.substr(1, s.size() - 2);
+}
+
+std::string Utils::TrimUnderscoreAndQuotes(std::string& s) {
+  return s.substr(2, s.size() - 4);
+}

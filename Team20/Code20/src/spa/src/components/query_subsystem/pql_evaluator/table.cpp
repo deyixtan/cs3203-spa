@@ -11,6 +11,9 @@ Table::Table(const std::string& synonym, std::unordered_set<std::string>& single
   for (const auto& single_constraint : single_constraints) {
     records.emplace_back(std::initializer_list<std::string>{single_constraint});
   }
+  if (single_constraints.empty()) {
+    EncounteredFalseClause();
+  }
 }
 
 Table::Table(const std::string &first_synonym,
@@ -21,9 +24,12 @@ Table::Table(const std::string &first_synonym,
   for (const auto& pair_constraint : pair_constraints) {
     records.emplace_back(std::initializer_list<std::string>{pair_constraint.first, pair_constraint.second});
   }
+  if (pair_constraints.empty()) {
+    EncounteredFalseClause();
+  }
 }
 
-bool Table::IsEmpty() const {
+bool Table::IsRecordsEmpty() const {
   return records.empty();
 }
 
@@ -84,20 +90,20 @@ void Table::NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t
   }
 
   Records new_records;
-  for (auto record_it = records.begin(); record_it != records.end(); ++record_it) {
-    for (auto other_record_it = other_table.records.begin(); other_record_it != other_table.records.end(); ++other_record_it) {
+  for (auto & record : records) {
+    for (auto & other_record_it : other_table.records) {
       bool record_match_on_common_attribute_indices = true;
       for (auto common_attribute_index_pair : common_attribute_index_pairs) {
-        if (record_it->at(common_attribute_index_pair.first) != other_record_it->at(common_attribute_index_pair.second)){
+        if (record.at(common_attribute_index_pair.first) != other_record_it.at(common_attribute_index_pair.second)){
           record_match_on_common_attribute_indices = false;
           break;
         }
       }
 
       if (record_match_on_common_attribute_indices) {
-        auto new_record = *record_it;
+        auto new_record = record;
         for (auto other_attribute_index : other_attribute_indices) {
-          new_record.emplace_back(other_record_it->at(other_attribute_index));
+          new_record.emplace_back(other_record_it.at(other_attribute_index));
         }
         new_records.emplace_back(new_record);
       }
@@ -107,9 +113,9 @@ void Table::NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t
 }
 void Table::CrossJoin(Table &other_table) {
   attributes.insert(attributes.end(), other_table.attributes.begin(), other_table.attributes.end());
-  if (other_table.IsEmpty()) {
+  if (other_table.IsRecordsEmpty()) {
     return;
-  } else if (IsEmpty()) {
+  } else if (IsRecordsEmpty()) {
     records = std::move(other_table.records);
     return;
   }
@@ -129,7 +135,7 @@ void Table::CrossJoin(Table &other_table) {
 
 std::unordered_set<std::string> Table::GetResult(const std::string& select_synonym) {
   std::unordered_set<std::string> result({});
-  std::vector<std::string>::iterator itr = std::find(attributes.begin(), attributes.end(), select_synonym);
+  auto itr = std::find(attributes.begin(), attributes.end(), select_synonym);
   if (itr != attributes.cend()) {
     int index = std::distance(attributes.begin(), itr);
     for (auto row : records) {
@@ -160,7 +166,7 @@ void Table::EncounteredFalseClause() {
   encountered_false_clause = true;
 }
 
-bool Table::HasEncounteredFalseClause() {
+bool Table::HasEncounteredFalseClause() const {
   return encountered_false_clause;
 }
 

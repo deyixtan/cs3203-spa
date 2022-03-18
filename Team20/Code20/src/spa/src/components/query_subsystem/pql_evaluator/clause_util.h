@@ -17,7 +17,7 @@ DesignEntityType GetSynonymDesignEntity(const PqlToken &arg, const std::unordere
 bool IsArgProcSynonym(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations);
 bool IsArgStmtSynonym(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations);
 StmtType GetStmtType(const DesignEntityType &design_entity);
-std::string GetIdentWithoutQuotes(const std::string &ident);
+//std::string GetIdentWithoutQuotes(const std::string &ident);
 
 }
 
