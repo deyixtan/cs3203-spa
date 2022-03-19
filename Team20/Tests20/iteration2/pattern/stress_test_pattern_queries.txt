@@ -1,0 +1,65 @@
+1 - Long Exact Pattern Match
+variable v; assign a;
+Select v pattern a(v, "a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z + aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz - a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z * aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz / a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z % aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz + a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z + aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz - a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z * aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz / a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z % aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz - a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z + aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz - a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z * aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz / a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z % aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz * a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z + aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz - a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z * aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz / a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z % aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz / a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z + aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz - a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z * aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz / a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z % aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz % a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z + aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz - a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z * aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz / a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z % aa-bb+cc/dd*ee%ff-gg+hh/ii*jj%kk-ll+mm/nn*oo%pp-qq+rr/ss*tt%uu-vv+ww/xx*yy%zz")
+d
+5000
+2 - Long Sub Pattern Match
+variable v; assign a;
+Select v pattern a(v, _"a-b+c/d*e%f-g+h/i*j%k-l+m/n*o%p-q+r/s*t%u-v+w/x*y%z"_)
+a, b, c, d
+5000
+3 - Select first pattern param
+variable v; assign a;
+Select v pattern a(v, "aa")
+b, c, d
+5000
+4 - Accurately pick out matches from many assignment statements first param
+variable v; assign a;
+Select v pattern a(v, "z")
+a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+5000
+5 - Accurately pick out matches from many assignment statements
+variable v; assign a;
+Select a pattern a("x", _)
+603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619, 620, 621, 622, 623, 624, 625, 626, 627, 628
+5000
+6 - Accurately pick 1 match from many assignment statements
+variable v; assign a;
+Select a pattern a("y", "y")
+649
+5000
+8 - Check that all variables exists and stored
+variable v;
+Select v
+a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz, hello, world, rhs, lhs, rhsAsComplexAs, lhsAsComplexAs, hola, amigo, betweenTheLines, lhsSimple, rhsSimple, RHSLong, LHSLong
+5000
+9 - Accurate pattern if
+variable v; if ifs;
+Select ifs pattern ifs("vv", _, _)
+3, 6, 9, 10, 13, 17, 26
+5000
+10 - Accurate pattern while
+variable v; while w;
+Select w pattern w("hh", _)
+16, 20, 22, 24, 27, 29
+5000
+11 - Accurately pick out variables from if
+variable v; if ifs;
+Select v pattern ifs(v, _, _) with ifs.stmt# = 3
+RHSLong, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz
+5000
+12 - Accurately pick out variables from while
+variable v; while w;
+Select v pattern w(v, _) with w.stmt# = 20
+lhsIsNotComplicated, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll, mm, nn, oo, pp, qq, rr, ss, tt, uu, vv, ww, xx, yy, zz
+5000
+13 - Accurately pick 1 match from many if statements
+variable v; if ifs;
+Select ifs pattern ifs("onlyLHSExpressionIsLong", _, _)
+6
+5000
+14 - Accurately pick 1 match from many while statements
+variable v; while w;
+Select w pattern w("rhsIsNotComplicated", _)
+22
+5000
