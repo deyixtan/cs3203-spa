@@ -98,10 +98,10 @@ assign a; variable v;
 Select BOOLEAN pattern a (v, "red +     gre    en -  1")
 none
 5000
-21 - assign pattern 1 synonym false 2
+21 - assign pattern 1 synonym true 2
 assign a; variable v;
 Select BOOLEAN pattern a (v, _  "1 * red"_)
-FALSE
+TRUE
 5000
 22 - assign pattern 1 synonym false 3
 assign a; variable v;
