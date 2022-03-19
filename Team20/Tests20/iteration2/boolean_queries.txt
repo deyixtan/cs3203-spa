@@ -248,13 +248,23 @@ assign a; variable v; constant c; procedure p;
 Select BOOLEAN with p.procName = v.varName
 TRUE
 5000
-50 - with clause 2 attributes false 1
+51 - with clause 2 attributes false 1
 assign a; variable v; constant c; procedure p; read rd;
 Select BOOLEAN with rd.stmt# = c.value
 FALSE
 5000
-50 - with clause 2 attributes false 2
+52 - with clause 2 attributes false 2
 assign a; variable v; constant c; procedure p; read rd;
 Select BOOLEAN with v.varName = p.procName and v.varName = "green"
 FALSE
+5000
+53 - BOOLEAN as synonym 1
+assign a; variable BOOLEAN; constant c; procedure p; read rd;
+Select BOOLEAN with v.varName = "green"
+green
+5000
+54 - BOOLEAN as synonym 2
+assign a; variable BOOLEAN; constant c; procedure p; read rd;
+Select BOOLEAN such that Uses (a, BOOLEAN)
+2, 3, 4, 5, 6, 8, 11, 12, 14
 5000
