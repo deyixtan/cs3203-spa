@@ -27,6 +27,7 @@ public:
   Table HandleIntegerInteger();
   Table HandleIdentAttribute();
   Table HandleIdentIdent();
+  std::unordered_set<std::string> HandleSetIntersectionSingleColumn(std::unordered_set<std::string>, std::unordered_set<std::string>);
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> HandleSetIntersection(std::unordered_set<std::string>, std::unordered_set<std::string>);
 };
 
