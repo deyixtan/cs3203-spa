@@ -114,7 +114,7 @@ Select v with v.varName = "x"
 x
 5000
 24 - Select v with rhs string = name with valid random spaces
-variable v
+variable v;
 Select v with v.varName = "procE  "
 procE
 5000
