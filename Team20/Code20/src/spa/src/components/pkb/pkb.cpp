@@ -49,11 +49,21 @@ std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
 }
 
 std::unordered_set<std::string> PKB::GetStmtByName(StmtType type, std::string name) {
-  return m_name_to_stmt->at(type).at(name);
+  std::unordered_map<std::string, std::unordered_set<std::string>> ref_map = m_name_to_stmt->at(type);
+
+  if (ref_map.find(name) != ref_map.end()) {
+    return ref_map.at(name);
+  }
+  return {}
 }
 
 std::string PKB::GetNameByStmt(StmtType type, std::string stmt) {
-  return m_stmt_to_name->at(type).at(stmt);
+  std::unordered_map<std::string, std::string> ref_map = m_stmt_to_name->at(type);
+
+  if (ref_map.find(stmt) != ref_map.end()) {
+    return ref_map.at(stmt);
+  }
+  return "";
 }
 
 std::shared_ptr<FollowStore> PKB::GetFollowStore() {
