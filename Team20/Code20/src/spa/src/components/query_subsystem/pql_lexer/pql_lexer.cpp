@@ -315,9 +315,12 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
   const char delimiter = '^';
   bool isString = false;
   bool isTuple = false;
+  bool isSubExpr = false;
   for (const char c : s) {
     switch (c) {
-      // Check for string literals
+      case '_':
+        isSubExpr = !isSubExpr;
+        break;
       case '<':
         isTuple = !isTuple;
         break;
@@ -331,7 +334,7 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
       case ' ':
       case '\n':
       case '\t':
-        if (!isString && !isTuple) {
+        if (!isString && !isTuple && !isSubExpr) {
           charArr.push_back(delimiter);
           continue;
         }
@@ -348,12 +351,17 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
       case '(':
         if (!isString) {
           charArr.push_back(delimiter);
+          if(isSubExpr and c == ')') {
+            isSubExpr = !isSubExpr;
+          }
         }
         break;
       default:
         break;
     }
-    charArr.push_back(c);
+    if(c != ' ' || !isSubExpr) {
+      charArr.push_back(c);
+    }
     switch (c) {
       case ';':
       case '=':
