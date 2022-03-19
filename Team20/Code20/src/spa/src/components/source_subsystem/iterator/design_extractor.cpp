@@ -27,14 +27,12 @@ void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node
 }
 
 void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
-
+  std::stack<std::shared_ptr<CfgNode>> node_stack;
+  std::vector<std::string> prev_stmts;
+  std::unordered_set<std::shared_ptr<CfgNode>> visited;
+  std::unordered_map<std::string, std::unordered_set<std::string>> next_map;
   std::unordered_map<std::string, std::shared_ptr<CfgNode>> prog = root->GetCfgMap();
   for (auto proc : prog) {
-    std::stack<std::shared_ptr<CfgNode>> node_stack;
-    std::vector<std::string> prev_stmts;
-    std::unordered_set<std::shared_ptr<CfgNode>> visited;
-    std::unordered_map<std::string, std::unordered_set<std::string>> next_map;
-
     std::shared_ptr<CfgNode> curr_proc = proc.second; // root node of cfg
     node_stack.push(curr_proc);
 
@@ -102,10 +100,8 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
         }
       }
     }
-
-    m_pkb_client->PopulateNext(next_map);
   }
-
+  m_pkb_client->PopulateNext(next_map);
 }
 
 void DesignExtractor::Visit(std::shared_ptr<ProgramNode> node) {
