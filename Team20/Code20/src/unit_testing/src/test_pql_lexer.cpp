@@ -681,3 +681,10 @@ TEST_CASE("Test pattern clause for ifs with 3 args") {
 
   REQUIRE(pql_lexer.Lex() == expected_tokens);
 }
+
+TEST_CASE("Test invalid synonym in pattern sub-expression") {
+  std::string query = "assign a, a1; variable v; Select  a pattern a(_, _\" 1 * re d\"_)";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::string expected_wrong_token = "_\" 1 * re d\"_";
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
+}
