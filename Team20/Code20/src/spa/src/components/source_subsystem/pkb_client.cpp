@@ -89,6 +89,12 @@ void PkbClient::PopulateCfg(Cfg &cfg) {
   pkb->AddProgramCfg(std::make_shared<Cfg>(cfg));
 }
 
+void PkbClient::PopulateNext(std::unordered_map<std::string, std::unordered_set<std::string>> rs_map) {
+  pkb->GetNextStore()->AddNextMap(rs_map);
+  pkb->GetNextStore()->AddBeforeMap(rs_map);
+  pkb->GetNextStore()->ConstructNextPairs();
+}
+
 void PkbClient::AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs) {
   if (type == StmtType::STMT) {
     pkb->GetPatternStore()->AddStmtWithPattern(stmt, lhs, rhs);
