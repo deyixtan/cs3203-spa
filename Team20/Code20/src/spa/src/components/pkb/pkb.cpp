@@ -54,7 +54,7 @@ std::unordered_set<std::string> PKB::GetStmtByName(StmtType type, std::string na
   if (ref_map.find(name) != ref_map.end()) {
     return ref_map.at(name);
   }
-  return {}
+  return {};
 }
 
 std::string PKB::GetNameByStmt(StmtType type, std::string stmt) {
