@@ -299,3 +299,40 @@ TEST_CASE("Test query parser with 'such that' clause and 'and'") {
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
   REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
 }
+
+TEST_CASE("Test query parser attribute with whitespaces") {
+  std::string query = "stmt s; variable v; procedure p;\n Select a pattern a(v,_) with v      .     varName = p.procName and a .      stmt# = 5";
+  PqlLexer pql_lexer = PqlLexer(query);
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  QueryValidator qv = QueryValidator(test_token_vect);
+  test_token_vect = qv.CheckValidation();
+  ParsedQueryBuilder pqb(test_token_vect);
+  ParsedQuery pq = pqb.Build();
+  ResultClause result_clause = pq.GetResultClause();
+  const auto decl = pq.GetDeclaration();
+  std::vector<Relationship> rship = pq.GetRelationships();
+  Pattern ptrn = pq.GetPatterns().front();
+  std::vector<With> withs = pq.GetWithClause();
+  With with_first = withs.front();
+  With with_second = withs[1];
+  // Test that no relationships have been added to query struct
+  REQUIRE(rship.size() == 0);
+  REQUIRE(ptrn.GetSynonym().value == "a");
+  REQUIRE(ptrn.GetFirst().value == "v");
+  REQUIRE(ptrn.GetSecond().value == "_");
+  REQUIRE(result_clause.GetValues()[0].value == "a");
+  REQUIRE(with_first.GetFirst().type == PqlTokenType::ATTRIBUTE);
+  REQUIRE(with_first.GetFirst().value == "v.varName");
+  REQUIRE(with_first.GetSecond().type == PqlTokenType::ATTRIBUTE);
+  REQUIRE(with_first.GetSecond().value == "p.procName");
+  REQUIRE(with_second.GetFirst().type == PqlTokenType::ATTRIBUTE);
+  REQUIRE(with_second.GetFirst().value == "a.stmt#");
+  REQUIRE(with_second.GetSecond().type == PqlTokenType::NUMBER);
+  REQUIRE(with_second.GetSecond().value == "5");
+  REQUIRE(ptrn.GetFirst().value == "v");
+  REQUIRE(ptrn.GetSecond().value == "_");
+  REQUIRE(result_clause.GetType() == ResultClauseType::SYNONYM);
+  REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(decl.find("p")->second == DesignEntityType::PROCEDURE);
+}
