@@ -38,7 +38,6 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
     std::shared_ptr<CfgNode> curr_proc = proc.second; // root node of cfg
     node_stack.push(curr_proc);
 
-
     // per cfg logic
     while(node_stack.size() > 0) {
       std::shared_ptr<CfgNode> curr = node_stack.top();
@@ -57,7 +56,6 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
         }
       }
 
-      // ???????
       int start = 0;
       int next = 1;
 
@@ -77,14 +75,10 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
       }
 
       // recurse until next_node.front() != dummy node
-      // At node 10, [dummy, 11]
-      // At node 11, [10]
       while(next_nodes.size() > 0 && next_nodes.front()->GetStatementList().size() == 0) {
         next_nodes = next_nodes.front()->GetDescendants(); // becomes next_nodes = 11
       }
 
-      // 11
-      // [6, dummy(8)]
       for(auto &desc : next_nodes) {
         if (curr_stmts.size() > 0) {
           if(next_map.find(curr_stmts[curr_stmts.size() - 1]) == next_map.end()) {
