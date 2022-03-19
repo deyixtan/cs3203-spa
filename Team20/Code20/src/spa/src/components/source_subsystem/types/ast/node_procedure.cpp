@@ -39,7 +39,7 @@ bool ProcedureNode::operator==(const ProcedureNode &other) const {
 
 void ProcedureNode::Accept(DesignExtractor *de) {
   de->GetPkbClient()->PopulateProc(m_identifier);
-  de->Visit(m_stmt_list);
+  de->Visit(m_stmt_list, m_identifier);
 }
 
 std::shared_ptr<CfgNode> ProcedureNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {

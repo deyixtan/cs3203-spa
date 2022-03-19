@@ -32,7 +32,7 @@ class CombinationExpressionNode : public ExpressionNode {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat();
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
-  std::string Accept(DesignExtractor *de, bool is_uses);
+  std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses);
 };
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_
