@@ -90,12 +90,12 @@ Table WithClause::HandleIntegerInteger() {
 }
 
 Table WithClause::HandleIdentAttribute() {
- return HandleIntegerAttribute();
+  return HandleIntegerAttribute();
 }
 
 Table WithClause::HandleIdentIdent() {
   // same logic as HandleIntegerInteger
-  HandleIntegerInteger();
+  return HandleIntegerInteger();
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> WithClause::HandleSetIntersection(std::unordered_set<std::string> set_one, std::unordered_set<std::string> set_two) {
