@@ -26,6 +26,7 @@ class PkbClient {
   void PopulateProc(std::string name);
   void PopulateAssign(std::string stmt);
   void PopulateStmt(std::string stmt);
+  void PopulateName(std::string name, StmtType type);
   void PopulateRead(std::string stmt, std::string name);
   void PopulatePrint(std::string stmt, std::string name);
   void PopulateVars(std::string var);
