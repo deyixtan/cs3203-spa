@@ -6,18 +6,27 @@
 #include <stack>
 #include <sstream>
 #include "../utils.h"
-
 // public
 PqlLexer::PqlLexer(std::string query) { this->query = query; }
 
 std::vector<PqlToken> PqlLexer::Lex() {
   std::vector<std::string> raw_tokens = Split(query);
   std::vector<PqlToken> tokens;
-  for (const auto token : raw_tokens) {
+  bool isAttribute = false;
+  std::string attributeConstructor = "";
+  for (int i = 0; i < raw_tokens.size(); i++) {
+    std::string token = raw_tokens[i];
     if (token.size() == 0) {
       continue;
     }
     std::string getTuple = GetValidTuple(token);
+    if(isAttribute) {
+      auto itPos = raw_tokens.begin() + i + 1;
+      raw_tokens.insert(itPos, attributeConstructor + token);
+      isAttribute = false;
+      attributeConstructor = "";
+      continue;
+    }
     if (string_token_map.find(token) != string_token_map.end()) {
       tokens.push_back(PqlToken{string_token_map[token], token});
     } else if (IsIdent(token)) {
@@ -29,16 +38,20 @@ std::vector<PqlToken> PqlLexer::Lex() {
     } else if (getTuple.length() > 0) {
       tokens.push_back(PqlToken{PqlTokenType::TUPLE, getTuple});
     } else if (IsValidString(token)) {
-      if (IsEntRef(token)) {
-        std::string no_space_token = Utils::RemoveSpace(token);
+      std::string no_space_token = Utils::RemoveSpace(token);
+      if (IsEntRef(no_space_token)) {
         tokens.push_back(PqlToken{PqlTokenType::IDENT_WITH_QUOTES, Utils::TrimQuotes(no_space_token)});
       } else {
-        std::string no_space_token = Utils::RemoveSpace(token);
         tokens.push_back(PqlToken{PqlTokenType::EXPR, Utils::TrimQuotes(no_space_token)});
       }
     } else if (IsSubExpressionToken(token)) {
       std::string no_space_token = Utils::RemoveSpace(token);
       tokens.push_back(PqlToken{PqlTokenType::SUB_EXPRESSION, Utils::TrimUnderscoreAndQuotes(no_space_token)});
+    } else if (token == "." && tokens[tokens.size() - 1].type == PqlTokenType::SYNONYM) {
+      std::string prev = tokens[tokens.size() - 1].value;
+      tokens.pop_back();
+      isAttribute = !isAttribute;
+      attributeConstructor = prev + token;
     } else {
       throw "ERROR: Unrecognised token " + token + "\n";
     }
@@ -294,7 +307,6 @@ std::vector<std::string> PqlLexer::Format(const std::string &s, char delimeter) 
   while (getline(ss, token, delimeter)) {
     result.push_back(token);
   }
-
   return result;
 }
 
@@ -303,9 +315,12 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
   const char delimiter = '^';
   bool isString = false;
   bool isTuple = false;
+  bool isSubExpr = false;
   for (const char c : s) {
     switch (c) {
-      // Check for string literals
+      case '_':
+        isSubExpr = !isSubExpr;
+        break;
       case '<':
         isTuple = !isTuple;
         break;
@@ -319,7 +334,7 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
       case ' ':
       case '\n':
       case '\t':
-        if (!isString && !isTuple) {
+        if (!isString && !isTuple && !isSubExpr) {
           charArr.push_back(delimiter);
           continue;
         }
@@ -336,12 +351,17 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
       case '(':
         if (!isString) {
           charArr.push_back(delimiter);
+          if(isSubExpr and c == ')') {
+            isSubExpr = !isSubExpr;
+          }
         }
         break;
       default:
         break;
     }
-    charArr.push_back(c);
+    if(c != ' ' || !isSubExpr) {
+      charArr.push_back(c);
+    }
     switch (c) {
       case ';':
       case '=':

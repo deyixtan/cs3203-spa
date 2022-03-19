@@ -24,7 +24,7 @@ bool ConstantNode::operator==(const ExpressionNode &other) const {
   return m_value == casted_other->m_value;
 }
 
-std::string ConstantNode::Accept(DesignExtractor *de, bool is_uses) {
+std::string ConstantNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
   de->GetPkbClient()->PopulateConst(m_value);
   return GetPatternFormat();
 }

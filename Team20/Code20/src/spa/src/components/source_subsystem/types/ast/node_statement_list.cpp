@@ -36,7 +36,7 @@ bool StatementListNode::operator==(const StatementListNode &other) const {
   return true;
 }
 
-void StatementListNode::Accept(DesignExtractor *de) {
+void StatementListNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::vector<std::shared_ptr<StatementNode>> stmts = m_statements;
 
   for (int i = 0; i < stmts.size(); ++i) {
@@ -60,7 +60,7 @@ void StatementListNode::Accept(DesignExtractor *de) {
       }
     }
 
-    de->Visit(stmt);
+    de->Visit(stmt, proc_name);
   }
 }
 

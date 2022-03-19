@@ -45,19 +45,19 @@ bool WhileStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
 }
 
-void WhileStatementNode::Accept(DesignExtractor *de) {
+void WhileStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   de->GetPkbClient()->PopulateStmt(stmt_num);
   std::string while_stmt_num = std::to_string(GetStatementNumber());
   de->GetVisited().push_back(while_stmt_num);
 
-  std::string cond_expr = de->Visit(m_condition, true);
+  std::string cond_expr = de->Visit(m_condition, proc_name, true);
   de->GetPkbClient()->AddPattern(WHILE, stmt_num, cond_expr, "");
 
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
 
-  de->Visit(while_block);
+  de->Visit(while_block, proc_name);
 
   de->GetPkbClient()->PopulateWhile(stmt_num);
   de->GetPkbClient()->PopulateParentStar(while_stmt_num, de->GetVisited());

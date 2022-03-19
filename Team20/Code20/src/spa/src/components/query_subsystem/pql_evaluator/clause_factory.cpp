@@ -14,6 +14,7 @@
 #include "pattern_if_clause.h"
 #include "with_clause.h"
 #include "select_clause.h"
+#include "select_boolean_clause.h"
 #include "clause_util.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
 
@@ -22,7 +23,7 @@ namespace pql {
 using namespace ::clause_util;
 
 std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
-                                              const std::unordered_map<std::string, DesignEntityType>& declarations,
+                                              const std::unordered_map<std::string, DesignEntityType> &declarations,
                                               PKB *pkb) {
   switch (relationship.GetRelRef().type) {
     case PqlTokenType::MODIFIES: {
@@ -68,7 +69,7 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
 }
 
 std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern,
-                                              const std::unordered_map<std::string, DesignEntityType>& declarations,
+                                              const std::unordered_map<std::string, DesignEntityType> &declarations,
                                               PKB *pkb) {
   auto pattern_synonym_design_entity_type = GetSynonymDesignEntity(pattern.GetSynonym(), declarations);
   switch (pattern_synonym_design_entity_type) {
@@ -94,16 +95,27 @@ std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern,
   }
 }
 
-std::unique_ptr<Clause> ClauseFactory::Create(const PqlToken& selected_synonym,
-                                              const std::unordered_map<std::string, DesignEntityType>& declarations,
+std::unique_ptr<Clause> ClauseFactory::Create(const PqlToken &selected_synonym,
+                                              const std::unordered_map<std::string, DesignEntityType> &declarations,
                                               PKB *pkb) {
   return std::make_unique<SelectClause>(selected_synonym, declarations, pkb);
 }
 
 std::unique_ptr<Clause> ClauseFactory::Create(With with,
-                                              const std::unordered_map<std::string, DesignEntityType>& declarations,
+                                              const std::unordered_map<std::string, DesignEntityType> &declarations,
                                               PKB *pkb) {
   return std::make_unique<WithClause>(declarations, with.GetFirst(), with.GetSecond(), pkb);
+}
+
+std::unique_ptr<Clause> ClauseFactory::Create(ResultClause result_clause,
+                                              const std::unordered_map<std::string, DesignEntityType> &declarations,
+                                              PKB *pkb) {
+  ResultClauseType result_clause_type = result_clause.GetType();
+  if (result_clause_type==ResultClauseType::BOOLEAN) {
+    return std::make_unique<SelectBooleanClause>();
+  } else {
+    return Create(result_clause.GetValues()[0], declarations, pkb);
+  }
 }
 
 }
