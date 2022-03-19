@@ -36,7 +36,7 @@ none
 8
 procedure v;
 Select v such that Uses(v, "mango")
-none
+foo
 5000
 9
 variable v;
@@ -51,5 +51,5 @@ none
 11
 variable v;
 Select v such that Uses("foo", v)
-apple,banana,peach
+apple,banana,peach,mango
 5000
