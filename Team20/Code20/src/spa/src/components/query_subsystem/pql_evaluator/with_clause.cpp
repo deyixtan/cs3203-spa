@@ -38,7 +38,7 @@ Table WithClause::HandleAttributeAttribute() {
   std::pair<std::pair<DesignEntityType, std::string>, AtrriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
   std::pair<std::pair<DesignEntityType, std::string>, AtrriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
   auto single_constraints_first = pkb->GetStmt(GetStmtType(first_attribute.first.first));
-  auto single_constraints_second = pkb->GetStmt(GetStmtType(first_attribute.first.first));
+  auto single_constraints_second = pkb->GetStmt(GetStmtType(second_attribute.first.first));
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> intersection_pair = HandleSetIntersection(single_constraints_first, single_constraints_second);
 
