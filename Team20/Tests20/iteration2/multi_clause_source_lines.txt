@@ -1,0 +1,188 @@
+procedure How {
+1.  read coffee;
+2.  read tea;
+3.  call Now;
+}
+
+procedure Now {
+4.  read eggs;
+5.  read bacon;
+6.  if ((((eggs != bacon) && (!(bacon > eggs))) || (beans == 0)) && (salt < 0)) then {
+7.      print coffee;
+8.      while (!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(beans > 1337))))))))))))))))))) {
+9.          print breakfast;
+10.         tea = 2;
+        }
+11.     call Brown;
+    } else {
+12.     eggs = 1000 % 10 + beans               * bacon % eggs;
+13.     beans = (12345 % ((10 + beans) * bacon)) % eggs;
+    }
+14. while (!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!(!((((tea <= 3) || (coffee == 10)) && (salt == 1)) || (sugar == 2))))))))))))))))))) {
+15.     print breakfast;
+16.     tea = 7777990798706080970970962;
+    }
+17. call Brown;
+}
+
+procedure Brown {
+18. if (coffee == 10) then {
+19.     eggs = coffee + ((tea / bacon) % salt - pepper);
+    } else {
+20.     tea = 123456789012345678;
+21.     while (tea != (bacon + 52324 + salt)) {
+22.         print eggs;print tea;
+23.         if ((tea > 133333333) && (coffee < 7777777)) then {
+24.             tea = 10;
+            } else {
+25.             coffee = 99;
+26.             tea = 0;
+27.             pepper = 1;
+            }
+28.         print tea;
+29.         print pepper;
+        }
+30.     read eggs;
+31.     print pepper;
+32.     call Cow;
+    }
+}
+
+procedure Cow {
+33. eggs = 1 + 1 + 1 + 1 + 1 + 10 + 1 + 1 + 0 + 1 + 0 + 1;
+34. call Farm;
+}
+
+procedure Farm {
+35. while (x == 0) {
+36.     dog = 1111111111111111111111110111111111111111111111111111111111111111111111111111111111111111101010101010100100000100001111111111101010101010100100000100001111111111111110101011111111111111111111111101010101010100100000100001010101001000001000011111111111111101010101010100100000100001111111111111110111111111111111111111111010101010101001000001000010101010101001000001000010101010101111111111111111111111110101010101010010000010000111111111111111111111111010101010101001000001000010010000010000;
+37.     while (x == 1) {
+38.         while (x == 3) {
+39.             while (x == 4) {
+40.                 while (x == 5) {
+41.                     while (x == 6) {
+42.                         if (y == 1111111111111111111111110101010101010010000010000) then {
+43.                             print y;
+44.                             y = 123;
+45.                             if (y == 11111111111111111111111101010101010100100000100001) then {
+46.                                 cat = cat;
+47.                                 cat = cat;
+48.                                 cat = cat;
+49. & 50.                           cat = cat;dog = 1;
+51.                                 cat = cat;
+52. & 53.                           cat = cat;read dog;
+54.                                 cat = cat;
+55.                                 cat = cat;
+56. & 57.                           cat = cat;print dog;
+58.                                 cat = cat;
+59.                                 cat = cat;
+60.                                 cat = cat;
+61.                                 cat = cat;
+62.                                 cat = cat;
+63.                                 cat = cat;
+64.                                 cat = cat;
+65.                                 cat = cat;
+66.                                 cat = cat;
+67.                                 cat = cat;
+                                } else {
+68.                                 if (cat == 123123) then {
+69.                                     dog = cat;
+70.                                     cat = dog;
+                                    } else {
+71.                                     while (dog == 0) {
+72.                                         print dog;
+                                        }
+73.                                     print cat;
+                                    }
+                                }
+                            } else {
+74.                             while (dog == 1321321) {
+75.                                 dog = dog;
+                                }
+76.                             cat = 12344365;
+77.                             dog = 123190890234;
+                            }
+                        }
+78.                     print dog;
+                    }
+                }
+79.             cat = 11111 % (901827321 % 120837 / 0987132) + x;
+            }
+        }
+    }
+80. call Pyramid;
+}
+
+procedure Pyramid {
+81. if (hell == 0) then {
+82.     if (hell == 0) then {
+83.         if (hell == 0) then {
+84.             if (hell == 0) then {
+85.                 if (hell == 0) then {
+86.                     if (hell == 0) then {
+87.                         if (hell == 0) then {
+88.                             if (hell == 0) then {
+89.                                 if (hell == 0) then {
+90.                                     if (hell == 0) then {
+91.                                         if (hell == 0) then {
+92.                                             if (hell == 0) then {
+93.                                                 if (hell == 0) then {
+94.                                                     if (hell == 0) then {
+95.                                                         if (hell == 0) then {
+96.                                                             if (hell == 0) then {
+97.                                                                 if (hell == 0) then {
+98.                                                                     while (hell == 0) {
+99.                                                                         hell = 1;
+100.                                                                    }
+                                                                    } else {
+101.                                                                    hell = 0;
+                                                                    }
+                                                                } else {
+102.                                                                hell = 0;
+                                                                }
+                                                            } else {
+103.                                                            hell = 0;
+                                                            }
+                                                        } else {
+104.                                                        hell = 0;
+                                                        }
+                                                    } else {
+105.                                                    hell = 0;
+                                                    }
+                                                } else {
+106.                                                hell = 0;
+                                                }
+                                            } else {
+107.                                            hell = 0;
+                                            }
+                                        } else {
+108.                                        hell = 0;
+                                        }
+                                    } else {
+109.                                    hell = 0;
+                                    }
+                                } else {
+110.                                hell = 0;
+                                }
+                            } else {
+111.                            hell = 0;
+                            }
+                        } else {
+112.                        hell = 0;
+                        }
+                    } else {
+113.                    hell = 0;
+                    }
+                } else {
+114.                hell = 0;
+                }
+            } else {
+115.            hell = 0;
+            }
+        } else {
+116.        hell = 0;
+        }
+    } else {
+117.    hell = 0;
+    }
+}
