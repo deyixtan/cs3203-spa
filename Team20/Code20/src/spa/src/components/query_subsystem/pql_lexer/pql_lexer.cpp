@@ -121,7 +121,10 @@ std::vector<std::string> PqlLexer::BreakString(const std::string &s) {
   std::string single_raw_token;
   for (const char c : s) {
     if (isspace(c)) {
-      if (!single_raw_token.empty()) {
+      if (!single_raw_token.empty() && single_raw_token.length() == 1) {
+        raw_tokens.push_back(single_raw_token);
+        single_raw_token.clear();
+      } else {
         raw_tokens.push_back(single_raw_token);
         single_raw_token.clear();
       }
