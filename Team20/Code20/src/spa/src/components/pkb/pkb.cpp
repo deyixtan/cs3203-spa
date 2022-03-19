@@ -24,10 +24,10 @@ void PKB::AddStmt(std::string const &stmt, StmtType type) {
 
 void PKB::AddNameToStmt(StmtType type, std::string const &name, std::string const &stmt) {
   std::unordered_map<std::string, std::unordered_set<std::string>> ref_map = m_name_to_stmt->at(type);
-  if (ref_map.find(stmt) != ref_map.end()) {
-    m_name_to_stmt->at(type).at(stmt).insert(name);
+  if (ref_map.find(name) != ref_map.end()) {
+    m_name_to_stmt->at(type).at(name).insert(stmt);
   } else{
-    m_name_to_stmt->at(type).insert({stmt, {name}});
+    m_name_to_stmt->at(type).insert({name, {stmt}});
   }
 }
 
