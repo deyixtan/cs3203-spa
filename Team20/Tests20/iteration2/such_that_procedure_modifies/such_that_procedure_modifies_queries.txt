@@ -6,7 +6,7 @@ Modifies, foo
 2
 procedure p; variable v;
 Select v such that Modifies(p, v)
-d,p,x,z,p,q
+d,p,x,z,q,s
 5000
 3
 procedure p;
@@ -36,7 +36,7 @@ none
 8
 procedure v;
 Select v such that Modifies(v, "p")
-foo
+Modifies, foo
 5000
 9
 variable v;

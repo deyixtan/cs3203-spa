@@ -2,6 +2,7 @@
 
 PKB::PKB()
     : m_stmt_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)),
+      m_name_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)),
       m_name_to_stmt(std::make_shared<std::vector<std::unordered_map<std::string, std::unordered_set<std::string>>>>(
           COUNT)), m_stmt_to_name(std::make_shared<std::vector<std::unordered_map<std::string, std::string>>>(
         COUNT)) {
@@ -20,6 +21,10 @@ void PKB::InitRelationshipStores() {
 
 void PKB::AddStmt(std::string const &stmt, StmtType type) {
   m_stmt_vector->at(type).insert(stmt);
+}
+
+void PKB::AddName(std::string const &name, StmtType type) {
+  m_name_vector->at(type).insert(name);
 }
 
 void PKB::AddNameToStmt(StmtType type, std::string const &name, std::string const &stmt) {
@@ -46,6 +51,10 @@ void PKB::AddProgramCfg(std::shared_ptr<Cfg> program_cfg) {
 
 std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
   return m_stmt_vector->at(type);
+}
+
+std::unordered_set<std::string> PKB::GetName(StmtType type) {
+  return m_name_vector->at(type);
 }
 
 std::unordered_set<std::string> PKB::GetStmtByName(StmtType type, std::string name) {

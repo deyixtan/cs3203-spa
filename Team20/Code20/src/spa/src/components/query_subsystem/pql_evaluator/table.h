@@ -31,6 +31,7 @@ class Table {
   Table(const std::string& synonym, std::unordered_set<std::string>& single_constraint);
   Table(const std::string& first_synonym, const std::string& second_synonym,
         std::unordered_set<std::pair<std::string, std::string>, pair_hash>& pair_constraints);
+  [[nodiscard]] bool IsAttributesEmpty() const;
   [[nodiscard]] bool IsRecordsEmpty() const;
   void Merge(Table& other_table);
   void EncounteredFalseClause();
