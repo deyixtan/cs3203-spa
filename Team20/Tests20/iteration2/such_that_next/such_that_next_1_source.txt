@@ -1,70 +1,70 @@
 procedure main {
-    if (a == 5) then {
+   if (a == 5) then {
         a = 5;
-    } else {
+   } else {
         a = 5;
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         while (a == 5) {
             a = 5;
         }
-    } else {
+   } else {
         a = 5;
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         a = 5;
-    } else {
+   } else {
         while (a == 5) {
             read a;
         }
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         while (a == 5) {
             a = 5;
         }
-    } else {
+   } else {
         while (a == 5) {
             print a;
         }
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         if (a == 5) then {
             a = 5;
         } else {
             a = 5;
         }
-    } else {
+   } else {
         if (a == 5) then {
             read a;
         } else {
             a = 5;
         }
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         a = 5;
-    } else {
+   } else {
         if (a == 5) then {
             a = 5;
         } else {
             print a;
         }
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         if (a == 5) then {
             a = 5;
         } else {
             a = 5;
         }
-    } else {
+   } else {
         a = 5;
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         if (a == 5) then {
             a = 5;
         } else {
             a = 5;
         }
-    } else {
+   } else {
         if (a == 5) then {
             a = 5;
         } else {
@@ -72,14 +72,14 @@ procedure main {
                 a = 5;
             }
         }
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         if (a == 5) then {
             read a;
         } else {
             a = 5;
         }
-    } else {
+   } else {
         if (a == 5) then {
             while (a == 5) {
                 print a;
@@ -87,8 +87,8 @@ procedure main {
         } else {
             a = 5;
         }
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         if (a == 5) then {
             a = 5;
         } else {
@@ -96,19 +96,19 @@ procedure main {
                 a = 5;
             }
         }
-    } else {
+   } else {
         if (a == 5) then {
             print a;
         } else {
             a = 5;
         }
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         read a;
-    } else {
+   } else {
         print a;
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         while (a == 5) {
             read a;
             if (a == 5) then {
@@ -145,7 +145,7 @@ procedure main {
                 }
             }
         }
-    } else {
+   } else {
         if (a == 5) then {
             a = 5;
         } else {
@@ -162,42 +162,42 @@ procedure main {
         } else {
             a = 5;
         }
-    }
-    if (a == 5) then {
+   }
+   if (a == 5) then {
         if (a == 5) then {
-            while (a == 5) {
+           while (a == 5) {
                 a = 5;
             }
         } else {
             a = 5;
         }
-    } else {
+   } else {
         if (a == 5) then {
             a = 5;
         } else {
             a = 5;
         }
-    }
-    while (a == 5) {
+   }
+   while (a == 5) {
         while (a == 5) {
             while (a == 5) {
                 while (a == 5) {
                     read a;
                 }
             }
-        }
-    }
-    while (a == 5) {
+       }
+   }
+   while (a == 5) {
         a = 5;
-    }
-    while (a == 5) {
+   }
+   while (a == 5) {
         if (a == 5) then {
             a = 5;
         } else {
             a = 5;
         }
-    }
-    while (a == 5) {
+   }
+   while (a == 5) {
         if (a == 5) then {
             if (a == 5) then {
                 print a;
@@ -207,55 +207,55 @@ procedure main {
         } else {
             a = 5;
         }
-    }
-    while (a == 5) {
+   }
+   while (a == 5) {
         if (a == 5) then {
             if (a == 5) then {
                 read a;
             } else {
-                while (a == 5) {
-                    a = 5;
-                }
-            }
-        } else {
-            read a;
-        }
-    }
-    while (a == 5) {
-        if (a == 5) then {
-            if (a == 5) then {
-                while (a == 5) {
-                    a = 5;
-                }
-            } else {
-                a = 5;
-            }
-        } else {
-            a = 5;
-        }
-    }
-    while (a == 5) {
-        if (a == 5) then {
-            if (a == 5) then {
-                if (a == 5) then {
-                    print a;
-                } else {
-                    a = 5;
-                }
-            } else {
-                a = 5;
-            }
-        } else {
-            print a;
-        }
-    }
-    while (a == 5) {
-        if (a == 5) then {
-            print a;
-        } else {
-            while (a == 5) {
-                a = 5;
-            }
-        }
-    }
+               while (a == 5) {
+                   a = 5;
+               }
+           }
+       } else {
+           read a;
+       }
+   }
+   while (a == 5) {
+       if (a == 5) then {
+           if (a == 5) then {
+               while (a == 5) {
+                   a = 5;
+               }
+           } else {
+               a = 5;
+           }
+       } else {
+           a = 5;
+       }
+   }
+   while (a == 5) {
+      if (a == 5) then {
+           print a;
+       } else {
+           if (a == 5) then {
+               if (a == 5) then {
+                   print a;
+              } else {
+                   a = 5;
+              }
+          } else {
+               a = 5;
+          }
+       }
+   }
+   while (a == 5) {
+       if (a == 5) then {
+           print a;
+       } else {
+           while (a == 5) {
+               a = 5;
+           }
+       }
+   }
 }
