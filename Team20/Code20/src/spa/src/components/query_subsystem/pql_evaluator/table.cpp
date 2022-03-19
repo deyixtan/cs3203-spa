@@ -54,9 +54,7 @@ void Table::Merge(Table &other_table) {
     CrossJoin(other_table);
   }
 
-  if (IsRecordsEmpty()) {
-    EncounteredFalseClause();
-  }
+  // Fix if both tables are empty and merging encounter false clause
 }
 
 std::vector<std::pair<size_t, size_t>> Table::GetCommonAttributeIndexPairs(const Table::Attributes &other_attributes) {
