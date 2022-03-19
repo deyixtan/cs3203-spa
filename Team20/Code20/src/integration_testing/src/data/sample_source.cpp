@@ -60,3 +60,52 @@ std::string sample_source3 =
     "procedure buzz {"
     "    read x;" // 8
     "}";
+
+std::string sample_source4 =
+    "procedure bar {"
+    "    read x;" // 1
+    "    read y;" // 2
+    "    while (x != 0) {" // 3
+    "        tan = y / x;" // 4
+    "        sin = y / length;" // 5
+    "        sin = y / length;" // 6
+    "    }"
+    "    if (((sin * sin + cos * cos) == 1) || (!(tan != (sin / cos)))) then {" // 7
+    "        x = y / 2;" // 8
+    "    } else {"
+    "        x = 0;" // 9
+    "    }"
+    "    x = 10;" // 10
+    "    y = 10;" // 11
+    "    length = x * x + y * y;" // 12
+    "}";
+
+std::string sample_source5 =
+   "procedure main {"
+   "    if (a == b) then {" // 1
+   "        if ((3 + 5) % 2 / (2 + 3) == 1) then {" // 2
+   "            if (((a == 10101010) || (2 == 2)) && (a != 7)) then {" // 3
+   "                y = 0;" // 4
+   "            } else {"
+   "                while ((y == x) && (5 == 5)) {" // 5
+   "                    z = 0;" // 6
+   "                }"
+   "            }"
+   "        } else {"
+   "            y = 2;" // 7
+   "        }"
+   "    } else {"
+   "        while (c == d) {" // 8
+   "            if (x != y) then {" // 9
+   "                y = 4;" // 10
+   "            } else {"
+   "                x = 1;" // 11
+   "                while ((x + y == 3) || (2 == 3)) {" // 12
+   "                    x = 0;" // 13
+   "                }"
+   "                x = 2;" // 14
+   "            }"
+   "            y = 3;" // 15
+   "        }"
+   "    }"
+   "}";

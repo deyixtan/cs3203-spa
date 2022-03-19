@@ -11,6 +11,7 @@ void PKB::InitRelationshipStores() {
   m_usage_store = std::make_shared<UsageStore>(m_stmt_vector);
   m_pattern_store = std::make_shared<PatternStore>(m_stmt_vector);
   m_call_store = std::make_shared<CallStore>(m_stmt_vector);
+  m_next_store = std::make_shared<NextStore>(m_stmt_vector);
 }
 
 void PKB::AddStmt(std::string const &stmt, StmtType type) {
@@ -47,4 +48,12 @@ std::shared_ptr<PatternStore> PKB::GetPatternStore() {
 
 std::shared_ptr<CallStore> PKB::GetCallStore() {
   return m_call_store;
+}
+
+std::shared_ptr<NextStore> PKB::GetNextStore() {
+  return m_next_store;
+}
+
+std::shared_ptr<Cfg> PKB::GetProgCfg() {
+  return m_program_cfg;
 }

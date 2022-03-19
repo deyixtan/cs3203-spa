@@ -1,4 +1,5 @@
 #include "source_controller.h"
+#include "../../components/pkb/pkb.h"
 
 namespace source {
 
@@ -37,6 +38,7 @@ void SourceController::PopulatePKB(PKB *pkb, std::shared_ptr<ProgramNode> ast) {
 
   design_extractor.IterateAstAndPopulatePkb(ast);
   cfg_builder.IterateAstAndPopulatePkb(ast);
+  design_extractor.IterateCfgAndPopulatePkb(pkb->GetProgCfg());
 }
 
 }
