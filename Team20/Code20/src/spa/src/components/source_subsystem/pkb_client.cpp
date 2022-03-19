@@ -51,12 +51,16 @@ void PkbClient::PopulateStmt(std::string stmt) {
   pkb->AddStmt(stmt, STMT);
 }
 
-void PkbClient::PopulateRead(std::string stmt) {
+void PkbClient::PopulateRead(std::string stmt, std::string name) {
   pkb->AddStmt(stmt, READ);
+  pkb->AddStmtToName(READ, stmt, name);
+  pkb->AddNameToStmt(READ, name, stmt);
 }
 
-void PkbClient::PopulatePrint(std::string stmt) {
+void PkbClient::PopulatePrint(std::string stmt, std::string name) {
   pkb->AddStmt(stmt, PRINT);
+  pkb->AddStmtToName(PRINT, stmt, name);
+  pkb->AddNameToStmt(PRINT, name, stmt);
 }
 
 void PkbClient::PopulateVars(std::string var) {
@@ -75,8 +79,10 @@ void PkbClient::PopulateConst(std::string name) {
   pkb->AddStmt(name, CONSTS);
 }
 
-void PkbClient::PopulateCall(std::string stmt) {
+void PkbClient::PopulateCall(std::string stmt, std::string name) {
   pkb->AddStmt(stmt, CALL);
+  pkb->AddStmtToName(CALL, stmt, name);
+  pkb->AddNameToStmt(CALL, name, stmt);
 }
 
 void PkbClient::PopulateCfg(Cfg &cfg) {

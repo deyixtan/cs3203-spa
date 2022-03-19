@@ -31,7 +31,7 @@ void PrintStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   de->GetPkbClient()->PopulateStmt(stmt_num);
   std::string var_name = m_identifier->GetIdentifier();
-  de->GetPkbClient()->PopulatePrint(stmt_num);
+  de->GetPkbClient()->PopulatePrint(stmt_num, m_identifier->GetIdentifier());
   de->Visit(m_identifier, proc_name, true);
 }
 
