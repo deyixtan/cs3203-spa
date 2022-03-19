@@ -12,6 +12,7 @@ class CfgNode {
  public:
   CfgNode();
   std::vector<std::string> GetStatementList();
+  std::vector<std::shared_ptr<CfgNode>> GetDescendants();
   void AddStatement(std::string stmt_no);
   void AddNext(std::shared_ptr<CfgNode> cfg_node);
 };
