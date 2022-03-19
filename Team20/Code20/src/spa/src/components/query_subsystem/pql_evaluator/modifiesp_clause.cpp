@@ -64,7 +64,7 @@ Table ModifiesPClause::HandleIdentWildcard() {
 
 Table ModifiesPClause::HandleIdentIdent() {
   std::pair arg_pair(first_arg.value, second_arg.value);
-  bool is_empty = pkb->GetModifyStore()->ProcVarExists(arg_pair);
+  bool is_empty = !pkb->GetModifyStore()->ProcVarExists(arg_pair);
   Table table;
   if (is_empty) {
     table.EncounteredFalseClause();

@@ -32,4 +32,5 @@ procedure foo {
   print apple;
   read avocado;
   grape = peach * banana;
+  print mango;
 }
