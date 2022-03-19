@@ -29,21 +29,30 @@ Table::Table(const std::string &first_synonym,
   }
 }
 
+bool Table::IsAttributesEmpty() const {
+  return attributes.empty();
+}
+
 bool Table::IsRecordsEmpty() const {
   return records.empty();
 }
 
 void Table::Merge(Table &other_table) {
+
   if (!IsBooleanResult() && other_table.IsBooleanResult()) {
     ToggleBooleanResult();
   }
 
   if (HasEncounteredFalseClause()) {
+    // short circuit if current table has already encountered_false_clause
     return;
   }
 
   if (other_table.HasEncounteredFalseClause()) {
+    // maintain invariant that FALSE CLAUSE TABLE -> no attribute, no records, encountered_false_clause = true;
     EncounteredFalseClause();
+    attributes.clear();
+    records.clear();
     return;
   }
 
@@ -54,7 +63,11 @@ void Table::Merge(Table &other_table) {
     CrossJoin(other_table);
   }
 
-  // Fix if both tables are empty and merging encounter false clause
+  if (!IsAttributesEmpty() && IsRecordsEmpty()) {
+    // if merging two tables with attributes causes empty records
+    // there are no possible values so we emulate encountering false clause
+    EncounteredFalseClause();
+  }
 }
 
 std::vector<std::pair<size_t, size_t>> Table::GetCommonAttributeIndexPairs(const Table::Attributes &other_attributes) {

@@ -15,7 +15,7 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
   }
 
   if (table.IsBooleanResult()) {
-    if (table.HasEncounteredFalseClause() || table.IsRecordsEmpty()) {
+    if (table.HasEncounteredFalseClause()) {
       results.emplace_back("FALSE");
     } else {
       results.emplace_back("TRUE");
