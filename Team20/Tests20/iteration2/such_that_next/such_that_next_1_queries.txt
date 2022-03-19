@@ -429,79 +429,80 @@ Select p such that Next(134,142)
 main
 5000
 87 - Call on same node without while
-procedure p
+procedure p;
 Select p such that Next(1,1)
 none
 5000
 88 - Call on same node with while
-procedure p
+procedure p;
 Select p such that Next(92,92)
 none
 5000
 89 - Skip nodes
-procedure p
+procedure p;
 Select p such that Next(1,4)
 none
 5000
 90 - Skip nodes
-procedure p
+procedure p;
 Select p such that Next(2,5)
 none
 5000
 91 - Skip nodes
-procedure p
+procedure p;
 Select p such that Next(2,7)
 none
 5000
 92 - Skip nodes
-procedure p
+procedure p;
 Select p such that Next(1,6)
 none
 5000
 93 - Skip nodes
-procedure p
+procedure p;
 Select p such that Next(3,8)
 none
 5000
 94 - Skip nodes with dummy between
-procedure p
+procedure p;
 Select p such that Next(26,29)
 none
 5000
 95 - Skip nodes
-procedure p
+procedure p;
 Select p such that Next(79,81)
 none
 5000
 96 - Skip nodes in deep nested while loop
-procedure p
+procedure p;
 Select p such that Next(107,105)
 none
 5000
 97 - Skip nodes in deep nested while loop
-procedure p
+procedure p;
 Select p such that Next(106,104)
 none
 5000
 98 - Skip nodes in deep nested while loop
-procedure p
+procedure p;
 Select p such that Next(103,105)
 none
 5000
 99 - Skip nodes in deep nested while loop
-procedure p
+procedure p;
 Select p such that Next(105,107)
 none
 5000
 100 - Skip nodes in deep nested while loop
-procedure p
+procedure p;
 Select p such that Next(104,108)
 none
-101 - Skip while body and skip nodes
-procedure p
-Select p such that Next(120,128)
 5000
+101 - Skip while body and skip nodes
+procedure p;
+Select p such that Next(120,128)
 none
+5000
 102 - Invalid
 procedure p;
 Select p such that Next(142,147)

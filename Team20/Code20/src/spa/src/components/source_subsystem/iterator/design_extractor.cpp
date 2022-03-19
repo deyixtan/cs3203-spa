@@ -70,16 +70,15 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
           if(next_map.find(curr_stmts[curr_stmts.size() - 1]) == next_map.end()) {
             next_map.insert({curr_stmts[curr_stmts.size() - 1], std::unordered_set<std::string>()});
           }
-
           std::vector<std::string> next_stmts = desc->GetStatementList();
           std::unordered_set<std::string> vals = next_map[curr_stmts[curr_stmts.size() - 1]];
           if(next_stmts.size() > 0 ) {
             vals.insert(next_stmts.front());
             next_map[curr_stmts[curr_stmts.size() - 1]] = vals;
           }
-          if(visited.find(desc) == visited.end()) {
-            node_stack.push(desc);
-          }
+        }
+        if(visited.find(desc) == visited.end()) {
+          node_stack.push(desc);
         }
       }
     }

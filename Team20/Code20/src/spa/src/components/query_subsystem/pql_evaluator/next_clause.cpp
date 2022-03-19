@@ -54,7 +54,7 @@ Table NextClause::HandleSynonymSynonym() {
 }
 
 Table NextClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetFollowStore()->GetAllFollowStmt(
+  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       StmtType::STMT
   );
