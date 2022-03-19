@@ -32,6 +32,8 @@ class Utils {
   static std::pair<std::string, AtrriName> ParseAttributeRef(PqlToken &token);
   static std::string TrimQuotes(std::string&);
   static std::string TrimUnderscoreAndQuotes(std::string&);
+  static std::unordered_set<DesignEntityType> int_ident_entities;
+  static bool IsConversionNeeded(DesignEntityType, AtrriName);
 };
 
 #endif //UTILS_H
