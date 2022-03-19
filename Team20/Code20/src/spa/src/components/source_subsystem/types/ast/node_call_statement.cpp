@@ -27,7 +27,7 @@ void CallStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   de->GetPkbClient()->PopulateStmt(stmt_num);
   std::string callee_name = m_identifier;
-  de->GetPkbClient()->PopulateCall(stmt_num);
+  de->GetPkbClient()->PopulateCall(stmt_num, m_identifier);
   de->GetPkbClient()->PopulateCalls(proc_name, callee_name);
 }
 

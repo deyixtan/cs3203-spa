@@ -34,6 +34,10 @@ bool Table::IsRecordsEmpty() const {
 }
 
 void Table::Merge(Table &other_table) {
+  if (!IsBooleanResult() && other_table.IsBooleanResult()) {
+    ToggleBooleanResult();
+  }
+
   if (HasEncounteredFalseClause()) {
     return;
   }
@@ -48,6 +52,10 @@ void Table::Merge(Table &other_table) {
     NaturalJoin(other_table, common_attribute_index_pairs);
   } else {
     CrossJoin(other_table);
+  }
+
+  if (IsRecordsEmpty()) {
+    EncounteredFalseClause();
   }
 }
 
@@ -168,6 +176,14 @@ void Table::EncounteredFalseClause() {
 
 bool Table::HasEncounteredFalseClause() const {
   return encountered_false_clause;
+}
+
+void Table::ToggleBooleanResult() {
+  is_boolean_result ^= true;
+}
+
+bool Table::IsBooleanResult() const {
+  return is_boolean_result;
 }
 
 }

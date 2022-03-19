@@ -1,6 +1,10 @@
 #include "pkb.h"
 
-PKB::PKB() : m_stmt_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)) {
+PKB::PKB()
+    : m_stmt_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)),
+      m_name_to_stmt(std::make_shared<std::vector<std::unordered_map<std::string, std::unordered_set<std::string>>>>(
+          COUNT)), m_stmt_to_name(std::make_shared<std::vector<std::unordered_map<std::string, std::string>>>(
+        COUNT)) {
   InitRelationshipStores();
 }
 
@@ -11,10 +15,29 @@ void PKB::InitRelationshipStores() {
   m_usage_store = std::make_shared<UsageStore>(m_stmt_vector);
   m_pattern_store = std::make_shared<PatternStore>(m_stmt_vector);
   m_call_store = std::make_shared<CallStore>(m_stmt_vector);
+  m_next_store = std::make_shared<NextStore>(m_stmt_vector);
 }
 
 void PKB::AddStmt(std::string const &stmt, StmtType type) {
   m_stmt_vector->at(type).insert(stmt);
+}
+
+void PKB::AddNameToStmt(StmtType type, std::string const &name, std::string const &stmt) {
+  std::unordered_map<std::string, std::unordered_set<std::string>> ref_map = m_name_to_stmt->at(type);
+  if (ref_map.find(name) != ref_map.end()) {
+    m_name_to_stmt->at(type).at(name).insert(stmt);
+  } else{
+    m_name_to_stmt->at(type).insert({name, {stmt}});
+  }
+}
+
+void PKB::AddStmtToName(StmtType type, std::string const &stmt, std::string const &name) {
+  std::unordered_map<std::string, std::string> ref_map = m_stmt_to_name->at(type);
+  if (ref_map.find(stmt) != ref_map.end()) {
+    m_stmt_to_name->at(type).at(stmt) = name;
+  } else{
+    m_stmt_to_name->at(type).insert({stmt, name});
+  }
 }
 
 void PKB::AddProgramCfg(std::shared_ptr<Cfg> program_cfg) {
@@ -23,6 +46,24 @@ void PKB::AddProgramCfg(std::shared_ptr<Cfg> program_cfg) {
 
 std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
   return m_stmt_vector->at(type);
+}
+
+std::unordered_set<std::string> PKB::GetStmtByName(StmtType type, std::string name) {
+  std::unordered_map<std::string, std::unordered_set<std::string>> ref_map = m_name_to_stmt->at(type);
+
+  if (ref_map.find(name) != ref_map.end()) {
+    return ref_map.at(name);
+  }
+  return {};
+}
+
+std::string PKB::GetNameByStmt(StmtType type, std::string stmt) {
+  std::unordered_map<std::string, std::string> ref_map = m_stmt_to_name->at(type);
+
+  if (ref_map.find(stmt) != ref_map.end()) {
+    return ref_map.at(stmt);
+  }
+  return "";
 }
 
 std::shared_ptr<FollowStore> PKB::GetFollowStore() {
@@ -47,4 +88,12 @@ std::shared_ptr<PatternStore> PKB::GetPatternStore() {
 
 std::shared_ptr<CallStore> PKB::GetCallStore() {
   return m_call_store;
+}
+
+std::shared_ptr<NextStore> PKB::GetNextStore() {
+  return m_next_store;
+}
+
+std::shared_ptr<Cfg> PKB::GetProgCfg() {
+  return m_program_cfg;
 }

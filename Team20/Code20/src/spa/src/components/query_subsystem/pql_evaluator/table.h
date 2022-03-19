@@ -34,11 +34,14 @@ class Table {
   [[nodiscard]] bool IsRecordsEmpty() const;
   void Merge(Table& other_table);
   void EncounteredFalseClause();
+  void ToggleBooleanResult();
   [[nodiscard]] bool HasEncounteredFalseClause() const;
+  [[nodiscard]] bool IsBooleanResult() const;
   std::unordered_set<std::string> GetResult(const std::string& select_synonym);
   friend std::ostream& operator<<(std::ostream& os, const Table& table);
 
  private:
+  bool is_boolean_result = false;
   bool encountered_false_clause = false;
   std::vector<std::pair<size_t, size_t>> GetCommonAttributeIndexPairs(const Attributes& other_attributes);
   std::vector<size_t> GetOtherAttributeIndices(const Attributes& other_attributes);

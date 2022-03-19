@@ -13,10 +13,20 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
     table.Merge(intermediate_table);
     clauses.pop();
   }
-  auto projected_results = table.GetResult(query.GetResultClause().GetValues()[0].value);
-  for (auto result : projected_results) {
-    results.emplace_back(result);
+
+  if (table.IsBooleanResult()) {
+    if (table.HasEncounteredFalseClause()) {
+      results.emplace_back("FALSE");
+    } else {
+      results.emplace_back("TRUE");
+    }
+  } else {
+    auto projected_results = table.GetResult(query.GetResultClause().GetValues()[0].value);
+    for (auto result : projected_results) {
+      results.emplace_back(result);
+    }
   }
+
 }
 
 std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query) {
@@ -42,7 +52,7 @@ std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQ
     }
   }
 
-  clauses.push(pql::ClauseFactory::Create(query.GetResultClause().GetValues()[0], query.GetDeclaration(), pkb));
+  clauses.push(pql::ClauseFactory::Create(query.GetResultClause(), query.GetDeclaration(), pkb));
 
   return clauses;
 }
