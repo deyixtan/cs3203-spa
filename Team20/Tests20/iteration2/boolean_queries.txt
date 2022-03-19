@@ -260,7 +260,7 @@ FALSE
 5000
 53 - BOOLEAN as synonym 1
 assign a; variable BOOLEAN; constant c; procedure p; read rd;
-Select BOOLEAN with v.varName = "green"
+Select BOOLEAN with BOOLEAN.varName = "green"
 green
 5000
 54 - BOOLEAN as synonym 2
