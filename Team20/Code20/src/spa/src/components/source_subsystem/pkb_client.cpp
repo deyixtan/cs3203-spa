@@ -51,6 +51,10 @@ void PkbClient::PopulateStmt(std::string stmt) {
   pkb->AddStmt(stmt, STMT);
 }
 
+void PkbClient::PopulateName(std::string name, StmtType type) {
+  pkb->AddName(name, type);
+}
+
 void PkbClient::PopulateRead(std::string stmt, std::string name) {
   pkb->AddStmt(stmt, READ);
   pkb->AddStmtToName(READ, stmt, name);
