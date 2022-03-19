@@ -985,7 +985,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 3)") {
 //  cfg_builder.IterateAstAndPopulatePkb(ast);
 //  design_extractor->IterateAstAndPopulatePkb(ast);
 //  design_extractor->IterateCfgAndPopulatePkb(pkb->GetProgCfg());
-//  std::unordered_set<std::string> set = pkb->GetNextStore()->GetNextStarOf("12");
+//  std::unordered_set<std::string> set = pkb->GetNextStore()->GetNextStarOf("3");
 //  for (auto stmt : set) {
 //    std::cout << stmt;
 //    std::cout << " * ";
@@ -997,4 +997,4 @@ TEST_CASE("Test components between Source and PKB (Sample source 3)") {
 ////    std::cout << "\n";
 //  }
 //  REQUIRE("" == "");
-}
+//}
