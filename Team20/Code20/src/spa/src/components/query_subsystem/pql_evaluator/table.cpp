@@ -43,6 +43,10 @@ void Table::Merge(Table &other_table) {
     ToggleBooleanResult();
   }
 
+  if (!IsAttributeResult() && other_table.IsAttributeResult()) {
+    ToggleAttributeResult();
+  }
+
   if (HasEncounteredFalseClause()) {
     // short circuit if current table has already encountered_false_clause
     return;

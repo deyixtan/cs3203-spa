@@ -21,10 +21,10 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
       results.emplace_back("TRUE");
     }
   } else if (table.IsAttributeResult()) {
-    auto projected_results = table.GetResult(query.GetResultClause().GetValues()[0].value);
     ResultClause result_clause = query.GetResultClause();
     std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
     static std::pair<std::pair<DesignEntityType, std::string>, AtrriName> attribute = Utils::ParseAttributeRef(result_clause.GetValues().front(), declarations);
+    auto projected_results = table.GetResult(attribute.first.second);
     if (Utils::IsConversionNeeded(attribute.first.first, attribute.second)) {
       std::unordered_set<std::string> temp_set;
       for (auto s : projected_results) {

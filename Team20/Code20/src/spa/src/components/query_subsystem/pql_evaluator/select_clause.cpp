@@ -10,7 +10,7 @@ Table SelectClause::Execute() {
   if (result_clause.type == PqlTokenType::ATTRIBUTE) {
     std::pair<std::pair<DesignEntityType, std::string>, AtrriName> attribute = Utils::ParseAttributeRef(result_clause, declarations);
     single_constraints = pkb->GetStmt(clause_util::GetStmtType(attribute.first.first));
-    Table table = Table(result_clause.value, single_constraints);
+    Table table = Table(attribute.first.second, single_constraints);
     table.ToggleAttributeResult();
     return table;
   } else {

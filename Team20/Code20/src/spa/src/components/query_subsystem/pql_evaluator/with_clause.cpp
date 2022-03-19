@@ -70,13 +70,9 @@ Table WithClause::HandleAttributeAttribute() {
     std::unordered_set<std::string> intersection_temp;
     for (auto s : single_column_intersection) {
       std::unordered_set<std::string> all_stmts = pkb->GetStmtByName(GetStmtType(first_attribute.first.first), s);
-      intersection_temp.insert(all_stmts.begin(), all_stmts.end());
-    }
-
-    std::unordered_set<std::string>::iterator it1 = intersection_temp.begin();
-    std::unordered_set<std::string>::iterator it2 = single_column_intersection.begin();
-    for(; it1 != intersection_temp.end() && it2 != single_column_intersection.end(); ++it1, ++it2) {
-      intersection_pair.insert(std::make_pair(*it1, *it2));
+      for (auto stmt_no : all_stmts) {
+        intersection_pair.insert(std::make_pair(stmt_no, s));
+      }
     }
 
   } else if (is_conversion_needed_second) {
@@ -86,15 +82,10 @@ Table WithClause::HandleAttributeAttribute() {
     std::unordered_set<std::string> intersection_temp;
     for (auto s : single_column_intersection) {
       std::unordered_set<std::string> all_stmts = pkb->GetStmtByName(GetStmtType(second_attribute.first.first), s);
-      intersection_temp.insert(all_stmts.begin(), all_stmts.end());
+      for (auto stmt_no : all_stmts) {
+        intersection_pair.insert(std::make_pair(s, stmt_no));
+      }
     }
-
-    std::unordered_set<std::string>::iterator it1 = single_column_intersection.begin();
-    std::unordered_set<std::string>::iterator it2 = intersection_temp.begin();
-    for(; it1 != single_column_intersection.end() && it2 != intersection_temp.end(); ++it1, ++it2) {
-      intersection_pair.insert(std::make_pair(*it1, *it2));
-    }
-
   } else {
     single_constraints_first = pkb->GetStmt(GetStmtType(first_attribute.first.first));
     single_constraints_second = pkb->GetStmt(GetStmtType(second_attribute.first.first));
