@@ -13,9 +13,9 @@ class NextStore : public Store {
   explicit NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddNextMap(std::unordered_map<std::string, std::unordered_set<std::string>> rs_map);
   void AddBeforeMap(std::unordered_map<std::string, std::unordered_set<std::string>> rs_map);
-  void AddNextPair(std::string const &before, std::string const &next);
-  void FindNextStarOf(std::string const &stmt, std::unordered_set<std::string>);
-  void FindBeforeStarOf(std::string const &stmt, std::unordered_set<std::string> res);
+  void ConstructNextPairs();
+  void FindNextStarOf(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited);
+  void FindBeforeStarOf(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited) ;
   void AddNextStarPairs(std::string first, std::string stmt, std::unordered_set<std::pair<std::string, std::string>, pair_hash>);
   [[nodiscard]] bool IsNext(std::string const &stmt);
   [[nodiscard]] bool IsBefore(std::string const &stmt);
@@ -23,7 +23,7 @@ class NextStore : public Store {
   [[nodiscard]] bool IsBeforeStar(std::string const &stmt);
   [[nodiscard]] bool NextExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool NextStarExists(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] std::string GetBeforeOf(std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetBeforeOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetNextOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetBeforeStarOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetNextStarOf(std::string const &stmt);

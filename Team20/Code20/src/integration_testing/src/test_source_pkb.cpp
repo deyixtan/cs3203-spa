@@ -977,7 +977,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 3)") {
 
 // TODO: Add test cases for cfg traversing and Next Store
 //TEST_CASE("Test") {
-//  std::shared_ptr<ProgramNode> ast = GenerateAbstractSyntaxTree(sample_source2);
+//  std::shared_ptr<ProgramNode> ast = GenerateAbstractSyntaxTree(sample_source5);
 //  PKB *pkb = GetPopulatedPkbInstance(ast);
 //  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
 //  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
@@ -985,5 +985,16 @@ TEST_CASE("Test components between Source and PKB (Sample source 3)") {
 //  cfg_builder.IterateAstAndPopulatePkb(ast);
 //  design_extractor->IterateAstAndPopulatePkb(ast);
 //  design_extractor->IterateCfgAndPopulatePkb(pkb->GetProgCfg());
+//  std::unordered_set<std::string> set = pkb->GetNextStore()->GetNextStarOf("12");
+//  for (auto stmt : set) {
+//    std::cout << stmt;
+//    std::cout << " * ";
+//  }
+//  for(auto stmt : pairs) {
+//    std::cout << stmt;
+////    std::cout << "&";
+////    std::cout << pair.second;
+////    std::cout << "\n";
+//  }
 //  REQUIRE("" == "");
-//}
+}
