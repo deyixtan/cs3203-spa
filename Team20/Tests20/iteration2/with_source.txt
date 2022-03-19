@@ -1,0 +1,64 @@
+procedure ProcA {
+  call ProcD;
+  x = 5;
+  if (i != j) then {
+    read a;
+    print b;
+    y = x * z;
+  }
+  else {
+    j = i;
+  }
+  call ProcC;
+  a = ProcB;
+}
+
+procedure ProcB {
+  while (ProcD != ProcE) {
+    procD = ProcE;
+    read ProcA;
+    print ProcC;
+  }
+  z = a - b;
+  if (a == b) then {
+    while (b != a) {
+      c = c + d;
+      c = procE;
+    }
+    c = c;
+  }
+  else {
+    if (c != c + 3) then {
+      read k;
+    }
+    else {
+      print k;
+    }
+    c = k * 27;
+  }
+  call ProcE;
+}
+
+procedure ProcC {
+  call ProcE;
+  call ProcD;
+}
+
+procedure ProcD {
+  x = a - 1;
+  read a;
+  print c;
+}
+
+procedure ProcE {
+  while (1 == 0) {
+    if (a >= b) then {
+      a = b + c - d / 10;
+    }
+    else {
+      b = a - c + 4;
+    }
+  }
+  read a;
+  print b;
+}

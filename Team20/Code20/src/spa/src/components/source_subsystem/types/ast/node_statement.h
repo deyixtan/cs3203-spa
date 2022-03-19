@@ -22,7 +22,7 @@ class StatementNode : public Node {
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] std::string GetPatternFormat() override;
   virtual bool operator==(const StatementNode &other) const = 0;
-  virtual void Accept(DesignExtractor *de) = 0;
+  virtual void Accept(DesignExtractor *de, std::string proc_name) = 0;
   virtual std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) = 0;
 };
 

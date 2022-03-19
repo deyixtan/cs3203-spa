@@ -1,0 +1,261 @@
+1 - Get statements with two Follows clauses at procedure level (before nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select s such that Follows(s, ifs) and Follows(ifs, w)
+5
+5000
+2 - Get statements with two Follows clauses at procedure level (at nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select ifs such that Follows(s, ifs) and Follows(ifs, w)
+6
+5000
+3 - Get statements with two Follows clauses at procedure level (after nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select w such that Follows(s, ifs) and Follows(ifs, w)
+14
+5000
+4 - Get statements with two Follows clauses at nested level 1 (before nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select pn such that Follows(pn, w) and Follows(w, cl)
+7
+5000
+5 - Get statements with two Follows clauses at nested level 1 (at nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select w such that Follows(pn, w) and Follows(w, cl)
+8
+5000
+6 - Get statements with two Follows clauses at nested level 1 (after nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select cl such that Follows(pn, w) and Follows(w, cl)
+
+5000
+7 - Get statements with two Follows clauses at nested level 2 (before nested statement)
+stmt s; procedure p; assign a; print pn, pn2; read r; if ifs; while w; constant c; call cl;
+Select pn such that Follows(pn, ifs) and Follows(ifs, pn2)
+23
+5000
+8 - Get statements with two Follows clauses at nested level 2 (at nested statement)
+stmt s; procedure p; assign a; print pn, pn2; read r; if ifs; while w; constant c; call cl;
+Select ifs such that Follows(pn, ifs) and Follows(ifs, pn2)
+24
+5000
+9 - Get statements with two Follows clauses at nested level 2 (after nested statement)
+stmt s; procedure p; assign a; print pn, pn2; read r; if ifs; while w; constant c; call cl;
+Select pn2 such that Follows(pn, ifs) and Follows(ifs, pn2)
+29
+5000
+10 - Get statements with two Follows* clauses at procedure level (before nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select s such that Follows*(s, ifs) and Follows*(ifs, w)
+4,5
+5000
+11 - Get statements with two Follows* clauses at procedure level (at nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select ifs such that Follows*(s, ifs) and Follows*(ifs, w)
+6
+5000
+12 - Get statements with two Follows* clauses at procedure level (after nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select w such that Follows*(s, ifs) and Follows*(ifs, w)
+14
+5000
+13 - Get statements with two Follows* clauses at nested level 1 (before nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select pn such that Follows*(pn, w) and Follows*(w, cl)
+7
+5000
+14 - Get statements with two Follows* clauses at nested level 1 (at nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select w such that Follows*(pn, w) and Follows*(w, cl)
+8
+5000
+15 - Get statements with two Follows* clauses at nested level 1 (after nested statement)
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select cl such that Follows*(pn, w) and Follows*(w, cl)
+
+5000
+16 - Get statements with two Follows* clauses at nested level 2 (before nested statement)
+stmt s; procedure p; assign a; print pn, pn2; read r; if ifs; while w; constant c; call cl;
+Select pn such that Follows*(pn, ifs) and Follows*(ifs, pn2)
+22,23
+5000
+17 - Get statements with two Follows* clauses at nested level 2 (at nested statement)
+stmt s; procedure p; assign a; print pn, pn2; read r; if ifs; while w; constant c; call cl;
+Select ifs such that Follows*(pn, ifs) and Follows*(ifs, pn2)
+24
+5000
+18 - Get statements with two Follows* clauses at nested level 2 (after nested statement)
+stmt s; procedure p; assign a; print pn, pn2; read r; if ifs; while w; constant c; call cl;
+Select pn2 such that Follows*(pn, ifs) and Follows*(ifs, pn2)
+29,30
+5000
+19 - Get statements with two Parent clauses at procedure level
+stmt s; procedure p; assign a; print pn; read r; if ifs, ifs2; while w; constant c; call cl;
+Select ifs such that Parent(ifs, w) and Parent(w, ifs2)
+18
+5000
+20 - Get statements with two Parent clauses at nested level 1
+stmt s; procedure p; assign a; print pn; read r; if ifs, ifs2; while w; constant c; call cl;
+Select w such that Parent(ifs, w) and Parent(w, ifs2)
+21
+5000
+21 - Get statements with two Parent clauses at nested level 2
+stmt s; procedure p; assign a; print pn; read r; if ifs, ifs2; while w; constant c; call cl;
+Select ifs2 such that Parent(ifs, w) and Parent(w, ifs2)
+24
+5000
+22 - Get statements with two Parent* clauses at procedure level
+stmt s; procedure p; assign a; print pn; read r; if ifs, ifs2; while w; constant c; call cl;
+Select ifs such that Parent*(ifs, w) and Parent*(w, ifs2)
+18
+5000
+23 - Get statements with two Parent* clauses at nested level 1
+stmt s; procedure p; assign a; print pn; read r; if ifs, ifs2; while w; constant c; call cl;
+Select w such that Parent*(ifs, w) and Parent*(w, ifs2)
+21
+5000
+24 - Get statements with two Parent* clauses at nested level 2
+stmt s; procedure p; assign a; print pn; read r; if ifs, ifs2; while w; constant c; call cl;
+Select ifs2 such that Parent*(ifs, w) and Parent*(w, ifs2)
+24
+5000
+25 - Get statements with two Modifies clauses on two procedures
+stmt s; procedure p, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select v such that Modifies(p, v) and Modifies(p2, v)
+bacon,beans,coffee,eggs,pepper,tea
+5000
+26 - Get statements with two Modifies clauses on two assign statements
+stmt s; procedure p; assign a, a2; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select v such that Modifies(a, v) and Modifies(a2, v)
+beans,coffee,eggs,pepper,tea
+5000
+27 - Get statements with two Modifies clauses on two print statements
+stmt s; procedure p; assign a; print pn, pn2; read r; if ifs; while w; constant c; call cl; variable v;
+Select v such that Modifies(pn, v) and Modifies(pn2, v)
+none
+5000
+28 - Get statements with two Modifies clauses on two read statements
+stmt s; procedure p; assign a; print pn; read r, r2; if ifs; while w; constant c; call cl; variable v;
+Select v such that Modifies(r, v) and Modifies(r2, v)
+bacon,coffee,eggs,tea
+5000
+29 - Get statements with two Modifies clauses on two if-statements
+stmt s; procedure p; assign a; print pn; read r; if ifs, ifs2; while w; constant c; call cl; variable v;
+Select v such that Modifies(ifs, v) and Modifies(ifs2, v)
+beans,coffee,eggs,pepper,tea
+5000
+30 - Get statements with two Modifies clauses on two while-statements
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w, w2; constant c; call cl; variable v;
+Select v such that Modifies(w, v) and Modifies(w2, v)
+coffee,pepper,tea
+5000
+31 - Get statements with two Modifies clauses on two call-statements
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl, cl2; variable v;
+Select v such that Modifies(cl, v) and Modifies(cl2, v)
+none
+5000
+32 - Get statements with two Uses clauses on two procedures
+stmt s; procedure p, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select v such that Uses(p, v) and Uses(p2, v)
+bacon,beans,breakfast,coffee,eggs,pepper,salt,sugar,tea
+5000
+33 - Get statements with two Uses clauses on two assign statements
+stmt s; procedure p; assign a, a2; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select v such that Uses(a, v) and Uses(a2, v)
+bacon,beans,coffee,eggs,pepper,salt,tea
+5000
+34 - Get statements with two Uses clauses on two print statements
+stmt s; procedure p; assign a; print pn, pn2; read r; if ifs; while w; constant c; call cl; variable v;
+Select v such that Uses(pn, v) and Uses(pn2, v)
+breakfast,coffee,eggs,pepper,tea
+5000
+35 - Get statements with two Uses clauses on two read statements
+stmt s; procedure p; assign a; print pn; read r, r2; if ifs; while w; constant c; call cl; variable v;
+Select v such that Uses(r, v) and Uses(r2, v)
+
+5000
+36 - Get statements with two Uses clauses on two if-statements
+stmt s; procedure p; assign a; print pn; read r; if ifs, ifs2; while w; constant c; call cl; variable v;
+Select v such that Uses(ifs, v) and Uses(ifs2, v)
+bacon,beans,breakfast,coffee,eggs,pepper,salt,tea
+5000
+37 - Get statements with two Uses clauses on two while-statements
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w, w2; constant c; call cl; variable v;
+Select v such that Uses(w, v) and Uses(w2, v)
+bacon,beans,breakfast,coffee,eggs,pepper,salt,sugar,tea
+5000
+38 - Get statements with two Uses clauses on two call-statements
+stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl, cl2; variable v;
+Select v such that Uses(cl, v) and Uses(cl2, v)
+
+5000
+39 - Get procedures with two Calls clauses between two procedures (1)
+stmt s; procedure p, p2, p3; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p such that Calls(p, p2) and Calls(p2, p3)
+How,Now
+5000
+40 - Get procedures with two Calls clauses between two procedures (2)
+stmt s; procedure p, p2, p3; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p2 such that Calls(p, p2) and Calls(p2, p3)
+Brown,Now
+5000
+41 - Get procedures with two Calls clauses between two procedures (3)
+stmt s; procedure p, p2, p3; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p3 such that Calls(p, p2) and Calls(p2, p3)
+Brown,Cow
+5000
+42 - Get procedures with three Calls clauses between two procedures (1)
+stmt s; procedure p, p2, p3, p4; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p such that Calls(p, p2) and Calls(p2, p3) and Calls(p3, p4)
+How
+5000
+43 - Get procedures with three Calls clauses between two procedures (2)
+stmt s; procedure p, p2, p3, p4; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p2 such that Calls(p, p2) and Calls(p2, p3) and Calls(p3, p4)
+Now
+5000
+44 - Get procedures with three Calls clauses between two procedures (3)
+stmt s; procedure p, p2, p3, p4; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p3 such that Calls(p, p2) and Calls(p2, p3) and Calls(p3, p4)
+Brown
+5000
+45 - Get procedures with three Calls clauses between two procedures (4)
+stmt s; procedure p, p2, p3, p4; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p4 such that Calls(p, p2) and Calls(p2, p3) and Calls(p3, p4)
+Cow
+5000
+46 - Get procedures with two Calls* clauses between two procedures (1)
+stmt s; procedure p, p2, p3; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p such that Calls*(p, p2) and Calls*(p2, p3)
+How,Now
+5000
+47 - Get procedures with two Calls* clauses between two procedures (2)
+stmt s; procedure p, p2, p3; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p2 such that Calls*(p, p2) and Calls*(p2, p3)
+Brown,Now
+5000
+48 - Get procedures with two Calls* clauses between two procedures (3)
+stmt s; procedure p, p2, p3; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p3 such that Calls*(p, p2) and Calls*(p2, p3)
+Brown,Cow
+5000
+49 - Get procedures with three Calls* clauses between two procedures (1)
+stmt s; procedure p, p2, p3, p4; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p such that Calls*(p, p2) and Calls*(p2, p3) and Calls*(p3, p4)
+How
+5000
+50 - Get procedures with three Calls* clauses between two procedures (2)
+stmt s; procedure p, p2, p3, p4; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p2 such that Calls*(p, p2) and Calls*(p2, p3) and Calls*(p3, p4)
+Now
+5000
+51 - Get procedures with three Calls* clauses between two procedures (3)
+stmt s; procedure p, p2, p3, p4; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p3 such that Calls*(p, p2) and Calls*(p2, p3) and Calls*(p3, p4)
+Brown
+5000
+52 - Get procedures with three Calls* clauses between two procedures (4)
+stmt s; procedure p, p2, p3, p4; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
+Select p4 such that Calls*(p, p2) and Calls*(p2, p3) and Calls*(p3, p4)
+Cow
+5000
+// TODO: add Next clauses, add clauses with patterns

@@ -14,7 +14,7 @@ class CallStatementNode : public StatementNode {
   [[nodiscard]] StmtType GetStatementType() override;
   [[nodiscard]] std::string ToString() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
-  void Accept(DesignExtractor *de);
+  void Accept(DesignExtractor *de, std::string proc_name);
   std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
 

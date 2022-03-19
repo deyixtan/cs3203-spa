@@ -34,9 +34,9 @@ bool BooleanExpressionNode::operator==(const ConditionalExpressionNode &other) c
       && *m_right_expression == *(casted_other->m_right_expression);
 }
 
-std::string BooleanExpressionNode::Accept(DesignExtractor *de, bool is_uses) {
+std::string BooleanExpressionNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
   if (m_boolean_operator == BooleanOperator::AND) {
-    return de->Visit(m_left_expression, is_uses) + "&&" + de->Visit(m_right_expression, is_uses);
+    return de->Visit(m_left_expression, proc_name, is_uses) + "&&" + de->Visit(m_right_expression, proc_name, is_uses);
   }
-  return de->Visit(m_left_expression, is_uses) + "||" + de->Visit(m_right_expression, is_uses);
+  return de->Visit(m_left_expression, proc_name, is_uses) + "||" + de->Visit(m_right_expression, proc_name, is_uses);
 }

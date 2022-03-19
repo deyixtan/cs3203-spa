@@ -25,6 +25,6 @@ bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const
   return *m_expression == *(casted_other->m_expression);
 }
 
-std::string NotExpressionNode::Accept(DesignExtractor *de, bool is_uses) {
-  return de->Visit(m_expression, is_uses);
+std::string NotExpressionNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
+  return de->Visit(m_expression, proc_name, is_uses);
 }

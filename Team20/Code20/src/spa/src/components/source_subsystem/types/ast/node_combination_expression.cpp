@@ -56,7 +56,7 @@ bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
       && *m_right_expression == *(casted_other->m_right_expression);
 }
 
-std::string CombinationExpressionNode::Accept(DesignExtractor *de, bool is_uses) {
-  return "(" + de->Visit(m_left_expression, is_uses) + GetArithmeticOperatorLabel(m_arithmetic_operator)
-      + de->Visit(m_right_expression, is_uses) + ")";
+std::string CombinationExpressionNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
+  return "(" + de->Visit(m_left_expression, proc_name, is_uses) + GetArithmeticOperatorLabel(m_arithmetic_operator)
+      + de->Visit(m_right_expression, proc_name, is_uses) + ")";
 }
