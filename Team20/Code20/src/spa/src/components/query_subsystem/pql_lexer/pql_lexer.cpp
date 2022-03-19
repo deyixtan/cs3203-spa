@@ -38,11 +38,10 @@ std::vector<PqlToken> PqlLexer::Lex() {
     } else if (getTuple.length() > 0) {
       tokens.push_back(PqlToken{PqlTokenType::TUPLE, getTuple});
     } else if (IsValidString(token)) {
-      if (IsEntRef(token)) {
-        std::string no_space_token = Utils::RemoveSpace(token);
+      std::string no_space_token = Utils::RemoveSpace(token);
+      if (IsEntRef(no_space_token)) {
         tokens.push_back(PqlToken{PqlTokenType::IDENT_WITH_QUOTES, Utils::TrimQuotes(no_space_token)});
       } else {
-        std::string no_space_token = Utils::RemoveSpace(token);
         tokens.push_back(PqlToken{PqlTokenType::EXPR, Utils::TrimQuotes(no_space_token)});
       }
     } else if (IsSubExpressionToken(token)) {
