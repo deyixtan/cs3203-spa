@@ -27,20 +27,28 @@ void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node
 }
 
 void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
-  std::stack<std::shared_ptr<CfgNode>> node_stack;
-  std::vector<std::string> prev_stmts;
-  std::unordered_set<std::shared_ptr<CfgNode>> visited;
-  std::unordered_map<std::string, std::unordered_set<std::string>> next_map;
+
   std::unordered_map<std::string, std::shared_ptr<CfgNode>> prog = root->GetCfgMap();
   for (auto proc : prog) {
-    std::shared_ptr<CfgNode> curr_proc = proc.second;
+    std::stack<std::shared_ptr<CfgNode>> node_stack;
+    std::vector<std::string> prev_stmts;
+    std::unordered_set<std::shared_ptr<CfgNode>> visited;
+    std::unordered_map<std::string, std::unordered_set<std::string>> next_map;
+
+    std::shared_ptr<CfgNode> curr_proc = proc.second; // root node of cfg
     node_stack.push(curr_proc);
+
+
+    // per cfg logic
     while(node_stack.size() > 0) {
       std::shared_ptr<CfgNode> curr = node_stack.top();
       node_stack.pop();
       visited.insert(curr);
-      std::vector<std::string> curr_stmts = curr->GetStatementList();
-      std::vector<std::shared_ptr<CfgNode>> next_nodes = curr->GetDescendants();
+
+      std::vector<std::string> curr_stmts = curr->GetStatementList(); // get all stmt in node
+      std::vector<std::shared_ptr<CfgNode>> next_nodes = curr->GetDescendants(); // get all possible next nodes
+
+      // check if actual dummy node
       if(curr_stmts.size() == 0 && next_nodes.size() == 0) {
         if(node_stack.size() == 0) {
           break;
@@ -48,9 +56,14 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
           continue;
         }
       }
+
+      // ???????
       int start = 0;
       int next = 1;
-      while(next < curr_stmts.size()) {
+
+      // node with more than one statement
+      while(curr_stmts.size() > next) {
+        // check if first statement is inside next_map
         if(next_map.find(curr_stmts[start]) == next_map.end()) {
           std::unordered_set<std::string> nextSet = std::unordered_set<std::string>();
           nextSet.insert(curr_stmts[next]);
@@ -62,14 +75,27 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
         start++;
         next++;
       }
+
+      // recurse until next_node.front() != dummy node
+      // At node 10, [dummy, 11]
+      // At node 11, [10]
       while(next_nodes.size() > 0 && next_nodes.front()->GetStatementList().size() == 0) {
-        next_nodes = next_nodes.front()->GetDescendants();
+        next_nodes = next_nodes.front()->GetDescendants(); // becomes next_nodes = 11
       }
-      for(auto const &desc : next_nodes) {
+
+      // 11
+      // [6, dummy(8)]
+      for(auto &desc : next_nodes) {
         if (curr_stmts.size() > 0) {
           if(next_map.find(curr_stmts[curr_stmts.size() - 1]) == next_map.end()) {
             next_map.insert({curr_stmts[curr_stmts.size() - 1], std::unordered_set<std::string>()});
           }
+
+          // force desc to legit node
+          while(desc->GetStatementList().size() == 0 && desc->GetDescendants().size() > 0) {
+            desc = desc->GetDescendants().front();
+          }
+
           std::vector<std::string> next_stmts = desc->GetStatementList();
           std::unordered_set<std::string> vals = next_map[curr_stmts[curr_stmts.size() - 1]];
           if(next_stmts.size() > 0 ) {
@@ -82,8 +108,10 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
         }
       }
     }
+
+    m_pkb_client->PopulateNext(next_map);
   }
-  m_pkb_client->PopulateNext(next_map);
+
 }
 
 void DesignExtractor::Visit(std::shared_ptr<ProgramNode> node) {
