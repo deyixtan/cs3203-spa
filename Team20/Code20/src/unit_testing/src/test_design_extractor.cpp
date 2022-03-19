@@ -15,6 +15,7 @@
 #include "components/source_subsystem/types/ast/node_relational_expression.h"
 #include "components/source_subsystem/types/ast/node_boolean_expression.h"
 #include "components/source_subsystem/types/ast/node_while_statement.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
 
 using namespace source;
 
@@ -242,7 +243,10 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
+  cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateCfgAndPopulatePkb(test_pkb->GetProgCfg());
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -333,15 +337,15 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
 TEST_CASE("Test DE parent population for single procedure with nested while and if statements") {
   // set up AST for:
 
-  // procedure main {
-  //     while ((a == 1) && (a == 2)) {       1
-  //         if (x == 1) then {               2
-  //             a = 3;                       3
-  //         } else {
-  //             a = 4;                       4
-  //         }
-  //     }
-  // }
+//   procedure main {
+//       while ((a == 1) && (a == 2)) {       1
+//           if (x == 1) then {               2
+//               a = 3;                       3
+//           } else {
+//               a = 4;                       4
+//           }
+//       }
+//   }
 
   // if's stmt_list
   std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "3");
@@ -440,7 +444,10 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
+  cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateCfgAndPopulatePkb(test_pkb->GetProgCfg());
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -551,7 +558,10 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
+  cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateCfgAndPopulatePkb(test_pkb->GetProgCfg());
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -588,3 +598,4 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   REQUIRE(test_pkb->GetFollowStore()->GetAllFollowStarStmt(STMT) == pkb->GetFollowStore()->GetAllFollowStarStmt(STMT));
   REQUIRE(test_pkb->GetFollowStore()->GetAllFollowStarStmt(STMT, STMT) == pkb->GetFollowStore()->GetAllFollowStarStmt(STMT, STMT));
 }
+
