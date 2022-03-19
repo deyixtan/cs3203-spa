@@ -53,6 +53,10 @@ void Table::Merge(Table &other_table) {
   } else {
     CrossJoin(other_table);
   }
+
+  if (IsRecordsEmpty()) {
+    EncounteredFalseClause();
+  }
 }
 
 std::vector<std::pair<size_t, size_t>> Table::GetCommonAttributeIndexPairs(const Table::Attributes &other_attributes) {

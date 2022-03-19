@@ -26,13 +26,13 @@ class PkbClient {
   void PopulateProc(std::string name);
   void PopulateAssign(std::string stmt);
   void PopulateStmt(std::string stmt);
-  void PopulateRead(std::string stmt);
-  void PopulatePrint(std::string stmt);
+  void PopulateRead(std::string stmt, std::string name);
+  void PopulatePrint(std::string stmt, std::string name);
   void PopulateVars(std::string var);
   void PopulateWhile(std::string stmt);
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
-  void PopulateCall(std::string name);
+  void PopulateCall(std::string stmt, std::string name);
   void PopulateCfg(Cfg &cfg);
   void PopulateNext(std::unordered_map<std::string, std::unordered_set<std::string>> rs_map);
   void AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs);
