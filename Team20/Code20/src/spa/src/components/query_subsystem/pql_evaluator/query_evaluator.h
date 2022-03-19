@@ -6,6 +6,7 @@
 #include "query_condition.h"
 #include "clause.h"
 #include "clause_factory.h"
+#include "clause_util.h"
 
 #include <string>
 #include <unordered_set>

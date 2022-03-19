@@ -193,8 +193,16 @@ void Table::ToggleBooleanResult() {
   is_boolean_result ^= true;
 }
 
+void Table::ToggleAttributeResult() {
+  is_attribute_result ^= true;
+}
+
 bool Table::IsBooleanResult() const {
   return is_boolean_result;
+}
+
+bool Table::IsAttributeResult() const {
+  return is_attribute_result;
 }
 
 }
