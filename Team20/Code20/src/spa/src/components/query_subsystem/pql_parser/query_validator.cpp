@@ -230,6 +230,9 @@ int QueryValidator::ValidatePatternClause(int pattern_clause_starting_index) {
   return current_index;
 }
 int QueryValidator::ValidateWithClause(int with_clause_starting_index) {
+  if (with_clause_starting_index + WITH_CLAUSE_SIZE > tokens_.size()) {
+    throw INVALID_WITH_CLAUSE_FORMAT;
+  }
   int current_index = with_clause_starting_index;
   while (current_index < tokens_.size()) {
     if (current_index == with_clause_starting_index || tokens_[current_index].type == PqlTokenType::AND) {
