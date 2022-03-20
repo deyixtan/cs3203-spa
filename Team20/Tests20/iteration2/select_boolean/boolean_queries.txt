@@ -270,6 +270,6 @@ blue, green, red, yellow
 5000
 55 - special attribute
 assign a; variable v; constant c; procedure p; read rd;
-Select BOOLEAN such that with v    .   varName = p    . procName
-yellow
+Select BOOLEAN with v    .   varName = p    . procName
+TRUE
 5000
