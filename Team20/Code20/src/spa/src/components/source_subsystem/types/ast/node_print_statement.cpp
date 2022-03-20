@@ -33,6 +33,7 @@ void PrintStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   de->GetPkbClient()->PopulateName(m_identifier->GetIdentifier(), PRINT);
   std::string var_name = m_identifier->GetIdentifier();
   de->GetPkbClient()->PopulatePrint(stmt_num, m_identifier->GetIdentifier());
+  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
   de->Visit(m_identifier, proc_name, true);
 }
 
