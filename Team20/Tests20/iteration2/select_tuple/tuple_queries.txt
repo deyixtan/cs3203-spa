@@ -106,7 +106,7 @@ none
 22 - double synonym double tuple true clause 1 Parent
 assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
 Select <rd, v> such that Parent (w, a)
-7 11, 7 13
+7 a, 7 b, 7 c, 7 d, 7 e, 7 f
 5000
 23 - double synonym double tuple true clause 2 Parent
 assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
