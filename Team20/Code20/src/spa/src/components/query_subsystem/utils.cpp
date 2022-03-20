@@ -55,3 +55,18 @@ std::string Utils::TrimQuotes(std::string& s) {
 std::string Utils::TrimUnderscoreAndQuotes(std::string& s) {
   return s.substr(2, s.size() - 4);
 }
+
+std::unordered_set<DesignEntityType> int_ident_entities = {
+    DesignEntityType::READ,
+    DesignEntityType::PRINT,
+    DesignEntityType::CALL
+};
+
+bool Utils::IsConversionNeeded(DesignEntityType type, AtrriName attribute_name) {
+  if (int_ident_entities.count(type) != 0) {
+    if (attribute_name == AtrriName::PROCNAME || attribute_name == AtrriName::VARNAME) {
+      return true;
+    }
+  }
+  return false;
+}

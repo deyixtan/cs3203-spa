@@ -50,23 +50,23 @@ TRUE
 5000
 11 - assign pattern no synonym true 4
 assign a; variable v;
-Select BOOLEAN pattern a (_, "_yellow_")
+Select BOOLEAN pattern a (_, _"yellow"_)
 TRUE
 5000
 12 - assign pattern no synonym true 5
 assign a; variable v;
-Select BOOLEAN pattern a ("yellow", "_yellow_")
+Select BOOLEAN pattern a ("yellow", _"yellow"_)
 TRUE
 5000
 13 - assign pattern no synonym false 1
 assign a; variable v;
-Select BOOLEAN pattern a ("yellow", "_blue_")
+Select BOOLEAN pattern a ("yellow", _"blue"_)
 FALSE
 5000
-14 - assign pattern no synonym false 2
+14 - assign pattern no synonym true 2
 assign a; variable v;
 Select BOOLEAN pattern a (_, _"blue"_)
-FALSE
+TRUE
 5000
 15 - assign pattern no synonym false 3
 assign a; variable v;
@@ -96,17 +96,17 @@ TRUE
 20 - assign pattern 1 synonym false 1
 assign a; variable v;
 Select BOOLEAN pattern a (v, "red +     gre    en -  1")
-FALSE
+none
 5000
-21 - assign pattern 1 synonym false 2
+21 - assign pattern 1 synonym true 2
 assign a; variable v;
 Select BOOLEAN pattern a (v, _  "1 * red"_)
-FALSE
+TRUE
 5000
 22 - assign pattern 1 synonym false 3
 assign a; variable v;
 Select BOOLEAN pattern a (v, _"1 * r  ed"_)
-FALSE
+none
 5000
 23 - if pattern 0 synonym true 1
 if ifs; variable v;
@@ -121,7 +121,7 @@ TRUE
 25 - if pattern 0 synonym false 1
 if ifs; variable v;
 Select BOOLEAN pattern ifs (_,_,"green")
-FALSE
+none
 5000
 26 - if pattern 0 synonym false 2
 if ifs; variable v;
@@ -141,7 +141,7 @@ FALSE
 29 - if pattern 1 synonym false 2
 if ifs; variable v;
 Select BOOLEAN pattern ifs (v,_)
-FALSE
+none
 5000
 30 - while pattern 0 synonym true 1
 while w; variable v;
@@ -166,17 +166,17 @@ TRUE
 34 - while pattern 1 synonym false 1
 while w; variable v;
 Select BOOLEAN pattern w (v,_,_)
-TRUE
+none
 5000
 35 - while pattern 1 synonym false 2
 while w; variable v;
 Select BOOLEAN pattern w (v,_) with v.varName = "happy"
-TRUE
+FALSE
 5000
 36 - while pattern 1 synonym false 2
 while w; variable v;
 Select BOOLEAN pattern w (v,_) with v.varName = "happy"
-TRUE
+FALSE
 5000
 37 - with clause no attribute true 1
 while w; variable v;
@@ -221,12 +221,12 @@ TRUE
 45 - with clause 1 attribute false 1
 assign a; variable v; constant c;
 Select BOOLEAN with v.varName = "yello  w"
-FALSE
+none
 5000
 46 - with clause 1 attribute false 2
 assign a; variable v; constant c; procedure p;
 Select BOOLEAN with p.procName = "yello  w"
-FALSE
+none
 5000
 47 - with clause 1 attribute false 3
 assign a; variable v; constant c; procedure p;
@@ -248,13 +248,103 @@ assign a; variable v; constant c; procedure p;
 Select BOOLEAN with p.procName = v.varName
 TRUE
 5000
-50 - with clause 2 attributes false 1
+51 - with clause 2 attributes false 1
 assign a; variable v; constant c; procedure p; read rd;
 Select BOOLEAN with rd.stmt# = c.value
 FALSE
 5000
-50 - with clause 2 attributes false 2
+52 - with clause 2 attributes false 2
 assign a; variable v; constant c; procedure p; read rd;
 Select BOOLEAN with v.varName = p.procName and v.varName = "green"
 FALSE
+5000
+53 - BOOLEAN as synonym 1
+assign a; variable BOOLEAN; constant c; procedure p; read rd;
+Select BOOLEAN with BOOLEAN.varName = "green"
+green
+5000
+54 - BOOLEAN as synonym 2
+assign a; variable BOOLEAN; constant c; procedure p; read rd;
+Select BOOLEAN such that Uses (a, BOOLEAN)
+blue, green, red, yellow
+5000
+55 - special attribute
+assign a; variable v; constant c; procedure p; read rd;
+Select BOOLEAN with v    .   varName = p    . procName
+TRUE
+5000
+56 - multi relationship clause 1
+assign a; variable v; constant c; procedure p; read rd;
+Select BOOLEAN such that Uses (a, v) such that Modifies (a, v) such that Follows (a, rd)
+FALSE
+5000
+57 - multi relationship clause with space 1
+assign a; variable v; constant c; procedure p; read rd;
+Select BOOLEAN such   that Uses (  a, v) such that Modifies (a, v  ) such that Follows (a,   rd)
+FALSE
+5000
+58 - multi relationship clause with space - invalid synonym
+assign a; variable v; constant c; procedure p; read rd;
+Select BOOLEAN such   that Uses (  a, v) such that Modifies (a, v  ) such that Follows (a,   r d)
+none
+5000
+59 - multi relationship clause with space - invalid rel-ref
+assign a; variable v; constant c; procedure p; read rd;
+Select BOOLEAN such   that Uses (  a, v) such that Mod ifies (a, v  ) such that Follows (a,   r d)
+none
+5000
+60 - multi relationship and with clause with space 1
+assign a; variable v; constant c; procedure p; read rd;
+Select BOOLEAN such   that Uses (  a, v) and Modifies (a, v  ) with v.varName = "blue"
+TRUE
+5000
+61 - multi relationship and with clause with space no synonym overlap
+assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN such   that Follows (cl, pn) and Modifies (  a, v  ) with c  .  value = 3
+TRUE
+5000
+62 - multi relationship and with clause with space - invalid declaration 1
+assign a; variable v; constant c; procedure p; read r d; call cl; print pn;
+Select BOOLEAN such   that Follows (cl, pn) and Modifies (  a, v  ) with v  . varName = "blue"
+none
+5000
+63 - multi relationship and with clause with space - invalid declaration 2
+assign a; variable v; constant c; procedure p; read rd;
+Select BOOLEAN such   that Follows (cl, pn) and Modifies (  a, v  ) with v  . varName = "blue"
+none
+5000
+64 - multi relationship and with clause with space - invalid declaration 3
+assign a; variable v; constant c; procedure p; read rd; call cl; print pn
+Select BOOLEAN such   that Follows (cl, pn) and Modifies (  a, v  ) with v  . varName = "blue"
+none
+5000
+65 - multi relationship and with clause and pattern clause - valid 1
+assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN such that Follows (cl,pn) and Modifies (a,v) with v  . varName = "blue" pattern a(_,"red")
+FALSE
+5000
+66 - multi relationship and with clause and pattern clause - valid 2
+assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN such that Follows (cl,pn) and Modifies (a,v) with v  . varName = "blue" pattern a(_,_"red"_)
+TRUE
+5000
+67 - multi relationship and with clause and pattern clause - invalid sub expression 1
+assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN such that Follows (cl,pn) and Modifies (a,v) with v  . varName = "blue" pattern a(_,_"re d"_)
+none
+5000
+68 - multi relationship and with clause and pattern clause - invalid sub expression 2
+assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN such that Follows (cl,pn) and Modifies (a,v) with v  . varName = "blue" pattern a(_,_red" x + y"_)
+none
+5000
+69 - multi relationship and with clause and pattern clause 2 overlap
+assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN such that Follows (rd,a) and Modifies (a,v) with v  . varName = "blue" pattern a1(_,_  "red  "  _)
+TRUE
+5000
+70 - multi relationship and with clause and pattern clause 3 overlap
+assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN such that Follows (rd,a) and Modifies (a,v) with v  . varName = "blue" pattern a(_,_)
+TRUE
 5000

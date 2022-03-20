@@ -114,7 +114,7 @@ Select v with v.varName = "x"
 x
 5000
 24 - Select v with rhs string = name with valid random spaces
-variable v
+variable v;
 Select v with v.varName = "procE  "
 procE
 5000
@@ -398,10 +398,10 @@ stmt s1, s2; procedure p; assign a; print pn; read r; if ifs; while w; constant 
 Select s1 with c.value = ifs.stmt#
 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35
 5000
-81 - Select v.varName with c.stmt# = c.value - Permutation
+81 - Select v.varName with c.stmt# = c.value - Invalid attribute name
 stmt s1, s2; procedure p; assign a; print pn; read r; if ifs; while w; variable v; constant c; call cl;
 Select v.varName with c.stmt# = c.value
-a, b, c, d, i, j, k, x, y, z, ProcA, ProcB, ProcC, procD, ProcD, ProcE, procE
+none
 5000
 82 - Select p with c.value = a.stmt# - Permutation
 stmt s1, s2; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
@@ -873,20 +873,20 @@ stmt s1, s2; procedure p; assign a; print pn; read r; if ifs; while w; constant 
 Select r with r = 4
 none
 5000
-176 - Select s1 with s1 = a.stmt#
+176 - Select s1 with s1 = a.stmt# - Invalid comparison
 stmt s1, s2; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s1 with s1 = a.stmt#
-2, 6, 7, 9, 11, 14, 17, 18, 19, 23, 27, 32, 33
+none
 5000
-177 - Select s1 with s1 = s1
+177 - Select s1 with s1 = s1 - Invalid comparison
 stmt s1, s2; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s1 with s1 = s1
-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35
+none
 5000
-178 - Select s1 with s1 = s2
+178 - Select s1 with s1 = s2 - Invalid comparison
 stmt s1, s2; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s1 with s1 = s2
-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35
+none
 5000
 179 - Select s1 with s1 = cl.procName - Negative stmt comparison
 stmt s1, s2; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;

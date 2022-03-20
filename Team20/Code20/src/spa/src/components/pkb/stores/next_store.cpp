@@ -164,23 +164,23 @@ void NextStore::AddNextStarPairs(std::string first, std::string stmt, std::unord
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
-  return GetAllStmt(type, supported_types, all_next_pairs, false);
+  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
+  return Store::GetAllStmt(type, supported_types, all_next_pairs, false);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStmt(StmtType type1,
                                                                                                  StmtType type2) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
-  return GetAllStmt(type1, type2, supported_types, GetAllNextStmt(type2), true);
+  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
+  return Store::GetAllStmt(type1, type2, supported_types, GetAllNextStmt(type2), true);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStarStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
-  return GetAllStmt(type, supported_types, GetNextStarPairs(), false);
+  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
+  return Store::GetAllStmt(type, supported_types, GetNextStarPairs(), false);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStarStmt(StmtType type1,
                                                                                                      StmtType type2) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
-  return GetAllStmt(type1, type2, supported_types, GetAllNextStarStmt(type2), true);
+  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
+  return Store::GetAllStmt(type1, type2, supported_types, GetAllNextStarStmt(type2), true);
 }

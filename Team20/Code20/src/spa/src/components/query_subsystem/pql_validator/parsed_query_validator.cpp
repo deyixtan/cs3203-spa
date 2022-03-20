@@ -46,6 +46,10 @@ bool ParsedQueryValidator::ValidateAttribute(PqlToken token, std::unordered_map<
         parsed_attribute.second != AtrriName::STMTNO) {
       return false;
     }
+  } else if (parsed_attribute.first.first == DesignEntityType::VARIABLE) {
+    if (parsed_attribute.second != AtrriName::VARNAME) {
+      return false;
+    }
   }
   return true;
 }
@@ -143,16 +147,18 @@ bool ParsedQueryValidator::ValidateUsesArguments(Relationship relationship, std:
       return false;
     }
 
-    if (!IsStmt(declarations.at(first_arg.value)) && declarations.at(first_arg.value) != DesignEntityType::PROCEDURE) {
+    if (!IsStmt(declarations.at(first_arg.value)) && !IsProc(declarations.at(first_arg.value))) {
       return false;
     }
+
     if (declarations.at(second_arg.value) !=DesignEntityType::VARIABLE) {
       return false;
     }
   } else if (first_arg.type == PqlTokenType::SYNONYM) {
-    if (!IsStmt(declarations.at(first_arg.value))) {
+    if (!IsStmt(declarations.at(first_arg.value)) && !IsProc(declarations.at(first_arg.value))) {
       return false;
     }
+
   } else if (second_arg.type == PqlTokenType::SYNONYM) {
     if (declarations.at(second_arg.value)!= DesignEntityType::VARIABLE) {
       return false;
