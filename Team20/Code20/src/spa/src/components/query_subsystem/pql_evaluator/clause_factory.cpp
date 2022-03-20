@@ -9,12 +9,14 @@
 #include "parentt_clause.h"
 #include "calls_clause.h"
 #include "callst_clause.h"
+#include "next_clause.h"
 #include "pattern_assign_clause.h"
 #include "pattern_while_clause.h"
 #include "pattern_if_clause.h"
 #include "with_clause.h"
 #include "select_clause.h"
 #include "select_boolean_clause.h"
+#include "select_tuple_clause.h"
 #include "clause_util.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
 
@@ -61,6 +63,9 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
     }
     case PqlTokenType::CALLS_T: {
       return std::make_unique<CallsTClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
+    }
+    case PqlTokenType::NEXT: {
+      return std::make_unique<NextClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     default: {
       return nullptr;
@@ -113,8 +118,17 @@ std::unique_ptr<Clause> ClauseFactory::Create(ResultClause result_clause,
   ResultClauseType result_clause_type = result_clause.GetType();
   if (result_clause_type==ResultClauseType::BOOLEAN) {
     return std::make_unique<SelectBooleanClause>();
-  } else {
-    return Create(result_clause.GetValues()[0], declarations, pkb);
+  } else if (result_clause_type==ResultClauseType::SYNONYM) {
+    return std::make_unique<SelectClause>(result_clause.GetValues().front(), declarations, pkb);
+//    auto selected_synonym = result_clause.GetValues().front();
+//    return std::make_unique<SelectSynonymClause>(selected_synonym, declarations, pkb);
+  } else if (result_clause_type==ResultClauseType::ATTRIBUTE) {
+    return std::make_unique<SelectClause>(result_clause.GetValues().front(), declarations, pkb);
+//    auto selected_attribute = result_clause.GetValues().front();
+//    return std::make_unique<SelectAttributeClause>(selected_attribute, declarations, pkb);
+  } else { // result_clause_type==ResultClauseType::TUPLE
+    auto selected_tuple = result_clause.GetValues();
+    return std::make_unique<SelectTupleClause>(selected_tuple, declarations, pkb);
   }
 }
 

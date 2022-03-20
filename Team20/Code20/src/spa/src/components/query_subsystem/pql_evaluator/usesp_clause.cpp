@@ -57,7 +57,7 @@ Table UsesPClause::HandleIdentWildcard() {
   bool is_empty = pkb->GetUsageStore()->GetVarUsedByProc(first_arg.value).empty();
   Table table;
   if (is_empty) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -67,7 +67,7 @@ Table UsesPClause::HandleIdentIdent() {
   bool is_empty = !pkb->GetUsageStore()->ProcVarExists(arg_pair);
   Table table;
   if (is_empty) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }

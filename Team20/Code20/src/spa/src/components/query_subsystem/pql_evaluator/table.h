@@ -2,6 +2,9 @@
 #define TABLE_H_
 
 #include "utils/pair_hash.h"
+#include "components/query_subsystem/pql_lexer/pql_token.h"
+#include "components/query_subsystem/utils.h"
+#include "components/pkb/pkb.h"
 #include <iostream>
 #include <utility>
 #include <string>
@@ -20,34 +23,52 @@ namespace pql {
  *
  */
 class Table {
-  using Attributes = std::vector<std::string>;
-  using Records = std::vector<std::vector<std::string>>;
+  using Attribute = std::string;
+  using Attributes = std::vector<Attribute>;
+  using Record = std::vector<std::string>;
+  using Records = std::vector<Record>;
 
  public:
   Attributes attributes;
   Records records;
 
   Table();
-  Table(const std::string& synonym, std::unordered_set<std::string>& single_constraint);
-  Table(const std::string& first_synonym, const std::string& second_synonym,
-        std::unordered_set<std::pair<std::string, std::string>, pair_hash>& pair_constraints);
+  Table(const std::string &synonym, std::unordered_set<std::string> &single_constraint);
+  Table(const std::string &first_synonym, const std::string &second_synonym,
+        std::unordered_set<std::pair<std::string, std::string>, pair_hash> &pair_constraints);
+  void Merge(Table &other_table);
+  void ToggleFalseClause();
+  void ToggleBooleanResult();
+  void ToggleSynonymResult();
+  void ToggleAttributeResult();
+  void ToggleTupleResult();
   [[nodiscard]] bool IsAttributesEmpty() const;
   [[nodiscard]] bool IsRecordsEmpty() const;
-  void Merge(Table& other_table);
-  void EncounteredFalseClause();
-  void ToggleBooleanResult();
-  [[nodiscard]] bool HasEncounteredFalseClause() const;
+  [[nodiscard]] bool IsFalseClause() const;
   [[nodiscard]] bool IsBooleanResult() const;
-  std::unordered_set<std::string> GetResult(const std::string& select_synonym);
-  friend std::ostream& operator<<(std::ostream& os, const Table& table);
+  [[nodiscard]] bool IsSynonymResult() const;
+  [[nodiscard]] bool IsAttributeResult() const;
+  [[nodiscard]] bool IsTupleResult() const;
+  std::unordered_set<std::string> GetResult(const std::string &select_synonym);
+  std::unordered_set<std::string> GetTupleResult(const std::vector<PqlToken> &tuple,
+                                                 const std::unordered_map<std::string, DesignEntityType> &declarations,
+                                                 PKB *pkb);
+  friend std::ostream &operator<<(std::ostream &os, const Table &table);
 
  private:
   bool is_boolean_result = false;
-  bool encountered_false_clause = false;
-  std::vector<std::pair<size_t, size_t>> GetCommonAttributeIndexPairs(const Attributes& other_attributes);
-  std::vector<size_t> GetOtherAttributeIndices(const Attributes& other_attributes);
-  void NaturalJoin(Table& other_table, std::vector<std::pair<size_t, size_t>>& common_attribute_index_pairs);
-  void CrossJoin(Table& other_table);
+  bool is_synonym_result = false;
+  bool is_attribute_result = false;
+  bool is_tuple_result = false;
+  bool is_false_clause = false;
+  std::vector<std::pair<size_t, size_t>> GetCommonAttributeIndexPairs(const Attributes &other_attributes);
+  std::vector<size_t> GetOtherAttributeIndices(const Attributes &other_attributes);
+  void NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t>> &common_attribute_index_pairs);
+  void CrossJoin(Table &other_table);
+  void UpdateResultType(const Table &other_table);
+  static std::string JoinRecordBy(const Record &record, const std::string &delimiter);
+  size_t GetAttributeIdxFromElem(PqlToken &elem, const std::unordered_map<std::string, DesignEntityType> &declarations);
+  static std::string ConvertAttrRef(const DesignEntityType &attr_ref, std::string value, PKB *pkb);
 };
 
 }

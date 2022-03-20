@@ -1,43 +1,42 @@
-#include "parentt_clause.h"
+#include "next_clause.h"
 #include "clause_util.h"
 
 namespace pql {
 
 using namespace clause_util;
 
-ParentTClause::ParentTClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
-                             const PqlToken &first_arg,
-                             const PqlToken &second_arg,
-                             PKB *pkb)
-    : declarations(declarations), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
+NextClause::NextClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
+                       const PqlToken &first_arg,
+                       const PqlToken &second_arg,
+                       PKB *pkb) : declarations(declarations), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
-Table ParentTClause::Execute() {
+Table NextClause::Execute() {
   if (IsArgSynonym(first_arg) && IsArgSynonym(second_arg)) {
-    // Parent(s1, s2)
+    // Next(s1, s2)
     return HandleSynonymSynonym();
   } else if (IsArgSynonym(first_arg) && IsArgWildcard(second_arg)) {
-    // Parent(s, _)
+    // Next(s, _)
     return HandleSynonymWildcard();
   } else if (IsArgSynonym(first_arg) && IsArgInteger(second_arg)) {
-    // Parent(s, 2)
+    // Next(s, 2)
     return HandleSynonymInteger();
   } else if (IsArgWildcard(first_arg) && IsArgSynonym(second_arg)) {
-    // Parent(_, s)
+    // Next(_, s)
     return HandleWildcardSynonym();
   } else if (IsArgWildcard(first_arg) && IsArgWildcard(second_arg)) {
-    // Parent(_, _)
+    // Next(_, _)
     return HandleWildcardWildcard();
   } else if (IsArgWildcard(first_arg) && IsArgInteger(second_arg)) {
-    // Parent(_, 2)
+    // Next(_, 2)
     return HandleWildcardInteger();
   } else if (IsArgInteger(first_arg) && IsArgSynonym(second_arg)) {
-    // Parent(1, s)
+    // Next(1, s)
     return HandleIntegerSynonym();
   } else if (IsArgInteger(first_arg) && IsArgWildcard(second_arg)) {
-    // Parent(1, _)
+    // Next(1, _)
     return HandleIntegerWildcard();
   } else if (IsArgInteger(first_arg) && IsArgInteger(second_arg)) {
-    // Parent(1, 2)
+    // Next(1, 2)
     return HandleIntegerInteger();
   } else {
     // throw exception???
@@ -46,16 +45,16 @@ Table ParentTClause::Execute() {
   }
 }
 
-Table ParentTClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStarStmt(
+Table NextClause::HandleSynonymSynonym() {
+  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
   );
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
-Table ParentTClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStarStmt(
+Table NextClause::HandleSynonymWildcard() {
+  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       StmtType::STMT
   );
@@ -66,8 +65,8 @@ Table ParentTClause::HandleSynonymWildcard() {
   return {first_arg.value, single_constraints};
 }
 
-Table ParentTClause::HandleSynonymInteger() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStarStmt(
+Table NextClause::HandleSynonymInteger() {
+  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       StmtType::STMT
   );
@@ -80,8 +79,8 @@ Table ParentTClause::HandleSynonymInteger() {
   return {first_arg.value, single_constraints};
 }
 
-Table ParentTClause::HandleWildcardSynonym() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStarStmt(
+Table NextClause::HandleWildcardSynonym() {
+  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       StmtType::STMT,
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
   );
@@ -92,8 +91,8 @@ Table ParentTClause::HandleWildcardSynonym() {
   return {second_arg.value, single_constraints};
 }
 
-Table ParentTClause::HandleWildcardWildcard() {
-  bool is_false_clause = pkb->GetParentStore()->GetAllParentStarStmt(StmtType::STMT, StmtType::STMT).empty();
+Table NextClause::HandleWildcardWildcard() {
+  bool is_false_clause = pkb->GetNextStore()->GetAllNextStmt(StmtType::STMT, StmtType::STMT).empty();
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
@@ -101,8 +100,8 @@ Table ParentTClause::HandleWildcardWildcard() {
   return table;
 }
 
-Table ParentTClause::HandleWildcardInteger() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStarStmt(StmtType::STMT, StmtType::STMT);
+Table NextClause::HandleWildcardInteger() {
+  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(StmtType::STMT, StmtType::STMT);
   bool is_false_clause = true;
   for (const auto &pair_constraint : pair_constraints) {
     if (pair_constraint.second==second_arg.value) {
@@ -116,8 +115,8 @@ Table ParentTClause::HandleWildcardInteger() {
   return table;
 }
 
-Table ParentTClause::HandleIntegerSynonym() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStarStmt(
+Table NextClause::HandleIntegerSynonym() {
+  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       StmtType::STMT,
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
   );
@@ -130,8 +129,8 @@ Table ParentTClause::HandleIntegerSynonym() {
   return {second_arg.value, single_constraints};
 }
 
-Table ParentTClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetParentStore()->GetAllDescOf(first_arg.value).empty();
+Table NextClause::HandleIntegerWildcard() {
+  bool is_false_clause = pkb->GetNextStore()->GetNextOf(first_arg.value).empty();
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
@@ -139,9 +138,9 @@ Table ParentTClause::HandleIntegerWildcard() {
   return table;
 }
 
-Table ParentTClause::HandleIntegerInteger() {
-  auto descendants = pkb->GetParentStore()->GetAllDescOf(first_arg.value);
-  bool is_false_clause = descendants.find(second_arg.value)==descendants.end();
+Table NextClause::HandleIntegerInteger() {
+  auto possible_next_values = pkb->GetNextStore()->GetNextOf(first_arg.value);
+  bool is_false_clause = possible_next_values.find(second_arg.value) == possible_next_values.end();
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();

@@ -67,7 +67,7 @@ Table UsesSClause::HandleIntegerWildcard() {
   bool is_empty = pkb->GetUsageStore()->GetVarUsedByStmt(first_arg.value).empty();
   Table table;
   if (is_empty) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -77,7 +77,7 @@ Table UsesSClause::HandleIntegerIdent() {
   bool is_empty = !pkb->GetUsageStore()->StmtVarExists(arg_pair);
   Table table;
   if (is_empty) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }

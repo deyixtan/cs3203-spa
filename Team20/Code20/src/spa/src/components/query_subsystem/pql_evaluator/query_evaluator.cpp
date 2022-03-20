@@ -15,18 +15,40 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
   }
 
   if (table.IsBooleanResult()) {
-    if (table.HasEncounteredFalseClause()) {
+    if (table.IsFalseClause()) {
       results.emplace_back("FALSE");
     } else {
       results.emplace_back("TRUE");
     }
-  } else {
+  } else if (table.IsAttributeResult()) {
+    ResultClause result_clause = query.GetResultClause();
+    std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
+    std::pair<std::pair<DesignEntityType, std::string>, AtrriName> attribute = Utils::ParseAttributeRef(result_clause.GetValues().front(), declarations);
+    auto projected_results = table.GetResult(attribute.first.second);
+    if (Utils::IsConversionNeeded(attribute.first.first, attribute.second)) {
+      std::unordered_set<std::string> temp_set;
+      for (auto s : projected_results) {
+        temp_set.insert(pkb->GetNameByStmt(clause_util::GetStmtType(attribute.first.first), s));
+      }
+      for (auto result : temp_set) {
+        results.emplace_back(result);
+      }
+    } else {
+      for (auto result : projected_results) {
+        results.emplace_back(result);
+      }
+    }
+  } else if (table.IsSynonymResult()) {
     auto projected_results = table.GetResult(query.GetResultClause().GetValues()[0].value);
     for (auto result : projected_results) {
       results.emplace_back(result);
     }
+  } else if (table.IsTupleResult()) {
+    auto projected_results = table.GetTupleResult(query.GetResultClause().GetValues(), query.GetDeclaration(), pkb);
+    for (auto result : projected_results) {
+      results.emplace_back(result);
+    }
   }
-
 }
 
 std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query) {

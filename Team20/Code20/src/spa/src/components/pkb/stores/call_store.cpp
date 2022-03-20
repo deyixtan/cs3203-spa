@@ -20,14 +20,22 @@ void CallStore::AddCallerHelper(std::string const &caller, std::string const &ca
     rs_map.at(caller).callees_star_set.insert(callee);
     rs_map.at(callee).callers_star_set.insert(caller);
     all_calls_star_pairs.emplace(std::pair<std::string, std::string>(caller, callee));
-    if(rs_map.find(caller) != rs_map.end()){
-      CallNode node = rs_map.at(caller);
-      for(auto callerStar : node.callers_star_set){
-        rs_map.at(callee).callers_star_set.insert(callerStar);
-        all_calls_star_pairs.emplace(std::pair<std::string, std::string>(callerStar, callee));
-        rs_map.at(callerStar).callees_star_set.insert(callee);
-      }
+  if(rs_map.find(callee) != rs_map.end()){
+    CallNode node = rs_map.at(callee);
+    for(auto calleeStar : node.callees_star_set) {
+      all_calls_star_pairs.emplace(std::pair<std::string, std::string>(caller, calleeStar));
+      rs_map.at(calleeStar).callers_star_set.insert(caller);
+      rs_map.at(caller).callees_star_set.insert(calleeStar);
     }
+  }
+  if(rs_map.find(caller) != rs_map.end()){
+    CallNode node = rs_map.at(caller);
+    for(auto callerStar : node.callers_star_set) {
+      all_calls_star_pairs.emplace(std::pair<std::string, std::string>(callerStar, callee));
+      rs_map.at(callerStar).callees_star_set.insert(callee);
+      rs_map.at(callee).callers_star_set.insert(callerStar);
+    }
+  }
 }
 
 bool CallStore::IsCallsPairExists(std::string const &first_proc, std::string const &second_proc) {

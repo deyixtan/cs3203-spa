@@ -96,7 +96,7 @@ Table FollowsTClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetFollowStore()->GetAllFollowStarStmt(StmtType::STMT, StmtType::STMT).empty();
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -111,7 +111,7 @@ Table FollowsTClause::HandleWildcardInteger() {
   }
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -134,7 +134,7 @@ Table FollowsTClause::HandleIntegerWildcard() {
   bool is_false_clause = pkb->GetFollowStore()->GetFollowingStarOf(first_arg.value).empty();
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -144,7 +144,7 @@ Table FollowsTClause::HandleIntegerInteger() {
   bool is_false_clause = following_star.find(second_arg.value)==following_star.end();
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
