@@ -321,7 +321,7 @@ none
 65 - multi relationship and with clause and pattern clause - valid 1
 assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
 Select BOOLEAN such that Follows (cl,pn) and Modifies (a,v) with v  . varName = "blue" pattern a(_,"red")
-TRUE
+FALSE
 5000
 66 - multi relationship and with clause and pattern clause - valid 2
 assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
