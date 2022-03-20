@@ -28,19 +28,36 @@ bool clause_util::IsArgAttribute(const PqlToken &arg) {
   return arg.type==PqlTokenType::ATTRIBUTE;
 }
 
-DesignEntityType clause_util::GetSynonymDesignEntity(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations) {
+DesignEntityType clause_util::GetSynonymDesignEntity(const PqlToken &arg,
+                                                     const std::unordered_map<std::string,
+                                                                              DesignEntityType> &declarations) {
   assert(arg.type==PqlTokenType::SYNONYM);
-  if (declarations.count(arg.value) != 0) {
+  if (declarations.count(arg.value)!=0) {
     return declarations.at(arg.value);
   }
   throw std::out_of_range("Synonym not declared");
 }
 
-bool clause_util::IsArgProcSynonym(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations) {
-  return IsArgSynonym(arg) && GetSynonymDesignEntity(arg, declarations)==DesignEntityType::PROCEDURE;
+bool clause_util::IsFirstArgProcRelationship(const PqlToken &first_arg,
+                                        const std::unordered_map<std::string, DesignEntityType> &declarations) {
+  return IsArgSynonym(first_arg) &&
+      GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::PROCEDURE ||
+      GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::CALL;
 }
 
-bool clause_util::IsArgStmtSynonym(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations) {
+bool clause_util::IsFirstArgStmtRelationship(const PqlToken &first_arg,
+                                        const std::unordered_map<std::string, DesignEntityType> &declarations) {
+  return IsArgSynonym(first_arg) &&
+      GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::STMT ||
+      GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::ASSIGN ||
+      GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::READ ||
+      GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::PRINT ||
+      GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::WHILE ||
+      GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::IF;
+}
+
+bool clause_util::IsArgStmtSynonym(const PqlToken &arg,
+                                   const std::unordered_map<std::string, DesignEntityType> &declarations) {
   return IsArgSynonym(arg) &&
       GetSynonymDesignEntity(arg, declarations)==DesignEntityType::STMT ||
       GetSynonymDesignEntity(arg, declarations)==DesignEntityType::ASSIGN ||
