@@ -390,11 +390,11 @@ Select <a, v> such that Uses (a, v) pattern a (v, _)
 5000
 79 - double tuple true multi relationship and with
 assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
-Select <a, v> such that Uses (a, v) with v.variableName = "a"
+Select <a, v> such that Uses (a, v) with v.varName = "a"
 6 a, 19 a
 5000
 80 - double tuple true multi relationship pattern and with
 assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
-Select <ifs, v> such that Uses (ifs, v) pattern ifs ("a",_,_) with v.variableName = v1.variableName
+Select <ifs, v> such that Uses (ifs, v) pattern ifs ("a",_,_) with v.varName = v1.varName
 14 a
 5000
