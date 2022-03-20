@@ -96,7 +96,7 @@ Table ParentClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetParentStore()->GetAllParentStmt(StmtType::STMT, StmtType::STMT).empty();
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -111,7 +111,7 @@ Table ParentClause::HandleWildcardInteger() {
   }
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -134,7 +134,7 @@ Table ParentClause::HandleIntegerWildcard() {
   bool is_false_clause = pkb->GetParentStore()->GetChildOf(first_arg.value).empty();
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -143,7 +143,7 @@ Table ParentClause::HandleIntegerInteger() {
   bool is_false_clause = pkb->GetParentStore()->ParentChildExists(first_arg.value,second_arg.value);
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
