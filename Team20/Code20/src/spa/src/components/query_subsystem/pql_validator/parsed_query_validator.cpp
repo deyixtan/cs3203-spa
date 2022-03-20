@@ -46,6 +46,10 @@ bool ParsedQueryValidator::ValidateAttribute(PqlToken token, std::unordered_map<
         parsed_attribute.second != AtrriName::STMTNO) {
       return false;
     }
+  } else if (parsed_attribute.first.first == DesignEntityType::VARIABLE) {
+    if (parsed_attribute.second != AtrriName::VARNAME) {
+      return false;
+    }
   }
   return true;
 }

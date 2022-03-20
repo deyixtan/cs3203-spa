@@ -43,6 +43,10 @@ void Table::Merge(Table &other_table) {
     ToggleBooleanResult();
   }
 
+  if (!IsAttributeResult() && other_table.IsAttributeResult()) {
+    ToggleAttributeResult();
+  }
+
   if (HasEncounteredFalseClause()) {
     // short circuit if current table has already encountered_false_clause
     return;
@@ -193,8 +197,16 @@ void Table::ToggleBooleanResult() {
   is_boolean_result ^= true;
 }
 
+void Table::ToggleAttributeResult() {
+  is_attribute_result ^= true;
+}
+
 bool Table::IsBooleanResult() const {
   return is_boolean_result;
+}
+
+bool Table::IsAttributeResult() const {
+  return is_attribute_result;
 }
 
 }

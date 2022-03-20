@@ -5,19 +5,19 @@
 #include "components/pkb/pkb.h"
 #include "components/query_subsystem/pql_lexer/pql_token.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
+#include "clause_util.h"
 
 namespace pql {
 
 class SelectClause : public Clause {
  public:
-  SelectClause(const PqlToken &selected_synonym, const std::unordered_map<std::string, DesignEntityType> &declarations, PKB *pkb);
+  SelectClause(const PqlToken &result_clause, const std::unordered_map<std::string, DesignEntityType> &declarations, PKB *pkb);
   Table Execute() override;
  private:
-  PqlToken selected_synonym;
+  PqlToken result_clause;
   std::unordered_map<std::string, DesignEntityType> declarations;
   PKB *pkb;
   DesignEntityType GetSynonymDesignEntity(const PqlToken &arg);
-  StmtType GetStmtType(const DesignEntityType &design_entity);
 
 };
 
