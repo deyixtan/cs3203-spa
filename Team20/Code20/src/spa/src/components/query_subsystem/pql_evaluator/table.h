@@ -36,12 +36,14 @@ class Table {
   void ToggleBooleanResult();
   void ToggleSynonymResult();
   void ToggleAttributeResult();
+  void ToggleTupleResult();
   [[nodiscard]] bool IsAttributesEmpty() const;
   [[nodiscard]] bool IsRecordsEmpty() const;
   [[nodiscard]] bool IsFalseClause() const;
   [[nodiscard]] bool IsBooleanResult() const;
   [[nodiscard]] bool IsSynonymResult() const;
   [[nodiscard]] bool IsAttributeResult() const;
+  [[nodiscard]] bool IsTupleResult() const;
   std::unordered_set<std::string> GetResult(const std::string& select_synonym);
   friend std::ostream& operator<<(std::ostream& os, const Table& table);
 
@@ -49,6 +51,7 @@ class Table {
   bool is_boolean_result = false;
   bool is_synonym_result = false;
   bool is_attribute_result = false;
+  bool is_tuple_result = false;
   bool is_false_clause = false;
   std::vector<std::pair<size_t, size_t>> GetCommonAttributeIndexPairs(const Attributes& other_attributes);
   std::vector<size_t> GetOtherAttributeIndices(const Attributes& other_attributes);

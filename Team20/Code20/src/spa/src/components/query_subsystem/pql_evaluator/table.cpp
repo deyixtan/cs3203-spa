@@ -200,6 +200,10 @@ void Table::ToggleAttributeResult() {
   is_attribute_result ^= true;
 }
 
+void Table::ToggleTupleResult() {
+  is_tuple_result ^= true;
+}
+
 bool Table::IsBooleanResult() const {
   return is_boolean_result;
 }
@@ -210,6 +214,10 @@ bool Table::IsSynonymResult() const {
 
 bool Table::IsAttributeResult() const {
   return is_attribute_result;
+}
+
+bool Table::IsTupleResult() const {
+  return is_tuple_result;
 }
 
 void Table::UpdateResultType(const Table &other_table) {
