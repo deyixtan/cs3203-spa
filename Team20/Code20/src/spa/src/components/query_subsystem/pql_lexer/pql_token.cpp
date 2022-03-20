@@ -84,7 +84,8 @@ std::unordered_set<PqlTokenType> design_entities = {
 std::unordered_set<PqlTokenType> expression_spec = {
     PqlTokenType::EXPR,
     PqlTokenType::SUB_EXPRESSION,
-    PqlTokenType::UNDERSCORE
+    PqlTokenType::UNDERSCORE,
+    PqlTokenType::IDENT_WITH_QUOTES
 };
 
 std::unordered_set<PqlTokenType> ent_ref = {
