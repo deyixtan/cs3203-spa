@@ -10,23 +10,17 @@
 PqlLexer::PqlLexer(std::string query) { this->query = query; }
 
 std::vector<PqlToken> PqlLexer::Lex() {
-  std::vector<std::string> raw_tokens = Split(query);
+  std::vector<std::string> raw_tokens = Regroup(Split(query));
   std::vector<PqlToken> tokens;
   bool isAttribute = false;
-  std::string attributeConstructor = "";
   for (int i = 0; i < raw_tokens.size(); i++) {
     std::string token = raw_tokens[i];
+    token = Trim(token);
     if (token.size() == 0) {
       continue;
     }
     std::string getTuple = GetValidTuple(token);
-    if(isAttribute) {
-      auto itPos = raw_tokens.begin() + i + 1;
-      raw_tokens.insert(itPos, attributeConstructor + token);
-      isAttribute = false;
-      attributeConstructor = "";
-      continue;
-    }
+
     if (string_token_map.find(token) != string_token_map.end()) {
       tokens.push_back(PqlToken{string_token_map[token], token});
     } else if (IsIdent(token)) {
@@ -34,9 +28,9 @@ std::vector<PqlToken> PqlLexer::Lex() {
     } else if (IsDigits(token)) {
       tokens.push_back(PqlToken{PqlTokenType::NUMBER, token});
     } else if (IsValidAttribute(token)) {
-      tokens.push_back(PqlToken{PqlTokenType::ATTRIBUTE, token});
+      tokens.push_back(PqlToken{PqlTokenType::ATTRIBUTE, Utils::RemoveSpace(token)});
     } else if (getTuple.length() > 0) {
-      tokens.push_back(PqlToken{PqlTokenType::TUPLE, getTuple});
+      tokens.push_back(PqlToken{PqlTokenType::TUPLE, Utils::RemoveSpace(getTuple)});
     } else if (IsValidString(token)) {
       std::string no_space_token = Utils::RemoveSpace(token);
       if (IsEntRef(no_space_token)) {
@@ -47,13 +41,8 @@ std::vector<PqlToken> PqlLexer::Lex() {
     } else if (IsSubExpressionToken(token)) {
       std::string no_space_token = Utils::RemoveSpace(token);
       tokens.push_back(PqlToken{PqlTokenType::SUB_EXPRESSION, Utils::TrimUnderscoreAndQuotes(no_space_token)});
-    } else if (token == "." && tokens[tokens.size() - 1].type == PqlTokenType::SYNONYM) {
-      std::string prev = tokens[tokens.size() - 1].value;
-      tokens.pop_back();
-      isAttribute = !isAttribute;
-      attributeConstructor = prev + token;
     } else {
-      throw "ERROR: Unrecognised token " + token + "\n";
+      throw std::runtime_error("ERROR: Unrecognised token! \n");
     }
   }
   return tokens;
@@ -142,20 +131,18 @@ std::vector<std::string> PqlLexer::BreakString(const std::string &s) {
   return raw_tokens;
 }
 
-bool PqlLexer::IsValidSynonym(const std::string &s) {
-  std::unordered_set<char> mathematical_signs = {'*', '/', '+', '-', '%'};
-  for (const auto c : s) {
-    if (!mathematical_signs.count(c) && !isalpha(c) && !isdigit(c)) {
-      return false;
-    }
-  }
-  return true;
-}
-
 bool PqlLexer::IsValidAttribute(const std::string &s) {
   std::unordered_set<std::string> attr_name = {"procName", "varName", "value", "stmt#"};
   size_t dot = s.find('.');
+  std::string synonym = s.substr(0, dot);
+  synonym = Trim(synonym);
+  if (!IsIdent(synonym)) {
+    return false;
+  }
+
   std::string attr = s.substr(dot + 1, s.length() - dot - 1);
+  attr = Trim(attr);
+
   if (!attr_name.count(attr)) {
     return false;
   }
@@ -163,6 +150,7 @@ bool PqlLexer::IsValidAttribute(const std::string &s) {
 }
 
 std::string PqlLexer::GetValidTuple(const std::string &s) {
+  Trim(s);
   int len = s.length();
   if(!(s[0] == '<' && s[len - 1] == '>')) {
     return "";
@@ -208,6 +196,7 @@ std::string PqlLexer::Trim(const std::string &s) {
 // 4. '(' cannot be followed by mathematical signs except for '('
 // 5. mathematical signs except for ')' cannot be followed by ')'
 // 6. '(' must be followed* by ')'
+
 bool PqlLexer::IsValidString(const std::string &s) {
   std::stack<std::string> stack;
   if (s.size() <= 2) {
@@ -234,7 +223,7 @@ bool PqlLexer::IsValidString(const std::string &s) {
     // check for strings with length > 1
     if (str.size() > 1) {
       // check that its a valid synonym
-      if(!IsValidSynonym(str)) {
+      if(!IsIdent(str)) {
         return false;
       }
       if (IsIdent(str) && prev_synonym) {
@@ -299,86 +288,182 @@ bool PqlLexer::IsValidString(const std::string &s) {
   return true;
 }
 
-std::vector<std::string> PqlLexer::Format(const std::string &s, char delimeter) {
+std::vector<std::string> PqlLexer::Format(const std::string &s, char delimiter) {
   std::vector<std::string> result;
   std::stringstream ss(s);
   std::string token;
 
-  while (getline(ss, token, delimeter)) {
+  while (getline(ss, token, delimiter)) {
     result.push_back(token);
   }
   return result;
 }
 
 std::vector<std::string> PqlLexer::Split(std::string s) {
-  std::vector<char> charArr;
+  std::vector<char> char_arr;
   const char delimiter = '^';
-  bool isString = false;
-  bool isTuple = false;
-  bool isSubExpr = false;
   for (const char c : s) {
-    switch (c) {
-      case '_':
-        isSubExpr = !isSubExpr;
-        break;
-      case '<':
-        isTuple = !isTuple;
-        break;
-      case '>':
-        isTuple = !isTuple;
-        break;
-      case '"':
-        isString = !isString;
-        break;
-        // Replace spaces w delimiter
-      case ' ':
-      case '\n':
-      case '\t':
-        if (!isString && !isTuple && !isSubExpr) {
-          charArr.push_back(delimiter);
-          continue;
-        }
-        break;
-        // Characters that will not appear in string
-      case '=':
-      case ';':
-      case ',':
-        if(!isTuple) {
-          charArr.push_back(delimiter);
-        }
-        break;
-      case ')':
-      case '(':
-        if (!isString) {
-          charArr.push_back(delimiter);
-          if(isSubExpr and c == ')') {
-            isSubExpr = !isSubExpr;
-          }
-        }
-        break;
-      default:
-        break;
+    if (sticky_characters.count(c) != 0) {
+      char_arr.push_back(delimiter);
     }
-    if(c != ' ' || !isSubExpr) {
-      charArr.push_back(c);
-    }
-    switch (c) {
-      case ';':
-      case '=':
-      case ',':
-        if(!isTuple) {
-          charArr.push_back(delimiter);
-        }
-        break;
-      case '(':
-      case ')':
-        if (!isString) {
-          charArr.push_back(delimiter);
-        }
-        break;
-      default:
-        break;
+    char_arr.push_back(c);
+    if (sticky_characters.count(c) != 0) {
+      char_arr.push_back(delimiter);
     }
   }
-  return Format(std::string(charArr.begin(), charArr.end()), delimiter);
+
+  std::vector<std::string> reformatted_list = Format(std::string(char_arr.begin(), char_arr.end()), delimiter);
+  std::vector<std::string> result_list;
+  for (auto token : reformatted_list) {
+    if (token != " " && token != "\n" && token != "\t" && !token.empty()) {
+      result_list.push_back(token);
+    }
+  }
+
+  return result_list;
 }
+
+std::vector<std::string> PqlLexer::Regroup(std::vector<std::string> indiv_token_list) {
+  int max_len = indiv_token_list.size();
+  int current_index = 0;
+  bool is_end = false;
+  std::vector<std::string> regrouped_token_list;
+
+  while (current_index < max_len - 1) {
+    std::string curr_token = indiv_token_list[current_index];
+    std::string next_token = indiv_token_list[current_index + 1];
+
+    if (curr_token == " " || curr_token == "\n" || curr_token == "\t" || curr_token.empty()) {
+      current_index++;
+    } else if (rel_ref_string.count(curr_token) != 0 && next_token == "*") { // check for star relationship
+      current_index = RegroupStarRelationship(current_index, regrouped_token_list, curr_token);
+    } else if (curr_token == "_" && next_token == "\"") { // check for sub_expression
+      current_index = RegroupSubExpression(indiv_token_list, max_len, current_index, regrouped_token_list);
+    } else if (curr_token == "\"") { // check for string
+      current_index = RegroupString(indiv_token_list, max_len, current_index, regrouped_token_list);
+      if (current_index >= max_len) {
+        is_end = true;
+      }
+    } else if (curr_token == "<") { // check for tuple
+      current_index = RegroupTuple(indiv_token_list, max_len, current_index, regrouped_token_list);
+      if (current_index >= max_len) {
+        is_end = true;
+      }
+    } else if (next_token == ".") { // check for attribute
+      current_index = RegroupAttribute(indiv_token_list, current_index, regrouped_token_list, curr_token, next_token);
+      if (current_index >= max_len) {
+        is_end = true;
+      }
+    } else {
+      regrouped_token_list.push_back(curr_token);
+      current_index++;
+    }
+  }
+
+  if (!is_end) {
+    regrouped_token_list.push_back(indiv_token_list[max_len - 1]);
+  }
+  return regrouped_token_list;
+}
+
+int PqlLexer::RegroupAttribute(const std::vector<std::string> &indiv_token_list,
+                               int current_index,
+                               std::vector<std::string> &regrouped_token_list,
+                               const std::string &curr_token,
+                               const std::string &next_token) const {
+  std::string attribute = curr_token + next_token + indiv_token_list[current_index + 2];
+  regrouped_token_list.push_back(attribute);
+  current_index += 3;
+  return current_index;
+}
+
+int PqlLexer::RegroupTuple(const std::vector<std::string> &indiv_token_list,
+                            int max_len,
+                            int current_index,
+                            std::vector<std::string> &regrouped_token_list) const {
+  int increment = 1;
+  std::string tuple = "<";
+  while (current_index + increment < max_len) {
+    if (indiv_token_list[current_index + increment] == ">") {
+      tuple += (indiv_token_list[current_index + increment] + " ");
+      break;
+    }
+    tuple += (indiv_token_list[current_index + increment] + " ");
+    increment++;
+  }
+  if (current_index + increment == max_len) {
+    throw "ERROR: Wrong tuple format! \n";
+  }
+  regrouped_token_list.push_back(tuple);
+  current_index += (increment + 1);
+  return current_index;
+}
+
+int PqlLexer::RegroupString(const std::vector<std::string> &indiv_token_list,
+                            int max_len,
+                            int current_index,
+                            std::vector<std::string> &regrouped_token_list) const {
+  int increment = 1;
+  std::string string_token = "\"";
+  while (current_index + increment < max_len) {
+    if (indiv_token_list[current_index + increment] == "\"") {
+      string_token += (indiv_token_list[current_index + increment] + " ");
+      break;
+    }
+    string_token += (indiv_token_list[current_index + increment] + " ");
+    increment++;
+  }
+  if (current_index + increment == max_len) {
+    throw "ERROR: Wrong string format! \n";
+  }
+  regrouped_token_list.push_back(string_token);
+  current_index += (increment + 1);
+  return current_index;
+}
+
+int PqlLexer::RegroupSubExpression(const std::vector<std::string> &indiv_token_list,
+                                   int max_len,
+                                   int current_index,
+                                   std::vector<std::string> &regrouped_token_list) const {
+  int increment = 1;
+  std::string sub_expression = "_";
+  while (current_index + increment < max_len - 1) {
+    if (indiv_token_list[current_index + increment] == "\"" && indiv_token_list[current_index + increment + 1] == "_") {
+      sub_expression += (indiv_token_list[current_index + increment] + indiv_token_list[current_index + increment + 1]);
+      break;
+    }
+    sub_expression += (indiv_token_list[current_index + increment] + " ");
+    increment++;
+  }
+  if (current_index + increment == max_len - 1) {
+    throw "ERROR: Wrong sub expression format! \n";
+  }
+  regrouped_token_list.push_back(sub_expression);
+  current_index += (increment + 2);
+  return current_index;
+}
+
+int PqlLexer::RegroupStarRelationship(int current_index,
+                                      std::vector<std::string> &regrouped_token_list,
+                                      const std::string &curr_token) const {
+  regrouped_token_list.push_back(curr_token + "*");
+  current_index += 2;
+  return current_index;
+}
+
+std::unordered_set<char> sticky_characters = {
+  '(', ')', ',', '.',
+  ' ', '\n', '\t',
+  '+', '-', '*', '/', '%',
+  '_', ';',
+  '<', '>',
+  '\"'
+};
+
+std::unordered_set<std::string> rel_ref_string = {
+    "Affects",
+    "Follows",
+    "Parent",
+    "Calls",
+    "Next"
+};
