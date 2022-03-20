@@ -211,6 +211,11 @@ bool ParsedQueryValidator::ValidateNextNextTArguments(Relationship relationship,
   PqlToken second_arg = relationship.GetSecond();
 
   if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+    if (first_arg.value==second_arg.value && relationship.GetRelRef().type == PqlTokenType::NEXT) {
+      // Next (s, s) is semantically invalid
+      return false;
+    }
+
     if (declarations.count(first_arg.value) == 0) {
       return false;
     }
