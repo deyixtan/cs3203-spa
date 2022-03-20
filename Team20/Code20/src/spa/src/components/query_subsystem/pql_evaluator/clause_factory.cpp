@@ -16,6 +16,7 @@
 #include "with_clause.h"
 #include "select_clause.h"
 #include "select_boolean_clause.h"
+#include "select_tuple_clause.h"
 #include "clause_util.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
 
@@ -126,8 +127,8 @@ std::unique_ptr<Clause> ClauseFactory::Create(ResultClause result_clause,
 //    auto selected_attribute = result_clause.GetValues().front();
 //    return std::make_unique<SelectAttributeClause>(selected_attribute, declarations, pkb);
   } else { // result_clause_type==ResultClauseType::TUPLE
-//    auto selected_tuple = result_clause.GetValues();
-//    return std::make_unique<SelectTupleClause>(selected_tuple, declarations, pkb);
+    auto selected_tuple = result_clause.GetValues();
+    return std::make_unique<SelectTupleClause>(selected_tuple, declarations, pkb);
   }
 }
 
