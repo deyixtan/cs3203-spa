@@ -30,7 +30,7 @@ procedure Brown {
 19.     eggs = coffee + ((tea / bacon) % salt - pepper);
     } else {
 20.     tea = 123456789012345678;
-21.     while (tea != (bacon + 52324 + salt)) {
+21.     while (tea != (bacon + 52324 + salt)) {20
 22. & 23.   print eggs;print tea;
 24.         if ((tea > 133333333) && (coffee < 7777777)) then {
 25.             tea = 10;
