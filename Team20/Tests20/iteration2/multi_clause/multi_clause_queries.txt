@@ -1000,132 +1000,132 @@ RESULT
 5000
 201. Get cl from multi clauses on Parent and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Parent(BLANK, BLANK) and Calls*(BLANK, BLANK)
+Select cl such that Parent(a, s) and Calls*(v, a)
 RESULT
 5000
 202. Get cl from multi clauses on Parent* and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Parent*(BLANK, BLANK) and Next(BLANK, BLANK)
+Select cl such that Parent*(p, v) and Next(r, ifs)
 RESULT
 5000
 203. Get cl from multi clauses on Parent* and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Parent*(BLANK, BLANK) and Modifies(BLANK, BLANK)
+Select cl such that Parent*(w, pn) and Modifies(ifs, v)
 RESULT
 5000
 204. Get cl from multi clauses on Parent* and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Parent*(BLANK, BLANK) and Uses(BLANK, BLANK)
+Select cl such that Parent*(w, r) and Uses(a, "breakfast")
 RESULT
 5000
 205. Get cl from multi clauses on Parent* and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Parent*(BLANK, BLANK) and Calls(BLANK, BLANK)
+Select cl such that Parent*(w, s) and Calls("Brown", "Cow")
 RESULT
 5000
 206. Get cl from multi clauses on Parent* and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Parent*(BLANK, BLANK) and Calls*(BLANK, BLANK)
+Select cl such that Parent*(w, cl) and Calls*("Brown", "Farm")
 RESULT
 5000
 207. Get cl from multi clauses on Next and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Next(BLANK, BLANK) and Modifies(BLANK, BLANK)
+Select cl such that Next(4, 17) and Modifies(w, v)
 RESULT
 5000
 208. Get cl from multi clauses on Next and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Next(BLANK, BLANK) and Uses(BLANK, BLANK)
+Select cl such that Next(s, s) and Uses(ifs, "breakfast")
 RESULT
 5000
 209. Get cl from multi clauses on Next and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Next(BLANK, BLANK) and Calls(BLANK, BLANK)
+Select cl such that Next(a, ifs) and Calls(_, _)
 RESULT
 5000
 210. Get cl from multi clauses on Next and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Next(BLANK, BLANK) and Calls*(BLANK, BLANK)
+Select cl such that Next(pn, cl) and Calls*(a, a)
 RESULT
 5000
 211. Get cl from multi clauses on Modifies and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Modifies(BLANK, BLANK) and Uses(BLANK, BLANK)
+Select cl such that Modifies(BLANK, BLANK) and Uses(w, "breakfast")
 RESULT
 5000
 212. Get cl from multi clauses on Modifies and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Modifies(BLANK, BLANK) and Calls(BLANK, BLANK)
+Select cl such that Modifies(a, "eggs") and Calls(BLANK, BLANK)
 RESULT
 5000
 213. Get cl from multi clauses on Modifies and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Modifies(BLANK, BLANK) and Calls*(BLANK, BLANK)
+Select cl such that Modifies(ifs, "eggs") and Calls*(BLANK, BLANK)
 RESULT
 5000
 214. Get cl from multi clauses on Uses and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Uses(BLANK, BLANK) and Calls(BLANK, BLANK)
+Select cl such that Uses(ifs, "salt") and Calls(BLANK, BLANK)
 RESULT
 5000
 215. Get cl from multi clauses on Uses and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Uses(BLANK, BLANK) and Calls*(BLANK, BLANK)
+Select cl such that Uses(cl, v) and Calls*(v, cl)
 RESULT
 5000
 216. Get cl from multi clauses on Call and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select cl such that Calls(BLANK, BLANK) and Calls*(BLANK, BLANK)
+Select cl such that Calls("Brown", p) and Calls*(p, "Brown")
 RESULT
 5000
 217. Get r from multi clauses on Follows and Follows*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows(BLANK, BLANK) and Follows*(BLANK, BLANK)
+Select r such that Follows(a, s) and Follows*(s, a)
 RESULT
 5000
 218. Get r from multi clauses on Follows and Parent
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows(BLANK, BLANK) and Parent(BLANK, BLANK)
+Select r such that Follows(v, a) and Parent(a, v)
 RESULT
 5000
 219. Get r from multi clauses on Follows and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows(BLANK, BLANK) and Parent*(BLANK, BLANK)
+Select r such that Follows(w, w) and Parent*(w, w)
 RESULT
 5000
 220. Get r from multi clauses on Follows and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows(BLANK, BLANK) and Next(BLANK, BLANK)
+Select r such that Follows(a, a) and Next(a, a)
 RESULT
 5000
 221. Get r from multi clauses on Follows and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows(BLANK, BLANK) and Modifies(BLANK, BLANK)
+Select r such that Follows(ifs, ifs) and Modifies(ifs, ifs)
 RESULT
 5000
 222. Get r from multi clauses on Follows and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows(BLANK, BLANK) and Uses(BLANK, BLANK)
+Select r such that Follows(pn, pn) and Uses(pn, pn)
 RESULT
 5000
 223. Get r from multi clauses on Follows and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows(BLANK, BLANK) and Calls(BLANK, BLANK)
+Select r such that Follows(r, r) and Calls(r, r)
 RESULT
 5000
 224. Get r from multi clauses on Follows and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows(BLANK, BLANK) and Calls*(BLANK, BLANK)
+Select r such that Follows(s, s) and Calls*(s, s)
 RESULT
 5000
 225. Get r from multi clauses on Follows* and Parent
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows*(BLANK, BLANK) and Parent(BLANK, BLANK)
+Select r such that Follows*(c, c) and Parent(c, c)
 RESULT
 5000
 226. Get r from multi clauses on Follows* and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows*(BLANK, BLANK) and Parent*(BLANK, BLANK)
+Select r such that Follows*(cl, cl) and Parent*(cl, cl)
 RESULT
 5000
 227. Get r from multi clauses on Follows* and Next
@@ -1135,127 +1135,127 @@ RESULT
 5000
 228. Get r from multi clauses on Follows* and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows*(BLANK, BLANK) and Modifies(BLANK, BLANK)
+Select r such that Follows*(ifs, w) and Modifies(w, a)
 RESULT
 5000
 229. Get r from multi clauses on Follows* and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows*(BLANK, BLANK) and Uses(BLANK, BLANK)
+Select r such that Follows*(w, v) and Uses(r, v)
 RESULT
 5000
 230. Get r from multi clauses on Follows* and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows*(BLANK, BLANK) and Calls(BLANK, BLANK)
+Select r such that Follows*(s, r) and Calls(p, p)
 RESULT
 5000
 231. Get r from multi clauses on Follows* and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Follows*(BLANK, BLANK) and Calls*(BLANK, BLANK)
+Select r such that Follows*(s, pn) and Calls*(p, p)
 RESULT
 5000
 232. Get r from multi clauses on Parent and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Parent(BLANK, BLANK) and Parent*(BLANK, BLANK)
+Select r such that Parent(s, c) and Parent*(c, a)
 RESULT
 5000
 233. Get r from multi clauses on Parent and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Parent(BLANK, BLANK) and Next(BLANK, BLANK)
+Select r such that Parent(s, cl) and Next(a, c)
 RESULT
 5000
 234. Get r from multi clauses on Parent and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Parent(BLANK, BLANK) and Modifies(BLANK, BLANK)
+Select r such that Parent(pn, r) and Modifies(w, c)
 RESULT
 5000
 235. Get r from multi clauses on Parent and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Parent(BLANK, BLANK) and Uses(BLANK, BLANK)
+Select r such that Parent(BLANK, BLANK) and Uses(a, v)
 RESULT
 5000
 236. Get r from multi clauses on Parent and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Parent(BLANK, BLANK) and Calls(BLANK, BLANK)
+Select r such that Parent(18, 4) and Calls(p, p)
 RESULT
 5000
 237. Get r from multi clauses on Parent and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Parent(BLANK, BLANK) and Calls*(BLANK, BLANK)
+Select r such that Parent(25, "tea") and Calls*(_, _)
 RESULT
 5000
 238. Get r from multi clauses on Parent* and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Parent*(BLANK, BLANK) and Next(BLANK, BLANK)
+Select r such that Parent*(18, 34) and Next(37, 37)
 RESULT
 5000
 239. Get r from multi clauses on Parent* and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Parent*(BLANK, BLANK) and Modifies(BLANK, BLANK)
+Select r such that Parent*(38, 79) and Modifies(w, "dog")
 RESULT
 5000
 240. Get r from multi clauses on Parent* and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Parent*(BLANK, BLANK) and Uses(BLANK, BLANK)
+Select r such that Parent*(75, ifs) and Uses(w, "cat")
 RESULT
 5000
 241. Get r from multi clauses on Parent* and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Parent*(BLANK, BLANK) and Calls(BLANK, BLANK)
+Select r such that Parent*(ifs, 72) and Calls(BLANK, BLANK)
 RESULT
 5000
 242. Get r from multi clauses on Parent* and Call*
-stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Parent*(BLANK, BLANK) and Calls*(BLANK, BLANK)
+stmt s; procedure p1, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select r such that Parent*(18, 29) and Calls*(p1, p2)
 RESULT
 5000
 243. Get r from multi clauses on Next and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Next(BLANK, BLANK) and Modifies(BLANK, BLANK)
+Select r such that Next(r, r) and Modifies(a, v)
 RESULT
 5000
 244. Get r from multi clauses on Next and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Next(BLANK, BLANK) and Uses(BLANK, BLANK)
+Select r such that Next(v, pn) and Uses(pn, v)
 RESULT
 5000
 245. Get r from multi clauses on Next and Call
-stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Next(BLANK, BLANK) and Calls(BLANK, BLANK)
+stmt s; procedure p1, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select r such that Next(p1, p2) and Calls(p1, p2)
 RESULT
 5000
 246. Get r from multi clauses on Next and Call*
-stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Next(BLANK, BLANK) and Calls*(BLANK, BLANK)
+stmt s; procedure p1, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select r such that Next(s, w) and Calls*(p1, p2)
 RESULT
 5000
 247. Get r from multi clauses on Modifies and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Modifies(BLANK, BLANK) and Uses(BLANK, BLANK)
+Select r such that Modifies(ifs, "pepper") and Uses(BLANK, BLANK)
 RESULT
 5000
 248. Get r from multi clauses on Modifies and Call
-stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Modifies(BLANK, BLANK) and Calls(BLANK, BLANK)
+stmt s; procedure p1, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select r such that Modifies(a, "pepper") and Calls(p1, p2)
 RESULT
 5000
 249. Get r from multi clauses on Modifies and Call*
-stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Modifies(BLANK, BLANK) and Calls*(BLANK, BLANK)
+stmt s; procedure p1, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select r such that Modifies(a, v) and Calls*(p1, p2)
 RESULT
 5000
 250. Get r from multi clauses on Uses and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Uses(BLANK, BLANK) and Calls(BLANK, BLANK)
+Select r such that Uses(a, "pepper") and Calls(p1, p2)
 RESULT
 5000
 251. Get r from multi clauses on Uses and Call*
-stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Uses(BLANK, BLANK) and Calls*(BLANK, BLANK)
+stmt s; procedure p1, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select r such that Uses(a, v) and Calls*(p1, p2)
 RESULT
 5000
 252. Get r from multi clauses on Call and Call*
-stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
-Select r such that Calls(BLANK, BLANK) and Calls*(BLANK, BLANK)
+stmt s; procedure p1, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
+Select r such that Calls(BLANK, BLANK) and Calls*(p1, p2)
 RESULT
 5000
 253. Get p from multi clauses on Follows and Follows*
