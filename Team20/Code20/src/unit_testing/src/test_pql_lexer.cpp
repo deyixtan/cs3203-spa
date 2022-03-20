@@ -701,3 +701,4 @@ TEST_CASE("Test invalid synonym in pattern sub-expression") {
   PqlLexer pql_lexer = PqlLexer(query);
   REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
+
