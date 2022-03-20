@@ -268,3 +268,8 @@ assign a; variable BOOLEAN; constant c; procedure p; read rd;
 Select BOOLEAN such that Uses (a, BOOLEAN)
 blue, green, red, yellow
 5000
+55 - special attribute
+assign a; variable v; constant c; procedure p; read rd;
+Select BOOLEAN such that with v    .   varName = p    . procName
+yellow
+5000
