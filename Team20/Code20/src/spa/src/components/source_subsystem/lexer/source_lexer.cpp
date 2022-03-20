@@ -2,35 +2,7 @@
 
 namespace source {
 
-SourceLexer::SourceLexer(std::string simple_source) : m_cursor(0), m_simple_source(std::move(simple_source)) {
-  ConstructLexerSpecs();
-}
-
-void SourceLexer::ConstructLexerSpecs() {
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^\\s+", TokenType::WHITE_SPACE));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^\\d+", TokenType::INTEGER));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[a-zA-Z]+[a-zA-Z0-9]*", TokenType::NAME));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[{]", TokenType::OPENED_BRACES));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[}]", TokenType::CLOSED_BRACES));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[(]", TokenType::OPENED_PARENTHESIS));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[)]", TokenType::CLOSED_PARENTHESIS));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[&][&]", TokenType::AND));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[|][|]", TokenType::OR));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[>][=]", TokenType::IS_GREATER_EQUAL));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[>]", TokenType::IS_GREATER));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[<][=]", TokenType::IS_LESSER_EQUAL));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[<]", TokenType::IS_LESSER));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[=][=]", TokenType::IS_EQUAL));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[!][=]", TokenType::IS_NOT_EQUAL));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[+]", TokenType::ADDITION));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[-]", TokenType::SUBTRACTION));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[*]", TokenType::MULTIPLICATION));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[/]", TokenType::DIVISION));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[%]", TokenType::MODULUS));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[;]", TokenType::SEMI_COLON));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[=]", TokenType::EQUAL));
-  m_lexer_specs.emplace_back(std::pair<std::regex, TokenType>("^[!]", TokenType::NOT));
-}
+SourceLexer::SourceLexer(std::string simple_source) : m_cursor(0), m_simple_source(std::move(simple_source)) {}
 
 bool SourceLexer::HasMoreTokens() {
   return m_cursor < m_simple_source.length();
@@ -38,22 +10,110 @@ bool SourceLexer::HasMoreTokens() {
 
 std::shared_ptr<SourceToken> SourceLexer::GetNextToken() {
   std::string remaining_source = m_simple_source.substr(m_cursor);
-  for (std::pair<std::regex, TokenType> lexer_spec : m_lexer_specs) {
-    std::regex pattern_expression = lexer_spec.first;
-    TokenType token_type = lexer_spec.second;
-
-    std::smatch match;
-    std::regex_search(remaining_source, match, pattern_expression);
-    if (match.length() == 0) {
-      continue;
+  char lookahead = remaining_source.at(0);
+  if (remaining_source.length() > 1) {
+    char lookahead2 = remaining_source.at(1);
+    if (lookahead == '&' && lookahead2 == '&') {
+      m_cursor += 2;
+      return std::make_shared<SourceToken>(TokenType::AND, "");
+    } else if (lookahead == '|' && lookahead2 == '|') {
+      m_cursor += 2;
+      return std::make_shared<SourceToken>(TokenType::OR, "");
+    } else if (lookahead == '>' && lookahead2 == '=') {
+      m_cursor += 2;
+      return std::make_shared<SourceToken>(TokenType::IS_GREATER_EQUAL, "");
+    } else if (lookahead == '<' && lookahead2 == '=') {
+      m_cursor += 2;
+      return std::make_shared<SourceToken>(TokenType::IS_LESSER_EQUAL, "");
+    } else if (lookahead == '=' && lookahead2 == '=') {
+      m_cursor += 2;
+      return std::make_shared<SourceToken>(TokenType::IS_EQUAL, "");
+    } else if (lookahead == '!' && lookahead2 == '=') {
+      m_cursor += 2;
+      return std::make_shared<SourceToken>(TokenType::IS_NOT_EQUAL, "");
     }
+  }
 
-    std::string token_value = match[0].str();
-    m_cursor += match[0].str().length();
-    if (token_type == TokenType::NAME || token_type == TokenType::INTEGER) {
-      return std::make_shared<SourceToken>(token_type, token_value);
+  if (lookahead == '\n') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::NEW_LINE, "");
+  } else if (lookahead == '{') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::OPENED_BRACES, "");
+  } else if (lookahead == '}') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::CLOSED_BRACES, "");
+  } else if (lookahead == '(') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::OPENED_PARENTHESIS, "");
+  } else if (lookahead == ')') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::CLOSED_PARENTHESIS, "");
+  } else if (lookahead == '>') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::IS_GREATER, "");
+  } else if (lookahead == '<') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::IS_LESSER, "");
+  } else if (lookahead == '+') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::ADDITION, "");
+  } else if (lookahead == '-') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::SUBTRACTION, "");
+  } else if (lookahead == '*') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::MULTIPLICATION, "");
+  } else if (lookahead == '/') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::DIVISION, "");
+  } else if (lookahead == '%') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::MODULUS, "");
+  } else if (lookahead == ';') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::SEMI_COLON, "");
+  } else if (lookahead == '=') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::EQUAL, "");
+  } else if (lookahead == '!') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::NOT, "");
+  } else if (lookahead == ' ') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::WHITE_SPACE, "");
+  } else if (std::isdigit(lookahead) != 0) {
+    std::string value = "";
+    while (std::isdigit(lookahead) != 0) {
+      value += lookahead;
+      m_cursor++;
+      remaining_source = m_simple_source.substr(m_cursor);
+      if (m_cursor >= m_simple_source.length()) {
+        break;
+      }
+      lookahead = remaining_source.at(0);
     }
-    return std::make_shared<SourceToken>(token_type, "");
+    return std::make_shared<SourceToken>(TokenType::INTEGER, value);
+  } else if (std::isalpha(lookahead) != 0) {
+    std::string value = "";
+    value += lookahead;
+    m_cursor++;
+    remaining_source = m_simple_source.substr(m_cursor);
+    if (m_cursor >= m_simple_source.length()) {
+      return std::make_shared<SourceToken>(TokenType::NAME, value);
+    }
+    lookahead = remaining_source.at(0);
+
+    while (std::isalnum(lookahead) != 0) {
+      value += lookahead;
+      m_cursor++;
+      remaining_source = m_simple_source.substr(m_cursor);
+      if (m_cursor >= m_simple_source.length()) {
+        break;
+      }
+      lookahead = remaining_source.at(0);
+    }
+    return std::make_shared<SourceToken>(TokenType::NAME, value);
   }
 
   throw UnexpectedTokenException();
@@ -62,7 +122,7 @@ std::shared_ptr<SourceToken> SourceLexer::GetNextToken() {
 void SourceLexer::RemoveWhiteSpaceTokens(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr) {
   for (std::vector<std::shared_ptr<SourceToken>>::iterator it = tokens_ptr.begin(); it != tokens_ptr.end(); it++) {
     TokenType type = (*it)->GetType();
-    if (type == TokenType::WHITE_SPACE) {
+    if (type == TokenType::WHITE_SPACE || type == TokenType::NEW_LINE) {
       tokens_ptr.erase(it--);
     }
   }

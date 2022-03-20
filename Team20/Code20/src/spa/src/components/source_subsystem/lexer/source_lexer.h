@@ -18,7 +18,6 @@ class SourceLexer {
   std::vector<std::pair<std::regex, TokenType>> m_lexer_specs;
 
  private:
-  void ConstructLexerSpecs();
   bool HasMoreTokens();
   [[nodiscard]] std::shared_ptr<SourceToken> GetNextToken();
   void RemoveWhiteSpaceTokens(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);

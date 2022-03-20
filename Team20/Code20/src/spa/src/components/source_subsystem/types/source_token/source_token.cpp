@@ -17,6 +17,8 @@ std::string SourceToken::ToString() {
   switch (m_type) {
     case TokenType::WHITE_SPACE:type_str = "WHITE_SPACE";
       break;
+    case TokenType::NEW_LINE:type_str = "NEW_LINE";
+      break;
     case TokenType::INTEGER:type_str = "INTEGER";
       break;
     case TokenType::NAME:type_str = "NAME";
