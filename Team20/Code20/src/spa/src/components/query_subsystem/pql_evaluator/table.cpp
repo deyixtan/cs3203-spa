@@ -232,6 +232,10 @@ void Table::UpdateResultType(const Table &other_table) {
   if (!IsSynonymResult() && other_table.IsSynonymResult()) {
     ToggleSynonymResult();
   }
+
+  if (!IsTupleResult() && other_table.IsTupleResult()) {
+    ToggleTupleResult();
+  }
 }
 
 }
