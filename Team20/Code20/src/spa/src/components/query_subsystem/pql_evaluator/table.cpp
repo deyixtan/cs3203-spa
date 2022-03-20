@@ -1,8 +1,11 @@
 #include "table.h"
+#include "clause_util.h"
 
 #include <initializer_list>
 
 namespace pql {
+
+using namespace clause_util;
 
 Table::Table(): attributes({}), records({}) {}
 
@@ -153,6 +156,60 @@ std::unordered_set<std::string> Table::GetResult(const std::string& select_synon
     }
   }
   return result;
+}
+
+std::unordered_set<std::string> Table::GetTupleResult(const std::vector<PqlToken> &tuple, const std::unordered_map<std::string, DesignEntityType> &declarations, PKB *pkb) {
+  std::unordered_set<std::string> result;
+  const std::string WHITESPACE = " ";
+
+  for (auto record : records) {
+    Record new_record;
+    for (auto elem : tuple) {
+      auto idx = GetAttributeIdxFromElem(elem, declarations);
+      if (elem.type==PqlTokenType::ATTRIBUTE) {
+        auto parsed_attr_ref = Utils::ParseAttributeRef(elem, declarations);
+        auto attr_ref_design_entity = parsed_attr_ref.first.first;
+        auto attr_ref_attr_name = parsed_attr_ref.second;
+        if (Utils::IsConversionNeeded(attr_ref_design_entity, attr_ref_attr_name)) {
+          new_record.push_back(ConvertAttrRef(attr_ref_design_entity, record[idx], pkb));
+        } else {
+          new_record.push_back(record[idx]);
+        }
+      }
+      if (elem.type==PqlTokenType::SYNONYM) {
+        new_record.push_back(record[idx]);
+      }
+    }
+
+    result.insert(JoinRecordBy(new_record, WHITESPACE));
+  }
+
+  return result;
+}
+
+size_t Table::GetAttributeIdxFromElem(PqlToken& elem, const std::unordered_map<std::string, DesignEntityType> &declarations) {
+  if (elem.type==PqlTokenType::ATTRIBUTE) {
+    auto parsed_attr_ref = Utils::ParseAttributeRef(elem, declarations);
+    auto attr_ref_synonym = parsed_attr_ref.first.second;
+    auto it = std::find(attributes.begin(), attributes.end(), attr_ref_synonym);
+    return it - attributes.begin();
+  } else { // elem.type == PqlTokenType::SYNONYM
+    auto it = std::find(attributes.begin(), attributes.end(), elem.value);
+    return it - attributes.begin();
+  }
+}
+
+std::string Table::ConvertAttrRef(const DesignEntityType &attr_ref_design_entity, std::string value, PKB *pkb) {
+  auto new_value = pkb->GetNameByStmt(GetStmtType(attr_ref_design_entity), value);
+  return new_value;
+}
+
+std::string Table::JoinRecordBy(const Record& record, const std::string &delimiter) {
+  std::string result_string;
+  for (size_t i = 0; i < record.size(); ++i) {
+    result_string += record[i] + (i != record.size() - 1 ? delimiter : "");
+  }
+  return result_string;
 }
 
 std::ostream& operator<<(std::ostream& os, const Table& table) {

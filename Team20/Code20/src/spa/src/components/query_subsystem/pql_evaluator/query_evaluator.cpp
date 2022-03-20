@@ -38,13 +38,17 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
         results.emplace_back(result);
       }
     }
-  } else {
+  } else if (table.IsSynonymResult()) {
     auto projected_results = table.GetResult(query.GetResultClause().GetValues()[0].value);
     for (auto result : projected_results) {
       results.emplace_back(result);
     }
+  } else if (table.IsTupleResult()) {
+    auto projected_results = table.GetTupleResult(query.GetResultClause().GetValues(), query.GetDeclaration(), pkb);
+    for (auto result : projected_results) {
+      results.emplace_back(result);
+    }
   }
-
 }
 
 std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query) {
