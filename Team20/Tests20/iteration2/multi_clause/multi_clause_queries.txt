@@ -1,722 +1,722 @@
 1. Get ifs from multi clauses on Follows and Follows*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows(ifs, w) and Follows*(ifs, cl)
-RESULT
+6
 5000
 2. Get ifs from multi clauses on Follows and Parent
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows(pn, ifs) and Parent(ifs, a)
-RESULT
+24
 5000
 3. Get ifs from multi clauses on Follows and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows(a, w) and Parent*(w, ifs)
-RESULT
+69,43,46,24
 5000
 4. Get ifs from multi clauses on Follows and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows(a, ifs) and Next(ifs, pn)
-RESULT
+none
 5000
 5. Get ifs from multi clauses on Follows and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows(pn, ifs) and Modifies(ifs, "tea")
-RESULT
+24
 5000
 6. Get ifs from multi clauses on Follows and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows(a, ifs) and Uses(ifs, "y")
-RESULT
+46
 5000
 7. Get ifs from multi clauses on Follows and Call
 stmt s; procedure p, p1; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows(ifs, w) and Calls(p, p1)
-RESULT
+6
 5000
 8. Get ifs from multi clauses on Follows and Call*
 stmt s; procedure p, p1; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows(ifs, w) and Calls*(p, p1)
-RESULT
+6
 5000
 9. Get ifs from multi clauses on Follows* and Parent
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w, w1; constant c; call cl;
 Select ifs such that Follows*(a, w) and Parent(w, w1)
-RESULT
+98,97,96,95,94,93,92,91,90,89,88,86,85,46,82,43,87,69,24,18,83,84,6
 5000
 10. Get ifs from multi clauses on Follows* and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w, w1; constant c; call cl;
 Select ifs such that Follows*(a, w) and Parent*(w, w1)
-RESULT
+98,97,96,95,94,93,92,91,90,89,88,86,85,46,82,43,87,69,24,18,83,84,6
 5000
 11. Get ifs from multi clauses on Follows* and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows*(4, ifs) and Next(ifs, pn)
-RESULT
+6
 5000
 12. Get ifs from multi clauses on Follows* and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows*(4, ifs) and Modifies(ifs, "eggs")
-RESULT
+6
 5000
 13. Get ifs from multi clauses on Follows* and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows*(ifs, 30) and Uses(ifs, "coffee")
-RESULT
+24
 5000
 14. Get ifs from multi clauses on Follows* and Call
 stmt s; procedure p, p1; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows*(pn, ifs) and Calls(p, p1)
-RESULT
+46,24
 5000
 15. Get ifs from multi clauses on Follows* and Call*
 stmt s; procedure p, p1; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Follows*(a, ifs) and Calls*(p1, p)
-RESULT
+46
 5000
 16. Get ifs from multi clauses on Parent and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w, w1; constant c; call cl;
 Select ifs such that Parent(w1, ifs) and Parent*(w, w1)
-RESULT
+43
 5000
 17. Get ifs from multi clauses on Parent and Next
 stmt s; procedure p; assign a, a1; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Parent(ifs, a) and Next(a, a1)
-RESULT
+6,46,24,43,69
 5000
 18. Get ifs from multi clauses on Parent and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Parent(ifs, a) and Modifies(a, "y")
-RESULT
+43
 5000
 19. Get ifs from multi clauses on Parent and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Parent(w, ifs) and Uses(ifs, "y")
-RESULT
+43
 5000
 20. Get ifs from multi clauses on Parent and Call
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs, ifs2; while w; constant c; call cl;
 Select ifs such that Parent(ifs, ifs2) and Calls(p2, p)
-RESULT
+97,84,46,43,87,94,96,95,93,92,91,90,89,88,86,85,83,82
 5000
 21. Get ifs from multi clauses on Parent and Call*
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs, ifs2; while w; constant c; call cl;
 Select ifs such that Parent(ifs, ifs2) and Calls*(p, p2)
-RESULT
+97,84,46,43,87,94,96,95,93,92,91,90,89,88,86,85,83,82
 5000
 22. Get ifs from multi clauses on Parent* and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Parent*(w, ifs) and Next(w, a)
-RESULT
+69,43,46
 5000
 23. Get ifs from multi clauses on Parent* and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Parent*(w, ifs) and Modifies(ifs, "cat")
-RESULT
+43,69,46
 5000
 24. Get ifs from multi clauses on Parent* and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Parent*(ifs, w) and Uses(ifs, "hell")
-RESULT
+82,83,6,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,18
 5000
 25. Get ifs from multi clauses on Parent* and Call
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Parent*(w, a) and Calls(p, p2)
-RESULT
+98,97,96,95,94,93,92,91,90,89,88,86,85,46,82,43,87,69,24,18,83,84,6
 5000
 26. Get ifs from multi clauses on Parent* and Call*
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Parent*(ifs, w) and Calls*(p, p2)
-RESULT
+84,6,83,18,87,69,43,82,46,85,86,88,89,90,91,92,93,94,95,96,97,98
 5000
 27. Get ifs from multi clauses on Next and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Next(a, ifs) and Modifies(ifs, "cat")
-RESULT
+46
 5000
 28. Get ifs from multi clauses on Next and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Next(pn, ifs) and Uses(ifs, "cat")
-RESULT
+none
 5000
 29. Get ifs from multi clauses on Next and Call
 stmt s; procedure p, p2; assign a, a2; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Next(a, a2) and Calls(p2, p)
-RESULT
+98,97,96,95,94,93,92,91,90,89,88,86,85,46,82,43,87,69,24,18,83,84,6
 5000
 30. Get ifs from multi clauses on Next and Call*
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs, ifs1; while w; constant c; call cl;
 Select ifs such that Next(ifs, ifs1) and Calls*(p, p2)
-RESULT
+84,83,87,82,46,85,86,88,89,90,91,92,93,94,95,96,97
 5000
 31. Get ifs from multi clauses on Modifies and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
 Select ifs such that Modifies(ifs, v) and Uses(a, v)
-RESULT
+6,18,24,43,69,46
 5000
 32. Get ifs from multi clauses on Modifies and Call
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Modifies(pn, "cat") and Calls(p, p2)
-RESULT
+none
 5000
 33. Get ifs from multi clauses on Modifies and Call*
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Modifies(w, "dog") and Calls*(p, p2)
-RESULT
+98,97,96,95,94,93,92,91,90,89,88,86,85,46,82,43,87,69,24,18,83,84,6
 5000
 34. Get ifs from multi clauses on Uses and Call
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Uses(ifs, "y") and Calls(p2, p)
-RESULT
+43,46,18,6
 5000
 35. Get ifs from multi clauses on Uses and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Uses(a, "salt") and Calls*(p, _)
-RESULT
+98,97,96,95,94,93,92,91,90,89,88,86,85,46,82,43,87,69,24,18,83,84,6
 5000
 36. Get ifs from multi clauses on Call and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select ifs such that Calls(p, _) and Calls*(p, _)
-RESULT
+98,97,96,95,94,93,92,91,90,89,88,86,85,46,82,43,87,69,24,18,83,84,6
 5000
 37. Get w from multi clauses on Follows and Follows*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows(w, cl) and Follows*(r, w)
-RESULT
+14
 5000
 38. Get w from multi clauses on Follows and Parent
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w, w2; constant c; call cl;
 Select w such that Follows(ifs, w2) and Parent(ifs, w)
-RESULT
+8
 5000
 39. Get w from multi clauses on Follows and Parent*
 stmt s; procedure p; assign a, a2; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows(a, w) and Parent*(w, a2)
-RESULT
+38,21
 5000
 40. Get w from multi clauses on Follows and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows(a, w) and Next(w, r)
-RESULT
+21
 5000
 41. Get w from multi clauses on Follows and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows(w, cl) and Modifies(w, _)
-RESULT
+8,14,36
 5000
 42. Get w from multi clauses on Follows and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows(w, cl) and Uses(w, "coffee")
-RESULT
+14
 5000
 43. Get w from multi clauses on Follows and Call
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows(w, a) and Calls(p, p2)
-RESULT
+40,75
 5000
 44. Get w from multi clauses on Follows and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows(a, w) and Calls*(p, _)
-RESULT
+38,21
 5000
 45. Get w from multi clauses on Follows* and Parent
 stmt s; procedure p; assign a, a2; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows*(w, a) and Parent(w, a2)
-RESULT
+75
 5000
 46. Get w from multi clauses on Follows* and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows*(ifs, w) and Parent*(ifs, a)
-RESULT
+14
 5000
 47. Get w from multi clauses on Follows* and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows*(s, w) and Next(w, _)
-RESULT
+8,14,21,38
 5000
 48. Get w from multi clauses on Follows* and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows*(s, w) and Modifies(w, _)
-RESULT
+8,14,21,38
 5000
 49. Get w from multi clauses on Follows* and Uses
 stmt s, s2; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows*(s, s2) and Uses(s2, "dog")
-RESULT
+99,40,39,75,72,42,41,38,21,36,14,8
 5000
 50. Get w from multi clauses on Follows* and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Follows*(s, w) and Calls(p, _)
-RESULT
+8,14,21,38
 5000
 51. Get w from multi clauses on Follows* and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w, w2; constant c; call cl;
 Select w such that Follows*(w, s) and Calls*(p, _)
-RESULT
+8,14,36,72,21,40,75,42
 5000
 52. Get w from multi clauses on Parent and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w, w2; constant c; call cl;
 Select w such that Parent(w2, ifs) and Parent*(ifs, w)
-RESULT
+72,75
 5000
 53. Get w from multi clauses on Parent and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Parent(w, s) and Next(s, _)
-RESULT
+39,40,21,36,41,38,42,8,14,72,75,99
 5000
 54. Get w from multi clauses on Parent and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Parent(w, a) and Modifies(a, "cat")
-RESULT
+39
 5000
 55. Get w from multi clauses on Parent and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Parent(ifs, w) and Uses(ifs, _)
-RESULT
+99,8,72,21,75
 5000
 56. Get w from multi clauses on Parent and Call
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Parent(p, w) and Calls(p, p2)
-RESULT
+none
 5000
 57. Get w from multi clauses on Parent and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Parent(w, a) and Calls*(p, _)
-RESULT
+8,99,14,75,39,36
 5000
 58. Get w from multi clauses on Parent* and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w, w2; constant c; call cl;
 Select w such that Parent*(w, w2) and Next(w2, ifs)
-RESULT
+36,38,41,39,40
 5000
 59. Get w from multi clauses on Parent* and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Parent*(w, ifs) and Modifies(ifs, _)
-RESULT
+36,21,38,41,39,40,42
 5000
 60. Get w from multi clauses on Parent* and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Parent*(w, ifs) and Uses(ifs, "cat")
-RESULT
+36,38,41,39,40,42
 5000
 61. Get w from multi clauses on Parent* and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Parent*(w, w) and Calls(p, _)
-RESULT
+none
 5000
 62. Get w from multi clauses on Parent* and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Parent*(ifs, w) and Calls*(p, _)
-RESULT
+8,99,72,21,75
 5000
 63. Get w from multi clauses on Next and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Next(ifs, w) and Modifies(w, "hell")
-RESULT
+99
 5000
 64. Get w from multi clauses on Next and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Next(a, w) and Uses(a, "x")
-RESULT
+39
 5000
 65. Get w from multi clauses on Next and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Next(ifs, r) and Calls(_, _)
-RESULT
+none
 5000
 66. Get w from multi clauses on Next and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Next(cl, w) and Calls*(_, _)
-RESULT
+14
 5000
 67. Get w from multi clauses on Modifies and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Modifies(r, "tea") and Uses(w, "beans")
-RESULT
+8
 5000
 68. Get w from multi clauses on Modifies and Call
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select w such that Modifies(w, "tea") and Calls(p, p2)
-RESULT
+8,14,21
 5000
 69. Get w from multi clauses on Modifies and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
 Select w such that Modifies(w, v) and Calls*(_, _)
-RESULT
+8,14,21,36,38,41,39,40,42,75,99
 5000
 70. Get w from multi clauses on Uses and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
 Select w such that Uses(w, "coffee") and Calls(_, _)
-RESULT
+14,21
 5000
 71. Get w from multi clauses on Uses and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
 Select w such that Uses(ifs, _) and Calls*(_, _)
-RESULT
+99,40,39,75,72,42,41,38,21,36,14,8
 5000
 72. Get w from multi clauses on Call and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
 Select w such that Calls(p, p2) and Calls*(p, p2)
-RESULT
+none
 5000
 73. Get s from multi clauses on Follows and Follows*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows(s, a) and Follows*(a, ifs)
-RESULT
+44
 5000
 74. Get s from multi clauses on Follows and Parent
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows(a, w) and Parent(w, s)
-RESULT
+39,24,22,23,29,30
 5000
 75. Get s from multi clauses on Follows and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows(pn, w) and Parent*(w, s)
-RESULT
+9,10
 5000
 76. Get s from multi clauses on Follows and Next
 stmt s; procedure p; assign a, a2; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows(a, a2) and Next(a2, s)
-RESULT
+50,58,14,28,29,54,51,57,49,52,53,61,62,63,64,65,66,67,68,42
 5000
 77. Get s from multi clauses on Follows and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows(s, ifs) and Modifies(ifs, "tea")
-RESULT
+5,23
 5000
 78. Get s from multi clauses on Follows and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows(5, s) and Uses(s, "eggs")
-RESULT
+6
 5000
 79. Get s from multi clauses on Follows and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows(s, cl) and Calls(_, _)
-RESULT
+2,36,8,32,14,34
 5000
 80. Get s from multi clauses on Follows and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows(a, s) and Calls*(_, _)
-RESULT
+35,13,21,54,49,52,27,53,28,50,56,48,51,57,58,60,61,62,38,63,64,65,66,67,68,71,46,78
 5000
 81. Get s from multi clauses on Follows* and Parent
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows*(s, a) and Parent(ifs, a)
-RESULT
+12,47,53,26,48,52,27,49,50,51,54,55,56,57,58,59,60,61,62,63,64,65,66,67,70,44,75,77
 5000
 82. Get s from multi clauses on Follows* and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows*(a, ifs) and Parent*(ifs, s)
-RESULT
+47,54,72,58,69,73,74,53,48,52,49,50,51,55,56,57,59,60,61,62,63,64,65,66,67,68,70,71
 5000
 83. Get s from multi clauses on Follows* and Next
 stmt s, s2; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows*(w, s) and Next(s, s2)
-RESULT
+11,31,32,74,77,78,79,80
 5000
 84. Get s from multi clauses on Follows* and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows*(pn, s) and Modifies(s, "tea")
-RESULT
+24,11,8,10,16
 5000
 85. Get s from multi clauses on Follows* and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows*(s, w) and Uses(s, "bacon")
-RESULT
+6
 5000
 86. Get s from multi clauses on Follows* and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows*(w, s) and Calls(_, p)
-RESULT
+11,31,17,32,77,33,74,81,78,80,79
 5000
 87. Get s from multi clauses on Follows* and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Follows*(pn, s) and Calls*(_, p)
-RESULT
+10,29,16,30,11,64,8,23,24,68,33,60,59,61,62,63,65,66,67,45,46
 5000
 88. Get s from multi clauses on Parent and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Parent(w, s) and Parent*(s, a)
-RESULT
+43,38,41,39,40,24,42
 5000
 89. Get s from multi clauses on Parent and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Parent(w, s) and Next(s, w)
-RESULT
+10,41,30,16,39,80,79,73,76,38,100
 5000
 90. Get s from multi clauses on Parent and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Parent(ifs, s) and Modifies(s, "pepper")
-RESULT
+21,11,28
 5000
 91. Get s from multi clauses on Parent and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Parent(s, a) and Uses(s, "x")
-RESULT
+18,36,6,39
 5000
 92. Get s from multi clauses on Parent and Call
 stmt s; procedure p, p2; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Parent(s, pn) and Calls(p, p2)
-RESULT
+46,8,72,21,18,6,69,14,43,41
 5000
 93. Get s from multi clauses on Parent and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Parent(s, _) and Calls*(_, p)
-RESULT
+84,6,75,97,21,18,98,24,46,43,69,87,96,95,94,93,92,91,72,90,89,88,86,85,36,83,82,8,14,40,42,41,39,38,99
 5000
 94. Get s from multi clauses on Parent* and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Parent*(s, a) and Next(a, w)
-RESULT
+39,40,84,6,8,83,36,38,41,42,87,69,43,46,14,18,97,75,82,85,86,88,89,90,91,92,93,94,95,96,98,99
 5000
 95. Get s from multi clauses on Parent* and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Parent*(s, r) and Modifies(r, _)
-RESULT
+36,38,41,39,40,42,43,46,18
 5000
 96. Get s from multi clauses on Parent* and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Parent*(s, pn) and Uses(pn, "dog")
-RESULT
+36,38,41,39,40,42,43,46,72,69
 5000
 97. Get s from multi clauses on Parent* and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Parent*(w, s) and Calls(_, _)
-RESULT
+29,10,65,9,59,15,52,27,16,50,25,53,26,28,57,22,56,23,30,51,24,47,48,49,55,60,61,39,62,38,63,64,66,67,68,70,71,45,76,77,78,80,37,54,58,73,74,79,44,43,69,46,72,40,75,42,41,100
 5000
 98. Get s from multi clauses on Parent* and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Parent*(s, s) and Calls*(_, _)
-RESULT
+none
 5000
 99. Get s from multi clauses on Next and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Next(s, w) and Modifies(s, "dog")
-RESULT
+38,41,39,40,43,69,37,78,76,11
 5000
 100. Get s from multi clauses on Next and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Next(s, w) and Uses(w, "dog")
-RESULT
+37,73,76,69,38,79,39,40,43,41,80,74,78,71,68
 5000
 101. Get s from multi clauses on Next and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Next(s, pn) and Calls(_, _)
-RESULT
+31,6,21,29,28,8,14,25,57,22,43,72,42
 5000
 102. Get s from multi clauses on Next and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Next(s, r) and Calls*(_, _)
-RESULT
+21,1,4,53
 5000
 103. Get s from multi clauses on Modifies and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Modifies(s, _) and Uses(s, _)
-RESULT
+84,6,21,18,36,83,24,43,87,69,82,46,85,33,68,86,66,88,67,89,90,91,70,92,71,93,76,94,95,96,75,97,98,64,8,14,41,63,38,40,62,39,42,99,12,13,19,55,50,53,52,47,48,49,56,57,59,60,61,65,35,80,81,3,11,17
 5000
 104. Get s from multi clauses on Modifies and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Modifies(s, "y") and Calls(_, _)
-RESULT
+18,36,38,41,39,40,42,43,6,45,33,35,3,11,17
 5000
 105. Get s from multi clauses on Modifies and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Modifies(s, "eggs") and Calls*(p, _)
-RESULT
+6,31,18,4,33,12,3,34,19,11,17
 5000
 106. Get s from multi clauses on Uses and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Uses(s, "salt") and Calls(p, _)
-RESULT
+17,6,21,18,14,11,19,3
 5000
 107. Get s from multi clauses on Uses and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Uses(s, s) and Calls*(_, p)
-RESULT
+none
 5000
 108. Get s from multi clauses on Call and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select s such that Calls(p, p) and Calls*(_, p)
-RESULT
+none
 5000
 109. Get pn from multi clauses on Follows and Follows*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows(pn, a) and Follows*(pn, a)
-RESULT
+9,15,58,44
 5000
 110. Get pn from multi clauses on Follows and Parent
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows(pn, ifs) and Parent(ifs, a)
-RESULT
+23
 5000
 111. Get pn from multi clauses on Follows and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows(a, w) and Parent*(w, pn)
-RESULT
+58,73,74,22,44,79,23,29,30
 5000
 112. Get pn from multi clauses on Follows and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows(pn, cl) and Next(cl, w)
-RESULT
+none
 5000
 113. Get pn from multi clauses on Follows and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows(r, pn) and Modifies(r, "eggs")
-RESULT
+32
 5000
 114. Get pn from multi clauses on Follows and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows(pn, ifs) and Uses(ifs, "tea")
-RESULT
+23
 5000
 115. Get pn from multi clauses on Follows and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows(pn, a) and Calls(_, _)
-RESULT
+9,15,58,44
 5000
 116. Get pn from multi clauses on Follows and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows(a, pn) and Calls*(p, _)
-RESULT
+58
 5000
 117. Get pn from multi clauses on Follows* and Parent
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows*(pn, ifs) and Parent(ifs, a)
-RESULT
+22,44,23
 5000
 118. Get pn from multi clauses on Follows* and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows*(pn, a) and Parent*(ifs, pn)
-RESULT
+9,58,44
 5000
 119. Get pn from multi clauses on Follows* and Next
 stmt s; procedure p; assign a, a2; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows*(a, pn) and Next(pn, a2)
-RESULT
+58
 5000
 120. Get pn from multi clauses on Follows* and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows*(pn, a) and Modifies(a, "cat")
-RESULT
+58
 5000
 121. Get pn from multi clauses on Follows* and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows*(w, pn) and Uses(w, "cat")
-RESULT
+79
 5000
 122. Get pn from multi clauses on Follows* and Call
 stmt s; procedure p; assign a; print pn, pn2; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows*(pn, pn2) and Calls(_, _)
-RESULT
+29,22,23
 5000
 123. Get pn from multi clauses on Follows* and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Follows*(r, pn) and Calls*(_, _)
-RESULT
+32,58
 5000
 124. Get pn from multi clauses on Parent and Parent*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Parent(ifs, pn) and Parent*(ifs, cl)
-RESULT
+7,32
 5000
 125. Get pn from multi clauses on Parent and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Parent(w, pn) and Next(pn, a)
-RESULT
+9,15
 5000
 126. Get pn from multi clauses on Parent and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
 Select pn such that Parent(ifs, pn) and Modifies(v, "cat")
-RESULT
+none
 5000
 127. Get pn from multi clauses on Parent and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Parent(ifs, pn) and Uses(ifs, "coffee")
-RESULT
+7,32
 5000
 128. Get pn from multi clauses on Parent and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Parent(w, pn) and Calls(p, _)
-RESULT
+29,9,15,79,22,23,30,73
 5000
 129. Get pn from multi clauses on Parent and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Parent(ifs, pn) and Calls*(_, _)
-RESULT
+74,7,58,32,44
 5000
 130. Get pn from multi clauses on Parent* and Next
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Parent*(w, pn) and Next(pn, a)
-RESULT
+9,15,44,58
 5000
 131. Get pn from multi clauses on Parent* and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v;
 Select pn such that Parent*(ifs, pn) and Modifies(v, v)
-RESULT
+none
 5000
 132. Get pn from multi clauses on Parent* and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Parent*(pn, w) and Uses(w, _)
-RESULT
+none
 5000
 133. Get pn from multi clauses on Parent* and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Parent*(s, _) and Calls(p, p)
-RESULT
+none
 5000
 134. Get pn from multi clauses on Parent* and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Parent*(s, pn) and Calls*(_, _)
-RESULT
+29,9,7,30,15,22,23,32,58,73,74,44,79
 5000
 135. Get pn from multi clauses on Next and Modifies
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Next(w, pn) and Modifies(a, _)
-RESULT
+9,15,73,74,79,22
 5000
 136. Get pn from multi clauses on Next and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Next(pn, w) and Uses(a, _)
-RESULT
+7,30,74,73,79
 5000
 137. Get pn from multi clauses on Next and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Next(pn, _) and Calls(p, _)
-RESULT
+7,30,9,29,15,22,23,32,44,58,73,74,79
 5000
 138. Get pn from multi clauses on Next and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Next(pn, _) and Calls*(p, _)
-RESULT
+7,30,9,29,15,22,23,32,44,58,73,74,79
 5000
 139. Get pn from multi clauses on Modifies and Uses
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Modifies(a, pn) and Uses(w, pn)
-RESULT
+none
 5000
 140. Get pn from multi clauses on Modifies and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Modifies(pn, a) and Calls(p, pn)
-RESULT
+none
 5000
 141. Get pn from multi clauses on Modifies and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Modifies(w, pn) and Calls*(pn, p)
-RESULT
+none
 5000
 142. Get pn from multi clauses on Uses and Call
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Uses(w, pn) and Calls(_, _)
-RESULT
+none
 5000
 143. Get pn from multi clauses on Uses and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Uses(ifs, pn) and Calls*(_, _)
-RESULT
+none
 5000
 144. Get pn from multi clauses on Call and Call*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
 Select pn such that Calls(_, a) and Calls*(_, _)
-RESULT
+none
 5000
 145. Get c from multi clauses on Follows and Follows*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl;
