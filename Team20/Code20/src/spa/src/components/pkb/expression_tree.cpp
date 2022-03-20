@@ -121,7 +121,7 @@ nptr ExpressionTree::GetRoot() {
 std::string ExpressionTree::GetPattern(nptr root) {
   std::string pattern = "";
 
-  if (root->data == "-" || root->data == "+" || root->data == "*" || root->data == "/") {
+  if (root->data == "-" || root->data == "+" || root->data == "*" || root->data == "/" || root->data == "%") {
     pattern += "(" + GetPattern(root->left) + root->data + GetPattern(root->right) + ")";
   } else {
     return "(" + root->data + ")";
