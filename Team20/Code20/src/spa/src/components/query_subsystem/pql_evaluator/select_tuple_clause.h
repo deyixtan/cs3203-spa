@@ -17,6 +17,8 @@ class SelectTupleClause : public Clause {
   std::vector<PqlToken> tuple;
   std::unordered_map<std::string, DesignEntityType> declarations;
   PKB *pkb;
+  Table HandleSynonymElem(const PqlToken &synonym);
+  Table HandleAttrRefElem(PqlToken &attr_ref);
 };
 
 }
