@@ -15,11 +15,10 @@ bool IsArgPartialMatch(const PqlToken &arg);
 bool IsArgExactMatch(const PqlToken &arg);
 bool IsArgAttribute(const PqlToken &arg);
 DesignEntityType GetSynonymDesignEntity(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations);
-bool IsArgProcSynonym(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations);
 bool IsArgStmtSynonym(const PqlToken &arg, const std::unordered_map<std::string, DesignEntityType> &declarations);
 StmtType GetStmtType(const DesignEntityType &design_entity);
-//std::string GetIdentWithoutQuotes(const std::string &ident);
-
+bool IsFirstArgProcRelationship(const PqlToken &first_arg, const std::unordered_map<std::string, DesignEntityType> &declarations);
+bool IsFirstArgStmtRelationship(const PqlToken &first_arg, const std::unordered_map<std::string, DesignEntityType> &declarations);
 }
 
 #endif //CLAUSE_UTIL_H_

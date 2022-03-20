@@ -1,0 +1,640 @@
+1 - Double synonym single tuple no overlap true clause Follows
+assign a, a1; variable v; print pn;
+Select <pn> such that Follows(a1, a)
+11, 13
+5000
+2 - Double synonym double tuple no overlap true clause 1 Follows
+assign a, a1; variable v; print pn; read rd;
+Select <pn, rd> such that Follows(a1, a)
+11 7, 13 7
+5000
+3 - Double synonym double tuple no overlap true clause 2 Follows
+assign a, a1; variable v; print pn; read rd;
+Select <a, a1> such that Follows(a, a1)
+19 20
+5000
+4 - Double synonym double tuple attribute no overlap true clause 3 Follows
+assign a, a1; variable v; print pn; read rd;
+Select <a, a1.stmt#> such that Follows(a, a1)
+19 20
+5000
+5 - Double synonym double tuple attribute no overlap false clause Follows
+assign a, a1; variable v; print pn; read rd;
+Select <a, a1.stmt#> such that Follows(a, rd)
+none
+5000
+6 - Single synonym single tuple true clause Follows
+assign a, a1; variable v; print pn; read rd;
+Select <a> such that Follows(a, 2)
+1
+5000
+7 - Single synonym single tuple true clause 2 Follows
+assign a, a1; variable v; print pn; read rd;
+Select <rd> such that Follows(a, 2)
+7
+5000
+8 - Single synonym double tuple true clause 1 Follows
+assign a, a1; variable v; print pn; read rd;
+Select <a, a1> such that Follows(a, 2)
+1 1, 1 3, 1 5, 1 6, 1 8, 1 16, 1 18, 1 19, 1 20
+5000
+9 - Single synonym double tuple attribute true clause 2 Follows
+assign a, a1; variable v; print pn; read rd;
+Select <a, v.varName> such that Follows(a, 2)
+1 a, 1 b, 1 c, 1 d, 1 e, 1 f
+5000
+10 - Single synonym double tuple attribute false clause Follows
+assign a, a1; variable v; print pn; read rd;
+Select <a, v.varName> such that Follows(a, 22)
+none
+5000
+11 - no synonym single tuple true clause Follows
+assign a, a1; variable v; print pn; read rd;
+Select <a> such that Follows(1, 2)
+1, 3, 5, 6, 8, 16, 18, 19, 20
+5000
+12 - no synonym double tuple true clause Follows
+assign a, a1; variable v; print pn; read rd;
+Select <rd, pn> such that Follows(1, 2)
+7 11, 7 13
+5000
+13 - no synonym double tuple false clause Follows
+assign a, a1; variable v; print pn; read rd;
+Select <rd, pn> such that Follows(2, 1)
+none
+5000
+14 - double synonym double tuple true clause Follows
+assign a, a1; variable v; print pn; read rd;
+Select <rd, pn> such that Follows(2, 1)
+none
+5000
+15 - double synonym double tuple true clause FollowsT
+assign a, a1; variable v; print pn; read rd; call c;
+Select <rd, pn> such that Follows* (c, pn)
+7 11
+5000
+16 - double synonym double tuple true clause FollowsT
+assign a, a1; variable v; print pn; read rd; call c;
+Select <c, pn> such that Follows* (c, pn)
+10 11
+5000
+17 - double synonym double tuple false clause FollowsT
+assign a, a1; variable v; print pn; read rd; call c;
+Select <c, pn> such that Follows* (a, pn)
+10 11,12 11,9 11
+5000
+18 - single synonym double tuple true clause FollowsT
+assign a, a1; variable v; print pn; read rd; call c;
+Select <a, v> such that Follows* (a, 11)
+1 a, 1 b, 1 c, 1 d, 1 e, 1 f
+5000
+19 - single synonym double tuple false clause FollowsT
+assign a, a1; variable v; print pn; read rd; call c;
+Select <a, v> such that Follows* (a, 1)
+none
+5000
+20 - no synonym double tuple true clause FollowsT
+assign a, a1; variable v; print pn; read rd; call c;
+Select <rd, v> such that Follows* (1, 11)
+7 a, 7 b, 7 c, 7 d, 7 e, 7 f
+5000
+21 - no synonym double tuple false clause FollowsT
+assign a, a1; variable v; print pn; read rd; call c;
+Select <rd, v> such that Follows* (3, 11)
+none
+5000
+22 - double synonym double tuple true clause 1 Parent
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <rd, v> such that Parent (w, a)
+7 a, 7 b, 7 c, 7 d, 7 e, 7 f
+5000
+23 - double synonym double tuple true clause 2 Parent
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <w, a> such that Parent (w, a)
+2 3, 2 8, 15 16, 17 18
+5000
+24 - single synonym double tuple true clause 1 Parent
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <w, pn> such that Parent (w, 3)
+2 11, 2 13
+5000
+25 - single synonym double tuple true clause 2 Parent
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <a, pn> such that Parent (14, a)
+19 11, 20 11, 19 13, 20 13
+5000
+26 - no synonym double tuple true clause Parent
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <v, rd> such that Parent (14, 15)
+a 7, b 7, c 7, d 7, e 7, f 7
+5000
+27 - no synonym double tuple false clause Parent
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <v, rd> such that Parent (14, 16)
+none
+5000
+28 - double synonym double tuple true clause ParentT
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <w, a> such that Parent* (w, a)
+2 3, 2 5, 2 6, 2 8, 15 16, 15 18, 17 18
+5000
+29 - single synonym double tuple true clause 1 ParentT
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <rd, a> such that Parent* (15, a)
+7 16, 7 18
+5000
+30 - single synonym double tuple true clause 2 ParentT
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <w, rd> such that Parent* (w, 18)
+17 7, 15 7
+5000
+31 - no synonym double tuple true clause ParentT
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <rd, rd> such that Parent* (15, 18)
+7 7
+5000
+32 - no synonym double tuple false clause ParentT
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <rd, rd> such that Parent* (19, 18)
+none
+5000
+33 - double synonym double tuple true clause 1 Modifies
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <rd, rd> such that Modifies (rd, v)
+7 7
+5000
+34 - double synonym double tuple true clause 2 Modifies
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <rd, v> such that Modifies (rd, v)
+7 f
+5000
+35 - double synonym double tuple true clause 3 Modifies
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <a, v> such that Modifies (a, v)
+1 a, 3 c, 5 d, 6 e, 8 b, 16 c, 18 e, 19 a, 20 b
+5000
+36 - single synonym double tuple false clause Modifies
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <a, v> such that Modifies (a, "f")
+none
+5000
+37 - single synonym double tuple true clause Modifies
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <rd, v> such that Modifies (1, v)
+7 a
+5000
+38 - no synonym double tuple true clause Modifies
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <rd, v> such that Modifies (1, "a")
+7 a, 7 b, 7 c, 7 d, 7 e, 7 f
+5000
+39 - no synonym double tuple false clause Modifies
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w;
+Select <rd, v> such that Modifies (1, "b")
+none
+5000
+40 - double synonym double tuple true clause ModifiesP
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
+Select <p, v> such that Modifies (p, v)
+main a, main b, main c, main d, main e, main f, car c, car e, car a, car b
+5000
+41 - single synonym double tuple true clause 1 ModifiesP
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
+Select <p, v> such that Modifies (p, "d")
+main a, main b, main c, main d, main e, main f
+5000
+42 - single synonym double tuple true clause 2 ModifiesP
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
+Select <rd, v> such that Modifies ("main", v)
+7 a, 7 b, 7 c, 7 d, 7 e, 7 f
+5000
+43 - no synonym double tuple true clause ModifiesP
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
+Select <rd, v> such that Modifies ("main", "a")
+7 a, 7 b, 7 c, 7 d, 7 e, 7 f
+5000
+44 - double synonym double tuple true clause Uses
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
+Select <a, v> such that Uses (a, v)
+3 b, 5 d, 5 b, 6 a, 6 b, 8 b, 16 c, 18 c, 19 a, 20 b
+5000
+45 - single synonym double tuple true clause Uses
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
+Select <a, rd> such that Uses (a, "b")
+3 7, 5 7, 6 7, 8 7, 20 7
+5000
+46 - no synonym double tuple true clause Uses
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
+Select <v, rd> such that Uses (3, "b")
+a 7, b 7, c 7, d 7, e 7, f 7
+5000
+47 - double synonym double tuple true clause UsesP
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
+Select <p, v> such that Uses (p, v)
+main b, main d, main a, main c, main e, car a, car b, car c
+5000
+48 - single synonym double tuple true clause UsesP
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
+Select <p, v> such that Uses (p, "a")
+main b, main d, main a, main c, main f, main e, car a, car b, car c, car d, car e, car f
+5000
+49 - no synonym double tuple true clause UsesP
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
+Select <rd, rd> such that Uses ("main", "a")
+7 7
+5000
+50 - double synonym double tuple true clause Calls
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <p, p1> such that Calls (p, p1)
+main bar, bar car
+5000
+51 - single synonym with wildcard double tuple true clause 1 Calls
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <p, p1> such that Calls (p, _)
+main bar, main car, main main, bar main, bar bar, bar car
+5000
+52 - single synonym with wildcard double tuple true clause 2 Calls
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <p, p1> such that Calls (_, p)
+bar main, bar bar, bar car, car main, car bar, car car
+5000
+53 - single synonym double tuple true clause Calls
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <p, p1> such that Calls ("main", p)
+bar main, bar bar, bar car
+5000
+54 - single synonym double tuple false clause Calls
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <p, p1> such that Calls (p, "main")
+none
+5000
+55 - double synonym double tuple true clause CallsT
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <p, p1> such that Calls* (p, p1)
+main bar, bar car, main car
+5000
+56 - single synonym double tuple true clause CallsT
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <p, p1> such that Calls* (p, "car")
+main bar, main car, main main, bar car, bar bar, bar main
+5000
+57 - no synonym double tuple true clause CallsT
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <p, p1> such that Calls* ("main", "car")
+main bar, main car, main main, bar car, bar bar, bar main, car main, car bar, car car
+5000
+58 - double synonym double tuple true clause 1 Next
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <a, a1> such that Next (a, a1)
+19 20
+5000
+59 - double synonym double tuple true clause 2 Next
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <rd, a> such that Next (rd, a)
+7 8
+5000
+60 - single synonym double tuple true clause Next
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <rd, v> such that Next (rd, 8)
+7 a, 7 b, 7 c, 7 d, 7 e, 7 f
+5000
+61 - no synonym double tuple true clause Next
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <rd, v> such that Next (9, 2)
+7 a, 7 b, 7 c, 7 d, 7 e, 7 f
+5000
+62 - no synonym with wildcard double tuple true assign pattern
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <a, rd> pattern a (_, _)
+1 7, 3 7, 5 7, 6 7, 8 7, 16 7, 18 7, 19 7, 20 7
+5000
+63 - no synonym double tuple true assign pattern
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <a, rd> pattern a ("e", "c * 2")
+18 7
+5000
+64 - one synonym double tuple true assign pattern
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <a, v> pattern a (v, "c * 2")
+18 e
+5000
+65 - one synonym with wildcard double tuple true assign pattern
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <a, v> pattern a (v, _)
+1 a, 3 c, 5 d, 6 e, 8 b, 16 c, 18 e, 19 a, 20 b
+5000
+66 - no synonym with wildcard double tuple true while pattern
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <rd, rd> pattern w (_, _)
+7 7
+5000
+67 - no synonym double tuple true while pattern
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <w, rd> pattern w ("b", _)
+2 7, 15 7
+5000
+68 - single synonym double tuple true while pattern
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <w, v> pattern w (v, _)
+2 b, 15 b, 17 c
+5000
+69 - no synonym with all wildcard double tuple true if pattern
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <ifs, rd> pattern ifs (_, _, _)
+4 7, 14 7
+5000
+70 - no synonym with double tuple true if pattern
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <ifs, rd> pattern ifs ("a", _, _)
+14 7
+5000
+71 - one synonym with double tuple true if pattern
+assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <ifs, v> pattern ifs (v, _, _)
+4 c, 14 a, 14 b
+5000
+72 - double tuple true multi relationship clauses 1
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <a, v> such that Uses (a, v) such that Modifies (a, v)
+5 d, 8 b, 16 c, 19 a, 20 b
+5000
+73 - double tuple true multi relationship clauses 2
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <w, v> such that Uses (a, v) such that Parent (w, a)
+2 b, 15 c, 17 c
+5000
+74 - double tuple true multi relationship and pattern
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <a, v> such that Uses (a, v) pattern a (v, _)
+5 d, 8 b, 16 c, 19 a, 20 b
+5000
+75 - double tuple true multi relationship and with
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <a, v> such that Uses (a, v) with v.varName = "a"
+6 a, 19 a
+5000
+76 - double tuple true multi relationship pattern and with
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <ifs, v> such that Uses (ifs, v) pattern ifs ("a",_,_) with v.varName = v1.varName
+14 a, 14 b, 14 c
+5000
+77 - single tuple with attribute no overlap 1
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <v.varName> pattern ifs ("a",_,_) with rd.varName = "f"
+a, b, c, d, e, f
+5000
+78 - single tuple with attribute no overlap 2
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <p.procName> pattern ifs ("a",_,_) with rd.varName = "f"
+main, bar, car
+5000
+79 - single tuple with attribute no overlap 3
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <pn.stmt#> pattern ifs ("a",_,_) with rd.varName = "f"
+11, 13
+5000
+80 - single tuple with attribute no overlap 4
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <pn.varName> pattern ifs ("a",_,_) with rd.varName = "f"
+a, e
+5000
+81 - single tuple with attribute no overlap 5
+assign a, a1; variable v, v1; print pn; read rd; constant c; if ifs; while w; procedure p, p1;
+Select <c.value> pattern ifs ("a",_,_) with rd.varName = "f"
+0, 1, 2
+5000
+82 - single tuple with attribute with 1 overlap 1
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <rd.stmt#> pattern ifs ("a",_,_) with rd.varName = "f"
+7
+5000
+83 - single tuple with attribute with 1 overlap 2
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <pn.varName> such that Uses (a, v) with pn.varName = v.varName
+a
+5000
+84 - single tuple with attribute with 1 overlap 3
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <p.procName> such that Uses (p, v) with pn.varName = v.varName
+main, car
+5000
+85 - single tuple with attribute with 1 overlap 4
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select < p .procName    > such that Uses (p, v) with pn.varName = v.varName
+main, car
+5000
+86 - single tuple with attribute with 1 overlap 5
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select < p. procName> such that Uses (p,v) with pn.varName = v.varName
+main, car
+5000
+87 - single tuple with attribute with 2 overlaps 1
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <p.procName> such that Uses (p,v) with p.procName = c.procName
+car
+5000
+88 - single tuple with attribute with 2 overlaps 1
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <v.varName> such that Uses (ifs,v) pattern a(v, _)
+c, d, b, a
+5000
+89 - single tuple with attribute with 2 overlaps 2
+assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
+Select <pn.varName> such that Follows (pn,ifs) with 13 = pn.stmt#
+a
+5000
+90 - single tuple with attribute with 2 overlaps 3
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <pn.varName> such that Follows (cl,pn) with 13 = pn.stmt#
+none
+5000
+91 - single tuple with attribute with 2 overlaps 4
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a.stmt#> such that Follows* (a,pn) pattern a (_,_)
+1
+5000
+92 - double tuple with attribute and synonym with no overlap 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a, a.stmt#> such that Follows* (cl,pn) pattern w (_,_)
+1 1, 3 3, 5 5, 6 6, 8 8, 16 16, 18 18, 19 19, 20 20
+5000
+93 - double tuple with attribute and synonym with no overlap 2
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a, rd.stmt#> such that Follows* (cl,pn) pattern w (_,_)
+1 7, 3 7, 5 7, 6 7, 8 7, 16 7, 18 7, 19 7, 20 7
+5000
+94 - double tuple with attribute and synonym with no overlap 3
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a, pn.varName> such that Follows* (cl,pn) pattern w (_,_)
+1 e, 3 e, 5 e, 6 e, 8 e, 16 e, 18 e, 19 e, 20 e
+5000
+95 - double tuple with attribute and synonym with 1 overlap 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a, pn.varName> such that Follows* (a,rd) pattern w (_,_)
+3 a, 3 e
+5000
+96 - double tuple with attribute and synonym with 1 overlap 2
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <v, pn.varName> such that Follows* (a,rd) pattern w (v,_)
+b a, b e, c a, c e
+5000
+97 - double tuple with attribute and synonym with 1 overlap 3
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <v, pn.stmt#> such that Follows* (a,rd) pattern w (v,_)
+b 11, c 13
+5000
+98 - double tuple with attribute and synonym with 2 overlaps 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <v, a.stmt#> such that Follows* (a,rd) pattern w (v,_)
+b 3, c 3
+5000
+99 - double tuple with attribute and synonym with 2 overlaps 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <rd, a.stmt#> such that Follows* (a,rd) pattern w (v,_)
+7 3
+5000
+100 - double tuple with attribute and synonym with 3 overlaps 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w, a.stmt#> such that Parent* (w, a) and Uses (a, v)
+2 3, 2 5, 2 6, 2 8, 15 16, 15 18, 17 18
+5000
+101 - double tuple with attribute and synonym with 3 overlaps 2
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <v, a.stmt#> such that Parent* (w, a) and Uses (a, v)
+b 3, d 5, b 5, a 6, b 6, b 8, c 16, c 18
+5000
+102 - double tuple with attribute and synonym with 3 overlaps 3
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <v, w.stmt#> such that Parent* (w, a) and Uses (a, v)
+b 2, d 2, c 15, c 17, a 2
+5000
+103 - double tuple with attribute and synonym with 4 overlaps 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <v, w.stmt#> such that Modifies (w, v) and Uses (w, v)
+b 2, c 2, d 2, c 15
+5000
+104 - double tuple with attribute and synonym with no overlap 1 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a.stmt#, a> such that Follows* (cl,pn) pattern w (_,_)
+1 1, 3 3, 5 5, 6 6, 8 8, 16 16, 18 18, 19 19, 20 20
+5000
+105 - double tuple with attribute and synonym with no overlap 2 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <rd.stmt#, a> such that Follows* (cl,pn) pattern w (_,_)
+7 1, 7 3, 7 5, 7 6, 7 8, 7 16, 7 18, 7 19, 7 20
+5000
+106 - double tuple with attribute and synonym with no overlap 3 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <pn.varName, a> such that Follows* (cl,pn) pattern w (_,_)
+e 1, e 3, e 5, e 6, e 8, e 16, e 18, e 19, e 20
+5000
+107 - double tuple with attribute and synonym with 1 overlap 1 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <pn.varName, a> such that Follows* (a,rd) pattern w (_,_)
+a 3, e 3
+5000
+108 - double tuple with attribute and synonym with 1 overlap 2 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <pn.varName, v> such that Follows* (a,rd) pattern w (v,_)
+a b, e b, e c, a c
+5000
+109 - double tuple with attribute and synonym with 1 overlap 3 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <pn.stmt#, v> such that Follows* (a,rd) pattern w (v,_)
+11 b, 13 c
+5000
+110 - double tuple with attribute and synonym with 2 overlaps 1 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a.stmt#, v> such that Follows* (a,rd) pattern w (v,_)
+3 b, 3 c
+5000
+111 - double tuple with attribute and synonym with 2 overlaps 1 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a.stmt#, rd> such that Follows* (a,rd) pattern w (v,_)
+3 7
+5000
+112 - double tuple with attribute and synonym with 3 overlaps 1 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a.stmt#, w> such that Parent* (w, a) and Uses (a, v)
+3 2, 5 2, 6 2, 8 2, 16 15, 18 15, 18 17
+5000
+113 - double tuple with attribute and synonym with 3 overlaps 2 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a.stmt#, v> such that Parent* (w, a) and Uses (a, v)
+3 b, 5 d, 5 b, 6 a, 6 b, 8 b, 16 c, 18 c
+5000
+114 - double tuple with attribute and synonym with 3 overlaps 3 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v> such that Parent* (w, a) and Uses (a, v)
+2 b, 2 d, 2 a, 15 c, 17 c
+5000
+115 - double tuple with attribute and synonym with 4 overlaps 1 reversed
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v> such that Modifies (w, v) and Uses (w, v)
+2 b, 2 c, 2 d, 15 c
+5000
+116 - double tuple with attribute and attribute with no overlap 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a.stmt#, a.stmt#> such that Follows* (cl,pn) pattern w (_,_)
+1 1, 3 3, 5 5, 6 6, 8 8, 16 16, 18 18, 19 19, 20 20
+5000
+117 - double tuple with attribute and attribute with no overlap 2
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <rd.stmt#, a,stmt#> such that Follows* (cl,pn) pattern w (_,_)
+7 1, 7 16, 7 18, 7 19, 7 20, 7 3, 7 5, 7 6, 7 8
+5000
+118 - double tuple with attribute and attribute with no overlap 3
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <pn.varName, a.stmt#> such that Follows* (cl,pn) pattern w (_,_)
+e 1, e 3, e 5, e 6, e 8, e 16, e 18, e 19, e 20
+5000
+119 - double tuple with attribute and attribute with 1 overlap 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <pn.varName, a.stmt#> such that Follows* (a,rd) pattern w (_,_)
+a 3, e 3
+5000
+120 - double tuple with attribute and attribute with 1 overlap 2
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <pn.varName, v.varName> such that Follows* (a,rd) pattern w (v,_)
+a b, e b, e c, a c
+5000
+121 - double tuple with attribute and attribute with 1 overlap 3
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <pn.stmt#, v.varName> such that Follows* (a,rd) pattern w (v,_)
+11 b, 13 c
+5000
+122 - double tuple with attribute and attribute with 2 overlaps 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a.stmt#, v.varName> such that Follows* (a,rd) pattern w (v,_)
+3 b, 3 c
+5000
+123 - double tuple with attribute and attribute with 2 overlaps 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a.stmt#, rd.stmt#> such that Follows* (a,rd) pattern w (v,_)
+3 7
+5000
+124 - double tuple with attribute and attribute with 3 overlaps 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a.stmt#, w.stmt#> such that Parent* (w, a) and Uses (a, v)
+3 2, 5 2, 6 2, 8 2, 16 15, 18 15, 18 17
+5000
+125 - double tuple with attribute and attribute with 3 overlaps 2
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <a.stmt#, v.varName> such that Parent* (w, a) and Uses (a, v)
+3 b, 5 d, 5 b, 6 a, 6 b, 8 b, 16 c, 18 c
+5000
+126 - double tuple with attribute and attribute with 3 overlaps 3
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v.varName> such that Parent* (w, a) and Uses (a, v)
+2 b, 2 d, 2 a, 15 c, 17 c
+5000
+127 - double tuple with attribute and attribute with 4 overlaps 1
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v.varName> such that Modifies (w, v) and Uses (w, v)
+2 b, 2 c, 2 d, 15 c
+5000
+128 - double tuple with attribute and attribute with 4 overlaps with spaces
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.  stmt#,v.  varName> such that Modifies (w, v) and Uses (w, v)
+2 b, 2 c, 2 d, 15 c
+5000

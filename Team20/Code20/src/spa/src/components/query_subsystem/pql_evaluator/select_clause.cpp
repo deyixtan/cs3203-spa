@@ -15,8 +15,10 @@ Table SelectClause::Execute() {
     return table;
   } else {
     single_constraints = pkb->GetStmt(clause_util::GetStmtType(GetSynonymDesignEntity(result_clause)));
+    Table table = Table(result_clause.value, single_constraints);
+    table.ToggleSynonymResult();
+    return table;
   }
-  return {result_clause.value, single_constraints};
 }
 
 DesignEntityType SelectClause::GetSynonymDesignEntity(const PqlToken &arg) {
