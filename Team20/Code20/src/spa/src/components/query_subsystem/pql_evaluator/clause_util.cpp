@@ -21,7 +21,7 @@ bool clause_util::IsArgPartialMatch(const PqlToken &arg) {
 }
 
 bool clause_util::IsArgExactMatch(const PqlToken &arg) {
-  return arg.type==PqlTokenType::EXPR;
+  return arg.type==PqlTokenType::EXPR || arg.type==PqlTokenType::IDENT_WITH_QUOTES;
 }
 
 bool clause_util::IsArgAttribute(const PqlToken &arg) {
