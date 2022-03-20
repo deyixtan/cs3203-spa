@@ -37,6 +37,9 @@ std::shared_ptr<SourceToken> SourceLexer::GetNextToken() {
   if (lookahead == '\n') {
     m_cursor += 1;
     return std::make_shared<SourceToken>(TokenType::NEW_LINE, "");
+  } if (lookahead == '\t') {
+    m_cursor += 1;
+    return std::make_shared<SourceToken>(TokenType::TAB, "");
   } else if (lookahead == '{') {
     m_cursor += 1;
     return std::make_shared<SourceToken>(TokenType::OPENED_BRACES, "");
@@ -122,7 +125,7 @@ std::shared_ptr<SourceToken> SourceLexer::GetNextToken() {
 void SourceLexer::RemoveWhiteSpaceTokens(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr) {
   for (std::vector<std::shared_ptr<SourceToken>>::iterator it = tokens_ptr.begin(); it != tokens_ptr.end(); it++) {
     TokenType type = (*it)->GetType();
-    if (type == TokenType::WHITE_SPACE || type == TokenType::NEW_LINE) {
+    if (type == TokenType::WHITE_SPACE || type == TokenType::NEW_LINE || type == TokenType::TAB) {
       tokens_ptr.erase(it--);
     }
   }

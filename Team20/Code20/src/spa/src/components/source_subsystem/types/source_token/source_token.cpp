@@ -19,6 +19,8 @@ std::string SourceToken::ToString() {
       break;
     case TokenType::NEW_LINE:type_str = "NEW_LINE";
       break;
+    case TokenType::TAB:type_str = "TAB";
+      break;
     case TokenType::INTEGER:type_str = "INTEGER";
       break;
     case TokenType::NAME:type_str = "NAME";
