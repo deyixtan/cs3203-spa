@@ -84,7 +84,7 @@ Select <c, pn> such that Follows* (a, pn)
 10 11,12 11,9 11
 5000
 18 - single synonym double tuple true clause FollowsT
-assign a, a1; variablev; print pn; read rd; call c;
+assign a, a1; variable v; print pn; read rd; call c;
 Select <a, v> such that Follows* (a, 11)
 1 a, 1 b, 1 c, 1 d, 1 e, 1 f
 5000
