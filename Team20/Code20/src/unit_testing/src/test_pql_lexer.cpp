@@ -605,12 +605,12 @@ TEST_CASE("Test invalid tuple") {
 
 TEST_CASE("Test invalid tuple 2") {
   PqlLexer pql_lexer = PqlLexer("Select <a, b, c, d, e,       >");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Wrong tuple format! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
 
 TEST_CASE("Test invalid tuple 3") {
   PqlLexer pql_lexer = PqlLexer("Select <s.t.stmt# >");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Wrong tuple format! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
 
 TEST_CASE("Test invalid attribute 2") {
