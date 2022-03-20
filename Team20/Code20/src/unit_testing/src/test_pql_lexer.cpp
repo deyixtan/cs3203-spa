@@ -282,6 +282,31 @@ TEST_CASE("Test declarations with pattern relationship") {
   REQUIRE(test_token_vect == expected_token_vect);
 }
 
+TEST_CASE("Test declarations with single pattern relationship") {
+  PqlLexer pql_lexer = PqlLexer("assign a;\n"
+                                "Select a pattern a (v, \"x + y\")");
+  std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
+  std::vector<PqlToken> expected_token_vect;
+
+  // assign
+  expected_token_vect.push_back(assign_token);
+  expected_token_vect.push_back(a_token);
+  expected_token_vect.push_back(semicolon_token);
+
+  // select clause
+  expected_token_vect.push_back(select_token);
+  expected_token_vect.push_back(a_token);
+  expected_token_vect.push_back(pattern_token);
+  expected_token_vect.push_back(a_token);
+  expected_token_vect.push_back(open_parenthesis_token);
+  expected_token_vect.push_back(v_token);
+  expected_token_vect.push_back(comma_token);
+  expected_token_vect.push_back(x_plus_y_string_token);
+  expected_token_vect.push_back(closed_parenthesis_token);
+
+  REQUIRE(test_token_vect == expected_token_vect);
+}
+
 TEST_CASE("Test declarations with pattern relationship omitting spaces") {
 PqlLexer pql_lexer = PqlLexer("stmt s; variable v; assign a;\n"
                               "Select s such that Uses (s,\"x\") pattern a (v,\"x+ y\")");
@@ -544,64 +569,53 @@ TEST_CASE("Test tuple with attribute") {
 TEST_CASE("Test declarations with incomplete double quote token") {
   PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
                                 "Select s such that Uses (s, \"x\") pattern a (\"x\", \"y)");
-  std::string expected_wrong_token = "\"y)";
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Wrong string format! \n");
 }
 
 TEST_CASE("Test invalid string") {
   PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, \"+y\")");
-  std::string expected_wrong_token = "\"+y\"";
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
 
 TEST_CASE("Test invalid sub-expression") {
   PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, _\"y\"x_)");
-  std::string expected_wrong_token = "_\"y\"x_";
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Wrong sub expression format! \n");
 }
 
 TEST_CASE("Test declarations with unrecognised token") {
   PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
                                 "Select s such that Uses (s, \"x\") && Modifies (s, v)");
-  std::string expected_wrong_token = "&&";
-
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
 
 TEST_CASE("Test invalid integer") {
   PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, _\"0123\"_)");
-  std::string expected_wrong_token = "_\"0123\"_";
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
 
 TEST_CASE("Test invalid attribute") {
   PqlLexer pql_lexer = PqlLexer("Select s.stmtNo such that Uses (s, \"x\") pattern a (_, _)");
-  std::string expected_wrong_token = "s.stmtNo";
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token +  "\n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
 
 TEST_CASE("Test invalid tuple") {
   PqlLexer pql_lexer = PqlLexer("Select <s,t,> such that Uses (s, \"x\") pattern a (_, _)");
-  std::string expected_wrong_token = "<s,t,>";
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token +  "\n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
 
 TEST_CASE("Test invalid tuple 2") {
   PqlLexer pql_lexer = PqlLexer("Select <a, b, c, d, e,       >");
-  std::string expected_wrong_token = "<a, b, c, d, e,       >";
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token +  "\n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Wrong tuple format! \n");
 }
 
 TEST_CASE("Test invalid tuple 3") {
   PqlLexer pql_lexer = PqlLexer("Select <s.t.stmt# >");
-  std::string expected_wrong_token = "<s.t.stmt# >";
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token +  "\n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Wrong tuple format! \n");
 }
 
 TEST_CASE("Test invalid attribute 2") {
   PqlLexer pql_lexer = PqlLexer("Select a.val such that Uses (s, \"x\") pattern a (_, _)");
-  std::string expected_wrong_token = "a.val";
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token +  "\n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
 
 TEST_CASE("Test pattern clause with and") {
@@ -685,6 +699,5 @@ TEST_CASE("Test pattern clause for ifs with 3 args") {
 TEST_CASE("Test invalid synonym in pattern sub-expression") {
   std::string query = "assign a, a1; variable v; Select  a pattern a(_, _\" 1 * re d\"_)";
   PqlLexer pql_lexer = PqlLexer(query);
-  std::string expected_wrong_token = "_\" 1 * re d\"_";
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token " + expected_wrong_token + "\n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
