@@ -319,32 +319,32 @@ Select BOOLEAN such   that Follows (cl, pn) and Modifies (  a, v  ) with v  . va
 none
 5000
 65 - multi relationship and with clause and pattern clause - valid 1
-assign a; variable v; constant c; procedure p; read rd; call cl; print pn
+assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
 Select BOOLEAN such that Follows (cl,pn) and Modifies (a,v) with v  . varName = "blue" pattern a(_,"red")
 TRUE
 5000
 66 - multi relationship and with clause and pattern clause - valid 2
-assign a; variable v; constant c; procedure p; read rd; call cl; print pn
+assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
 Select BOOLEAN such that Follows (cl,pn) and Modifies (a,v) with v  . varName = "blue" pattern a(_,_"red"_)
 TRUE
 5000
 67 - multi relationship and with clause and pattern clause - invalid sub expression 1
-assign a; variable v; constant c; procedure p; read rd; call cl; print pn
+assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
 Select BOOLEAN such that Follows (cl,pn) and Modifies (a,v) with v  . varName = "blue" pattern a(_,_"re d"_)
 none
 5000
 68 - multi relationship and with clause and pattern clause - invalid sub expression 2
-assign a; variable v; constant c; procedure p; read rd; call cl; print pn
+assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
 Select BOOLEAN such that Follows (cl,pn) and Modifies (a,v) with v  . varName = "blue" pattern a(_,_red" x + y"_)
 none
 5000
 69 - multi relationship and with clause and pattern clause 2 overlap
-assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn
+assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn;
 Select BOOLEAN such that Follows (rd,a) and Modifies (a,v) with v  . varName = "blue" pattern a1(_,_  "red  "  _)
 TRUE
 5000
 70 - multi relationship and with clause and pattern clause 3 overlap
-assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn
+assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn;
 Select BOOLEAN such that Follows (rd,a) and Modifies (a,v) with v  . varName = "blue" pattern a(_,_)
 TRUE
 5000
