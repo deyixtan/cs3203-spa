@@ -67,7 +67,7 @@ Table CallsTClause::HandleWildcardWildcard() {
   bool is_empty = pkb->GetCallStore()->GetAllCallsStar().empty();
   Table table;
   if (is_empty) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -76,7 +76,7 @@ Table CallsTClause::HandleWildcardIdent() {
   bool is_empty = pkb->GetCallStore()->GetCallersStarOf(second_arg.value).empty();
   Table table;
   if (is_empty) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -90,7 +90,7 @@ Table CallsTClause::HandleIdentWildcard() {
   bool is_empty = pkb->GetCallStore()->GetCalleesStarOf(first_arg.value).empty();
   Table table;
   if (is_empty) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -99,7 +99,7 @@ Table CallsTClause::HandleIdentIdent() {
   bool is_empty = !pkb->GetCallStore()->IsCallsStarPairExists(first_arg.value, second_arg.value);
   Table table;
   if (is_empty) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }

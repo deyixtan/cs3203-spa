@@ -95,7 +95,7 @@ Table NextClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetNextStore()->GetAllNextStmt(StmtType::STMT, StmtType::STMT).empty();
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -110,7 +110,7 @@ Table NextClause::HandleWildcardInteger() {
   }
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -133,7 +133,7 @@ Table NextClause::HandleIntegerWildcard() {
   bool is_false_clause = pkb->GetNextStore()->GetNextOf(first_arg.value).empty();
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -143,7 +143,7 @@ Table NextClause::HandleIntegerInteger() {
   bool is_false_clause = possible_next_values.find(second_arg.value) == possible_next_values.end();
   Table table;
   if (is_false_clause) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }

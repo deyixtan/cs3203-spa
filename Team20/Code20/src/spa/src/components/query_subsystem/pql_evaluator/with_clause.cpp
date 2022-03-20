@@ -94,7 +94,7 @@ Table WithClause::HandleAttributeAttribute() {
 
   Table table;
   if (intersection_pair.empty()) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
     return table;
   }
 
@@ -109,14 +109,14 @@ Table WithClause::HandleAttributeIdent() {
   if (is_conversion_needed) {
     single_constraints = pkb->GetStmtByName(GetStmtType(first_attribute.first.first), second_arg.value);
     if (single_constraints.empty()) {
-      table.EncounteredFalseClause();
+      table.ToggleFalseClause();
       return table;
     }
     return {first_attribute.first.second, single_constraints};
   } else {
     single_constraints = pkb->GetStmt(GetStmtType(first_attribute.first.first));
     if (single_constraints.count(second_arg.value) == 0) {
-      table.EncounteredFalseClause();
+      table.ToggleFalseClause();
       return table;
     }
   }
@@ -131,7 +131,7 @@ Table WithClause::HandleAttributeInteger() {
   auto single_constraints = pkb->GetStmt(GetStmtType(first_attribute.first.first));
   Table table;
   if (single_constraints.count(second_arg.value) == 0) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
     return table;
   }
   std::unordered_set<std::string> result_set;
@@ -144,7 +144,7 @@ Table WithClause::HandleIntegerAttribute() {
   auto single_constraints = pkb->GetStmt(GetStmtType(second_attribute.first.first));
   Table table;
   if (single_constraints.count(first_arg.value) == 0) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
     return table;
   }
   std::unordered_set<std::string> result_set;
@@ -155,7 +155,7 @@ Table WithClause::HandleIntegerAttribute() {
 Table WithClause::HandleIntegerInteger() {
   Table table;
   if (first_arg.value != second_arg.value) {
-    table.EncounteredFalseClause();
+    table.ToggleFalseClause();
   }
   return table;
 }
@@ -168,14 +168,14 @@ Table WithClause::HandleIdentAttribute() {
   if (is_conversion_needed) {
     single_constraints = pkb->GetStmtByName(GetStmtType(second_attribute.first.first), first_arg.value);
     if (single_constraints.empty()) {
-      table.EncounteredFalseClause();
+      table.ToggleFalseClause();
       return table;
     }
     return {second_attribute.first.second, single_constraints};
   } else {
     single_constraints = pkb->GetStmt(GetStmtType(second_attribute.first.first));
     if (single_constraints.count(first_arg.value) == 0) {
-      table.EncounteredFalseClause();
+      table.ToggleFalseClause();
       return table;
     }
   }

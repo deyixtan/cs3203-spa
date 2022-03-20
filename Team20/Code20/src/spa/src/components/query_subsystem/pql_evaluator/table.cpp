@@ -12,7 +12,7 @@ Table::Table(const std::string& synonym, std::unordered_set<std::string>& single
     records.emplace_back(std::initializer_list<std::string>{single_constraint});
   }
   if (single_constraints.empty()) {
-    EncounteredFalseClause();
+    ToggleFalseClause();
   }
 }
 
@@ -25,36 +25,23 @@ Table::Table(const std::string &first_synonym,
     records.emplace_back(std::initializer_list<std::string>{pair_constraint.first, pair_constraint.second});
   }
   if (pair_constraints.empty()) {
-    EncounteredFalseClause();
+    ToggleFalseClause();
   }
 }
 
-bool Table::IsAttributesEmpty() const {
-  return attributes.empty();
-}
 
-bool Table::IsRecordsEmpty() const {
-  return records.empty();
-}
 
 void Table::Merge(Table &other_table) {
+  UpdateResultType(other_table);
 
-  if (!IsBooleanResult() && other_table.IsBooleanResult()) {
-    ToggleBooleanResult();
-  }
-
-  if (!IsAttributeResult() && other_table.IsAttributeResult()) {
-    ToggleAttributeResult();
-  }
-
-  if (HasEncounteredFalseClause()) {
-    // short circuit if current table has already encountered_false_clause
+  if (IsFalseClause()) {
+    // short circuit if current table has already is_false_clause
     return;
   }
 
-  if (other_table.HasEncounteredFalseClause()) {
-    // maintain invariant that FALSE CLAUSE TABLE -> no attribute, no records, encountered_false_clause = true;
-    EncounteredFalseClause();
+  if (other_table.IsFalseClause()) {
+    // maintain invariant that FALSE CLAUSE TABLE -> no attribute, no records, is_false_clause = true;
+    ToggleFalseClause();
     attributes.clear();
     records.clear();
     return;
@@ -70,7 +57,7 @@ void Table::Merge(Table &other_table) {
   if (!IsAttributesEmpty() && IsRecordsEmpty()) {
     // if merging two tables with attributes causes empty records
     // there are no possible values so we emulate encountering false clause
-    EncounteredFalseClause();
+    ToggleFalseClause();
   }
 }
 
@@ -185,16 +172,28 @@ std::ostream& operator<<(std::ostream& os, const Table& table) {
   return os;
 }
 
-void Table::EncounteredFalseClause() {
-  encountered_false_clause = true;
+bool Table::IsAttributesEmpty() const {
+  return attributes.empty();
 }
 
-bool Table::HasEncounteredFalseClause() const {
-  return encountered_false_clause;
+bool Table::IsRecordsEmpty() const {
+  return records.empty();
+}
+
+void Table::ToggleFalseClause() {
+  is_false_clause = true;
+}
+
+bool Table::IsFalseClause() const {
+  return is_false_clause;
 }
 
 void Table::ToggleBooleanResult() {
   is_boolean_result ^= true;
+}
+
+void Table::ToggleSynonymResult() {
+  is_synonym_result ^= true;
 }
 
 void Table::ToggleAttributeResult() {
@@ -205,8 +204,26 @@ bool Table::IsBooleanResult() const {
   return is_boolean_result;
 }
 
+bool Table::IsSynonymResult() const {
+  return is_synonym_result;
+}
+
 bool Table::IsAttributeResult() const {
   return is_attribute_result;
+}
+
+void Table::UpdateResultType(const Table &other_table) {
+  if (!IsBooleanResult() && other_table.IsBooleanResult()) {
+    ToggleBooleanResult();
+  }
+
+  if (!IsAttributeResult() && other_table.IsAttributeResult()) {
+    ToggleAttributeResult();
+  }
+
+  if (!IsSynonymResult() && other_table.IsSynonymResult()) {
+    ToggleSynonymResult();
+  }
 }
 
 }
