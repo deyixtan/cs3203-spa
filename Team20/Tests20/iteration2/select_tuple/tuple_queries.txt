@@ -481,7 +481,7 @@ b a, b e, c a, c e
 97 - double tuple with attribute and synonym with 1 overlap 3
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <v, pn.stmt#> such that Follows* (a,rd) pattern w (v,_)
-b 11, c 13
+b 11, c 13, b 13, c 11
 5000
 98 - double tuple with attribute and synonym with 2 overlaps 1
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
@@ -541,7 +541,7 @@ a b, e b, e c, a c
 109 - double tuple with attribute and synonym with 1 overlap 3 reversed
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <pn.stmt#, v> such that Follows* (a,rd) pattern w (v,_)
-11 b, 13 c
+11 b, 13 c, 11 c, 13 b
 5000
 110 - double tuple with attribute and synonym with 2 overlaps 1 reversed
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
@@ -580,7 +580,7 @@ Select <a.stmt#, a.stmt#> such that Follows* (cl,pn) pattern w (_,_)
 5000
 117 - double tuple with attribute and attribute with no overlap 2
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
-Select <rd.stmt#, a,stmt#> such that Follows* (cl,pn) pattern w (_,_)
+Select <rd.stmt#, a.stmt#> such that Follows* (cl,pn) pattern w (_,_)
 7 1, 7 16, 7 18, 7 19, 7 20, 7 3, 7 5, 7 6, 7 8
 5000
 118 - double tuple with attribute and attribute with no overlap 3
@@ -601,7 +601,7 @@ a b, e b, e c, a c
 121 - double tuple with attribute and attribute with 1 overlap 3
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <pn.stmt#, v.varName> such that Follows* (a,rd) pattern w (v,_)
-11 b, 13 c
+11 b, 13 c, 13 b, 11 c
 5000
 122 - double tuple with attribute and attribute with 2 overlaps 1
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
