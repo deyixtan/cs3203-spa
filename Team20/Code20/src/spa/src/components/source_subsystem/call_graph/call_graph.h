@@ -6,17 +6,20 @@
 #include <map>
 #include <set>
 #include <queue>
-#include "../types/ast/node_call_statement.h"
+#include <string>
 
 class CallGraph {
-  std::set<std::string> names;
-  std::map<std::string, std::set<std::string>> edges, back_edges;
+ private:
+  std::set<std::string> m_names;
+  std::map<std::string, std::set<std::string>> m_edges, back_edges;
 
   public:
+    explicit CallGraph();
     /* push_back function is used to add new element at the end of the list container */
-    void add_edge(std::string x, std::string y) {
-      edges.at(x).insert(y);
-    }
+    bool AddNode(std::string node);
+    bool AddEdge(std::string x, std::string y);
+    bool IsConnected(std::string src, std::string dst);
+    bool IsConnectedExcluding(std::string src, std::string dst);
     //void topological(int, std::vector<int>, std::stack<int>& );
     std::vector<std::string> TopoSort();
 };

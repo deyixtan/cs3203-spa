@@ -4,9 +4,12 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <stack>
 #include "components/source_subsystem/types/cfg/cfg.h"
+#include "../../pkb/pkb.h"
 
 class PkbClient;
+class CallGraph;
 class ProgramNode;
 class ProcedureNode;
 class StatementListNode;
@@ -19,14 +22,17 @@ class ConstantNode;
 class DesignExtractor {
  private:
   std::shared_ptr<PkbClient> m_pkb_client;
+  std::shared_ptr<CallGraph> m_call_graph;
   std::vector<std::string> m_visited;
 
  public:
   explicit DesignExtractor(std::shared_ptr<PkbClient> pkb_client);
   [[nodiscard]] std::shared_ptr<PkbClient> GetPkbClient();
+  [[nodiscard]] std::shared_ptr<CallGraph> GetCallGraph();
   [[nodiscard]] std::vector<std::string> &GetVisited();
   void IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node);
   void IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root);
+  void UpdateCallUsesMod(std::string proc);
   void Visit(std::shared_ptr<ProgramNode> node);
   void Visit(std::shared_ptr<ProcedureNode> nod);
   void Visit(std::shared_ptr<StatementListNode> node, std::string proc_name);

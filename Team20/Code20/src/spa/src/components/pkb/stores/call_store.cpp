@@ -46,6 +46,21 @@ bool CallStore::IsCallsStarPairExists(const std::string &first_proc, const std::
   return all_calls_star_pairs.find({first_proc, second_proc}) != all_calls_star_pairs.end();
 }
 
+std::unordered_set<std::string> CallStore::GetCallStmtOf(std::string proc) {
+  if (call_stmt_map.find(proc) == call_stmt_map.end()) {
+    return {};
+  }
+  return call_stmt_map.at(proc);
+}
+
+void CallStore::AddCallStmtMap(std::string proc, std::string stmt) {
+  if (call_stmt_map.find(proc) == call_stmt_map.end()) {
+    call_stmt_map.insert({proc, {stmt}});
+  } else {
+    call_stmt_map.at(proc).insert(stmt);
+  }
+}
+
 std::unordered_set<std::string> CallStore::GetCallersOf(std::string const &proc){
   if (rs_map.find(proc) != rs_map.end()) {
     return rs_map.at(proc).callers_set;
