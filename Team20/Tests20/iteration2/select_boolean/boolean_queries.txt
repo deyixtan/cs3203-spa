@@ -353,3 +353,13 @@ assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn;
 Select BOOLEAN such that Uses (_,v)
 FALSE
 5000
+72 - semantically invalid query 2
+assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN with "First" = a.stmt#
+FALSE
+5000
+73 - semantically invalid query 3
+assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN with v.varName = a.stmt#
+FALSE
+5000
