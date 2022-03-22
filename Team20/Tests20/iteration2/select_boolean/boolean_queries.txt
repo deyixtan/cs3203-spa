@@ -303,15 +303,15 @@ assign a; variable v; constant c; procedure p; read rd; call cl; print pn;
 Select BOOLEAN such   that Follows (cl, pn) and Modifies (  a, v  ) with c  .  value = 3
 TRUE
 5000
-62 - multi relationship and with clause with space - invalid declaration 1
+62 - multi relationship and with clause with space - invalid declaration 1 grammatically invalid
 assign a; variable v; constant c; procedure p; read r d; call cl; print pn;
 Select BOOLEAN such   that Follows (cl, pn) and Modifies (  a, v  ) with v  . varName = "blue"
 none
 5000
-63 - multi relationship and with clause with space - invalid declaration 2
+63 - multi relationship and with clause with space - invalid declaration 2 semantically invalid
 assign a; variable v; constant c; procedure p; read rd;
 Select BOOLEAN such   that Follows (cl, pn) and Modifies (  a, v  ) with v  . varName = "blue"
-none
+FALSE
 5000
 64 - multi relationship and with clause with space - invalid declaration 3
 assign a; variable v; constant c; procedure p; read rd; call cl; print pn
@@ -347,4 +347,19 @@ TRUE
 assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn;
 Select BOOLEAN such that Follows (rd,a) and Modifies (a,v) with v  . varName = "blue" pattern a(_,_)
 TRUE
+5000
+71 - semantically invalid query 1
+assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN such that Uses (_,v)
+FALSE
+5000
+72 - semantically invalid query 2
+assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN with "First" = a.stmt#
+FALSE
+5000
+73 - semantically invalid query 3
+assign a, a1; variable v; constant c; procedure p; read rd; call cl; print pn;
+Select BOOLEAN with v.varName = a.stmt#
+FALSE
 5000
