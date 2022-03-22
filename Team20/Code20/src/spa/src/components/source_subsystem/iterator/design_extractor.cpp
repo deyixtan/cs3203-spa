@@ -54,7 +54,7 @@ void DesignExtractor::UpdateCallUsesMod(std::string proc) {
     for (auto &mod_call : mod_calls) {
       m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(call_stmt, mod_call);
       for (auto &ance : ancestors) {
-        m_pkb_client->GetPKB()->GetUsageStore()->AddStmtVar(ance, mod_call);
+        m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(ance, mod_call);
       }
       for (auto &caller : callers) {
         m_pkb_client->GetPKB()->GetModifyStore()->AddProcVar(caller, mod_call);
