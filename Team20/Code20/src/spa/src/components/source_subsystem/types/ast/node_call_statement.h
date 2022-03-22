@@ -2,6 +2,7 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CALL_STATEMENT_H_
 
 #include "node_statement.h"
+#include "../../call_graph/call_graph.h"
 
 class CallStatementNode : public StatementNode {
  private:

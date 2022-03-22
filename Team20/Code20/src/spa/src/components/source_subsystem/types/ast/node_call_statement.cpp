@@ -30,6 +30,7 @@ void CallStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string callee_name = m_identifier;
   de->GetPkbClient()->PopulateCall(stmt_num, m_identifier);
   de->GetPkbClient()->PopulateCalls(proc_name, callee_name);
+  CallGraph().add_edge(proc_name, callee_name);
 }
 
 std::shared_ptr<CfgNode> CallStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
