@@ -160,6 +160,9 @@ bool ParsedQueryValidator::ValidateUsesArguments(Relationship relationship, std:
     }
 
   } else if (second_arg.type == PqlTokenType::SYNONYM) {
+    if (first_arg.type == PqlTokenType::UNDERSCORE) {
+      return false;
+    }
     if (declarations.at(second_arg.value)!= DesignEntityType::VARIABLE) {
       return false;
     }
@@ -275,6 +278,10 @@ bool ParsedQueryValidator::ValidateAssignPatternArguments(Pattern pattern, std::
   PqlToken first_arg = pattern.GetFirst();
   PqlToken second_arg = pattern.GetSecond();
 
+  if (!pattern.GetThird().value.empty()) {
+    throw "ERROR: Invalid assign pattern grammar!";
+  }
+
   if (first_arg.type==PqlTokenType::SYNONYM) {
     if (declarations.count(first_arg.value) == 0) {
       return false;
@@ -291,6 +298,10 @@ bool ParsedQueryValidator::ValidateAssignPatternArguments(Pattern pattern, std::
 bool ParsedQueryValidator::ValidateWhilePatternArguments(Pattern pattern, std::unordered_map<std::string, DesignEntityType> declarations) {
   PqlToken first_arg = pattern.GetFirst();
   PqlToken second_arg = pattern.GetSecond();
+
+  if (!pattern.GetThird().value.empty()) {
+    throw "ERROR: Invalid assign pattern grammar!";
+  }
 
   if (first_arg.type==PqlTokenType::SYNONYM) {
     if (declarations.count(first_arg.value) == 0) {
@@ -313,6 +324,10 @@ bool ParsedQueryValidator::ValidateIfPatternArguments(Pattern pattern, std::unor
   PqlToken first_arg = pattern.GetFirst();
   PqlToken second_arg = pattern.GetSecond();
   PqlToken third_arg = pattern.GetThird();
+
+  if (pattern.GetThird().value.empty()) {
+    throw std::runtime_error("ERROR: Invalid assign pattern grammar!");
+  }
 
   if (first_arg.type==PqlTokenType::SYNONYM) {
     if (declarations.count(first_arg.value) == 0) {

@@ -79,8 +79,7 @@ void QueryValidator::ValidateRelRefFirstArg(int first_arg_position) {
   if (rel_ref_token.type == PqlTokenType::USES || rel_ref_token.type == PqlTokenType::MODIFIES) {
     if (allowed_synonyms.count(tokens_[first_arg_position].type)) {
       tokens_[first_arg_position].type = PqlTokenType::SYNONYM;
-    } else if (tokens_[first_arg_position].type == PqlTokenType::UNDERSCORE ||
-        (!stmt_ref.count(tokens_[first_arg_position].type) &&
+    } else if ((!stmt_ref.count(tokens_[first_arg_position].type) &&
             !ent_ref.count(tokens_[first_arg_position].type))) {
       throw INVALID_REL_REF_ARGUMENTS;
     }
