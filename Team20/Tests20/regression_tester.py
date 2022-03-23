@@ -11,6 +11,7 @@ def check_env():
         return False
     return True
 
+
 def find_tests():
     test_paths = []
     for subdir, _, files in os.walk('.'):
@@ -47,7 +48,8 @@ def execute_tests(autotester_path, test_files):
     total_wrong_count = 0
 
     for source_path, query_path in test_files:
-        subprocess.run([autotester_path, source_path, query_path, "out.xml"], stdout=subprocess.DEVNULL)
+        process = subprocess.Popen([autotester_path, source_path, query_path, "out.xml"], stdout=subprocess.DEVNULL)
+        process.wait()
         correct_list, wrong_list = analyse()
         correct_count = len(correct_list)
         wrong_count = len(wrong_list)
