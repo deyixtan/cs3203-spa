@@ -1,6 +1,5 @@
-#include <queue>
-#include <stack>
 #include "design_extractor.h"
+#include "../call_graph/call_graph.h"
 #include "../types/ast/node_program.h"
 #include "../types/ast/node_procedure.h"
 #include "../types/ast/node_statement_list.h"
@@ -12,10 +11,14 @@
 #include "../types/ast/node_constant.h"
 
 DesignExtractor::DesignExtractor(std::shared_ptr<PkbClient> pkb_client)
-    : m_pkb_client(std::move(pkb_client)), m_visited(std::vector<std::string>()) {}
+    : m_pkb_client(std::move(pkb_client)), m_call_graph(std::make_shared<CallGraph>()), m_visited(std::vector<std::string>()) {}
 
 std::shared_ptr<PkbClient> DesignExtractor::GetPkbClient() {
   return m_pkb_client;
+}
+
+std::shared_ptr<CallGraph> DesignExtractor::GetCallGraph() {
+  return m_call_graph;
 }
 
 std::vector<std::string> &DesignExtractor::GetVisited() {
@@ -24,6 +27,41 @@ std::vector<std::string> &DesignExtractor::GetVisited() {
 
 void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node) {
   Visit(std::move(node));
+  std::vector<std::string> topo_order = m_call_graph->TopoSort();
+  for(int i = topo_order.size() - 1; i >= 0; i--) {
+    UpdateCallUsesMod(topo_order.at(i));
+  }
+}
+
+void DesignExtractor::UpdateCallUsesMod(std::string proc) {
+  std::unordered_set<std::string> uses_calls = m_pkb_client->GetPKB()->GetUsageStore()->GetVarUsedByProc(proc);
+  std::unordered_set<std::string> mod_calls = m_pkb_client->GetPKB()->GetModifyStore()->GetVarModByProc(proc);
+  std::unordered_set<std::string> call_stmts = m_pkb_client->GetPKB()->GetCallStore()->GetCallStmtOf(proc);
+  std::unordered_set<std::string> callers = m_pkb_client->GetPKB()->GetCallStore()->GetCallersOf(proc);
+
+  for (auto &call_stmt : call_stmts) {
+    std::unordered_set<std::string> ancestors = m_pkb_client->GetPKB()->GetParentStore()->GetAllAnceOf(call_stmt);
+    for (auto &uses_call : uses_calls) {
+      m_pkb_client->GetPKB()->GetUsageStore()->AddStmtVar(call_stmt, uses_call);
+      for (auto &ance : ancestors) {
+        m_pkb_client->GetPKB()->GetUsageStore()->AddStmtVar(ance, uses_call);
+      }
+      for (auto &caller : callers) {
+        m_pkb_client->GetPKB()->GetUsageStore()->AddProcVar(caller, uses_call);
+      }
+    }
+
+    for (auto &mod_call : mod_calls) {
+      m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(call_stmt, mod_call);
+      for (auto &ance : ancestors) {
+        m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(ance, mod_call);
+      }
+      for (auto &caller : callers) {
+        m_pkb_client->GetPKB()->GetModifyStore()->AddProcVar(caller, mod_call);
+      }
+    }
+
+  }
 }
 
 void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {

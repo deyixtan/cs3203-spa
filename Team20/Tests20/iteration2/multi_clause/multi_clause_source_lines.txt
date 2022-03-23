@@ -133,56 +133,56 @@ procedure Pyramid {
 98.                                                                 if (hell == 0) then {
 99.                                                                     while (hell == 0) {
 100.                                                                        hell = 1;
-101.                                                                    }
+                                                                        }
                                                                     } else {
-102.                                                                    hell = 0;
+101.                                                                    hell = 0;
                                                                     }
                                                                 } else {
-103.                                                                hell = 0;
+102.                                                                hell = 0;
                                                                 }
                                                             } else {
-104.                                                            hell = 0;
+103.                                                            hell = 0;
                                                             }
                                                         } else {
-105.                                                        hell = 0;
+104.                                                        hell = 0;
                                                         }
                                                     } else {
-106.                                                    hell = 0;
+105.                                                    hell = 0;
                                                     }
                                                 } else {
-107.                                                hell = 0;
+106.                                                hell = 0;
                                                 }
                                             } else {
-108.                                            hell = 0;
+107.                                            hell = 0;
                                             }
                                         } else {
-109.                                        hell = 0;
+108.                                        hell = 0;
                                         }
                                     } else {
-110.                                    hell = 0;
+109.                                    hell = 0;
                                     }
                                 } else {
-111.                                hell = 0;
+110.                                hell = 0;
                                 }
                             } else {
-112.                            hell = 0;
+111.                            hell = 0;
                             }
                         } else {
-113.                        hell = 0;
+112.                        hell = 0;
                         }
                     } else {
-114.                    hell = 0;
+113.                    hell = 0;
                     }
                 } else {
-115.                hell = 0;
+114.                hell = 0;
                 }
             } else {
-116.            hell = 0;
+115.            hell = 0;
             }
         } else {
-117.        hell = 0;
+116.        hell = 0;
         }
     } else {
-118.    hell = 0;
+117.    hell = 0;
     }
 }

@@ -14,6 +14,7 @@ class PkbClient {
 
  public:
   explicit PkbClient(PKB *pkb);
+  PKB* GetPKB();
   void PopulateParent(std::string stmt1, std::string stmt2);
   void PopulateParentStar(std::string stmt, std::vector<std::string> visited);
   void PopulateFollows(std::string stmt1, std::string stmt2);
@@ -33,6 +34,7 @@ class PkbClient {
   void PopulateWhile(std::string stmt);
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
+  void PopulateCallStmt(std::string proc, std::string stmt);
   void PopulateCall(std::string stmt, std::string name);
   void PopulateCfg(Cfg &cfg);
   void PopulateNext(std::unordered_map<std::string, std::unordered_set<std::string>> rs_map);

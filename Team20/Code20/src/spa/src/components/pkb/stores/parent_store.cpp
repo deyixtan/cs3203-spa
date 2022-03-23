@@ -124,7 +124,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
+  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
   return GetAllStmt(type, supported_types, GetParentChildPairs(), false);
 }
 
@@ -135,7 +135,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetAllParentStarStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN};
+  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
   return GetAllStmt(type, supported_types, GetAnceDescPairs(), false);
 }
 

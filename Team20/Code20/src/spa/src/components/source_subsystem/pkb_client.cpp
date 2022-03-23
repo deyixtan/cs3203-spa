@@ -3,6 +3,10 @@
 
 PkbClient::PkbClient(PKB *pkb) : pkb(pkb) {}
 
+PKB* PkbClient::GetPKB() {
+  return pkb;
+}
+
 void PkbClient::PopulateParent(std::string stmt1, std::string stmt2) {
   pkb->GetParentStore()->AddParent(stmt1, stmt2);
 }
@@ -87,6 +91,10 @@ void PkbClient::PopulateCall(std::string stmt, std::string name) {
   pkb->AddStmt(stmt, CALL);
   pkb->AddStmtToName(CALL, stmt, name);
   pkb->AddNameToStmt(CALL, name, stmt);
+}
+
+void PkbClient::PopulateCallStmt(std::string proc, std::string stmt) {
+  pkb->GetCallStore()->AddCallStmtMap(proc, stmt);
 }
 
 void PkbClient::PopulateCfg(Cfg &cfg) {
