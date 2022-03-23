@@ -57,6 +57,11 @@ jobs:
         shell: bash
         run: ${{runner.workspace}}/build/src/integration_testing/integration_testing
 
+      - name: Build Autotester
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE --target autotester
+
       - name: Set up Regression Tests
         shell: bash
         run: |
