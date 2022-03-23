@@ -46,12 +46,12 @@ def analyse():
     return correct_count, wrong_count, total
 
 
-def execute_tests(test_files):
+def execute_tests(autotester_path, test_files):
     total_correct_count = 0
     total_wrong_count = 0
 
     for source_path, query_path in test_files:
-        subprocess.run(["autotester", source_path, query_path, "out.xml"], stdout=subprocess.DEVNULL)
+        subprocess.run([sys.argv[1], source_path, query_path, "out.xml"], stdout=subprocess.DEVNULL)
         correct_count, wrong_count, _ = analyse()
         total_correct_count += correct_count
         total_wrong_count += wrong_count
@@ -67,9 +67,9 @@ if __name__ == "__main__":
         sys.exit(1)
 
     test_files = find_tests()
-    correct_count, wrong_count = execute_tests(test_files)
+    correct_count, wrong_count = execute_tests(sys.argv[1], test_files)
     total = correct_count + wrong_count
-    
+
     print(f"Correct test cases: {correct_count}/{total}.")
     print(f"Wrong test cases: {wrong_count}/{total}.")
 

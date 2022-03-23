@@ -66,5 +66,5 @@ jobs:
       - name: Run Regression Tests
         working-directory: ${{runner.workspace}}/build/regression_tests
         shell: bash
-        run: python regression_tester.py
+        run: python regression_tester.py ${{runner.workspace}}/build/src/unit_testing/autotester
 
