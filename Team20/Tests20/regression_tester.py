@@ -51,7 +51,7 @@ def execute_tests(test_files):
     total_wrong_count = 0
 
     for source_path, query_path in test_files:
-        subprocess.run(["../cmake-build-debug/src/autotester/autotester", source_path, query_path, "out.xml"], stdout=subprocess.DEVNULL)
+        subprocess.run(["autotester", source_path, query_path, "out.xml"], stdout=subprocess.DEVNULL)
         correct_count, wrong_count, _ = analyse()
         total_correct_count += correct_count
         total_wrong_count += wrong_count
