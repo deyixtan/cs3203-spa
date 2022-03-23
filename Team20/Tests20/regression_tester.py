@@ -27,6 +27,9 @@ def find_tests():
 
 
 def analyse():
+    with open("out.xml") as f:
+        print(str(f.readlines()))
+
     tree = ET.parse("out.xml")
     queries = tree.getroot()[1]
 

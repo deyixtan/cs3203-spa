@@ -65,10 +65,10 @@ jobs:
       - name: Set up Regression Tests
         shell: bash
         run: |
-          mkdir -p ${{runner.workspace}}/build/regression_tests
-          cp -r $GITHUB_WORKSPACE/Team20/Tests20/* ${{runner.workspace}}/build/regression_tests
+          mkdir -v -p ${{runner.workspace}}/build/regression_tests
+          cp -v -r $GITHUB_WORKSPACE/Team20/Tests20/* ${{runner.workspace}}/build/regression_tests
 
       - name: Run Regression Tests
         working-directory: ${{runner.workspace}}/build/regression_tests
         shell: bash
-        run: python regression_tester.py ${{runner.workspace}}/build/src/autotester/autotester
+        run: python regression_tester.py ../src/autotester/autotester
