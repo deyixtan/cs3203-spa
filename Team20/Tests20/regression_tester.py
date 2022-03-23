@@ -27,9 +27,6 @@ def find_tests():
 
 
 def analyse():
-    with open("out.xml") as f:
-        print(str(f.readlines()))
-
     tree = ET.parse("out.xml")
     queries = tree.getroot()[1]
 
@@ -37,8 +34,13 @@ def analyse():
     wrong_list = []
     for query in queries:
         query_id = query[0].text
-        result_tag = query[5].tag
-        if result_tag == "failed":
+        is_exception_tag = query[2].tag
+
+        if is_exception_tag == "exception":
+            wrong_list.append(query_id)
+            continue
+        is_result_tag = query[5].tag
+        if is_result_tag == "failed":
             wrong_list.append(query_id)
             continue
         correct_list.append(query_id)
@@ -51,8 +53,7 @@ def execute_tests(autotester_path, test_files):
     total_wrong_count = 0
 
     for source_path, query_path in test_files:
-        process = subprocess.Popen([autotester_path, source_path, query_path, "out.xml"], stdout=subprocess.DEVNULL)
-        process.wait()
+        subprocess.Popen([autotester_path, source_path, query_path, "out.xml"], stdout=subprocess.DEVNULL).wait()
         correct_list, wrong_list = analyse()
         correct_count = len(correct_list)
         wrong_count = len(wrong_list)
