@@ -223,9 +223,7 @@ bool PqlLexer::IsValidString(const std::string &s) {
     // check for strings with length > 1
     if (str.size() > 1) {
       // check that its a valid synonym
-      if(!IsIdent(str)) {
-        return false;
-      }
+
       if (IsIdent(str) && prev_synonym) {
         return false;
       } else if(IsIdent(str)) {
