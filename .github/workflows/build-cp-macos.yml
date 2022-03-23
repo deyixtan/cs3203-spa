@@ -20,6 +20,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{runner.workspace}}/build
@@ -39,17 +42,29 @@ jobs:
         shell: bash
         run: cmake --build . --config $BUILD_TYPE --target unit_testing
 
-      - name: Build Integration Tests
-        working-directory: ${{runner.workspace}}/build
-        shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target integration_testing
-
       - name: Run Unit Tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
         run: ${{runner.workspace}}/build/src/unit_testing/unit_testing
 
+      - name: Build Integration Tests
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE --target integration_testing
+
       - name: Run Integration Tests
         working-directory: ${{runner.workspace}}/build
         shell: bash
         run: ${{runner.workspace}}/build/src/integration_testing/integration_testing
+
+      - name: Set up Regression Tests
+        shell: bash
+        run: |
+          mkdir -p ${{runner.workspace}}/build/regression_tests
+          cp $GITHUB_WORKSPACE/Team20/* ${{runner.workspace}}/build/regression_tests
+
+      - name: Run Regression Tests
+        working-directory: ${{runner.workspace}}/build/regression_tests
+        shell: bash
+        run: python regression_tester.py
+
