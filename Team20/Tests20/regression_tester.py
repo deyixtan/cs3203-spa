@@ -39,11 +39,7 @@ def analyse():
             continue
         correct_list.append(query_id)
 
-    correct_count = len(correct_list)    
-    wrong_count = len(wrong_list)    
-    total = correct_count + wrong_count
-
-    return correct_count, wrong_count, total
+    return correct_list, wrong_list
 
 
 def execute_tests(autotester_path, test_files):
@@ -52,11 +48,15 @@ def execute_tests(autotester_path, test_files):
 
     for source_path, query_path in test_files:
         subprocess.run([autotester_path, source_path, query_path, "out.xml"], stdout=subprocess.DEVNULL)
-        correct_count, wrong_count, _ = analyse()
+        correct_list, wrong_list = analyse()
+        correct_count = len(correct_list)
+        wrong_count = len(wrong_list)
+        total = correct_count + wrong_count
         total_correct_count += correct_count
         total_wrong_count += wrong_count
-        total = correct_count + wrong_count
         print(f"[{source_path[source_path.rfind('/') + 1:-11]}] {correct_count}/{total} test cases.")
+        if wrong_count > 0:
+            print(f"\tWrong cases: {wrong_list}")
 
     return total_correct_count, total_wrong_count
 
