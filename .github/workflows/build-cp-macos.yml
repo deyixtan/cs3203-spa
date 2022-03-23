@@ -61,7 +61,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p ${{runner.workspace}}/build/regression_tests
-          cp -r $GITHUB_WORKSPACE/Team20/* ${{runner.workspace}}/build/regression_tests
+          cp -r $GITHUB_WORKSPACE/Team20/Test20/* ${{runner.workspace}}/build/regression_tests
 
       - name: Run Regression Tests
         working-directory: ${{runner.workspace}}/build/regression_tests
