@@ -18,6 +18,7 @@ class PqlLexer {
   bool IsEntRef(const std::string &s);
   bool IsSubExpressionToken(const std::string &token);
   bool IsIdent(const std::string &s);
+  bool IsValidSynonym(const std::string &s);
   bool IsValidAttribute(const std::string &s);
   std::string GetValidTuple(const std::string &s);
   std::string Trim(const std::string &s);
