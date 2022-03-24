@@ -569,7 +569,7 @@ TEST_CASE("Test tuple with attribute") {
 TEST_CASE("Test declarations with incomplete double quote token") {
   PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
                                 "Select s such that Uses (s, \"x\") pattern a (\"x\", \"y)");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Wrong string format! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
 
 TEST_CASE("Test invalid string") {
@@ -579,7 +579,7 @@ TEST_CASE("Test invalid string") {
 
 TEST_CASE("Test invalid sub-expression") {
   PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, _\"y\"x_)");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Wrong sub expression format! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
 
 TEST_CASE("Test declarations with unrecognised token") {
