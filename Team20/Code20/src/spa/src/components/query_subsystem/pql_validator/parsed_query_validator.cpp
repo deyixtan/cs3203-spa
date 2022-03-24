@@ -163,9 +163,6 @@ bool ParsedQueryValidator::ValidateUsesArguments(Relationship relationship, std:
     }
 
   } else if (second_arg.type == PqlTokenType::SYNONYM) {
-    if (first_arg.type == PqlTokenType::UNDERSCORE) {
-      return false;
-    }
     if (declarations.at(second_arg.value)!= DesignEntityType::VARIABLE) {
       return false;
     }
