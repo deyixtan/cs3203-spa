@@ -183,9 +183,6 @@ bool ParsedQueryValidator::ValidateCallsCallsTArguments(Relationship relationshi
   PqlToken first_arg = relationship.GetFirst();
   PqlToken second_arg = relationship.GetSecond();
 
-  if (first_arg.type==PqlTokenType::UNDERSCORE && second_arg.type==PqlTokenType::UNDERSCORE) {
-    return false;
-  }
   if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
     if (declarations.count(first_arg.value) == 0) {
       return false;
