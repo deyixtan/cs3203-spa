@@ -101,12 +101,12 @@ none
 21 - No synonym with wildcard (_, 'x')
 print pn;
 Select pn such that Modifies(_, "x")
-none
+11,2
 5000
 22 - No synonym with wildcard (_, _)
 print pn;
 Select pn such that Modifies(_, _)
-none
+11,2
 5000
 23 - No synonym with wildcard (50, _)
 print pn;

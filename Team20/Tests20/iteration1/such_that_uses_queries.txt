@@ -121,7 +121,7 @@ durian, apple, banana, papaya, pear, orange, plum, peach, berry, carrot, grape, 
 25 - select variable uses(_, _)
 variable v;
 Select v such that Uses(_, _)
-none
+apple, banana, papaya, pear, orange, peach, berry, carrot, grape, avocado, durian, plum
 5000
 26 - select variable uses(_, var)
 variable v;

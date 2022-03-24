@@ -196,7 +196,7 @@ none
 40 - double synonym double tuple true clause ModifiesP
 assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
 Select <p, v> such that Modifies (p, v)
-main a, main b, main c, main d, main e, main f, car c, car e, car a, car b
+main a, main c, main d, main e, main b, main f, car c, car e, car a, car b, bar c, bar e, bar a, bar b
 5000
 41 - single synonym double tuple true clause 1 ModifiesP
 assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
@@ -231,12 +231,12 @@ a 7, b 7, c 7, d 7, e 7, f 7
 47 - double synonym double tuple true clause UsesP
 assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
 Select <p, v> such that Uses (p, v)
-main b, main d, main a, main c, main e, car a, car b, car c
+car a, car b, car c, bar a, bar b, bar c, main a, main b, main c, main d, main e
 5000
 48 - single synonym double tuple true clause UsesP
 assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
 Select <p, v> such that Uses (p, "a")
-main b, main d, main a, main c, main f, main e, car a, car b, car c, car d, car e, car f
+car a, car b, car c, car d, car e, car f, bar a, bar b, bar c, bar d, bar e, bar f, main a, main b, main c, main d, main e, main f
 5000
 49 - no synonym double tuple true clause UsesP
 assign a, a1; variable v; print pn; read rd; call c; if ifs; while w; procedure p;
@@ -416,22 +416,22 @@ a
 84 - single tuple with attribute with 1 overlap 3
 assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
 Select <p.procName> such that Uses (p, v) with pn.varName = v.varName
-main, car
+main, car, bar
 5000
 85 - single tuple with attribute with 1 overlap 4
 assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
 Select < p .procName    > such that Uses (p, v) with pn.varName = v.varName
-main, car
+main, car , bar
 5000
 86 - single tuple with attribute with 1 overlap 5
 assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
 Select < p. procName> such that Uses (p,v) with pn.varName = v.varName
-main, car
+main, car, bar
 5000
 87 - single tuple with attribute with 2 overlaps 1
 assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
 Select <p.procName> such that Uses (p,v) with p.procName = c.procName
-car
+car, bar
 5000
 88 - single tuple with attribute with 2 overlaps 1
 assign a, a1; variable v, v1; print pn; read rd; call c; if ifs; while w; procedure p, p1;
@@ -511,7 +511,7 @@ b 2, d 2, c 15, c 17, a 2
 103 - double tuple with attribute and synonym with 4 overlaps 1
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <v, w.stmt#> such that Modifies (w, v) and Uses (w, v)
-b 2, c 2, d 2, c 15
+a 2, b 2, c 2, d 2, c 15
 5000
 104 - double tuple with attribute and synonym with no overlap 1 reversed
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
@@ -571,7 +571,7 @@ Select <w.stmt#, v> such that Parent* (w, a) and Uses (a, v)
 115 - double tuple with attribute and synonym with 4 overlaps 1 reversed
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <w.stmt#, v> such that Modifies (w, v) and Uses (w, v)
-2 b, 2 c, 2 d, 15 c
+2 a, 2 b, 2 c, 2 d, 15 c
 5000
 116 - double tuple with attribute and attribute with no overlap 1
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
@@ -631,10 +631,10 @@ Select <w.stmt#, v.varName> such that Parent* (w, a) and Uses (a, v)
 127 - double tuple with attribute and attribute with 4 overlaps 1
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <w.stmt#, v.varName> such that Modifies (w, v) and Uses (w, v)
-2 b, 2 c, 2 d, 15 c
+2 a, 2 b, 2 c, 2 d, 15 c
 5000
 128 - double tuple with attribute and attribute with 4 overlaps with spaces
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <w.  stmt#,v.  varName> such that Modifies (w, v) and Uses (w, v)
-2 b, 2 c, 2 d, 15 c
+2 a, 2 b, 2 c, 2 d, 15 c
 5000
