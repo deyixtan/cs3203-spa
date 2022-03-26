@@ -80,7 +80,7 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
       node_stack.pop();
       visited.insert(curr);
 
-      std::vector<std::string> curr_stmts = curr->GetStatementList(); // get all stmt in node
+      std::vector<Statement> curr_stmts = curr->GetStatementList(); // get all stmt in node
       std::vector<std::shared_ptr<CfgNode>> next_nodes = curr->GetDescendants(); // get all possible next nodes
 
       // check if actual dummy node
@@ -98,13 +98,13 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
       // node with more than one statement
       while(curr_stmts.size() > next) {
         // check if first statement is inside next_map
-        if(next_map.find(curr_stmts[start]) == next_map.end()) {
+        if(next_map.find(curr_stmts[start].stmt_no) == next_map.end()) {
           std::unordered_set<std::string> nextSet = std::unordered_set<std::string>();
-          nextSet.insert(curr_stmts[next]);
-          next_map.insert({curr_stmts[start], nextSet});
+          nextSet.insert(curr_stmts[next].stmt_no);
+          next_map.insert({curr_stmts[start].stmt_no, nextSet});
         } else {
-          std::unordered_set<std::string> vals = next_map[curr_stmts[start]];
-          vals.insert(curr_stmts[next]);
+          std::unordered_set<std::string> vals = next_map[curr_stmts[start].stmt_no];
+          vals.insert(curr_stmts[next].stmt_no);
         }
         start++;
         next++;
@@ -117,8 +117,8 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
 
       for(auto &desc : next_nodes) {
         if (curr_stmts.size() > 0) {
-          if(next_map.find(curr_stmts[curr_stmts.size() - 1]) == next_map.end()) {
-            next_map.insert({curr_stmts[curr_stmts.size() - 1], std::unordered_set<std::string>()});
+          if(next_map.find(curr_stmts[curr_stmts.size() - 1].stmt_no) == next_map.end()) {
+            next_map.insert({curr_stmts[curr_stmts.size() - 1].stmt_no, std::unordered_set<std::string>()});
           }
 
           // force desc to legit node
@@ -126,11 +126,11 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
             desc = desc->GetDescendants().front();
           }
 
-          std::vector<std::string> next_stmts = desc->GetStatementList();
-          std::unordered_set<std::string> vals = next_map[curr_stmts[curr_stmts.size() - 1]];
+          std::vector<Statement> next_stmts = desc->GetStatementList();
+          std::unordered_set<std::string> vals = next_map[curr_stmts[curr_stmts.size() - 1].stmt_no];
           if(next_stmts.size() > 0 ) {
-            vals.insert(next_stmts.front());
-            next_map[curr_stmts[curr_stmts.size() - 1]] = vals;
+            vals.insert(next_stmts.front().stmt_no);
+            next_map[curr_stmts[curr_stmts.size() - 1].stmt_no] = vals;
           }
         }
         if(visited.find(desc) == visited.end()) {

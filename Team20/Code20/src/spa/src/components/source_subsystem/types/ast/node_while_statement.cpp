@@ -69,7 +69,7 @@ void WhileStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
 std::shared_ptr<CfgNode> WhileStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
   std::shared_ptr<CfgNode> body_node = std::make_shared<CfgNode>();
   std::shared_ptr<CfgNode> next_node = std::make_shared<CfgNode>();
-  cfg_node->AddStatement(std::to_string(GetStatementNumber()));
+  cfg_node->AddStatement(StmtType::WHILE, std::to_string(GetStatementNumber()));
   cfg_node->AddNext(body_node);
   cfg_node->AddNext(next_node);
   body_node = cb->Visit(m_stmt_list, body_node);
