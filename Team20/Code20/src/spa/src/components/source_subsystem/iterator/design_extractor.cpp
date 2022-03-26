@@ -31,38 +31,51 @@ void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node
   Visit(std::move(node));
   std::vector<std::string> topo_order = m_call_graph->TopoSort();
   for (int i = topo_order.size() - 1; i >= 0; i--) {
-    UpdateCallUsesMod(topo_order.at(i));
+    UpdateCallUsesModifies(topo_order.at(i));
   }
 }
 
-void DesignExtractor::UpdateCallUsesMod(std::string proc) {
-  std::unordered_set<std::string> uses_calls = m_pkb_client->GetPKB()->GetUsageStore()->GetVarUsedByProc(proc);
-  std::unordered_set<std::string> mod_calls = m_pkb_client->GetPKB()->GetModifyStore()->GetVarModByProc(proc);
+void DesignExtractor::UpdateCallUsesModifies(std::string proc) {
+  std::unordered_set<std::string> uses_vars = m_pkb_client->GetPKB()->GetUsageStore()->GetVarUsedByProc(proc);
+  std::unordered_set<std::string> mod_vars = m_pkb_client->GetPKB()->GetModifyStore()->GetVarModByProc(proc);
   std::unordered_set<std::string> call_stmts = m_pkb_client->GetPKB()->GetCallStore()->GetCallStmtOf(proc);
   std::unordered_set<std::string> callers = m_pkb_client->GetPKB()->GetCallStore()->GetCallersOf(proc);
 
   for (auto &call_stmt : call_stmts) {
     std::unordered_set<std::string> ancestors = m_pkb_client->GetPKB()->GetParentStore()->GetAllAnceOf(call_stmt);
-    for (auto &uses_call : uses_calls) {
-      m_pkb_client->GetPKB()->GetUsageStore()->AddStmtVar(call_stmt, uses_call);
-      for (auto &ance : ancestors) {
-        m_pkb_client->GetPKB()->GetUsageStore()->AddStmtVar(ance, uses_call);
-      }
-      for (auto &caller : callers) {
-        m_pkb_client->GetPKB()->GetUsageStore()->AddProcVar(caller, uses_call);
-      }
-    }
 
-    for (auto &mod_call : mod_calls) {
-      m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(call_stmt, mod_call);
-      for (auto &ance : ancestors) {
-        m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(ance, mod_call);
-      }
-      for (auto &caller : callers) {
-        m_pkb_client->GetPKB()->GetModifyStore()->AddProcVar(caller, mod_call);
-      }
-    }
+    UpdateCallUses(call_stmt, uses_vars, ancestors, callers);
+    UpdateCallModifies(call_stmt, mod_vars, ancestors, callers);
+  }
+}
 
+void DesignExtractor::UpdateCallUses(std::string const &call_stmt,
+                                     std::unordered_set<std::string> const &vars,
+                                     std::unordered_set<std::string> const &ancestors,
+                                     std::unordered_set<std::string> const &callers) {
+  for (auto &var : vars) {
+    m_pkb_client->GetPKB()->GetUsageStore()->AddStmtVar(call_stmt, var);
+    for (auto &ance : ancestors) {
+      m_pkb_client->GetPKB()->GetUsageStore()->AddStmtVar(ance, var);
+    }
+    for (auto &caller : callers) {
+      m_pkb_client->GetPKB()->GetUsageStore()->AddProcVar(caller, var);
+    }
+  }
+}
+
+void DesignExtractor::UpdateCallModifies(std::string const &call_stmt,
+                                         std::unordered_set<std::string> const &vars,
+                                         std::unordered_set<std::string> const &ancestors,
+                                         std::unordered_set<std::string> const &callers) {
+  for (auto &var : vars) {
+    m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(call_stmt, var);
+    for (auto &ance : ancestors) {
+      m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(ance, var);
+    }
+    for (auto &caller : callers) {
+      m_pkb_client->GetPKB()->GetModifyStore()->AddProcVar(caller, var);
+    }
   }
 }
 
