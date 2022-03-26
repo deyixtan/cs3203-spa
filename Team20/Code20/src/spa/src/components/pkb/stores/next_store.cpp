@@ -148,19 +148,24 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::Ge
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> res;
   for(auto pair : next_map) {
     std::string stmt = pair.first;
-    AddNextStarPairs(stmt, stmt, res);
+    std::unordered_set<std::string> next_star_stmt = GetNextStarOf(stmt);
+    for(auto next_star : next_star_stmt){
+      res.insert({stmt, next_star});
+    }
   }
+  return res;
 }
 
-void NextStore::AddNextStarPairs(std::string first, std::string stmt, std::unordered_set<std::pair<std::string, std::string>, pair_hash> res) {
-  if(next_map.find(stmt) == next_map.end()) {
-    return;
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetNextStarSameStmt(StmtType type) {
+  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_pairs = GetAllNextStarStmt(type, type);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> same_synonym_pairs;
+  for(auto pair : all_pairs) {
+    if(pair.first == pair.second) {
+      same_synonym_pairs.insert(pair);
+    }
   }
-  std::unordered_set<std::string> next_set = next_map.at(first);
-  for(auto next : next_set) {
-    res.insert({ first, next});
-    AddNextStarPairs(first, next, res);
-  }
+  return same_synonym_pairs;
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStmt(StmtType type) {
@@ -182,5 +187,12 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::Ge
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStarStmt(StmtType type1,
                                                                                                      StmtType type2) {
   std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  return Store::GetAllStmt(type1, type2, supported_types, GetAllNextStarStmt(type2), true);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_pairs = Store::GetAllStmt(type1, type2, supported_types, GetAllNextStarStmt(type2), true);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> diff_stmt_pairs;
+  for(auto pair : all_pairs) {
+    if(pair.first != pair.second) {
+      diff_stmt_pairs.insert(pair);
+    }
+  }
+  return diff_stmt_pairs;
 }
