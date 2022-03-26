@@ -32,6 +32,20 @@ class DesignExtractor {
   [[nodiscard]] std::vector<std::string> &GetVisited();
   void IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node);
   void IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root);
+  void CfgProcessHandler(std::shared_ptr<CfgNode> &curr_proc,
+                         std::stack<std::shared_ptr<CfgNode>> &node_stack,
+                         std::vector<std::string> &prev_stmts,
+                         std::unordered_set<std::shared_ptr<CfgNode>> &visited,
+                         std::unordered_map<std::string, std::unordered_set<std::string>> &next_map);
+  void MultipleStmtsNodeHandler(std::vector<std::string> &curr_stmts,
+                                std::unordered_map<std::string,
+                                                   std::unordered_set<std::string>> &next_map);
+  void NextNodeHandler(std::shared_ptr<CfgNode> &desc,
+                       std::stack<std::shared_ptr<CfgNode>> &node_stack,
+                       std::vector<std::string> &curr_stmts,
+                       std::unordered_set<std::shared_ptr<CfgNode>> &visited,
+                       std::unordered_map<std::string,
+                                          std::unordered_set<std::string>> &next_map);
   void UpdateCallUsesMod(std::string proc);
   void Visit(std::shared_ptr<ProgramNode> node);
   void Visit(std::shared_ptr<ProcedureNode> nod);
