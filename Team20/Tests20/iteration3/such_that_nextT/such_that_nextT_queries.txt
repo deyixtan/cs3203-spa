@@ -1,0 +1,23 @@
+1 - Syntactically invalid Next* (missing argument)
+Select BOOLEAN such that Next*(1)
+none
+5000
+2 - Syntactically invalid Next* (extra argument)
+Select BOOLEAN such that Next*(1, 2, 3)
+none
+5000
+3 - Semantically invalid Next* (constant synonym)
+constant c; stmt s;
+Select BOOLEAN such that Next*(c, s)
+FALSE
+5000
+4 - Semantically invalid Next* (variable synonym)
+variable v; stmt s;
+Select BOOLEAN such that Next*(s, v)
+FALSE
+5000
+5 - Next* within procedure (no synonyms)
+
+6 - Next* across procedure (no synonyms)
+
+
