@@ -14,7 +14,9 @@ def check_env():
 
 def find_tests():
     test_paths = []
-    for subdir, _, files in os.walk('.'):
+    for subdir, test, files in os.walk('.'):
+        if subdir.startswith("./ignore"):
+            continue
         for file in files:
             if file.endswith('source.txt'):
                 query_file_name = file[:-10] + "queries.txt"
