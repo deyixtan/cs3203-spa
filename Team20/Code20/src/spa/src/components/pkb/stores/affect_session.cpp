@@ -39,7 +39,7 @@ void AffectSession::TraverseCfg(std::shared_ptr<CfgNode> cfg_node, std::shared_p
       std::shared_ptr<CfgNode> next_node = cfg_node->GetDescendants().back();
       TraverseCfg(next_node, cfg_terminating_node, last_modified_map);
     } else {
-      cfg_terminating_node = cfg_node;
+      return;
     }
   }
 
@@ -59,7 +59,8 @@ void AffectSession::TraverseCfg(std::shared_ptr<CfgNode> cfg_node, std::shared_p
       HandleIfStatement(stmt_no, cfg_node, cfg_terminating_node, last_modified_map);
     }
   }
-  TraverseCfg(cfg_node->GetDescendants()[0], cfg_terminating_node, last_modified_map);
+  // process next cfg_node
+  TraverseCfg(cfg_node->GetDescendants().back(), cfg_terminating_node, last_modified_map);
 }
 
 void AffectSession::HandleAssignStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
