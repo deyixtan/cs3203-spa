@@ -18,7 +18,7 @@ class AffectStore : public Store {
  public:
   explicit AffectStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddProgramCfg(std::shared_ptr<Cfg> program_cfg);
-  std::shared_ptr<AffectSession> ComputeAffect(std::string const &a1, std::string const &a2);
+  std::shared_ptr<AffectSession> ComputeAffect();
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECTS_STORE_H_

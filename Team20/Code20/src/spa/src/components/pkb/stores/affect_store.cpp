@@ -9,7 +9,7 @@ void AffectStore::AddProgramCfg(std::shared_ptr<Cfg> program_cfg) {
   m_program_cfg = program_cfg;
 }
 
-std::shared_ptr<AffectSession> AffectStore::ComputeAffect(std::string const &a1, std::string const &a2) {
-  std::shared_ptr<AffectSession> affect_session = std::make_shared<AffectSession>(m_program_cfg, a1, a2);
+std::shared_ptr<AffectSession> AffectStore::ComputeAffect() {
+  std::shared_ptr<AffectSession> affect_session = std::make_shared<AffectSession>(m_program_cfg);
   return affect_session;
 }
