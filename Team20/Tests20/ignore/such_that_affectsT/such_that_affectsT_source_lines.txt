@@ -1,0 +1,78 @@
+procedure singapore {
+1    	if (merlion == 5) then {
+2    		read bishan;
+3    		merlion = merlion * bishan + serangoon;
+4    		while (merlion < 1000) {
+5    			print merlion;
+6    			esplanade = merlion + durian;
+7    			merlion = merlion + 10;
+    		}
+    	} else {
+8    		read orchard;
+9     		town = orchard;
+10    		town = town + raffles;
+11   		if (orchard < raffles) then {
+12    			town = town - orchard;
+    		} else {
+13    			read serangoon;
+		}
+14    		while (serangoon == 1000) {
+15    			read caldecott;
+16    			caldecott = caldecott + serangoon + town;
+17    			marymount = raffles + caldecott;
+    		}
+    	}
+18    	read promenade;
+19    	bayfront = promenade + cityHall + downtown;
+20    	read somerset;
+21    	bayfront = bayfront - somerset;
+22    	somerset = dhoby - novena + downtown + chinatown;
+23    	chinatown = littleIndia * clarkeQuay + outram * telokAyer;
+24    	if (chinatown == 5) then {
+25    		somerset = chinatown + bayfront;
+26    		sentosa = harbourfront;
+27    		If (sentosa == 20) then {
+28    			somerset = somerset + 50;
+    		} else {
+29    			while (sentosa == 30) {
+30    				harbourfront = sentosa * (caldecott + chinatown);
+31    				chinatown = chinatown + 20;
+    		}
+    	} else {
+32    		call europe;
+    	}
+    }
+
+    procedure europe {
+33    	read france;
+34    	france = france + paris + nice;
+35    	read italy;
+36    	print italy;
+37    	italy = venice + florence * rome * verona + serangoon;
+38    	while (italy == france) {
+39    		germany = berlin * munich;
+40    		munich = munich * 2 + 1000 * hamburg;
+41    		if (hamburg == 1000) then {
+42    			frankfurt = hamburg * 200;
+43    			munich = munich * munich;
+    		} else {
+44    			munich = potsdam;
+    		}
+45    		germany = munich;
+46          call country;
+47          berlin = germany;
+48          berlin = munich;
+    	}
+    }
+
+    procedure country {
+48      print germany;
+49      read germany;
+50      germany = 1;
+51      call city;
+    }
+
+    procedure city {
+52      germany = munich + 1;
+53      munich = 2;
+    }
