@@ -13,6 +13,7 @@
 #include "stores/call_store.h"
 #include "stores/pattern_store.h"
 #include "stores/next_store.h"
+#include "stores/affect_store.h"
 #include "expression_tree.h"
 #include "../source_subsystem/types/cfg/cfg.h"
 
@@ -25,6 +26,8 @@ class PKB {
   std::shared_ptr<CallStore> m_call_store;
   std::shared_ptr<PatternStore> m_pattern_store;
   std::shared_ptr<NextStore> m_next_store;
+  std::shared_ptr<AffectStore> m_affect_store;
+
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_name_vector;
   std::shared_ptr<std::vector<std::unordered_map<std::string, std::unordered_set<std::string>>>> m_name_to_stmt;
@@ -50,6 +53,7 @@ class PKB {
   [[nodiscard]] std::shared_ptr<UsageStore> GetUsageStore();
   [[nodiscard]] std::shared_ptr<PatternStore> GetPatternStore();
   [[nodiscard]] std::shared_ptr<NextStore> GetNextStore();
+  [[nodiscard]] std::shared_ptr<AffectStore> GetAffectStore();
   [[nodiscard]] std::shared_ptr<Cfg> GetProgCfg();
 };
 
