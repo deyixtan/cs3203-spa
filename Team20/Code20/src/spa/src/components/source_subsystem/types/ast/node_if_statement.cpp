@@ -98,7 +98,7 @@ std::shared_ptr<CfgNode> IfStatementNode::Accept(CfgBuilder *cb, std::shared_ptr
   std::shared_ptr<CfgNode> if_node = std::make_shared<CfgNode>();
   std::shared_ptr<CfgNode> else_node = std::make_shared<CfgNode>();
   std::shared_ptr<CfgNode> next_node = std::make_shared<CfgNode>();
-  cfg_node->AddStatement(std::to_string(GetStatementNumber()));
+  cfg_node->AddStatement(StmtType::IF, std::to_string(GetStatementNumber()));
   cfg_node->AddNext(if_node);
   cfg_node->AddNext(else_node);
   if_node = cb->Visit(m_if_stmt_list, if_node);
