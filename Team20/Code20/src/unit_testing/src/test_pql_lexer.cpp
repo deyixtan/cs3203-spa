@@ -3,6 +3,7 @@
 
 #include "catch.hpp"
 #include "sample_token.h"
+#include <iostream>
 
 TEST_CASE("Test single declaration") {
   PqlLexer pql_lexer = PqlLexer("procedure p;");
@@ -698,6 +699,12 @@ TEST_CASE("Test pattern clause for ifs with 3 args") {
 
 TEST_CASE("Test invalid synonym in pattern sub-expression") {
   std::string query = "assign a, a1; variable v; Select  a pattern a(_, _\" 1 * re d\"_)";
+  PqlLexer pql_lexer = PqlLexer(query);
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+}
+
+TEST_CASE("Test extra open parenthesis in pattern sub-expression") {
+  std::string query = "assign a, a1; variable v; Select  a pattern a( _,_    \"    1 + (1 * red\" _)";
   PqlLexer pql_lexer = PqlLexer(query);
   REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
 }
