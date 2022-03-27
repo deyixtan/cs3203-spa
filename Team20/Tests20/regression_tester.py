@@ -56,7 +56,12 @@ def execute_tests(autotester_path, test_files):
 
     for source_path, query_path in test_files:
         subprocess.run([autotester_path, source_path, query_path, "out.xml"], stdout=subprocess.DEVNULL)
-        correct_list, wrong_list = analyse()
+        
+        try:
+            correct_list, wrong_list = analyse()
+        except ET.ParseError:
+            raise RuntimeError(f"[{source_path[source_path.rfind('/') + 1:-11]}] Unable to analyse test results.")
+
         correct_count = len(correct_list)
         wrong_count = len(wrong_list)
         total = correct_count + wrong_count
@@ -74,13 +79,16 @@ if __name__ == "__main__":
         print("Environment not set up properly.")
         sys.exit(1)
 
-    test_files = find_tests()
-    correct_count, wrong_count = execute_tests(sys.argv[1], test_files)
-    total = correct_count + wrong_count
+    try:
+        test_files = find_tests()
+        correct_count, wrong_count = execute_tests(sys.argv[1], test_files)
+        total = correct_count + wrong_count
 
-    print(f"Correct test cases: {correct_count}/{total}.")
-    print(f"Wrong test cases: {wrong_count}/{total}.")
+        print(f"Correct test cases: {correct_count}/{total}.")
+        print(f"Wrong test cases: {wrong_count}/{total}.")
 
-    if (wrong_count > 0):
-        sys.exit(1)
-    sys.exit(0)
+        if (wrong_count > 0):
+            sys.exit(1)
+        sys.exit(0)
+    except Exception as e:
+        print(e)
