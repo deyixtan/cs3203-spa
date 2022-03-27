@@ -47,6 +47,6 @@ void AssignStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
 }
 
 std::shared_ptr<CfgNode> AssignStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
-  cfg_node->AddStatement(std::to_string(GetStatementNumber()));
+  cfg_node->AddStatement(StmtType::ASSIGN, std::to_string(GetStatementNumber()));
   return cfg_node;
 }

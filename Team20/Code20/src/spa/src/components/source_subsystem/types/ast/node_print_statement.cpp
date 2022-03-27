@@ -38,6 +38,6 @@ void PrintStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
 }
 
 std::shared_ptr<CfgNode> PrintStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
-  cfg_node->AddStatement(std::to_string(GetStatementNumber()));
+  cfg_node->AddStatement(StmtType::PRINT, std::to_string(GetStatementNumber()));
   return cfg_node;
 }
