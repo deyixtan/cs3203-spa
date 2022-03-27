@@ -293,6 +293,9 @@ bool PqlLexer::IsValidString(const std::string &s) {
       }
     }
   }
+  if(stack.size() > 0) {
+    return false;
+  }
   return true;
 }
 
