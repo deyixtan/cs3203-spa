@@ -187,12 +187,5 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::Ge
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStarStmt(StmtType type1,
                                                                                                      StmtType type2) {
   std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_pairs = Store::GetAllStmt(type1, type2, supported_types, GetAllNextStarStmt(type2), true);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> diff_stmt_pairs;
-  for(auto pair : all_pairs) {
-    if(pair.first != pair.second) {
-      diff_stmt_pairs.insert(pair);
-    }
-  }
-  return diff_stmt_pairs;
+  return Store::GetAllStmt(type1, type2, supported_types, GetAllNextStarStmt(type2), true);
 }

@@ -32,6 +32,20 @@ PKB *GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
   DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
   design_extractor->IterateAstAndPopulatePkb(ast);
+  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
+  cfg_builder.IterateAstAndPopulatePkb(ast);
+  return pkb;
+}
+
+PKB *GetCfgPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
+  PKB *pkb = new PKB();
+
+  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
+  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
+  cfg_builder.IterateAstAndPopulatePkb(ast);
+  design_extractor->IterateAstAndPopulatePkb(ast);
+  design_extractor->IterateCfgAndPopulatePkb(pkb->GetProgCfg());
   return pkb;
 }
 
@@ -975,27 +989,34 @@ TEST_CASE("Test components between Source and PKB (Sample source 3)") {
   }
 }
 
-// TODO: Add test cases for cfg traversing and Next Store
-//TEST_CASE("Test") {
-//  std::shared_ptr<ProgramNode> ast = GenerateAbstractSyntaxTree(sample_source4);
-//  PKB *pkb = GetPopulatedPkbInstance(ast);
-//  std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
-//  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
-//  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
-//  cfg_builder.IterateAstAndPopulatePkb(ast);
-//  design_extractor->IterateAstAndPopulatePkb(ast);
-//  design_extractor->IterateCfgAndPopulatePkb(pkb->GetProgCfg());
-////  std::unordered_set<std::string> set = pkb->GetNextStore()->GetNextStarOf("13");
-//  std::unordered_set<std::pair<std::string, std::string>, pair_hash> pairs = pkb->GetNextStore()->GetAllNextStarStmt(StmtType::STMT, StmtType::STMT);
-////  for (auto stmt : set) {
-////    std::cout << stmt;
-////    std::cout << " * ";
-////  }
-//  for(auto stmt : pairs) {
-//    std::cout << stmt.first;
-//    std::cout << "&";
-//    std::cout << stmt.second;
-//    std::cout << "\n";
-//  }
-////  REQUIRE("" == "");
-//}
+TEST_CASE("Test components between Source and PKB for Next (Sample source 5)") {
+  std::shared_ptr<ProgramNode> ast = GenerateAbstractSyntaxTree(sample_source5);
+  PKB *pkb = GetCfgPopulatedPkbInstance(ast);
+  SECTION("Test Next") {
+    std::unordered_set<std::string> result1 = pkb->GetNextStore()->GetNextOf("13");
+    std::unordered_set<std::string> result2 = pkb->GetNextStore()->GetNextOf("2");
+    std::unordered_set<std::string> result3 = pkb->GetNextStore()->GetNextOf("15");
+    std::unordered_set<std::string> result4 = pkb->GetNextStore()->GetBeforeOf("12");
+    std::unordered_set<std::string> result5 = pkb->GetNextStore()->GetBeforeOf("5");
+    std::unordered_set<std::string> result6 = pkb->GetNextStore()->GetBeforeOf("8");
+    std::unordered_set<std::string> result7 = pkb->GetNextStore()->GetNextOf("4");
+    std::unordered_set<std::string> result8 = pkb->GetNextStore()->GetNextOf("12");
+
+    std::unordered_set<std::string> expected_result1 = {"12"};
+    std::unordered_set<std::string> expected_result2 = {"3", "7"};
+    std::unordered_set<std::string> expected_result3 = {"8"};
+    std::unordered_set<std::string> expected_result4 = {"11", "13"};
+    std::unordered_set<std::string> expected_result5 = {"3", "6"};
+    std::unordered_set<std::string> expected_result6 = {"1", "15"};
+    std::unordered_set<std::string> expected_result7 = {};
+    std::unordered_set<std::string> expected_result8 = {"13", "14"};
+
+    REQUIRE(result1 == expected_result1);
+    REQUIRE(result2 == expected_result2);
+    REQUIRE(result3 == expected_result3);
+    REQUIRE(result4 == expected_result4);
+    REQUIRE(result5 == expected_result5);
+    REQUIRE(result6 == expected_result6);
+    REQUIRE(result7 == expected_result7);
+  }
+}
