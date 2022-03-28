@@ -29,12 +29,9 @@ bool PrintStatementNode::operator==(const StatementNode &other) const {
 
 void PrintStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  de->GetPkbClient()->PopulateStmt(stmt_num);
-  de->GetPkbClient()->PopulateName(m_identifier->GetIdentifier(), PRINT);
   std::string var_name = m_identifier->GetIdentifier();
-  de->GetPkbClient()->PopulatePrint(stmt_num, m_identifier->GetIdentifier());
-  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
   de->Visit(m_identifier, proc_name, true);
+  de->GetPkbClient()->PopulatePrint(de->GetVisited(), stmt_num, var_name);
 }
 
 std::shared_ptr<CfgNode> PrintStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {

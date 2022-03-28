@@ -80,10 +80,17 @@ void PkbClient::PopulateRead(std::string stmt, std::string name) {
   pkb->AddNameToStmt(READ, name, stmt);
 }
 
-void PkbClient::PopulatePrint(std::string stmt, std::string name) {
-  pkb->AddStmt(stmt, PRINT);
-  pkb->AddStmtToName(PRINT, stmt, name);
-  pkb->AddNameToStmt(PRINT, name, stmt);
+void PkbClient::PopulatePrint(std::vector<std::string> &visited, std::string &curr_stmt, std::string &var_name) {
+  pkb->AddStmt(curr_stmt, PRINT);
+  pkb->AddStmtToName(PRINT, curr_stmt, var_name);
+  pkb->AddNameToStmt(PRINT, var_name, curr_stmt);
+  PopulateName(var_name, PRINT);
+  PrintHelper(visited, curr_stmt);
+}
+
+void PkbClient::PrintHelper(std::vector<std::string> &visited, std::string &curr_stmt) {
+  PopulateStmt(curr_stmt);
+  PopulateParentStar(curr_stmt, visited);
 }
 
 void PkbClient::PopulateVars(std::vector<std::string> &visited,
