@@ -16,7 +16,6 @@ class NextStore : public Store {
   void ConstructNextPairs();
   void FindNextStarOf(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited);
   void FindBeforeStarOf(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited) ;
-  void AddNextStarPairs(std::string first, std::string stmt, std::unordered_set<std::pair<std::string, std::string>, pair_hash>);
   [[nodiscard]] bool IsNext(std::string const &stmt);
   [[nodiscard]] bool IsBefore(std::string const &stmt);
   [[nodiscard]] bool IsNextStar(std::string const &stmt);
@@ -32,6 +31,7 @@ class NextStore : public Store {
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStmt(StmtType type1,
                                                                                                     StmtType type2);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetNextStarSameStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStarStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStarStmt(StmtType type1,
                                                                                                         StmtType type2);
