@@ -66,7 +66,7 @@ bool ParentStore::ParentChildExists(std::string const &stmt1, std::string const 
 }
 
 // Used for Parent*(s1, s2)
-bool ParentStore::IsIsAnceExists(std::string const &curr, std::string const &ance) {
+bool ParentStore::IsAnceExists(std::string const &curr, std::string const &ance) {
   std::unordered_set<std::string> all_ance = GetAllAnceOf(curr);
   if (all_ance.find(ance) != all_ance.end()) {
     return true;
