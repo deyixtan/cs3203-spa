@@ -47,8 +47,15 @@ void PkbClient::PopulateProc(std::string name) {
   pkb->AddStmt(name, PROC);
 }
 
-void PkbClient::PopulateAssign(std::string stmt) {
-  pkb->AddStmt(stmt, ASSIGN);
+void PkbClient::PopulateAssign(std::vector<std::string> &visited,
+                               std::string &proc_name,
+                               std::string &curr_stmt,
+                               std::string &var_name,
+                               std::string &rhs_expr) {
+  pkb->AddStmt(curr_stmt, ASSIGN);
+  PopulateStmt(curr_stmt);
+  AddPattern(STMT, curr_stmt, var_name, rhs_expr);
+  PopulateParentStar(curr_stmt, visited);
 }
 
 void PkbClient::PopulateStmt(std::string stmt) {

@@ -1,238 +1,238 @@
 <?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
 <test_results>
 <info>
-<name>Tests20</name><parsing_time_taken>3.298000</parsing_time_taken>
+<name>Tests20</name><parsing_time_taken>1.962000</parsing_time_taken>
 </info>
 <queries>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Double synonym; no overlap true clause (ifs, v)">1</id><querystr><![CDATA[print pn; if ifs; variable v; Select pn such that Modifies(ifs, v)]]></querystr>
 <stuans>11,2</stuans>
 <correct>2,11</correct>
-<time_taken>2.352000</time_taken>
+<time_taken>1.658000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="No synonym; no overlap false clause (3, 'v')">2</id><querystr><![CDATA[print pn; variable v; Select pn such that Modifies(3, "v")]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.500000</time_taken>
+<time_taken>1.009000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Single synonym; overlap (r, 'd')">3</id><querystr><![CDATA[read r; Select r such that Modifies(r, "d")]]></querystr>
 <stuans>1</stuans>
 <correct>1</correct>
-<time_taken>1.269000</time_taken>
+<time_taken>2.450000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Double synonym; overlap (r, v)">4</id><querystr><![CDATA[read r; variable v; Select v such that Modifies(r, v)]]></querystr>
 <stuans>d,x</stuans>
 <correct>d,x</correct>
-<time_taken>1.514000</time_taken>
+<time_taken>1.498000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" CondNum="2" RelNum="1" comment="Double synonym; intentionally misspelt (r, pn)">5</id><querystr><![CDATA[read r; print pn; Select pn suc that Modifies(r, pn)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.282000</time_taken>
+<time_taken>1.335000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Double synonym (r, v)">6</id><querystr><![CDATA[read r; variable v; Select r such that Modifies(r, v)]]></querystr>
 <stuans>1,6,4,10</stuans>
 <correct>1,4,6,10</correct>
-<time_taken>1.387000</time_taken>
+<time_taken>3.433000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Single synonym (r, 'x')">7</id><querystr><![CDATA[read r; Select r such that Modifies(r, "x")]]></querystr>
 <stuans>10,4,6</stuans>
 <correct>4,6,10</correct>
-<time_taken>1.372000</time_taken>
+<time_taken>1.391000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Single synonym with wildcard (r, _)">8</id><querystr><![CDATA[read r; Select r such that Modifies(r, _)]]></querystr>
 <stuans>10,4,6,1</stuans>
 <correct>1,4,6,10</correct>
-<time_taken>1.379000</time_taken>
+<time_taken>1.167000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Double synonym (a, v)">9</id><querystr><![CDATA[assign a; variable v; Select v such that Modifies(a, v)]]></querystr>
 <stuans>d,p,z</stuans>
 <correct>d,z,p</correct>
-<time_taken>1.393000</time_taken>
+<time_taken>0.921000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Single synonym (a, 'z')">10</id><querystr><![CDATA[assign a; Select a such that Modifies(a, "z")]]></querystr>
 <stuans>8</stuans>
 <correct>8</correct>
-<time_taken>1.323000</time_taken>
+<time_taken>2.609000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Double synonym (ifs, v)">11</id><querystr><![CDATA[if ifs; variable v; Select v such that Modifies(ifs, v)]]></querystr>
 <stuans>x</stuans>
 <correct>x</correct>
-<time_taken>1.329000</time_taken>
+<time_taken>1.495000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Single synonym (ifs, 'x')">12</id><querystr><![CDATA[if ifs; Select ifs such that Modifies(ifs, "x")]]></querystr>
 <stuans>9</stuans>
 <correct>9</correct>
-<time_taken>1.087000</time_taken>
+<time_taken>1.339000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Single synonym with wildcard (ifs, _)">13</id><querystr><![CDATA[if ifs; Select ifs such that Modifies(ifs, _)]]></querystr>
 <stuans>9</stuans>
 <correct>9</correct>
-<time_taken>1.096000</time_taken>
+<time_taken>1.540000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Double synonym (w, v)">14</id><querystr><![CDATA[while w; variable v; Select v such that Modifies(w, v)]]></querystr>
 <stuans>d,z,x</stuans>
 <correct>x,d,z</correct>
-<time_taken>1.395000</time_taken>
+<time_taken>1.500000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Single synonym (w, 'x')">15</id><querystr><![CDATA[while w; Select w such that Modifies(w, "x")]]></querystr>
 <stuans>5,3</stuans>
 <correct>3,5</correct>
-<time_taken>1.506000</time_taken>
+<time_taken>1.134000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Single synonym with wildcard (w, _)">16</id><querystr><![CDATA[while w; Select w such that Modifies(w, _)]]></querystr>
 <stuans>5,3</stuans>
 <correct>3,5</correct>
-<time_taken>1.249000</time_taken>
+<time_taken>1.149000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Single synonym (9, v)">17</id><querystr><![CDATA[variable v; Select v such that Modifies(9, v)]]></querystr>
 <stuans>x</stuans>
 <correct>x</correct>
-<time_taken>1.007000</time_taken>
+<time_taken>1.129000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="No synonym (9, 'z')">18</id><querystr><![CDATA[print pn; Select pn such that Modifies(9, "z")]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.035000</time_taken>
+<time_taken>0.789000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="No synonym with wildcard (9, _)">19</id><querystr><![CDATA[print pn; Select pn such that Modifies(9, _)]]></querystr>
 <stuans>11,2</stuans>
 <correct>2,11</correct>
-<time_taken>1.171000</time_taken>
+<time_taken>0.823000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="Single synonym with wildcard (_, v)">20</id><querystr><![CDATA[print pn; variable v; Select pn such that Modifies(_, v)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.120000</time_taken>
+<time_taken>0.788000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="No synonym with wildcard (_, 'x')">21</id><querystr><![CDATA[print pn; Select pn such that Modifies(_, "x")]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.125000</time_taken>
+<time_taken>0.721000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" comment="No synonym with wildcard (_, _)">22</id><querystr><![CDATA[print pn; Select pn such that Modifies(_, _)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>0.825000</time_taken>
+<time_taken>0.708000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" comment="No synonym with wildcard (50, _)">23</id><querystr><![CDATA[print pn; Select pn such that Modifies(50, _)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>0.920000</time_taken>
+<time_taken>0.723000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Single synonym (ifs, 'i982')">24</id><querystr><![CDATA[print pn; if ifs; Select pn such that Modifies(ifs, "i982")]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.438000</time_taken>
+<time_taken>0.828000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Double synonym; negative (s, v)">25</id><querystr><![CDATA[print pn; variable v; stmt s1, s2; Select pn such that Modifies(s, v)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.658000</time_taken>
+<time_taken>0.790000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="Double synonym; negative (s, v)">26</id><querystr><![CDATA[print pn; variable v; stmt s1, s2; Select pn such that Modifies*(s, v)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.397000</time_taken>
+<time_taken>0.872000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" SuchThat="1" CondNum="2" RelNum="0" comment="Double synonym; negative (s, v)">27</id><querystr><![CDATA[print pn; variable v; stmt s1, s2; Select pn such that Modifies*(s, v)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.147000</time_taken>
+<time_taken>0.770000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Double synonym; negative (v1, v2)">28</id><querystr><![CDATA[print pn; variable v; Select pn such that Modifies(v1, v2)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>2.175000</time_taken>
+<time_taken>0.771000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Double synonym; negative (s, a)">29</id><querystr><![CDATA[assign a; print pn; stmt s1, s2; Select pn such that Modifies(s, a)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.464000</time_taken>
+<time_taken>0.820000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Single synonym; negative (s, '9')">30</id><querystr><![CDATA[print pn; stmt s1, s2; Select pn such that Modifies(s, "9")]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.195000</time_taken>
+<time_taken>0.857000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Single synonym; negative (s, 'ab#c')">31</id><querystr><![CDATA[print pn; stmt s1, s2; Select pn such that Modifies(s, "ab#c")]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.324000</time_taken>
+<time_taken>0.749000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Single synonym; negative (s, 'd y c')">32</id><querystr><![CDATA[print pn; stmt s1, s2; Select pn such that Modifies(s, "d y c")]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.265000</time_taken>
+<time_taken>0.811000</time_taken>
 <passed/>
 </query>
 <query>
 <id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="Single synonym; negative (s, 2)">33</id><querystr><![CDATA[print pn; stmt s1, s2; Select pn such that Modifies(s, 2)]]></querystr>
 <stuans></stuans>
 <correct></correct>
-<time_taken>1.203000</time_taken>
+<time_taken>0.846000</time_taken>
 <passed/>
 </query>
 </queries>
