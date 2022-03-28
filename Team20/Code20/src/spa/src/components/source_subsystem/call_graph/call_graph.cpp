@@ -50,29 +50,15 @@ bool CallGraph::AddEdge(std::string x, std::string y) {
   AddNode(x);
   AddNode(y);
   auto x_out_iter = m_edges.find(x);
-  assert(x_out_iter != m_edges.end());
   auto y_in_iter = m_edges.find(y);
-  assert(y_in_iter != back_edges.end());
 
   if (x_out_iter->second.count(y)) {
-    assert(y_in_iter->second.count(x));
     return false;
   }
-  assert(!y_in_iter->second.count(x));
 
   x_out_iter->second.insert(y);
   y_in_iter->second.insert(x);
 
   back_edges.find(y)->second.insert(x);
   return true;
-}
-
-bool CallGraph::IsConnected(std::string src, std::string dst) {
-  for (auto &node : m_edges) {
-
-  }
-}
-
-bool CallGraph::IsConnectedExcluding(std::string src, std::string dst) {
-
 }
