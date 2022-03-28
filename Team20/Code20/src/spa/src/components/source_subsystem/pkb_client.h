@@ -25,21 +25,37 @@ class PkbClient {
   void PopulateModifiesProc(std::string stmt, std::string var);
   void PopulateCalls(std::string caller, std::string callee);
   void PopulateProc(std::string name);
+
   void PopulateAssign(std::vector<std::string> &visited,
                       std::string &proc_name,
                       std::string &curr_stmt,
                       std::string &var_name,
                       std::string &rhs_expr);
+  void AssignHelper(std::vector<std::string> &visited,
+                    std::string &proc_name,
+                    std::string &curr_stmt,
+                    std::string &var_name,
+                    std::string &rhs_expr);
+
   void PopulateStmt(std::string stmt);
   void PopulateName(std::string name, StmtType type);
   void PopulateRead(std::string stmt, std::string name);
   void PopulatePrint(std::string stmt, std::string name);
+
   void PopulateVars(std::vector<std::string> &visited,
                     std::string &curr_stmt,
                     std::string &proc_name,
                     std::string &var_name,
                     bool is_uses);
+  void VarsHelper(std::vector<std::string> &visited,
+                  std::string &curr_stmt,
+                  std::string &proc_name,
+                  std::string &var_name,
+                  bool is_uses);
+
   void PopulateWhile(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr);
+  void WhileHelper(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr);
+
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
   void PopulateCallStmt(std::string proc, std::string stmt);

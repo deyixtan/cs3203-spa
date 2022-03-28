@@ -53,6 +53,14 @@ void PkbClient::PopulateAssign(std::vector<std::string> &visited,
                                std::string &var_name,
                                std::string &rhs_expr) {
   pkb->AddStmt(curr_stmt, ASSIGN);
+  AssignHelper(visited, proc_name, curr_stmt, var_name, rhs_expr);
+}
+
+void PkbClient::AssignHelper(std::vector<std::string> &visited,
+                             std::string &proc_name,
+                             std::string &curr_stmt,
+                             std::string &var_name,
+                             std::string &rhs_expr) {
   PopulateStmt(curr_stmt);
   AddPattern(STMT, curr_stmt, var_name, rhs_expr);
   PopulateParentStar(curr_stmt, visited);
@@ -84,6 +92,14 @@ void PkbClient::PopulateVars(std::vector<std::string> &visited,
                              std::string &var_name,
                              bool is_uses) {
   pkb->AddStmt(var_name, VARS);
+  VarsHelper(visited, curr_stmt, proc_name, var_name, is_uses);
+}
+
+void PkbClient::VarsHelper(std::vector<std::string> &visited,
+                             std::string &curr_stmt,
+                             std::string &proc_name,
+                             std::string &var_name,
+                             bool is_uses) {
   if (!is_uses) {
     for (std::string s : visited) {
       PopulateModifies(s, var_name);
@@ -101,6 +117,11 @@ void PkbClient::PopulateVars(std::vector<std::string> &visited,
 
 void PkbClient::PopulateWhile(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr) {
   pkb->AddStmt(curr_stmt, WHILE);
+  WhileHelper(visited, curr_stmt, cond_expr);
+
+}
+
+void PkbClient::WhileHelper(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr) {
   PopulateStmt(curr_stmt);
   AddPattern(WHILE, curr_stmt, cond_expr, "");
   PopulateParentStar(curr_stmt, visited);
