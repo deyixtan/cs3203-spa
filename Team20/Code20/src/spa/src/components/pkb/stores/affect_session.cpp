@@ -124,9 +124,10 @@ void AffectSession::HandleWhileStatement(std::string stmt_no, std::shared_ptr<Cf
   std::unordered_map<std::string, std::unordered_set<std::string>> last_modified_map_clone = last_modified_map;
   std::shared_ptr<CfgNode> tmp1 = cfg_node->GetDescendants().front();
   std::shared_ptr<CfgNode> tmp2 = cfg_terminating_node;
+  std::shared_ptr<CfgNode> tmp3 = cfg_node->GetDescendants().front(); // save state
+  std::shared_ptr<CfgNode> tmp4 = cfg_terminating_node; // save state
   TraverseCfg(tmp1, tmp2, last_modified_map_clone);
-  // iterate loop once more
-  TraverseCfg(tmp1, tmp2, last_modified_map_clone);
+  TraverseCfg(tmp3, tmp4, last_modified_map_clone);
 }
 
 void AffectSession::HandleIfStatement(std::string stmt_no, std::shared_ptr<CfgNode> &cfg_node, std::shared_ptr<CfgNode> &cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
