@@ -35,7 +35,7 @@ class PkbClient {
                     std::string &proc_name,
                     std::string &var_name,
                     bool is_uses);
-  void PopulateWhile(std::string stmt);
+  void PopulateWhile(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr);
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
   void PopulateCallStmt(std::string proc, std::string stmt);
