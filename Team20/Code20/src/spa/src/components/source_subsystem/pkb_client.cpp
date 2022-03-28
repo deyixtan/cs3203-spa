@@ -118,7 +118,6 @@ void PkbClient::VarsHelper(std::vector<std::string> &visited,
 void PkbClient::PopulateWhile(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr) {
   pkb->AddStmt(curr_stmt, WHILE);
   WhileHelper(visited, curr_stmt, cond_expr);
-
 }
 
 void PkbClient::WhileHelper(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr) {
@@ -128,8 +127,16 @@ void PkbClient::WhileHelper(std::vector<std::string> &visited, std::string &curr
   visited.pop_back();
 }
 
-void PkbClient::PopulateIf(std::string stmt) {
-  pkb->AddStmt(stmt, IF);
+void PkbClient::PopulateIf(std::vector<std::string> &visited, std::string curr_stmt, std::string cond_expr) {
+  pkb->AddStmt(curr_stmt, IF);
+  IfHelper(visited, curr_stmt, cond_expr);
+}
+
+void PkbClient::IfHelper(std::vector<std::string> &visited, std::string curr_stmt, std::string cond_expr) {
+  PopulateStmt(curr_stmt);
+  AddPattern(IF, curr_stmt, cond_expr, "");
+  PopulateParentStar(curr_stmt, visited);
+  visited.pop_back();
 }
 
 void PkbClient::PopulateConst(std::string name) {
