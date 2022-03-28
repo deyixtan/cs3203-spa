@@ -92,8 +92,12 @@ void PkbClient::PopulateVars(std::vector<std::string> &visited,
   }
 }
 
-void PkbClient::PopulateWhile(std::string stmt) {
-  pkb->AddStmt(stmt, WHILE);
+void PkbClient::PopulateWhile(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr) {
+  pkb->AddStmt(curr_stmt, WHILE);
+  PopulateStmt(curr_stmt);
+  AddPattern(WHILE, curr_stmt, cond_expr, "");
+  PopulateParentStar(curr_stmt, visited);
+  visited.pop_back();
 }
 
 void PkbClient::PopulateIf(std::string stmt) {
