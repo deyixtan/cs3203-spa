@@ -41,7 +41,7 @@ void PKB::AddStmtToName(StmtType type, std::string const &stmt, std::string cons
   std::unordered_map<std::string, std::string> ref_map = m_stmt_to_name->at(type);
   if (ref_map.find(stmt) != ref_map.end()) {
     m_stmt_to_name->at(type).at(stmt) = name;
-  } else{
+  } else {
     m_stmt_to_name->at(type).insert({stmt, name});
   }
 }

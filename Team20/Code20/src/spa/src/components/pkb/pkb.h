@@ -14,7 +14,7 @@
 #include "stores/pattern_store.h"
 #include "stores/next_store.h"
 #include "stores/affect_store.h"
-#include "expression_tree.h"
+#include "components/pkb/expression_tree/expression_tree.h"
 #include "../source_subsystem/types/cfg/cfg.h"
 
 class PKB {

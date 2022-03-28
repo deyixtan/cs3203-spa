@@ -2,7 +2,7 @@
 #define PATTERN_STORE_H
 
 #include "store.h"
-#include "components/pkb/expression_tree.h"
+#include "components/pkb/expression_tree/expression_tree.h"
 
 class PatternStore : Store {
  private:

@@ -96,10 +96,10 @@ void PkbClient::PopulateVars(std::vector<std::string> &visited,
 }
 
 void PkbClient::VarsHelper(std::vector<std::string> &visited,
-                             std::string &curr_stmt,
-                             std::string &proc_name,
-                             std::string &var_name,
-                             bool is_uses) {
+                           std::string &curr_stmt,
+                           std::string &proc_name,
+                           std::string &var_name,
+                           bool is_uses) {
   if (!is_uses) {
     for (std::string s : visited) {
       PopulateModifies(s, var_name);
@@ -136,10 +136,18 @@ void PkbClient::PopulateConst(std::string name) {
   pkb->AddStmt(name, CONSTS);
 }
 
-void PkbClient::PopulateCall(std::string stmt, std::string name) {
-  pkb->AddStmt(stmt, CALL);
-  pkb->AddStmtToName(CALL, stmt, name);
-  pkb->AddNameToStmt(CALL, name, stmt);
+void PkbClient::PopulateCall(std::vector<std::string> &visited,
+                             std::string &curr_stmt,
+                             std::string &proc_name,
+                             std::string &callee_name) {
+  pkb->AddStmt(curr_stmt, CALL);
+  pkb->AddStmtToName(CALL, curr_stmt, callee_name);
+  pkb->AddNameToStmt(CALL, callee_name, curr_stmt);
+  PopulateStmt(curr_stmt);
+  PopulateName(callee_name, CALL);
+  PopulateCalls(proc_name, callee_name);
+  PopulateCallStmt(callee_name, curr_stmt);
+  PopulateParentStar(curr_stmt, visited);
 }
 
 void PkbClient::PopulateCallStmt(std::string proc, std::string stmt) {

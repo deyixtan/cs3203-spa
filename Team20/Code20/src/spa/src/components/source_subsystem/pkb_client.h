@@ -59,7 +59,10 @@ class PkbClient {
   void PopulateIf(std::string stmt);
   void PopulateConst(std::string name);
   void PopulateCallStmt(std::string proc, std::string stmt);
-  void PopulateCall(std::string stmt, std::string name);
+  void PopulateCall(std::vector<std::string> &visited,
+                    std::string &curr_stmt,
+                    std::string &proc_name,
+                    std::string &callee_name);
   void PopulateCfg(Cfg &cfg);
   void PopulateNext(std::unordered_map<std::string, std::unordered_set<std::string>> rs_map);
   void AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs);
