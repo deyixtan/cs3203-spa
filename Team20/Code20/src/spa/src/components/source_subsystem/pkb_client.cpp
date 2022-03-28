@@ -3,7 +3,7 @@
 
 PkbClient::PkbClient(PKB *pkb) : pkb(pkb) {}
 
-PKB* PkbClient::GetPKB() {
+PKB *PkbClient::GetPKB() {
   return pkb;
 }
 
@@ -71,8 +71,25 @@ void PkbClient::PopulatePrint(std::string stmt, std::string name) {
   pkb->AddNameToStmt(PRINT, name, stmt);
 }
 
-void PkbClient::PopulateVars(std::string var) {
-  pkb->AddStmt(var, VARS);
+void PkbClient::PopulateVars(std::vector<std::string> &visited,
+                             std::string &curr_stmt,
+                             std::string &proc_name,
+                             std::string &var_name,
+                             bool is_uses) {
+  pkb->AddStmt(var_name, VARS);
+  if (!is_uses) {
+    for (std::string s : visited) {
+      PopulateModifies(s, var_name);
+    }
+    PopulateModifiesProc(proc_name, var_name);
+    PopulateModifies(curr_stmt, var_name);
+  } else {
+    for (std::string s : visited) {
+      PopulateUses(s, var_name);
+    }
+    PopulateUsesProc(proc_name, var_name);
+    PopulateUses(curr_stmt, var_name);
+  }
 }
 
 void PkbClient::PopulateWhile(std::string stmt) {
