@@ -29,11 +29,11 @@ void StatementStore::AddVarHelper(std::string index,
   }
 }
 
-bool StatementStore::StmtVarExists(std::pair<std::string, std::string> const &pair) {
+bool StatementStore::IsStmtVarExists(std::pair<std::string, std::string> const &pair) {
   return stmt_var_pairs.find(pair) != stmt_var_pairs.end();
 }
 
-bool StatementStore::ProcVarExists(std::pair<std::string, std::string> const &pair) {
+bool StatementStore::IsProcVarExists(std::pair<std::string, std::string> const &pair) {
   return proc_var_pairs.find(pair) != proc_var_pairs.end();
 }
 

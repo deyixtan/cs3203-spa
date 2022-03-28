@@ -63,7 +63,7 @@ bool NextStore::IsBeforeStar(const std::string &stmt) {
   return IsBefore(stmt);
 }
 
-bool NextStore::NextExists(std::pair<std::string, std::string> const &pair) {
+bool NextStore::IsNextExists(std::pair<std::string, std::string> const &pair) {
   if(all_next_pairs.find(pair) != all_next_pairs.end()) {
     return true;
   } else {
@@ -71,7 +71,7 @@ bool NextStore::NextExists(std::pair<std::string, std::string> const &pair) {
   }
 }
 
-bool NextStore::NextStarExists(std::pair<std::string, std::string> const &pair) {
+bool NextStore::IsNextStarExists(std::pair<std::string, std::string> const &pair) {
   std::unordered_set<std::string> res;
   std::unordered_set<std::string> visited;
   FindNextStarOf(pair.first, res, visited);

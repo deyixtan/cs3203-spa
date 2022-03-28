@@ -26,7 +26,7 @@ TEST_CASE("Valid follow pair") {
   FollowStore follow_store = set_up_follow(10);
   std::string stmt1 = "2";
   std::string stmt2 = "3";
-  bool actual = follow_store.FollowExists({stmt1, stmt2});
+  bool actual = follow_store.IsFollowExists({stmt1, stmt2});
   bool expected = follow_set.find({stmt1, stmt2}) != follow_set.end();
 
   REQUIRE(actual == expected);
@@ -36,7 +36,7 @@ TEST_CASE("Invalid follow pair") {
   FollowStore follow_store = set_up_follow(10);
   std::string stmt1 = "2";
   std::string stmt2 = "5";
-  bool actual = follow_store.FollowExists({stmt1, stmt2});
+  bool actual = follow_store.IsFollowExists({stmt1, stmt2});
   bool expected = follow_set.find({stmt1, stmt2}) != follow_set.end();
 
   REQUIRE(actual == expected);

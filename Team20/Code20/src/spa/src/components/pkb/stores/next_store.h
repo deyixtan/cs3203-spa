@@ -20,8 +20,8 @@ class NextStore : public Store {
   [[nodiscard]] bool IsBefore(std::string const &stmt);
   [[nodiscard]] bool IsNextStar(std::string const &stmt);
   [[nodiscard]] bool IsBeforeStar(std::string const &stmt);
-  [[nodiscard]] bool NextExists(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] bool NextStarExists(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsNextExists(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsNextStarExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetBeforeOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetNextOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetBeforeStarOf(std::string const &stmt);

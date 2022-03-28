@@ -66,7 +66,7 @@ bool ParentStore::ParentChildExists(std::string const &stmt1, std::string const 
 }
 
 // Used for Parent*(s1, s2)
-bool ParentStore::AnceExists(std::string const &curr, std::string const &ance) {
+bool ParentStore::IsIsAnceExists(std::string const &curr, std::string const &ance) {
   std::unordered_set<std::string> all_ance = GetAllAnceOf(curr);
   if (all_ance.find(ance) != all_ance.end()) {
     return true;
@@ -75,7 +75,7 @@ bool ParentStore::AnceExists(std::string const &curr, std::string const &ance) {
 }
 
 // Used for Parent*(s1, s2)
-bool ParentStore::DescExists(std::string const &curr, std::string const &desc) {
+bool ParentStore::IsDescExists(std::string const &curr, std::string const &desc) {
   std::unordered_set<std::string> all_desc = GetAllDescOf(curr);
   if (all_desc.find(desc) != all_desc.end()) {
     return true;

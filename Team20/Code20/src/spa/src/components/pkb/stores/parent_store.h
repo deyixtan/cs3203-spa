@@ -31,8 +31,8 @@ class ParentStore : public Store {
   [[nodiscard]] bool IsAnce(std::string const &stmt);
   [[nodiscard]] bool IsDesc(std::string const &stmt);
   [[nodiscard]] bool ParentChildExists(std::string const &stmt1, std::string const &stmt2);
-  [[nodiscard]] bool AnceExists(std::string const &curr, std::string const &ance);
-  [[nodiscard]] bool DescExists(std::string const &curr, std::string const &desc);
+  [[nodiscard]] bool IsAnceExists(std::string const &curr, std::string const &ance);
+  [[nodiscard]] bool IsDescExists(std::string const &curr, std::string const &desc);
   [[nodiscard]] std::string GetParentOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetChildOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetAllAnceOf(std::string const &stmt);

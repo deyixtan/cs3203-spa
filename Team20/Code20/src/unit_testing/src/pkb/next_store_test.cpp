@@ -20,7 +20,7 @@ TEST_CASE("Valid next pair") {
   NextStore next_store = set_up_next();
   std::string stmt1 = "9";
   std::string stmt2 = "11";
-  bool actual = next_store.NextExists({stmt1, stmt2});
+  bool actual = next_store.IsNextExists({stmt1, stmt2});
   bool expected = all_next_pairs.find({stmt1, stmt2}) != all_next_pairs.end();
 
   REQUIRE(actual == expected);
@@ -30,7 +30,7 @@ TEST_CASE("Invalid next pair") {
   NextStore next_store = set_up_next();
   std::string stmt1 = "4";
   std::string stmt2 = "5";
-  bool actual = next_store.NextExists({stmt1, stmt2});
+  bool actual = next_store.IsNextExists({stmt1, stmt2});
   bool expected = all_next_pairs.find({stmt1, stmt2}) != all_next_pairs.end();
 
   REQUIRE(actual == expected);

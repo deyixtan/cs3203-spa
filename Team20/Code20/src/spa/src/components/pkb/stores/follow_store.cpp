@@ -52,12 +52,12 @@ bool FollowStore::IsFollowingStar(std::string const &stmt) {
 }
 
 // Used for follower(s1, s2)
-bool FollowStore::FollowExists(std::pair<std::string, std::string> const &pair) {
+bool FollowStore::IsFollowExists(std::pair<std::string, std::string> const &pair) {
   return all_follow_pairs.find(pair) != all_follow_pairs.end();
 }
 
 // Used for follower*(s1, s2)
-bool FollowStore::FollowStarExists(std::pair<std::string, std::string> const &pair) {
+bool FollowStore::IsFollowStarExists(std::pair<std::string, std::string> const &pair) {
   return all_follow_star_pairs.find(pair) != all_follow_star_pairs.end();
 }
 

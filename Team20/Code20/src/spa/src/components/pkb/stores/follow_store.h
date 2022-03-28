@@ -31,8 +31,8 @@ class FollowStore : public Store {
   [[nodiscard]] bool IsFollowing(std::string const &stmt);
   [[nodiscard]] bool IsFollowerStar(std::string const &stmt);
   [[nodiscard]] bool IsFollowingStar(std::string const &stmt);
-  [[nodiscard]] bool FollowExists(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] bool FollowStarExists(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsFollowExists(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsFollowStarExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetFollowerOf(std::string const &stmt);
   [[nodiscard]] std::string GetFollowingOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetFollowerStarOf(std::string const &stmt);

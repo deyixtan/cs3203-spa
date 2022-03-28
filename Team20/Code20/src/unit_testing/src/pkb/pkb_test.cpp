@@ -378,7 +378,7 @@ TEST_CASE("Get all proc using (correct)") {
 TEST_CASE("Check if usage proc-var pair exists (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->ProcVarExists({"funcX", "c"});
+  auto actual = pkb->GetUsageStore()->IsProcVarExists({"funcX", "c"});
   auto expected = uses_proc_var_pairs.find({"funcX", "c"}) != uses_proc_var_pairs.end();
 
   REQUIRE(actual == expected);
@@ -387,7 +387,7 @@ TEST_CASE("Check if usage proc-var pair exists (correct)") {
 TEST_CASE("Check if usage proc-var pair exists (wrong)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->ProcVarExists({"funcA", "2"});
+  auto actual = pkb->GetUsageStore()->IsProcVarExists({"funcA", "2"});
   auto expected = uses_proc_var_pairs.find({"funcA", "2"}) != uses_proc_var_pairs.end();
 
   REQUIRE(actual == false);
@@ -397,7 +397,7 @@ TEST_CASE("Check if usage proc-var pair exists (wrong)") {
 TEST_CASE("Check if usage stmt-var pair exists (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->StmtVarExists({"4", "k"});
+  auto actual = pkb->GetUsageStore()->IsStmtVarExists({"4", "k"});
   auto expected = uses_stmt_var_pairs.find({"4", "k"}) != uses_stmt_var_pairs.end();
 
   REQUIRE(actual == expected);
@@ -406,7 +406,7 @@ TEST_CASE("Check if usage stmt-var pair exists (correct)") {
 TEST_CASE("Check if usage stmt-var pair exists (wrong)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->StmtVarExists({"5", "j"});
+  auto actual = pkb->GetUsageStore()->IsStmtVarExists({"5", "j"});
   auto expected = uses_stmt_var_pairs.find({"5", "j"}) != uses_stmt_var_pairs.end();
 
   REQUIRE(actual == false);
@@ -526,7 +526,7 @@ TEST_CASE("Get all proc modifies (correct)") {
 TEST_CASE("Check if modifies proc-var pair exists (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->ProcVarExists({"main", "dragon"});
+  auto actual = pkb->GetModifyStore()->IsProcVarExists({"main", "dragon"});
   auto expected = mod_proc_var_pairs.find({"main", "dragon"}) != mod_proc_var_pairs.end();
 
   REQUIRE(actual == expected);
@@ -535,7 +535,7 @@ TEST_CASE("Check if modifies proc-var pair exists (correct)") {
 TEST_CASE("Check if modifies proc-var pair exists (wrong)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->ProcVarExists({"funcA", "2"});
+  auto actual = pkb->GetModifyStore()->IsProcVarExists({"funcA", "2"});
   auto expected = mod_proc_var_pairs.find({"funcA", "2"}) != mod_proc_var_pairs.end();
 
   REQUIRE(actual == false);
@@ -545,7 +545,7 @@ TEST_CASE("Check if modifies proc-var pair exists (wrong)") {
 TEST_CASE("Check if modifies stmt-var pair exists (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->StmtVarExists({"15", "monkey"});
+  auto actual = pkb->GetModifyStore()->IsStmtVarExists({"15", "monkey"});
   auto expected = mod_stmt_var_pairs.find({"15", "monkey"}) != mod_stmt_var_pairs.end();
 
   REQUIRE(actual == expected);
@@ -554,7 +554,7 @@ TEST_CASE("Check if modifies stmt-var pair exists (correct)") {
 TEST_CASE("Check if modifies stmt-var pair exists (wrong)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->StmtVarExists({"5", "cat"});
+  auto actual = pkb->GetModifyStore()->IsStmtVarExists({"5", "cat"});
   auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
 
   REQUIRE(actual == false);
@@ -602,7 +602,7 @@ TEST_CASE("Check if stmt is a following star") {
 TEST_CASE("Check if follow pair exists") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetFollowStore()->FollowExists({"8", "9"});
+  auto actual = pkb->GetFollowStore()->IsFollowExists({"8", "9"});
   auto expected = follow_pairs.find({"8", "9"}) != follow_pairs.end();
 
   REQUIRE(actual == expected);
@@ -611,7 +611,7 @@ TEST_CASE("Check if follow pair exists") {
 TEST_CASE("Check if follow star pair exists") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetFollowStore()->FollowStarExists({"1", "4"});
+  auto actual = pkb->GetFollowStore()->IsFollowStarExists({"1", "4"});
   auto expected = follow_star_pairs.find({"1", "4"}) != follow_star_pairs.end();
 
   REQUIRE(actual == expected);
@@ -705,7 +705,7 @@ TEST_CASE("Checks if a parent-child pair relationship exists") {
 //TEST_CASE("Checks if a ance-desc pair relationship exists") {
 //  PKB *pkb = set_up_pkb();
 //  
-//  auto actual = pkb->GetParentStore()->AnceExists("5", "9");
+//  auto actual = pkb->GetParentStore()->IsAnceExists("5", "9");
 //  auto expected = ance_desc_pairs.find({"5", "9"}) != ance_desc_pairs.end();
 //
 //  REQUIRE(actual == expected);
