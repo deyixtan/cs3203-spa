@@ -25,7 +25,11 @@ class PkbClient {
   void PopulateModifiesProc(std::string stmt, std::string var);
   void PopulateCalls(std::string caller, std::string callee);
   void PopulateProc(std::string name);
-  void PopulateAssign(std::string stmt);
+  void PopulateAssign(std::vector<std::string> &visited,
+                      std::string &proc_name,
+                      std::string &curr_stmt,
+                      std::string &var_name,
+                      std::string &rhs_expr);
   void PopulateStmt(std::string stmt);
   void PopulateName(std::string name, StmtType type);
   void PopulateRead(std::string stmt, std::string name);
