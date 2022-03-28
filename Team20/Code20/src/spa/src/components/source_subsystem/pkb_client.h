@@ -40,7 +40,9 @@ class PkbClient {
   void PopulateStmt(std::string stmt);
   void PopulateName(std::string name, StmtType type);
   void PopulateRead(std::string stmt, std::string name);
-  void PopulatePrint(std::string stmt, std::string name);
+
+  void PopulatePrint(std::vector<std::string> &visited, std::string &curr_stmt, std::string &var_name);
+  void PrintHelper(std::vector<std::string> &visited, std::string &curr_stmt);
 
   void PopulateVars(std::vector<std::string> &visited,
                     std::string &curr_stmt,
