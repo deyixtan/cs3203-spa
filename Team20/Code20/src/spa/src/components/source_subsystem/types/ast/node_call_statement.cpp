@@ -1,8 +1,7 @@
 #include "node_call_statement.h"
 #include "../../iterator/design_extractor.h"
-#include "../../call_graph/call_graph.h"
+#include "../call_graph/call_graph.h"
 #include "../../iterator/cfg_builder.h"
-#include "../cfg/cfg_node.h"
 
 CallStatementNode::CallStatementNode(int stmt_no, std::string proc, std::string identifier)
     : StatementNode(stmt_no), proc_name(proc), m_identifier(identifier) {}

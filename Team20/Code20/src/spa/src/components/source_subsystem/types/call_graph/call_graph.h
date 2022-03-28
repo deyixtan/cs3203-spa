@@ -11,7 +11,7 @@
 class CallGraph {
  private:
   std::set<std::string> m_names;
-  std::map<std::string, std::set<std::string>> m_edges, back_edges;
+  std::map<std::string, std::set<std::string>> fwd_edges, bwd_edges;
 
   public:
     explicit CallGraph();
