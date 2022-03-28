@@ -28,12 +28,12 @@ class AffectSession {
   std::unordered_set<std::string> GetVarModByStmt(std::string stmt_no);
   std::unordered_set<std::string> GetVarUsedByStmt(std::string stmt_no);
   void TraverseCfg();
-  void TraverseCfg(std::shared_ptr<CfgNode> cfg_node, std::shared_ptr<CfgNode> cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
+  void TraverseCfg(std::shared_ptr<CfgNode> &cfg_node, std::shared_ptr<CfgNode> &cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
   void HandleAssignStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
   void HandleReadStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
   void HandleCallStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
-  void HandleWhileStatement(std::string stmt_no, std::shared_ptr<CfgNode> cfg_node, std::shared_ptr<CfgNode> cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
-  void HandleIfStatement(std::string stmt_no, std::shared_ptr<CfgNode> cfg_node, std::shared_ptr<CfgNode> cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
+  void HandleWhileStatement(std::string stmt_no, std::shared_ptr<CfgNode> &cfg_node, std::shared_ptr<CfgNode> &cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
+  void HandleIfStatement(std::string stmt_no, std::shared_ptr<CfgNode> &cfg_node, std::shared_ptr<CfgNode> &cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECT_SESSION_H_

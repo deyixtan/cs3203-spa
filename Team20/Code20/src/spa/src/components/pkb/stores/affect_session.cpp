@@ -26,24 +26,26 @@ void AffectSession::TraverseCfg() {
     std::shared_ptr<CfgNode> cfg_head = cfg.second;
 
     std::unordered_map<std::string, std::unordered_set<std::string>> last_modified_map;
-    TraverseCfg(cfg_head, std::shared_ptr<CfgNode>(), last_modified_map);
+    std::shared_ptr<CfgNode> tmp = std::shared_ptr<CfgNode>();
+    TraverseCfg(cfg_head, tmp, last_modified_map);
   }
 }
 
-void AffectSession::TraverseCfg(std::shared_ptr<CfgNode> cfg_node, std::shared_ptr<CfgNode> cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
+void AffectSession::TraverseCfg(std::shared_ptr<CfgNode> &cfg_node, std::shared_ptr<CfgNode> &cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
   std::vector<Statement> statements = cfg_node->GetStatementList();
 
-  // check if dummy node, but not last node
+  // check dummy node statement, skip
   if (statements.size() == 0) {
-    if (cfg_node->GetDescendants().size() > 0) {
-      std::shared_ptr<CfgNode> next_node = cfg_node->GetDescendants().back();
-      TraverseCfg(next_node, cfg_terminating_node, last_modified_map);
-    } else {
-      return;
-    }
+    cfg_terminating_node = cfg_node;
+    return;
   }
 
-  // process statements in cfg_node
+  // is terminating
+  if (cfg_node == cfg_terminating_node) {
+    return;
+  }
+
+  // process statements in a cfg_node
   for (auto const &stmt : statements) {
     std::string stmt_no = stmt.stmt_no;
     StmtType type = stmt.type;
@@ -54,13 +56,17 @@ void AffectSession::TraverseCfg(std::shared_ptr<CfgNode> cfg_node, std::shared_p
     } else if (type == CALL) {
       HandleCallStatement(stmt_no, last_modified_map);
     } else if (type == WHILE) {
-      HandleWhileStatement(stmt_no, cfg_node, cfg_terminating_node, last_modified_map);
+      HandleWhileStatement(stmt_no, cfg_node, cfg_node, last_modified_map);
     } else if (type == IF) {
       HandleIfStatement(stmt_no, cfg_node, cfg_terminating_node, last_modified_map);
     }
   }
+
   // process next cfg_node
-  TraverseCfg(cfg_node->GetDescendants().back(), cfg_terminating_node, last_modified_map);
+  if (cfg_node->GetDescendants().size() > 0) {
+    std::shared_ptr<CfgNode> next_node = cfg_node->GetDescendants().back();
+    TraverseCfg(next_node, cfg_terminating_node, last_modified_map);
+  }
 }
 
 void AffectSession::HandleAssignStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
@@ -113,14 +119,17 @@ void AffectSession::HandleCallStatement(std::string stmt_no, std::unordered_map<
   }
 }
 
-void AffectSession::HandleWhileStatement(std::string stmt_no, std::shared_ptr<CfgNode> cfg_node, std::shared_ptr<CfgNode> cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
+void AffectSession::HandleWhileStatement(std::string stmt_no, std::shared_ptr<CfgNode> &cfg_node, std::shared_ptr<CfgNode> &cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
   // create a copy of last_modified_map, to be served to the "else" cfg node
   std::unordered_map<std::string, std::unordered_set<std::string>> last_modified_map_clone = last_modified_map;
-
-  TraverseCfg(cfg_node->GetDescendants().front(), cfg_terminating_node, last_modified_map_clone);
+  std::shared_ptr<CfgNode> tmp1 = cfg_node->GetDescendants().front();
+  std::shared_ptr<CfgNode> tmp2 = cfg_terminating_node;
+  TraverseCfg(tmp1, tmp2, last_modified_map_clone);
+  // iterate loop once more
+  TraverseCfg(tmp1, tmp2, last_modified_map_clone);
 }
 
-void AffectSession::HandleIfStatement(std::string stmt_no, std::shared_ptr<CfgNode> cfg_node, std::shared_ptr<CfgNode> cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
+void AffectSession::HandleIfStatement(std::string stmt_no, std::shared_ptr<CfgNode> &cfg_node, std::shared_ptr<CfgNode> &cfg_terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
   std::shared_ptr<CfgNode> if_cfg_node = cfg_node->GetDescendants()[0];
   std::shared_ptr<CfgNode> else_cfg_node = cfg_node->GetDescendants()[1];
   // create a copy of last_modified_map, to be served to the "else" cfg node
@@ -133,8 +142,11 @@ void AffectSession::HandleIfStatement(std::string stmt_no, std::shared_ptr<CfgNo
   for (auto last_modified : last_modified_map_clone) {
     std::string var_name = last_modified.first;
     std::unordered_set<std::string> stmt_nos = last_modified.second;
+    if (last_modified_map.count(var_name) == 0) {
+      last_modified_map.insert({var_name, std::unordered_set<std::string>()});
+    }
     last_modified_map.at(var_name).insert(stmt_nos.begin(), stmt_nos.end());
   }
 
-  TraverseCfg(cfg_terminating_node->GetDescendants().back(), cfg_terminating_node, last_modified_map);
+  cfg_node = cfg_terminating_node;
 }
