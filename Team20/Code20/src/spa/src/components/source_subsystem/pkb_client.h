@@ -56,7 +56,9 @@ class PkbClient {
   void PopulateWhile(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr);
   void WhileHelper(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr);
 
-  void PopulateIf(std::string stmt);
+  void PopulateIf(std::vector<std::string> &visited, std::string curr_stmt, std::string cond_expr);
+  void IfHelper(std::vector<std::string> &visited, std::string curr_stmt, std::string cond_expr);
+
   void PopulateConst(std::string name);
   void PopulateCallStmt(std::string proc, std::string stmt);
   void PopulateCall(std::vector<std::string> &visited,
