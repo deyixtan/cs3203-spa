@@ -3,6 +3,23 @@
 
 QueryValidator::QueryValidator(std::vector<PqlToken> tokens) : tokens_(tokens){}
 
+std::unordered_map<PqlTokenType,
+std::pair<std::unordered_set<PqlTokenType>,
+std::unordered_set<PqlTokenType>>> QueryValidator::rel_ref_arg_map = {
+    {PqlTokenType::FOLLOWS, std::make_pair(stmt_ref, stmt_ref)},
+    {PqlTokenType::FOLLOWS_T, std::make_pair(stmt_ref, stmt_ref)},
+    {PqlTokenType::PARENT, std::make_pair(stmt_ref, stmt_ref)},
+    {PqlTokenType::PARENT_T, std::make_pair(stmt_ref, stmt_ref)},
+    {PqlTokenType::USES, std::make_pair(stmt_ref_and_ent_ref, ent_ref)},
+    {PqlTokenType::MODIFIES, std::make_pair(stmt_ref_and_ent_ref, ent_ref)},
+    {PqlTokenType::CALLS, std::make_pair(ent_ref, ent_ref)},
+    {PqlTokenType::CALLS_T, std::make_pair(ent_ref, ent_ref)},
+    {PqlTokenType::NEXT, std::make_pair(stmt_ref, stmt_ref)},
+    {PqlTokenType::NEXT_T, std::make_pair(stmt_ref, stmt_ref)},
+    {PqlTokenType::AFFECTS, std::make_pair(stmt_ref, stmt_ref)},
+    {PqlTokenType::AFFECTS_T, std::make_pair(stmt_ref, stmt_ref)}
+};
+
 bool QueryValidator::IsValidSynonym(PqlToken synonym_token) {
   // rel_ref or design_entities can also be synonyms
   return allowed_synonyms.count(synonym_token.type);
@@ -71,49 +88,22 @@ void QueryValidator::ValidateRelRefClause(int rel_ref_clause_starting_index) {
       PqlTokenType::CLOSED_PARENTHESIS) {
     throw INVALID_REL_REF_FORMAT;
   }
-  // check first_argument
+  ValidateRelRefArgs(rel_ref_clause_starting_index);
+}
+
+void QueryValidator::ValidateRelRefArgs(int rel_ref_clause_starting_index) {
+  PqlToken rel_ref_token = tokens_[rel_ref_clause_starting_index];
   int first_arg_position = rel_ref_clause_starting_index + RELATIONSHIP_CLAUSE_FIRST_ARG_POSITION;
-  ValidateRelRefFirstArg(first_arg_position);
-  // check second_argument
   int second_arg_position = rel_ref_clause_starting_index + RELATIONSHIP_CLAUSE_SECOND_ARG_POSITION;
-  ValidateRelRefSecondArg(second_arg_position);
-}
-
-void QueryValidator::ValidateRelRefFirstArg(int first_arg_position) {
-  PqlToken rel_ref_token = tokens_[first_arg_position - RELATIONSHIP_CLAUSE_FIRST_ARG_POSITION];
-
-  if (rel_ref_first_arg_both_ref.count(rel_ref_token.type)) {
-    ReplaceSynonym(first_arg_position);
-    if ((!stmt_ref.count(tokens_[first_arg_position].type) &&
-            !ent_ref.count(tokens_[first_arg_position].type))) {
-      throw INVALID_REL_REF_ARGUMENTS;
-    }
-  } else if (rel_ref_first_arg_stmt_ref.count(rel_ref_token.type)) {
-    ReplaceSynonym(first_arg_position);
-    if (!stmt_ref.count(tokens_[first_arg_position].type)) {
-      throw INVALID_REL_REF_ARGUMENTS;
-    }
-  } else if (rel_ref_first_arg_ent_ref.count(rel_ref_token.type)) {
-    ReplaceSynonym(first_arg_position);
-    if (!ent_ref.count(tokens_[first_arg_position].type)) {
-      throw INVALID_REL_REF_ARGUMENTS;
-    }
-  }
-}
-
-void QueryValidator::ValidateRelRefSecondArg(int second_arg_position) {
-  PqlToken rel_ref_token = tokens_[second_arg_position - RELATIONSHIP_CLAUSE_SECOND_ARG_POSITION];
-
-  if (rel_ref_second_arg_ent_ref.count(rel_ref_token.type)) {
-    ReplaceSynonym(second_arg_position);
-    if (!ent_ref.count(tokens_[second_arg_position].type)) {
-      throw INVALID_REL_REF_ARGUMENTS;
-    }
-  } else {
-    ReplaceSynonym(second_arg_position);
-    if (!stmt_ref.count(tokens_[second_arg_position].type)) {
-      throw INVALID_REL_REF_ARGUMENTS;
-    }
+  ReplaceSynonym(first_arg_position);
+  ReplaceSynonym(second_arg_position);
+  PqlToken first_arg = tokens_[first_arg_position];
+  PqlToken second_arg = tokens_[second_arg_position];
+  std::unordered_set<PqlTokenType> first_arg_set = rel_ref_arg_map.at(rel_ref_token.type).first;
+  std::unordered_set<PqlTokenType> second_arg_set = rel_ref_arg_map.at(rel_ref_token.type).second;
+  if (!first_arg_set.count(first_arg.type) ||
+      !second_arg_set.count(second_arg.type)) {
+    throw INVALID_REL_REF_ARGUMENTS;
   }
 }
 

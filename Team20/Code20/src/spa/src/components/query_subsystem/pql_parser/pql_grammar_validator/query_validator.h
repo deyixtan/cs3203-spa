@@ -6,13 +6,13 @@
 class QueryValidator {
  private:
   std::vector<PqlToken> tokens_;
+  static std::unordered_map<PqlTokenType, std::pair<std::unordered_set<PqlTokenType>, std::unordered_set<PqlTokenType>>> rel_ref_arg_map;
   bool IsValidSynonym(PqlToken synonym_token);
   bool IsValidRelRefToken(PqlToken rel_ref_token);
   bool IsValidDesignEntity(PqlToken design_entity_token);
 
   void ValidateRelRefClause(int rel_ref_clause_starting_index);
-  void ValidateRelRefFirstArg(int first_arg_position);
-  void ValidateRelRefSecondArg(int second_arg_position);
+  void ValidateRelRefArgs(int rel_ref_clause_starting_index);
   int ValidatePatternArg(int pattern_arg_index);
 
   void ValidateDeclaration(int declaration_starting_index, int declaration_ended_index);
