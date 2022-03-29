@@ -1,12 +1,12 @@
 #ifndef PARENT_STORE_H
 #define PARENT_STORE_H
 
-#include "follows_parent_store.h"
+#include "bi_directional_store.h"
 
 
 
 // A store class that maintains all Parent APIs and relationships
-class ParentStore : public FollowsParentStore {
+class ParentStore : public BidirectionalStore {
  private:
 
  public:
@@ -19,7 +19,7 @@ class ParentStore : public FollowsParentStore {
   [[nodiscard]] bool IsDesc(std::string const &stmt);
   [[nodiscard]] bool ParentChildExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetParentOf(std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetBaseChildOf(std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetChildOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetAllAnceOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetAllDescOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetParentChildPairs();

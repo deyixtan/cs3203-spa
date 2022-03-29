@@ -19,10 +19,18 @@ struct ParentChildNode {
   std::unordered_set<std::string> desc;
 };
 
-class FollowsParentStore : public Store {
+struct CallsNode {
+  std::unordered_set<std::string> callers_set;
+  std::unordered_set<std::string> callees_set;
+  std::unordered_set<std::string> callers_star_set;
+  std::unordered_set<std::string> callees_star_set;
+};
+
+class BidirectionalStore : public Store {
  private:
   std::unordered_map<std::string, FollowsNode> follows_rs_map;
   std::unordered_map<std::string, ParentChildNode> parent_rs_map;
+  std::unordered_map<std::string, CallsNode> calls_rs_map;
   std::unordered_set<std::string> upper_set;
   std::unordered_set<std::string> lower_set;
   std::unordered_set<std::string> upper_star_set;
@@ -31,22 +39,24 @@ class FollowsParentStore : public Store {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_star_pairs;
 
  public:
-  explicit FollowsParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
-  void AddUpperLower(bool isFollows, std::string const &upper, std::string const &lower);
-  void AddUpperLowerStar(bool isFollows, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited);
-  void AddFollowsUpperLower(bool is_star, std::string const &upper, std::string const &lower);
-  void AddParentUpperLower(bool is_star, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited);
+  explicit BidirectionalStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  void AddUpperLower(StoreType type, std::string const &upper, std::string const &lower);
+  void AddUpperLowerStar(StoreType type, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited);
+  void AddFollows(bool is_star, std::string const &upper, std::string const &lower);
+  void AddParent(bool is_star, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited);
+  void AddCalls(bool is_star, std::string const &upper, std::string const &lower);
   [[nodiscard]] bool IsUpper(std::string const &stmt);
   [[nodiscard]] bool IsLower(std::string const &stmt);
   [[nodiscard]] bool IsUpperStar(std::string const &stmt);
   [[nodiscard]] bool IsLowerStar(std::string const &stmt);
   [[nodiscard]] bool IsExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsStarExists(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] std::string GetUpperOf(bool isFollows, std::string const &stmt);
-  [[nodiscard]] std::string GetFollowingOf(std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetChildOf(std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetUpperStarOf(bool isFollows, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetLowerStarOf(bool isFollows, std::string const &stmt);
+  [[nodiscard]] std::string GetUpperOf(StoreType type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetUpperOf(std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetLowerOf(StoreType type, std::string const &stmt);
+  [[nodiscard]] std::string GetLowerOf(std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetUpperStarOf(StoreType type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetLowerStarOf(StoreType type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStarPairs();
 };

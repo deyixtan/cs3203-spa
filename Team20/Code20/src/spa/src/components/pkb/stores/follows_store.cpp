@@ -1,14 +1,14 @@
 #include "follows_store.h"
 
 FollowsStore::FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    FollowsParentStore(move(stmt_vector)) {}
+    BidirectionalStore(move(stmt_vector)) {}
 
 void FollowsStore::AddFollow(std::string const &follower, std::string const &following) {
-  AddUpperLower(true, follower, following);
+  AddUpperLower(FOLLOWS, follower, following);
 }
 
 void FollowsStore::AddFollowStar(std::string const &follower, std::string const &following) {
-  AddUpperLowerStar(true, follower, following, std::vector<std::string>());
+  AddUpperLowerStar(FOLLOWS, follower, following, std::vector<std::string>());
 }
 
 bool FollowsStore::IsFollower(std::string const &stmt) {
@@ -38,19 +38,19 @@ bool FollowsStore::IsFollowStarExists(std::pair<std::string, std::string> const 
 }
 
 std::string FollowsStore::GetFollowerOf(std::string const &stmt) {
-  return GetUpperOf(true, stmt);
+  return GetUpperOf(FOLLOWS, stmt);
 }
 
-std::string FollowsStore::GetBaseFollowingOf(std::string const &stmt) {
-  return GetFollowingOf(stmt);
+std::string FollowsStore::GetFollowingOf(std::string const &stmt) {
+  return GetLowerOf(stmt);
 }
 
 std::unordered_set<std::string> FollowsStore::GetFollowerStarOf(std::string const &stmt) {
-  return GetUpperStarOf(true, stmt);
+  return GetUpperStarOf(FOLLOWS, stmt);
 }
 
 std::unordered_set<std::string> FollowsStore::GetFollowingStarOf(std::string const &stmt) {
-  return GetLowerStarOf(true, stmt);
+  return GetLowerStarOf(FOLLOWS, stmt);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowsStore::GetFollowPairs() {

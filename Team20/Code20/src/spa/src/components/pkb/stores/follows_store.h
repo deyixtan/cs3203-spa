@@ -1,10 +1,10 @@
 #ifndef FOLLOW_STORE_H
 #define FOLLOW_STORE_H
 
-#include "follows_parent_store.h"
+#include "bi_directional_store.h"
 
 // A store class that maintains all Parent APIs and relationships
-class FollowsStore : public FollowsParentStore {
+class FollowsStore : public BidirectionalStore {
  private:
 
  public:
@@ -18,7 +18,7 @@ class FollowsStore : public FollowsParentStore {
   [[nodiscard]] bool IsFollowExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsFollowStarExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetFollowerOf(std::string const &stmt);
-  [[nodiscard]] std::string GetBaseFollowingOf(std::string const &stmt);
+  [[nodiscard]] std::string GetFollowingOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetFollowerStarOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetFollowingStarOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowPairs();

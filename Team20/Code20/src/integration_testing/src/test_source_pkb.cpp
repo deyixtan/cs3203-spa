@@ -90,18 +90,18 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
   }
 
   SECTION("Test Follows relationship") {
-    std::string result1 = pkb->GetFollowsStore()->GetBaseFollowingOf("1");
-    std::string result2 = pkb->GetFollowsStore()->GetBaseFollowingOf("2");
-    std::string result3 = pkb->GetFollowsStore()->GetBaseFollowingOf("3");
-    std::string result4 = pkb->GetFollowsStore()->GetBaseFollowingOf("4");
-    std::string result5 = pkb->GetFollowsStore()->GetBaseFollowingOf("5");
-    std::string result6 = pkb->GetFollowsStore()->GetBaseFollowingOf("6");
-    std::string result7 = pkb->GetFollowsStore()->GetBaseFollowingOf("7");
-    std::string result8 = pkb->GetFollowsStore()->GetBaseFollowingOf("8");
-    std::string result9 = pkb->GetFollowsStore()->GetBaseFollowingOf("9");
-    std::string result10 = pkb->GetFollowsStore()->GetBaseFollowingOf("10");
-    std::string result11 = pkb->GetFollowsStore()->GetBaseFollowingOf("11");
-    std::string result12 = pkb->GetFollowsStore()->GetBaseFollowingOf("12");
+    std::string result1 = pkb->GetFollowsStore()->GetFollowingOf("1");
+    std::string result2 = pkb->GetFollowsStore()->GetFollowingOf("2");
+    std::string result3 = pkb->GetFollowsStore()->GetFollowingOf("3");
+    std::string result4 = pkb->GetFollowsStore()->GetFollowingOf("4");
+    std::string result5 = pkb->GetFollowsStore()->GetFollowingOf("5");
+    std::string result6 = pkb->GetFollowsStore()->GetFollowingOf("6");
+    std::string result7 = pkb->GetFollowsStore()->GetFollowingOf("7");
+    std::string result8 = pkb->GetFollowsStore()->GetFollowingOf("8");
+    std::string result9 = pkb->GetFollowsStore()->GetFollowingOf("9");
+    std::string result10 = pkb->GetFollowsStore()->GetFollowingOf("10");
+    std::string result11 = pkb->GetFollowsStore()->GetFollowingOf("11");
+    std::string result12 = pkb->GetFollowsStore()->GetFollowingOf("12");
 
     std::string expected_result1 = "2";
     std::string expected_result2 = "3";
@@ -213,18 +213,18 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
   }
 
   SECTION("Test Parents relationship 2") {
-    std::unordered_set<std::string> result1 = pkb->GetParentStore()->GetBaseChildOf("1");
-    std::unordered_set<std::string> result2 = pkb->GetParentStore()->GetBaseChildOf("2");
-    std::unordered_set<std::string> result3 = pkb->GetParentStore()->GetBaseChildOf("3");
-    std::unordered_set<std::string> result4 = pkb->GetParentStore()->GetBaseChildOf("4");
-    std::unordered_set<std::string> result5 = pkb->GetParentStore()->GetBaseChildOf("5");
-    std::unordered_set<std::string> result6 = pkb->GetParentStore()->GetBaseChildOf("6");
-    std::unordered_set<std::string> result7 = pkb->GetParentStore()->GetBaseChildOf("7");
-    std::unordered_set<std::string> result8 = pkb->GetParentStore()->GetBaseChildOf("8");
-    std::unordered_set<std::string> result9 = pkb->GetParentStore()->GetBaseChildOf("9");
-    std::unordered_set<std::string> result10 = pkb->GetParentStore()->GetBaseChildOf("10");
-    std::unordered_set<std::string> result11 = pkb->GetParentStore()->GetBaseChildOf("11");
-    std::unordered_set<std::string> result12 = pkb->GetParentStore()->GetBaseChildOf("12");
+    std::unordered_set<std::string> result1 = pkb->GetParentStore()->GetChildOf("1");
+    std::unordered_set<std::string> result2 = pkb->GetParentStore()->GetChildOf("2");
+    std::unordered_set<std::string> result3 = pkb->GetParentStore()->GetChildOf("3");
+    std::unordered_set<std::string> result4 = pkb->GetParentStore()->GetChildOf("4");
+    std::unordered_set<std::string> result5 = pkb->GetParentStore()->GetChildOf("5");
+    std::unordered_set<std::string> result6 = pkb->GetParentStore()->GetChildOf("6");
+    std::unordered_set<std::string> result7 = pkb->GetParentStore()->GetChildOf("7");
+    std::unordered_set<std::string> result8 = pkb->GetParentStore()->GetChildOf("8");
+    std::unordered_set<std::string> result9 = pkb->GetParentStore()->GetChildOf("9");
+    std::unordered_set<std::string> result10 = pkb->GetParentStore()->GetChildOf("10");
+    std::unordered_set<std::string> result11 = pkb->GetParentStore()->GetChildOf("11");
+    std::unordered_set<std::string> result12 = pkb->GetParentStore()->GetChildOf("12");
 
     std::unordered_set<std::string> expected_result1 = {};
     std::unordered_set<std::string> expected_result2 = {};
@@ -511,21 +511,21 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
   }
 
   SECTION("Test Follows relationship") {
-    std::string result1 = pkb->GetFollowsStore()->GetBaseFollowingOf("1");
-    std::string result2 = pkb->GetFollowsStore()->GetBaseFollowingOf("2");
-    std::string result3 = pkb->GetFollowsStore()->GetBaseFollowingOf("3");
-    std::string result4 = pkb->GetFollowsStore()->GetBaseFollowingOf("4");
-    std::string result5 = pkb->GetFollowsStore()->GetBaseFollowingOf("5");
-    std::string result6 = pkb->GetFollowsStore()->GetBaseFollowingOf("6");
-    std::string result7 = pkb->GetFollowsStore()->GetBaseFollowingOf("7");
-    std::string result8 = pkb->GetFollowsStore()->GetBaseFollowingOf("8");
-    std::string result9 = pkb->GetFollowsStore()->GetBaseFollowingOf("9");
-    std::string result10 = pkb->GetFollowsStore()->GetBaseFollowingOf("10");
-    std::string result11 = pkb->GetFollowsStore()->GetBaseFollowingOf("11");
-    std::string result12 = pkb->GetFollowsStore()->GetBaseFollowingOf("12");
-    std::string result13 = pkb->GetFollowsStore()->GetBaseFollowingOf("13");
-    std::string result14 = pkb->GetFollowsStore()->GetBaseFollowingOf("14");
-    std::string result15 = pkb->GetFollowsStore()->GetBaseFollowingOf("15");
+    std::string result1 = pkb->GetFollowsStore()->GetFollowingOf("1");
+    std::string result2 = pkb->GetFollowsStore()->GetFollowingOf("2");
+    std::string result3 = pkb->GetFollowsStore()->GetFollowingOf("3");
+    std::string result4 = pkb->GetFollowsStore()->GetFollowingOf("4");
+    std::string result5 = pkb->GetFollowsStore()->GetFollowingOf("5");
+    std::string result6 = pkb->GetFollowsStore()->GetFollowingOf("6");
+    std::string result7 = pkb->GetFollowsStore()->GetFollowingOf("7");
+    std::string result8 = pkb->GetFollowsStore()->GetFollowingOf("8");
+    std::string result9 = pkb->GetFollowsStore()->GetFollowingOf("9");
+    std::string result10 = pkb->GetFollowsStore()->GetFollowingOf("10");
+    std::string result11 = pkb->GetFollowsStore()->GetFollowingOf("11");
+    std::string result12 = pkb->GetFollowsStore()->GetFollowingOf("12");
+    std::string result13 = pkb->GetFollowsStore()->GetFollowingOf("13");
+    std::string result14 = pkb->GetFollowsStore()->GetFollowingOf("14");
+    std::string result15 = pkb->GetFollowsStore()->GetFollowingOf("15");
 
     std::string expected_result1 = "2";
     std::string expected_result2 = "3";
@@ -661,21 +661,21 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
   }
 
   SECTION("Test Parents relationship 2") {
-    std::unordered_set<std::string> result1 = pkb->GetParentStore()->GetBaseChildOf("1");
-    std::unordered_set<std::string> result2 = pkb->GetParentStore()->GetBaseChildOf("2");
-    std::unordered_set<std::string> result3 = pkb->GetParentStore()->GetBaseChildOf("3");
-    std::unordered_set<std::string> result4 = pkb->GetParentStore()->GetBaseChildOf("4");
-    std::unordered_set<std::string> result5 = pkb->GetParentStore()->GetBaseChildOf("5");
-    std::unordered_set<std::string> result6 = pkb->GetParentStore()->GetBaseChildOf("6");
-    std::unordered_set<std::string> result7 = pkb->GetParentStore()->GetBaseChildOf("7");
-    std::unordered_set<std::string> result8 = pkb->GetParentStore()->GetBaseChildOf("8");
-    std::unordered_set<std::string> result9 = pkb->GetParentStore()->GetBaseChildOf("9");
-    std::unordered_set<std::string> result10 = pkb->GetParentStore()->GetBaseChildOf("10");
-    std::unordered_set<std::string> result11 = pkb->GetParentStore()->GetBaseChildOf("11");
-    std::unordered_set<std::string> result12 = pkb->GetParentStore()->GetBaseChildOf("12");
-    std::unordered_set<std::string> result13 = pkb->GetParentStore()->GetBaseChildOf("13");
-    std::unordered_set<std::string> result14 = pkb->GetParentStore()->GetBaseChildOf("14");
-    std::unordered_set<std::string> result15 = pkb->GetParentStore()->GetBaseChildOf("15");
+    std::unordered_set<std::string> result1 = pkb->GetParentStore()->GetChildOf("1");
+    std::unordered_set<std::string> result2 = pkb->GetParentStore()->GetChildOf("2");
+    std::unordered_set<std::string> result3 = pkb->GetParentStore()->GetChildOf("3");
+    std::unordered_set<std::string> result4 = pkb->GetParentStore()->GetChildOf("4");
+    std::unordered_set<std::string> result5 = pkb->GetParentStore()->GetChildOf("5");
+    std::unordered_set<std::string> result6 = pkb->GetParentStore()->GetChildOf("6");
+    std::unordered_set<std::string> result7 = pkb->GetParentStore()->GetChildOf("7");
+    std::unordered_set<std::string> result8 = pkb->GetParentStore()->GetChildOf("8");
+    std::unordered_set<std::string> result9 = pkb->GetParentStore()->GetChildOf("9");
+    std::unordered_set<std::string> result10 = pkb->GetParentStore()->GetChildOf("10");
+    std::unordered_set<std::string> result11 = pkb->GetParentStore()->GetChildOf("11");
+    std::unordered_set<std::string> result12 = pkb->GetParentStore()->GetChildOf("12");
+    std::unordered_set<std::string> result13 = pkb->GetParentStore()->GetChildOf("13");
+    std::unordered_set<std::string> result14 = pkb->GetParentStore()->GetChildOf("14");
+    std::unordered_set<std::string> result15 = pkb->GetParentStore()->GetChildOf("15");
 
     std::unordered_set<std::string> expected_result1 = {};
     std::unordered_set<std::string> expected_result2 = {};

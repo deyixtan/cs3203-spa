@@ -1,14 +1,14 @@
 #import "parent_store.h"
 
 ParentStore::ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    FollowsParentStore(move(stmt_vector)) {}
+    BidirectionalStore(move(stmt_vector)) {}
 
 void ParentStore::AddParent(std::string const &parent, std::string const &child) {
-  AddUpperLower(false, parent, child);
+  AddUpperLower(PARENT, parent, child);
 }
 
 void ParentStore::AddParentStar(std::string const &stmt, std::vector<std::string> const &visited) {
-  AddUpperLowerStar(false, "", stmt, visited);
+  AddUpperLowerStar(PARENT, "", stmt, visited);
 }
 
 bool ParentStore::IsParent(std::string const &stmt) {
@@ -33,19 +33,19 @@ bool ParentStore::ParentChildExists(std::pair<std::string, std::string> const &p
 }
 
 std::string ParentStore::GetParentOf(std::string const &stmt) {
-  return GetUpperOf(false, stmt);
+  return GetUpperOf(PARENT, stmt);
 }
 
-std::unordered_set<std::string> ParentStore::GetBaseChildOf(std::string const &stmt) {
-  return GetChildOf(stmt);
+std::unordered_set<std::string> ParentStore::GetChildOf(std::string const &stmt) {
+  return GetLowerOf(PARENT, stmt);
 }
 
 std::unordered_set<std::string> ParentStore::GetAllAnceOf(std::string const &stmt) {
-  return GetUpperStarOf(false, stmt);
+  return GetUpperStarOf(PARENT, stmt);
 }
 
 std::unordered_set<std::string> ParentStore::GetAllDescOf(std::string const &stmt) {
-  return GetLowerStarOf(false, stmt);
+  return GetLowerStarOf(PARENT, stmt);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetParentChildPairs() {
