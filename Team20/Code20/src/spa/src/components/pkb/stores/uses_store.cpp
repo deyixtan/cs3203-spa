@@ -1,7 +1,7 @@
 #include "uses_store.h"
 
 UsesStore::UsesStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    StatementStore(move(stmt_vector)) {}
+    UsesModifiesStore(move(stmt_vector)) {}
 
 std::unordered_set<std::string> UsesStore::GetVarUsedByStmt(std::string const &stmt) {
   return GetVarByStmt(stmt);

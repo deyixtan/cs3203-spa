@@ -460,8 +460,8 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   REQUIRE(test_pkb->GetParentStore()->GetParentOf("2") == pkb->GetParentStore()->GetParentOf("2"));
   REQUIRE(test_pkb->GetParentStore()->GetParentOf("3") == pkb->GetParentStore()->GetParentOf("3"));
   REQUIRE(test_pkb->GetParentStore()->GetParentOf("4") == pkb->GetParentStore()->GetParentOf("4"));
-  REQUIRE(test_pkb->GetParentStore()->GetChildOf("1") == pkb->GetParentStore()->GetChildOf("1"));
-  REQUIRE(test_pkb->GetParentStore()->GetChildOf("2") == pkb->GetParentStore()->GetChildOf("2"));
+  REQUIRE(test_pkb->GetParentStore()->GetBaseChildOf("1") == pkb->GetParentStore()->GetBaseChildOf("1"));
+  REQUIRE(test_pkb->GetParentStore()->GetBaseChildOf("2") == pkb->GetParentStore()->GetBaseChildOf("2"));
   REQUIRE(test_pkb->GetParentStore()->GetAllAnceOf("3") == pkb->GetParentStore()->GetAllAnceOf("3"));
   REQUIRE(test_pkb->GetParentStore()->GetAllAnceOf("4") == pkb->GetParentStore()->GetAllAnceOf("4"));
   REQUIRE(test_pkb->GetParentStore()->GetAllParentStmt(IF) == pkb->GetParentStore()->GetAllParentStmt(IF));
@@ -573,11 +573,11 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf("3") == pkb->GetFollowsStore()->GetFollowerOf("3"));
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf("4") == pkb->GetFollowsStore()->GetFollowerOf("4"));
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf("5") == pkb->GetFollowsStore()->GetFollowerOf("5"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf("1") == pkb->GetFollowsStore()->GetFollowingOf("1"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf("2") == pkb->GetFollowsStore()->GetFollowingOf("2"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf("3") == pkb->GetFollowsStore()->GetFollowingOf("3"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf("4") == pkb->GetFollowsStore()->GetFollowingOf("4"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf("5") == pkb->GetFollowsStore()->GetFollowingOf("5"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetBaseFollowingOf("1") == pkb->GetFollowsStore()->GetBaseFollowingOf("1"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetBaseFollowingOf("2") == pkb->GetFollowsStore()->GetBaseFollowingOf("2"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetBaseFollowingOf("3") == pkb->GetFollowsStore()->GetBaseFollowingOf("3"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetBaseFollowingOf("4") == pkb->GetFollowsStore()->GetBaseFollowingOf("4"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetBaseFollowingOf("5") == pkb->GetFollowsStore()->GetBaseFollowingOf("5"));
 
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf("1") == pkb->GetFollowsStore()->GetFollowerStarOf("1"));
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf("2") == pkb->GetFollowsStore()->GetFollowerStarOf("2"));

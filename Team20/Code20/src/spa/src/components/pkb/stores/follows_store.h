@@ -1,26 +1,11 @@
 #ifndef FOLLOW_STORE_H
 #define FOLLOW_STORE_H
 
-#include "store.h"
-
-// A struct to maintain every FollowsNode's relationships
-struct FollowsNode {
-  std::string follower;
-  std::string following;
-  std::unordered_set<std::string> follower_star;
-  std::unordered_set<std::string> following_star;
-};
+#include "follows_parent_store.h"
 
 // A store class that maintains all Parent APIs and relationships
-class FollowsStore : public Store {
+class FollowsStore : public FollowsParentStore {
  private:
-  std::unordered_map<std::string, FollowsNode> rs_map;
-  std::unordered_set<std::string> follower_set;
-  std::unordered_set<std::string> following_set;
-  std::unordered_set<std::string> follower_star_set;
-  std::unordered_set<std::string> following_star_set;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_follow_pairs;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_follow_star_pairs;
 
  public:
   explicit FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
@@ -34,7 +19,7 @@ class FollowsStore : public Store {
   [[nodiscard]] bool IsFollowExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsFollowStarExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetFollowerOf(std::string const &stmt);
-  [[nodiscard]] std::string GetFollowingOf(std::string const &stmt);
+  [[nodiscard]] std::string GetBaseFollowingOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetFollowerStarOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetFollowingStarOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowPairs();

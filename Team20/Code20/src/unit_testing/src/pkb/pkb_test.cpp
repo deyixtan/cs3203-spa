@@ -620,7 +620,7 @@ TEST_CASE("Check if follow star pair exists") {
 TEST_CASE("Get follows of a stmt") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetFollowsStore()->GetFollowingOf("2");
+  auto actual = pkb->GetFollowsStore()->GetBaseFollowingOf("2");
   auto expected = follows_rs.at("2").following;
 
   REQUIRE(actual == expected);
@@ -696,7 +696,7 @@ TEST_CASE("Checks if a stmt is a child") {
 TEST_CASE("Checks if a parent-child pair relationship exists") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetParentStore()->ParentChildExists("5", "9");
+  auto actual = pkb->GetParentStore()->ParentChildExists({"5", "9"});
   auto expected = parent_child_pairs.find({"5", "9"}) != parent_child_pairs.end();
 
   REQUIRE(actual == expected);

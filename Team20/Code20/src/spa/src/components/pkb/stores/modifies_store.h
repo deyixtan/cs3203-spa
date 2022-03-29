@@ -4,7 +4,7 @@
 #include "uses_modifies_store.h"
 
 // proxy class
-class ModifiesStore : public StatementStore {
+class ModifiesStore : public UsesModifiesStore {
  public:
   explicit ModifiesStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   [[nodiscard]] std::unordered_set<std::string> GetVarModByStmt(std::string const &stmt);
