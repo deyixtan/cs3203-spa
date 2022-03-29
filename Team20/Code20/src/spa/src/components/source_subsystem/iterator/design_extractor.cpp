@@ -1,13 +1,11 @@
 #include "design_extractor.h"
-#include "../call_graph/call_graph.h"
+#include "../types/call_graph/call_graph.h"
 #include "../types/ast/node_program.h"
 #include "../types/ast/node_procedure.h"
 #include "../types/ast/node_statement_list.h"
 #include "../types/ast/node_statement.h"
 #include "../types/ast/node_conditional_expression.h"
 #include "../types/ast/node_variable.h"
-
-#include "../types/cfg/cfg_node.h"
 #include "../types/ast/node_constant.h"
 
 DesignExtractor::DesignExtractor(std::shared_ptr<PkbClient> pkb_client)
