@@ -3,7 +3,7 @@
 
 #include "store.h"
 
-class StatementStore : public Store {
+class StmtVarStore : public Store {
  private:
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> stmt_var_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
@@ -15,7 +15,7 @@ class StatementStore : public Store {
   std::unordered_set<std::string> all_proc;
 
  public:
-  explicit StatementStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  explicit StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddStmtVar(std::string stmt, std::string var);
   void AddProcVar(std::string proc, std::string var);
   void AddVarHelper(std::string index,
@@ -24,8 +24,8 @@ class StatementStore : public Store {
                     std::unordered_set<std::pair<std::string, std::string>, pair_hash> &index_pair,
                     std::unordered_map<std::string, std::unordered_set<std::string>> &var_map,
                     std::unordered_map<std::string, std::unordered_set<std::string>> &reverse_var_map);
-  [[nodiscard]] bool StmtVarExists(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] bool ProcVarExists(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsStmtVarValid(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsProcVarValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetVarByStmt(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetStmtByVar(std::string const &var);
   [[nodiscard]] std::unordered_set<std::string> GetVarByProc(std::string const &proc);
