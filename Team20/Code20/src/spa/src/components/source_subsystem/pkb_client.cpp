@@ -16,27 +16,27 @@ void PkbClient::PopulateParentStar(std::string stmt, std::vector<std::string> vi
 }
 
 void PkbClient::PopulateFollows(std::string stmt1, std::string stmt2) {
-  pkb->GetFollowStore()->AddFollow(stmt1, stmt2);
+  pkb->GetFollowsStore()->AddFollow(stmt1, stmt2);
 }
 
 void PkbClient::PopulateFollowsStar(std::string stmt1, std::string stmt2) {
-  pkb->GetFollowStore()->AddFollowStar(stmt1, stmt2);
+  pkb->GetFollowsStore()->AddFollowStar(stmt1, stmt2);
 }
 
 void PkbClient::PopulateUses(std::string stmt, std::string var) {
-  pkb->GetUsageStore()->AddStmtVar(stmt, var);
+  pkb->GetUsesStore()->AddStmtVar(stmt, var);
 }
 
 void PkbClient::PopulateUsesProc(std::string proc, std::string var) {
-  pkb->GetUsageStore()->AddProcVar(proc, var);
+  pkb->GetUsesStore()->AddProcVar(proc, var);
 }
 
 void PkbClient::PopulateModifies(std::string stmt, std::string var) {
-  pkb->GetModifyStore()->AddStmtVar(stmt, var);
+  pkb->GetModifiesStore()->AddStmtVar(stmt, var);
 }
 
 void PkbClient::PopulateModifiesProc(std::string proc, std::string var) {
-  pkb->GetModifyStore()->AddProcVar(proc, var);
+  pkb->GetModifiesStore()->AddProcVar(proc, var);
 }
 
 void PkbClient::PopulateCalls(std::string caller, std::string callee) {

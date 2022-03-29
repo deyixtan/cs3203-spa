@@ -90,18 +90,18 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
   }
 
   SECTION("Test Follows relationship") {
-    std::string result1 = pkb->GetFollowStore()->GetFollowingOf("1");
-    std::string result2 = pkb->GetFollowStore()->GetFollowingOf("2");
-    std::string result3 = pkb->GetFollowStore()->GetFollowingOf("3");
-    std::string result4 = pkb->GetFollowStore()->GetFollowingOf("4");
-    std::string result5 = pkb->GetFollowStore()->GetFollowingOf("5");
-    std::string result6 = pkb->GetFollowStore()->GetFollowingOf("6");
-    std::string result7 = pkb->GetFollowStore()->GetFollowingOf("7");
-    std::string result8 = pkb->GetFollowStore()->GetFollowingOf("8");
-    std::string result9 = pkb->GetFollowStore()->GetFollowingOf("9");
-    std::string result10 = pkb->GetFollowStore()->GetFollowingOf("10");
-    std::string result11 = pkb->GetFollowStore()->GetFollowingOf("11");
-    std::string result12 = pkb->GetFollowStore()->GetFollowingOf("12");
+    std::string result1 = pkb->GetFollowsStore()->GetFollowingOf("1");
+    std::string result2 = pkb->GetFollowsStore()->GetFollowingOf("2");
+    std::string result3 = pkb->GetFollowsStore()->GetFollowingOf("3");
+    std::string result4 = pkb->GetFollowsStore()->GetFollowingOf("4");
+    std::string result5 = pkb->GetFollowsStore()->GetFollowingOf("5");
+    std::string result6 = pkb->GetFollowsStore()->GetFollowingOf("6");
+    std::string result7 = pkb->GetFollowsStore()->GetFollowingOf("7");
+    std::string result8 = pkb->GetFollowsStore()->GetFollowingOf("8");
+    std::string result9 = pkb->GetFollowsStore()->GetFollowingOf("9");
+    std::string result10 = pkb->GetFollowsStore()->GetFollowingOf("10");
+    std::string result11 = pkb->GetFollowsStore()->GetFollowingOf("11");
+    std::string result12 = pkb->GetFollowsStore()->GetFollowingOf("12");
 
     std::string expected_result1 = "2";
     std::string expected_result2 = "3";
@@ -131,18 +131,18 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
   }
 
   SECTION("Test Follows* relationship") {
-    std::unordered_set<std::string> result1 = pkb->GetFollowStore()->GetFollowingStarOf("1");
-    std::unordered_set<std::string> result2 = pkb->GetFollowStore()->GetFollowingStarOf("2");
-    std::unordered_set<std::string> result3 = pkb->GetFollowStore()->GetFollowingStarOf("3");
-    std::unordered_set<std::string> result4 = pkb->GetFollowStore()->GetFollowingStarOf("4");
-    std::unordered_set<std::string> result5 = pkb->GetFollowStore()->GetFollowingStarOf("5");
-    std::unordered_set<std::string> result6 = pkb->GetFollowStore()->GetFollowingStarOf("6");
-    std::unordered_set<std::string> result7 = pkb->GetFollowStore()->GetFollowingStarOf("7");
-    std::unordered_set<std::string> result8 = pkb->GetFollowStore()->GetFollowingStarOf("8");
-    std::unordered_set<std::string> result9 = pkb->GetFollowStore()->GetFollowingStarOf("9");
-    std::unordered_set<std::string> result10 = pkb->GetFollowStore()->GetFollowingStarOf("10");
-    std::unordered_set<std::string> result11 = pkb->GetFollowStore()->GetFollowingStarOf("11");
-    std::unordered_set<std::string> result12 = pkb->GetFollowStore()->GetFollowingStarOf("12");
+    std::unordered_set<std::string> result1 = pkb->GetFollowsStore()->GetFollowingStarOf("1");
+    std::unordered_set<std::string> result2 = pkb->GetFollowsStore()->GetFollowingStarOf("2");
+    std::unordered_set<std::string> result3 = pkb->GetFollowsStore()->GetFollowingStarOf("3");
+    std::unordered_set<std::string> result4 = pkb->GetFollowsStore()->GetFollowingStarOf("4");
+    std::unordered_set<std::string> result5 = pkb->GetFollowsStore()->GetFollowingStarOf("5");
+    std::unordered_set<std::string> result6 = pkb->GetFollowsStore()->GetFollowingStarOf("6");
+    std::unordered_set<std::string> result7 = pkb->GetFollowsStore()->GetFollowingStarOf("7");
+    std::unordered_set<std::string> result8 = pkb->GetFollowsStore()->GetFollowingStarOf("8");
+    std::unordered_set<std::string> result9 = pkb->GetFollowsStore()->GetFollowingStarOf("9");
+    std::unordered_set<std::string> result10 = pkb->GetFollowsStore()->GetFollowingStarOf("10");
+    std::unordered_set<std::string> result11 = pkb->GetFollowsStore()->GetFollowingStarOf("11");
+    std::unordered_set<std::string> result12 = pkb->GetFollowsStore()->GetFollowingStarOf("12");
 
     std::unordered_set<std::string> expected_result1 = {"2", "3", "4", "8", "12"};
     std::unordered_set<std::string> expected_result2 = {"3", "4", "8", "12"};
@@ -336,18 +336,18 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
   }
 
   SECTION("Test Uses relationship for variables") {
-    std::unordered_set<std::string> result1 = pkb->GetUsageStore()->GetVarUsedByStmt("1");
-    std::unordered_set<std::string> result2 = pkb->GetUsageStore()->GetVarUsedByStmt("2");
-    std::unordered_set<std::string> result3 = pkb->GetUsageStore()->GetVarUsedByStmt("3");
-    std::unordered_set<std::string> result4 = pkb->GetUsageStore()->GetVarUsedByStmt("4");
-    std::unordered_set<std::string> result5 = pkb->GetUsageStore()->GetVarUsedByStmt("5");
-    std::unordered_set<std::string> result6 = pkb->GetUsageStore()->GetVarUsedByStmt("6");
-    std::unordered_set<std::string> result7 = pkb->GetUsageStore()->GetVarUsedByStmt("7");
-    std::unordered_set<std::string> result8 = pkb->GetUsageStore()->GetVarUsedByStmt("8");
-    std::unordered_set<std::string> result9 = pkb->GetUsageStore()->GetVarUsedByStmt("9");
-    std::unordered_set<std::string> result10 = pkb->GetUsageStore()->GetVarUsedByStmt("10");
-    std::unordered_set<std::string> result11 = pkb->GetUsageStore()->GetVarUsedByStmt("11");
-    std::unordered_set<std::string> result12 = pkb->GetUsageStore()->GetVarUsedByStmt("12");
+    std::unordered_set<std::string> result1 = pkb->GetUsesStore()->GetVarUsedByStmt("1");
+    std::unordered_set<std::string> result2 = pkb->GetUsesStore()->GetVarUsedByStmt("2");
+    std::unordered_set<std::string> result3 = pkb->GetUsesStore()->GetVarUsedByStmt("3");
+    std::unordered_set<std::string> result4 = pkb->GetUsesStore()->GetVarUsedByStmt("4");
+    std::unordered_set<std::string> result5 = pkb->GetUsesStore()->GetVarUsedByStmt("5");
+    std::unordered_set<std::string> result6 = pkb->GetUsesStore()->GetVarUsedByStmt("6");
+    std::unordered_set<std::string> result7 = pkb->GetUsesStore()->GetVarUsedByStmt("7");
+    std::unordered_set<std::string> result8 = pkb->GetUsesStore()->GetVarUsedByStmt("8");
+    std::unordered_set<std::string> result9 = pkb->GetUsesStore()->GetVarUsedByStmt("9");
+    std::unordered_set<std::string> result10 = pkb->GetUsesStore()->GetVarUsedByStmt("10");
+    std::unordered_set<std::string> result11 = pkb->GetUsesStore()->GetVarUsedByStmt("11");
+    std::unordered_set<std::string> result12 = pkb->GetUsesStore()->GetVarUsedByStmt("12");
 
     std::unordered_set<std::string> expected_result1 = {};
     std::unordered_set<std::string> expected_result2 = {};
@@ -377,13 +377,13 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
   }
 
   SECTION("Test Uses relationship for statement number") {
-    std::unordered_set<std::string> result1 = pkb->GetUsageStore()->GetStmtUsedByVar("count");
-    std::unordered_set<std::string> result2 = pkb->GetUsageStore()->GetStmtUsedByVar("cenX");
-    std::unordered_set<std::string> result3 = pkb->GetUsageStore()->GetStmtUsedByVar("cenY");
-    std::unordered_set<std::string> result4 = pkb->GetUsageStore()->GetStmtUsedByVar("x");
-    std::unordered_set<std::string> result5 = pkb->GetUsageStore()->GetStmtUsedByVar("y");
-    std::unordered_set<std::string> result6 = pkb->GetUsageStore()->GetStmtUsedByVar("flag");
-    std::unordered_set<std::string> result7 = pkb->GetUsageStore()->GetStmtUsedByVar("normSq");
+    std::unordered_set<std::string> result1 = pkb->GetUsesStore()->GetStmtUsedByVar("count");
+    std::unordered_set<std::string> result2 = pkb->GetUsesStore()->GetStmtUsedByVar("cenX");
+    std::unordered_set<std::string> result3 = pkb->GetUsesStore()->GetStmtUsedByVar("cenY");
+    std::unordered_set<std::string> result4 = pkb->GetUsesStore()->GetStmtUsedByVar("x");
+    std::unordered_set<std::string> result5 = pkb->GetUsesStore()->GetStmtUsedByVar("y");
+    std::unordered_set<std::string> result6 = pkb->GetUsesStore()->GetStmtUsedByVar("flag");
+    std::unordered_set<std::string> result7 = pkb->GetUsesStore()->GetStmtUsedByVar("normSq");
 
     std::unordered_set<std::string> expected_result1 = {"4", "5", "8", "10", "11"};
     std::unordered_set<std::string> expected_result2 = {"4", "8", "6", "10", "12"};
@@ -403,18 +403,18 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
   }
 
   SECTION("Test Modifies relationship for variables") {
-    std::unordered_set<std::string> result1 = pkb->GetModifyStore()->GetVarModByStmt("1");
-    std::unordered_set<std::string> result2 = pkb->GetModifyStore()->GetVarModByStmt("2");
-    std::unordered_set<std::string> result3 = pkb->GetModifyStore()->GetVarModByStmt("3");
-    std::unordered_set<std::string> result4 = pkb->GetModifyStore()->GetVarModByStmt("4");
-    std::unordered_set<std::string> result5 = pkb->GetModifyStore()->GetVarModByStmt("5");
-    std::unordered_set<std::string> result6 = pkb->GetModifyStore()->GetVarModByStmt("6");
-    std::unordered_set<std::string> result7 = pkb->GetModifyStore()->GetVarModByStmt("7");
-    std::unordered_set<std::string> result8 = pkb->GetModifyStore()->GetVarModByStmt("8");
-    std::unordered_set<std::string> result9 = pkb->GetModifyStore()->GetVarModByStmt("9");
-    std::unordered_set<std::string> result10 = pkb->GetModifyStore()->GetVarModByStmt("10");
-    std::unordered_set<std::string> result11 = pkb->GetModifyStore()->GetVarModByStmt("11");
-    std::unordered_set<std::string> result12 = pkb->GetModifyStore()->GetVarModByStmt("12");
+    std::unordered_set<std::string> result1 = pkb->GetModifiesStore()->GetVarModByStmt("1");
+    std::unordered_set<std::string> result2 = pkb->GetModifiesStore()->GetVarModByStmt("2");
+    std::unordered_set<std::string> result3 = pkb->GetModifiesStore()->GetVarModByStmt("3");
+    std::unordered_set<std::string> result4 = pkb->GetModifiesStore()->GetVarModByStmt("4");
+    std::unordered_set<std::string> result5 = pkb->GetModifiesStore()->GetVarModByStmt("5");
+    std::unordered_set<std::string> result6 = pkb->GetModifiesStore()->GetVarModByStmt("6");
+    std::unordered_set<std::string> result7 = pkb->GetModifiesStore()->GetVarModByStmt("7");
+    std::unordered_set<std::string> result8 = pkb->GetModifiesStore()->GetVarModByStmt("8");
+    std::unordered_set<std::string> result9 = pkb->GetModifiesStore()->GetVarModByStmt("9");
+    std::unordered_set<std::string> result10 = pkb->GetModifiesStore()->GetVarModByStmt("10");
+    std::unordered_set<std::string> result11 = pkb->GetModifiesStore()->GetVarModByStmt("11");
+    std::unordered_set<std::string> result12 = pkb->GetModifiesStore()->GetVarModByStmt("12");
 
     std::unordered_set<std::string> expected_result1 = {"count"};
     std::unordered_set<std::string> expected_result2 = {"cenX"};
@@ -444,13 +444,13 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
   }
 
   SECTION("Test Modifies relationship for statement number") {
-    std::unordered_set<std::string> result1 = pkb->GetModifyStore()->GetStmtModByVar("count");
-    std::unordered_set<std::string> result2 = pkb->GetModifyStore()->GetStmtModByVar("cenX");
-    std::unordered_set<std::string> result3 = pkb->GetModifyStore()->GetStmtModByVar("cenY");
-    std::unordered_set<std::string> result4 = pkb->GetModifyStore()->GetStmtModByVar("x");
-    std::unordered_set<std::string> result5 = pkb->GetModifyStore()->GetStmtModByVar("y");
-    std::unordered_set<std::string> result6 = pkb->GetModifyStore()->GetStmtModByVar("flag");
-    std::unordered_set<std::string> result7 = pkb->GetModifyStore()->GetStmtModByVar("normSq");
+    std::unordered_set<std::string> result1 = pkb->GetModifiesStore()->GetStmtModByVar("count");
+    std::unordered_set<std::string> result2 = pkb->GetModifiesStore()->GetStmtModByVar("cenX");
+    std::unordered_set<std::string> result3 = pkb->GetModifiesStore()->GetStmtModByVar("cenY");
+    std::unordered_set<std::string> result4 = pkb->GetModifiesStore()->GetStmtModByVar("x");
+    std::unordered_set<std::string> result5 = pkb->GetModifiesStore()->GetStmtModByVar("y");
+    std::unordered_set<std::string> result6 = pkb->GetModifiesStore()->GetStmtModByVar("flag");
+    std::unordered_set<std::string> result7 = pkb->GetModifiesStore()->GetStmtModByVar("normSq");
 
     std::unordered_set<std::string> expected_result1 = {"1", "4", "5"};
     std::unordered_set<std::string> expected_result2 = {"2", "4", "8", "6", "10"};
@@ -511,21 +511,21 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
   }
 
   SECTION("Test Follows relationship") {
-    std::string result1 = pkb->GetFollowStore()->GetFollowingOf("1");
-    std::string result2 = pkb->GetFollowStore()->GetFollowingOf("2");
-    std::string result3 = pkb->GetFollowStore()->GetFollowingOf("3");
-    std::string result4 = pkb->GetFollowStore()->GetFollowingOf("4");
-    std::string result5 = pkb->GetFollowStore()->GetFollowingOf("5");
-    std::string result6 = pkb->GetFollowStore()->GetFollowingOf("6");
-    std::string result7 = pkb->GetFollowStore()->GetFollowingOf("7");
-    std::string result8 = pkb->GetFollowStore()->GetFollowingOf("8");
-    std::string result9 = pkb->GetFollowStore()->GetFollowingOf("9");
-    std::string result10 = pkb->GetFollowStore()->GetFollowingOf("10");
-    std::string result11 = pkb->GetFollowStore()->GetFollowingOf("11");
-    std::string result12 = pkb->GetFollowStore()->GetFollowingOf("12");
-    std::string result13 = pkb->GetFollowStore()->GetFollowingOf("13");
-    std::string result14 = pkb->GetFollowStore()->GetFollowingOf("14");
-    std::string result15 = pkb->GetFollowStore()->GetFollowingOf("15");
+    std::string result1 = pkb->GetFollowsStore()->GetFollowingOf("1");
+    std::string result2 = pkb->GetFollowsStore()->GetFollowingOf("2");
+    std::string result3 = pkb->GetFollowsStore()->GetFollowingOf("3");
+    std::string result4 = pkb->GetFollowsStore()->GetFollowingOf("4");
+    std::string result5 = pkb->GetFollowsStore()->GetFollowingOf("5");
+    std::string result6 = pkb->GetFollowsStore()->GetFollowingOf("6");
+    std::string result7 = pkb->GetFollowsStore()->GetFollowingOf("7");
+    std::string result8 = pkb->GetFollowsStore()->GetFollowingOf("8");
+    std::string result9 = pkb->GetFollowsStore()->GetFollowingOf("9");
+    std::string result10 = pkb->GetFollowsStore()->GetFollowingOf("10");
+    std::string result11 = pkb->GetFollowsStore()->GetFollowingOf("11");
+    std::string result12 = pkb->GetFollowsStore()->GetFollowingOf("12");
+    std::string result13 = pkb->GetFollowsStore()->GetFollowingOf("13");
+    std::string result14 = pkb->GetFollowsStore()->GetFollowingOf("14");
+    std::string result15 = pkb->GetFollowsStore()->GetFollowingOf("15");
 
     std::string expected_result1 = "2";
     std::string expected_result2 = "3";
@@ -561,21 +561,21 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
   }
 
   SECTION("Test Follows* relationship") {
-    std::unordered_set<std::string> result1 = pkb->GetFollowStore()->GetFollowingStarOf("1");
-    std::unordered_set<std::string> result2 = pkb->GetFollowStore()->GetFollowingStarOf("2");
-    std::unordered_set<std::string> result3 = pkb->GetFollowStore()->GetFollowingStarOf("3");
-    std::unordered_set<std::string> result4 = pkb->GetFollowStore()->GetFollowingStarOf("4");
-    std::unordered_set<std::string> result5 = pkb->GetFollowStore()->GetFollowingStarOf("5");
-    std::unordered_set<std::string> result6 = pkb->GetFollowStore()->GetFollowingStarOf("6");
-    std::unordered_set<std::string> result7 = pkb->GetFollowStore()->GetFollowingStarOf("7");
-    std::unordered_set<std::string> result8 = pkb->GetFollowStore()->GetFollowingStarOf("8");
-    std::unordered_set<std::string> result9 = pkb->GetFollowStore()->GetFollowingStarOf("9");
-    std::unordered_set<std::string> result10 = pkb->GetFollowStore()->GetFollowingStarOf("10");
-    std::unordered_set<std::string> result11 = pkb->GetFollowStore()->GetFollowingStarOf("11");
-    std::unordered_set<std::string> result12 = pkb->GetFollowStore()->GetFollowingStarOf("12");
-    std::unordered_set<std::string> result13 = pkb->GetFollowStore()->GetFollowingStarOf("13");
-    std::unordered_set<std::string> result14 = pkb->GetFollowStore()->GetFollowingStarOf("14");
-    std::unordered_set<std::string> result15 = pkb->GetFollowStore()->GetFollowingStarOf("15");
+    std::unordered_set<std::string> result1 = pkb->GetFollowsStore()->GetFollowingStarOf("1");
+    std::unordered_set<std::string> result2 = pkb->GetFollowsStore()->GetFollowingStarOf("2");
+    std::unordered_set<std::string> result3 = pkb->GetFollowsStore()->GetFollowingStarOf("3");
+    std::unordered_set<std::string> result4 = pkb->GetFollowsStore()->GetFollowingStarOf("4");
+    std::unordered_set<std::string> result5 = pkb->GetFollowsStore()->GetFollowingStarOf("5");
+    std::unordered_set<std::string> result6 = pkb->GetFollowsStore()->GetFollowingStarOf("6");
+    std::unordered_set<std::string> result7 = pkb->GetFollowsStore()->GetFollowingStarOf("7");
+    std::unordered_set<std::string> result8 = pkb->GetFollowsStore()->GetFollowingStarOf("8");
+    std::unordered_set<std::string> result9 = pkb->GetFollowsStore()->GetFollowingStarOf("9");
+    std::unordered_set<std::string> result10 = pkb->GetFollowsStore()->GetFollowingStarOf("10");
+    std::unordered_set<std::string> result11 = pkb->GetFollowsStore()->GetFollowingStarOf("11");
+    std::unordered_set<std::string> result12 = pkb->GetFollowsStore()->GetFollowingStarOf("12");
+    std::unordered_set<std::string> result13 = pkb->GetFollowsStore()->GetFollowingStarOf("13");
+    std::unordered_set<std::string> result14 = pkb->GetFollowsStore()->GetFollowingStarOf("14");
+    std::unordered_set<std::string> result15 = pkb->GetFollowsStore()->GetFollowingStarOf("15");
 
     std::unordered_set<std::string> expected_result1 = {"2", "3"};
     std::unordered_set<std::string> expected_result2 = {"3"};
@@ -812,21 +812,21 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
   }
 
   SECTION("Test Uses relationship for variables") {
-    std::unordered_set<std::string> result1 = pkb->GetUsageStore()->GetVarUsedByStmt("1");
-    std::unordered_set<std::string> result2 = pkb->GetUsageStore()->GetVarUsedByStmt("2");
-    std::unordered_set<std::string> result3 = pkb->GetUsageStore()->GetVarUsedByStmt("3");
-    std::unordered_set<std::string> result4 = pkb->GetUsageStore()->GetVarUsedByStmt("4");
-    std::unordered_set<std::string> result5 = pkb->GetUsageStore()->GetVarUsedByStmt("5");
-    std::unordered_set<std::string> result6 = pkb->GetUsageStore()->GetVarUsedByStmt("6");
-    std::unordered_set<std::string> result7 = pkb->GetUsageStore()->GetVarUsedByStmt("7");
-    std::unordered_set<std::string> result8 = pkb->GetUsageStore()->GetVarUsedByStmt("8");
-    std::unordered_set<std::string> result9 = pkb->GetUsageStore()->GetVarUsedByStmt("9");
-    std::unordered_set<std::string> result10 = pkb->GetUsageStore()->GetVarUsedByStmt("10");
-    std::unordered_set<std::string> result11 = pkb->GetUsageStore()->GetVarUsedByStmt("11");
-    std::unordered_set<std::string> result12 = pkb->GetUsageStore()->GetVarUsedByStmt("12");
-    std::unordered_set<std::string> result13 = pkb->GetUsageStore()->GetVarUsedByStmt("13");
-    std::unordered_set<std::string> result14 = pkb->GetUsageStore()->GetVarUsedByStmt("14");
-    std::unordered_set<std::string> result15 = pkb->GetUsageStore()->GetVarUsedByStmt("15");
+    std::unordered_set<std::string> result1 = pkb->GetUsesStore()->GetVarUsedByStmt("1");
+    std::unordered_set<std::string> result2 = pkb->GetUsesStore()->GetVarUsedByStmt("2");
+    std::unordered_set<std::string> result3 = pkb->GetUsesStore()->GetVarUsedByStmt("3");
+    std::unordered_set<std::string> result4 = pkb->GetUsesStore()->GetVarUsedByStmt("4");
+    std::unordered_set<std::string> result5 = pkb->GetUsesStore()->GetVarUsedByStmt("5");
+    std::unordered_set<std::string> result6 = pkb->GetUsesStore()->GetVarUsedByStmt("6");
+    std::unordered_set<std::string> result7 = pkb->GetUsesStore()->GetVarUsedByStmt("7");
+    std::unordered_set<std::string> result8 = pkb->GetUsesStore()->GetVarUsedByStmt("8");
+    std::unordered_set<std::string> result9 = pkb->GetUsesStore()->GetVarUsedByStmt("9");
+    std::unordered_set<std::string> result10 = pkb->GetUsesStore()->GetVarUsedByStmt("10");
+    std::unordered_set<std::string> result11 = pkb->GetUsesStore()->GetVarUsedByStmt("11");
+    std::unordered_set<std::string> result12 = pkb->GetUsesStore()->GetVarUsedByStmt("12");
+    std::unordered_set<std::string> result13 = pkb->GetUsesStore()->GetVarUsedByStmt("13");
+    std::unordered_set<std::string> result14 = pkb->GetUsesStore()->GetVarUsedByStmt("14");
+    std::unordered_set<std::string> result15 = pkb->GetUsesStore()->GetVarUsedByStmt("15");
 
     std::unordered_set<std::string> expected_result1 = {};
     std::unordered_set<std::string> expected_result2 = {};
@@ -862,12 +862,12 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
   }
 
   SECTION("Test Uses relationship for statement number") {
-    std::unordered_set<std::string> result1 = pkb->GetUsageStore()->GetStmtUsedByVar("x");
-    std::unordered_set<std::string> result2 = pkb->GetUsageStore()->GetStmtUsedByVar("y");
-    std::unordered_set<std::string> result3 = pkb->GetUsageStore()->GetStmtUsedByVar("length");
-    std::unordered_set<std::string> result4 = pkb->GetUsageStore()->GetStmtUsedByVar("sin");
-    std::unordered_set<std::string> result5 = pkb->GetUsageStore()->GetStmtUsedByVar("cos");
-    std::unordered_set<std::string> result6 = pkb->GetUsageStore()->GetStmtUsedByVar("tan");
+    std::unordered_set<std::string> result1 = pkb->GetUsesStore()->GetStmtUsedByVar("x");
+    std::unordered_set<std::string> result2 = pkb->GetUsesStore()->GetStmtUsedByVar("y");
+    std::unordered_set<std::string> result3 = pkb->GetUsesStore()->GetStmtUsedByVar("length");
+    std::unordered_set<std::string> result4 = pkb->GetUsesStore()->GetStmtUsedByVar("sin");
+    std::unordered_set<std::string> result5 = pkb->GetUsesStore()->GetStmtUsedByVar("cos");
+    std::unordered_set<std::string> result6 = pkb->GetUsesStore()->GetStmtUsedByVar("tan");
 
     std::unordered_set<std::string> expected_result1 = {"3", "4", "5", "7", "8", "10", "12", "15"};
     std::unordered_set<std::string> expected_result2 = {"3", "4", "5", "6", "8", "9", "12", "15"};
@@ -885,21 +885,21 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
   }
 
   SECTION("Test Modifies relationship for variables") {
-    std::unordered_set<std::string> result1 = pkb->GetModifyStore()->GetVarModByStmt("1");
-    std::unordered_set<std::string> result2 = pkb->GetModifyStore()->GetVarModByStmt("2");
-    std::unordered_set<std::string> result3 = pkb->GetModifyStore()->GetVarModByStmt("3");
-    std::unordered_set<std::string> result4 = pkb->GetModifyStore()->GetVarModByStmt("4");
-    std::unordered_set<std::string> result5 = pkb->GetModifyStore()->GetVarModByStmt("5");
-    std::unordered_set<std::string> result6 = pkb->GetModifyStore()->GetVarModByStmt("6");
-    std::unordered_set<std::string> result7 = pkb->GetModifyStore()->GetVarModByStmt("7");
-    std::unordered_set<std::string> result8 = pkb->GetModifyStore()->GetVarModByStmt("8");
-    std::unordered_set<std::string> result9 = pkb->GetModifyStore()->GetVarModByStmt("9");
-    std::unordered_set<std::string> result10 = pkb->GetModifyStore()->GetVarModByStmt("10");
-    std::unordered_set<std::string> result11 = pkb->GetModifyStore()->GetVarModByStmt("11");
-    std::unordered_set<std::string> result12 = pkb->GetModifyStore()->GetVarModByStmt("12");
-    std::unordered_set<std::string> result13 = pkb->GetModifyStore()->GetVarModByStmt("13");
-    std::unordered_set<std::string> result14 = pkb->GetModifyStore()->GetVarModByStmt("14");
-    std::unordered_set<std::string> result15 = pkb->GetModifyStore()->GetVarModByStmt("15");
+    std::unordered_set<std::string> result1 = pkb->GetModifiesStore()->GetVarModByStmt("1");
+    std::unordered_set<std::string> result2 = pkb->GetModifiesStore()->GetVarModByStmt("2");
+    std::unordered_set<std::string> result3 = pkb->GetModifiesStore()->GetVarModByStmt("3");
+    std::unordered_set<std::string> result4 = pkb->GetModifiesStore()->GetVarModByStmt("4");
+    std::unordered_set<std::string> result5 = pkb->GetModifiesStore()->GetVarModByStmt("5");
+    std::unordered_set<std::string> result6 = pkb->GetModifiesStore()->GetVarModByStmt("6");
+    std::unordered_set<std::string> result7 = pkb->GetModifiesStore()->GetVarModByStmt("7");
+    std::unordered_set<std::string> result8 = pkb->GetModifiesStore()->GetVarModByStmt("8");
+    std::unordered_set<std::string> result9 = pkb->GetModifiesStore()->GetVarModByStmt("9");
+    std::unordered_set<std::string> result10 = pkb->GetModifiesStore()->GetVarModByStmt("10");
+    std::unordered_set<std::string> result11 = pkb->GetModifiesStore()->GetVarModByStmt("11");
+    std::unordered_set<std::string> result12 = pkb->GetModifiesStore()->GetVarModByStmt("12");
+    std::unordered_set<std::string> result13 = pkb->GetModifiesStore()->GetVarModByStmt("13");
+    std::unordered_set<std::string> result14 = pkb->GetModifiesStore()->GetVarModByStmt("14");
+    std::unordered_set<std::string> result15 = pkb->GetModifiesStore()->GetVarModByStmt("15");
 
     std::unordered_set<std::string> expected_result1 = {"x"};
     std::unordered_set<std::string> expected_result2 = {"y"};
@@ -935,12 +935,12 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
   }
 
   SECTION("Test Modifies relationship for statement number") {
-    std::unordered_set<std::string> result1 = pkb->GetModifyStore()->GetStmtModByVar("x");
-    std::unordered_set<std::string> result2 = pkb->GetModifyStore()->GetStmtModByVar("y");
-    std::unordered_set<std::string> result3 = pkb->GetModifyStore()->GetStmtModByVar("length");
-    std::unordered_set<std::string> result4 = pkb->GetModifyStore()->GetStmtModByVar("sin");
-    std::unordered_set<std::string> result5 = pkb->GetModifyStore()->GetStmtModByVar("cos");
-    std::unordered_set<std::string> result6 = pkb->GetModifyStore()->GetStmtModByVar("tan");
+    std::unordered_set<std::string> result1 = pkb->GetModifiesStore()->GetStmtModByVar("x");
+    std::unordered_set<std::string> result2 = pkb->GetModifiesStore()->GetStmtModByVar("y");
+    std::unordered_set<std::string> result3 = pkb->GetModifiesStore()->GetStmtModByVar("length");
+    std::unordered_set<std::string> result4 = pkb->GetModifiesStore()->GetStmtModByVar("sin");
+    std::unordered_set<std::string> result5 = pkb->GetModifiesStore()->GetStmtModByVar("cos");
+    std::unordered_set<std::string> result6 = pkb->GetModifiesStore()->GetStmtModByVar("tan");
 
     std::unordered_set<std::string> expected_result1 = {"1", "3", "4", "8", "9", "11", "13"};
     std::unordered_set<std::string> expected_result2 = {"2", "3", "4", "8", "10", "14"};

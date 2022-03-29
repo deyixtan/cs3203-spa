@@ -1,12 +1,12 @@
 #ifndef MODIFY_STORE_H
 #define MODIFY_STORE_H
 
-#include "statement_store.h"
+#include "components/pkb/stores/stmt_var_store.h"
 
 // proxy class
-class ModifyStore : public StatementStore {
+class ModifiesStore : public StmtVarStore {
  public:
-  explicit ModifyStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  explicit ModifiesStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   [[nodiscard]] std::unordered_set<std::string> GetVarModByStmt(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetStmtModByVar(std::string const &var);
   [[nodiscard]] std::unordered_set<std::string> GetVarModByProc(std::string const &proc);

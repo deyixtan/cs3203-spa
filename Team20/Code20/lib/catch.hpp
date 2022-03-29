@@ -10921,7 +10921,7 @@ namespace Catch {
     }
 
     FatalConditionHandler::FatalConditionHandler() {
-        assert(!altStackMem && "Cannot initialize POSIX signal handler when one already exists");
+        assert(!altStackMem && "Cannot initialize POSIX signal handler when one already Valid");
         if (altStackSize == 0) {
             altStackSize = std::max(static_cast<size_t>(SIGSTKSZ), minStackSizeForErrors);
         }

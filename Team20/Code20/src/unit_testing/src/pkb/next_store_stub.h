@@ -1,7 +1,7 @@
 #ifndef NEXT_STORE_STUB_H_
 #define NEXT_STORE_STUB_H_
 
-#include "components/pkb/stores/next_store.h"
+#include "components/pkb/stores/next_store/next_store.h"
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_next_pairs =
     {
