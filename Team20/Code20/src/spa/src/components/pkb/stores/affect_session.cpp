@@ -100,21 +100,27 @@ void AffectSession::HandleAssignStatement(std::string stmt_no, std::unordered_ma
 
 void AffectSession::HandleReadStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
   // update modified table
+  // since, read is not an assign stmt, we cleared it from the table
   std::unordered_set<std::string> vars_mod = GetVarModByStmt(stmt_no);
   if (vars_mod.size() != 1) {
     // TODO: replace with custom exception
     throw std::runtime_error("READ SHOULD ONLY HAVE ONE VAR MOD");
   }
-
   std::string var_mod = *(vars_mod.begin());
+  if (last_modified_map.count(var_mod) == 0) {
+    last_modified_map.insert({var_mod, std::unordered_set<std::string>()});
+  }
   last_modified_map.at(var_mod).clear();
 }
 
 void AffectSession::HandleCallStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
   // update modified table
-  // call statements can have multiple modified vars
+  // since, read is not an assign stmt, we cleared it from the table
   std::unordered_set<std::string> vars_mod = GetVarModByStmt(stmt_no);
   for (std::string var_mod : vars_mod) {
+    if (last_modified_map.count(var_mod) == 0) {
+      last_modified_map.insert({var_mod, std::unordered_set<std::string>()});
+    }
     last_modified_map.at(var_mod).clear();
   }
 }
