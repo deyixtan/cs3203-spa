@@ -211,7 +211,7 @@ void AffectSession::HandleIfStatement(std::shared_ptr<CfgNode> &cfg_node, std::u
 
   std::shared_ptr<CfgNode> if_cfg_node = cfg_node->GetDescendants()[0];
   std::shared_ptr<CfgNode> else_cfg_node = cfg_node->GetDescendants()[1];
-  std::shared_ptr<CfgNode> end_node = std::shared_ptr<CfgNode>();
+  std::shared_ptr<CfgNode> end_node = std::make_shared<CfgNode>();
 
   // first TraverseIfCfg (if-block) will process statements and find dummy node
   // for the second TraverseIfCfg (else-block)
