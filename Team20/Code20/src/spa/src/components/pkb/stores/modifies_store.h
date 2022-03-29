@@ -1,10 +1,10 @@
 #ifndef MODIFY_STORE_H
 #define MODIFY_STORE_H
 
-#include "uni_directional_store.h"
+#include "stmt_var_store.h"
 
 // proxy class
-class ModifiesStore : public UnidirectionalStore {
+class ModifiesStore : public StmtVarStore {
  public:
   explicit ModifiesStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   [[nodiscard]] std::unordered_set<std::string> GetVarModByStmt(std::string const &stmt);

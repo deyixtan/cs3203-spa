@@ -1,10 +1,10 @@
 #ifndef USAGE_STORE_H
 #define USAGE_STORE_H
 
-#include "uni_directional_store.h"
+#include "stmt_var_store.h"
 
 // proxy class
-class UsesStore : public UnidirectionalStore {
+class UsesStore : public StmtVarStore {
  public:
   explicit UsesStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   [[nodiscard]] std::unordered_set<std::string> GetVarUsedByStmt(std::string const &stmt);

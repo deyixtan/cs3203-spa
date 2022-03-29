@@ -1,9 +1,9 @@
 #ifndef CALLS_STORE_H
 #define CALLS_STORE_H
 
-#include "bi_directional_store.h"
+#include "stmt_stmt_store.h"
 
-class CallStore : public BidirectionalStore {
+class CallStore : public StmtStmtStore {
  private:
   std::unordered_map<std::string, std::unordered_set<std::string>> call_stmt_map;
 

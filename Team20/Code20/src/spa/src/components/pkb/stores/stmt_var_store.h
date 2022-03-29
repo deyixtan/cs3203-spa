@@ -3,7 +3,7 @@
 
 #include "store.h"
 
-class UnidirectionalStore : public Store {
+class StmtVarStore : public Store {
  private:
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> stmt_var_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
@@ -15,7 +15,7 @@ class UnidirectionalStore : public Store {
   std::unordered_set<std::string> all_proc;
 
  public:
-  explicit UnidirectionalStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  explicit StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddStmtVar(std::string stmt, std::string var);
   void AddProcVar(std::string proc, std::string var);
   void AddVarHelper(std::string index,

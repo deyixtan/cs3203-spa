@@ -1,12 +1,12 @@
 #ifndef PARENT_STORE_H
 #define PARENT_STORE_H
 
-#include "bi_directional_store.h"
+#include "stmt_stmt_store.h"
 
 
 
 // A store class that maintains all Parent APIs and relationships
-class ParentStore : public BidirectionalStore {
+class ParentStore : public StmtStmtStore {
  private:
 
  public:

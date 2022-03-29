@@ -1,9 +1,9 @@
-#ifndef NEXT_STORE_H_
-#define NEXT_STORE_H_
+#ifndef NEXT_STORE_H
+#define NEXT_STORE_H
 
-#include "store.h"
+#include "stmt_stmt_store.h"
 
-class NextStore : public Store {
+class NextStore : public StmtStmtStore {
  private:
   std::unordered_map<std::string, std::unordered_set<std::string>> next_map;
   std::unordered_map<std::string, std::unordered_set<std::string>> before_map;
@@ -37,4 +37,4 @@ class NextStore : public Store {
                                                                                                         StmtType type2);
 };
 
-#endif //NEXT_STORE_H_
+#endif //NEXT_STORE_H

@@ -1,7 +1,7 @@
 #import "parent_store.h"
 
 ParentStore::ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    BidirectionalStore(move(stmt_vector)) {}
+    StmtStmtStore(move(stmt_vector)) {}
 
 void ParentStore::AddParent(std::string const &parent, std::string const &child) {
   AddUpperLower(PARENT, parent, child);

@@ -26,7 +26,7 @@ struct CallsNode {
   std::unordered_set<std::string> callees_star_set;
 };
 
-class BidirectionalStore : public Store {
+class StmtStmtStore : public Store {
  private:
   std::unordered_map<std::string, FollowsNode> follows_rs_map;
   std::unordered_map<std::string, ParentChildNode> parent_rs_map;
@@ -39,7 +39,7 @@ class BidirectionalStore : public Store {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_star_pairs;
 
  public:
-  explicit BidirectionalStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddUpperLower(StoreType type, std::string const &upper, std::string const &lower);
   void AddUpperLowerStar(StoreType type, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited);
   void AddFollows(bool is_star, std::string const &upper, std::string const &lower);

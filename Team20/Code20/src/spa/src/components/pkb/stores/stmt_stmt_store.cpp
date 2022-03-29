@@ -1,9 +1,9 @@
-#include "bi_directional_store.h"
+#include "stmt_stmt_store.h"
 
-BidirectionalStore::BidirectionalStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector)
+StmtStmtStore::StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector)
     : Store(move(stmt_vector)) {}
 
-void BidirectionalStore::AddUpperLower(StoreType type, std::string const &upper, std::string const &lower) {
+void StmtStmtStore::AddUpperLower(StoreType type, std::string const &upper, std::string const &lower) {
   if (type == FOLLOWS) {
     AddFollows(false, upper, lower);
   } else if (type == PARENT) {
@@ -13,7 +13,7 @@ void BidirectionalStore::AddUpperLower(StoreType type, std::string const &upper,
   }
 }
 
-void BidirectionalStore::AddUpperLowerStar(StoreType type, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited) {
+void StmtStmtStore::AddUpperLowerStar(StoreType type, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited) {
   if (type == FOLLOWS) {
     AddFollows(true, upper, lower);
   } else if (type == PARENT) {
@@ -23,7 +23,7 @@ void BidirectionalStore::AddUpperLowerStar(StoreType type, std::string const &up
   }
 }
 
-void BidirectionalStore::AddFollows(bool is_star, std::string const &upper, std::string const &lower) {
+void StmtStmtStore::AddFollows(bool is_star, std::string const &upper, std::string const &lower) {
   if (follows_rs_map.find(upper) == follows_rs_map.end()) {
     follows_rs_map.insert({upper, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
   }
@@ -48,7 +48,7 @@ void BidirectionalStore::AddFollows(bool is_star, std::string const &upper, std:
   all_star_pairs.emplace(std::pair<std::string, std::string>(upper, lower));
 }
 
-void BidirectionalStore::AddParent(bool is_star, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited) {
+void StmtStmtStore::AddParent(bool is_star, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited) {
   if (parent_rs_map.find(upper) == parent_rs_map.end()) {
     parent_rs_map.insert({upper, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
                                   std::unordered_set<std::string>()}});
@@ -83,7 +83,7 @@ void BidirectionalStore::AddParent(bool is_star, std::string const &upper, std::
   }
 }
 
-void BidirectionalStore::AddCalls(bool is_star, std::string const &upper, std::string const &lower) {
+void StmtStmtStore::AddCalls(bool is_star, std::string const &upper, std::string const &lower) {
   if (calls_rs_map.find(upper) == calls_rs_map.end()) {
     calls_rs_map.insert({upper, {std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>(),
                             std::unordered_set<std::string>()}});
@@ -125,31 +125,31 @@ void BidirectionalStore::AddCalls(bool is_star, std::string const &upper, std::s
   }
 }
 
-bool BidirectionalStore::IsUpper(std::string const &stmt) {
+bool StmtStmtStore::IsUpper(std::string const &stmt) {
   return upper_set.find(stmt) != upper_set.end();
 }
 
-bool BidirectionalStore::IsLower(std::string const &stmt) {
+bool StmtStmtStore::IsLower(std::string const &stmt) {
   return lower_set.find(stmt) != lower_set.end();
 }
 
-bool BidirectionalStore::IsUpperStar(std::string const &stmt) {
+bool StmtStmtStore::IsUpperStar(std::string const &stmt) {
   return upper_star_set.find(stmt) != upper_star_set.end();
 }
 
-bool BidirectionalStore::IsLowerStar(std::string const &stmt) {
+bool StmtStmtStore::IsLowerStar(std::string const &stmt) {
   return lower_star_set.find(stmt) != lower_star_set.end();
 }
 
-bool BidirectionalStore::IsExists(std::pair<std::string, std::string> const &pair) {
+bool StmtStmtStore::IsExists(std::pair<std::string, std::string> const &pair) {
   return all_pairs.find(pair) != all_pairs.end();
 }
 
-bool BidirectionalStore::IsStarExists(std::pair<std::string, std::string> const &pair) {
+bool StmtStmtStore::IsStarExists(std::pair<std::string, std::string> const &pair) {
   return all_star_pairs.find(pair) != all_star_pairs.end();
 }
 
-std::string BidirectionalStore::GetUpperOf(StoreType type, std::string const &stmt) {
+std::string StmtStmtStore::GetUpperOf(StoreType type, std::string const &stmt) {
   if (type == FOLLOWS) {
     if (follows_rs_map.find(stmt) != follows_rs_map.end()) {
       return follows_rs_map.at(stmt).follower;
@@ -162,14 +162,14 @@ std::string BidirectionalStore::GetUpperOf(StoreType type, std::string const &st
   return "0";
 }
 
-std::unordered_set<std::string> BidirectionalStore::GetUpperOf(std::string const &stmt) {
+std::unordered_set<std::string> StmtStmtStore::GetUpperOf(std::string const &stmt) {
   if (calls_rs_map.find(stmt) != calls_rs_map.end()) {
     return calls_rs_map.at(stmt).callers_set;
   }
   return {};
 }
 
-std::unordered_set<std::string> BidirectionalStore::GetLowerOf(StoreType type, std::string const &stmt) {
+std::unordered_set<std::string> StmtStmtStore::GetLowerOf(StoreType type, std::string const &stmt) {
   if (type == PARENT) {
     if (parent_rs_map.find(stmt) != parent_rs_map.end()) {
       return parent_rs_map.at(stmt).child;
@@ -182,14 +182,14 @@ std::unordered_set<std::string> BidirectionalStore::GetLowerOf(StoreType type, s
   return {};
 }
 
-std::string BidirectionalStore::GetLowerOf(std::string const &stmt) {
+std::string StmtStmtStore::GetLowerOf(std::string const &stmt) {
   if (follows_rs_map.find(stmt) != follows_rs_map.end()) {
     return follows_rs_map.at(stmt).following;
   }
   return "0";
 }
 
-std::unordered_set<std::string> BidirectionalStore::GetUpperStarOf(StoreType type, std::string const &stmt) {
+std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType type, std::string const &stmt) {
   if (type == FOLLOWS) {
     if (follows_rs_map.find(stmt) != follows_rs_map.end()) {
       return follows_rs_map.at(stmt).follower_star;
@@ -206,7 +206,7 @@ std::unordered_set<std::string> BidirectionalStore::GetUpperStarOf(StoreType typ
   return {};
 }
 
-std::unordered_set<std::string> BidirectionalStore::GetLowerStarOf(StoreType type, std::string const &stmt) {
+std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StoreType type, std::string const &stmt) {
   if (type == FOLLOWS) {
     if (follows_rs_map.find(stmt) != follows_rs_map.end()) {
       return follows_rs_map.at(stmt).following_star;
@@ -223,10 +223,10 @@ std::unordered_set<std::string> BidirectionalStore::GetLowerStarOf(StoreType typ
   return {};
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> BidirectionalStore::GetAllPairs() {
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore::GetAllPairs() {
   return all_pairs;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> BidirectionalStore::GetAllStarPairs() {
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore::GetAllStarPairs() {
   return all_star_pairs;
 }

@@ -1,7 +1,7 @@
 #include "call_store.h"
 
 CallStore::CallStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    BidirectionalStore(move(stmt_vector)) {}
+    StmtStmtStore(move(stmt_vector)) {}
 
 void CallStore::AddCallerHelper(std::string const &caller, std::string const &callee) {
   AddUpperLower(CALLS, caller, callee);

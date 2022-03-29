@@ -1,7 +1,7 @@
 #include "follows_store.h"
 
 FollowsStore::FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    BidirectionalStore(move(stmt_vector)) {}
+    StmtStmtStore(move(stmt_vector)) {}
 
 void FollowsStore::AddFollow(std::string const &follower, std::string const &following) {
   AddUpperLower(FOLLOWS, follower, following);

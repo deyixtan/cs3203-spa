@@ -1,10 +1,10 @@
 #ifndef FOLLOW_STORE_H
 #define FOLLOW_STORE_H
 
-#include "bi_directional_store.h"
+#include "stmt_stmt_store.h"
 
 // A store class that maintains all Parent APIs and relationships
-class FollowsStore : public BidirectionalStore {
+class FollowsStore : public StmtStmtStore {
  private:
 
  public:
