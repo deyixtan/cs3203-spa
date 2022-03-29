@@ -36,5 +36,13 @@ class Utils {
 };
 
 extern std::unordered_set<DesignEntityType> int_ident_entities;
+extern std::unordered_set<DesignEntityType> procname_entities;
+extern std::unordered_set<DesignEntityType> varname_entities;
+extern std::unordered_set<DesignEntityType> stmtno_entities;
+extern std::unordered_set<DesignEntityType> value_entities;
+extern std::unordered_set<DesignEntityType> varname_and_stmtno_entities;
+extern std::unordered_set<DesignEntityType> procname_and_stmtno_entities;
+extern std::unordered_set<AtrriName> varname_and_stmtno_attrinames;
+extern std::unordered_set<AtrriName> procname_and_stmtno_attrinames;
 
 #endif //UTILS_H

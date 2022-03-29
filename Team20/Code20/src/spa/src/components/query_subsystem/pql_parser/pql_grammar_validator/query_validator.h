@@ -51,6 +51,8 @@ class QueryValidator {
  public:
   QueryValidator(std::vector<PqlToken>);
   std::vector<PqlToken> CheckValidation();
+  int ValidateAssignWhilePattern(int pattern_arg_index);
+  int ValidateIfPattern(int pattern_arg_index);
 };
 
 #endif

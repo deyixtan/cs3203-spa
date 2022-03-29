@@ -149,39 +149,39 @@ int QueryValidator::ValidatePatternArg(int pattern_arg_index) {
   if (!ent_ref.count(tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION].type)) {
     throw INVALID_PATTERN_CLAUSE_FORMAT;
   }
-
   if (tokens_[pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_SHORT].type
       == PqlTokenType::CLOSED_PARENTHESIS) {
     // while and assign pattern
-
-    if (tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_COMMA_POSITION].type != PqlTokenType::COMMA) {
-      throw INVALID_PATTERN_CLAUSE_FORMAT;
-    }
-
-    if (!expression_spec.count(tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type) &&
-        tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type != PqlTokenType::UNDERSCORE) {
-      throw INVALID_PATTERN_CLAUSE_FORMAT;
-    }
-
-    return pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_SHORT + 1;
-
+    return ValidateAssignWhilePattern(pattern_arg_index);
   } else if (tokens_[pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_LONG].type
       == PqlTokenType::CLOSED_PARENTHESIS) {
     // if pattern
-    if (tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_COMMA_POSITION].type != PqlTokenType::COMMA ||
-        tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_COMMA_POSITION].type != PqlTokenType::COMMA) {
-      throw INVALID_PATTERN_CLAUSE_FORMAT;
-    }
-
-    if (tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type != PqlTokenType::UNDERSCORE ||
-        tokens_[pattern_arg_index + PATTERN_CLAUSE_THIRD_ARG_POSITION].type != PqlTokenType::UNDERSCORE) {
-      throw INVALID_PATTERN_CLAUSE_FORMAT;
-    }
-
-    return pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_LONG + 1;
+    return ValidateIfPattern(pattern_arg_index);
   } else {
     throw INVALID_PATTERN_CLAUSE_FORMAT;
   }
+}
+int QueryValidator::ValidateIfPattern(int pattern_arg_index) {
+  if (tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_COMMA_POSITION].type != PqlTokenType::COMMA ||
+      tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_COMMA_POSITION].type != PqlTokenType::COMMA) {
+    throw INVALID_PATTERN_CLAUSE_FORMAT;
+  }
+  if (tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type != PqlTokenType::UNDERSCORE ||
+      tokens_[pattern_arg_index + PATTERN_CLAUSE_THIRD_ARG_POSITION].type != PqlTokenType::UNDERSCORE) {
+    throw INVALID_PATTERN_CLAUSE_FORMAT;
+  }
+  return pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_LONG + 1;
+}
+
+int QueryValidator::ValidateAssignWhilePattern(int pattern_arg_index) {
+  if (tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_COMMA_POSITION].type != PqlTokenType::COMMA) {
+    throw INVALID_PATTERN_CLAUSE_FORMAT;
+  }
+  if (!expression_spec.count(tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type) &&
+      tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type != PqlTokenType::UNDERSCORE) {
+    throw INVALID_PATTERN_CLAUSE_FORMAT;
+  }
+  return pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_SHORT + 1;
 }
 
 int QueryValidator::ValidatePatternClause(int pattern_clause_starting_index) {

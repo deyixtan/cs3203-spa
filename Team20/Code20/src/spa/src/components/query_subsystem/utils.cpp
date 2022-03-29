@@ -70,3 +70,41 @@ bool Utils::IsConversionNeeded(DesignEntityType type, AtrriName attribute_name) 
   }
   return false;
 }
+
+std::unordered_set<DesignEntityType> procname_entities = {
+    DesignEntityType::PROCEDURE
+};
+
+std::unordered_set<DesignEntityType> varname_entities = {
+  DesignEntityType::VARIABLE
+};
+
+std::unordered_set<DesignEntityType> stmtno_entities = {
+  DesignEntityType::STMT,
+  DesignEntityType::WHILE,
+  DesignEntityType::IF,
+  DesignEntityType::ASSIGN
+};
+
+std::unordered_set<DesignEntityType> value_entities = {
+  DesignEntityType::CONSTANT
+};
+
+std::unordered_set<DesignEntityType> varname_and_stmtno_entities = {
+    DesignEntityType::READ,
+    DesignEntityType::PRINT
+};
+
+std::unordered_set<DesignEntityType> procname_and_stmtno_entities = {
+    DesignEntityType::CALL
+};
+
+std::unordered_set<AtrriName> varname_and_stmtno_attrinames = {
+    AtrriName::VARNAME,
+    AtrriName::STMTNO
+};
+
+std::unordered_set<AtrriName> procname_and_stmtno_attrinames = {
+    AtrriName::PROCNAME,
+    AtrriName::STMTNO
+};
