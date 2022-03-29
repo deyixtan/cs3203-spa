@@ -96,7 +96,7 @@ Table CallsTClause::HandleIdentWildcard() {
 }
 
 Table CallsTClause::HandleIdentIdent() {
-  bool is_empty = !pkb->GetCallStore()->IsCallsStarPairExists(first_arg.value, second_arg.value);
+  bool is_empty = !pkb->GetCallStore()->IsCallsStarPairValid(first_arg.value, second_arg.value);
   Table table;
   if (is_empty) {
     table.ToggleFalseClause();

@@ -74,7 +74,7 @@ Table ModifiesSClause::HandleIntegerWildcard() {
 
 Table ModifiesSClause::HandleIntegerIdent() {
   std::pair arg_pair(first_arg.value, second_arg.value);
-  bool is_empty = !pkb->GetModifiesStore()->IsStmtVarExists(arg_pair);
+  bool is_empty = !pkb->GetModifiesStore()->IsStmtVarValid(arg_pair);
   Table table;
   if (is_empty) {
     table.ToggleFalseClause();

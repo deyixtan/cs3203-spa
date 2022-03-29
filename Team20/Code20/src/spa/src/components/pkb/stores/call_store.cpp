@@ -8,12 +8,12 @@ void CallStore::AddCallerHelper(std::string const &caller, std::string const &ca
   AddUpperLowerStar(CALLS, caller, callee, std::vector<std::string>());
 }
 
-bool CallStore::IsCallsPairExists(std::string const &first_proc, std::string const &second_proc) {
-  return IsExists(std::make_pair(first_proc, second_proc));
+bool CallStore::IsCallsPairValid(std::string const &first_proc, std::string const &second_proc) {
+  return IsValid(std::make_pair(first_proc, second_proc));
 }
 
-bool CallStore::IsCallsStarPairExists(const std::string &first_proc, const std::string &second_proc) {
-  return IsStarExists(std::make_pair(first_proc, second_proc));
+bool CallStore::IsCallsStarPairValid(const std::string &first_proc, const std::string &second_proc) {
+  return IsStarValid(std::make_pair(first_proc, second_proc));
 }
 
 std::unordered_set<std::string> CallStore::GetCallStmtOf(std::string proc) {

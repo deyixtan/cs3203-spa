@@ -141,11 +141,11 @@ bool StmtStmtStore::IsLowerStar(std::string const &stmt) {
   return lower_star_set.find(stmt) != lower_star_set.end();
 }
 
-bool StmtStmtStore::IsExists(std::pair<std::string, std::string> const &pair) {
+bool StmtStmtStore::IsValid(std::pair<std::string, std::string> const &pair) {
   return all_pairs.find(pair) != all_pairs.end();
 }
 
-bool StmtStmtStore::IsStarExists(std::pair<std::string, std::string> const &pair) {
+bool StmtStmtStore::IsStarValid(std::pair<std::string, std::string> const &pair) {
   return all_star_pairs.find(pair) != all_star_pairs.end();
 }
 

@@ -28,8 +28,8 @@ bool ParentStore::IsDesc(std::string const &stmt) {
 }
 
 // Used for Parent(s1, s2)
-bool ParentStore::ParentChildExists(std::pair<std::string, std::string> const &pair) {
-  return IsExists(pair);
+bool ParentStore::ParentChildValid(std::pair<std::string, std::string> const &pair) {
+  return IsValid(pair);
 }
 
 std::string ParentStore::GetParentOf(std::string const &stmt) {

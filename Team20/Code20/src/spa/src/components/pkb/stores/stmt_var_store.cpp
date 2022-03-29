@@ -30,11 +30,11 @@ void StmtVarStore::AddVarHelper(std::string index,
   }
 }
 
-bool StmtVarStore::IsStmtVarExists(std::pair<std::string, std::string> const &pair) {
+bool StmtVarStore::IsStmtVarValid(std::pair<std::string, std::string> const &pair) {
   return stmt_var_pairs.find(pair) != stmt_var_pairs.end();
 }
 
-bool StmtVarStore::IsProcVarExists(std::pair<std::string, std::string> const &pair) {
+bool StmtVarStore::IsProcVarValid(std::pair<std::string, std::string> const &pair) {
   return proc_var_pairs.find(pair) != proc_var_pairs.end();
 }
 

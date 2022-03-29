@@ -64,7 +64,7 @@ Table UsesPClause::HandleIdentWildcard() {
 
 Table UsesPClause::HandleIdentIdent() {
   std::pair arg_pair(first_arg.value, second_arg.value);
-  bool is_empty = !pkb->GetUsesStore()->IsProcVarExists(arg_pair);
+  bool is_empty = !pkb->GetUsesStore()->IsProcVarValid(arg_pair);
   Table table;
   if (is_empty) {
     table.ToggleFalseClause();

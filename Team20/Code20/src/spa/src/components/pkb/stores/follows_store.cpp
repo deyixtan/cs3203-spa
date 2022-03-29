@@ -28,13 +28,13 @@ bool FollowsStore::IsFollowingStar(std::string const &stmt) {
 }
 
 // Used for follower(s1, s2)
-bool FollowsStore::IsFollowExists(std::pair<std::string, std::string> const &pair) {
-  return IsExists(pair);
+bool FollowsStore::IsFollowValid(std::pair<std::string, std::string> const &pair) {
+  return IsValid(pair);
 }
 
 // Used for follower*(s1, s2)
-bool FollowsStore::IsFollowStarExists(std::pair<std::string, std::string> const &pair) {
-  return IsStarExists(pair);
+bool FollowsStore::IsFollowStarValid(std::pair<std::string, std::string> const &pair) {
+  return IsStarValid(pair);
 }
 
 std::string FollowsStore::GetFollowerOf(std::string const &stmt) {

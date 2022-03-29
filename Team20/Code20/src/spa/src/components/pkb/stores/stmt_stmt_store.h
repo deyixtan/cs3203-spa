@@ -11,7 +11,7 @@ struct FollowsNode {
   std::unordered_set<std::string> following_star;
 };
 
-// A struct to maintain every node's relationships
+// A struct to maintain every ParentNode's relationships
 struct ParentChildNode {
   std::string parent;
   std::unordered_set<std::string> child;
@@ -19,6 +19,7 @@ struct ParentChildNode {
   std::unordered_set<std::string> desc;
 };
 
+// A struct to maintain every CallsNode's relationships
 struct CallsNode {
   std::unordered_set<std::string> callers_set;
   std::unordered_set<std::string> callees_set;
@@ -49,8 +50,8 @@ class StmtStmtStore : public Store {
   [[nodiscard]] bool IsLower(std::string const &stmt);
   [[nodiscard]] bool IsUpperStar(std::string const &stmt);
   [[nodiscard]] bool IsLowerStar(std::string const &stmt);
-  [[nodiscard]] bool IsExists(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] bool IsStarExists(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsValid(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsStarValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetUpperOf(StoreType type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetUpperOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetLowerOf(StoreType type, std::string const &stmt);

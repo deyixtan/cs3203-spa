@@ -17,7 +17,7 @@ class ParentStore : public StmtStmtStore {
   [[nodiscard]] bool IsChild(std::string const &stmt);
   [[nodiscard]] bool IsAnce(std::string const &stmt);
   [[nodiscard]] bool IsDesc(std::string const &stmt);
-  [[nodiscard]] bool ParentChildExists(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool ParentChildValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetParentOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetChildOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetAllAnceOf(std::string const &stmt);
