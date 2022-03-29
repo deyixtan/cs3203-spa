@@ -8,9 +8,9 @@
 
 #include "components/pkb/stores/store.h"
 
-class AffectSession;
 class ModifiesStore;
 class UsesStore;
+class AffectSession;
 class Cfg;
 
 class AffectStore : public Store {
@@ -25,6 +25,13 @@ class AffectStore : public Store {
                        std::shared_ptr<UsesStore> usage_store);
   void AddProgramCfg(std::shared_ptr<Cfg> program_cfg);
   std::shared_ptr<AffectSession> ComputeAffect();
+  [[nodiscard]] std::shared_ptr<Cfg> GetProgramCfg();
+  [[nodiscard]] std::shared_ptr<ModifiesStore> GetModifyStore();
+  [[nodiscard]] std::shared_ptr<UsesStore> GetUsageStore();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmtHelper(
+      std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs, StmtType type);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmtHelper(
+      std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs, StmtType type1, StmtType type2);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECTS_STORE_H_
