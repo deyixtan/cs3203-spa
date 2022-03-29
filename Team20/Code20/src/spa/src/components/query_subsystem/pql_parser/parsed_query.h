@@ -33,5 +33,5 @@ class ParsedQuery {
 };
 
 extern std::unordered_map<PqlTokenType, DesignEntityType> token_design_map;
-
+extern std::unordered_map<PqlTokenType, ResultClauseType> token_result_map;
 #endif
