@@ -36,8 +36,8 @@ void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node
 }
 
 void DesignExtractor::UpdateCallUsesModifies(std::string proc) {
-  std::unordered_set<std::string> uses_vars = m_pkb_client->GetPKB()->GetUsageStore()->GetVarUsedByProc(proc);
-  std::unordered_set<std::string> mod_vars = m_pkb_client->GetPKB()->GetModifyStore()->GetVarModByProc(proc);
+  std::unordered_set<std::string> uses_vars = m_pkb_client->GetPKB()->GetUsesStore()->GetVarUsedByProc(proc);
+  std::unordered_set<std::string> mod_vars = m_pkb_client->GetPKB()->GetModifiesStore()->GetVarModByProc(proc);
   std::unordered_set<std::string> call_stmts = m_pkb_client->GetPKB()->GetCallStore()->GetCallStmtOf(proc);
   std::unordered_set<std::string> callers = m_pkb_client->GetPKB()->GetCallStore()->GetCallersOf(proc);
 
@@ -54,12 +54,12 @@ void DesignExtractor::UpdateCallUses(std::string const &call_stmt,
                                      std::unordered_set<std::string> const &ancestors,
                                      std::unordered_set<std::string> const &callers) {
   for (auto &var : vars) {
-    m_pkb_client->GetPKB()->GetUsageStore()->AddStmtVar(call_stmt, var);
+    m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(call_stmt, var);
     for (auto &ance : ancestors) {
-      m_pkb_client->GetPKB()->GetUsageStore()->AddStmtVar(ance, var);
+      m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(ance, var);
     }
     for (auto &caller : callers) {
-      m_pkb_client->GetPKB()->GetUsageStore()->AddProcVar(caller, var);
+      m_pkb_client->GetPKB()->GetUsesStore()->AddProcVar(caller, var);
     }
   }
 }
@@ -69,12 +69,12 @@ void DesignExtractor::UpdateCallModifies(std::string const &call_stmt,
                                          std::unordered_set<std::string> const &ancestors,
                                          std::unordered_set<std::string> const &callers) {
   for (auto &var : vars) {
-    m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(call_stmt, var);
+    m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(call_stmt, var);
     for (auto &ance : ancestors) {
-      m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(ance, var);
+      m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(ance, var);
     }
     for (auto &caller : callers) {
-      m_pkb_client->GetPKB()->GetModifyStore()->AddProcVar(caller, var);
+      m_pkb_client->GetPKB()->GetModifiesStore()->AddProcVar(caller, var);
     }
 
   }

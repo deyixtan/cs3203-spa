@@ -1,5 +1,5 @@
 #include "affect_session.h"
-#include "../../source_subsystem/types/cfg/cfg_node.h"
+#include "../../../source_subsystem/types/cfg/cfg_node.h"
 
 AffectSession::AffectSession(std::shared_ptr<AffectStore> affects_store) : m_affects_store(affects_store){
   TraverseCfg();

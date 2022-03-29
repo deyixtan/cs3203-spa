@@ -36,8 +36,6 @@ void PatternStore::AddIfWithPattern(std::string const &stmt, std::string const &
 
 std::unordered_set<std::string> PatternStore::GetStmtWithPatternExact(std::string lhs, std::string rhs) {
   std::unordered_set<std::string> result = {};
-  lhs.erase(remove(lhs.begin(), lhs.end(), ' '), lhs.end());
-  rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
   rhs = "(" + rhs + ")";
 
   ExpressionTree expr_tree = ExpressionTree();
@@ -64,8 +62,6 @@ std::unordered_set<std::string> PatternStore::GetStmtWithPatternExact(std::strin
 
 std::unordered_set<std::string> PatternStore::GetStmtWithPatternPartial(std::string lhs, std::string rhs) {
   std::unordered_set<std::string> result = {};
-  lhs.erase(remove(lhs.begin(), lhs.end(), ' '), lhs.end());
-  rhs.erase(remove(rhs.begin(), rhs.end(), ' '), rhs.end());
   rhs = "(" + rhs + ")";
 
   ExpressionTree expr_tree = ExpressionTree();
@@ -89,7 +85,6 @@ std::unordered_set<std::string> PatternStore::GetStmtWithPatternPartial(std::str
 
 std::unordered_set<std::string> PatternStore::GetStmtWithPatternWildcard(std::string lhs) {
   std::unordered_set<std::string> result = {};
-  lhs.erase(remove(lhs.begin(), lhs.end(), ' '), lhs.end());
 
   for (auto const&[key, val] : m_stmt_pattern_map) {
     //pattern a(_, _)
@@ -106,7 +101,6 @@ std::unordered_set<std::string> PatternStore::GetStmtWithPatternWildcard(std::st
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result = {};
-  expr.erase(remove(expr.begin(), expr.end(), ' '), expr.end());
   expr = "(" + expr + ")";
 
   ExpressionTree expr_tree = ExpressionTree();
@@ -124,7 +118,6 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore:
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result = {};
-  expr.erase(remove(expr.begin(), expr.end(), ' '), expr.end());
   expr = "(" + expr + ")";
 
   ExpressionTree expr_tree = ExpressionTree();

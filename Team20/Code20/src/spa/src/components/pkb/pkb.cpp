@@ -10,10 +10,10 @@ PKB::PKB()
 }
 
 void PKB::InitRelationshipStores() {
-  m_follow_store = std::make_shared<FollowStore>(m_stmt_vector);
-  m_modify_store = std::make_shared<ModifyStore>(m_stmt_vector);
+  m_follow_store = std::make_shared<FollowsStore>(m_stmt_vector);
+  m_modify_store = std::make_shared<ModifiesStore>(m_stmt_vector);
   m_parent_store = std::make_shared<ParentStore>(m_stmt_vector);
-  m_usage_store = std::make_shared<UsageStore>(m_stmt_vector);
+  m_usage_store = std::make_shared<UsesStore>(m_stmt_vector);
   m_pattern_store = std::make_shared<PatternStore>(m_stmt_vector);
   m_call_store = std::make_shared<CallStore>(m_stmt_vector);
   m_next_store = std::make_shared<NextStore>(m_stmt_vector);
@@ -77,11 +77,11 @@ std::string PKB::GetNameByStmt(StmtType type, std::string stmt) {
   return "";
 }
 
-std::shared_ptr<FollowStore> PKB::GetFollowStore() {
+std::shared_ptr<FollowsStore> PKB::GetFollowsStore() {
   return m_follow_store;
 }
 
-std::shared_ptr<ModifyStore> PKB::GetModifyStore() {
+std::shared_ptr<ModifiesStore> PKB::GetModifiesStore() {
   return m_modify_store;
 }
 
@@ -89,7 +89,7 @@ std::shared_ptr<ParentStore> PKB::GetParentStore() {
   return m_parent_store;
 }
 
-std::shared_ptr<UsageStore> PKB::GetUsageStore() {
+std::shared_ptr<UsesStore> PKB::GetUsesStore() {
   return m_usage_store;
 }
 

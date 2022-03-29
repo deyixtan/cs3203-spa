@@ -227,7 +227,7 @@ std::unordered_set<std::string> all_proc_mod = {"main", "foo", "func"};
 
 /* FOLLOW STORE */
 
-std::unordered_map<std::string, FollowNode> follows_rs =
+std::unordered_map<std::string, FollowsNode> follows_rs =
     {
         {"1", {"0", "2", {}, {"2", "3", "4", "5"}}},
         {"2", {"1", "3", {"1"}, {"3", "4", "5"}}},

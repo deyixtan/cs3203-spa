@@ -2,7 +2,7 @@
 
 namespace source {
 
-std::string ProcedureExistException::MESSAGE = "Duplicate procedure name exists.";
+std::string ProcedureExistException::MESSAGE = "Duplicate procedure name Valid.";
 
 ProcedureExistException::ProcedureExistException() : m_msg(MESSAGE) {}
 
