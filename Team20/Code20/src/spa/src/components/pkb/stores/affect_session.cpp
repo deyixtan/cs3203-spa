@@ -1,28 +1,74 @@
 #include "affect_session.h"
-#include "modify_store.h"
-#include "usage_store.h"
-#include "../../source_subsystem/types/cfg/cfg.h"
 #include "../../source_subsystem/types/cfg/cfg_node.h"
 
-AffectSession::AffectSession(std::shared_ptr<Cfg> program_cfg,
-                             std::shared_ptr<ModifyStore> modify_store,
-                             std::shared_ptr<UsageStore> usage_store)
-    : m_program_cfg(program_cfg), m_modify_store(modify_store), m_usage_store(usage_store) {
+AffectSession::AffectSession(std::shared_ptr<AffectStore> affects_store) : m_affects_store(affects_store){
   TraverseCfg();
+}
+
+bool AffectSession::IsAffected(std::string const &stmt) {
+  for (auto pairs : m_all_affects_pairs) {
+    if (pairs.second == stmt) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool AffectSession::IsAffecting(std::string const &stmt) {
+  for (auto pairs : m_all_affects_pairs) {
+    if (pairs.first == stmt) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool AffectSession::DoesAffectExists(std::pair<std::string, std::string> const &pair) {
+  if (m_all_affects_pairs.find(pair) != m_all_affects_pairs.end()) {
+    return true;
+  }
+  return false;
+}
+
+std::unordered_set<std::string> AffectSession::GetAffectedOf(std::string const &stmt) {
+  if (m_affects_map.count(stmt) == 0) {
+    return {};
+  }
+  return m_affects_map.at(stmt);
+}
+
+std::unordered_set<std::string> AffectSession::GetAffectsOf(std::string const &stmt) {
+  if (m_affects_reverse_map.count(stmt) == 0) {
+    return {};
+  }
+  return m_affects_reverse_map.at(stmt);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAffectsPairs() {
+  return m_all_affects_pairs;
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAllAffectsStmt(StmtType type) {
+  return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_pairs, type);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAllAffectsStmt(StmtType type1,
+                                                                                                   StmtType type2) {
+  return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_pairs, type1, type2);
 }
 
 // HELPER METHODS
 std::unordered_set<std::string> AffectSession::GetVarModByStmt(std::string stmt_no) {
-  return m_modify_store->GetVarModByStmt(stmt_no);
+  return m_affects_store->GetModifyStore()->GetVarModByStmt(stmt_no);
 }
 
 std::unordered_set<std::string> AffectSession::GetVarUsedByStmt(std::string stmt_no) {
-  return m_usage_store->GetVarUsedByStmt(stmt_no);
+  return m_affects_store->GetUsageStore()->GetVarUsedByStmt(stmt_no);
 }
 
 // POPULATE METHODS
 void AffectSession::TraverseCfg() {
-  for (auto const &cfg : m_program_cfg->GetCfgMap()) {
+  for (auto const &cfg : m_affects_store->GetProgramCfg()->GetCfgMap()) {
     std::shared_ptr<CfgNode> cfg_head = cfg.second;
 
     std::unordered_map<std::string, std::unordered_set<std::string>> last_modified_map;
@@ -136,11 +182,18 @@ void AffectSession::HandleAssignStatement(std::string stmt_no, std::unordered_ma
     if (last_modified_map.count(var_used) != 0) {
       std::unordered_set<std::string> last_mod_stmt_nos = last_modified_map.at(var_used);
       for (auto const last_mod_stmt_no : last_mod_stmt_nos) {
-        // update affects
+        // update affects (m_affects_var_stmt_map)
         if (m_affects_map.count(last_mod_stmt_no) == 0) {
           m_affects_map.insert({last_mod_stmt_no, std::unordered_set<std::string>()});
         }
         m_affects_map.at(last_mod_stmt_no).insert(stmt_no);
+        // update affects (m_affects_stmt_var_map)
+        if (m_affects_reverse_map.count(stmt_no) == 0) {
+          m_affects_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
+        }
+        m_affects_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
+        // update affects (m_all_affects_pairs)
+        m_all_affects_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
       }
     }
   }

@@ -8,23 +8,20 @@
 #include <vector>
 
 #include "../../../utils/pair_hash.h"
+#include "../pkb.h"
 
-class ModifyStore;
-class UsageStore;
+class AffectStore;
 class Cfg;
 class CfgNode;
 
 class AffectSession {
  private:
-  std::shared_ptr<Cfg> m_program_cfg;
-  std::shared_ptr<ModifyStore> m_modify_store;
-  std::shared_ptr<UsageStore> m_usage_store;
-  std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_map;// <variable, stmt_no>
+  std::shared_ptr<AffectStore> m_affects_store;
+  std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_map;
+  std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_reverse_map;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_pairs;
 
- public:
-  explicit AffectSession(std::shared_ptr<Cfg> program_cfg,
-                         std::shared_ptr<ModifyStore> modify_store,
-                         std::shared_ptr<UsageStore> usage_store);
+ private:
   std::unordered_set<std::string> GetVarModByStmt(std::string stmt_no);
   std::unordered_set<std::string> GetVarUsedByStmt(std::string stmt_no);
   void TraverseCfg();
@@ -36,6 +33,18 @@ class AffectSession {
   void HandleCallStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
   void HandleWhileStatement(std::shared_ptr<CfgNode> &cfg_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
   void HandleIfStatement(std::shared_ptr<CfgNode> &cfg_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
+
+ public:
+  explicit AffectSession(std::shared_ptr<AffectStore> affects_store);
+  [[nodiscard]] bool IsAffected(std::string const &stmt);
+  [[nodiscard]] bool IsAffecting(std::string const &stmt);
+  [[nodiscard]] bool DoesAffectExists(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] std::unordered_set<std::string> GetAffectedOf(std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetAffectsOf(std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAffectsPairs();
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmt(StmtType type);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmt(StmtType type1,
+                                                                                                     StmtType type2);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECT_SESSION_H_
