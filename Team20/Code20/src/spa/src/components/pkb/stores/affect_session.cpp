@@ -227,4 +227,6 @@ void AffectSession::HandleIfStatement(std::shared_ptr<CfgNode> &cfg_node, std::u
     }
     last_modified_map.at(var_name).insert(stmt_nos.begin(), stmt_nos.end());
   }
+
+  cfg_node = end_node;
 }
