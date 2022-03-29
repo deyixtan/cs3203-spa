@@ -84,7 +84,11 @@ void AffectSession::TraverseWhileCfg(std::shared_ptr<CfgNode> &cfg_node, std::sh
   // process next cfg_node if available
   if (cfg_node->GetDescendants().size() > 0) {
     std::shared_ptr<CfgNode> next_node = cfg_node->GetDescendants().back();
-    TraverseWhileCfg(next_node, terminating_node, last_modified_map);
+    if (next_node->GetStatementList().size() > 0 && next_node->GetStatementList().front().type != WHILE) {
+      TraverseWhileCfg(next_node, terminating_node, last_modified_map);
+    } else {
+      terminating_node = next_node;
+    }
   }
 }
 
@@ -115,7 +119,7 @@ void AffectSession::TraverseIfCfg(std::shared_ptr<CfgNode> &cfg_node, std::share
   // process next cfg_node if available
   if (cfg_node->GetDescendants().size() > 0) {
     std::shared_ptr<CfgNode> next_node = cfg_node->GetDescendants().back();
-    if (next_node->GetStatementList().size() > 0) {
+    if (next_node->GetStatementList().size() > 0 && next_node->GetStatementList().front().type != WHILE) {
       TraverseIfCfg(next_node, terminating_node, last_modified_map);
     } else {
       terminating_node = next_node;
