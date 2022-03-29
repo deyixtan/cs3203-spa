@@ -34,10 +34,8 @@ class FollowsParentStore : public Store {
   explicit FollowsParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddUpperLower(bool isFollows, std::string const &upper, std::string const &lower);
   void AddUpperLowerStar(bool isFollows, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited);
-  void AddFollowsUpperLower(std::string const &upper, std::string const &lower);
-  void AddParentUpperLower(std::string const &upper, std::string const &lower);
-  void AddFollowsUpperLowerStar(std::string const &upper, std::string const &lower);
-  void AddParentUpperLowerStar(std::string const &stmt, std::vector<std::string> const &visited);
+  void AddFollowsUpperLower(bool is_star, std::string const &upper, std::string const &lower);
+  void AddParentUpperLower(bool is_star, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited);
   [[nodiscard]] bool IsUpper(std::string const &stmt);
   [[nodiscard]] bool IsLower(std::string const &stmt);
   [[nodiscard]] bool IsUpperStar(std::string const &stmt);

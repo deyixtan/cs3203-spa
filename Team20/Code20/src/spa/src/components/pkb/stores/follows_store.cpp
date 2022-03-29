@@ -11,10 +11,6 @@ void FollowsStore::AddFollowStar(std::string const &follower, std::string const 
   AddUpperLowerStar(true, follower, following, std::vector<std::string>());
 }
 
-void FollowsStore::AddFollowHelper(bool is_star, std::string const &follower, std::string const &following) {
-  //TODO: Merge AddFollow and AddFollowStar
-}
-
 bool FollowsStore::IsFollower(std::string const &stmt) {
   return IsUpper(stmt);
 }

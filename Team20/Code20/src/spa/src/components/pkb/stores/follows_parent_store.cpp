@@ -5,21 +5,21 @@ FollowsParentStore::FollowsParentStore(std::shared_ptr<std::vector<std::unordere
 
 void FollowsParentStore::AddUpperLower(bool isFollows, std::string const &upper, std::string const &lower) {
   if (isFollows) {
-    AddFollowsUpperLower(upper, lower);
+    AddFollowsUpperLower(false, upper, lower);
   } else {
-    AddParentUpperLower(upper, lower);
+    AddParentUpperLower(false, upper, lower, std::vector<std::string>());
   }
 }
 
 void FollowsParentStore::AddUpperLowerStar(bool isFollows, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited) {
   if (isFollows) {
-    AddFollowsUpperLowerStar(upper, lower);
+    AddFollowsUpperLower(true, upper, lower);
   } else {
-    AddParentUpperLowerStar(lower, visited);
+    AddParentUpperLower(true, upper, lower, visited);
   }
 }
 
-void FollowsParentStore::AddFollowsUpperLower(std::string const &upper, std::string const &lower) {
+void FollowsParentStore::AddFollowsUpperLower(bool is_star, std::string const &upper, std::string const &lower) {
   if (follows_rs_map.find(upper) == follows_rs_map.end()) {
     follows_rs_map.insert({upper, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
   }
@@ -28,67 +28,54 @@ void FollowsParentStore::AddFollowsUpperLower(std::string const &upper, std::str
     follows_rs_map.insert({lower, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
   }
 
-  follows_rs_map.at(upper).following = lower;
-  follows_rs_map.at(lower).follower = upper;
-  upper_set.insert(upper);
-  lower_set.insert(lower);
-  all_pairs.emplace(std::pair<std::string, std::string>(upper, lower));
+  if (!is_star) {
+    follows_rs_map.at(upper).following = lower;
+    follows_rs_map.at(lower).follower = upper;
+    upper_set.insert(upper);
+    lower_set.insert(lower);
+    all_pairs.emplace(std::pair<std::string, std::string>(upper, lower));
+  } else {
+    follows_rs_map.at(upper).following_star.insert(lower);
+    follows_rs_map.at(lower).follower_star.insert(upper);
+    upper_star_set.insert(upper);
+    lower_star_set.insert(lower);
+    all_star_pairs.emplace(std::pair<std::string, std::string>(upper, lower));
+  }
 }
 
-void FollowsParentStore::AddParentUpperLower(std::string const &upper, std::string const &lower) {
+void FollowsParentStore::AddParentUpperLower(bool is_star, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited) {
   if (parent_rs_map.find(upper) == parent_rs_map.end()) {
     parent_rs_map.insert({upper, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
-                            std::unordered_set<std::string>()}});
+                                  std::unordered_set<std::string>()}});
   }
 
   if (parent_rs_map.find(lower) == parent_rs_map.end()) {
     parent_rs_map.insert({lower, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
-                           std::unordered_set<std::string>()}});
+                                  std::unordered_set<std::string>()}});
   }
 
-  all_pairs.insert(std::make_pair(upper, lower));
-  upper_set.insert(upper);
-  lower_set.insert(lower);
-  parent_rs_map.at(upper).child.insert(lower);
-  parent_rs_map.at(lower).parent = upper;
-}
-
-void FollowsParentStore::AddFollowsUpperLowerStar(std::string const &upper, std::string const &lower) {
-  if (follows_rs_map.find(upper) == follows_rs_map.end()) {
-    follows_rs_map.insert({upper, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
-  }
-
-  if (follows_rs_map.find(lower) == follows_rs_map.end()) {
-    follows_rs_map.insert({lower, {"0", "0", std::unordered_set<std::string>(), std::unordered_set<std::string>()}});
-  }
-
-  follows_rs_map.at(upper).following_star.insert(lower);
-  follows_rs_map.at(lower).follower_star.insert(upper);
-  upper_star_set.insert(upper);
-  lower_star_set.insert(lower);
-  all_star_pairs.emplace(std::pair<std::string, std::string>(upper, lower));
-}
-
-void FollowsParentStore::AddParentUpperLowerStar(std::string const &stmt, std::vector<std::string> const &visited) {
-  for (std::string const &s : visited) {
-    if (parent_rs_map.find(stmt) == parent_rs_map.end()) {
-      parent_rs_map.insert({stmt, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
-                            std::unordered_set<std::string>()}});
-    }
-
-    if (parent_rs_map.find(s) == parent_rs_map.end()) {
-      parent_rs_map.insert({s, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
-                         std::unordered_set<std::string>()}});
-    }
-
-    if (s != stmt) {
-      all_star_pairs.insert(std::make_pair(s, stmt));
-      parent_rs_map.at(stmt).ance.insert(s);
-      parent_rs_map.at(s).desc.insert(stmt);
-      upper_star_set.insert(s);
-      lower_star_set.insert(stmt);
+  if (!is_star) {
+    all_pairs.insert(std::make_pair(upper, lower));
+    upper_set.insert(upper);
+    lower_set.insert(lower);
+    parent_rs_map.at(upper).child.insert(lower);
+    parent_rs_map.at(lower).parent = upper;
+  } else {
+    for (std::string const &ance : visited) {
+      if (parent_rs_map.find(ance) == parent_rs_map.end()) {
+        parent_rs_map.insert({ance, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
+                                      std::unordered_set<std::string>()}});
+      }
+      if (ance != lower) {
+        all_star_pairs.insert(std::make_pair(ance, lower));
+        parent_rs_map.at(lower).ance.insert(ance);
+        parent_rs_map.at(ance).desc.insert(lower);
+        upper_star_set.insert(ance);
+        lower_star_set.insert(lower);
+      }
     }
   }
+
 }
 
 bool FollowsParentStore::IsUpper(std::string const &stmt) {

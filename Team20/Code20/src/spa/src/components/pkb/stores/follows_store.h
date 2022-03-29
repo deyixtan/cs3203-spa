@@ -11,7 +11,6 @@ class FollowsStore : public FollowsParentStore {
   explicit FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddFollow(std::string const &parent, std::string const &child);
   void AddFollowStar(std::string const &parent, std::string const &child);
-  void AddFollowHelper(bool is_star, std::string const &follower, std::string const &following);
   [[nodiscard]] bool IsFollower(std::string const &stmt);
   [[nodiscard]] bool IsFollowing(std::string const &stmt);
   [[nodiscard]] bool IsFollowerStar(std::string const &stmt);
