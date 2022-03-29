@@ -1,8 +1,7 @@
 #include "node_call_statement.h"
 #include "../../iterator/design_extractor.h"
-#include "../../call_graph/call_graph.h"
+#include "../call_graph/call_graph.h"
 #include "../../iterator/cfg_builder.h"
-#include "../cfg/cfg_node.h"
 
 CallStatementNode::CallStatementNode(int stmt_no, std::string proc, std::string identifier)
     : StatementNode(stmt_no), proc_name(proc), m_identifier(identifier) {}
@@ -26,13 +25,8 @@ bool CallStatementNode::operator==(const StatementNode &other) const {
 
 void CallStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  de->GetPkbClient()->PopulateStmt(stmt_num);
-  de->GetPkbClient()->PopulateName(m_identifier, CALL);
   std::string callee_name = m_identifier;
-  de->GetPkbClient()->PopulateCall(stmt_num, m_identifier);
-  de->GetPkbClient()->PopulateCalls(proc_name, callee_name);
-  de->GetPkbClient()->PopulateCallStmt(callee_name, stmt_num);
-  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
+  de->GetPkbClient()->PopulateCall(de->GetVisited(), stmt_num, proc_name, callee_name);
   de->GetCallGraph()->AddEdge(proc_name, callee_name);
 }
 
