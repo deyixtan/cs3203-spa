@@ -1,7 +1,7 @@
 #ifndef CALLS_STORE_H
 #define CALLS_STORE_H
 
-#include "stmt_stmt_store.h"
+#include "components/pkb/stores/stmt_stmt_store.h"
 
 class CallStore : public StmtStmtStore {
  private:

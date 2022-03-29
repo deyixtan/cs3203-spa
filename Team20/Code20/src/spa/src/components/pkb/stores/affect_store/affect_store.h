@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "store.h"
+#include "components/pkb/stores/store.h"
 
 class AffectSession;
 class ModifiesStore;

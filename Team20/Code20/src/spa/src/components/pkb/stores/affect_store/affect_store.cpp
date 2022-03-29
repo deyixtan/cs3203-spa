@@ -1,8 +1,8 @@
 #include "affect_store.h"
 #include "affect_session.h"
-#include "modifies_store.h"
-#include "uses_store.h"
-#include "../../source_subsystem/types/cfg/cfg.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/source_subsystem/types/cfg/cfg.h"
 
 AffectStore::AffectStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                          std::shared_ptr<ModifiesStore> modify_store,

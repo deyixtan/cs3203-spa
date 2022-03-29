@@ -1,8 +1,8 @@
 #include "affect_session.h"
-#include "modifies_store.h"
-#include "uses_store.h"
-#include "../../source_subsystem/types/cfg/cfg.h"
-#include "../../source_subsystem/types/cfg/cfg_node.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/source_subsystem/types/cfg/cfg.h"
+#include "components/source_subsystem/types/cfg/cfg_node.h"
 
 AffectSession::AffectSession(std::shared_ptr<Cfg> program_cfg,
                              std::shared_ptr<ModifiesStore> modify_store,

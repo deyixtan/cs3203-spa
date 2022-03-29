@@ -1,7 +1,7 @@
 #ifndef FOLLOW_STORE_STUB_H
 #define FOLLOW_STORE_STUB_H
 
-#include "components/pkb/stores/follows_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_set =
     {

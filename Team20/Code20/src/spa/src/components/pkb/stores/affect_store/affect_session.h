@@ -7,7 +7,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "../../../utils/pair_hash.h"
+#include "utils/pair_hash.h"
 
 class ModifiesStore;
 class UsesStore;

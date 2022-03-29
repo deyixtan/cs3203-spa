@@ -6,15 +6,15 @@
 #include <unordered_set>
 #include <vector>
 
-#include "stores/uses_store.h"
-#include "stores/modifies_store.h"
-#include "stores/follows_store.h"
-#include "stores/parent_store.h"
-#include "stores/call_store.h"
-#include "stores/pattern_store.h"
-#include "stores/next_store.h"
-#include "stores/affect_store.h"
-#include "expression_tree.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
+#include "components/pkb/stores/call_store/call_store.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
+#include "components/pkb/stores/next_store/next_store.h"
+#include "components/pkb/stores/affect_store/affect_store.h"
+#include "components/pkb/stores/pattern_store/expression_tree/expression_tree.h"
 #include "../source_subsystem/types/cfg/cfg.h"
 
 class PKB {

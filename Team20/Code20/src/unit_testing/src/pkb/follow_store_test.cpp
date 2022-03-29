@@ -1,4 +1,4 @@
-#include "components/pkb/stores/follows_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
 #include "follow_store_stub.h"
 #include "../test_util.h"
 #include "catch.hpp"

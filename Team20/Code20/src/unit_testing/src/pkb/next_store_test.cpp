@@ -1,4 +1,4 @@
-#include "components/pkb/stores/next_store.h"
+#include "components/pkb/stores/next_store/next_store.h"
 #include "next_store_stub.h"
 #include "../test_util.h"
 #include "catch.hpp"

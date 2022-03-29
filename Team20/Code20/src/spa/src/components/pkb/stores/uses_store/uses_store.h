@@ -1,7 +1,7 @@
 #ifndef USAGE_STORE_H
 #define USAGE_STORE_H
 
-#include "stmt_var_store.h"
+#include "components/pkb/stores/stmt_var_store.h"
 
 // proxy class
 class UsesStore : public StmtVarStore {

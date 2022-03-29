@@ -1,7 +1,7 @@
 #ifndef PARENT_STORE_H
 #define PARENT_STORE_H
 
-#include "stmt_stmt_store.h"
+#include "components/pkb/stores/stmt_stmt_store.h"
 
 
 
