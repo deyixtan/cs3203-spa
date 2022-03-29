@@ -3,8 +3,8 @@
 
 #include "store.h"
 
-// A struct to maintain every FollowNode's relationships
-struct FollowNode {
+// A struct to maintain every FollowsNode's relationships
+struct FollowsNode {
   std::string follower;
   std::string following;
   std::unordered_set<std::string> follower_star;
@@ -12,9 +12,9 @@ struct FollowNode {
 };
 
 // A store class that maintains all Parent APIs and relationships
-class FollowStore : public Store {
+class FollowsStore : public Store {
  private:
-  std::unordered_map<std::string, FollowNode> rs_map;
+  std::unordered_map<std::string, FollowsNode> rs_map;
   std::unordered_set<std::string> follower_set;
   std::unordered_set<std::string> following_set;
   std::unordered_set<std::string> follower_star_set;
@@ -23,7 +23,7 @@ class FollowStore : public Store {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_follow_star_pairs;
 
  public:
-  explicit FollowStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  explicit FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddFollow(std::string const &parent, std::string const &child);
   void AddFollowStar(std::string const &parent, std::string const &child);
   void AddFollowHelper(bool is_star, std::string const &follower, std::string const &following);

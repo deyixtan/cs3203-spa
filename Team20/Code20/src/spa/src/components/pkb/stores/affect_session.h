@@ -9,22 +9,22 @@
 
 #include "../../../utils/pair_hash.h"
 
-class ModifyStore;
-class UsageStore;
+class ModifiesStore;
+class UsesStore;
 class Cfg;
 class CfgNode;
 
 class AffectSession {
  private:
   std::shared_ptr<Cfg> m_program_cfg;
-  std::shared_ptr<ModifyStore> m_modify_store;
-  std::shared_ptr<UsageStore> m_usage_store;
+  std::shared_ptr<ModifiesStore> m_modify_store;
+  std::shared_ptr<UsesStore> m_usage_store;
   std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_map;// <variable, stmt_no>
 
  public:
   explicit AffectSession(std::shared_ptr<Cfg> program_cfg,
-                         std::shared_ptr<ModifyStore> modify_store,
-                         std::shared_ptr<UsageStore> usage_store);
+                         std::shared_ptr<ModifiesStore> modify_store,
+                         std::shared_ptr<UsesStore> usage_store);
   std::unordered_set<std::string> GetVarModByStmt(std::string stmt_no);
   std::unordered_set<std::string> GetVarUsedByStmt(std::string stmt_no);
   void TraverseCfg();

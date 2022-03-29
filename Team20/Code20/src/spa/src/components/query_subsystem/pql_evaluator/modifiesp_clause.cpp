@@ -34,27 +34,27 @@ Table pql::ModifiesPClause::Execute() {
 }
 
 Table ModifiesPClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetModifyStore()->GetAllProcVar();
+  auto pair_constraints = pkb->GetModifiesStore()->GetAllProcVar();
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
 Table ModifiesPClause::HandleSynonymWildcard() {
-  auto single_constraints = pkb->GetModifyStore()->GetAllProcModify();
+  auto single_constraints = pkb->GetModifiesStore()->GetAllProcModify();
   return {first_arg.value, single_constraints};
 }
 
 Table ModifiesPClause::HandleSynonymIdent() {
-  auto single_constraints = pkb->GetModifyStore()->GetProcModByVar(second_arg.value);
+  auto single_constraints = pkb->GetModifiesStore()->GetProcModByVar(second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
 Table ModifiesPClause::HandleIdentSynonym() {
-  auto single_constraints = pkb->GetModifyStore()->GetVarModByProc(first_arg.value);
+  auto single_constraints = pkb->GetModifiesStore()->GetVarModByProc(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table ModifiesPClause::HandleIdentWildcard() {
-  bool is_empty = pkb->GetModifyStore()->GetVarModByProc(first_arg.value).empty();
+  bool is_empty = pkb->GetModifiesStore()->GetVarModByProc(first_arg.value).empty();
   Table table;
   if (is_empty) {
     table.ToggleFalseClause();
@@ -64,7 +64,7 @@ Table ModifiesPClause::HandleIdentWildcard() {
 
 Table ModifiesPClause::HandleIdentIdent() {
   std::pair arg_pair(first_arg.value, second_arg.value);
-  bool is_empty = !pkb->GetModifyStore()->IsProcVarExists(arg_pair);
+  bool is_empty = !pkb->GetModifiesStore()->IsProcVarExists(arg_pair);
   Table table;
   if (is_empty) {
     table.ToggleFalseClause();

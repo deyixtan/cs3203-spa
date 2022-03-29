@@ -1,4 +1,4 @@
-#include "statement_store.h"
+#include "uses_modifies_store.h"
 
 StatementStore::StatementStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(move(
     stmt_vector)) {}

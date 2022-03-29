@@ -6,9 +6,9 @@
 #include <unordered_set>
 #include <vector>
 
-#include "stores/usage_store.h"
-#include "stores/modify_store.h"
-#include "stores/follow_store.h"
+#include "stores/uses_store.h"
+#include "stores/modifies_store.h"
+#include "stores/follows_store.h"
 #include "stores/parent_store.h"
 #include "stores/call_store.h"
 #include "stores/pattern_store.h"
@@ -19,10 +19,10 @@
 
 class PKB {
  private:
-  std::shared_ptr<FollowStore> m_follow_store;
+  std::shared_ptr<FollowsStore> m_follow_store;
   std::shared_ptr<ParentStore> m_parent_store;
-  std::shared_ptr<UsageStore> m_usage_store;
-  std::shared_ptr<ModifyStore> m_modify_store;
+  std::shared_ptr<UsesStore> m_usage_store;
+  std::shared_ptr<ModifiesStore> m_modify_store;
   std::shared_ptr<CallStore> m_call_store;
   std::shared_ptr<PatternStore> m_pattern_store;
   std::shared_ptr<NextStore> m_next_store;
@@ -47,10 +47,10 @@ class PKB {
   [[nodiscard]] std::unordered_set<std::string> GetStmtByName(StmtType type, std::string name);
   [[nodiscard]] std::string GetNameByStmt(StmtType type, std::string stmt);
   [[nodiscard]] std::shared_ptr<CallStore> GetCallStore();
-  [[nodiscard]] std::shared_ptr<FollowStore> GetFollowStore();
-  [[nodiscard]] std::shared_ptr<ModifyStore> GetModifyStore();
+  [[nodiscard]] std::shared_ptr<FollowsStore> GetFollowsStore();
+  [[nodiscard]] std::shared_ptr<ModifiesStore> GetModifiesStore();
   [[nodiscard]] std::shared_ptr<ParentStore> GetParentStore();
-  [[nodiscard]] std::shared_ptr<UsageStore> GetUsageStore();
+  [[nodiscard]] std::shared_ptr<UsesStore> GetUsesStore();
   [[nodiscard]] std::shared_ptr<PatternStore> GetPatternStore();
   [[nodiscard]] std::shared_ptr<NextStore> GetNextStore();
   [[nodiscard]] std::shared_ptr<AffectStore> GetAffectStore();
