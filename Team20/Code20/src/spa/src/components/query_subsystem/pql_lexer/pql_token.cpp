@@ -66,6 +66,7 @@ std::unordered_set<PqlTokenType> rel_ref = {
     PqlTokenType::CALLS,
     PqlTokenType::CALLS_T,
     PqlTokenType::AFFECTS,
+    PqlTokenType::AFFECTS_T
 };
 
 std::unordered_set<PqlTokenType> design_entities = {
@@ -165,3 +166,41 @@ std::unordered_set<PqlTokenType> with_clause_ref = {
     PqlTokenType::ATTRIBUTE,
 };
 
+std::unordered_set<PqlTokenType> rel_ref_first_arg_stmt_ref = {
+    PqlTokenType::FOLLOWS,
+    PqlTokenType::FOLLOWS_T,
+    PqlTokenType::PARENT,
+    PqlTokenType::PARENT_T,
+    PqlTokenType::NEXT,
+    PqlTokenType::NEXT_T,
+    PqlTokenType::AFFECTS,
+    PqlTokenType::AFFECTS_T
+};
+
+std::unordered_set<PqlTokenType> rel_ref_first_arg_ent_ref = {
+    PqlTokenType::CALLS,
+    PqlTokenType::CALLS_T
+};
+
+std::unordered_set<PqlTokenType> rel_ref_first_arg_both_ref = {
+    PqlTokenType::USES,
+    PqlTokenType::MODIFIES
+};
+
+std::unordered_set<PqlTokenType> rel_ref_second_arg_stmt_ref = {
+    PqlTokenType::FOLLOWS,
+    PqlTokenType::FOLLOWS_T,
+    PqlTokenType::PARENT,
+    PqlTokenType::PARENT_T,
+    PqlTokenType::NEXT,
+    PqlTokenType::NEXT_T,
+    PqlTokenType::AFFECTS,
+    PqlTokenType::AFFECTS_T
+};
+
+std::unordered_set<PqlTokenType> rel_ref_second_arg_ent_ref = {
+    PqlTokenType::CALLS,
+    PqlTokenType::CALLS_T,
+    PqlTokenType::USES,
+    PqlTokenType::MODIFIES
+};

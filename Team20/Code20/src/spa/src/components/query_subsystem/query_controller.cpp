@@ -1,7 +1,7 @@
 #include "query_controller.h"
 #include "components/query_subsystem/pql_lexer/pql_lexer.h"
 #include "components/query_subsystem/pql_parser/parsed_query_builder.h"
-#include "components/query_subsystem/pql_parser/query_validator.h"
+#include "components/query_subsystem/pql_parser/pql_grammar_validator/query_validator.h"
 
 QueryController::QueryController(PKB *pkb): validator_{new pql_validator::ParsedQueryValidator()}, evaluator_{new pql_evaluator::QueryEvaluator(pkb)} {}
 

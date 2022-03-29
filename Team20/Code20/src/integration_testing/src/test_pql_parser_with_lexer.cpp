@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "components/query_subsystem/pql_parser/parsed_query_builder.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
-#include "components/query_subsystem/pql_parser/query_validator.h"
+#include "components/query_subsystem/pql_parser/pql_grammar_validator/query_validator.h"
 #include "components/query_subsystem/pql_lexer/pql_lexer.h"
 
 TEST_CASE("Test query with uses and pattern") {

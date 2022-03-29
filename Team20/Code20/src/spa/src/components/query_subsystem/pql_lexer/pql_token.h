@@ -86,5 +86,11 @@ extern std::unordered_set<PqlTokenType> result_cl_excluding_synonym;
 extern std::unordered_set<PqlTokenType> ent_ref_excluding_synonym;
 extern std::unordered_set<PqlTokenType> stmt_ref_excluding_synonym;
 extern std::unordered_set<PqlTokenType> with_clause_ref;
+extern std::unordered_set<PqlTokenType> rel_ref_first_arg_stmt_ref;
+extern std::unordered_set<PqlTokenType> rel_ref_first_arg_ent_ref;
+extern std::unordered_set<PqlTokenType> rel_ref_first_arg_both_ref;
+extern std::unordered_set<PqlTokenType> rel_ref_second_arg_stmt_ref;
+extern std::unordered_set<PqlTokenType> rel_ref_second_arg_ent_ref;
+
 
 #endif

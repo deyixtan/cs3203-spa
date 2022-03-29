@@ -1,5 +1,5 @@
 #include "query_validator.h"
-#include "query_grammar_error.h"
+#include "components/query_subsystem/pql_parser/query_grammar_error.h"
 
 QueryValidator::QueryValidator(std::vector<PqlToken> tokens) : tokens_(tokens){}
 
@@ -14,6 +14,12 @@ bool QueryValidator::IsValidRelRefToken(PqlToken rel_ref_token) {
 
 bool QueryValidator::IsValidDesignEntity(PqlToken design_entity_token) {
   return design_entities.count(design_entity_token.type);
+}
+
+void QueryValidator::ReplaceSynonym(int synonym_index) {
+  if (allowed_synonyms.count(tokens_[synonym_index].type)) {
+    tokens_[synonym_index].type = PqlTokenType::SYNONYM;
+  }
 }
 
 
@@ -76,31 +82,20 @@ void QueryValidator::ValidateRelRefClause(int rel_ref_clause_starting_index) {
 void QueryValidator::ValidateRelRefFirstArg(int first_arg_position) {
   PqlToken rel_ref_token = tokens_[first_arg_position - RELATIONSHIP_CLAUSE_FIRST_ARG_POSITION];
 
-  if (rel_ref_token.type == PqlTokenType::USES || rel_ref_token.type == PqlTokenType::MODIFIES) {
-    if (allowed_synonyms.count(tokens_[first_arg_position].type)) {
-      tokens_[first_arg_position].type = PqlTokenType::SYNONYM;
-    } else if ((!stmt_ref.count(tokens_[first_arg_position].type) &&
+  if (rel_ref_first_arg_both_ref.count(rel_ref_token.type)) {
+    ReplaceSynonym(first_arg_position);
+    if ((!stmt_ref.count(tokens_[first_arg_position].type) &&
             !ent_ref.count(tokens_[first_arg_position].type))) {
       throw INVALID_REL_REF_ARGUMENTS;
     }
-  } else if (rel_ref_token.type == PqlTokenType::FOLLOWS ||
-      rel_ref_token.type == PqlTokenType::FOLLOWS_T ||
-      rel_ref_token.type == PqlTokenType::PARENT ||
-      rel_ref_token.type == PqlTokenType::PARENT_T ||
-      rel_ref_token.type == PqlTokenType::NEXT ||
-      rel_ref_token.type == PqlTokenType::NEXT_T ||
-      rel_ref_token.type == PqlTokenType::AFFECTS ||
-      rel_ref_token.type == PqlTokenType::AFFECTS_T) {
-    if (allowed_synonyms.count(tokens_[first_arg_position].type)) {
-      tokens_[first_arg_position].type = PqlTokenType::SYNONYM;
-    } else if (!stmt_ref.count(tokens_[first_arg_position].type)) {
+  } else if (rel_ref_first_arg_stmt_ref.count(rel_ref_token.type)) {
+    ReplaceSynonym(first_arg_position);
+    if (!stmt_ref.count(tokens_[first_arg_position].type)) {
       throw INVALID_REL_REF_ARGUMENTS;
     }
-  } else if (rel_ref_token.type == PqlTokenType::CALLS ||
-      rel_ref_token.type == PqlTokenType::CALLS_T) {
-    if (allowed_synonyms.count(tokens_[first_arg_position].type)) {
-      tokens_[first_arg_position].type = PqlTokenType::SYNONYM;
-    } else if (!ent_ref.count(tokens_[first_arg_position].type)) {
+  } else if (rel_ref_first_arg_ent_ref.count(rel_ref_token.type)) {
+    ReplaceSynonym(first_arg_position);
+    if (!ent_ref.count(tokens_[first_arg_position].type)) {
       throw INVALID_REL_REF_ARGUMENTS;
     }
   }
@@ -109,19 +104,14 @@ void QueryValidator::ValidateRelRefFirstArg(int first_arg_position) {
 void QueryValidator::ValidateRelRefSecondArg(int second_arg_position) {
   PqlToken rel_ref_token = tokens_[second_arg_position - RELATIONSHIP_CLAUSE_SECOND_ARG_POSITION];
 
-  if (rel_ref_token.type == PqlTokenType::USES ||
-      rel_ref_token.type == PqlTokenType::MODIFIES ||
-      rel_ref_token.type == PqlTokenType::CALLS ||
-      rel_ref_token.type == PqlTokenType::CALLS_T) {
-    if (allowed_synonyms.count(tokens_[second_arg_position].type)) {
-      tokens_[second_arg_position].type = PqlTokenType::SYNONYM;
-    } else if (!ent_ref.count(tokens_[second_arg_position].type)) {
+  if (rel_ref_second_arg_ent_ref.count(rel_ref_token.type)) {
+    ReplaceSynonym(second_arg_position);
+    if (!ent_ref.count(tokens_[second_arg_position].type)) {
       throw INVALID_REL_REF_ARGUMENTS;
     }
   } else {
-    if (allowed_synonyms.count(tokens_[second_arg_position].type)) {
-      tokens_[second_arg_position].type = PqlTokenType::SYNONYM;
-    } else if (!stmt_ref.count(tokens_[second_arg_position].type)) {
+    ReplaceSynonym(second_arg_position);
+    if (!stmt_ref.count(tokens_[second_arg_position].type)) {
       throw INVALID_REL_REF_ARGUMENTS;
     }
   }
@@ -155,10 +145,8 @@ int QueryValidator::ValidatePatternArg(int pattern_arg_index) {
   if (tokens_[pattern_arg_index].type != PqlTokenType::OPEN_PARENTHESIS) {
     throw INVALID_PATTERN_CLAUSE_FORMAT;
   }
-
-  if (allowed_synonyms.count(tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION].type)) {
-    tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION].type = PqlTokenType::SYNONYM;
-  } else if (!ent_ref_excluding_synonym.count(tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION].type)) {
+  ReplaceSynonym(pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION);
+  if (!ent_ref.count(tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION].type)) {
     throw INVALID_PATTERN_CLAUSE_FORMAT;
   }
 

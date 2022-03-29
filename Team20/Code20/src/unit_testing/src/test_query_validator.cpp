@@ -1,6 +1,6 @@
 #include "components/query_subsystem/pql_lexer/pql_token.h"
 #include "components/query_subsystem/pql_lexer/pql_lexer.h"
-#include "components/query_subsystem/pql_parser/query_validator.h"
+#include "components/query_subsystem/pql_parser/pql_grammar_validator/query_validator.h"
 #include "components/query_subsystem/pql_parser/query_grammar_error.h"
 #include "sample_token.h"
 

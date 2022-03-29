@@ -1,7 +1,7 @@
 #ifndef QUERY_VALIDATOR_H
 #define QUERY_VALIDATOR_H
 
-#include "../pql_lexer/pql_token.h"
+#include "components/query_subsystem/pql_lexer/pql_token.h"
 
 class QueryValidator {
  private:
@@ -21,6 +21,8 @@ class QueryValidator {
   int ValidateSuchThatClause(int such_that_clause_starting_index);
   int ValidatePatternClause(int pattern_clause_starting_index);
   int ValidateWithClause(int with_clause_starting_index);
+
+  void ReplaceSynonym(int synonym_index);
 
   int MINIMUM_TOKEN_TABLE_SIZE_FOR_SELECT_CLAUSE = 2;
   int MINIMUM_SELECT_CLAUSE_SIZE = 2;
