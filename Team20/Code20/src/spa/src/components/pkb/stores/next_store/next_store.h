@@ -35,7 +35,7 @@ class NextStore : public StmtStmtStore {
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStmt(StmtType type1,
                                                                                                   StmtType type2);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetNextStarSameStmt(StmtType type);
+  [[nodiscard]] std::unordered_set<std::string> GetNextStarSameStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStarStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStarStmt(StmtType type1,
                                                                                                       StmtType type2);
