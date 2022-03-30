@@ -20,6 +20,38 @@ std::unordered_set<PqlTokenType>>> QueryValidator::rel_ref_arg_map = {
     {PqlTokenType::AFFECTS_T, std::make_pair(stmt_ref, stmt_ref)}
 };
 
+std::vector<std::unordered_set<PqlTokenType>> QueryValidator::assign_pattern_rules = {
+    std::unordered_set<PqlTokenType>({PqlTokenType::OPEN_PARENTHESIS}),
+    ent_ref,
+    std::unordered_set<PqlTokenType>({PqlTokenType::COMMA}),
+    expression_spec,
+    std::unordered_set<PqlTokenType>({PqlTokenType::CLOSED_PARENTHESIS})
+};
+
+std::vector<std::unordered_set<PqlTokenType>> QueryValidator::while_pattern_rules = {
+    std::unordered_set<PqlTokenType>({PqlTokenType::OPEN_PARENTHESIS}),
+    ent_ref,
+    std::unordered_set<PqlTokenType>({PqlTokenType::COMMA}),
+    std::unordered_set<PqlTokenType>({PqlTokenType::UNDERSCORE}),
+    std::unordered_set<PqlTokenType>({PqlTokenType::CLOSED_PARENTHESIS})
+};
+
+std::vector<std::unordered_set<PqlTokenType>> QueryValidator::if_pattern_rules = {
+    std::unordered_set<PqlTokenType>({PqlTokenType::OPEN_PARENTHESIS}),
+    ent_ref,
+    std::unordered_set<PqlTokenType>({PqlTokenType::COMMA}),
+    std::unordered_set<PqlTokenType>({PqlTokenType::UNDERSCORE}),
+    std::unordered_set<PqlTokenType>({PqlTokenType::COMMA}),
+    std::unordered_set<PqlTokenType>({PqlTokenType::UNDERSCORE}),
+    std::unordered_set<PqlTokenType>({PqlTokenType::CLOSED_PARENTHESIS})
+};
+
+std::unordered_map<PqlTokenType, std::vector<std::unordered_set<PqlTokenType>>> QueryValidator::pattern_arg_map = {
+    {PqlTokenType::ASSIGN, assign_pattern_rules},
+    {PqlTokenType::WHILE, while_pattern_rules},
+    {PqlTokenType::IF, if_pattern_rules},
+};
+
 bool QueryValidator::IsValidSynonym(PqlToken synonym_token) {
   // rel_ref or design_entities can also be synonyms
   return allowed_synonyms.count(synonym_token.type);
@@ -132,46 +164,23 @@ int QueryValidator::ValidateSuchThatClause(int such_that_clause_starting_index) 
 }
 
 int QueryValidator::ValidatePatternArg(int pattern_arg_index) {
-  if (tokens_[pattern_arg_index].type != PqlTokenType::OPEN_PARENTHESIS) {
-    throw INVALID_PATTERN_CLAUSE_FORMAT;
+  for (auto key_value_pair : pattern_arg_map) {
+    int clause_length = key_value_pair.second.size();
+    bool is_valid = true;
+    for (int i = 0; i < clause_length; i++) {
+      if (i == PATTERN_CLAUSE_FIRST_ARG_POSITION) {
+        ReplaceSynonym(pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION);
+      }
+      if (!key_value_pair.second[i].count(tokens_[pattern_arg_index + i].type)) {
+        is_valid = false;
+        break;
+      }
+    }
+    if (is_valid) {
+      return pattern_arg_index + clause_length;
+    }
   }
-  ReplaceSynonym(pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION);
-  if (!ent_ref.count(tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_ARG_POSITION].type)) {
-    throw INVALID_PATTERN_CLAUSE_FORMAT;
-  }
-  if (tokens_[pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_SHORT].type
-      == PqlTokenType::CLOSED_PARENTHESIS) {
-    // while and assign pattern
-    return ValidateAssignWhilePattern(pattern_arg_index);
-  } else if (tokens_[pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_LONG].type
-      == PqlTokenType::CLOSED_PARENTHESIS) {
-    // if pattern
-    return ValidateIfPattern(pattern_arg_index);
-  } else {
-    throw INVALID_PATTERN_CLAUSE_FORMAT;
-  }
-}
-int QueryValidator::ValidateIfPattern(int pattern_arg_index) {
-  if (tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_COMMA_POSITION].type != PqlTokenType::COMMA ||
-      tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_COMMA_POSITION].type != PqlTokenType::COMMA) {
-    throw INVALID_PATTERN_CLAUSE_FORMAT;
-  }
-  if (tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type != PqlTokenType::UNDERSCORE ||
-      tokens_[pattern_arg_index + PATTERN_CLAUSE_THIRD_ARG_POSITION].type != PqlTokenType::UNDERSCORE) {
-    throw INVALID_PATTERN_CLAUSE_FORMAT;
-  }
-  return pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_LONG + 1;
-}
-
-int QueryValidator::ValidateAssignWhilePattern(int pattern_arg_index) {
-  if (tokens_[pattern_arg_index + PATTERN_CLAUSE_FIRST_COMMA_POSITION].type != PqlTokenType::COMMA) {
-    throw INVALID_PATTERN_CLAUSE_FORMAT;
-  }
-  if (!expression_spec.count(tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type) &&
-      tokens_[pattern_arg_index + PATTERN_CLAUSE_SECOND_ARG_POSITION].type != PqlTokenType::UNDERSCORE) {
-    throw INVALID_PATTERN_CLAUSE_FORMAT;
-  }
-  return pattern_arg_index + PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_SHORT + 1;
+  throw INVALID_PATTERN_CLAUSE_FORMAT;
 }
 
 int QueryValidator::ValidatePatternClause(int pattern_clause_starting_index) {

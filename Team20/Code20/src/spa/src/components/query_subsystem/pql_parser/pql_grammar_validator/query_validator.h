@@ -7,6 +7,10 @@ class QueryValidator {
  private:
   std::vector<PqlToken> tokens_;
   static std::unordered_map<PqlTokenType, std::pair<std::unordered_set<PqlTokenType>, std::unordered_set<PqlTokenType>>> rel_ref_arg_map;
+  static std::unordered_map<PqlTokenType, std::vector<std::unordered_set<PqlTokenType>>> pattern_arg_map;
+  static std::vector<std::unordered_set<PqlTokenType>> assign_pattern_rules;
+  static std::vector<std::unordered_set<PqlTokenType>> while_pattern_rules;
+  static std::vector<std::unordered_set<PqlTokenType>> if_pattern_rules;
   bool IsValidSynonym(PqlToken synonym_token);
   bool IsValidRelRefToken(PqlToken rel_ref_token);
   bool IsValidDesignEntity(PqlToken design_entity_token);
@@ -35,15 +39,8 @@ class QueryValidator {
   int RELATIONSHIP_CLAUSE_CLOSED_PARENTHESIS_POSITION = 5;
   int RELATIONSHIP_CLAUSE_SIZE = 6;
   int PATTERN_CLAUSE_SIZE_SHORT = 6;
-  int PATTERN_CLAUSE_SIZE_LONG = 8;
   int PATTERN_CLAUSE_ARG_POSITION = 2;
-  int PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_SHORT = 4;
-  int PATTERN_CLAUSE_CLOSED_PARENTHESIS_POSITION_LONG = 6;
   int PATTERN_CLAUSE_FIRST_ARG_POSITION = 1;
-  int PATTERN_CLAUSE_SECOND_ARG_POSITION = 3;
-  int PATTERN_CLAUSE_THIRD_ARG_POSITION = 5;
-  int PATTERN_CLAUSE_FIRST_COMMA_POSITION = 2;
-  int PATTERN_CLAUSE_SECOND_COMMA_POSITION = 4;
   int WITH_CLAUSE_SIZE = 4;
   int WITH_CLAUSE_FIRST_ARG_POSITION = 1;
   int WITH_CLAUSE_SECOND_ARG_POSITION = 3;
@@ -51,8 +48,6 @@ class QueryValidator {
  public:
   QueryValidator(std::vector<PqlToken>);
   std::vector<PqlToken> CheckValidation();
-  int ValidateAssignWhilePattern(int pattern_arg_index);
-  int ValidateIfPattern(int pattern_arg_index);
 };
 
 #endif
