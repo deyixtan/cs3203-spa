@@ -52,9 +52,9 @@ void DesignExtractor::UpdateCallUses(std::string const &call_stmt,
                                      std::unordered_set<std::string> const &ancestors,
                                      std::unordered_set<std::string> const &callers) {
   for (auto &var : vars) {
-    m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(call_stmt, var);
+    m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(STMT, call_stmt, var); //TODO: Integrate GetTypeOfStmt()
     for (auto &ance : ancestors) {
-      m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(ance, var);
+      m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(STMT, ance, var); //TODO: Integrate GetTypeOfStmt()
     }
     for (auto &caller : callers) {
       m_pkb_client->GetPKB()->GetUsesStore()->AddProcVar(caller, var);
@@ -67,9 +67,9 @@ void DesignExtractor::UpdateCallModifies(std::string const &call_stmt,
                                          std::unordered_set<std::string> const &ancestors,
                                          std::unordered_set<std::string> const &callers) {
   for (auto &var : vars) {
-    m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(call_stmt, var);
+    m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(STMT, call_stmt, var); //TODO: Integrate GetTypeOfStmt()
     for (auto &ance : ancestors) {
-      m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(ance, var);
+      m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(STMT, ance, var); //TODO: Integrate GetTypeOfStmt()
     }
     for (auto &caller : callers) {
       m_pkb_client->GetPKB()->GetModifiesStore()->AddProcVar(caller, var);

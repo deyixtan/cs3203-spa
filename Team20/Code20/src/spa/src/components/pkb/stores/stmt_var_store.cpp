@@ -4,14 +4,11 @@ StmtVarStore::StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::s
     move(stmt_vector)) {}
 
 void StmtVarStore::AddStmtVar(StmtType type, std::string stmt, std::string var) {
+  all_stmt.insert({stmt});
   stmt_var_pairs.emplace(std::pair<std::string, std::string>(stmt, var));
 
   if (!stmt_var_map.emplace(stmt, std::unordered_set<std::string>{var}).second) {
     stmt_var_map.at(stmt).emplace(var);
-  }
-
-  if (!var_stmt_map.emplace(var, std::unordered_set<std::string>{stmt}).second) {
-    var_stmt_map.at(var).emplace(stmt);
   }
 
   if (var_stmt_map.find(var) != var_stmt_map.end()) {
@@ -27,15 +24,16 @@ void StmtVarStore::AddStmtVar(StmtType type, std::string stmt, std::string var) 
 }
 
 void StmtVarStore::AddProcVar(std::string proc, std::string var) {
+  all_proc.insert({proc});
   proc_var_pairs.emplace(std::pair<std::string, std::string>(proc, var));
 
   if (!stmt_var_map.emplace(proc, std::unordered_set<std::string>{var}).second) {
     stmt_var_map.at(proc).emplace(var);
   }
 
-  if (!var_stmt_map.emplace(var, std::unordered_set<std::string>{proc}).second) {
+/*  if (!var_stmt_map.emplace(var, std::unordered_set<std::string>{proc}).second) {
     var_stmt_map.at(var).emplace(proc);
-  }
+  }*/
 }
 
 /*void StmtVarStore::AddVarHelper(std::string index,
@@ -74,6 +72,14 @@ std::unordered_set<std::string> StmtVarStore::GetStmtByVar(StmtType type, std::s
     }
   }
   return {};
+}
+
+std::unordered_set<std::string> StmtVarStore::GetAllStmt() {
+  return all_stmt;
+}
+
+std::unordered_set<std::string> StmtVarStore::GetAllProc() {
+  return all_proc;
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtVarStore::GetAllStmtVar() {

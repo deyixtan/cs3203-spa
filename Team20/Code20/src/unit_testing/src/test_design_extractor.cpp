@@ -56,7 +56,7 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
   REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(STMT) == pkb->GetModifiesStore()->GetAllModStmt(STMT));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("1") == pkb->GetModifiesStore()->GetVarModByStmt("1"));
   REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar("a") == pkb->GetModifiesStore()->GetStmtModByVar("a"));
-  //REQUIRE(test_pkb->GetModifiesStore()->GetProcModByVar("a") == pkb->GetModifiesStore()->GetProcModByVar("a"));
+  //REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar("a") == pkb->GetModifiesStore()->GetStmtModByVar("a"));
   //REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("main") == pkb->GetModifiesStore()->GetVarModByStmt("main"));
   REQUIRE(test_pkb->GetModifiesStore()->GetAllStmtModify() == pkb->GetModifiesStore()->GetAllStmtModify());
   //REQUIRE(test_pkb->GetModifiesStore()->GetAllProcModify() == pkb->GetModifiesStore()->GetAllProcModify());
@@ -111,12 +111,12 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
   REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(STMT) == pkb->GetModifiesStore()->GetAllModStmt(STMT));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("1") == pkb->GetModifiesStore()->GetVarModByStmt("1"));
   REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar("a") == pkb->GetModifiesStore()->GetStmtModByVar("a"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetProcModByVar("a") == pkb->GetModifiesStore()->GetProcModByVar("a"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar("a") == pkb->GetModifiesStore()->GetStmtModByVar("a"));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("main") == pkb->GetModifiesStore()->GetVarModByStmt("main"));
   REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByStmt("2") == pkb->GetUsesStore()->GetVarUsedByStmt("2"));
   REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar("x") == pkb->GetUsesStore()->GetStmtUsedByVar("x"));
   REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByStmt("main") == pkb->GetUsesStore()->GetVarUsedByStmt("main"));
-  REQUIRE(test_pkb->GetUsesStore()->GetProcUsedByVar("x") == pkb->GetUsesStore()->GetProcUsedByVar("x"));
+  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar("x") == pkb->GetUsesStore()->GetStmtUsedByVar("x"));
   REQUIRE(test_pkb->GetUsesStore()->GetAllStmtUsing() == pkb->GetUsesStore()->GetAllStmtUsing());
   REQUIRE(test_pkb->GetUsesStore()->GetAllProcUsing() == pkb->GetUsesStore()->GetAllProcUsing());
   REQUIRE(test_pkb->GetUsesStore()->GetAllUsesStmt(STMT) == pkb->GetUsesStore()->GetAllUsesStmt(STMT));
@@ -169,12 +169,12 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(STMT) == pkb->GetModifiesStore()->GetAllModStmt(STMT));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("1") == pkb->GetModifiesStore()->GetVarModByStmt("1"));
   REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar("x") == pkb->GetModifiesStore()->GetStmtModByVar("x"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetProcModByVar("x") == pkb->GetModifiesStore()->GetProcModByVar("x"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar("x") == pkb->GetModifiesStore()->GetStmtModByVar("x"));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("main") == pkb->GetModifiesStore()->GetVarModByStmt("main"));
   REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByStmt("1") == pkb->GetUsesStore()->GetVarUsedByStmt("1"));
   REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar("x") == pkb->GetUsesStore()->GetStmtUsedByVar("x"));
   REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByStmt("main") == pkb->GetUsesStore()->GetVarUsedByStmt("main"));
-  REQUIRE(test_pkb->GetUsesStore()->GetProcUsedByVar("x") == pkb->GetUsesStore()->GetProcUsedByVar("x"));
+  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar("x") == pkb->GetUsesStore()->GetStmtUsedByVar("x"));
   REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPatternExact("x", "x + 1") == pkb->GetPatternStore()->GetStmtWithPatternExact("x", "x + 1"));
 }
 

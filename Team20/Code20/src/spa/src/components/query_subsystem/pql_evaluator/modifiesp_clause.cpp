@@ -44,7 +44,7 @@ Table ModifiesPClause::HandleSynonymWildcard() {
 }
 
 Table ModifiesPClause::HandleSynonymIdent() {
-  auto single_constraints = pkb->GetModifiesStore()->GetProcModByVar(second_arg.value);
+  auto single_constraints = pkb->GetModifiesStore()->GetStmtModByVar(STMT, second_arg.value); //TODO: Integrate GetTypeOfStmt()
   return {first_arg.value, single_constraints};
 }
 

@@ -324,7 +324,7 @@ TEST_CASE("Get var used by proc (invalid)") {
 TEST_CASE("Get proc used by var (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsesStore()->GetProcUsedByVar("dog");
+  auto actual = pkb->GetUsesStore()->GetStmtUsedByVar("dog");
   auto expected = uses_var_to_proc.at("dog");
 
   REQUIRE(actual == expected);
@@ -333,7 +333,7 @@ TEST_CASE("Get proc used by var (correct)") {
 TEST_CASE("Get proc used by var (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsesStore()->GetProcUsedByVar("horse");
+  auto actual = pkb->GetUsesStore()->GetStmtUsedByVar("horse");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);
@@ -472,7 +472,7 @@ TEST_CASE("Get var modified by proc (invalid)") {
 TEST_CASE("Get proc modified by var (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifiesStore()->GetProcModByVar("dog");
+  auto actual = pkb->GetModifiesStore()->GetStmtModByVar("dog");
   auto expected = mod_var_to_proc.at("dog");
 
   REQUIRE(actual == expected);
@@ -481,7 +481,7 @@ TEST_CASE("Get proc modified by var (correct)") {
 TEST_CASE("Get proc modified by var (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifiesStore()->GetProcModByVar("horse");
+  auto actual = pkb->GetModifiesStore()->GetStmtModByVar("horse");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);

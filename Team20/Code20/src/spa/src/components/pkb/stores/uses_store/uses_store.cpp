@@ -11,6 +11,14 @@ std::unordered_set<std::string> UsesStore::GetStmtUsedByVar(StmtType type, std::
   return GetStmtByVar(type, var);
 }
 
+std::unordered_set<std::string> UsesStore::GetAllStmtUsing() {
+  return GetAllStmt();
+}
+
+std::unordered_set<std::string> UsesStore::GetAllProcUsing() {
+  return GetAllProc();
+}
+
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> UsesStore::GetAllUsesStmt(StmtType type) {
   std::vector<StmtType> supported_types = {STMT, PRINT, WHILE, IF, ASSIGN};
   return Store::GetAllStmt(type, supported_types, GetAllStmtVar(), true);

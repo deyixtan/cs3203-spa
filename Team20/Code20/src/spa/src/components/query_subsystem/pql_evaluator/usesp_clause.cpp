@@ -44,7 +44,7 @@ Table UsesPClause::HandleSynonymWildcard() {
 }
 
 Table UsesPClause::HandleSynonymIdent() {
-  auto single_constraints = pkb->GetUsesStore()->GetProcUsedByVar(second_arg.value);
+  auto single_constraints = pkb->GetUsesStore()->GetStmtUsedByVar(STMT, second_arg.value); //TODO: Integrate GetTypeOfStmt()
   return {first_arg.value, single_constraints};
 }
 

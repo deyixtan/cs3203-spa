@@ -9,6 +9,8 @@ class StmtVarStore : public Store {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
   std::unordered_map<std::string, std::unordered_set<std::string>> stmt_var_map;
   std::unordered_map<std::string, std::unordered_map<StmtType, std::unordered_set<std::string>>> var_stmt_map;
+  std::unordered_set<std::string> all_stmt;
+  std::unordered_set<std::string> all_proc;
 
  public:
   explicit StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
@@ -22,6 +24,8 @@ class StmtVarStore : public Store {
   [[nodiscard]] bool IsStmtVarValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetVarByStmt(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetStmtByVar(StmtType type, std::string const &var);
+  [[nodiscard]] std::unordered_set<std::string> GetAllStmt();
+  [[nodiscard]] std::unordered_set<std::string> GetAllProc();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStmtVar();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllProcVar();
 };
