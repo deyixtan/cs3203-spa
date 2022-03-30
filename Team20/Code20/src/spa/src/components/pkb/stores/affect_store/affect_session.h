@@ -40,14 +40,23 @@ class AffectSession {
  public:
   explicit AffectSession(std::shared_ptr<AffectStore> affects_store);
   [[nodiscard]] bool IsAffected(std::string const &stmt);
+  [[nodiscard]] bool IsAffectedStar(std::string const &stmt);
   [[nodiscard]] bool IsAffecting(std::string const &stmt);
+  [[nodiscard]] bool IsAffectingStar(std::string const &stmt);
   [[nodiscard]] bool DoesAffectExists(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool DoesAffectStarExists(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetAffectedOf(std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetAffectedStarOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetAffectsOf(std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetAffectsStarOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAffectsPairs();
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAffectsStarPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmt(StmtType type);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStarStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmt(StmtType type1,
                                                                                                      StmtType type2);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStarStmt(StmtType type1,
+                                                                                                         StmtType type2);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECT_SESSION_H_

@@ -14,8 +14,26 @@ bool AffectSession::IsAffected(std::string const &stmt) {
   return false;
 }
 
+bool AffectSession::IsAffectedStar(std::string const &stmt) {
+  for (auto pairs : m_all_affects_star_pairs) {
+    if (pairs.second == stmt) {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool AffectSession::IsAffecting(std::string const &stmt) {
   for (auto pairs : m_all_affects_pairs) {
+    if (pairs.first == stmt) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool AffectSession::IsAffectingStar(std::string const &stmt) {
+  for (auto pairs : m_all_affects_star_pairs) {
     if (pairs.first == stmt) {
       return true;
     }
@@ -30,11 +48,25 @@ bool AffectSession::DoesAffectExists(std::pair<std::string, std::string> const &
   return false;
 }
 
+bool AffectSession::DoesAffectStarExists(std::pair<std::string, std::string> const &pair) {
+  if (m_all_affects_star_pairs.find(pair) != m_all_affects_star_pairs.end()) {
+    return true;
+  }
+  return false;
+}
+
 std::unordered_set<std::string> AffectSession::GetAffectedOf(std::string const &stmt) {
   if (m_affects_map.count(stmt) == 0) {
     return {};
   }
   return m_affects_map.at(stmt);
+}
+
+std::unordered_set<std::string> AffectSession::GetAffectedStarOf(std::string const &stmt) {
+  if (m_affects_star_map.count(stmt) == 0) {
+    return {};
+  }
+  return m_affects_star_map.at(stmt);
 }
 
 std::unordered_set<std::string> AffectSession::GetAffectsOf(std::string const &stmt) {
@@ -44,17 +76,37 @@ std::unordered_set<std::string> AffectSession::GetAffectsOf(std::string const &s
   return m_affects_reverse_map.at(stmt);
 }
 
+std::unordered_set<std::string> AffectSession::GetAffectsStarOf(std::string const &stmt) {
+  if (m_affects_star_reverse_map.count(stmt) == 0) {
+    return {};
+  }
+  return m_affects_star_reverse_map.at(stmt);
+}
+
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAffectsPairs() {
   return m_all_affects_pairs;
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAffectsStarPairs() {
+  return m_all_affects_star_pairs;
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAllAffectsStmt(StmtType type) {
   return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_pairs, type);
 }
 
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAllAffectsStarStmt(StmtType type) {
+  return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_star_pairs, type);
+}
+
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAllAffectsStmt(StmtType type1,
                                                                                                    StmtType type2) {
   return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_pairs, type1, type2);
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAllAffectsStarStmt(StmtType type1,
+                                                                                                    StmtType type2) {
+  return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_star_pairs, type1, type2);
 }
 
 // HELPER METHODS
