@@ -60,3 +60,9 @@ std::unordered_map<PqlTokenType, DesignEntityType> token_design_map {
     {PqlTokenType::CONSTANT, DesignEntityType::CONSTANT},
 };
 
+std::unordered_map<PqlTokenType, ResultClauseType> token_result_map {
+    {PqlTokenType::SYNONYM, ResultClauseType::SYNONYM},
+    {PqlTokenType::ATTRIBUTE, ResultClauseType::ATTRIBUTE},
+    {PqlTokenType::BOOLEAN, ResultClauseType::BOOLEAN},
+    {PqlTokenType::TUPLE, ResultClauseType::TUPLE},
+};
