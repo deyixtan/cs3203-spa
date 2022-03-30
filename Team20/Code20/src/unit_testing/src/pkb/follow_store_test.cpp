@@ -1,15 +1,15 @@
-#include "components/pkb/stores/follow_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
 #include "follow_store_stub.h"
 #include "../test_util.h"
 #include "catch.hpp"
 
-FollowStore set_up_follow(int numStmts) {
+FollowsStore set_up_follow(int numStmts) {
   std::vector<std::unordered_set<std::string>> stmt_vector;
   for (int i = 0; i < COUNT; i++) {
     stmt_vector.push_back(std::unordered_set<std::string>());
   }
 
-  FollowStore follow_store = FollowStore(std::make_shared<std::vector<std::unordered_set<std::string>>>(stmt_vector));
+  FollowsStore follow_store = FollowsStore(std::make_shared<std::vector<std::unordered_set<std::string>>>(stmt_vector));
   follow_store.AddFollow(LINE_1, LINE_2);
   follow_store.AddFollow(LINE_2, LINE_3);
   follow_store.AddFollow(LINE_3, LINE_4);
@@ -23,27 +23,27 @@ FollowStore set_up_follow(int numStmts) {
 }
 
 TEST_CASE("Valid follow pair") {
-  FollowStore follow_store = set_up_follow(10);
+  FollowsStore follow_store = set_up_follow(10);
   std::string stmt1 = "2";
   std::string stmt2 = "3";
-  bool actual = follow_store.FollowExists({stmt1, stmt2});
+  bool actual = follow_store.IsFollowValid({stmt1, stmt2});
   bool expected = follow_set.find({stmt1, stmt2}) != follow_set.end();
 
   REQUIRE(actual == expected);
 }
 
 TEST_CASE("Invalid follow pair") {
-  FollowStore follow_store = set_up_follow(10);
+  FollowsStore follow_store = set_up_follow(10);
   std::string stmt1 = "2";
   std::string stmt2 = "5";
-  bool actual = follow_store.FollowExists({stmt1, stmt2});
+  bool actual = follow_store.IsFollowValid({stmt1, stmt2});
   bool expected = follow_set.find({stmt1, stmt2}) != follow_set.end();
 
   REQUIRE(actual == expected);
 }
 
 TEST_CASE("Get follower of a statement (Correct)") {
-  FollowStore follow_store = set_up_follow(10);
+  FollowsStore follow_store = set_up_follow(10);
   std::string num = "2";
   std::string actual = follow_store.GetFollowerOf(num);
   std::string expected = rs_map.at(num).follower;
@@ -52,7 +52,7 @@ TEST_CASE("Get follower of a statement (Correct)") {
 }
 
 TEST_CASE("Get follower of a statement (Wrong)") {
-  FollowStore follow_store = set_up_follow(10);
+  FollowsStore follow_store = set_up_follow(10);
   std::string num = "2";
   std::string actual = follow_store.GetFollowerOf(num);
   std::string expected = rs_map.at("8").follower;
@@ -61,7 +61,7 @@ TEST_CASE("Get follower of a statement (Wrong)") {
 }
 
 TEST_CASE("Get following of a statement (Correct)") {
-  FollowStore follow_store = set_up_follow(10);
+  FollowsStore follow_store = set_up_follow(10);
   std::string num = "5";
   std::string actual = follow_store.GetFollowingOf(num);
   std::string expected = rs_map.at(num).following;
@@ -70,7 +70,7 @@ TEST_CASE("Get following of a statement (Correct)") {
 }
 
 TEST_CASE("Get following of a statement (Wrong)") {
-  FollowStore follow_store = set_up_follow(10);
+  FollowsStore follow_store = set_up_follow(10);
   std::string num = "5";
   std::string actual = follow_store.GetFollowingOf(num);
   std::string expected = rs_map.at("8").following;
