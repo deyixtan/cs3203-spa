@@ -49,12 +49,12 @@ Table ModifiesPClause::HandleSynonymIdent() {
 }
 
 Table ModifiesPClause::HandleIdentSynonym() {
-  auto single_constraints = pkb->GetModifiesStore()->GetVarModByProc(first_arg.value);
+  auto single_constraints = pkb->GetModifiesStore()->GetVarModByStmt(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table ModifiesPClause::HandleIdentWildcard() {
-  bool is_empty = pkb->GetModifiesStore()->GetVarModByProc(first_arg.value).empty();
+  bool is_empty = pkb->GetModifiesStore()->GetVarModByStmt(first_arg.value).empty();
   Table table;
   if (is_empty) {
     table.ToggleFalseClause();
@@ -64,7 +64,7 @@ Table ModifiesPClause::HandleIdentWildcard() {
 
 Table ModifiesPClause::HandleIdentIdent() {
   std::pair arg_pair(first_arg.value, second_arg.value);
-  bool is_empty = !pkb->GetModifiesStore()->IsProcVarValid(arg_pair);
+  bool is_empty = !pkb->GetModifiesStore()->IsStmtVarValid(arg_pair);
   Table table;
   if (is_empty) {
     table.ToggleFalseClause();

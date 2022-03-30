@@ -7,24 +7,8 @@ std::unordered_set<std::string> ModifiesStore::GetVarModByStmt(std::string const
   return GetVarByStmt(stmt);
 }
 
-std::unordered_set<std::string> ModifiesStore::GetStmtModByVar(std::string const &var) {
-  return GetStmtByVar(var);
-}
-
-std::unordered_set<std::string> ModifiesStore::GetVarModByProc(std::string const &proc) {
-  return GetVarByProc(proc);
-}
-
-std::unordered_set<std::string> ModifiesStore::GetProcModByVar(std::string const &var) {
-  return GetProcByVar(var);
-}
-
-std::unordered_set<std::string> ModifiesStore::GetAllStmtModify() {
-  return GetAllStmt();
-}
-
-std::unordered_set<std::string> ModifiesStore::GetAllProcModify() {
-  return GetAllProc();
+std::unordered_set<std::string> ModifiesStore::GetStmtModByVar(StmtType type, std::string const &var) {
+  return GetStmtByVar(type, var);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ModifiesStore::GetAllModStmt(StmtType type) {

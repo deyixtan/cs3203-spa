@@ -306,7 +306,7 @@ TEST_CASE("Get stmt used by var (invalid)") {
 TEST_CASE("Get var used by proc (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsesStore()->GetVarUsedByProc("main");
+  auto actual = pkb->GetUsesStore()->GetVarUsedByStmt("main");
   auto expected = uses_proc_to_var.at("main");
 
   REQUIRE(actual == expected);
@@ -315,7 +315,7 @@ TEST_CASE("Get var used by proc (correct)") {
 TEST_CASE("Get var used by proc (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsesStore()->GetVarUsedByProc("foobar");
+  auto actual = pkb->GetUsesStore()->GetVarUsedByStmt("foobar");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);
@@ -378,7 +378,7 @@ TEST_CASE("Get all proc using (correct)") {
 TEST_CASE("Check if usage proc-var pair Valid (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsesStore()->IsProcVarValid({"funcX", "c"});
+  auto actual = pkb->GetUsesStore()->IsStmtVarValid({"funcX", "c"});
   auto expected = uses_proc_var_pairs.find({"funcX", "c"}) != uses_proc_var_pairs.end();
 
   REQUIRE(actual == expected);
@@ -387,7 +387,7 @@ TEST_CASE("Check if usage proc-var pair Valid (correct)") {
 TEST_CASE("Check if usage proc-var pair Valid (wrong)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsesStore()->IsProcVarValid({"funcA", "2"});
+  auto actual = pkb->GetUsesStore()->IsStmtVarValid({"funcA", "2"});
   auto expected = uses_proc_var_pairs.find({"funcA", "2"}) != uses_proc_var_pairs.end();
 
   REQUIRE(actual == false);
@@ -454,7 +454,7 @@ TEST_CASE("Get stmt modified by var (invalid)") {
 TEST_CASE("Get var modified by proc (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifiesStore()->GetVarModByProc("main");
+  auto actual = pkb->GetModifiesStore()->GetVarModByStmt("main");
   auto expected = mod_proc_to_var.at("main");
 
   REQUIRE(actual == expected);
@@ -463,7 +463,7 @@ TEST_CASE("Get var modified by proc (correct)") {
 TEST_CASE("Get var modified by proc (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifiesStore()->GetVarModByProc("foobar");
+  auto actual = pkb->GetModifiesStore()->GetVarModByStmt("foobar");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);
@@ -526,7 +526,7 @@ TEST_CASE("Get all proc modifies (correct)") {
 TEST_CASE("Check if modifies proc-var pair Valid (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifiesStore()->IsProcVarValid({"main", "dragon"});
+  auto actual = pkb->GetModifiesStore()->IsStmtVarValid({"main", "dragon"});
   auto expected = mod_proc_var_pairs.find({"main", "dragon"}) != mod_proc_var_pairs.end();
 
   REQUIRE(actual == expected);
@@ -535,7 +535,7 @@ TEST_CASE("Check if modifies proc-var pair Valid (correct)") {
 TEST_CASE("Check if modifies proc-var pair Valid (wrong)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifiesStore()->IsProcVarValid({"funcA", "2"});
+  auto actual = pkb->GetModifiesStore()->IsStmtVarValid({"funcA", "2"});
   auto expected = mod_proc_var_pairs.find({"funcA", "2"}) != mod_proc_var_pairs.end();
 
   REQUIRE(actual == false);
