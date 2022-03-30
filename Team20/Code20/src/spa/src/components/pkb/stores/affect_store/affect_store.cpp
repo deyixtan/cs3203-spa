@@ -10,10 +10,20 @@ void AffectStore::AddProgramCfg(std::shared_ptr<Cfg> program_cfg) {
   m_program_cfg = program_cfg;
 }
 
-std::shared_ptr<AffectSession> AffectStore::ComputeAffect() {
-  std::shared_ptr<AffectSession>
-      affect_session = std::make_shared<AffectSession>(std::make_shared<AffectStore>(*this));
-  return affect_session;
+bool AffectStore::DoesAffectSessionExist() {
+  return m_affect_session != nullptr;
+}
+
+std::shared_ptr<AffectSession> AffectStore::GetAffectSession() {
+  return m_affect_session;
+}
+
+void AffectStore::ComputeAffectSession() {
+  m_affect_session = std::make_shared<AffectSession>(std::make_shared<AffectStore>(*this));
+}
+
+void AffectStore::ClearAffectSession() {
+  m_affect_session = nullptr;
 }
 
 std::shared_ptr<Cfg> AffectStore::GetProgramCfg() {
