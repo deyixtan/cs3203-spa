@@ -1,13 +1,11 @@
 #include "design_extractor.h"
-#include "../call_graph/call_graph.h"
+#include "../types/call_graph/call_graph.h"
 #include "../types/ast/node_program.h"
 #include "../types/ast/node_procedure.h"
 #include "../types/ast/node_statement_list.h"
 #include "../types/ast/node_statement.h"
 #include "../types/ast/node_conditional_expression.h"
 #include "../types/ast/node_variable.h"
-
-#include "../types/cfg/cfg_node.h"
 #include "../types/ast/node_constant.h"
 
 DesignExtractor::DesignExtractor(std::shared_ptr<PkbClient> pkb_client)
@@ -27,7 +25,7 @@ std::vector<std::string> &DesignExtractor::GetVisited() {
   return m_visited;
 }
 
-void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> &node) {
+void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node) {
   Visit(std::move(node));
   std::vector<std::string> topo_order = m_call_graph->TopoSort();
   for (int i = topo_order.size() - 1; i >= 0; i--) {
@@ -35,9 +33,9 @@ void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> &nod
   }
 }
 
-void DesignExtractor::UpdateCallUsesModifies(std::string &proc) {
-  std::unordered_set<std::string> uses_vars = m_pkb_client->GetPKB()->GetUsageStore()->GetVarUsedByProc(proc);
-  std::unordered_set<std::string> mod_vars = m_pkb_client->GetPKB()->GetModifyStore()->GetVarModByProc(proc);
+void DesignExtractor::UpdateCallUsesModifies(std::string proc) {
+  std::unordered_set<std::string> uses_vars = m_pkb_client->GetPKB()->GetUsesStore()->GetVarUsedByProc(proc);
+  std::unordered_set<std::string> mod_vars = m_pkb_client->GetPKB()->GetModifiesStore()->GetVarModByProc(proc);
   std::unordered_set<std::string> call_stmts = m_pkb_client->GetPKB()->GetCallStore()->GetCallStmtOf(proc);
   std::unordered_set<std::string> callers = m_pkb_client->GetPKB()->GetCallStore()->GetCallersOf(proc);
 
@@ -54,12 +52,12 @@ void DesignExtractor::UpdateCallUses(std::string const &call_stmt,
                                      std::unordered_set<std::string> const &ancestors,
                                      std::unordered_set<std::string> const &callers) {
   for (auto &var : vars) {
-    m_pkb_client->GetPKB()->GetUsageStore()->AddStmtVar(call_stmt, var);
+    m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(call_stmt, var);
     for (auto &ance : ancestors) {
-      m_pkb_client->GetPKB()->GetUsageStore()->AddStmtVar(ance, var);
+      m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(ance, var);
     }
     for (auto &caller : callers) {
-      m_pkb_client->GetPKB()->GetUsageStore()->AddProcVar(caller, var);
+      m_pkb_client->GetPKB()->GetUsesStore()->AddProcVar(caller, var);
     }
   }
 }
@@ -69,24 +67,24 @@ void DesignExtractor::UpdateCallModifies(std::string const &call_stmt,
                                          std::unordered_set<std::string> const &ancestors,
                                          std::unordered_set<std::string> const &callers) {
   for (auto &var : vars) {
-    m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(call_stmt, var);
+    m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(call_stmt, var);
     for (auto &ance : ancestors) {
-      m_pkb_client->GetPKB()->GetModifyStore()->AddStmtVar(ance, var);
+      m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(ance, var);
     }
     for (auto &caller : callers) {
-      m_pkb_client->GetPKB()->GetModifyStore()->AddProcVar(caller, var);
+      m_pkb_client->GetPKB()->GetModifiesStore()->AddProcVar(caller, var);
     }
 
   }
 }
 
-void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> &root) {
+void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
   std::stack<std::shared_ptr<CfgNode>> node_stack;
   std::vector<Statement> prev_stmts;
   std::unordered_set<std::shared_ptr<CfgNode>> visited;
   std::unordered_map<std::string, std::unordered_set<std::string>> next_map;
   std::unordered_map<std::string, std::shared_ptr<CfgNode>> prog = root->GetCfgMap();
-  for (const auto& proc : prog) {
+  for (auto proc : prog) {
     std::shared_ptr<CfgNode> curr_proc = proc.second; // root node of cfg
     CfgProcessHandler(curr_proc, node_stack, prev_stmts, visited, next_map);
   }
@@ -180,40 +178,40 @@ void DesignExtractor::NextNodeHandler(std::shared_ptr<CfgNode> &desc,
   }
 }
 
-void DesignExtractor::Visit(std::shared_ptr<ProgramNode> &node) {
+void DesignExtractor::Visit(std::shared_ptr<ProgramNode> node) {
   node->Accept(this);
 }
 
-void DesignExtractor::Visit(std::shared_ptr<ProcedureNode> &node) {
+void DesignExtractor::Visit(std::shared_ptr<ProcedureNode> node) {
   node->Accept(this);
 }
 
-void DesignExtractor::Visit(std::shared_ptr<StatementListNode> &node, std::string &proc_name) {
+void DesignExtractor::Visit(std::shared_ptr<StatementListNode> node, std::string proc_name) {
   node->Accept(this, proc_name);
 }
 
-void DesignExtractor::Visit(std::shared_ptr<StatementNode> &node, std::string &proc_name) {
+void DesignExtractor::Visit(std::shared_ptr<StatementNode> node, std::string proc_name) {
   // runtime polymorphism decides which specific StatementNode's Accept method to invoke
   node->Accept(this, proc_name);
 }
 
-std::string DesignExtractor::Visit(std::shared_ptr<ExpressionNode> &node, std::string &proc_name, bool &is_uses) {
+std::string DesignExtractor::Visit(std::shared_ptr<ExpressionNode> node, std::string proc_name, bool is_uses) {
   // runtime polymorphism decides which specific ExpressionNode's Accept method to invoke
   return node->Accept(this, proc_name, is_uses);
 }
 
-std::string DesignExtractor::Visit(std::shared_ptr<ConditionalExpressionNode> &node,
-                                   std::string &proc_name,
-                                   bool &is_uses) {
+std::string DesignExtractor::Visit(std::shared_ptr<ConditionalExpressionNode> node,
+                                   std::string proc_name,
+                                   bool is_uses) {
   // runtime polymorphism decides which specific ConditionalExpressionNode's Accept method to invoke
   return node->Accept(this, proc_name, is_uses);
 }
 
-void DesignExtractor::Visit(std::shared_ptr<VariableNode> &node, std::string &proc_name, bool &is_uses) {
+void DesignExtractor::Visit(std::shared_ptr<VariableNode> node, std::string proc_name, bool is_uses) {
   node->Accept(this, proc_name, is_uses);
 }
 
-void DesignExtractor::Visit(std::shared_ptr<ConstantNode> &node, std::string &proc_name, bool &is_uses) {
+void DesignExtractor::Visit(std::shared_ptr<ConstantNode> node, std::string proc_name, bool is_uses) {
   // ignores is_uses
   node->Accept(this, proc_name, is_uses);
 }

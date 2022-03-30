@@ -8,22 +8,15 @@ ParsedQueryBuilder::ParsedQueryBuilder(std::vector<PqlToken> tokens) : tokens_(t
 ResultClause ParsedQueryBuilder::BuildResultClause(PqlToken& result_clause_token) {
   ResultClause result_clause;
   std::vector<PqlToken> values;
-  if (result_clause_token.type == PqlTokenType::SYNONYM) {
-    values.push_back(result_clause_token);
-    result_clause = ResultClause(ResultClauseType::SYNONYM, values);
-  } else if (result_clause_token.type == PqlTokenType::ATTRIBUTE) {
-    values.push_back(result_clause_token);
-    result_clause = ResultClause(ResultClauseType::ATTRIBUTE, values);
-  } else if (result_clause_token.type == PqlTokenType::BOOLEAN) {
-    values.push_back(result_clause_token);
-    result_clause = ResultClause(ResultClauseType::BOOLEAN, values);
-  } else if (result_clause_token.type == PqlTokenType::TUPLE) {
+  if (result_clause_token.type == PqlTokenType::TUPLE) {
     SplitTuple(result_clause_token, values);
     result_clause = ResultClause(ResultClauseType::TUPLE, values);
+  } else if(token_result_map.find(result_clause_token.type) != token_result_map.end()) {
+    values.push_back(result_clause_token);
+    result_clause = ResultClause(token_result_map[result_clause_token.type], values);
   } else {
     throw INVALID_SELECT_CLAUSE_FORMAT;
   }
-
   return result_clause;
 }
 
