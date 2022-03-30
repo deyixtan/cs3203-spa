@@ -156,16 +156,16 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::Ge
   return res;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetNextStarSameStmt(StmtType type) {
+std::unordered_set<std::string> NextStore::GetNextStarSameStmt(StmtType type) {
   std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_pairs = GetAllNextStarStmt(type, type);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> same_synonym_pairs;
+  std::unordered_set<std::string> same_synonym_set;
   for (auto pair : all_pairs) {
     if (pair.first == pair.second) {
-      same_synonym_pairs.insert(pair);
+      same_synonym_set.insert(pair.first);
     }
   }
-  return same_synonym_pairs;
+  return same_synonym_set;
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStmt(StmtType type) {
