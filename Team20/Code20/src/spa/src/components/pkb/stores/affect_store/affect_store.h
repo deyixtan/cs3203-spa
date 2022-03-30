@@ -18,13 +18,17 @@ class AffectStore : public Store {
   std::shared_ptr<Cfg> m_program_cfg;
   std::shared_ptr<ModifiesStore> m_modify_store;
   std::shared_ptr<UsesStore> m_usage_store;
+  std::shared_ptr<AffectSession> m_affect_session;
 
  public:
   explicit AffectStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                        std::shared_ptr<ModifiesStore> modify_store,
                        std::shared_ptr<UsesStore> usage_store);
   void AddProgramCfg(std::shared_ptr<Cfg> program_cfg);
-  std::shared_ptr<AffectSession> ComputeAffect();
+  [[nodiscard]] bool DoesAffectSessionExist();
+  [[nodiscard]] std::shared_ptr<AffectSession> GetAffectSession();
+  void ComputeAffectSession();
+  void ClearAffectSession();
   [[nodiscard]] std::shared_ptr<Cfg> GetProgramCfg();
   [[nodiscard]] std::shared_ptr<ModifiesStore> GetModifyStore();
   [[nodiscard]] std::shared_ptr<UsesStore> GetUsageStore();
