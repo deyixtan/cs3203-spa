@@ -22,6 +22,16 @@ enum StmtType {
   COUNT = CALL + 1 // get max value of StmtType
 };
 
+enum StoreType {
+  USES,
+  MODIFIES,
+  FOLLOWS,
+  PARENT,
+  CALLS,
+  NEXT,
+  AFFECTS
+};
+
 class Store {
  protected:
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;

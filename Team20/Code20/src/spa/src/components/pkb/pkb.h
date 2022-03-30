@@ -6,25 +6,28 @@
 #include <unordered_set>
 #include <vector>
 
-#include "stores/usage_store.h"
-#include "stores/modify_store.h"
-#include "stores/follow_store.h"
-#include "stores/parent_store.h"
-#include "stores/call_store.h"
-#include "stores/pattern_store.h"
-#include "stores/next_store.h"
-#include "expression_tree.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
+#include "components/pkb/stores/call_store/call_store.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
+#include "components/pkb/stores/next_store/next_store.h"
+#include "components/pkb/stores/affect_store/affect_store.h"
+#include "components/pkb/stores/pattern_store/expression_tree/expression_tree.h"
 #include "../source_subsystem/types/cfg/cfg.h"
 
 class PKB {
  private:
-  std::shared_ptr<FollowStore> m_follow_store;
+  std::shared_ptr<FollowsStore> m_follow_store;
   std::shared_ptr<ParentStore> m_parent_store;
-  std::shared_ptr<UsageStore> m_usage_store;
-  std::shared_ptr<ModifyStore> m_modify_store;
+  std::shared_ptr<UsesStore> m_usage_store;
+  std::shared_ptr<ModifiesStore> m_modify_store;
   std::shared_ptr<CallStore> m_call_store;
   std::shared_ptr<PatternStore> m_pattern_store;
   std::shared_ptr<NextStore> m_next_store;
+  std::shared_ptr<AffectStore> m_affect_store;
+
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_name_vector;
   std::shared_ptr<std::vector<std::unordered_map<std::string, std::unordered_set<std::string>>>> m_name_to_stmt;
@@ -44,12 +47,13 @@ class PKB {
   [[nodiscard]] std::unordered_set<std::string> GetStmtByName(StmtType type, std::string name);
   [[nodiscard]] std::string GetNameByStmt(StmtType type, std::string stmt);
   [[nodiscard]] std::shared_ptr<CallStore> GetCallStore();
-  [[nodiscard]] std::shared_ptr<FollowStore> GetFollowStore();
-  [[nodiscard]] std::shared_ptr<ModifyStore> GetModifyStore();
+  [[nodiscard]] std::shared_ptr<FollowsStore> GetFollowsStore();
+  [[nodiscard]] std::shared_ptr<ModifiesStore> GetModifiesStore();
   [[nodiscard]] std::shared_ptr<ParentStore> GetParentStore();
-  [[nodiscard]] std::shared_ptr<UsageStore> GetUsageStore();
+  [[nodiscard]] std::shared_ptr<UsesStore> GetUsesStore();
   [[nodiscard]] std::shared_ptr<PatternStore> GetPatternStore();
   [[nodiscard]] std::shared_ptr<NextStore> GetNextStore();
+  [[nodiscard]] std::shared_ptr<AffectStore> GetAffectStore();
   [[nodiscard]] std::shared_ptr<Cfg> GetProgCfg();
 };
 
