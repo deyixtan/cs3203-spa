@@ -5,6 +5,7 @@ namespace pql_evaluator {
 void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &results) {
   pql::Table table;
   auto clauses = ExtractClauses(query);
+  pkb->GetAffectStore()->ComputeAffectSession();
   // extract clause -> optimizer -> sort clauses?
   // or insert a new sorter in here after extracting?
   while (!clauses.empty()) {
@@ -49,6 +50,8 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
       results.emplace_back(result);
     }
   }
+
+  pkb->GetAffectStore()->ClearAffectSession();
 }
 
 std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query) {
