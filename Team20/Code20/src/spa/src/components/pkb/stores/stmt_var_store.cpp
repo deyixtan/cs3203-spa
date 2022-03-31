@@ -3,7 +3,6 @@
 StmtVarStore::StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(
     move(stmt_vector)) {}
 
-#include <iostream>
 void StmtVarStore::AddStmtVar(StmtType type, std::string stmt, std::string var) {
   if (type == PROC) {
     all_proc.insert({stmt});
@@ -61,7 +60,10 @@ std::unordered_set<std::string> StmtVarStore::GetStmtByVar(StmtType type, std::s
   }
 
   if (is_present && type == STMT) {
-    for ()
+    std::unordered_map<StmtType, std::unordered_set<std::string>> set = var_stmt_map.at(var);
+    for (auto &i : set) {
+
+    }
   }
 
   if (is_present && type != STMT) {
