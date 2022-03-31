@@ -7,9 +7,17 @@ StmtStmtStore::StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std:
 void StmtStmtStore::AddUpperLower(StoreType store_type,
                                   std::string const &upper,
                                   std::string const &lower) {
+  StmtType type1, type2;
 
-  StmtType type1 = m_stmt_type->at(upper);
-  StmtType type2 = m_stmt_type->at(lower);
+  if (store_type == CALLS) {
+    type1 = CALL;
+    type2 = CALL;
+  }
+
+  if (store_type == PARENT) {
+    type1 = m_stmt_type->at(upper);
+    type2 = m_stmt_type->at(lower);
+  }
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
   set.insert(std::pair<std::string, std::string>(upper, lower));
@@ -38,13 +46,22 @@ void StmtStmtStore::AddUpperLowerStar(StoreType store_type,
                                       std::string const &upper,
                                       std::string const &lower,
                                       std::vector<std::string> const &visited) {
-  StmtType type1 = m_stmt_type->at(upper);
-  StmtType type2 = m_stmt_type->at(lower);
-
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
-  set.insert(std::pair<std::string, std::string>(upper, lower));
+
+  StmtType type1, type2;
+
+  if (store_type == CALLS) {
+    type1 = CALL;
+    type2 = CALL;
+  }
+
+  if (store_type == PARENT) {
+    type2 = m_stmt_type->at(lower);
+  }
 
   if (store_type != PARENT) {
+    set.insert(std::pair<std::string, std::string>(upper, lower));
+
     if (star_type_pair_map.find(type1) != star_type_pair_map.end()) {
       if (star_type_pair_map.at(type1).find(type2) != star_type_pair_map.at(type1).end()) {
         star_type_pair_map.at(type1).at(type2).emplace(std::pair<std::string, std::string>(upper, lower));

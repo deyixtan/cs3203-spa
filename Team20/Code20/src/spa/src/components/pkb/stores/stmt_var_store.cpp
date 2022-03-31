@@ -5,8 +5,13 @@ StmtVarStore::StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::s
     move(stmt_vector), move(stmt_type)) {}
 
 void StmtVarStore::AddStmtVar(std::string stmt, std::string var) {
-  //TODO: Add check to verify if stmt is a stmt_no or procedure name
-  StmtType type = m_stmt_type->at(stmt);
+  StmtType type;
+
+  if (isalpha(stmt.at(0))) {
+    type = PROC;
+  } else {
+    type = m_stmt_type->at(stmt);
+  }
 
   if (type == PROC) {
     all_proc.insert({stmt});
