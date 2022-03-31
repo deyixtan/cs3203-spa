@@ -20,6 +20,7 @@ class QueryEvaluator {
  public:
   explicit QueryEvaluator(PKB* pkb): pkb{pkb} {};
   void Evaluate(ParsedQuery&, std::list<std::string>&);
+  void WipeCache();
 
  private:
   std::unordered_set<std::string> result;
