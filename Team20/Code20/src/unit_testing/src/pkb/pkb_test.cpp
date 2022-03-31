@@ -348,15 +348,6 @@ TEST_CASE("Get all usage proc-var pairs") {
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Get all usage stmt-var pairs") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetUsesStore()->GetAllStmtVar();
-  auto expected = uses_stmt_var_pairs;
-
-  REQUIRE(actual == expected);
-}
-
 TEST_CASE("Get all stmt using (correct)") {
   PKB *pkb = set_up_pkb();
   
@@ -492,15 +483,6 @@ TEST_CASE("Get all modifies proc-var pairs") {
   
   auto actual = pkb->GetModifiesStore()->GetAllProcVar();
   auto expected = mod_proc_var_pairs;
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Get all modifies stmt-var pairs") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetModifiesStore()->GetAllStmtVar();
-  auto expected = mod_stmt_var_pairs;
 
   REQUIRE(actual == expected);
 }

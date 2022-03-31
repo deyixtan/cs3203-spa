@@ -34,7 +34,7 @@ Table pql::ModifiesPClause::Execute() {
 }
 
 Table ModifiesPClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetModifiesStore()->GetAllProcVar();
+  auto pair_constraints = pkb->GetModifiesStore()->GetAllModStmt(PROC);
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
