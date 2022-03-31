@@ -52,7 +52,8 @@ bool clause_util::IsFirstArgStmtRelationship(const PqlToken &first_arg,
           GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::READ ||
           GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::PRINT ||
           GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::WHILE ||
-          GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::IF);
+          GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::IF ||
+          GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::CALL);
 }
 
 bool clause_util::IsArgStmtSynonym(const PqlToken &arg,
