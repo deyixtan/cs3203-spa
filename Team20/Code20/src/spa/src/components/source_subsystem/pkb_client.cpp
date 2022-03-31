@@ -70,6 +70,10 @@ void PkbClient::PopulateStmt(std::string stmt) {
   pkb->AddStmt(stmt, STMT);
 }
 
+void PkbClient::PopulateTypeOfStmt(std::string stmt, StmtType type) {
+  pkb->AddTypeOfStmt(stmt, type);
+}
+
 void PkbClient::PopulateName(std::string name, StmtType type) {
   pkb->AddName(name, type);
 }
