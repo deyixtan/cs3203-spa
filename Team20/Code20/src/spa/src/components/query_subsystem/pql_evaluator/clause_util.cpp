@@ -41,8 +41,7 @@ DesignEntityType clause_util::GetSynonymDesignEntity(const PqlToken &arg,
 bool clause_util::IsFirstArgProcRelationship(const PqlToken &first_arg,
                                              const std::unordered_map<std::string, DesignEntityType> &declarations) {
   return IsArgSynonym(first_arg) &&
-      (GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::PROCEDURE ||
-          GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::CALL);
+      GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::PROCEDURE;
 }
 
 bool clause_util::IsFirstArgStmtRelationship(const PqlToken &first_arg,
@@ -53,7 +52,8 @@ bool clause_util::IsFirstArgStmtRelationship(const PqlToken &first_arg,
           GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::READ ||
           GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::PRINT ||
           GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::WHILE ||
-          GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::IF);
+          GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::IF ||
+          GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::CALL);
 }
 
 bool clause_util::IsArgStmtSynonym(const PqlToken &arg,

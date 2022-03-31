@@ -28,6 +28,6 @@ std::unordered_set<std::string> ModifiesStore::GetAllProcModify() {
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ModifiesStore::GetAllModStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, WHILE, IF, ASSIGN};
+  std::vector<StmtType> supported_types = {STMT, READ, WHILE, IF, ASSIGN, CALL};
   return Store::GetAllStmt(type, supported_types, GetAllStmtVar(), true);
 }
