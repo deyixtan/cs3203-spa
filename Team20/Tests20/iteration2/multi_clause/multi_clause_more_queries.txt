@@ -631,7 +631,7 @@ y, breakfast, cat, coffee, dog, eggs, pepper, tea
 127. Get v from multi clauses on Uses and Next*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v, v2;
 Select v such that Next*(w, pn) and Next*(ifs, s) and Uses(pn, v)
-y
+y, breakfast, cat, dog, eggs, pepper, tea
 5000
 128. Get v from multi clauses on Uses and Next*
 stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v, v2;
@@ -644,7 +644,7 @@ Select w such that Next*(ifs, pn) such that Next*(ifs, w) and Uses(w,"tea") such
 21,14
 5000
 130. Get w from multi clauses on Uses and Parent* and Modifies
-stmt s; procedure p; assign a; print pn; read r; if ifs; while w; constant c; call cl; variable v, v2;
+stmt s; procedure p; assign a; print pn; read r; if ifs, ifs2; while w; constant c; call cl; variable v, v2;
 Select w such that Parent*(ifs, w) and Parent*(ifs2, ifs) and Uses(w,v) and Modifies(ifs, v)
 99, 72
 5000
@@ -686,7 +686,7 @@ Select w such that Follows*(w, pn) and Modifies(w, _) and Parent*(ifs, w) and Us
 138. Get v from multi clauses on Follows and Parent* and Modifies and Uses
 stmt s; procedure p; assign a, a1; print pn; read r; if ifs, ifs2; while w, w1; constant c; call cl; variable v, v2;
 Select v such that Follows(pn, cl) and Modifies(cl, _) and Parent*(ifs, w) and Uses(w,v)
-beans, breakfast, tea, bacon, salt, eggs, coffee, pepper, dog
+beans, breakfast, tea, bacon, salt, eggs, coffee, pepper, dog, hell
 5000
 139. Get s from multi clauses on Follows and Parent and Modifies and Uses
 stmt s; procedure p; assign a, a1; print pn; read r; if ifs, ifs2; while w, w1; constant c; call cl; variable v, v2;
@@ -873,7 +873,42 @@ stmt s, s1; procedure p; assign a, a1, a2; print pn; read r; if ifs, ifs2; while
 Select p such that Modifies(p, _) and Next(_, _) and Uses(p, _) such that Follows(_, _) and Calls(_, _)
 Cow, Brown, How, Now, Farm, Pyramid
 5000
-176. Get p from multi clauses of Next with wildcard
+176. Get p from multi clauses of Modifies with wildcard
+stmt s, s1; procedure p; assign a, a1, a2; print pn; read r; if ifs, ifs2; while w; constant c; call cl; variable v, v1, v2;
+Select p such that Modifies(p, _) and Modifies(r, _) and Modifies(s, _) such that Modifies(cl, _) and Modifies(w, _)
+Cow, Brown, How, Now, Farm, Pyramid
+5000
+177. Get p from multi clauses of Uses with wildcard
+stmt s, s1; procedure p; assign a, a1, a2; print pn; read r; if ifs, ifs2; while w; constant c; call cl; variable v, v1, v2;
+Select p such that Uses(p, _) and Uses(pn, _) and Uses(s, _) such that Uses(cl, _) and Uses(w, _)
+Cow, Brown, How, Now, Farm, Pyramid
+5000
+178. Get p from multi clauses of Parent with wildcard
+stmt s, s1; procedure p; assign a, a1, a2; print pn; read r; if ifs, ifs2; while w; constant c; call cl; variable v, v1, v2;
+Select p such that Parent(w, _) and Parent(_, pn) and Parent(s, _) such that Parent(_, s1) and Parent(_, _)
+Cow, Brown, How, Now, Farm, Pyramid
+5000
+179. Get p from multi clauses of Parent
+stmt s, s1; procedure p; assign a, a1, a2; print pn; read r; if ifs, ifs2; while w; constant c; call cl; variable v, v1, v2;
+Select p such that Parent(w, ifs) and Parent(ifs, ifs2) and Parent(s, pn) such that Parent(s1, r) and Parent(ifs, a)
+Cow, Brown, How, Now, Farm, Pyramid
+5000
+180. Get p from multi clauses of Follows with wildcard
+stmt s, s1; procedure p; assign a, a1, a2; print pn; read r; if ifs, ifs2; while w; constant c; call cl; variable v, v1, v2;
+Select p such that Follows(w, _) and Follows(_, pn) and Follows(s, _) such that Follows(_, s1) and Follows(_, _)
+Cow, Brown, How, Now, Farm, Pyramid
+5000
+181. Get p from multi clauses of Follows
+stmt s, s1; procedure p; assign a, a1, a2; print pn; read r; if ifs, ifs2; while w; constant c; call cl; variable v, v1, v2;
+Select p such that Follows(a, a1) and Follows(a1, a2) and Follows(a2, pn) such that Follows(pn, s1) and Follows(s1, s)
+Cow, Brown, How, Now, Farm, Pyramid
+5000
+182. Get p from multi clauses of Next
+stmt s, s1; procedure p; assign a, a1, a2; print pn; read r; if ifs, ifs2; while w; constant c; call cl; variable v, v1, v2;
+Select p such that Next(a, a1) and Next(a1, a2) and Next(a2, pn) such that Next(pn, s1) and Next(s1, s)
+Cow, Brown, How, Now, Farm, Pyramid
+5000
+183. Get p from multi clauses of Next with wildcard
 stmt s, s1, s2, s3; procedure p; assign a, a1, a2; print pn; read r; if ifs, ifs2; while w; constant c; call cl; variable v, v1, v2;
 Select p such that Next(s, _) and Next(s1, _) and Next(s2, _) such that Next(s3, _)
 Cow, Brown, How, Now, Farm, Pyramid
