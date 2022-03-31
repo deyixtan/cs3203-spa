@@ -36,6 +36,7 @@ class PkbClient {
                     std::string &rhs_expr);
 
   void PopulateStmt(std::string stmt);
+  void PopulateTypeOfStmt(std::string stmt, StmtType type);
   void PopulateName(std::string name, StmtType type);
 
   void PopulateRead(std::vector<std::string> &visited, std::string &curr_stmt, std::string &var_name);

@@ -57,6 +57,7 @@ void WhileStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
 
   de->Visit(while_block, proc_name);
   de->GetPkbClient()->PopulateWhile(de->GetVisited(), stmt_num, cond_expr);
+  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, WHILE);
 }
 
 std::shared_ptr<CfgNode> WhileStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
