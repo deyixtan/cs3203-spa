@@ -12,6 +12,7 @@
 #include "next_clause.h"
 #include "nextt_clause.h"
 #include "affects_clause.h"
+#include "affectst_clause.h"
 #include "pattern_assign_clause.h"
 #include "pattern_while_clause.h"
 #include "pattern_if_clause.h"
@@ -74,6 +75,9 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
     }
     case PqlTokenType::AFFECTS: {
       return std::make_unique<AffectsClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
+    }
+    case PqlTokenType::AFFECTS_T: {
+      return std::make_unique<AffectsTClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     default: {
       return nullptr;
