@@ -1,38 +1,22 @@
 #ifndef FOLLOW_STORE_H
 #define FOLLOW_STORE_H
 
-#include "store.h"
-
-// A struct to maintain every FollowNode's relationships
-struct FollowNode {
-  std::string follower;
-  std::string following;
-  std::unordered_set<std::string> follower_star;
-  std::unordered_set<std::string> following_star;
-};
+#include "components/pkb/stores/stmt_stmt_store.h"
 
 // A store class that maintains all Parent APIs and relationships
-class FollowStore : public Store {
+class FollowsStore : public StmtStmtStore {
  private:
-  std::unordered_map<std::string, FollowNode> rs_map;
-  std::unordered_set<std::string> follower_set;
-  std::unordered_set<std::string> following_set;
-  std::unordered_set<std::string> follower_star_set;
-  std::unordered_set<std::string> following_star_set;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_follow_pairs;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_follow_star_pairs;
 
  public:
-  explicit FollowStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  explicit FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddFollow(std::string const &parent, std::string const &child);
   void AddFollowStar(std::string const &parent, std::string const &child);
-  void AddFollowHelper(bool is_star, std::string const &follower, std::string const &following);
   [[nodiscard]] bool IsFollower(std::string const &stmt);
   [[nodiscard]] bool IsFollowing(std::string const &stmt);
   [[nodiscard]] bool IsFollowerStar(std::string const &stmt);
   [[nodiscard]] bool IsFollowingStar(std::string const &stmt);
-  [[nodiscard]] bool FollowExists(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] bool FollowStarExists(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsFollowValid(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsFollowStarValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetFollowerOf(std::string const &stmt);
   [[nodiscard]] std::string GetFollowingOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetFollowerStarOf(std::string const &stmt);

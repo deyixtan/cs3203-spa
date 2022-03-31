@@ -47,6 +47,11 @@ Table NextTClause::Execute() {
 }
 
 Table NextTClause::HandleSynonymSynonym() {
+  if (first_arg.value==second_arg.value) {
+    auto single_constraints = pkb ->GetNextStore()->GetNextStarSameStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
+    return {first_arg.value, single_constraints};
+  }
+
   auto pair_constraints = pkb->GetNextStore()->GetAllNextStarStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))

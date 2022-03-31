@@ -1,0 +1,78 @@
+procedure singapore {
+	if (merlion == 5) then {
+		read bishan;
+		merlion = merlion * bishan + serangoon;
+		while (merlion < 1000) {
+			print merlion;
+			esplanade = merlion + durian;
+			merlion = merlion + 10;
+		}
+	} else {
+		read orchard;
+ 		town = orchard;
+		town = town + raffles;
+		if (orchard < raffles) then {
+			town = town - orchard;
+		} else {
+		    read serangoon;
+		}
+		while (serangoon == 1000) {
+			read caldecott;
+			caldecott = caldecott + serangoon + town;
+			marymount = raffles + caldecott;
+		}
+	}
+	read promenade;
+	bayfront = promenade + cityHall + downtown;
+	read somerset;
+	bayfront = bayfront - somerset;
+	somerset = dhoby - novena + downtown + chinatown;
+	chinatown = littleIndia * clarkeQuay + outram * telokAyer;
+	if (chinatown == 5) then {
+		somerset = chinatown + bayfront;
+		sentosa = harbourfront;
+		If (sentosa == 20) then {
+			somerset = somerset + 50;
+		} else {
+			while (sentosa == 30) {
+				harbourfront = sentosa * (caldecott + chinatown);
+				chinatown = chinatown + 20;
+		}
+	} else {
+		call europe;
+	}
+}
+
+procedure europe {
+	read france;
+	france = france + paris + nice;
+	read italy;
+	print italy;
+	italy = venice + florence * rome * verona + serangoon;
+	while (italy == france) {
+		germany = berlin * munich;
+		munich = munich * 2 + 1000 * hamburg;
+		if (hamburg == 1000) then {
+			frankfurt = hamburg * 200;
+			munich = munich * munich;
+		} else {
+			munich = potsdam;
+		}
+		germany = munich;
+		call country;
+		berlin = germany;
+		berlin = munich;
+	}
+}
+
+procedure country {
+    print germany;
+    read germany;
+    germany = 1;
+    call city;
+}
+
+procedure city {
+    germany = munich + 1;
+    munich = 2;
+}

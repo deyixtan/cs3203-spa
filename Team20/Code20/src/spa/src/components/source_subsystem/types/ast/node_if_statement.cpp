@@ -73,32 +73,25 @@ bool IfStatementNode::operator==(const StatementNode &other) const {
 
 void IfStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  de->GetPkbClient()->PopulateStmt(stmt_num);
-  std::string if_stmt_num = std::to_string(GetStatementNumber());
-  de->GetVisited().push_back(if_stmt_num);
-
-  std::string cond_expr = de->Visit(m_condition, proc_name, true);
-  de->GetPkbClient()->AddPattern(IF, stmt_num, cond_expr, "");
-
   std::shared_ptr<StatementListNode> if_block = m_if_stmt_list;
   std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;
   std::vector<std::shared_ptr<StatementNode>> if_stmts = m_if_stmt_list->GetStatements();
   std::vector<std::shared_ptr<StatementNode>> else_stmts =  m_else_stmt_list->GetStatements();
+
+  de->GetVisited().push_back(stmt_num);
+
+  std::string cond_expr = de->Visit(m_condition, proc_name, true);
   de->Visit(if_block, proc_name);
   de->Visit(else_block, proc_name);
 
-  de->GetPkbClient()->PopulateIf(stmt_num);
-  de->GetPkbClient()->PopulateParentStar(if_stmt_num, de->GetVisited());
-
-  de->GetVisited().pop_back();
-  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
+  de->GetPkbClient()->PopulateIf(de->GetVisited(), stmt_num, cond_expr);
 }
 
 std::shared_ptr<CfgNode> IfStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
   std::shared_ptr<CfgNode> if_node = std::make_shared<CfgNode>();
   std::shared_ptr<CfgNode> else_node = std::make_shared<CfgNode>();
   std::shared_ptr<CfgNode> next_node = std::make_shared<CfgNode>();
-  cfg_node->AddStatement(std::to_string(GetStatementNumber()));
+  cfg_node->AddStatement(StmtType::IF, std::to_string(GetStatementNumber()));
   cfg_node->AddNext(if_node);
   cfg_node->AddNext(else_node);
   if_node = cb->Visit(m_if_stmt_list, if_node);
