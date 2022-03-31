@@ -5,6 +5,7 @@
 
 class StmtVarStore : public Store {
  private:
+  std::hash<std::string> hash_fn;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> stmt_var_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> proc_var_pairs;
   std::unordered_map<std::string, std::unordered_set<std::string>> stmt_var_map;
@@ -15,6 +16,7 @@ class StmtVarStore : public Store {
 
  public:
   explicit StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  size_t TruncateHash(size_t n);
   void AddStmtVar(StmtType type, std::string stmt, std::string var);
   [[nodiscard]] bool IsStmtVarValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetVarByStmt(std::string const &stmt);

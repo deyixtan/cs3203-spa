@@ -3,7 +3,19 @@
 StmtVarStore::StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(
     move(stmt_vector)) {}
 
+size_t StmtVarStore::TruncateHash(size_t n) {
+  size_t mask = 0xffffffff; //max 10 digits
+  return n & mask;
+}
+
+#include <iostream>
 void StmtVarStore::AddStmtVar(StmtType type, std::string stmt, std::string var) {
+  if (var.length() > 10) {
+    size_t hash = hash_fn(var);
+    size_t truncated = TruncateHash(hash);
+    var = std::to_string(truncated);
+  }
+
   if (type == PROC) {
     all_proc.insert({stmt});
     proc_var_pairs.emplace(std::pair<std::string, std::string>(stmt, var));
@@ -62,7 +74,6 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtVarStore:
   }
   return {};
 }
-
 
 std::unordered_set<std::string> StmtVarStore::GetAllStmt() {
   return all_stmt;
