@@ -4,8 +4,8 @@ CallStore::CallStore(std::shared_ptr<std::vector<std::unordered_set<std::string>
     StmtStmtStore(move(stmt_vector)) {}
 
 void CallStore::AddCallerHelper(std::string const &caller, std::string const &callee) {
-  AddUpperLower(CALLS, caller, callee);
-  AddUpperLowerStar(CALLS, caller, callee, std::vector<std::string>());
+  AddUpperLower(CALLS, CALL, CALL, caller, callee); //TODO: Integrate GetTypeOfStmt()
+  AddUpperLowerStar(CALLS, CALL, CALL, caller, callee, std::vector<std::string>()); //TODO: Integrate GetTypeOfStmt()
 }
 
 bool CallStore::IsCallsPairValid(std::string const &first_proc, std::string const &second_proc) {

@@ -32,24 +32,34 @@ class StmtStmtStore : public Store {
   std::unordered_map<std::string, FollowsNode> follows_rs_map;
   std::unordered_map<std::string, ParentChildNode> parent_rs_map;
   std::unordered_map<std::string, CallsNode> calls_rs_map;
-  std::unordered_set<std::string> upper_set;
-  std::unordered_set<std::string> lower_set;
-  std::unordered_set<std::string> upper_star_set;
-  std::unordered_set<std::string> lower_star_set;
+  std::unordered_map<StmtType,
+                     std::unordered_map<StmtType, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>>
+      type_pair_map;
+  std::unordered_map<StmtType,
+                     std::unordered_map<StmtType, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>>
+      star_type_pair_map;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_star_pairs;
 
  public:
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
-  void AddUpperLower(StoreType type, std::string const &upper, std::string const &lower);
-  void AddUpperLowerStar(StoreType type, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited);
+  void AddUpperLower(StoreType store_type,
+                     StmtType stmt_type1,
+                     StmtType stmt_type2,
+                     std::string const &upper,
+                     std::string const &lower);
+  void AddUpperLowerStar(StoreType store_type,
+                         StmtType stmt_type1,
+                         StmtType stmt_type2,
+                         std::string const &upper,
+                         std::string const &lower,
+                         std::vector<std::string> const &visited);
   void AddFollows(bool is_star, std::string const &upper, std::string const &lower);
-  void AddParent(bool is_star, std::string const &upper, std::string const &lower, std::vector<std::string> const &visited);
+  void AddParent(bool is_star,
+                 std::string const &upper,
+                 std::string const &lower,
+                 std::vector<std::string> const &visited);
   void AddCalls(bool is_star, std::string const &upper, std::string const &lower);
-  [[nodiscard]] bool IsUpper(std::string const &stmt);
-  [[nodiscard]] bool IsLower(std::string const &stmt);
-  [[nodiscard]] bool IsUpperStar(std::string const &stmt);
-  [[nodiscard]] bool IsLowerStar(std::string const &stmt);
   [[nodiscard]] bool IsValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsStarValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetUpperOf(StoreType type, std::string const &stmt);
@@ -58,6 +68,10 @@ class StmtStmtStore : public Store {
   [[nodiscard]] std::string GetLowerOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetUpperStarOf(StoreType type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetLowerStarOf(StoreType type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetPairByType(StmtType type1,
+                                                                                                 StmtType type2);
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStarPairByType(StmtType type1,
+                                                                                                     StmtType type2);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStarPairs();
 };

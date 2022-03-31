@@ -13,10 +13,6 @@ class ParentStore : public StmtStmtStore {
   explicit ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
   void AddParent(std::string const &parent, std::string const &child);
   void AddParentStar(std::string const &stmt, std::vector<std::string> const &visited);
-  [[nodiscard]] bool IsParent(std::string const &stmt);
-  [[nodiscard]] bool IsChild(std::string const &stmt);
-  [[nodiscard]] bool IsAnce(std::string const &stmt);
-  [[nodiscard]] bool IsDesc(std::string const &stmt);
   [[nodiscard]] bool ParentChildValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetParentOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetChildOf(std::string const &stmt);
