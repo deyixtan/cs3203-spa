@@ -27,21 +27,6 @@ bool VariableNode::operator==(const ExpressionNode &other) const {
 }
 
 std::string VariableNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
-  std::string var_name = m_identifier;
-  if (!is_uses) {
-    for (std::string s : de->GetVisited()) {
-      de->GetPkbClient()->PopulateModifies(s, var_name);
-    }
-    de->GetPkbClient()->PopulateModifiesProc(proc_name, var_name);
-    de->GetPkbClient()->PopulateModifies(m_stmt, var_name);
-  } else {
-    for (std::string s : de->GetVisited()) {
-      de->GetPkbClient()->PopulateUses(s, var_name);
-    }
-    de->GetPkbClient()->PopulateUsesProc(proc_name, var_name);
-    de->GetPkbClient()->PopulateUses(m_stmt, var_name);
-  }
-
-  de->GetPkbClient()->PopulateVars(var_name);
+  de->GetPkbClient()->PopulateVars(de->GetVisited(), m_stmt, proc_name, m_identifier, is_uses);
   return GetPatternFormat();
 }
