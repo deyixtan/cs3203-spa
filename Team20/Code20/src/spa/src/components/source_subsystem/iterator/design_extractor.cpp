@@ -57,7 +57,7 @@ void DesignExtractor::UpdateCallUses(std::string const &call_stmt,
       m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(STMT, ance, var); //TODO: Integrate GetTypeOfStmt()
     }
     for (auto &caller : callers) {
-      m_pkb_client->GetPKB()->GetUsesStore()->AddProcVar(caller, var);
+      m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(PROC, caller, var); //TODO: Integrate GetTypeOfStmt()
     }
   }
 }
@@ -72,7 +72,7 @@ void DesignExtractor::UpdateCallModifies(std::string const &call_stmt,
       m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(STMT, ance, var); //TODO: Integrate GetTypeOfStmt()
     }
     for (auto &caller : callers) {
-      m_pkb_client->GetPKB()->GetModifiesStore()->AddProcVar(caller, var);
+      m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(PROC, caller, var); //TODO: Integrate GetTypeOfStmt()
     }
 
   }

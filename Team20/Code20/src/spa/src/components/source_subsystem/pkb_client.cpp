@@ -27,16 +27,8 @@ void PkbClient::PopulateUses(StmtType type, std::string stmt, std::string var) {
   pkb->GetUsesStore()->AddStmtVar(type, stmt, var);
 }
 
-void PkbClient::PopulateUsesProc(std::string proc, std::string var) {
-  pkb->GetUsesStore()->AddProcVar(proc, var);
-}
-
 void PkbClient::PopulateModifies(StmtType type, std::string stmt, std::string var) {
   pkb->GetModifiesStore()->AddStmtVar(type, stmt, var);
-}
-
-void PkbClient::PopulateModifiesProc(std::string proc, std::string var) {
-  pkb->GetModifiesStore()->AddProcVar(proc, var);
 }
 
 void PkbClient::PopulateCalls(std::string caller, std::string callee) {
@@ -118,13 +110,13 @@ void PkbClient::VarsHelper(std::vector<std::string> &visited,
     for (std::string s : visited) {
       PopulateModifies(STMT, s, var_name); //TODO: Integrate GetTypeOfStmt()
     }
-    PopulateModifiesProc(proc_name, var_name);
+    PopulateModifies(PROC, proc_name, var_name);
     PopulateModifies(STMT, curr_stmt, var_name); //TODO: Integrate GetTypeOfStmt()
   } else {
     for (std::string s : visited) {
       PopulateUses(STMT, s, var_name); //TODO: Integrate GetTypeOfStmt()
     }
-    PopulateUsesProc(proc_name, var_name);
+    PopulateUses(PROC, proc_name, var_name);
     PopulateUses(STMT, curr_stmt, var_name); //TODO: Integrate GetTypeOfStmt()
   }
 }
