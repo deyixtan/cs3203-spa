@@ -8,9 +8,10 @@ class FollowsStore : public StmtStmtStore {
  private:
 
  public:
-  explicit FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
-  void AddFollow(std::string const &parent, std::string const &child);
-  void AddFollowStar(std::string const &parent, std::string const &child);
+  explicit FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                        std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
+  void AddFollow(std::string const &follower, std::string const &following);
+  void AddFollowStar(std::string const &follower, std::string const &following);
   [[nodiscard]] bool IsFollowValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsFollowStarValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetFollowerOf(std::string const &stmt);

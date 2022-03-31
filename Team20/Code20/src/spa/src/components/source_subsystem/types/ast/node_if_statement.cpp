@@ -73,6 +73,8 @@ bool IfStatementNode::operator==(const StatementNode &other) const {
 
 void IfStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
+  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, IF);
+
   std::shared_ptr<StatementListNode> if_block = m_if_stmt_list;
   std::shared_ptr<StatementListNode> else_block = m_else_stmt_list;
   std::vector<std::shared_ptr<StatementNode>> if_stmts = m_if_stmt_list->GetStatements();
@@ -85,7 +87,6 @@ void IfStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   de->Visit(else_block, proc_name);
 
   de->GetPkbClient()->PopulateIf(de->GetVisited(), stmt_num, cond_expr);
-  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, IF);
 }
 
 std::shared_ptr<CfgNode> IfStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {

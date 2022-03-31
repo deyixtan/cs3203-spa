@@ -38,29 +38,31 @@ bool StatementListNode::operator==(const StatementListNode &other) const {
 
 void StatementListNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::vector<std::shared_ptr<StatementNode>> stmts = m_statements;
+  StmtType type1 = STMT;
+  StmtType type2 = STMT;
 
   for (int i = 0; i < stmts.size(); ++i) {
     std::shared_ptr<StatementNode> stmt = stmts[i];
+    de->Visit(stmt, proc_name);
     std::string stmt_num = std::to_string(stmt->GetStatementNumber());
     std::string var_name = "";
-    if (de->GetVisited().size() > 0)
+    if (de->GetVisited().size() > 0) {
       de->GetPkbClient()->PopulateParent(de->GetVisited().back(), stmt_num);
-
-    if (stmt != stmts.back()) {
-      int curr_stmt = stmt->GetStatementNumber();
-      int next_stmt = stmts[i + 1]->GetStatementNumber();
-      de->GetPkbClient()->PopulateFollows(std::to_string(curr_stmt), std::to_string(next_stmt));
-
-      // PopulateFollowsStar
-      int curr_stmt_star = stmts[i]->GetStatementNumber();
-
-      for (int j = i + 1; j < stmts.size(); ++j) {
-        int next_stmt_star = stmts[j]->GetStatementNumber();
-        de->GetPkbClient()->PopulateFollowsStar(std::to_string(curr_stmt_star), std::to_string(next_stmt_star));
-      }
     }
 
-    de->Visit(stmt, proc_name);
+    if (i > 0) {
+      int prev_stmt = stmts[i - 1]->GetStatementNumber();
+      int curr_stmt = stmt->GetStatementNumber();
+      de->GetPkbClient()->PopulateFollows(std::to_string(prev_stmt), std::to_string(curr_stmt));
+
+      // PopulateFollowsStar
+      for (int j = i; j >= 0; --j) {
+        prev_stmt = stmts[j]->GetStatementNumber();
+        type1 = de->GetPkbClient()->GetTypeOfStmt(std::to_string(prev_stmt));
+        type2 = de->GetPkbClient()->GetTypeOfStmt(std::to_string(curr_stmt));
+        de->GetPkbClient()->PopulateFollowsStar(std::to_string(prev_stmt), std::to_string(curr_stmt));
+      }
+    }
   }
 }
 

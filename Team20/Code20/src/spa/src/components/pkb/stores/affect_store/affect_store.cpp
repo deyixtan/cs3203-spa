@@ -2,9 +2,10 @@
 #include "affect_session.h"
 
 AffectStore::AffectStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
-std::shared_ptr<ModifiesStore> modify_store,
-    std::shared_ptr<UsesStore> usage_store) :
-  Store(move(stmt_vector)), m_modify_store(modify_store), m_usage_store(usage_store) {}
+                         std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
+                         std::shared_ptr<ModifiesStore> modify_store,
+                         std::shared_ptr<UsesStore> usage_store) :
+    Store(move(stmt_vector), move(stmt_type)), m_modify_store(modify_store), m_usage_store(usage_store) {}
 
 void AffectStore::AddProgramCfg(std::shared_ptr<Cfg> program_cfg) {
   m_program_cfg = program_cfg;

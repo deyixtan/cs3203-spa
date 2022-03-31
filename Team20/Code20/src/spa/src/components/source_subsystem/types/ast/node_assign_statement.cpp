@@ -36,11 +36,11 @@ bool AssignStatementNode::operator==(const StatementNode &other) const {
 
 void AssignStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
+  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, ASSIGN);
   std::string var_name = m_identifier->GetIdentifier();
   de->Visit(m_identifier, proc_name, false);
   std::string rhs_expr = de->Visit(m_expression, proc_name, true);
   de->GetPkbClient()->PopulateAssign(de->GetVisited(), proc_name, stmt_num, var_name, rhs_expr);
-  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, ASSIGN);
 }
 
 std::shared_ptr<CfgNode> AssignStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {

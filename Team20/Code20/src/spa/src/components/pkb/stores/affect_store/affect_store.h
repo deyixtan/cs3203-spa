@@ -22,6 +22,7 @@ class AffectStore : public Store {
 
  public:
   explicit AffectStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                       std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
                        std::shared_ptr<ModifiesStore> modify_store,
                        std::shared_ptr<UsesStore> usage_store);
   void AddProgramCfg(std::shared_ptr<Cfg> program_cfg);

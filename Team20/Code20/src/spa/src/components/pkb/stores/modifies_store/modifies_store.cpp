@@ -1,7 +1,8 @@
 #include "modifies_store.h"
 
-ModifiesStore::ModifiesStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    StmtVarStore(move(stmt_vector)) {}
+ModifiesStore::ModifiesStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                             std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
+    StmtVarStore(move(stmt_vector), move(stmt_type)) {}
 
 std::unordered_set<std::string> ModifiesStore::GetVarModByStmt(std::string const &stmt) {
   return GetVarByStmt(stmt);

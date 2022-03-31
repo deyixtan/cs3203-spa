@@ -10,7 +10,8 @@ class NextStore : public StmtStmtStore {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_next_pairs;
 
  public:
-  explicit NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  explicit NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                     std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
   void AddNextMap(std::unordered_map<std::string, std::unordered_set<std::string>> rs_map);
   void AddBeforeMap(std::unordered_map<std::string, std::unordered_set<std::string>> rs_map);
   void ConstructNextPairs();

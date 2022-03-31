@@ -1,14 +1,15 @@
 #import "parent_store.h"
 
-ParentStore::ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    StmtStmtStore(move(stmt_vector)) {}
+ParentStore::ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                         std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
+    StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
 
 void ParentStore::AddParent(std::string const &parent, std::string const &child) {
-  AddUpperLower(PARENT, STMT, STMT, parent, child); //TODO: Integrate GetTypeOfStmt()
+  AddUpperLower(PARENT, parent, child);
 }
 
 void ParentStore::AddParentStar(std::string const &stmt, std::vector<std::string> const &visited) {
-  AddUpperLowerStar(PARENT, STMT, STMT, "", stmt, visited);
+  AddUpperLowerStar(PARENT, "", stmt, visited);
 }
 
 // Used for Parent(s1, s2)

@@ -8,7 +8,8 @@ class CallStore : public StmtStmtStore {
   std::unordered_map<std::string, std::unordered_set<std::string>> call_stmt_map;
 
  public:
-  explicit CallStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  explicit CallStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                     std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
   void AddCallerHelper(std::string const &caller, std::string const &callee);
   [[nodiscard]] bool IsCallsPairValid(std::string const &first_proc, std::string const &second_proc);
   [[nodiscard]] bool IsCallsStarPairValid(std::string const &first_proc, std::string const &second_proc);

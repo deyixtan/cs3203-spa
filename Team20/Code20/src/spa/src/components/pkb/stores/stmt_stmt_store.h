@@ -42,15 +42,12 @@ class StmtStmtStore : public Store {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_star_pairs;
 
  public:
-  explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
+  explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                         std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
   void AddUpperLower(StoreType store_type,
-                     StmtType stmt_type1,
-                     StmtType stmt_type2,
                      std::string const &upper,
                      std::string const &lower);
   void AddUpperLowerStar(StoreType store_type,
-                         StmtType stmt_type1,
-                         StmtType stmt_type2,
                          std::string const &upper,
                          std::string const &lower,
                          std::vector<std::string> const &visited);

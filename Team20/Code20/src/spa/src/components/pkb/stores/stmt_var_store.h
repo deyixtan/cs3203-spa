@@ -12,8 +12,9 @@ class StmtVarStore : public Store {
   std::unordered_set<std::string> all_proc;
 
  public:
-  explicit StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
-  void AddStmtVar(StmtType type, std::string stmt, std::string var);
+  explicit StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                        std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
+  void AddStmtVar(std::string stmt, std::string var);
   [[nodiscard]] bool IsStmtVarValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetVarByStmt(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetStmtByVar(StmtType type, std::string const &var);

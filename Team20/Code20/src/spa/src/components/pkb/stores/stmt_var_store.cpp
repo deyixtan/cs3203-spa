@@ -1,9 +1,13 @@
 #include "stmt_var_store.h"
 
-StmtVarStore::StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) : Store(
-    move(stmt_vector)) {}
+StmtVarStore::StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                           std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) : Store(
+    move(stmt_vector), move(stmt_type)) {}
 
-void StmtVarStore::AddStmtVar(StmtType type, std::string stmt, std::string var) {
+void StmtVarStore::AddStmtVar(std::string stmt, std::string var) {
+  //TODO: Add check to verify if stmt is a stmt_no or procedure name
+  StmtType type = m_stmt_type->at(stmt);
+
   if (type == PROC) {
     all_proc.insert({stmt});
   } else {
@@ -55,19 +59,8 @@ std::unordered_set<std::string> StmtVarStore::GetStmtByVar(StmtType type, std::s
 
   if (var_stmt_map.find(var) != var_stmt_map.end()) {
     if (var_stmt_map.at(var).find(type) != var_stmt_map.at(var).end()) {
-      is_present = true;
+      return var_stmt_map.at(var).at(type);
     }
-  }
-
-  if (is_present && type == STMT) {
-    std::unordered_map<StmtType, std::unordered_set<std::string>> set = var_stmt_map.at(var);
-    for (auto &i : set) {
-
-    }
-  }
-
-  if (is_present && type != STMT) {
-    return var_stmt_map.at(var).at(type);
   }
 
   return {};
