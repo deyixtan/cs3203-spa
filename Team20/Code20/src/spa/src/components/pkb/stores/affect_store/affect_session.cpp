@@ -235,36 +235,61 @@ void AffectSession::HandleAssignStatement(std::string stmt_no, std::unordered_ma
     if (last_modified_map.count(var_used) != 0) {
       std::unordered_set<std::string> last_mod_stmt_nos = last_modified_map.at(var_used);
       for (auto const last_mod_stmt_no : last_mod_stmt_nos) {
-        // update affects (m_affects_var_stmt_map)
+        // update affects (m_affects_map)
         if (m_affects_map.count(last_mod_stmt_no) == 0) {
           m_affects_map.insert({last_mod_stmt_no, std::unordered_set<std::string>()});
         }
         m_affects_map.at(last_mod_stmt_no).insert(stmt_no);
-        // update affects (m_affects_stmt_var_map)
-        if (m_affects_reverse_map.count(stmt_no) == 0) {
-          m_affects_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
-        }
-        m_affects_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
-        // update affects (m_all_affects_pairs)
-        m_all_affects_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
-      }
-    }
-
-    if (last_modified_star_map.count(var_used) != 0) {
-      std::unordered_set<std::string> last_mod_stmt_nos = last_modified_star_map.at(var_used);
-      for (auto const last_mod_stmt_no : last_mod_stmt_nos) {
         // update affects star (m_affects_star_map)
         if (m_affects_star_map.count(last_mod_stmt_no) == 0) {
           m_affects_star_map.insert({last_mod_stmt_no, std::unordered_set<std::string>()});
         }
         m_affects_star_map.at(last_mod_stmt_no).insert(stmt_no);
+
+        // update affects (m_affects_reverse_map)
+        if (m_affects_reverse_map.count(stmt_no) == 0) {
+          m_affects_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
+        }
+        m_affects_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
         // update affects star (m_affects_star_reverse_map)
         if (m_affects_star_reverse_map.count(stmt_no) == 0) {
           m_affects_star_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
         }
         m_affects_star_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
-        // update affects (m_all_affects_star_pairs)
+
+        // update affects (m_all_affects_pairs)
+        m_all_affects_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
+        // update affects star (m_all_affects_star_pairs)
         m_all_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
+
+        // update modified star table
+        std::unordered_set<std::string> vars_mod = GetVarModByStmt(stmt_no);
+        for (auto const var_mod : vars_mod) {
+          if (last_modified_star_map.count(var_mod) == 0) {
+            last_modified_star_map.insert({var_mod, std::unordered_set<std::string>()});
+          }
+          //last_modified_star_map.at(var_mod).clear();
+          last_modified_star_map.at(var_mod).insert(last_mod_stmt_no);
+        }
+
+        // add transitive closure
+        if (last_modified_star_map.count(var_used) != 0) {
+          std::unordered_set<std::string> last_mod_stmt_nos = last_modified_star_map.at(var_used);
+          for (auto const last_mod_stmt_no : last_mod_stmt_nos) {
+            // update affects star (m_affects_star_map)
+            if (m_affects_star_map.count(last_mod_stmt_no) == 0) {
+              m_affects_star_map.insert({last_mod_stmt_no, std::unordered_set<std::string>()});
+            }
+            m_affects_star_map.at(last_mod_stmt_no).insert(stmt_no);
+            // update affects star (m_affects_star_reverse_map)
+            if (m_affects_star_reverse_map.count(stmt_no) == 0) {
+              m_affects_star_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
+            }
+            m_affects_star_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
+            // update affects (m_all_affects_star_pairs)
+            m_all_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
+          }
+        }
       }
     }
   }
@@ -277,15 +302,6 @@ void AffectSession::HandleAssignStatement(std::string stmt_no, std::unordered_ma
     }
     last_modified_map.at(var_mod).clear();
     last_modified_map.at(var_mod).insert(stmt_no);
-
-    // update modified star table
-    for (std::string var_used : vars_used) {
-      if (last_modified_star_map.count(var_mod) == 0) {
-        last_modified_star_map.insert({var_mod, std::unordered_set<std::string>()});
-      }
-      last_modified_star_map.at(var_mod).clear();
-      last_modified_star_map.at(var_mod).insert(stmt_no);
-    }
   }
 }
 
