@@ -12,6 +12,10 @@ AffectsTClause::AffectsTClause(const PqlToken &first_arg,
     : first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table AffectsTClause::Execute() {
+  if (!pkb->GetAffectStore()->DoesAffectSessionExist()) {
+    pkb->GetAffectStore()->ComputeAffectSession();
+  }
+
   if (IsArgSynonym(first_arg) && IsArgSynonym(second_arg)) {
     // Affects*(a1, a2)
     return HandleSynonymSynonym();
