@@ -39,6 +39,8 @@ void StmtStmtStore::AddUpperLower(StoreType store_type,
     AddParent(false, upper, lower, std::vector<std::string>());
   } else if (store_type == CALLS) {
     AddCalls(false, upper, lower);
+  } else if (store_type == NEXT) {
+    AddNext(false, upper, lower);
   }
 }
 
@@ -80,6 +82,8 @@ void StmtStmtStore::AddUpperLowerStar(StoreType store_type,
     AddParent(true, upper, lower, visited);
   } else if (store_type == CALLS) {
     AddCalls(true, upper, lower);
+  } else if (store_type == NEXT) {
+    AddNext(true, upper, lower);
   }
 }
 
@@ -102,6 +106,23 @@ void StmtStmtStore::AddFollows(bool is_star, std::string const &upper, std::stri
   follows_rs_map.at(upper).following_star.insert(lower);
   follows_rs_map.at(lower).follower_star.insert(upper);
   all_star_pairs.emplace(std::pair<std::string, std::string>(upper, lower));
+}
+
+void StmtStmtStore::AddNext(bool is_star, std::string const &upper, std::string const &lower) {
+  if (next_rs_map.find(upper) == next_rs_map.end()) {
+    next_rs_map.insert({upper, {std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>(),
+                                std::unordered_set<std::string>()}});
+  }
+
+  if (next_rs_map.find(lower) == next_rs_map.end()) {
+    next_rs_map.insert({lower, {std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>(),
+                                std::unordered_set<std::string>()}});
+  }
+  all_pairs.insert(std::make_pair(upper, lower));
+  upper_set.insert(upper);
+  lower_set.insert(lower);
+  next_rs_map.at(lower).before.insert(upper);
+  next_rs_map.at(upper).next.insert(lower);
 }
 
 void StmtStmtStore::AddParent(bool is_star,
@@ -199,6 +220,13 @@ void StmtStmtStore::AddCalls(bool is_star, std::string const &upper, std::string
   }
 }
 
+void StmtStmtStore::WipeNextStar() {
+  for (auto pair : next_rs_map) {
+    pair.second.next_star_set = {};
+    pair.second.before_star_set = {};
+  }
+}
+
 bool StmtStmtStore::IsValid(std::pair<std::string, std::string> const &pair) {
   return all_pairs.find(pair) != all_pairs.end();
 }
@@ -220,17 +248,28 @@ std::string StmtStmtStore::GetUpperOf(StoreType type, std::string const &stmt) {
   return "0";
 }
 
-std::unordered_set<std::string> StmtStmtStore::GetUpperOf(std::string const &stmt) {
-  if (calls_rs_map.find(stmt) != calls_rs_map.end()) {
-    return calls_rs_map.at(stmt).callers_set;
+std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType type, std::string const &stmt) {
+  if (type == NEXT) {
+    if (next_rs_map.find(stmt) != next_rs_map.end()) {
+      return next_rs_map.at(stmt).before;
+    }
+  } else if (type == CALLS) {
+    if (calls_rs_map.find(stmt) != calls_rs_map.end()) {
+      return calls_rs_map.at(stmt).callers_set;
+    }
+  } else {
+    return {};
   }
-  return {};
 }
 
 std::unordered_set<std::string> StmtStmtStore::GetLowerOf(StoreType type, std::string const &stmt) {
   if (type == PARENT) {
     if (parent_rs_map.find(stmt) != parent_rs_map.end()) {
       return parent_rs_map.at(stmt).child;
+    }
+  } else if (type == NEXT) {
+    if (next_rs_map.find(stmt) != next_rs_map.end()) {
+      return next_rs_map.at(stmt).next;
     }
   } else {
     if (calls_rs_map.find(stmt) != calls_rs_map.end()) {
@@ -260,6 +299,11 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType type, st
     if (calls_rs_map.find(stmt) != calls_rs_map.end()) {
       return calls_rs_map.at(stmt).callers_star_set;
     }
+  } else if (type == NEXT) {
+    std::unordered_set<std::string> res;
+    std::unordered_set<std::string> visited;
+    GetBeforeStarOf(stmt, res, visited);
+    return res;
   }
   return {};
 }
@@ -277,6 +321,14 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StoreType type, st
     if (calls_rs_map.find(stmt) != calls_rs_map.end()) {
       return calls_rs_map.at(stmt).callees_star_set;
     }
+  } else if (type == NEXT) {
+    if (next_rs_map.find(stmt) != next_rs_map.end() && !next_rs_map.at(stmt).next_star_set.empty()) {
+      return next_rs_map.at(stmt).next_star_set;
+    }
+    std::unordered_set<std::string> res;
+    std::unordered_set<std::string> visited;
+    GetNextStarOf(stmt, res, visited);
+    return res;
   }
   return {};
 }
@@ -301,10 +353,48 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore
   return {};
 }
 
+void StmtStmtStore::GetBeforeStarOf(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited) {
+  if (next_rs_map.find(stmt) == next_rs_map.end() || visited.find(stmt) != visited.end()) {
+    return;
+  }
+  std::unordered_set<std::string> before_set = next_rs_map[stmt].before;
+  visited.insert(stmt);
+  for (auto before : before_set) {
+    res.insert(before);
+    next_rs_map[stmt].before_star_set.insert(before);
+    GetBeforeStarOf(before, res, visited);
+  }
+}
+
+void StmtStmtStore::GetNextStarOf(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited) {
+  if (next_rs_map.find(stmt) == next_rs_map.end() || visited.find(stmt) != visited.end()) {
+    return;
+  }
+  std::unordered_set<std::string> &next_set = next_rs_map[stmt].next;
+  visited.insert(stmt);
+  for (auto next : next_set) {
+    res.insert(next);
+    next_rs_map[stmt].next_star_set.insert(next);
+    GetNextStarOf(next, res, visited);
+  }
+}
+
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore::GetAllPairs() {
   return all_pairs;
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore::GetAllStarPairs() {
   return all_star_pairs;
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore::GetAllNextStarPairs() {
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> res;
+  for (auto pair : next_rs_map) {
+    std::string stmt = pair.first;
+    std::unordered_set<std::string> next_star_stmt = GetLowerStarOf(NEXT, stmt);
+    for (auto next_star : next_star_stmt){
+      res.insert({stmt, next_star});
+    }
+  }
+  return res;
 }

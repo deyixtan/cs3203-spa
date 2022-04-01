@@ -11,6 +11,14 @@ struct FollowsNode {
   std::unordered_set<std::string> following_star;
 };
 
+// A struct to maintain every FollowsNode's relationships
+struct NextNode {
+  std::unordered_set<std::string> before;
+  std::unordered_set<std::string> next;
+  std::unordered_set<std::string> before_star_set;
+  std::unordered_set<std::string> next_star_set;
+};
+
 // A struct to maintain every ParentNode's relationships
 struct ParentChildNode {
   std::string parent;
@@ -32,6 +40,7 @@ class StmtStmtStore : public Store {
   std::unordered_map<std::string, FollowsNode> follows_rs_map;
   std::unordered_map<std::string, ParentChildNode> parent_rs_map;
   std::unordered_map<std::string, CallsNode> calls_rs_map;
+  std::unordered_map<std::string, NextNode> next_rs_map;
   std::unordered_map<StmtType,
                      std::unordered_map<StmtType, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>>
       type_pair_map;
@@ -57,10 +66,12 @@ class StmtStmtStore : public Store {
                  std::string const &lower,
                  std::vector<std::string> const &visited);
   void AddCalls(bool is_star, std::string const &upper, std::string const &lower);
+  void AddNext(bool is_star, std::string const &upper, std::string const &lower);
+  void WipeNextStar();
   [[nodiscard]] bool IsValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsStarValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetUpperOf(StoreType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetUpperOf(std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetUpperSetOf(StoreType type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetLowerOf(StoreType type, std::string const &stmt);
   [[nodiscard]] std::string GetLowerOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetUpperStarOf(StoreType type, std::string const &stmt);
@@ -71,6 +82,9 @@ class StmtStmtStore : public Store {
                                                                                                      StmtType type2);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStarPairs();
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStarPairs();
+  [[nodiscard]] void GetNextStarOf(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited);
+  [[nodiscard]] void GetBeforeStarOf(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited);
 };
 
 #endif //FOLLOWS_PARENT_STORE_H

@@ -9,10 +9,24 @@ NextStore set_up_next() {
     stmt_vector.push_back(std::unordered_set<std::string>());
   }
   NextStore next_store = NextStore(std::make_shared<std::vector<std::unordered_set<std::string>>>(stmt_vector));
-  next_store.AddNextMap(next_map);
-  next_store.AddBeforeMap(before_map);
-  next_store.ConstructNextPairs();
-
+  next_store.AddNext(LINE_1, LINE_8);
+  next_store.AddNext(LINE_1, LINE_2);
+  next_store.AddNext(LINE_2, LINE_7);
+  next_store.AddNext(LINE_2, LINE_3);
+  next_store.AddNext(LINE_3, LINE_5);
+  next_store.AddNext(LINE_3, LINE_4);
+  next_store.AddNext(LINE_5, LINE_6);
+  next_store.AddNext(LINE_6, LINE_5);
+  next_store.AddNext(LINE_8, LINE_9);
+  next_store.AddNext(LINE_9, LINE_10);
+  next_store.AddNext(LINE_9, LINE_11);
+  next_store.AddNext(LINE_10, LINE_15);
+  next_store.AddNext(LINE_11, LINE_12);
+  next_store.AddNext(LINE_12, LINE_13);
+  next_store.AddNext(LINE_12, LINE_14);
+  next_store.AddNext(LINE_13, LINE_12);
+  next_store.AddNext(LINE_14, LINE_15);
+  next_store.AddNext(LINE_15, LINE_8);
   return next_store;
 }
 

@@ -32,8 +32,8 @@ void CallStore::AddCallStmtMap(std::string proc, std::string stmt) {
   }
 }
 
-std::unordered_set<std::string> CallStore::GetCallersOf(std::string const &proc) {
-  return GetUpperOf(proc);
+std::unordered_set<std::string> CallStore::GetCallersOf(std::string const &proc){
+  return GetUpperSetOf(CALLS, proc);
 }
 
 std::unordered_set<std::string> CallStore::GetCalleesOf(std::string const &proc) {
