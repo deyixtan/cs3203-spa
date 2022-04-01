@@ -1,12 +1,13 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_TOKEN_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_TOKEN_H_
+#ifndef SOURCE_TOKEN_H
+#define SOURCE_TOKEN_H
 
 #include <string>
 
 namespace source {
 
 enum class TokenType {
-  WHITE_SPACE, NEW_LINE, TAB, INTEGER, NAME,
+  WHITE_SPACE, NEW_LINE, TAB,
+  INTEGER, NAME,
   OPENED_BRACES, CLOSED_BRACES, OPENED_PARENTHESIS, CLOSED_PARENTHESIS,
   NOT, AND, OR,
   IS_GREATER, IS_GREATER_EQUAL, IS_LESSER, IS_LESSER_EQUAL, IS_EQUAL, IS_NOT_EQUAL,
@@ -25,9 +26,8 @@ class SourceToken {
   SourceToken(TokenType type, std::string value);
   [[nodiscard]] TokenType GetType();
   [[nodiscard]] std::string GetValue();
-  [[nodiscard]] std::string ToString();
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_TOKEN_H_
+#endif //SOURCE_TOKEN_H
