@@ -9,11 +9,13 @@ namespace pql {
 
 class AffectsTClause : public Clause {
  public:
-  AffectsTClause(const PqlToken &first_arg,
+  AffectsTClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
+                 const PqlToken &first_arg,
                  const PqlToken &second_arg,
                  PKB *pkb);
   Table Execute() override;
  private:
+  std::unordered_map<std::string, DesignEntityType> declarations;
   PqlToken first_arg;
   PqlToken second_arg;
   PKB *pkb;
