@@ -51,12 +51,12 @@ Table AffectsTClause::Execute() {
 }
 
 Table AffectsTClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsPairs();
+  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarPairs();
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
 Table AffectsTClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsPairs();
+  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarPairs();
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.first);
@@ -65,12 +65,12 @@ Table AffectsTClause::HandleSynonymWildcard() {
 }
 
 Table AffectsTClause::HandleSynonymInteger() {
-  auto single_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsOf(second_arg.value);
+  auto single_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarOf(second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
 Table AffectsTClause::HandleWildcardSynonym() {
-  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsPairs();
+  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarPairs();
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.second);
@@ -79,7 +79,7 @@ Table AffectsTClause::HandleWildcardSynonym() {
 }
 
 Table AffectsTClause::HandleWildcardWildcard() {
-  bool is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectsPairs().empty();
+  bool is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarPairs().empty();
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
@@ -88,7 +88,7 @@ Table AffectsTClause::HandleWildcardWildcard() {
 }
 
 Table AffectsTClause::HandleWildcardInteger() {
-  auto is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectsOf(second_arg.value).empty();
+  auto is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarOf(second_arg.value).empty();
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
@@ -97,12 +97,12 @@ Table AffectsTClause::HandleWildcardInteger() {
 }
 
 Table AffectsTClause::HandleIntegerSynonym() {
-  auto single_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectedOf(first_arg.value);
+  auto single_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectedStarOf(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table AffectsTClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectedOf(first_arg.value).empty();
+  bool is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectedStarOf(first_arg.value).empty();
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
@@ -112,7 +112,7 @@ Table AffectsTClause::HandleIntegerWildcard() {
 
 Table AffectsTClause::HandleIntegerInteger() {
   auto is_false_clause =
-      pkb->GetAffectStore()->GetAffectSession()->DoesAffectExists({first_arg.value, second_arg.value});
+      pkb->GetAffectStore()->GetAffectSession()->DoesAffectStarExists({first_arg.value, second_arg.value});
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
