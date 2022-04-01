@@ -74,7 +74,7 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
       return std::make_unique<NextTClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     case PqlTokenType::AFFECTS: {
-      return std::make_unique<AffectsClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
+      return std::make_unique<AffectsClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     case PqlTokenType::AFFECTS_T: {
       return std::make_unique<AffectsTClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
