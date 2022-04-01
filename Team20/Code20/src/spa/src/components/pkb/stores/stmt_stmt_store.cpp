@@ -7,16 +7,23 @@ StmtStmtStore::StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std:
 void StmtStmtStore::AddUpperLower(StoreType store_type,
                                   std::string const &upper,
                                   std::string const &lower) {
-  StmtType type1, type2;
+  StmtType type1 = CALL;
+  StmtType type2 = CALL;
 
-  if (store_type == CALLS) {
-    type1 = CALL;
-    type2 = CALL;
-  }
-
-  if (store_type == PARENT) {
+  if (store_type == FOLLOWS) {
     type1 = m_stmt_type->at(upper);
     type2 = m_stmt_type->at(lower);
+    AddFollows(false, upper, lower);
+  } else if (store_type == PARENT) {
+    type1 = m_stmt_type->at(upper);
+    type2 = m_stmt_type->at(lower);
+    AddParent(false, upper, lower, std::vector<std::string>());
+  } else if (store_type == CALLS) {
+    AddCalls(false, upper, lower);
+  } else if (store_type == NEXT) {
+    type1 = m_stmt_type->at(upper);
+    type2 = m_stmt_type->at(lower);
+    AddNext(false, upper, lower);
   }
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
@@ -31,16 +38,6 @@ void StmtStmtStore::AddUpperLower(StoreType store_type,
   } else {
     type_pair_map.insert({type1, {}});
     type_pair_map.at(type1).insert({type2, set});
-  }
-
-  if (store_type == FOLLOWS) {
-    AddFollows(false, upper, lower);
-  } else if (store_type == PARENT) {
-    AddParent(false, upper, lower, std::vector<std::string>());
-  } else if (store_type == CALLS) {
-    AddCalls(false, upper, lower);
-  } else if (store_type == NEXT) {
-    AddNext(false, upper, lower);
   }
 }
 
@@ -110,17 +107,17 @@ void StmtStmtStore::AddFollows(bool is_star, std::string const &upper, std::stri
 
 void StmtStmtStore::AddNext(bool is_star, std::string const &upper, std::string const &lower) {
   if (next_rs_map.find(upper) == next_rs_map.end()) {
-    next_rs_map.insert({upper, {std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>(),
+    next_rs_map.insert({upper, {std::unordered_set<std::string>(), std::unordered_set<std::string>(),
+                                std::unordered_set<std::string>(),
                                 std::unordered_set<std::string>()}});
   }
 
   if (next_rs_map.find(lower) == next_rs_map.end()) {
-    next_rs_map.insert({lower, {std::unordered_set<std::string>(), std::unordered_set<std::string>(), std::unordered_set<std::string>(),
+    next_rs_map.insert({lower, {std::unordered_set<std::string>(), std::unordered_set<std::string>(),
+                                std::unordered_set<std::string>(),
                                 std::unordered_set<std::string>()}});
   }
   all_pairs.insert(std::make_pair(upper, lower));
-  upper_set.insert(upper);
-  lower_set.insert(lower);
   next_rs_map.at(lower).before.insert(upper);
   next_rs_map.at(upper).next.insert(lower);
 }
@@ -302,7 +299,7 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType type, st
   } else if (type == NEXT) {
     std::unordered_set<std::string> res;
     std::unordered_set<std::string> visited;
-    GetBeforeStarOf(stmt, res, visited);
+    GetUpperStarOfHelper(stmt, res, visited);
     return res;
   }
   return {};
@@ -327,7 +324,7 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StoreType type, st
     }
     std::unordered_set<std::string> res;
     std::unordered_set<std::string> visited;
-    GetNextStarOf(stmt, res, visited);
+    GetLowerStarOfHelper(stmt, res, visited);
     return res;
   }
   return {};
@@ -353,7 +350,9 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore
   return {};
 }
 
-void StmtStmtStore::GetBeforeStarOf(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited) {
+void StmtStmtStore::GetUpperStarOfHelper(std::string const &stmt,
+                                    std::unordered_set<std::string> &res,
+                                    std::unordered_set<std::string> &visited) {
   if (next_rs_map.find(stmt) == next_rs_map.end() || visited.find(stmt) != visited.end()) {
     return;
   }
@@ -362,11 +361,13 @@ void StmtStmtStore::GetBeforeStarOf(std::string const &stmt, std::unordered_set<
   for (auto before : before_set) {
     res.insert(before);
     next_rs_map[stmt].before_star_set.insert(before);
-    GetBeforeStarOf(before, res, visited);
+    GetUpperStarOfHelper(before, res, visited);
   }
 }
 
-void StmtStmtStore::GetNextStarOf(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited) {
+void StmtStmtStore::GetLowerStarOfHelper(std::string const &stmt,
+                                  std::unordered_set<std::string> &res,
+                                  std::unordered_set<std::string> &visited) {
   if (next_rs_map.find(stmt) == next_rs_map.end() || visited.find(stmt) != visited.end()) {
     return;
   }
@@ -375,7 +376,7 @@ void StmtStmtStore::GetNextStarOf(std::string const &stmt, std::unordered_set<st
   for (auto next : next_set) {
     res.insert(next);
     next_rs_map[stmt].next_star_set.insert(next);
-    GetNextStarOf(next, res, visited);
+    GetLowerStarOfHelper(next, res, visited);
   }
 }
 
@@ -385,16 +386,4 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore::GetAllStarPairs() {
   return all_star_pairs;
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore::GetAllNextStarPairs() {
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> res;
-  for (auto pair : next_rs_map) {
-    std::string stmt = pair.first;
-    std::unordered_set<std::string> next_star_stmt = GetLowerStarOf(NEXT, stmt);
-    for (auto next_star : next_star_stmt){
-      res.insert({stmt, next_star});
-    }
-  }
-  return res;
 }

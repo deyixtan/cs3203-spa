@@ -339,15 +339,6 @@ TEST_CASE("Get proc used by var (invalid)") {
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Get all usage proc-var pairs") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetUsesStore()->GetAllProcVar();
-  auto expected = uses_proc_var_pairs;
-
-  REQUIRE(actual == expected);
-}
-
 TEST_CASE("Get all stmt using (correct)") {
   PKB *pkb = set_up_pkb();
   
@@ -474,15 +465,6 @@ TEST_CASE("Get proc modified by var (invalid)") {
   
   auto actual = pkb->GetModifiesStore()->GetStmtModByVar("horse");
   std::unordered_set<std::string> expected = {};
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Get all modifies proc-var pairs") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetModifiesStore()->GetAllProcVar();
-  auto expected = mod_proc_var_pairs;
 
   REQUIRE(actual == expected);
 }
@@ -617,26 +599,6 @@ TEST_CASE("Get follows star of a stmt") {
   REQUIRE(actual == expected);
 }
 
-//TEST_CASE("Get all follow statements") {
-//  PKB *pkb = set_up_pkb();
-//  
-//  auto actual = pkb->GetAllFollowStmt(STMT);
-//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
-//
-//  REQUIRE(actual == false);
-//  REQUIRE(expected == false);
-//}
-//
-//TEST_CASE("Get all follow star statements") {
-//  PKB *pkb = set_up_pkb();
-//  
-//  auto actual = pkb->GetAllFollowStarStmt(STMT);
-//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
-//
-//  REQUIRE(actual == false);
-//  REQUIRE(expected == false);
-//}
-
 /* PARENT STORE */
 
 TEST_CASE("Checks if a stmt is a parent") {
@@ -657,24 +619,6 @@ TEST_CASE("Checks if a stmt is a child") {
   REQUIRE(actual == expected);
 }
 
-//TEST_CASE("Checks if a stmt is an ancestor") {
-//  PKB *pkb = set_up_pkb();
-//
-//  auto actual = pkb->GetParentStore()->IsAnce("5");
-//  auto expected = ancestors.find("5") != ancestors.end();
-//
-//  REQUIRE(actual == expected);
-//}
-
-//TEST_CASE("Checks if a stmt is a descendent") {
-//  PKB *pkb = set_up_pkb();
-//  
-//  auto actual = pkb->GetParentStore()->IsDesc("7");
-//  auto expected = descendants.find("7") != descendants.end();
-//
-//  REQUIRE(actual == expected);
-//}
-
 TEST_CASE("Checks if a parent-child pair relationship Valid") {
   PKB *pkb = set_up_pkb();
   
@@ -683,15 +627,6 @@ TEST_CASE("Checks if a parent-child pair relationship Valid") {
 
   REQUIRE(actual == expected);
 }
-
-//TEST_CASE("Checks if a ance-desc pair relationship Valid") {
-//  PKB *pkb = set_up_pkb();
-//  
-//  auto actual = pkb->GetParentStore()->IsAnceValid("5", "9");
-//  auto expected = ance_desc_pairs.find({"5", "9"}) != ance_desc_pairs.end();
-//
-//  REQUIRE(actual == expected);
-//}
 
 /* GENERAL */
 

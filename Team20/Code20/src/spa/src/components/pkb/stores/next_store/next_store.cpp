@@ -13,22 +13,6 @@ void NextStore::WipeStar() {
   WipeNextStar();
 }
 
-bool NextStore::IsNext(std::string const &stmt) {
-  return IsUpper(stmt);
-}
-
-bool NextStore::IsBefore(std::string const &stmt) {
-  return IsLower(stmt);
-}
-
-bool NextStore::IsNextStar(std::string const &stmt) {
-  return IsNext(stmt);
-}
-
-bool NextStore::IsBeforeStar(const std::string &stmt) {
-  return IsBefore(stmt);
-}
-
 bool NextStore::IsNextValid(std::pair<std::string, std::string> const &pair) {
   return IsValid(pair);
 }
@@ -58,7 +42,15 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::Ge
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetNextStarPairs() {
-  return GetAllNextStarPairs();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> res;
+  for (auto pair : next_rs_map) {
+    std::string stmt = pair.first;
+    std::unordered_set<std::string> next_star_stmt = GetLowerStarOf(NEXT, stmt);
+    for (auto next_star : next_star_stmt){
+      res.insert({stmt, next_star});
+    }
+  }
+  return res;
 }
 
 std::unordered_set<std::string> NextStore::GetNextStarSameStmt(StmtType type) {
