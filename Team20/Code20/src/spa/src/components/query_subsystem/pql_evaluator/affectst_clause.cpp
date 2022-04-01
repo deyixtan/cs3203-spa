@@ -112,7 +112,7 @@ Table AffectsTClause::HandleIntegerWildcard() {
 
 Table AffectsTClause::HandleIntegerInteger() {
   auto is_false_clause =
-      pkb->GetAffectStore()->GetAffectSession()->DoesAffectStarExists({first_arg.value, second_arg.value});
+      !pkb->GetAffectStore()->GetAffectSession()->DoesAffectStarExists({first_arg.value, second_arg.value});
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
