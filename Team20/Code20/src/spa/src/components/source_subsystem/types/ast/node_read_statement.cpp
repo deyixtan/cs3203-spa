@@ -33,6 +33,7 @@ void ReadStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string var_name = m_identifier->GetIdentifier();
   de->GetPkbClient()->PopulateRead(de->GetVisited(), stmt_num, var_name);
   de->Visit(m_identifier, proc_name, false);
+  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, READ);
 }
 
 std::shared_ptr<CfgNode> ReadStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {

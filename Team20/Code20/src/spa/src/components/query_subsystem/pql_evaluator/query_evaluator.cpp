@@ -81,5 +81,8 @@ std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQ
   return clauses;
 }
 
+void QueryEvaluator::WipeCache() {
+  pkb->GetNextStore()->WipeStar();
+}
 
 }
