@@ -84,8 +84,12 @@ class StmtStmtStore : public Store {
                                                                                                      StmtType type2);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStarPairs();
-  [[nodiscard]] void GetLowerStarOfHelper(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited);
-  [[nodiscard]] void GetUpperStarOfHelper(std::string const &stmt, std::unordered_set<std::string> &res, std::unordered_set<std::string> &visited);
+  [[nodiscard]] void GetLowerStarOfHelper(std::string const &stmt,
+                                          std::unordered_set<std::string> &res,
+                                          std::unordered_set<std::string> &visited);
+  [[nodiscard]] void GetUpperStarOfHelper(std::string const &stmt,
+                                          std::unordered_set<std::string> &res,
+                                          std::unordered_set<std::string> &visited);
 };
 
 #endif //FOLLOWS_PARENT_STORE_H
