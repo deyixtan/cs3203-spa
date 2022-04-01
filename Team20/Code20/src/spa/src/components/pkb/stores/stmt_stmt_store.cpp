@@ -7,8 +7,8 @@ StmtStmtStore::StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std:
 void StmtStmtStore::AddUpperLower(StoreType store_type,
                                   std::string const &upper,
                                   std::string const &lower) {
-  StmtType type1 = CALL;
-  StmtType type2 = CALL;
+  StmtType type1 = PROC;
+  StmtType type2 = PROC;
 
   if (store_type == FOLLOWS) {
     type1 = m_stmt_type->at(upper);
@@ -50,26 +50,27 @@ void StmtStmtStore::AddUpperLowerStar(StoreType store_type,
   StmtType type1, type2;
 
   if (store_type == CALLS) {
-    type1 = CALL;
-    type2 = CALL;
-  }
-
-  if (store_type == PARENT) {
+    type1 = PROC;
+    type2 = PROC;
+  } else if (store_type == PARENT) {
     type2 = m_stmt_type->at(lower);
+  } else {
+    type1 = m_stmt_type->at(lower);
+    type2 = m_stmt_type->at(upper);
   }
 
   if (store_type != PARENT) {
     set.insert(std::pair<std::string, std::string>(upper, lower));
 
-    if (star_type_pair_map.find(type1) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(type1).find(type2) != star_type_pair_map.at(type1).end()) {
-        star_type_pair_map.at(type1).at(type2).emplace(std::pair<std::string, std::string>(upper, lower));
+    if (star_type_pair_map.find(type2) != star_type_pair_map.end()) {
+      if (star_type_pair_map.at(type2).find(type1) != star_type_pair_map.at(type2).end()) {
+        star_type_pair_map.at(type2).at(type1).emplace(std::pair<std::string, std::string>(upper, lower));
       } else {
-        star_type_pair_map.at(type1).insert({type2, set});
+        star_type_pair_map.at(type2).insert({type1, set});
       }
     } else {
-      star_type_pair_map.insert({type1, {}});
-      star_type_pair_map.at(type1).insert({type2, set});
+      star_type_pair_map.insert({type2, {}});
+      star_type_pair_map.at(type2).insert({type1, set});
     }
   }
 
@@ -145,6 +146,10 @@ void StmtStmtStore::AddParent(bool is_star,
   }
 
   for (std::string const &ance : visited) {
+    if (ance == lower) {
+      continue;
+    }
+
     if (parent_rs_map.find(ance) == parent_rs_map.end()) {
       parent_rs_map.insert({ance, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
                                    std::unordered_set<std::string>()}});
@@ -160,15 +165,15 @@ void StmtStmtStore::AddParent(bool is_star,
     set.insert(std::pair<std::string, std::string>(ance, lower));
     StmtType ance_type = m_stmt_type->at(ance);
 
-    if (star_type_pair_map.find(type1) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(type1).find(ance_type) != star_type_pair_map.at(type1).end()) {
-        star_type_pair_map.at(type1).at(ance_type).emplace(std::pair<std::string, std::string>(upper, lower));
+    if (star_type_pair_map.find(ance_type) != star_type_pair_map.end()) {
+      if (star_type_pair_map.at(ance_type).find(type1) != star_type_pair_map.at(ance_type).end()) {
+        star_type_pair_map.at(ance_type).at(type1).emplace(std::pair<std::string, std::string>(ance, lower));
       } else {
-        star_type_pair_map.at(type1).insert({ance_type, set});
+        star_type_pair_map.at(ance_type).insert({type1, set});
       }
     } else {
-      star_type_pair_map.insert({type1, {}});
-      star_type_pair_map.at(type1).insert({ance_type, set});
+      star_type_pair_map.insert({ance_type, {}});
+      star_type_pair_map.at(ance_type).insert({type1, set});
     }
   }
 }

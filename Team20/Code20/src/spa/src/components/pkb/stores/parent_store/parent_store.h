@@ -12,7 +12,7 @@ class ParentStore : public StmtStmtStore {
                        std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
   void AddParent(std::string const &parent, std::string const &child);
   void AddParentStar(std::string const &stmt, std::vector<std::string> const &visited);
-  [[nodiscard]] bool ParentChildValid(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsParentPairValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] StmtType GetTypeOfStmt(std::string stmt_no);
   [[nodiscard]] std::string GetParentOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetChildOf(std::string const &stmt);

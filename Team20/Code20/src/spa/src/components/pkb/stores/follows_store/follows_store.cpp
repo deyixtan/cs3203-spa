@@ -15,12 +15,12 @@ void FollowsStore::AddFollowStar(std::string const &follower,
 }
 
 // Used for follower(s1, s2)
-bool FollowsStore::IsFollowValid(std::pair<std::string, std::string> const &pair) {
+bool FollowsStore::IsFollowsPairValid(std::pair<std::string, std::string> const &pair) {
   return IsValid(pair);
 }
 
 // Used for follower*(s1, s2)
-bool FollowsStore::IsFollowStarValid(std::pair<std::string, std::string> const &pair) {
+bool FollowsStore::IsFollowsStarPairValid(std::pair<std::string, std::string> const &pair) {
   return IsStarValid(pair);
 }
 

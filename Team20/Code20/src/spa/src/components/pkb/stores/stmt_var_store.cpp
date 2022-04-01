@@ -17,8 +17,13 @@ void StmtVarStore::AddStmtVar(std::string stmt, std::string var) {
     all_proc.insert({stmt});
   } else {
     all_stmt.insert({stmt});
+    AddStmtVarHelper(STMT, stmt, var);
   }
 
+  AddStmtVarHelper(type, stmt, var);
+}
+
+void StmtVarStore::AddStmtVarHelper(StmtType type, std::string stmt, std::string var) {
   if (!stmt_var_map.emplace(stmt, std::unordered_set<std::string>{var}).second) {
     stmt_var_map.at(stmt).emplace(var);
   }

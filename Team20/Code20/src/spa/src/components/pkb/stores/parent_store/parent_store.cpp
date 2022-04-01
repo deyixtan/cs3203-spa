@@ -13,7 +13,7 @@ void ParentStore::AddParentStar(std::string const &stmt, std::vector<std::string
 }
 
 // Used for Parent(s1, s2)
-bool ParentStore::ParentChildValid(std::pair<std::string, std::string> const &pair) {
+bool ParentStore::IsParentPairValid(std::pair<std::string, std::string> const &pair) {
   return IsValid(pair);
 }
 

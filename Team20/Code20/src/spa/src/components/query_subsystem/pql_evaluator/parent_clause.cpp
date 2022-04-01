@@ -140,7 +140,7 @@ Table ParentClause::HandleIntegerWildcard() {
 }
 
 Table ParentClause::HandleIntegerInteger() {
-  bool is_false_clause = !pkb->GetParentStore()->ParentChildValid({first_arg.value, second_arg.value});
+  bool is_false_clause = !pkb->GetParentStore()->IsParentPairValid({first_arg.value, second_arg.value});
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();

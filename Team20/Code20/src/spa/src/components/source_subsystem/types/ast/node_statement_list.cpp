@@ -38,8 +38,6 @@ bool StatementListNode::operator==(const StatementListNode &other) const {
 
 void StatementListNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::vector<std::shared_ptr<StatementNode>> stmts = m_statements;
-  StmtType type1 = STMT;
-  StmtType type2 = STMT;
 
   for (int i = 0; i < stmts.size(); ++i) {
     std::shared_ptr<StatementNode> stmt = stmts[i];
@@ -56,10 +54,8 @@ void StatementListNode::Accept(DesignExtractor *de, std::string proc_name) {
       de->GetPkbClient()->PopulateFollows(std::to_string(prev_stmt), std::to_string(curr_stmt));
 
       // PopulateFollowsStar
-      for (int j = i; j >= 0; --j) {
+      for (int j = i - 1; j >= 0; --j) {
         prev_stmt = stmts[j]->GetStatementNumber();
-        type1 = de->GetPkbClient()->GetTypeOfStmt(std::to_string(prev_stmt));
-        type2 = de->GetPkbClient()->GetTypeOfStmt(std::to_string(curr_stmt));
         de->GetPkbClient()->PopulateFollowsStar(std::to_string(prev_stmt), std::to_string(curr_stmt));
       }
     }
