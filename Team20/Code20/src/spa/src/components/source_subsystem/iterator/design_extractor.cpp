@@ -88,7 +88,6 @@ void DesignExtractor::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
     std::shared_ptr<CfgNode> curr_proc = proc.second; // root node of cfg
     CfgProcessHandler(curr_proc, node_stack, prev_stmts, visited, next_map);
   }
-  m_pkb_client->PopulateNext(next_map);
 }
 
 void DesignExtractor::CfgProcessHandler(std::shared_ptr<CfgNode> &curr_proc,
@@ -136,15 +135,7 @@ void DesignExtractor::MultipleStmtsNodeHandler(std::vector<Statement> &curr_stmt
   int start = 0;
   int next = 1;
   while (curr_stmts.size() > next) {
-    // check if first statement is inside next_map
-    if (next_map.find(curr_stmts[start].stmt_no) == next_map.end()) {
-      std::unordered_set<std::string> nextSet = std::unordered_set<std::string>();
-      nextSet.insert(curr_stmts[next].stmt_no);
-      next_map.insert({curr_stmts[start].stmt_no, nextSet});
-    } else {
-      std::unordered_set<std::string> vals = next_map[curr_stmts[start].stmt_no];
-      vals.insert(curr_stmts[next].stmt_no);
-    }
+    m_pkb_client->PopulateNext(curr_stmts[start].stmt_no, curr_stmts[next].stmt_no);
     start++;
     next++;
   }
@@ -157,20 +148,14 @@ void DesignExtractor::NextNodeHandler(std::shared_ptr<CfgNode> &desc,
                                       std::unordered_map<std::string,
                                                          std::unordered_set<std::string>> &next_map) {
   if (curr_stmts.size() > 0) {
-    if (next_map.find(curr_stmts[curr_stmts.size() - 1].stmt_no) == next_map.end()) {
-      next_map.insert({curr_stmts[curr_stmts.size() - 1].stmt_no, std::unordered_set<std::string>()});
-    }
-
     // force desc to legit node
     while (desc->GetStatementList().size() == 0 && desc->GetDescendants().size() > 0) {
       desc = desc->GetDescendants().front();
     }
 
     std::vector<Statement> next_stmts = desc->GetStatementList();
-    std::unordered_set<std::string> vals = next_map[curr_stmts[curr_stmts.size() - 1].stmt_no];
     if (next_stmts.size() > 0) {
-      vals.insert(next_stmts.front().stmt_no);
-      next_map[curr_stmts[curr_stmts.size() - 1].stmt_no] = vals;
+      m_pkb_client->PopulateNext(curr_stmts[curr_stmts.size() - 1].stmt_no, next_stmts.front().stmt_no);
     }
   }
   if (visited.find(desc) == visited.end()) {
