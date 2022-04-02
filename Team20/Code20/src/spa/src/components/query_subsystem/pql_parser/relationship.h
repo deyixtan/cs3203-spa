@@ -11,10 +11,13 @@ class Relationship {
 
  public:
   Relationship();
+  Relationship(PqlToken rel_ref);
   Relationship(PqlToken, PqlToken, PqlToken);
   PqlToken GetRelRef();
   PqlToken GetFirst();
   PqlToken GetSecond();
+  void SetFirst(PqlToken);
+  void SetSecond(PqlToken);
 };
 
 #endif

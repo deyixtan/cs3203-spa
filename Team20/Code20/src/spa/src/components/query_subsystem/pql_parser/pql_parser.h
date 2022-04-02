@@ -13,6 +13,7 @@ class PqlParser {
   PqlToken FetchNextToken();
   PqlToken ValidateToken(std::unordered_set<PqlTokenType>);
   PqlToken ValidateToken(PqlTokenType);
+  void RevertToSynonymType();
   int GetEndOfDeclarationCursor();
   void ParseDeclaration();
   void ParseDeclarationVariables(DesignEntityType&, Declaration&);
@@ -21,13 +22,12 @@ class PqlParser {
   void ParseSelectClause();
   void ParseResultClause();
   void ParseSynonymResultClause(ResultClause&, PqlToken&);
+  void ParseAttributeResultClause(ResultClause&, PqlToken&);
   void ParseBooleanResultClause(ResultClause&, PqlToken&);
   void ParseTupleResultClause(ResultClause&, PqlToken&);
   void ParseRelationshipClause();
   void ParsePatternClause();
   void ParseWithClause();
-  std::string BOOLEAN_SYNONYM_VALUE = "BOOLEAN";
-  std::string INVALID_QUERY_FORMAT = "Invalid Query Format! \n";
  public:
   PqlParser(std::vector<PqlToken>);
   ParsedQuery ParseQuery();
