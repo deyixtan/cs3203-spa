@@ -15,6 +15,7 @@ void QueryController::ProcessQuery(std::string query, std::list<std::string> &re
     ParsedQuery parsed_query = pqb.Build();
     if (validator_->ValidateQuery(parsed_query)) {
       evaluator_->Evaluate(parsed_query, results);
+      evaluator_->WipeCache();
     } else if (parsed_query.GetResultClause().GetType() == ResultClauseType::BOOLEAN){
       results.push_back("FALSE");
     }

@@ -85,6 +85,7 @@ void IfStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   de->Visit(else_block, proc_name);
 
   de->GetPkbClient()->PopulateIf(de->GetVisited(), stmt_num, cond_expr);
+  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, IF);
 }
 
 std::shared_ptr<CfgNode> IfStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
