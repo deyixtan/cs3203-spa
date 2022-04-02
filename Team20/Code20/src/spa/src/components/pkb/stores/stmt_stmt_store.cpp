@@ -330,7 +330,7 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType type, std
   }
 }
 
-std::unordered_set<std::string> StmtStmtStore::GetLowerOf(StoreType type, std::string const &stmt) {
+std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType type, std::string const &stmt) {
   if (type == PARENT) {
     if (parent_rs_map.find(stmt) != parent_rs_map.end()) {
       return parent_rs_map.at(stmt).child;

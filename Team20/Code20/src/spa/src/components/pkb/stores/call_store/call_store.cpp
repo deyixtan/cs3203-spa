@@ -37,7 +37,7 @@ std::unordered_set<std::string> CallStore::GetCallersOf(std::string const &proc)
 }
 
 std::unordered_set<std::string> CallStore::GetCalleesOf(std::string const &proc) {
-  return GetLowerOf(CALLS, proc);
+  return GetLowerSetOf(CALLS, proc);
 }
 
 std::unordered_set<std::string> CallStore::GetCallersStarOf(std::string const &proc) {

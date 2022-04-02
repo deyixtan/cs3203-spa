@@ -22,7 +22,7 @@ std::string ParentStore::GetParentOf(std::string const &stmt) {
 }
 
 std::unordered_set<std::string> ParentStore::GetChildOf(std::string const &stmt) {
-  return GetLowerOf(PARENT, stmt);
+  return GetLowerSetOf(PARENT, stmt);
 }
 
 std::unordered_set<std::string> ParentStore::GetAllAnceOf(std::string const &stmt) {
