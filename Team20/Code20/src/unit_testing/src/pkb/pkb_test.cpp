@@ -157,6 +157,7 @@ PKB *set_up_pkb() {
   pkb->GetModifiesStore()->AddStmtVar("foo", "snake");
   pkb->GetModifiesStore()->AddStmtVar("foo", "monkey");
   pkb->GetModifiesStore()->AddStmtVar("func", "monkey");
+  pkb->GetModifiesStore()->AddStmtVar("bar", "monkey");
 
   pkb->GetFollowsStore()->AddFollow("1", "2");
   pkb->GetFollowsStore()->AddFollow("2", "3");
@@ -452,8 +453,8 @@ TEST_CASE("Get stmt modified by var (invalid)") {
 TEST_CASE("Get var modified by proc (correct)") {
   PKB *pkb = set_up_pkb();
 
-  auto actual = pkb->GetModifiesStore()->GetAllModStmt(PROC);
-  auto expected = mod_proc_to_var.at("main");
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetModifiesStore()->GetAllModStmt(PROC);
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected = mod_proc_to_var.at(PROC);
 
   REQUIRE(actual == expected);
 }

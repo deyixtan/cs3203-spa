@@ -170,11 +170,9 @@ std::unordered_set<std::string> all_proc_using = {"main", "foo", "bar", "func"};
 
 /* MODIFY STORE */
 
-std::unordered_map<std::string, std::unordered_set<std::string>> mod_proc_to_var =
+std::unordered_map<StmtType, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> mod_proc_to_var =
     {
-        {"main", {"dog", "pig", "dragon"}},
-        {"foo", {"snake"}},
-        {"func", {"monkey"}}
+        {PROC, {{"main", "dog"}, {"main", "pig"}, {"main", "dragon"}, {"main", "snake"}, {"main", "monkey"}, {"foo", "snake"}, {"foo", "monkey"}, {"func", "monkey"}, {"bar", "monkey"}}},
     };
 
 std::unordered_map<std::string, std::unordered_set<std::string>> mod_var_to_proc =
@@ -225,7 +223,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> mod_stmt_var_
     };
 
 std::unordered_set<std::string> all_stmt_mod = {"1", "4", "7", "8", "10", "15"};
-std::unordered_set<std::string> all_proc_mod = {"main", "foo", "func"};
+std::unordered_set<std::string> all_proc_mod = {"main", "foo", "func", "bar"};
 
 /* FOLLOW STORE */
 
