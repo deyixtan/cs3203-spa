@@ -9,7 +9,7 @@ FollowsStore set_up_follow(int numStmts) {
     stmt_vector.push_back(std::unordered_set<std::string>());
   }
 
-  FollowsStore follow_store = FollowsStore(std::make_shared<std::vector<std::unordered_set<std::string>>>(stmt_vector));
+  FollowsStore follow_store = FollowsStore(std::make_shared<std::vector<std::unordered_set<std::string>>>(stmt_vector), std::make_shared<std::unordered_map<std::string, StmtType>>());
   follow_store.AddFollow(LINE_1, LINE_2);
   follow_store.AddFollow(LINE_2, LINE_3);
   follow_store.AddFollow(LINE_3, LINE_4);
@@ -26,7 +26,7 @@ TEST_CASE("Valid follow pair") {
   FollowsStore follow_store = set_up_follow(10);
   std::string stmt1 = "2";
   std::string stmt2 = "3";
-  bool actual = follow_store.IsFollowValid({stmt1, stmt2});
+  bool actual = follow_store.IsFollowsPairValid({stmt1, stmt2});
   bool expected = follow_set.find({stmt1, stmt2}) != follow_set.end();
 
   REQUIRE(actual == expected);
@@ -36,7 +36,7 @@ TEST_CASE("Invalid follow pair") {
   FollowsStore follow_store = set_up_follow(10);
   std::string stmt1 = "2";
   std::string stmt2 = "5";
-  bool actual = follow_store.IsFollowValid({stmt1, stmt2});
+  bool actual = follow_store.IsFollowsPairValid({stmt1, stmt2});
   bool expected = follow_set.find({stmt1, stmt2}) != follow_set.end();
 
   REQUIRE(actual == expected);

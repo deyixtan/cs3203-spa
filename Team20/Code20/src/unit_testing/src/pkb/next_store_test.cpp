@@ -8,7 +8,7 @@ NextStore set_up_next() {
   for (int i = 0; i < COUNT; i++) {
     stmt_vector.push_back(std::unordered_set<std::string>());
   }
-  NextStore next_store = NextStore(std::make_shared<std::vector<std::unordered_set<std::string>>>(stmt_vector));
+  NextStore next_store = NextStore(std::make_shared<std::vector<std::unordered_set<std::string>>>(stmt_vector), std::make_shared<std::unordered_map<std::string, StmtType>>());
   next_store.AddNext(LINE_1, LINE_8);
   next_store.AddNext(LINE_1, LINE_2);
   next_store.AddNext(LINE_2, LINE_7);
@@ -70,34 +70,15 @@ TEST_CASE("Valid before of stmt") {
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Valid next stmt") {
+TEST_CASE("Invalid before of stmt") {
   NextStore next_store = set_up_next();
-  std::string stmt1 = "8";
-  bool actual = next_store.IsNext(stmt1);
+  std::string stmt1 = "15";
+  std::unordered_set<std::string> actual;
+  actual.insert("9");
+  actual.insert("10");
+  actual.insert("14");
+  std::unordered_set<std::string> expected = next_store.GetBeforeOf(stmt1);
 
-  REQUIRE(actual == true);
+  REQUIRE(actual != expected);
 }
 
-TEST_CASE("Invalid next stmt") {
-  NextStore next_store = set_up_next();
-  std::string stmt1 = "16";
-  bool actual = next_store.IsNext(stmt1);
-
-  REQUIRE(actual == false);
-}
-
-TEST_CASE("Valid before stmt") {
-  NextStore next_store = set_up_next();
-  std::string stmt1 = "9";
-  bool actual = next_store.IsBefore(stmt1);
-
-  REQUIRE(actual == true);
-}
-
-TEST_CASE("Invalid before stmt") {
-  NextStore next_store = set_up_next();
-  std::string stmt1 = "16";
-  bool actual = next_store.IsBefore(stmt1);
-
-  REQUIRE(actual == false);
-}

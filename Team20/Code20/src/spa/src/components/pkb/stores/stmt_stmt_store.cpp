@@ -379,6 +379,10 @@ void StmtStmtStore::GetLowerStarOfHelper(std::string const &stmt,
   std::unordered_set<std::string> &next_set = next_rs_map[stmt].next;
   visited.insert(stmt);
   for (auto next : next_set) {
+    while(next_rs_map[next].next.size() > 0) {
+      res.insert(next);
+      next_rs_map[stmt].next_star_set.insert(next);
+    }
     res.insert(next);
     next_rs_map[stmt].next_star_set.insert(next);
     GetLowerStarOfHelper(next, res, visited);

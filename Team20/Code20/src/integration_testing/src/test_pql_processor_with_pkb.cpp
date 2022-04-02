@@ -59,22 +59,6 @@ PKB *set_up_pkb() {
   pkb->AddStmt("3", PRINT);
   pkb->AddStmt("13", PRINT);
 
-  pkb->GetUsesStore()->AddProcVar("main", "dog");
-  pkb->GetUsesStore()->AddProcVar("main", "cat");
-  pkb->GetUsesStore()->AddProcVar("main", "mouse");
-  pkb->GetUsesStore()->AddProcVar("main", "pig");
-  pkb->GetUsesStore()->AddProcVar("main", "ox");
-  pkb->GetUsesStore()->AddProcVar("main", "dragon");
-  pkb->GetUsesStore()->AddProcVar("main", "rabbit");
-  pkb->GetUsesStore()->AddProcVar("foo", "snake");
-  pkb->GetUsesStore()->AddProcVar("foo", "dog");
-  pkb->GetUsesStore()->AddProcVar("foo", "rabbit");
-  pkb->GetUsesStore()->AddProcVar("foo", "cat");
-  pkb->GetUsesStore()->AddProcVar("bar", "rabbit");
-  pkb->GetUsesStore()->AddProcVar("func", "monkey");
-  pkb->GetUsesStore()->AddProcVar("func", "tiger");
-  pkb->GetUsesStore()->AddProcVar("func", "dog");
-
   pkb->GetUsesStore()->AddStmtVar("3", "cat");
   pkb->GetUsesStore()->AddStmtVar("4", "dog");
   pkb->GetUsesStore()->AddStmtVar("4", "mouse");
@@ -99,12 +83,6 @@ PKB *set_up_pkb() {
   pkb->GetUsesStore()->AddStmtVar("15", "monkey");
   pkb->GetUsesStore()->AddStmtVar("15", "tiger");
   pkb->GetUsesStore()->AddStmtVar("15", "dog");
-
-  pkb->GetModifiesStore()->AddProcVar("main", "dog");
-  pkb->GetModifiesStore()->AddProcVar("main", "pig");
-  pkb->GetModifiesStore()->AddProcVar("main", "dragon");
-  pkb->GetModifiesStore()->AddProcVar("foo", "snake");
-  pkb->GetModifiesStore()->AddProcVar("func", "monkey");
 
   pkb->GetModifiesStore()->AddStmtVar("1", "dog");
   pkb->GetModifiesStore()->AddStmtVar("4", "dog");
