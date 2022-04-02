@@ -39,6 +39,39 @@ void StmtStmtStore::AddUpperLower(StoreType store_type,
     type_pair_map.insert({type1, {}});
     type_pair_map.at(type1).insert({type2, set});
   }
+
+  if (type_pair_map.find(STMT) != type_pair_map.end()) {
+    if (type_pair_map.at(STMT).find(type2) != type_pair_map.at(STMT).end()) {
+      type_pair_map.at(STMT).at(type2).emplace(std::pair<std::string, std::string>(upper, lower));
+    } else {
+      type_pair_map.at(STMT).insert({type2, set});
+    }
+  } else {
+    type_pair_map.insert({STMT, {}});
+    type_pair_map.at(STMT).insert({type2, set});
+  }
+
+  if (type_pair_map.find(type1) != type_pair_map.end()) {
+    if (type_pair_map.at(type1).find(STMT) != type_pair_map.at(type1).end()) {
+      type_pair_map.at(type1).at(STMT).emplace(std::pair<std::string, std::string>(upper, lower));
+    } else {
+      type_pair_map.at(type1).insert({STMT, set});
+    }
+  } else {
+    type_pair_map.insert({type1, {}});
+    type_pair_map.at(type1).insert({STMT, set});
+  }
+
+  if (type_pair_map.find(STMT) != type_pair_map.end()) {
+    if (type_pair_map.at(STMT).find(STMT) != type_pair_map.at(STMT).end()) {
+      type_pair_map.at(STMT).at(STMT).emplace(std::pair<std::string, std::string>(upper, lower));
+    } else {
+      type_pair_map.at(STMT).insert({STMT, set});
+    }
+  } else {
+    type_pair_map.insert({STMT, {}});
+    type_pair_map.at(STMT).insert({STMT, set});
+  }
 }
 
 void StmtStmtStore::AddUpperLowerStar(StoreType store_type,
@@ -71,6 +104,39 @@ void StmtStmtStore::AddUpperLowerStar(StoreType store_type,
     } else {
       star_type_pair_map.insert({type2, {}});
       star_type_pair_map.at(type2).insert({type1, set});
+    }
+
+    if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
+      if (star_type_pair_map.at(STMT).find(type1) != star_type_pair_map.at(STMT).end()) {
+        star_type_pair_map.at(STMT).at(type1).emplace(std::pair<std::string, std::string>(upper, lower));
+      } else {
+        star_type_pair_map.at(STMT).insert({type1, set});
+      }
+    } else {
+      star_type_pair_map.insert({STMT, {}});
+      star_type_pair_map.at(STMT).insert({type1, set});
+    }
+
+    if (star_type_pair_map.find(type2) != star_type_pair_map.end()) {
+      if (star_type_pair_map.at(type2).find(STMT) != star_type_pair_map.at(type2).end()) {
+        star_type_pair_map.at(type2).at(STMT).emplace(std::pair<std::string, std::string>(upper, lower));
+      } else {
+        star_type_pair_map.at(type2).insert({STMT, set});
+      }
+    } else {
+      star_type_pair_map.insert({type2, {}});
+      star_type_pair_map.at(type2).insert({STMT, set});
+    }
+
+    if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
+      if (star_type_pair_map.at(STMT).find(STMT) != star_type_pair_map.at(STMT).end()) {
+        star_type_pair_map.at(STMT).at(STMT).emplace(std::pair<std::string, std::string>(upper, lower));
+      } else {
+        star_type_pair_map.at(STMT).insert({STMT, set});
+      }
+    } else {
+      star_type_pair_map.insert({STMT, {}});
+      star_type_pair_map.at(STMT).insert({STMT, set});
     }
   }
 
