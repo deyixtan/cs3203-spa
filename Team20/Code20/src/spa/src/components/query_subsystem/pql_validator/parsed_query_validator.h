@@ -9,7 +9,7 @@ namespace pql_validator {
 class ParsedQueryValidator {
  public:
   ParsedQueryValidator() {};
-  bool ValidateQuery(ParsedQuery);
+  bool IsQuerySemanticallyValid(ParsedQuery query);
 
  private:
   bool IsStmt(DesignEntityType);
@@ -17,11 +17,15 @@ class ParsedQueryValidator {
   bool IsProc(DesignEntityType);
   bool IsEntRef(PqlTokenType);
   bool IsExpressionSpec(PqlTokenType);
-  bool IsNameAttribute(AtrriName attri_name);
-  bool IsIntegerAttribute(AtrriName attri_name);
-  bool ValidateAttribute(PqlToken, std::unordered_map<std::string, DesignEntityType>);
+  bool IsNameAttribute(AttriName attri_name);
+  bool IsIntegerAttribute(AttriName attri_name);
 
-  bool ValidateResultClauseDeclared(ParsedQuery);
+
+  bool IsDeclarationSemanticallyValid(Declaration);
+  bool IsResultClauseSemanticallyValid(ParsedQuery);
+  bool IsSynonymDeclared(PqlToken, std::unordered_map<std::string, DesignEntityType>);
+  bool IsAttributeSemanticallyValid(PqlToken token, std::unordered_map<std::string, DesignEntityType> declarations);
+  bool IsAttributeDeclared(std::pair<std::string, AttriName>, std::unordered_map<std::string, DesignEntityType>);
 
   bool ValidateSuchThatClause(ParsedQuery);
   bool ValidateFollowsFollowsTArguments(Relationship, std::unordered_map<std::string, DesignEntityType>);

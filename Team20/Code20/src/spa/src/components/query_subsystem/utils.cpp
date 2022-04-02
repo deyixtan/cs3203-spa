@@ -15,34 +15,34 @@ bool Utils::ContainsDot(const std::string &token) {
   return false;
 }
 
-std::pair<std::string, AtrriName> Utils::ParseAttributeRef(PqlToken &token) {
+std::pair<std::string, AttriName> Utils::ParseAttributeRef(PqlToken &token) {
   int dot_index = token.value.find('.');
   std::string synonym = token.value.substr(0, dot_index);
   std::string attriName = token.value.substr(dot_index + 1, token.value.size() - (dot_index + 1));
-  std::pair<std::string, AtrriName> attributePair = std::make_pair(synonym,
+  std::pair<std::string, AttriName> attributePair = std::make_pair(synonym,
                                                                    convertAttriName(attriName));
   return attributePair;
 }
 
-std::pair<std::pair<DesignEntityType, std::string>, AtrriName> Utils::ParseAttributeRef(PqlToken &token, std::unordered_map<std::string, DesignEntityType> declarations) {
+std::pair<std::pair<DesignEntityType, std::string>, AttriName> Utils::ParseAttributeRef(PqlToken &token, std::unordered_map<std::string, DesignEntityType> declarations) {
   int dot_index = token.value.find('.');
   std::string synonym = token.value.substr(0, dot_index);
   std::string attriName = token.value.substr(dot_index + 1, token.value.size() - (dot_index + 1));
   std::pair<DesignEntityType, std::string> synonym_pair = std::make_pair(declarations.at(synonym), synonym);
-  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> attributePair = std::make_pair(synonym_pair,
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName> attributePair = std::make_pair(synonym_pair,
                                                                                                 convertAttriName(attriName));
   return attributePair;
 }
 
-AtrriName Utils::convertAttriName(std::string attriName) {
+AttriName Utils::convertAttriName(std::string attriName) {
   if (attriName == "varName") {
-    return AtrriName::VARNAME;
+    return AttriName::VARNAME;
   } else if (attriName == "procName") {
-    return AtrriName::PROCNAME;
+    return AttriName::PROCNAME;
   } else if (attriName == "stmt#") {
-    return AtrriName::STMTNO;
+    return AttriName::STMTNO;
   } else if (attriName == "value") {
-    return AtrriName::VALUE;
+    return AttriName::VALUE;
   } else {
     throw "Invalid Attribute Name";
   }
@@ -62,9 +62,9 @@ std::unordered_set<DesignEntityType> int_ident_entities = {
     DesignEntityType::CALL
 };
 
-bool Utils::IsConversionNeeded(DesignEntityType type, AtrriName attribute_name) {
+bool Utils::IsConversionNeeded(DesignEntityType type, AttriName attribute_name) {
   if (int_ident_entities.count(type) != 0) {
-    if (attribute_name == AtrriName::PROCNAME || attribute_name == AtrriName::VARNAME) {
+    if (attribute_name == AttriName::PROCNAME || attribute_name == AttriName::VARNAME) {
       return true;
     }
   }
@@ -88,40 +88,28 @@ std::vector<std::string> Utils::SplitString(std::string& s, char delimiter) {
   return string_vec;
 }
 
-std::unordered_set<DesignEntityType> procname_entities = {
-    DesignEntityType::PROCEDURE
+std::unordered_set<AttriName> procedure_attribute_names = {
+    AttriName::PROCNAME
 };
 
-std::unordered_set<DesignEntityType> varname_entities = {
-  DesignEntityType::VARIABLE
+std::unordered_set<AttriName> call_attribute_names = {
+    AttriName::PROCNAME,
+    AttriName::STMTNO
 };
 
-std::unordered_set<DesignEntityType> stmtno_entities = {
-  DesignEntityType::STMT,
-  DesignEntityType::WHILE,
-  DesignEntityType::IF,
-  DesignEntityType::ASSIGN
+std::unordered_set<AttriName> variable_attribute_names = {
+    AttriName::VARNAME
 };
 
-std::unordered_set<DesignEntityType> value_entities = {
-  DesignEntityType::CONSTANT
+std::unordered_set<AttriName> read_and_print_attribute_names = {
+    AttriName::VARNAME,
+    AttriName::STMTNO
 };
 
-std::unordered_set<DesignEntityType> varname_and_stmtno_entities = {
-    DesignEntityType::READ,
-    DesignEntityType::PRINT
+std::unordered_set<AttriName> constant_attribute_names = {
+    AttriName::VALUE
 };
 
-std::unordered_set<DesignEntityType> procname_and_stmtno_entities = {
-    DesignEntityType::CALL
-};
-
-std::unordered_set<AtrriName> varname_and_stmtno_attrinames = {
-    AtrriName::VARNAME,
-    AtrriName::STMTNO
-};
-
-std::unordered_set<AtrriName> procname_and_stmtno_attrinames = {
-    AtrriName::PROCNAME,
-    AtrriName::STMTNO
+std::unordered_set<AttriName> stmt_attribute_names = {
+    AttriName::STMTNO
 };

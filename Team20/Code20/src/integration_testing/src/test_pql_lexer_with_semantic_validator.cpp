@@ -24,7 +24,7 @@ TEST_CASE("Test query missing declaration in result clause") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -38,7 +38,7 @@ TEST_CASE("Test query missing declaration in relationship clause") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -52,7 +52,7 @@ TEST_CASE("Test query missing declaration in pattern clause") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -66,7 +66,7 @@ TEST_CASE("Test query no missing declaration in pattern clause synonym") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -80,7 +80,7 @@ TEST_CASE("Test query no missing declaration in pattern clause") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == true);
 }
@@ -94,7 +94,7 @@ TEST_CASE("Test query missing declaration in with clause 1") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -108,7 +108,7 @@ TEST_CASE("Test query missing declaration in with clause 2") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -122,7 +122,7 @@ TEST_CASE("Test query missing declaration in with clause 3") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -136,7 +136,7 @@ TEST_CASE("Test query wrong with clause") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -150,7 +150,7 @@ TEST_CASE("Test query correct with clause") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == true);
 }
@@ -164,7 +164,7 @@ TEST_CASE("Test query wrong attribute") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -178,7 +178,7 @@ TEST_CASE("Test query wrong attribute in tuple") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -192,7 +192,7 @@ TEST_CASE("Test query correct attribute in tuple") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == true);
 }
@@ -206,7 +206,7 @@ TEST_CASE("Test query wrong attribute in with clause") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -220,7 +220,7 @@ TEST_CASE("Test query correct multi with clause") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == true);
 }
@@ -234,7 +234,7 @@ TEST_CASE("Test query wrong with clause 1") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -248,7 +248,7 @@ TEST_CASE("Test query wrong with clause 2") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -262,7 +262,7 @@ TEST_CASE("Test query wrong with clause 3") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -276,7 +276,7 @@ TEST_CASE("Test query wrong Uses clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -290,7 +290,7 @@ TEST_CASE("Test query wrong multi Uses clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -304,7 +304,7 @@ TEST_CASE("Test query correct Uses clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == true);
 }
@@ -318,7 +318,7 @@ TEST_CASE("Test query wrong modifies clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -332,7 +332,7 @@ TEST_CASE("Test query wrong multi modifies clause argument 1") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -346,7 +346,7 @@ TEST_CASE("Test query wrong multi modifies clause argument 2") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -360,7 +360,7 @@ TEST_CASE("Test query correct modifies clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == true);
 }
@@ -374,7 +374,7 @@ TEST_CASE("Test query wrong parent clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -388,7 +388,7 @@ TEST_CASE("Test query wrong next clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -402,7 +402,7 @@ TEST_CASE("Test query correct next and affects clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -416,7 +416,7 @@ TEST_CASE("Test query correct assign pattern clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -430,7 +430,7 @@ TEST_CASE("Test query wrong assign pattern clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -444,7 +444,7 @@ TEST_CASE("Test query correct while pattern clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == true);
 }
@@ -458,7 +458,7 @@ TEST_CASE("Test query wrong while pattern clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -472,7 +472,7 @@ TEST_CASE("Test query correct while and if pattern clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == true);
 }
@@ -486,7 +486,7 @@ TEST_CASE("Test query wrong if pattern clause argument") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -500,7 +500,7 @@ TEST_CASE("Test query wrong multi clause") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == false);
 }
@@ -514,7 +514,7 @@ TEST_CASE("Test query correct multi clause") {
   ParsedQueryBuilder pqb(test_token_vect);
   ParsedQuery pq = pqb.Build();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
-  bool is_query_valid = pqv.ValidateQuery(pq);
+  bool is_query_valid = pqv.IsQuerySemanticallyValid(pq);
 
   REQUIRE(is_query_valid == true);
 }

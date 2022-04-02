@@ -13,7 +13,7 @@ void QueryController::ProcessQuery(std::string query, std::list<std::string> &re
     std::vector<PqlToken> validated_tokens = query_validator.CheckValidation();
     ParsedQueryBuilder pqb(validated_tokens);
     ParsedQuery parsed_query = pqb.Build();
-    if (validator_->ValidateQuery(parsed_query)) {
+    if (validator_->IsQuerySemanticallyValid(parsed_query)) {
       evaluator_->Evaluate(parsed_query, results);
       evaluator_->WipeCache();
     } else if (parsed_query.GetResultClause().GetType() == ResultClauseType::BOOLEAN){
