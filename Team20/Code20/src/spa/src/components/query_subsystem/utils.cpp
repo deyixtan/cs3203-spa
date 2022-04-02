@@ -71,6 +71,23 @@ bool Utils::IsConversionNeeded(DesignEntityType type, AtrriName attribute_name) 
   return false;
 }
 
+std::vector<std::string> Utils::SplitString(std::string& s, char delimiter) {
+  std::vector<std::string> string_vec;
+  std::string temp_string;
+  for(char c : s) {
+    if (c == delimiter) {
+      string_vec.push_back(temp_string);
+      temp_string.clear();
+    } else {
+      temp_string += c;
+    }
+  }
+  if (!temp_string.empty()) {
+    string_vec.push_back(temp_string);
+  }
+  return string_vec;
+}
+
 std::unordered_set<DesignEntityType> procname_entities = {
     DesignEntityType::PROCEDURE
 };

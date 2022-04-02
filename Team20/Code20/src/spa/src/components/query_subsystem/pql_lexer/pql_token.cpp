@@ -151,6 +151,36 @@ std::unordered_set<PqlTokenType> allowed_synonyms = {
     PqlTokenType::BOOLEAN
 };
 
+std::unordered_set<PqlTokenType> result_cl = {
+    PqlTokenType::ATTRIBUTE,
+    PqlTokenType::TUPLE,
+    PqlTokenType::BOOLEAN,
+    PqlTokenType::SYNONYM,
+    PqlTokenType::FOLLOWS,
+    PqlTokenType::PARENT,
+    PqlTokenType::USES,
+    PqlTokenType::MODIFIES,
+    PqlTokenType::NEXT,
+    PqlTokenType::CALLS,
+    PqlTokenType::AFFECTS,
+    PqlTokenType::PATTERN,
+    PqlTokenType::STMT,
+    PqlTokenType::READ,
+    PqlTokenType::PRINT,
+    PqlTokenType::CALL,
+    PqlTokenType::WHILE,
+    PqlTokenType::IF,
+    PqlTokenType::ASSIGN,
+    PqlTokenType::VARIABLE,
+    PqlTokenType::CONSTANT,
+    PqlTokenType::PROCEDURE,
+    PqlTokenType::SUCH,
+    PqlTokenType::THAT,
+    PqlTokenType::WITH,
+    PqlTokenType::AND,
+    PqlTokenType::SELECT,
+};
+
 std::unordered_set<PqlTokenType> result_cl_excluding_synonym = {
     PqlTokenType::ATTRIBUTE,
     PqlTokenType::TUPLE,

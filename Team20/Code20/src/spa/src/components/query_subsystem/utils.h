@@ -33,6 +33,7 @@ class Utils {
   static std::string TrimQuotes(std::string&);
   static std::string TrimUnderscoreAndQuotes(std::string&);
   static bool IsConversionNeeded(DesignEntityType, AtrriName);
+  static std::vector<std::string> SplitString(std::string&, char);
 };
 
 extern std::unordered_set<DesignEntityType> int_ident_entities;
