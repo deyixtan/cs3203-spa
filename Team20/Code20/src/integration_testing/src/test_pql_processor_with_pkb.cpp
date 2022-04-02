@@ -59,6 +59,22 @@ PKB *set_up_pkb() {
   pkb->AddStmt("3", PRINT);
   pkb->AddStmt("13", PRINT);
 
+  pkb->AddTypeOfStmt("1", READ);
+  pkb->AddTypeOfStmt("2", STMT);
+  pkb->AddTypeOfStmt("3", PRINT);
+  pkb->AddTypeOfStmt("4", ASSIGN);
+  pkb->AddTypeOfStmt("5", STMT);
+  pkb->AddTypeOfStmt("6", STMT);
+  pkb->AddTypeOfStmt("7", ASSIGN);
+  pkb->AddTypeOfStmt("8", ASSIGN);
+  pkb->AddTypeOfStmt("9", STMT);
+  pkb->AddTypeOfStmt("10", ASSIGN);
+  pkb->AddTypeOfStmt("11", STMT);
+  pkb->AddTypeOfStmt("12", STMT);
+  pkb->AddTypeOfStmt("13", STMT);
+  pkb->AddTypeOfStmt("14", STMT);
+  pkb->AddTypeOfStmt("15", STMT);
+
   pkb->GetUsesStore()->AddStmtVar("3", "cat");
   pkb->GetUsesStore()->AddStmtVar("4", "dog");
   pkb->GetUsesStore()->AddStmtVar("4", "mouse");

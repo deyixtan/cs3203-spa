@@ -84,7 +84,23 @@ PKB *set_up_pkb() {
 
   pkb->AddStmt("3", PRINT);
   pkb->AddStmt("13", PRINT);
-  
+
+  pkb->AddTypeOfStmt("1", READ);
+  pkb->AddTypeOfStmt("2", STMT);
+  pkb->AddTypeOfStmt("3", PRINT);
+  pkb->AddTypeOfStmt("4", ASSIGN);
+  pkb->AddTypeOfStmt("5", STMT);
+  pkb->AddTypeOfStmt("6", STMT);
+  pkb->AddTypeOfStmt("7", ASSIGN);
+  pkb->AddTypeOfStmt("8", ASSIGN);
+  pkb->AddTypeOfStmt("9", STMT);
+  pkb->AddTypeOfStmt("10", ASSIGN);
+  pkb->AddTypeOfStmt("11", STMT);
+  pkb->AddTypeOfStmt("12", STMT);
+  pkb->AddTypeOfStmt("13", PRINT);
+  pkb->AddTypeOfStmt("14", STMT);
+  pkb->AddTypeOfStmt("15", ASSIGN);
+
   pkb->GetUsesStore()->AddStmtVar("3", "cat");
   pkb->GetUsesStore()->AddStmtVar("4", "dog");
   pkb->GetUsesStore()->AddStmtVar("4", "mouse");
@@ -109,6 +125,23 @@ PKB *set_up_pkb() {
   pkb->GetUsesStore()->AddStmtVar("15", "monkey");
   pkb->GetUsesStore()->AddStmtVar("15", "tiger");
   pkb->GetUsesStore()->AddStmtVar("15", "dog");
+  pkb->GetUsesStore()->AddStmtVar("main", "cat");
+  pkb->GetUsesStore()->AddStmtVar("main", "dog");
+  pkb->GetUsesStore()->AddStmtVar("main", "mouse");
+  pkb->GetUsesStore()->AddStmtVar("main", "dragon");
+  pkb->GetUsesStore()->AddStmtVar("main", "rabbit");
+  pkb->GetUsesStore()->AddStmtVar("main", "pig");
+  pkb->GetUsesStore()->AddStmtVar("main", "ox");
+  pkb->GetUsesStore()->AddStmtVar("foo", "cat");
+  pkb->GetUsesStore()->AddStmtVar("foo", "dog");
+  pkb->GetUsesStore()->AddStmtVar("foo", "rabbit");
+  pkb->GetUsesStore()->AddStmtVar("foo", "monkey");
+  pkb->GetUsesStore()->AddStmtVar("foo", "tiger");
+  pkb->GetUsesStore()->AddStmtVar("bar", "dog");
+  pkb->GetUsesStore()->AddStmtVar("bar", "rabbit");
+  pkb->GetUsesStore()->AddStmtVar("bar", "tiger");
+  pkb->GetUsesStore()->AddStmtVar("func", "tiger");
+  pkb->GetUsesStore()->AddStmtVar("func", "dog");
 
   pkb->GetModifiesStore()->AddStmtVar("1", "dog");
   pkb->GetModifiesStore()->AddStmtVar("4", "dog");
@@ -116,6 +149,14 @@ PKB *set_up_pkb() {
   pkb->GetModifiesStore()->AddStmtVar("8", "dragon");
   pkb->GetModifiesStore()->AddStmtVar("10", "snake");
   pkb->GetModifiesStore()->AddStmtVar("15", "monkey");
+  pkb->GetModifiesStore()->AddStmtVar("main", "dog");
+  pkb->GetModifiesStore()->AddStmtVar("main", "pig");
+  pkb->GetModifiesStore()->AddStmtVar("main", "dragon");
+  pkb->GetModifiesStore()->AddStmtVar("main", "snake");
+  pkb->GetModifiesStore()->AddStmtVar("main", "monkey");
+  pkb->GetModifiesStore()->AddStmtVar("foo", "snake");
+  pkb->GetModifiesStore()->AddStmtVar("foo", "monkey");
+  pkb->GetModifiesStore()->AddStmtVar("func", "monkey");
 
   pkb->GetFollowsStore()->AddFollow("1", "2");
   pkb->GetFollowsStore()->AddFollow("2", "3");
@@ -152,6 +193,12 @@ PKB *set_up_pkb() {
   pkb->GetPatternStore()->AddStmtWithPattern("10", "snake", "((dog)+(rabbit))");
   pkb->GetPatternStore()->AddStmtWithPattern("15", "monkey", "((tiger)+(dog))");
 
+  pkb->AddStmtToName(PRINT, "3", "cat");
+  pkb->AddNameToStmt(PRINT, "cat", "3");
+  pkb->AddStmtToName(PRINT, "13", "rabbit");
+  pkb->AddNameToStmt(PRINT, "rabbit", "13");
+  pkb->AddStmtToName(READ, "1", "dog");
+  pkb->AddNameToStmt(READ, "dog", "1");
   return pkb;
 }
 
@@ -303,7 +350,7 @@ TEST_CASE("Get proc used by var (correct)") {
   PKB *pkb = set_up_pkb();
   
   auto actual = pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "dog");
-  auto expected = uses_var_to_proc.at("dog");
+  auto expected = uses_var_to_stmt.at("dog");
 
   REQUIRE(actual == expected);
 }
@@ -322,15 +369,6 @@ TEST_CASE("Get all stmt using (correct)") {
   
   auto actual = pkb->GetUsesStore()->GetAllStmtUsing();
   auto expected = all_stmt_using;
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Get all proc using (correct)") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetUsesStore()->GetAllProcUsing();
-  auto expected = all_proc_using;
 
   REQUIRE(actual == expected);
 }
@@ -413,8 +451,8 @@ TEST_CASE("Get stmt modified by var (invalid)") {
 
 TEST_CASE("Get var modified by proc (correct)") {
   PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetModifiesStore()->GetVarModByStmt("main");
+
+  auto actual = pkb->GetModifiesStore()->GetAllModStmt(PROC);
   auto expected = mod_proc_to_var.at("main");
 
   REQUIRE(actual == expected);
@@ -432,7 +470,7 @@ TEST_CASE("Get var modified by proc (invalid)") {
 TEST_CASE("Get proc modified by var (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(STMT, "dog");
+  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(PROC, "dog");
   auto expected = mod_var_to_proc.at("dog");
 
   REQUIRE(actual == expected);
@@ -441,7 +479,7 @@ TEST_CASE("Get proc modified by var (correct)") {
 TEST_CASE("Get proc modified by var (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(STMT, "horse");
+  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(PROC, "horse");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);

@@ -113,6 +113,8 @@ std::unordered_map<std::string, std::unordered_set<std::string>> uses_var_to_stm
         {"mouse", {"4", "6", "8"}},
         {"dragon", {"4", "8"}},
         {"ox", {"7"}},
+        {"dog", {"4", "5", "8", "10", "15"}},
+
     };
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> uses_proc_var_pairs =
