@@ -120,9 +120,14 @@ void StmtStmtStore::AddCalls(bool is_star, std::string const &upper, std::string
   if (star_type_pair_map.find(PROC) != star_type_pair_map.end()) {
     if (star_type_pair_map.at(PROC).find(PROC) != star_type_pair_map.at(PROC).end()) {
       for (auto &pair : star_type_pair_map.at(PROC).at(PROC)) {
-        all_star_pairs.emplace(pair);
-        ExhaustiveAddAllStmt(PROC, upper, PROC, pair.second, true);
-        ExhaustiveAddAllStmt(PROC, pair.first, PROC, lower, true);
+        if (upper == pair.second) {
+          all_star_pairs.insert({pair.first, lower});
+          ExhaustiveAddAllStmt(PROC, pair.first, PROC, lower, true);
+        }
+        if (lower == pair.first) {
+          all_star_pairs.insert({upper, pair.second});
+          ExhaustiveAddAllStmt(PROC, upper, PROC, pair.second, true);
+        }
       }
     }
   }

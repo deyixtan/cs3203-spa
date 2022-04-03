@@ -32,6 +32,20 @@
 	}
 */
 
+struct FollowsNode {
+  std::string follower;
+  std::string following;
+  std::unordered_set<std::string> follower_star;
+  std::unordered_set<std::string> following_star;
+};
+
+struct ParentChildNode {
+  std::string parent;
+  std::unordered_set<std::string> child;
+  std::unordered_set<std::string> ance;
+  std::unordered_set<std::string> desc;
+};
+
 std::unordered_set<std::string>
     stmt_list = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
 
