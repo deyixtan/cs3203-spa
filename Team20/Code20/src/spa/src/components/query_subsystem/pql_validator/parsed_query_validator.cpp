@@ -244,8 +244,38 @@ bool ParsedQueryValidator::ValidateNextNextTArguments(Relationship relationship,
   return true;
 }
 bool ParsedQueryValidator::ValidateAffectsAffectsTArguments(Relationship relationship, std::unordered_map<std::string, DesignEntityType> declarations) {
-  // same validation as Next.Next*
-  return ValidateNextNextTArguments(relationship, declarations);
+  PqlToken first_arg = relationship.GetFirst();
+  PqlToken second_arg = relationship.GetSecond();
+
+  if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
+    if (first_arg.value==second_arg.value && relationship.GetRelRef().type == PqlTokenType::NEXT) {
+      // Affects (s, s) is semantically invalid
+      return false;
+    }
+
+    if (declarations.count(first_arg.value) == 0) {
+      return false;
+    }
+    if (declarations.count(second_arg.value) == 0) {
+      return false;
+    }
+
+    if (declarations.at(first_arg.value) != DesignEntityType::ASSIGN) {
+      return false;
+    }
+    if (declarations.at(second_arg.value) != DesignEntityType::ASSIGN) {
+      return false;
+    }
+  } else if (first_arg.type==PqlTokenType::SYNONYM) {
+    if (declarations.at(first_arg.value) != DesignEntityType::ASSIGN) {
+      return false;
+    }
+  } else if (second_arg.type==PqlTokenType::SYNONYM) {
+    if (declarations.at(second_arg.value) != DesignEntityType::ASSIGN) {
+      return false;
+    }
+  }
+  return true;
 }
 
 bool ParsedQueryValidator::ValidatePatternClause(ParsedQuery query) {
