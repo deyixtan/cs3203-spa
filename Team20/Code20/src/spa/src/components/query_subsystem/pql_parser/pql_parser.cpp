@@ -94,7 +94,7 @@ void PqlParser::ParseDeclaration() {
 }
 
 void PqlParser::ParseDeclarationVariables(DesignEntityType& design_entity_type, Declaration& declarations) {
-  PqlToken next_token = FetchNextToken();
+  PqlToken next_token = FetchToken();
   int starting_variable_index = cursor;
   while (next_token.type != PqlTokenType::SEMICOLON) {
     if ((cursor - starting_variable_index) % 2 == 0) {

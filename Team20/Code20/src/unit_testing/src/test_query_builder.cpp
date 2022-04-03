@@ -1,10 +1,9 @@
 #include "sample_token.h"
 #include "components/query_subsystem/pql_parser/parsed_query.cpp"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
-#include "components/query_subsystem/pql_parser/query_grammar_error.h"
+#include "components/query_subsystem/pql_parser/pql_parser.h"
 
 #include "catch.hpp"
-#include "components/query_subsystem/pql_parser/parsed_query_builder.h"
 
 TEST_CASE("Test query parser with uses") {
   std::vector<PqlToken> test_token_vect;
@@ -31,11 +30,11 @@ TEST_CASE("Test query parser with uses") {
   test_token_vect.push_back(v_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
 
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
@@ -82,12 +81,12 @@ TEST_CASE("Test query parser with uses and pattern") {
   test_token_vect.push_back(underscore_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
   Pattern patt = pq.GetPatterns().front();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
 
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
@@ -130,11 +129,11 @@ TEST_CASE("Test query parser with multiple variables") {
   test_token_vect.push_back(s_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
 
   REQUIRE(rship.GetRelRef().value == "Parent");
   REQUIRE(rship.GetFirst().value == "1");
@@ -158,10 +157,10 @@ TEST_CASE("Test select without such that") {
   test_token_vect.push_back(select_token);
   test_token_vect.push_back(s_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
 
   REQUIRE(result_clause.GetValues()[0].value == "s");
 }
@@ -190,11 +189,11 @@ TEST_CASE("Test query parser with pattern without such that") {
   test_token_vect.push_back(underscore_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   std::optional<Pattern> patt = pq.GetPatterns().front();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
 
   REQUIRE(result_clause.GetValues()[0].value == "a");
   REQUIRE(patt->GetSynonym().value == "a");
@@ -228,10 +227,12 @@ TEST_CASE("Test query parser with repeated synonym") {
   test_token_vect.push_back(underscore_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  std::string error = DUPLICATE_DECLARATION_SYNONYM;
+  std::string INVALID_QUERY_FORMAT = "Invalid Query Format! \n";
 
-  REQUIRE_THROWS_WITH(pqb.Build(), error);
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  std::string error = INVALID_QUERY_FORMAT;
+
+  REQUIRE_THROWS_WITH(pql_parser.ParseQuery(), error);
 }
 
 TEST_CASE("Test query parser with with clause") {
@@ -265,11 +266,11 @@ TEST_CASE("Test query parser with with clause") {
   test_token_vect.push_back(equal_sign_token);
   test_token_vect.push_back(number_value_token_5);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
   With with_clause = pq.GetWithClause().front();
 
   REQUIRE(rship.GetRelRef().value == "Uses");
@@ -319,11 +320,11 @@ TEST_CASE("Test query parser with multiple with clauses") {
   test_token_vect.push_back(equal_sign_token);
   test_token_vect.push_back(v1_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
   With first_with_clause = pq.GetWithClause().front();
   With second_with_clause = pq.GetWithClause()[1];
 
@@ -368,11 +369,11 @@ TEST_CASE("Test query parser with BOOLEAN var name") {
   test_token_vect.push_back(v_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
 
   REQUIRE(rship.GetRelRef().value == "Uses");
   REQUIRE(rship.GetFirst().value == "s");
@@ -413,11 +414,11 @@ TEST_CASE("Test query parser with ifs pattern") {
   test_token_vect.push_back(underscore_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   Pattern patt_ifs = pq.GetPatterns().front();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
 
   REQUIRE(decl.find("ifs")->second == DesignEntityType::IF);
   REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
@@ -467,12 +468,12 @@ TEST_CASE("Test query parser with And clause") {
   test_token_vect.push_back(underscore_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   Pattern patt_ifs = pq.GetPatterns().front();
   Pattern patt_assign = pq.GetPatterns()[1];
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
 
   REQUIRE(decl.find("ifs")->second == DesignEntityType::IF);
   REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
@@ -515,11 +516,11 @@ TEST_CASE("Test query parser with attributes and values") {
   test_token_vect.push_back(equal_sign_token);
   test_token_vect.push_back(attribute_statement_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
   With with_clause = pq.GetWithClause().front();
 
   REQUIRE(rship.GetRelRef().value == "Uses");
@@ -565,11 +566,11 @@ TEST_CASE("Test query parser with attributes and value strings") {
   test_token_vect.push_back(equal_sign_token);
   test_token_vect.push_back(v_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   Relationship rship = pq.GetRelationships().front();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
   With with_clause = pq.GetWithClause().front();
 
   REQUIRE(rship.GetRelRef().value == "Uses");
@@ -613,10 +614,10 @@ TEST_CASE("Test query parser with combination of attributes") {
   test_token_vect.push_back(equal_sign_token);
   test_token_vect.push_back(attribute_var_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
   With with_first = pq.GetWithClause().front();
   With with_second = pq.GetWithClause()[1];
   With with_third = pq.GetWithClause()[2];
@@ -694,14 +695,14 @@ TEST_CASE("Test query parser with multiple And clauses") {
   test_token_vect.push_back(s1_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
-  ParsedQuery pq = pqb.Build();
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  ParsedQuery pq = pql_parser.ParseQuery();
   ResultClause result_clause = pq.GetResultClause();
   Pattern patt_ifs = pq.GetPatterns().front();
   Pattern patt_assign = pq.GetPatterns()[1];
   Relationship rship_first = pq.GetRelationships().front();
   Relationship rship_second = pq.GetRelationships()[1];
-  const auto decl = pq.GetDeclaration();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
 
   REQUIRE(decl.find("ifs")->second == DesignEntityType::IF);
   REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
@@ -750,7 +751,9 @@ TEST_CASE("Test invalid pattern with extra args") {
   test_token_vect.push_back(underscore_token);
   test_token_vect.push_back(closed_parenthesis_token);
 
-  ParsedQueryBuilder pqb(test_token_vect);
+  PqlParser pql_parser = PqlParser(test_token_vect);
+  std::string INVALID_QUERY_FORMAT = "Invalid Query Format! \n";
+  std::string error = INVALID_QUERY_FORMAT;
 
-  REQUIRE_THROWS_WITH(pqb.Build(), "ERROR: Extra pattern argument!");
+  REQUIRE_THROWS_WITH(pql_parser.ParseQuery(), error);
 }
