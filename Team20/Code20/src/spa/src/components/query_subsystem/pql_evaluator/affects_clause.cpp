@@ -52,6 +52,9 @@ Table AffectsClause::Execute() {
 
 Table AffectsClause::HandleSynonymSynonym() {
   auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsPairs();
+  if (first_arg.value == second_arg.value) {
+    pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsSameSynPairs();
+  }
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
