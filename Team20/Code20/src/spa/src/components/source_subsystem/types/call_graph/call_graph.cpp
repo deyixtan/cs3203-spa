@@ -1,5 +1,7 @@
 #include "call_graph.h"
 
+namespace source {
+
 CallGraph::CallGraph() : m_names(std::set<std::string>()), fwd_edges(std::map<std::string, std::set<std::string>>()) {}
 
 std::vector<std::string> CallGraph::TopoSort() {
@@ -63,4 +65,6 @@ bool CallGraph::AddEdge(std::string src, std::string dst) {
 
   bwd_edges.find(dst)->second.insert(src);
   return true;
+}
+
 }

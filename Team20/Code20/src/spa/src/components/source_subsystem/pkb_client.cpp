@@ -1,6 +1,8 @@
 #include "pkb_client.h"
 #include "../pkb/pkb.h"
 
+namespace source {
+
 PkbClient::PkbClient(PKB *pkb) : pkb(pkb) {}
 
 PKB *PkbClient::GetPKB() {
@@ -195,4 +197,6 @@ void PkbClient::AddPattern(StmtType type, std::string stmt, std::string lhs, std
   } else if (type == StmtType::IF) {
     pkb->GetPatternStore()->AddIfWithPattern(stmt, lhs);
   }
+}
+
 }

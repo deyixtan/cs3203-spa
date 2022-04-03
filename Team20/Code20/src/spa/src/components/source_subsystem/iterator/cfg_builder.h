@@ -1,17 +1,9 @@
 #ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_CFG_BUILDER_H_
 #define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_CFG_BUILDER_H_
 
-#include <memory>
-#include <string>
-#include <unordered_map>
+#include "components/source_subsystem/source_declarations.h"
 
-class PkbClient;
-class ProgramNode;
-class ProcedureNode;
-class StatementListNode;
-class StatementNode;
-class Cfg;
-class CfgNode;
+namespace source {
 
 class CfgBuilder {
  private:
@@ -27,5 +19,7 @@ class CfgBuilder {
                                                std::shared_ptr<CfgNode> cfg_node);
   [[nodiscard]] std::shared_ptr<CfgNode> Visit(std::shared_ptr<StatementNode> node, std::shared_ptr<CfgNode> cfg_node);
 };
+
+}
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_CFG_BUILDER_H_

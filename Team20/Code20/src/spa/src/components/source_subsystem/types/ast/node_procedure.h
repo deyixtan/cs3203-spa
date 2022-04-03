@@ -3,10 +3,7 @@
 
 #include "node.h"
 
-class DesignExtractor;
-class CfgBuilder;
-class StatementListNode;
-class CfgNode;
+namespace source {
 
 class ProcedureNode : public Node {
  private:
@@ -23,5 +20,7 @@ class ProcedureNode : public Node {
   void Accept(DesignExtractor *de);
   std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
+
+}
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROCEDURE_H_

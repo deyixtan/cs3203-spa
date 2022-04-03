@@ -5,6 +5,8 @@
 #include <vector>
 #include "../../../pkb/stores/store.h"
 
+namespace source {
+
 struct Statement {
   StmtType type;
   std::string stmt_no;
@@ -22,5 +24,7 @@ class CfgNode {
   void AddStatement(StmtType type, std::string stmt_no);
   void AddNext(std::shared_ptr<CfgNode> cfg_node);
 };
+
+}
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_TYPES_CFG_CFG_NODE_H_

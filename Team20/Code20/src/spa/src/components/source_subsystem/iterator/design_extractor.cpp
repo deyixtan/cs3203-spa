@@ -8,6 +8,8 @@
 #include "../types/ast/node_variable.h"
 #include "../types/ast/node_constant.h"
 
+namespace source {
+
 DesignExtractor::DesignExtractor(std::shared_ptr<PkbClient> pkb_client)
     : m_pkb_client(std::move(pkb_client)),
       m_call_graph(std::make_shared<CallGraph>()),
@@ -199,4 +201,6 @@ void DesignExtractor::Visit(std::shared_ptr<VariableNode> node, std::string proc
 void DesignExtractor::Visit(std::shared_ptr<ConstantNode> node, std::string proc_name, bool is_uses) {
   // ignores is_uses
   node->Accept(this, proc_name, is_uses);
+}
+
 }

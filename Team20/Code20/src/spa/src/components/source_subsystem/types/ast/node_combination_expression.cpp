@@ -1,6 +1,8 @@
 #include "node_combination_expression.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
 
+namespace source {
+
 CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator,
                                                      std::shared_ptr<ExpressionNode> right_expression)
     : m_arithmetic_operator(arithmetic_operator), m_left_expression(NULL), m_right_expression(right_expression) {}
@@ -59,4 +61,6 @@ bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
 std::string CombinationExpressionNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
   return "(" + de->Visit(m_left_expression, proc_name, is_uses) + GetArithmeticOperatorLabel(m_arithmetic_operator)
       + de->Visit(m_right_expression, proc_name, is_uses) + ")";
+}
+
 }

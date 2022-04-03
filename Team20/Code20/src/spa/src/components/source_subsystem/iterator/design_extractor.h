@@ -9,6 +9,8 @@
 #include "components/source_subsystem/types/cfg/cfg_node.h"
 #include "../../pkb/pkb.h"
 
+namespace source {
+
 class PkbClient;
 class CallGraph;
 class ProgramNode;
@@ -49,13 +51,13 @@ class DesignExtractor {
                                           std::unordered_set<std::string>> &next_map);
   void UpdateCallUsesModifies(std::string proc);
   void UpdateCallUses(std::string const &call_stmt,
-                                           std::unordered_set<std::string> const &vars,
-                                           std::unordered_set<std::string> const &ancestors,
-                                           std::unordered_set<std::string> const &callers);
+                      std::unordered_set<std::string> const &vars,
+                      std::unordered_set<std::string> const &ancestors,
+                      std::unordered_set<std::string> const &callers);
   void UpdateCallModifies(std::string const &call_stmt,
-                                           std::unordered_set<std::string> const &vars,
-                                           std::unordered_set<std::string> const &ancestors,
-                                           std::unordered_set<std::string> const &callers);
+                          std::unordered_set<std::string> const &vars,
+                          std::unordered_set<std::string> const &ancestors,
+                          std::unordered_set<std::string> const &callers);
   void Visit(std::shared_ptr<ProgramNode> node);
   void Visit(std::shared_ptr<ProcedureNode> nod);
   void Visit(std::shared_ptr<StatementListNode> node, std::string proc_name);
@@ -65,5 +67,7 @@ class DesignExtractor {
   void Visit(std::shared_ptr<VariableNode> node, std::string proc_name, bool is_uses);
   void Visit(std::shared_ptr<ConstantNode> node, std::string proc_name, bool is_uses);
 };
+
+}
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_DESIGN_EXTRACTOR_H_

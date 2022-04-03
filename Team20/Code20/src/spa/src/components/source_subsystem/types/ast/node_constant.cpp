@@ -1,6 +1,8 @@
 #include "node_constant.h"
 #include "../../iterator/design_extractor.h"
 
+namespace source {
+
 ConstantNode::ConstantNode(std::string value) : m_value(value) {}
 
 std::string ConstantNode::GetValue() {
@@ -27,4 +29,6 @@ bool ConstantNode::operator==(const ExpressionNode &other) const {
 std::string ConstantNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
   de->GetPkbClient()->PopulateConst(m_value);
   return GetPatternFormat();
+}
+
 }
