@@ -113,3 +113,25 @@ std::unordered_set<AttriName> constant_attribute_names = {
 std::unordered_set<AttriName> stmt_attribute_names = {
     AttriName::STMTNO
 };
+
+std::unordered_set<DesignEntityType> stmt_design_entities = {
+    DesignEntityType::STMT,
+    DesignEntityType::READ,
+    DesignEntityType::PRINT,
+    DesignEntityType::CALL,
+    DesignEntityType::WHILE,
+    DesignEntityType::IF,
+    DesignEntityType::ASSIGN
+};
+
+std::unordered_set<DesignEntityType> variable_design_entity = {
+    DesignEntityType::VARIABLE
+};
+
+std::unordered_set<DesignEntityType> procedure_design_entity = {
+    DesignEntityType::PROCEDURE
+};
+
+std::unordered_set<DesignEntityType> assign_design_entity = {
+    DesignEntityType::ASSIGN
+};
