@@ -71,8 +71,9 @@ std::unordered_set<DesignEntityType> procedure_design_entity = {
     DesignEntityType::PROCEDURE
 };
 
-std::unordered_set<DesignEntityType> assign_design_entity = {
-    DesignEntityType::ASSIGN
+std::unordered_set<DesignEntityType> assign_stmt_design_entity = {
+    DesignEntityType::ASSIGN,
+    DesignEntityType::STMT
 };
 
 std::vector<std::unordered_set<DesignEntityType>> stmt_stmt_vector = {
@@ -91,8 +92,8 @@ std::vector<std::unordered_set<DesignEntityType>> proc_proc_vector = {
 };
 
 std::vector<std::unordered_set<DesignEntityType>> assign_assign_vector = {
-    assign_design_entity,
-    assign_design_entity
+    assign_stmt_design_entity,
+    assign_stmt_design_entity
 };
 
 std::unordered_map<PqlTokenType,
