@@ -52,6 +52,9 @@ Table AffectsTClause::Execute() {
 
 Table AffectsTClause::HandleSynonymSynonym() {
   auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarPairs();
+  if (first_arg.value == second_arg.value) {
+    pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsSameSynPairs();
+  }
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
@@ -112,7 +115,7 @@ Table AffectsTClause::HandleIntegerWildcard() {
 
 Table AffectsTClause::HandleIntegerInteger() {
   auto is_false_clause =
-      pkb->GetAffectStore()->GetAffectSession()->DoesAffectStarExists({first_arg.value, second_arg.value});
+      !pkb->GetAffectStore()->GetAffectSession()->DoesAffectStarExists({first_arg.value, second_arg.value});
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
