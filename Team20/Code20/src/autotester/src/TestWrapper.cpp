@@ -22,8 +22,8 @@ TestWrapper::TestWrapper() {
 void TestWrapper::parse(std::string filename) {
   std::cout << "TestWrapper::parse() Start" << std::endl;
   std::string simple_source = source_controller->RetrieveFileContent(filename);
-  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
-  source_controller->Tokenize(simple_source, tokens_ptr);
+  source::TokenStream token_stream;
+  source_controller->Tokenize(simple_source, token_stream);
 
   // // Print tokens
   // std::vector<SourceToken *>::iterator it;
@@ -31,7 +31,7 @@ void TestWrapper::parse(std::string filename) {
   //  std::cout << (*it)->GetTypeStr() << " " << (*it)->GetValue() << std::endl;
   // }
 
-  std::shared_ptr<ProgramNode> ast = source_controller->ParseTokenStream(tokens_ptr);
+  std::shared_ptr<ProgramNode> ast = source_controller->ParseTokenStream(token_stream);
   source_controller->PopulatePKB(pkb, ast);
 
   //std::cout << "RESULT: " << pkb->GetStmt(STMT).size() << std::endl;
