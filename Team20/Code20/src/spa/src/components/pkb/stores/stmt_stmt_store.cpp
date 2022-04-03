@@ -24,59 +24,13 @@ void StmtStmtStore::AddUpperLower(StoreType store_type,
     }
   }
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
-  set.insert(std::pair<std::string, std::string>(upper, lower));
-
-  if (type_pair_map.find(type1) != type_pair_map.end()) {
-    if (type_pair_map.at(type1).find(type2) != type_pair_map.at(type1).end()) {
-      type_pair_map.at(type1).at(type2).emplace(std::pair<std::string, std::string>(upper, lower));
-    } else {
-      type_pair_map.at(type1).insert({type2, set});
-    }
-  } else {
-    type_pair_map.insert({type1, {}});
-    type_pair_map.at(type1).insert({type2, set});
-  }
-
-  if (type_pair_map.find(STMT) != type_pair_map.end()) {
-    if (type_pair_map.at(STMT).find(type2) != type_pair_map.at(STMT).end()) {
-      type_pair_map.at(STMT).at(type2).emplace(std::pair<std::string, std::string>(upper, lower));
-    } else {
-      type_pair_map.at(STMT).insert({type2, set});
-    }
-  } else {
-    type_pair_map.insert({STMT, {}});
-    type_pair_map.at(STMT).insert({type2, set});
-  }
-
-  if (type_pair_map.find(type1) != type_pair_map.end()) {
-    if (type_pair_map.at(type1).find(STMT) != type_pair_map.at(type1).end()) {
-      type_pair_map.at(type1).at(STMT).emplace(std::pair<std::string, std::string>(upper, lower));
-    } else {
-      type_pair_map.at(type1).insert({STMT, set});
-    }
-  } else {
-    type_pair_map.insert({type1, {}});
-    type_pair_map.at(type1).insert({STMT, set});
-  }
-
-  if (type_pair_map.find(STMT) != type_pair_map.end()) {
-    if (type_pair_map.at(STMT).find(STMT) != type_pair_map.at(STMT).end()) {
-      type_pair_map.at(STMT).at(STMT).emplace(std::pair<std::string, std::string>(upper, lower));
-    } else {
-      type_pair_map.at(STMT).insert({STMT, set});
-    }
-  } else {
-    type_pair_map.insert({STMT, {}});
-    type_pair_map.at(STMT).insert({STMT, set});
-  }
+  ExhaustiveAddStmt(type1, upper, type2, lower, false);
 }
 
 void StmtStmtStore::AddUpperLowerStar(StoreType store_type,
                                       std::string const &upper,
                                       std::string const &lower,
                                       std::vector<std::string> const &visited) {
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
 
   StmtType type1, type2;
 
@@ -91,51 +45,7 @@ void StmtStmtStore::AddUpperLowerStar(StoreType store_type,
   }
 
   if (store_type != PARENT) {
-    set.insert(std::pair<std::string, std::string>(upper, lower));
-
-    if (star_type_pair_map.find(type2) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(type2).find(type1) != star_type_pair_map.at(type2).end()) {
-        star_type_pair_map.at(type2).at(type1).emplace(std::pair<std::string, std::string>(upper, lower));
-      } else {
-        star_type_pair_map.at(type2).insert({type1, set});
-      }
-    } else {
-      star_type_pair_map.insert({type2, {}});
-      star_type_pair_map.at(type2).insert({type1, set});
-    }
-
-    if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(STMT).find(type1) != star_type_pair_map.at(STMT).end()) {
-        star_type_pair_map.at(STMT).at(type1).emplace(std::pair<std::string, std::string>(upper, lower));
-      } else {
-        star_type_pair_map.at(STMT).insert({type1, set});
-      }
-    } else {
-      star_type_pair_map.insert({STMT, {}});
-      star_type_pair_map.at(STMT).insert({type1, set});
-    }
-
-    if (star_type_pair_map.find(type2) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(type2).find(STMT) != star_type_pair_map.at(type2).end()) {
-        star_type_pair_map.at(type2).at(STMT).emplace(std::pair<std::string, std::string>(upper, lower));
-      } else {
-        star_type_pair_map.at(type2).insert({STMT, set});
-      }
-    } else {
-      star_type_pair_map.insert({type2, {}});
-      star_type_pair_map.at(type2).insert({STMT, set});
-    }
-
-    if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(STMT).find(STMT) != star_type_pair_map.at(STMT).end()) {
-        star_type_pair_map.at(STMT).at(STMT).emplace(std::pair<std::string, std::string>(upper, lower));
-      } else {
-        star_type_pair_map.at(STMT).insert({STMT, set});
-      }
-    } else {
-      star_type_pair_map.insert({STMT, {}});
-      star_type_pair_map.at(STMT).insert({STMT, set});
-    }
+    ExhaustiveAddStmt(type2, upper, type1, lower, true);
   }
 
   if (store_type == FOLLOWS) {
@@ -191,7 +101,6 @@ void StmtStmtStore::AddParent(bool is_star,
                               std::string const &upper,
                               std::string const &lower,
                               std::vector<std::string> const &visited) {
-  StmtType type1 = m_stmt_type->at(lower);
   if (parent_rs_map.find(upper) == parent_rs_map.end()) {
     parent_rs_map.insert({upper, {"0", std::unordered_set<std::string>(), std::unordered_set<std::string>(),
                                   std::unordered_set<std::string>()}});
@@ -225,53 +134,7 @@ void StmtStmtStore::AddParent(bool is_star,
       parent_rs_map.at(ance).desc.insert(lower);
     }
 
-    std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
-    set.insert(std::pair<std::string, std::string>(ance, lower));
-    StmtType ance_type = m_stmt_type->at(ance);
-
-    if (star_type_pair_map.find(ance_type) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(ance_type).find(type1) != star_type_pair_map.at(ance_type).end()) {
-        star_type_pair_map.at(ance_type).at(type1).emplace(std::pair<std::string, std::string>(ance, lower));
-      } else {
-        star_type_pair_map.at(ance_type).insert({type1, set});
-      }
-    } else {
-      star_type_pair_map.insert({ance_type, {}});
-      star_type_pair_map.at(ance_type).insert({type1, set});
-    }
-
-    if (star_type_pair_map.find(ance_type) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(ance_type).find(STMT) != star_type_pair_map.at(ance_type).end()) {
-        star_type_pair_map.at(ance_type).at(STMT).emplace(std::pair<std::string, std::string>(ance, lower));
-      } else {
-        star_type_pair_map.at(ance_type).insert({STMT, set});
-      }
-    } else {
-      star_type_pair_map.insert({ance_type, {}});
-      star_type_pair_map.at(ance_type).insert({STMT, set});
-    }
-
-    if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(STMT).find(type1) != star_type_pair_map.at(STMT).end()) {
-        star_type_pair_map.at(STMT).at(type1).emplace(std::pair<std::string, std::string>(ance, lower));
-      } else {
-        star_type_pair_map.at(STMT).insert({type1, set});
-      }
-    } else {
-      star_type_pair_map.insert({STMT, {}});
-      star_type_pair_map.at(STMT).insert({type1, set});
-    }
-
-    if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(STMT).find(STMT) != star_type_pair_map.at(STMT).end()) {
-        star_type_pair_map.at(STMT).at(STMT).emplace(std::pair<std::string, std::string>(ance, lower));
-      } else {
-        star_type_pair_map.at(STMT).insert({STMT, set});
-      }
-    } else {
-      star_type_pair_map.insert({STMT, {}});
-      star_type_pair_map.at(STMT).insert({STMT, set});
-    }
+    ExhaustiveAddStmt(m_stmt_type->at(ance), ance, m_stmt_type->at(lower), lower, true);
   }
 }
 
@@ -319,6 +182,63 @@ void StmtStmtStore::AddCalls(bool is_star, std::string const &upper, std::string
   }
 }
 
+void StmtStmtStore::ExhaustiveAddStmt(StmtType type1, std::string upper, StmtType type2, std::string lower, bool is_star) {
+  std::unordered_map<StmtType, std::unordered_map<StmtType, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>> *pair_map;
+
+  if (!is_star) {
+    pair_map = &type_pair_map;
+  } else {
+    pair_map = &star_type_pair_map;
+  }
+
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
+  set.insert(std::pair<std::string, std::string>(upper, lower));
+
+  if (pair_map->find(type1) != pair_map->end()) {
+    if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
+      pair_map->at(type1).at(type2).emplace(std::pair<std::string, std::string>(upper, lower));
+    } else {
+      pair_map->at(type1).insert({type2, set});
+    }
+  } else {
+    pair_map->insert({type1, {}});
+    pair_map->at(type1).insert({type2, set});
+  }
+
+  if (pair_map->find(STMT) != pair_map->end()) {
+    if (pair_map->at(STMT).find(type2) != pair_map->at(STMT).end()) {
+      pair_map->at(STMT).at(type2).emplace(std::pair<std::string, std::string>(upper, lower));
+    } else {
+      pair_map->at(STMT).insert({type2, set});
+    }
+  } else {
+    pair_map->insert({STMT, {}});
+    pair_map->at(STMT).insert({type2, set});
+  }
+
+  if (pair_map->find(type1) != pair_map->end()) {
+    if (pair_map->at(type1).find(STMT) != pair_map->at(type1).end()) {
+      pair_map->at(type1).at(STMT).emplace(std::pair<std::string, std::string>(upper, lower));
+    } else {
+      pair_map->at(type1).insert({STMT, set});
+    }
+  } else {
+    pair_map->insert({type1, {}});
+    pair_map->at(type1).insert({STMT, set});
+  }
+
+  if (pair_map->find(STMT) != pair_map->end()) {
+    if (pair_map->at(STMT).find(STMT) != pair_map->at(STMT).end()) {
+      pair_map->at(STMT).at(STMT).emplace(std::pair<std::string, std::string>(upper, lower));
+    } else {
+      pair_map->at(STMT).insert({STMT, set});
+    }
+  } else {
+    pair_map->insert({STMT, {}});
+    pair_map->at(STMT).insert({STMT, set});
+  }
+}
+
 void StmtStmtStore::WipeNextStar() {
   for (auto pair : next_rs_map) {
     pair.second.next_star_set = {};
@@ -337,7 +257,11 @@ bool StmtStmtStore::IsStarValid(std::pair<std::string, std::string> const &pair)
 std::string StmtStmtStore::GetUpperOf(StoreType store_type, StmtType stmt_type, std::string const &stmt) {
   if (type_pair_map.find(stmt_type) != type_pair_map.end()) {
     if (type_pair_map.at(stmt_type).find(STMT) != type_pair_map.at(stmt_type).end()) {
-      return type_pair_map.at(stmt_type).at(STMT).begin()->first;
+      for (auto &pair : type_pair_map.at(stmt_type).at(STMT)) {
+        if (pair.second == stmt) {
+          return pair.first;
+        }
+      }
     }
   }
   return "0";
@@ -346,7 +270,11 @@ std::string StmtStmtStore::GetUpperOf(StoreType store_type, StmtType stmt_type, 
 std::string StmtStmtStore::GetLowerOf(StmtType stmt_type, std::string const &stmt) {
   if (type_pair_map.find(STMT) != type_pair_map.end()) {
     if (type_pair_map.at(STMT).find(stmt_type) != type_pair_map.at(STMT).end()) {
-      return type_pair_map.at(STMT).at(stmt_type).begin()->second;
+      for (auto &pair : type_pair_map.at(stmt_type).at(STMT)) {
+        if (pair.first == stmt) {
+          return pair.second;
+        }
+      }
     }
   }
   return "0";

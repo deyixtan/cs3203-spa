@@ -69,6 +69,7 @@ class StmtStmtStore : public Store {
                  std::vector<std::string> const &visited);
   void AddCalls(bool is_star, std::string const &upper, std::string const &lower);
   void AddNext(bool is_star, std::string const &upper, std::string const &lower);
+  void ExhaustiveAddStmt(StmtType type1, std::string upper, StmtType type2, std::string lower, bool is_star);
   void WipeNextStar();
   [[nodiscard]] bool IsValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsStarValid(std::pair<std::string, std::string> const &pair);
