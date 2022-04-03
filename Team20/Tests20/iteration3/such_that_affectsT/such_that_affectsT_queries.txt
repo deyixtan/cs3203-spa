@@ -8,11 +8,6 @@ stmt s1, s2;
 Select s2 such that Affects*(s1, s2)
 6,31,17,16,7,30,25,28,10,12,21,43,45,39
 5000
-3 - All Affects (tuple)
-stmt s1, s2;
-Select <s1, s2> such that Affects*(s1, s2)
-3 6,48 39,43 45,23 25,3 7,23 30,9 10,12 30,12 16,12 17,23 28,23 31,44 45,7 6,19 28,10 12,7 7,16 17,16 30,9 12,9 30,9 16,9 17,10 30,10 16,10 17,19 21,31 30,19 25,21 25,21 28,25 28,26 30,31 31,40 43,40 45
-5000
 4 - Double nested if stmt
 stmt s1, s2; procedure p;
 Select p such that Affects*(23, 28)
@@ -27,11 +22,6 @@ none
 stmt s1, s2; procedure p;
 Select p such that Affects*(31, 31)
 city,europe,country,singapore
-5000
-7 - Basic affects
-stmt s1; procedure p; assign a; while w;
-Select s1 such that Affects*(s1, 30)
-23,12,16,10,9,26,31
 5000
 8 - Basic affects
 stmt s1; procedure p; assign a; while w;
@@ -48,20 +38,10 @@ stmt s1; procedure p; assign a; while w;
 Select s1 such that Affects*(s1, s1)
 7,31
 5000
-11 - Basic affects one synonym
-stmt s1, s2; procedure p; assign a; while w;
-Select a such that Affects*(19, a)
-21,25,28
-5000
 12 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(3, a)
 6,7
-5000
-13 - Basic affects* one synonym
-stmt s1, s2; procedure p; assign a; while w;
-Select a such that Affects*(9, a)
-10,12,16,30,17
 5000
 14 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
@@ -98,11 +78,6 @@ stmt s1, s2; procedure p; assign a; while w;
 Select s2 such that Affects*(23, s2)
 25,28,30,31
 5000
-21 - Basic affects* one synonym
-stmt s1, s2; procedure p; assign a; while w;
-Select a such that Affects*(a, 30)
-23,12,16,10,9,26,31
-5000
 22 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(a, 39)
@@ -112,11 +87,6 @@ Select a such that Affects*(a, 39)
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(a, 25)
 23,19,21
-5000
-24 - Basic affects* one synonym
-stmt s1, s2; procedure p; assign a; while w;
-Select a such that Affects*(a, 28)
-23,19,21,25
 5000
 25 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
@@ -132,11 +102,6 @@ Select a such that Affects*(a, 12)
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(a, 6)
 3,7
-5000
-28 - Basic affects one synonym
-stmt s1, s2; procedure p; assign a; while w;
-Select a such that Affects*(a, 17)
-12,16,10,9
 5000
 29 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
