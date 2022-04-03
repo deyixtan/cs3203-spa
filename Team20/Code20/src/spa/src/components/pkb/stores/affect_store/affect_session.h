@@ -23,6 +23,8 @@ class AffectSession {
   std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_star_reverse_map;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_star_pairs;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_same_affects_pairs; // for same synonym
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_same_affects_star_pairs; // for same synonym
 
  private:
   std::unordered_set<std::string> GetVarModByStmt(std::string stmt_no);
@@ -50,6 +52,8 @@ class AffectSession {
   [[nodiscard]] std::unordered_set<std::string> GetAffectsStarOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAffectsPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAffectsStarPairs();
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAffectsSameSynPairs();
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAffectsStarSameSynPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStarStmt(StmtType type);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmt(StmtType type1,

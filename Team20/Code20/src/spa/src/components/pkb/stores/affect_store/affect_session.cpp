@@ -1,7 +1,7 @@
 #include "affect_session.h"
 #include "../../../source_subsystem/types/cfg/cfg_node.h"
 
-AffectSession::AffectSession(std::shared_ptr<AffectStore> affects_store) : m_affects_store(affects_store){
+AffectSession::AffectSession(std::shared_ptr<AffectStore> affects_store) : m_affects_store(affects_store) {
   TraverseCfg();
 }
 
@@ -89,6 +89,14 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAffectsStarPairs() {
   return m_all_affects_star_pairs;
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAffectsSameSynPairs() {
+  return m_same_affects_pairs;
+}
+
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAffectsStarSameSynPairs() {
+  return m_same_affects_star_pairs;
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAllAffectsStmt(StmtType type) {
@@ -207,6 +215,11 @@ void AffectSession::HandleAssignStatement(std::string stmt_no, std::unordered_ma
         // update affects star (m_all_affects_star_pairs)
         m_all_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
 
+        // update affects same synonym
+        if (last_mod_stmt_no == stmt_no) {
+          m_same_affects_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
+        }
+
         // update modified star table
         std::unordered_set<std::string> vars_mod = GetVarModByStmt(stmt_no);
         for (auto const var_mod : vars_mod) {
@@ -231,8 +244,13 @@ void AffectSession::HandleAssignStatement(std::string stmt_no, std::unordered_ma
               m_affects_star_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
             }
             m_affects_star_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
-            // update affects (m_all_affects_star_pairs)
+            // update affects star (m_all_affects_star_pairs)
             m_all_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
+
+            // update affects star same synonym
+            if (last_mod_stmt_no == stmt_no) {
+              m_same_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
+            }
           }
         }
       }
