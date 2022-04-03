@@ -4,35 +4,11 @@
 #include "store.h"
 
 // A struct to maintain every FollowsNode's relationships
-struct FollowsNode {
-  std::string follower;
-  std::string following;
-  std::unordered_set<std::string> follower_star;
-  std::unordered_set<std::string> following_star;
-};
-
-// A struct to maintain every FollowsNode's relationships
 struct NextNode {
   std::unordered_set<std::string> before;
   std::unordered_set<std::string> next;
   std::unordered_set<std::string> before_star_set;
   std::unordered_set<std::string> next_star_set;
-};
-
-// A struct to maintain every ParentNode's relationships
-struct ParentChildNode {
-  std::string parent;
-  std::unordered_set<std::string> child;
-  std::unordered_set<std::string> ance;
-  std::unordered_set<std::string> desc;
-};
-
-// A struct to maintain every CallsNode's relationships
-struct CallsNode {
-  std::unordered_set<std::string> callers_set;
-  std::unordered_set<std::string> callees_set;
-  std::unordered_set<std::string> callers_star_set;
-  std::unordered_set<std::string> callees_star_set;
 };
 
 class StmtStmtStore : public Store {
@@ -47,9 +23,6 @@ class StmtStmtStore : public Store {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_star_pairs;
 
  protected:
-  std::unordered_map<std::string, FollowsNode> follows_rs_map;
-  std::unordered_map<std::string, ParentChildNode> parent_rs_map;
-  std::unordered_map<std::string, CallsNode> calls_rs_map;
   std::unordered_map<std::string, NextNode> next_rs_map;
 
  public:
@@ -69,16 +42,31 @@ class StmtStmtStore : public Store {
                  std::vector<std::string> const &visited);
   void AddCalls(bool is_star, std::string const &upper, std::string const &lower);
   void AddNext(bool is_star, std::string const &upper, std::string const &lower);
-  void ExhaustiveAddStmt(StmtType type1, std::string upper, StmtType type2, std::string lower, bool is_star);
+  void ExhaustiveAddAllStmt(StmtType type1, std::string upper, StmtType type2, std::string lower, bool is_star);
+  void ExhaustiveAddSubStmt(StmtType type1,
+                            std::string upper,
+                            StmtType type2,
+                            std::string lower,
+                            std::unordered_map<StmtType,
+                                               std::unordered_map<StmtType,
+                                                                  std::unordered_set<std::pair<std::string,
+                                                                                               std::string>,
+                                                                                     pair_hash>>> *pair_map);
   void WipeNextStar();
   [[nodiscard]] bool IsValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsStarValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetUpperOf(StoreType store_type, StmtType stmt_type, std::string const &stmt);
   [[nodiscard]] std::string GetLowerOf(StmtType stmt_type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetUpperSetOf(StoreType store_type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetLowerSetOf(StoreType store_type, StmtType stmt_type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetUpperStarOf(StoreType store_type, StmtType stmt_type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetLowerStarOf(StoreType store_type, StmtType stmt_type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetLowerSetOf(StoreType store_type,
+                                                              StmtType stmt_type,
+                                                              std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetUpperStarOf(StoreType store_type,
+                                                               StmtType stmt_type,
+                                                               std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetLowerStarOf(StoreType store_type,
+                                                               StmtType stmt_type,
+                                                               std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetPairByType(StmtType type1,
                                                                                                  StmtType type2);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStarPairByType(StmtType type1,
