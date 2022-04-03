@@ -8,13 +8,14 @@
 #include "iterator/design_extractor.h"
 #include "iterator/cfg_builder.h"
 #include "utils/file_util.h"
+#include "source_declarations.h"
 
 namespace source {
 
 class SourceController {
  public:
   SourceController();
-  void Tokenize(std::string program_source, std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
+  void Tokenize(std::string source, std::vector<TokenPtr> &token_stream);
   std::shared_ptr<ProgramNode> ParseTokenStream(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
   std::string RetrieveFileContent(std::string file_path);
   void PopulatePKB(PKB *pkb, std::shared_ptr<ProgramNode> ast);

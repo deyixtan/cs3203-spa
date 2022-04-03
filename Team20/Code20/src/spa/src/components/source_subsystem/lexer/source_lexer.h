@@ -1,33 +1,34 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_LEXER_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_LEXER_H_
+#ifndef SOURCE_LEXER_H
+#define SOURCE_LEXER_H
 
-#include <regex>
-#include <string>
-#include <vector>
-
-#include "../types/source_token/source_token.h"
-#include "components/source_subsystem/exceptions/end_of_stream.h"
-#include "components/source_subsystem/exceptions/unexpected_token.h"
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
+
+class SourceToken;
 
 class SourceLexer {
  private:
   int m_cursor;
-  std::string m_simple_source;
-  std::vector<std::pair<std::regex, TokenType>> m_lexer_specs;
+  std::string m_source;
 
  private:
-  bool HasMoreTokens();
-  [[nodiscard]] std::shared_ptr<SourceToken> GetNextToken();
-  void RemoveWhiteSpaceTokens(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
-  void TranslateKeywordTokens(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
+  [[nodiscard]] bool HasMoreTokens();
+  [[nodiscard]] TokenPtr GetNextToken();
+  void TwoCharsTokenHandler(TokenPtr &token, char curr_char, char next_char);
+  void OneCharTokenHandler(TokenPtr &token, char curr_char);
+  void MultipleCharsTokenHandler(TokenPtr &token, char curr_char);
+  void IntegerTokenHandler(TokenPtr &token, char curr_char);
+  void NameTokenHandler(TokenPtr &token, char curr_char);
+  static void SanitizeTokenStream(std::vector<TokenPtr> &token_stream);
+  static void EncodeTokenStream(std::vector<TokenPtr> &token_stream);
+  static void EncodeTokenHandler(TokenPtr &token, TokenPtr &next_token);
 
  public:
-  explicit SourceLexer(std::string simple_source);
-  void Tokenize(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
+  explicit SourceLexer(std::string source);
+  void Tokenize(std::vector<TokenPtr> &token_stream);
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_LEXER_H_
+#endif //SOURCE_LEXER_H

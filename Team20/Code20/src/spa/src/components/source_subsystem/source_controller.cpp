@@ -1,17 +1,16 @@
 #include "source_controller.h"
-#include "../../components/pkb/pkb.h"
 
 namespace source {
 
 SourceController::SourceController() {}
 
-void SourceController::Tokenize(std::string program_source, std::vector<std::shared_ptr<SourceToken>> &tokens_ptr) {
-  SourceLexer lexer = SourceLexer(program_source);
+void SourceController::Tokenize(std::string source, std::vector<TokenPtr> &token_stream) {
+  SourceLexer lexer = SourceLexer(source);
   try {
-    lexer.Tokenize(tokens_ptr);
+    lexer.Tokenize(token_stream);
   } catch (const UnexpectedTokenException &unexpected_token) {
     std::cout << unexpected_token.what() << std::endl;
-    tokens_ptr.clear();
+    token_stream.clear();
   }
 }
 
