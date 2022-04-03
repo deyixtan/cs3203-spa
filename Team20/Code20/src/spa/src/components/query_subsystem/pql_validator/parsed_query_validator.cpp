@@ -202,7 +202,7 @@ bool ParsedQueryValidator::AreRelationshipArgsSemanticallyValid(Relationship rel
 
 bool ParsedQueryValidator::AreRelationshipArgsDeclared(PqlToken first_arg, PqlToken second_arg, std::unordered_map<std::string, DesignEntityType> declarations) {
   if (first_arg.type == PqlTokenType::SYNONYM && !IsSynonymDeclared(first_arg, declarations)) {
-      return false;
+    return false;
   }
   if (second_arg.type == PqlTokenType::SYNONYM && !IsSynonymDeclared(second_arg, declarations)) {
     return false;
