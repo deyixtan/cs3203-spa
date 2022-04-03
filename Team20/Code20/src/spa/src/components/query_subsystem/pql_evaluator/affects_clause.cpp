@@ -6,11 +6,10 @@ namespace pql {
 
 using namespace clause_util;
 
-AffectsClause::AffectsClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
-                             const PqlToken &first_arg,
+AffectsClause::AffectsClause(const PqlToken &first_arg,
                              const PqlToken &second_arg,
                              PKB *pkb)
-    : declarations(declarations), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
+    : first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table AffectsClause::Execute() {
   if (!pkb->GetAffectStore()->DoesAffectSessionExist()) {
@@ -52,10 +51,7 @@ Table AffectsClause::Execute() {
 }
 
 Table AffectsClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAllAffectsStmt(
-      GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
-      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
-  );
+  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsPairs();
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
