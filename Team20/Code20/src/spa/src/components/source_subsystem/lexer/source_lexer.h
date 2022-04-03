@@ -20,13 +20,13 @@ class SourceLexer {
   void MultipleCharsTokenHandler(TokenPtr &token, char curr_char);
   void IntegerTokenHandler(TokenPtr &token, char curr_char);
   void NameTokenHandler(TokenPtr &token, char curr_char);
-  static void SanitizeTokenStream(std::vector<TokenPtr> &token_stream);
-  static void EncodeTokenStream(std::vector<TokenPtr> &token_stream);
+  static void SanitizeTokenStream(TokenStream &token_stream);
+  static void EncodeTokenStream(TokenStream &token_stream);
   static void EncodeTokenHandler(TokenPtr &token, TokenPtr &next_token);
 
  public:
   explicit SourceLexer(std::string source);
-  void Tokenize(std::vector<TokenPtr> &token_stream);
+  void Tokenize(TokenStream &token_stream);
 };
 
 }

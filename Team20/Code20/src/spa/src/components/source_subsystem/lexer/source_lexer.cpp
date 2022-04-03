@@ -6,7 +6,7 @@ namespace source {
 
 SourceLexer::SourceLexer(std::string source) : m_cursor(0), m_source(std::move(source)) {}
 
-void SourceLexer::Tokenize(std::vector<TokenPtr> &token_stream) {
+void SourceLexer::Tokenize(TokenStream &token_stream) {
   while (HasMoreTokens()) {
     TokenPtr token = GetNextToken();
     token_stream.push_back(token);
@@ -160,7 +160,7 @@ void SourceLexer::NameTokenHandler(TokenPtr &token, char curr_char) {
   token = std::make_shared<SourceToken>(TokenType::NAME, value);
 }
 
-void SourceLexer::SanitizeTokenStream(std::vector<TokenPtr> &token_stream) {
+void SourceLexer::SanitizeTokenStream(TokenStream &token_stream) {
   for (auto it = token_stream.begin(); it != token_stream.end(); it++) {
     TokenType type = (*it)->GetType();
 
@@ -172,7 +172,7 @@ void SourceLexer::SanitizeTokenStream(std::vector<TokenPtr> &token_stream) {
   }
 }
 
-void SourceLexer::EncodeTokenStream(std::vector<TokenPtr> &token_stream) {
+void SourceLexer::EncodeTokenStream(TokenStream &token_stream) {
   for (auto it = token_stream.begin(); it != token_stream.end(); it++) {
     if ((*it)->GetType() != TokenType::NAME) {
       continue;

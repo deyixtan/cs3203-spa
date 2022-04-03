@@ -4,7 +4,7 @@ namespace source {
 
 SourceController::SourceController() {}
 
-void SourceController::Tokenize(std::string source, std::vector<TokenPtr> &token_stream) {
+void SourceController::Tokenize(std::string source, TokenStream &token_stream) {
   SourceLexer lexer = SourceLexer(source);
   try {
     lexer.Tokenize(token_stream);
