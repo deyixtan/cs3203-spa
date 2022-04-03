@@ -83,7 +83,7 @@ TEST_CASE("Valid next list") {
   std::unordered_set<std::string> actual;
   actual.insert("4");
   actual.insert("5");
-  std::unordered_set<std::string> expected = next_store->GetNextOf(stmt1);
+  std::unordered_set<std::string> expected = next_store->GetNextOf(STMT, stmt1);
 
   REQUIRE(actual == expected);
 }

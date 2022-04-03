@@ -136,7 +136,7 @@ Table NextTClause::HandleIntegerSynonym() {
 }
 
 Table NextTClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetNextStore()->GetNextStarOf(first_arg.value).empty();
+  bool is_false_clause = pkb->GetNextStore()->GetNextStarOf(STMT, first_arg.value).empty(); //TODO: Fix StmtType
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
@@ -145,7 +145,7 @@ Table NextTClause::HandleIntegerWildcard() {
 }
 
 Table NextTClause::HandleIntegerInteger() {
-  auto possible_next_values = pkb->GetNextStore()->GetNextStarOf(first_arg.value);
+  auto possible_next_values = pkb->GetNextStore()->GetNextStarOf(STMT, first_arg.value); //TODO: Fix StmtType
   bool is_false_clause = possible_next_values.find(second_arg.value)==possible_next_values.end();
   Table table;
   if (is_false_clause) {

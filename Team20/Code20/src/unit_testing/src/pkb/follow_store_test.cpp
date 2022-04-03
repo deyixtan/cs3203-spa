@@ -62,7 +62,7 @@ TEST_CASE("Invalid follow pair") {
 TEST_CASE("Get follower of a statement (Correct)") {
   std::shared_ptr<FollowsStore> follow_store = set_up_follow();
   std::string num = "2";
-  std::string actual = follow_store->GetFollowerOf(num);
+  std::string actual = follow_store->GetFollowerOf(STMT, num);
   std::string expected = rs_map.at(num).follower;
 
   REQUIRE(actual == expected);
@@ -71,7 +71,7 @@ TEST_CASE("Get follower of a statement (Correct)") {
 TEST_CASE("Get follower of a statement (Wrong)") {
   std::shared_ptr<FollowsStore> follow_store = set_up_follow();
   std::string num = "2";
-  std::string actual = follow_store->GetFollowerOf(num);
+  std::string actual = follow_store->GetFollowerOf(STMT, num);
   std::string expected = rs_map.at("8").follower;
 
   REQUIRE(actual != expected);
@@ -80,7 +80,7 @@ TEST_CASE("Get follower of a statement (Wrong)") {
 TEST_CASE("Get following of a statement (Correct)") {
   std::shared_ptr<FollowsStore> follow_store = set_up_follow();
   std::string num = "5";
-  std::string actual = follow_store->GetFollowingOf(num);
+  std::string actual = follow_store->GetFollowingOf(STMT, num);
   std::string expected = rs_map.at(num).following;
 
   REQUIRE(actual == expected);
@@ -89,24 +89,8 @@ TEST_CASE("Get following of a statement (Correct)") {
 TEST_CASE("Get following of a statement (Wrong)") {
   std::shared_ptr<FollowsStore> follow_store = set_up_follow();
   std::string num = "5";
-  std::string actual = follow_store->GetFollowingOf(num);
+  std::string actual = follow_store->GetFollowingOf(STMT, num);
   std::string expected = rs_map.at("8").following;
 
   REQUIRE(actual != expected);
-}
-
-TEST_CASE("Get follower* of a statement (Correct)") {
-  //to be implemented
-}
-
-TEST_CASE("Get follower* of a statement (Wrong)") {
-  //to be implemented
-}
-
-TEST_CASE("Get following* of a statement (Correct)") {
-  //to be implemented
-}
-
-TEST_CASE("Get following* of a statement (Wrong)") {
-  //to be implemented
 }

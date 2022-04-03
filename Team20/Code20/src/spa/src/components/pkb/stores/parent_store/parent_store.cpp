@@ -12,9 +12,12 @@ void ParentStore::AddParentStar(std::string const &stmt, std::vector<std::string
   AddUpperLowerStar(PARENT, "", stmt, visited);
 }
 
-// Parent(1, 2)
 bool ParentStore::IsParentPairValid(std::pair<std::string, std::string> const &pair) {
   return IsValid(pair);
+}
+
+bool ParentStore::IsAnceDescValid(std::pair<std::string, std::string> const &pair) {
+  return IsStarValid(pair);
 }
 
 std::string ParentStore::GetParentOf(StmtType type, std::string const &stmt) {
@@ -25,12 +28,12 @@ std::unordered_set<std::string> ParentStore::GetChildOf(StmtType type, std::stri
   return GetLowerSetOf(PARENT, type, stmt);
 }
 
-std::unordered_set<std::string> ParentStore::GetAllAnceOf(std::string const &stmt) {
-  return GetUpperStarOf(PARENT, stmt);
+std::unordered_set<std::string> ParentStore::GetAllAnceOf(StmtType type, std::string const &stmt) {
+  return GetUpperStarOf(PARENT, type, stmt);
 }
 
-std::unordered_set<std::string> ParentStore::GetAllDescOf(std::string const &stmt) {
-  return GetLowerStarOf(PARENT, stmt);
+std::unordered_set<std::string> ParentStore::GetAllDescOf(StmtType type, std::string const &stmt) {
+  return GetLowerStarOf(PARENT, type, stmt);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> ParentStore::GetParentChildPairs() {

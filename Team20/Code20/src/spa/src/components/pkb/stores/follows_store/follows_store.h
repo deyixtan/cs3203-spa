@@ -16,8 +16,8 @@ class FollowsStore : public StmtStmtStore {
   [[nodiscard]] bool IsFollowsStarPairValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::string GetFollowerOf(StmtType type, std::string const &stmt);
   [[nodiscard]] std::string GetFollowingOf(StmtType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetFollowerStarOf(std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetFollowingStarOf(std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetFollowerStarOf(StmtType type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetFollowingStarOf(StmtType type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowStarPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllFollowStmt(StmtType type1,

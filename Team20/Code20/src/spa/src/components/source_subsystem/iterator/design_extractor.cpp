@@ -40,7 +40,7 @@ void DesignExtractor::UpdateCallUsesModifies(std::string proc) {
   std::unordered_set<std::string> callers = m_pkb_client->GetPKB()->GetCallStore()->GetCallersOf(proc);
 
   for (auto &call_stmt : call_stmts) {
-    std::unordered_set<std::string> ancestors = m_pkb_client->GetPKB()->GetParentStore()->GetAllAnceOf(call_stmt);
+    std::unordered_set<std::string> ancestors = m_pkb_client->GetPKB()->GetParentStore()->GetAllAnceOf(STMT, call_stmt); //TODO: Fix StmtType
 
     UpdateCallUses(call_stmt, uses_vars, ancestors, callers);
     UpdateCallModifies(call_stmt, mod_vars, ancestors, callers);

@@ -131,7 +131,7 @@ Table ParentTClause::HandleIntegerSynonym() {
 }
 
 Table ParentTClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetParentStore()->GetAllDescOf(first_arg.value).empty();
+  bool is_false_clause = pkb->GetParentStore()->GetAllDescOf(STMT, first_arg.value).empty(); //TODO: Fix StmtType
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
@@ -140,8 +140,7 @@ Table ParentTClause::HandleIntegerWildcard() {
 }
 
 Table ParentTClause::HandleIntegerInteger() {
-  auto descendants = pkb->GetParentStore()->GetAllDescOf(first_arg.value);
-  bool is_false_clause = descendants.find(second_arg.value)==descendants.end();
+  bool is_false_clause = !pkb->GetParentStore()->IsAnceDescValid({first_arg.value, second_arg.value});
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();

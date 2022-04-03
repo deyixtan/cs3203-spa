@@ -62,7 +62,7 @@ class StmtStmtStore : public Store {
                          std::string const &upper,
                          std::string const &lower,
                          std::vector<std::string> const &visited);
-  void AddFollows(bool is_star, std::string const &upper, std::string const &lower);
+  void AddFollows(bool is_star, StmtType type1, std::string const &upper, StmtType type2, std::string const &lower);
   void AddParent(bool is_star,
                  std::string const &upper,
                  std::string const &lower,
@@ -77,8 +77,8 @@ class StmtStmtStore : public Store {
   [[nodiscard]] std::string GetLowerOf(StmtType stmt_type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetUpperSetOf(StoreType store_type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetLowerSetOf(StoreType store_type, StmtType stmt_type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetUpperStarOf(StoreType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetLowerStarOf(StoreType type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetUpperStarOf(StoreType store_type, StmtType stmt_type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetLowerStarOf(StoreType store_type, StmtType stmt_type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetPairByType(StmtType type1,
                                                                                                  StmtType type2);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStarPairByType(StmtType type1,

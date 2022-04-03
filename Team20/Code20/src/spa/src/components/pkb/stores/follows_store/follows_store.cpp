@@ -32,12 +32,12 @@ std::string FollowsStore::GetFollowingOf(StmtType type, std::string const &stmt)
   return GetLowerOf(type, stmt);
 }
 
-std::unordered_set<std::string> FollowsStore::GetFollowerStarOf(std::string const &stmt) {
-  return GetUpperStarOf(FOLLOWS, stmt);
+std::unordered_set<std::string> FollowsStore::GetFollowerStarOf(StmtType type, std::string const &stmt) {
+  return GetUpperStarOf(FOLLOWS, type, stmt);
 }
 
-std::unordered_set<std::string> FollowsStore::GetFollowingStarOf(std::string const &stmt) {
-  return GetLowerStarOf(FOLLOWS, stmt);
+std::unordered_set<std::string> FollowsStore::GetFollowingStarOf(StmtType type, std::string const &stmt) {
+  return GetLowerStarOf(FOLLOWS, type, stmt);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowsStore::GetFollowPairs() {

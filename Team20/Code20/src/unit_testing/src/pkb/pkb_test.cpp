@@ -564,7 +564,7 @@ TEST_CASE("Check if follow star pair Valid") {
 TEST_CASE("Get follows of a stmt") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetFollowsStore()->GetFollowingOf("2");
+  auto actual = pkb->GetFollowsStore()->GetFollowingOf(STMT, "2");
   auto expected = follows_rs.at("2").following;
 
   REQUIRE(actual == expected);
@@ -573,7 +573,7 @@ TEST_CASE("Get follows of a stmt") {
 TEST_CASE("Get follows star of a stmt") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetFollowsStore()->GetFollowingStarOf("2");
+  auto actual = pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "2");
   auto expected = follows_rs.at("2").following_star;
 
   REQUIRE(actual == expected);

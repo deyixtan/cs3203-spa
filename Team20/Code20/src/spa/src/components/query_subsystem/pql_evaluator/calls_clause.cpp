@@ -82,12 +82,12 @@ Table CallsClause::HandleWildcardIdent() {
 }
 
 Table CallsClause::HandleIdentSynonym() {
-  auto single_constraints = pkb->GetCallStore()->GetCalleesOf(PROC, first_arg.value);
+  auto single_constraints = pkb->GetCallStore()->GetCalleesOf(PROC, first_arg.value); //TODO: Fix StmtType
   return {second_arg.value, single_constraints};
 }
 
 Table CallsClause::HandleIdentWildcard() {
-  bool is_empty = pkb->GetCallStore()->GetCalleesOf(PROC, first_arg.value).empty();
+  bool is_empty = pkb->GetCallStore()->GetCalleesOf(PROC, first_arg.value).empty(); //TODO: Fix StmtType
   Table table;
   if (is_empty) {
     table.ToggleFalseClause();
