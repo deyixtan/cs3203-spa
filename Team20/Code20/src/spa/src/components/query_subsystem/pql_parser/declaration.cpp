@@ -1,6 +1,6 @@
 #include "declaration.h"
 
-Declaration::Declaration() : declarations(declarations), has_duplicated_synonyms(false) {}
+Declaration::Declaration() : declarations(std::unordered_map<std::string, DesignEntityType>()), has_duplicated_synonyms(false) {}
 Declaration::Declaration(std::unordered_map<std::string, DesignEntityType> declarations) : declarations(declarations), has_duplicated_synonyms(false) {}
 std::unordered_map<std::string, DesignEntityType> Declaration::GetDeclarations() {
   return declarations;

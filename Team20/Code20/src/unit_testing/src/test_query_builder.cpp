@@ -203,38 +203,6 @@ TEST_CASE("Test query parser with pattern without such that") {
   REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
 }
 
-TEST_CASE("Test query parser with repeated synonym") {
-  std::vector<PqlToken> test_token_vect;
-
-  // assign
-  test_token_vect.push_back(assign_token);
-  test_token_vect.push_back(a_token);
-  test_token_vect.push_back(semicolon_token);
-
-  // variable
-  test_token_vect.push_back(variable_token);
-  test_token_vect.push_back(a_token);
-  test_token_vect.push_back(semicolon_token);
-
-  // select clause
-  test_token_vect.push_back(select_token);
-  test_token_vect.push_back(a_token);
-  test_token_vect.push_back(pattern_token);
-  test_token_vect.push_back(a_token);
-  test_token_vect.push_back(open_parenthesis_token);
-  test_token_vect.push_back(v_token);
-  test_token_vect.push_back(comma_token);
-  test_token_vect.push_back(underscore_token);
-  test_token_vect.push_back(closed_parenthesis_token);
-
-  std::string INVALID_QUERY_FORMAT = "Invalid Query Format! \n";
-
-  PqlParser pql_parser = PqlParser(test_token_vect);
-  std::string error = INVALID_QUERY_FORMAT;
-
-  REQUIRE_THROWS_WITH(pql_parser.ParseQuery(), error);
-}
-
 TEST_CASE("Test query parser with with clause") {
   std::vector<PqlToken> test_token_vect;
 
@@ -318,7 +286,7 @@ TEST_CASE("Test query parser with multiple with clauses") {
   test_token_vect.push_back(with_token);
   test_token_vect.push_back(attribute_var_token);
   test_token_vect.push_back(equal_sign_token);
-  test_token_vect.push_back(v1_token);
+  test_token_vect.push_back(v_value_token);
 
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery pq = pql_parser.ParseQuery();
@@ -340,8 +308,8 @@ TEST_CASE("Test query parser with multiple with clauses") {
   REQUIRE(first_with_clause.GetSecond().value == "5");
   REQUIRE(second_with_clause.GetFirst().type == PqlTokenType::ATTRIBUTE);
   REQUIRE(second_with_clause.GetFirst().value == "v.varName");
-  REQUIRE(second_with_clause.GetSecond().type == PqlTokenType::SYNONYM);
-  REQUIRE(second_with_clause.GetSecond().value == "v1");
+  REQUIRE(second_with_clause.GetSecond().type == PqlTokenType::IDENT_WITH_QUOTES);
+  REQUIRE(second_with_clause.GetSecond().value == "\"v\"");
 }
 
 TEST_CASE("Test query parser with BOOLEAN var name") {
@@ -566,23 +534,11 @@ TEST_CASE("Test query parser with attributes and value strings") {
   test_token_vect.push_back(equal_sign_token);
   test_token_vect.push_back(v_token);
 
+  std::string INVALID_QUERY_FORMAT = "Invalid Query Format! \n";
   PqlParser pql_parser = PqlParser(test_token_vect);
-  ParsedQuery pq = pql_parser.ParseQuery();
-  ResultClause result_clause = pq.GetResultClause();
-  Relationship rship = pq.GetRelationships().front();
-  const auto decl = pq.GetDeclaration().GetDeclarations();
-  With with_clause = pq.GetWithClause().front();
+  std::string error = INVALID_QUERY_FORMAT;
 
-  REQUIRE(rship.GetRelRef().value == "Uses");
-  REQUIRE(rship.GetFirst().value == "s");
-  REQUIRE(rship.GetSecond().value == "v");
-  REQUIRE(result_clause.GetValues()[0].value == "s");
-  REQUIRE(decl.find("s")->second == DesignEntityType::STMT);
-  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
-  REQUIRE(with_clause.GetFirst().type == PqlTokenType::ATTRIBUTE);
-  REQUIRE(with_clause.GetFirst().value == "v.varName");
-  REQUIRE(with_clause.GetSecond().type == PqlTokenType::SYNONYM);
-  REQUIRE(with_clause.GetSecond().value == "v");
+  REQUIRE_THROWS_WITH(pql_parser.ParseQuery(), error);
 }
 
 TEST_CASE("Test query parser with combination of attributes") {
@@ -610,7 +566,7 @@ TEST_CASE("Test query parser with combination of attributes") {
   test_token_vect.push_back(equal_sign_token);
   test_token_vect.push_back(number_value_token_2);
   test_token_vect.push_back(and_token);
-  test_token_vect.push_back(v1_token);
+  test_token_vect.push_back(attribute_var_token);
   test_token_vect.push_back(equal_sign_token);
   test_token_vect.push_back(attribute_var_token);
 
@@ -633,8 +589,8 @@ TEST_CASE("Test query parser with combination of attributes") {
   REQUIRE(with_second.GetFirst().value == "s.stmt#");
   REQUIRE(with_second.GetSecond().type == PqlTokenType::NUMBER);
   REQUIRE(with_second.GetSecond().value == "2");
-  REQUIRE(with_third.GetFirst().type == PqlTokenType::SYNONYM);
-  REQUIRE(with_third.GetFirst().value == "v1");
+  REQUIRE(with_third.GetFirst().type == PqlTokenType::ATTRIBUTE);
+  REQUIRE(with_third.GetFirst().value == "v.varName");
   REQUIRE(with_third.GetSecond().type == PqlTokenType::ATTRIBUTE);
   REQUIRE(with_third.GetSecond().value == "v.varName");
 }
@@ -682,7 +638,7 @@ TEST_CASE("Test query parser with multiple And clauses") {
   test_token_vect.push_back(such_token);
   test_token_vect.push_back(that_token);
   test_token_vect.push_back(affects_token);
-  test_token_vect.push_back(closed_parenthesis_token);
+  test_token_vect.push_back(open_parenthesis_token);
   test_token_vect.push_back(a1_token);
   test_token_vect.push_back(comma_token);
   test_token_vect.push_back(a_token);
@@ -752,8 +708,19 @@ TEST_CASE("Test invalid pattern with extra args") {
   test_token_vect.push_back(closed_parenthesis_token);
 
   PqlParser pql_parser = PqlParser(test_token_vect);
-  std::string INVALID_QUERY_FORMAT = "Invalid Query Format! \n";
-  std::string error = INVALID_QUERY_FORMAT;
+  ParsedQuery pq = pql_parser.ParseQuery();
+  ResultClause result_clause = pq.GetResultClause();
+  Pattern patt_assign = pq.GetPatterns().front();
+  const auto decl = pq.GetDeclaration().GetDeclarations();
 
-  REQUIRE_THROWS_WITH(pql_parser.ParseQuery(), error);
+  REQUIRE(decl.find("ifs")->second == DesignEntityType::IF);
+  REQUIRE(decl.find("a")->second == DesignEntityType::ASSIGN);
+  REQUIRE(decl.find("v")->second == DesignEntityType::VARIABLE);
+  REQUIRE(patt_assign.GetFirst().type == PqlTokenType::SYNONYM);
+  REQUIRE(patt_assign.GetSecond().type == PqlTokenType::UNDERSCORE);
+  REQUIRE(patt_assign.GetThird().type == PqlTokenType::UNDERSCORE);
+  REQUIRE(patt_assign.GetSynonym().value == "a");
+  REQUIRE(patt_assign.GetFirst().value == "v");
+  REQUIRE(patt_assign.GetSecond().value == "_");
+  REQUIRE(patt_assign.GetThird().value == "_");
 }

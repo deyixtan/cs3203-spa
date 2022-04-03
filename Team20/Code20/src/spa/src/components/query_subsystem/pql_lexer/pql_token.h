@@ -59,7 +59,9 @@ enum class PqlTokenType {
   SUB_EXPRESSION,
 
   ATTRIBUTE,
-  TUPLE
+  TUPLE,
+
+  DUMMY
 };
 
 class PqlToken {

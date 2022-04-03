@@ -30,15 +30,13 @@ PqlToken PqlParser::FetchToken() {
   if (cursor < tokens.size()) {
     return tokens[cursor];
   } else {
-    throw INVALID_QUERY_FORMAT;
+    return PqlToken(PqlTokenType::DUMMY, "");
   }
 }
 
 PqlToken PqlParser::FetchNextToken() {
   if (cursor + 1 < tokens.size()) {
     return tokens[cursor + 1];
-  } else {
-    throw INVALID_QUERY_FORMAT;
   }
 }
 
@@ -222,6 +220,7 @@ void PqlParser::ParsePatternClause() {
     if (next_token.type == PqlTokenType::COMMA) {
       MoveCursor(1);
       third_arg = ValidateToken(PqlTokenType::UNDERSCORE);
+      ValidateToken(PqlTokenType::CLOSED_PARENTHESIS);
     } else if (next_token.type == PqlTokenType::CLOSED_PARENTHESIS) {
       MoveCursor(1);
     } else {
