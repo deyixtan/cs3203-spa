@@ -368,6 +368,9 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType type, st
       return calls_rs_map.at(stmt).callers_star_set;
     }
   } else if (type == NEXT) {
+    if (next_rs_map.find(stmt) != next_rs_map.end() && !next_rs_map.at(stmt).before_star_set.empty()) {
+      return next_rs_map.at(stmt).before_star_set;
+    }
     std::unordered_set<std::string> res;
     std::unordered_set<std::string> visited;
     GetUpperStarOfHelper(stmt, res, visited);
@@ -424,34 +427,70 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore
 void StmtStmtStore::GetUpperStarOfHelper(std::string const &stmt,
                                     std::unordered_set<std::string> &res,
                                     std::unordered_set<std::string> &visited) {
-  if (next_rs_map.find(stmt) == next_rs_map.end() || visited.find(stmt) != visited.end()) {
+  if (next_rs_map.find(stmt) == next_rs_map.end()) {
     return;
   }
-  std::unordered_set<std::string> before_set = next_rs_map[stmt].before;
+  if(visited.find(stmt) != visited.end()) {
+    bool is_loop = false;
+    for (auto next : visited) {
+      if(next == stmt) {
+        is_loop = true;
+      }
+      next_rs_map[next].before_star_set.insert(stmt);
+      if(is_loop) {
+        next_rs_map[next].before_star_set.insert(next);
+      }
+      res.insert(stmt);
+    }
+    return;
+  }
+  for (auto next : visited) {
+    next_rs_map[next].before_star_set.insert(stmt);
+    res.insert(stmt);
+  }
   visited.insert(stmt);
-  for (auto before : before_set) {
-    res.insert(before);
-    next_rs_map[stmt].before_star_set.insert(before);
-    GetUpperStarOfHelper(before, res, visited);
+  std::unordered_set<std::string> &before_set = next_rs_map[stmt].before;
+  for (auto before: before_set) {
+    std::unordered_set<std::string> new_visited;
+    for (auto stmt : visited) {
+      new_visited.insert(stmt);
+    }
+    GetLowerStarOfHelper(before, res, new_visited);
   }
 }
 
 void StmtStmtStore::GetLowerStarOfHelper(std::string const &stmt,
                                   std::unordered_set<std::string> &res,
                                   std::unordered_set<std::string> &visited) {
-  if (next_rs_map.find(stmt) == next_rs_map.end() || visited.find(stmt) != visited.end()) {
+  if (next_rs_map.find(stmt) == next_rs_map.end()) {
     return;
   }
-  std::unordered_set<std::string> &next_set = next_rs_map[stmt].next;
-  visited.insert(stmt);
-  for (auto next : next_set) {
-    while(next_rs_map[next].next.size() > 0) {
-      res.insert(next);
-      next_rs_map[stmt].next_star_set.insert(next);
+  if(visited.find(stmt) != visited.end()) {
+    bool is_loop = false;
+    for (auto before : visited) {
+      if(before == stmt) {
+        is_loop = true;
+      }
+      next_rs_map[before].next_star_set.insert(stmt);
+      if (is_loop) {
+        next_rs_map[before].next_star_set.insert(before);
+      }
+      res.insert(stmt);
     }
-    res.insert(next);
-    next_rs_map[stmt].next_star_set.insert(next);
-    GetLowerStarOfHelper(next, res, visited);
+    return;
+  }
+  for (auto before : visited) {
+    next_rs_map[before].next_star_set.insert(stmt);
+    res.insert(stmt);
+  }
+  visited.insert(stmt);
+  std::unordered_set<std::string> &next_set = next_rs_map[stmt].next;
+  for (auto next: next_set) {
+    std::unordered_set<std::string> new_visited;
+    for (auto stmt : visited) {
+      new_visited.insert(stmt);
+    }
+    GetLowerStarOfHelper(next, res, new_visited);
   }
 }
 
