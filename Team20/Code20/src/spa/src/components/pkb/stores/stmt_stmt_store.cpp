@@ -169,6 +169,7 @@ void StmtStmtStore::AddCalls(bool is_star, std::string const &upper, std::string
       all_star_pairs.emplace(std::pair<std::string, std::string>(upper, callee_star));
       calls_rs_map.at(callee_star).callers_star_set.insert(upper);
       calls_rs_map.at(upper).callees_star_set.insert(callee_star);
+      ExhaustiveAddStmt(PROC, upper, PROC, callee_star, true);
     }
   }
 
@@ -178,6 +179,7 @@ void StmtStmtStore::AddCalls(bool is_star, std::string const &upper, std::string
       all_star_pairs.emplace(std::pair<std::string, std::string>(caller_star, lower));
       calls_rs_map.at(caller_star).callees_star_set.insert(lower);
       calls_rs_map.at(lower).callers_star_set.insert(caller_star);
+      ExhaustiveAddStmt(PROC, caller_star, PROC, lower, true);
     }
   }
 }
@@ -281,13 +283,22 @@ std::string StmtStmtStore::GetLowerOf(StmtType stmt_type, std::string const &stm
 }
 
 std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_type, std::string const &stmt) {
+  std::unordered_set<std::string> result;
+
   if (store_type == NEXT) {
     if (next_rs_map.find(stmt) != next_rs_map.end()) {
       return next_rs_map.at(stmt).before;
     }
   } else if (store_type == CALLS) {
-    if (calls_rs_map.find(stmt) != calls_rs_map.end()) {
-      return calls_rs_map.at(stmt).callers_set;
+    if (type_pair_map.find(PROC) != type_pair_map.end()) {
+      if (type_pair_map.at(PROC).find(PROC) != type_pair_map.at(PROC).end()) {
+        for (auto &pair : type_pair_map.at(PROC).at(PROC)) {
+          if (pair.second == stmt) {
+            result.insert(pair.first);
+          }
+        }
+        return result;
+      }
     }
   } else {
     return {};
@@ -295,7 +306,7 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_typ
 }
 
 std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType store_type, StmtType stmt_type, std::string const &stmt) {
-  std::unordered_set<std::string> result = {};
+  std::unordered_set<std::string> result;
 
   if (store_type == PARENT) {
     if (type_pair_map.find(STMT) != type_pair_map.end()) {
@@ -313,25 +324,33 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType store_typ
       return next_rs_map.at(stmt).next;
     }
   } else {
-    if (calls_rs_map.find(stmt) != calls_rs_map.end()) {
-      return calls_rs_map.at(stmt).callees_set;
+    if (type_pair_map.find(PROC) != type_pair_map.end()) {
+      if (type_pair_map.at(PROC).find(PROC) != type_pair_map.at(PROC).end()) {
+        for (auto &pair : type_pair_map.at(PROC).at(PROC)) {
+          if (pair.first == stmt) {
+            result.insert(pair.second);
+          }
+        }
+        return result;
+      }
     }
   }
   return {};
 }
 
 std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType type, std::string const &stmt) {
-  if (type == FOLLOWS) {
-    if (follows_rs_map.find(stmt) != follows_rs_map.end()) {
-      return follows_rs_map.at(stmt).follower_star;
-    }
-  } else if (type == PARENT) {
-    if (parent_rs_map.find(stmt) != parent_rs_map.end()) {
-      return parent_rs_map.at(stmt).ance;
-    }
-  } else if (type == CALLS) {
-    if (calls_rs_map.find(stmt) != calls_rs_map.end()) {
-      return calls_rs_map.at(stmt).callers_star_set;
+  std::unordered_set<std::string> result;
+
+  if (type == FOLLOWS || type == PARENT || type == CALLS) {
+    if (star_type_pair_map.find(PROC) != star_type_pair_map.end()) {
+      if (star_type_pair_map.at(PROC).find(PROC) != star_type_pair_map.at(PROC).end()) {
+        for (auto &pair : star_type_pair_map.at(PROC).at(PROC)) {
+          if (pair.second == stmt) {
+            result.insert(pair.first);
+          }
+        }
+        return result;
+      }
     }
   } else if (type == NEXT) {
     if (next_rs_map.find(stmt) != next_rs_map.end() && !next_rs_map.at(stmt).before_star_set.empty()) {
@@ -346,17 +365,18 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType type, st
 }
 
 std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StoreType type, std::string const &stmt) {
-  if (type == FOLLOWS) {
-    if (follows_rs_map.find(stmt) != follows_rs_map.end()) {
-      return follows_rs_map.at(stmt).following_star;
-    }
-  } else if (type == PARENT) {
-    if (parent_rs_map.find(stmt) != parent_rs_map.end()) {
-      return parent_rs_map.at(stmt).desc;
-    }
-  } else if (type == CALLS) {
-    if (calls_rs_map.find(stmt) != calls_rs_map.end()) {
-      return calls_rs_map.at(stmt).callees_star_set;
+  std::unordered_set<std::string> result;
+
+  if (type == FOLLOWS || type == PARENT || type == CALLS) {
+    if (star_type_pair_map.find(PROC) != star_type_pair_map.end()) {
+      if (star_type_pair_map.at(PROC).find(PROC) != star_type_pair_map.at(PROC).end()) {
+        for (auto &pair : star_type_pair_map.at(PROC).at(PROC)) {
+          if (pair.first == stmt) {
+            result.insert(pair.second);
+          }
+        }
+        return result;
+      }
     }
   } else if (type == NEXT) {
     if (next_rs_map.find(stmt) != next_rs_map.end() && !next_rs_map.at(stmt).next_star_set.empty()) {
