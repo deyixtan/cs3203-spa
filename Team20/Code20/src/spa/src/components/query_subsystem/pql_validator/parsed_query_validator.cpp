@@ -248,7 +248,7 @@ bool ParsedQueryValidator::ValidateAffectsAffectsTArguments(Relationship relatio
   PqlToken second_arg = relationship.GetSecond();
 
   if (first_arg.type==PqlTokenType::SYNONYM && second_arg.type==PqlTokenType::SYNONYM) {
-    if (first_arg.value==second_arg.value && relationship.GetRelRef().type == PqlTokenType::NEXT) {
+    if (first_arg.value==second_arg.value && relationship.GetRelRef().type == PqlTokenType::ASSIGN) {
       // Affects (s, s) is semantically invalid
       return false;
     }
@@ -260,18 +260,18 @@ bool ParsedQueryValidator::ValidateAffectsAffectsTArguments(Relationship relatio
       return false;
     }
 
-    if (declarations.at(first_arg.value) != DesignEntityType::ASSIGN) {
+    if (declarations.at(first_arg.value) != DesignEntityType::ASSIGN && declarations.at(first_arg.value) != DesignEntityType::STMT) {
       return false;
     }
-    if (declarations.at(second_arg.value) != DesignEntityType::ASSIGN) {
+    if (declarations.at(second_arg.value) != DesignEntityType::ASSIGN && declarations.at(second_arg.value) != DesignEntityType::STMT) {
       return false;
     }
   } else if (first_arg.type==PqlTokenType::SYNONYM) {
-    if (declarations.at(first_arg.value) != DesignEntityType::ASSIGN) {
+    if (declarations.at(first_arg.value) != DesignEntityType::ASSIGN && declarations.at(first_arg.value) != DesignEntityType::STMT) {
       return false;
     }
   } else if (second_arg.type==PqlTokenType::SYNONYM) {
-    if (declarations.at(second_arg.value) != DesignEntityType::ASSIGN) {
+    if (declarations.at(second_arg.value) != DesignEntityType::ASSIGN && declarations.at(second_arg.value) != DesignEntityType::STMT) {
       return false;
     }
   }
