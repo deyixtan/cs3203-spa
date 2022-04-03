@@ -12,11 +12,6 @@ class ParsedQueryValidator {
   bool IsQuerySemanticallyValid(ParsedQuery query);
 
  private:
-  bool IsStmt(DesignEntityType);
-  bool IsStmtRef(PqlTokenType);
-  bool IsProc(DesignEntityType);
-  bool IsEntRef(PqlTokenType);
-  bool IsExpressionSpec(PqlTokenType);
   bool IsNameAttribute(AttriName attri_name);
   bool IsIntegerAttribute(AttriName attri_name);
 
@@ -31,14 +26,15 @@ class ParsedQueryValidator {
   bool AreRelationshipArgsSemanticallyValid(Relationship, std::unordered_map<std::string, DesignEntityType>);
 
   bool IsPatternClauseSemanticallyValid(ParsedQuery);
-  bool ArePatternArgsSemanticallyValid(Pattern);
+  bool ArePatternArgsSemanticallyValid(Pattern, std::unordered_map<std::string, DesignEntityType>);
+  bool IsPatternAssignSemanticallyValid(Pattern);
+  bool IsPatternWhileSemanticallyValid(Pattern);
+  bool IsPatternIfSemanticallyValid(Pattern);
 
-  bool ValidatePatternClause(ParsedQuery);
-  bool ValidateAssignPatternArguments(Pattern, std::unordered_map<std::string, DesignEntityType>);
-  bool ValidateWhilePatternArguments(Pattern, std::unordered_map<std::string, DesignEntityType>);
-  bool ValidateIfPatternArguments(Pattern, std::unordered_map<std::string, DesignEntityType>);
-
-  bool ValidateWithClause(ParsedQuery);
+  bool IsWithClauseSemanticallyValid(ParsedQuery);
+  bool IsAttributeAttributeSemanticallyValid(PqlToken, PqlToken, std::unordered_map<std::string, DesignEntityType>);
+  bool IsAttributeOthersSemanticallyValid(PqlToken, PqlToken, std::unordered_map<std::string, DesignEntityType>);
+  bool IsOthersAttributeSemanticallyValid(PqlToken, PqlToken, std::unordered_map<std::string, DesignEntityType>);
 };
 
 };

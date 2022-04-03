@@ -1,6 +1,5 @@
 #include "parsed_query_validator.h"
 
-#include <string>
 #include <vector>
 
 namespace pql_validator {
@@ -44,8 +43,8 @@ bool ParsedQueryValidator::IsQuerySemanticallyValid(ParsedQuery query) {
   return IsDeclarationSemanticallyValid(query.GetDeclaration())
       && IsResultClauseSemanticallyValid(query)
       && IsRelationshipClauseSemanticallyValid(query)
-      && ValidatePatternClause(query)
-      && ValidateWithClause(query);
+      && IsPatternClauseSemanticallyValid(query)
+      && IsWithClauseSemanticallyValid(query);
 }
 
 bool ParsedQueryValidator::IsDeclarationSemanticallyValid(Declaration declaration) {
@@ -149,189 +148,123 @@ bool ParsedQueryValidator::IsPatternClauseSemanticallyValid(ParsedQuery query) {
   std::vector<Pattern> patterns = query.GetPatterns();
   std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration().GetDeclarations();
   for (auto pattern : patterns) {
-
+    if (!ArePatternArgsSemanticallyValid(pattern, declarations)) {
+      return false;
+    }
   }
   return true;
 }
 
-bool ParsedQueryValidator::ArePatternArgsSemanticallyValid(Pattern pattern) {
+bool ParsedQueryValidator::ArePatternArgsSemanticallyValid(Pattern pattern, std::unordered_map<std::string, DesignEntityType> declarations) {
   PqlToken pattern_synonym = pattern.GetSynonym();
   PqlToken first_arg = pattern.GetFirst();
   PqlToken second_arg = pattern.GetSecond();
   PqlToken third_arg = pattern.GetThird();
+  if (first_arg.type == PqlTokenType::SYNONYM) {
+    if (!IsSynonymDeclared(first_arg, declarations) || declarations.at(first_arg.value) != DesignEntityType::VARIABLE) {
+      return false;
+    }
+  }
+  if (declarations.at(pattern_synonym.value) == DesignEntityType::ASSIGN) {
+    return IsPatternAssignSemanticallyValid(pattern);
+  } else if (declarations.at(pattern_synonym.value) == DesignEntityType::IF) {
+    return IsPatternIfSemanticallyValid(pattern);
+  } else if (declarations.at(pattern_synonym.value) == DesignEntityType::WHILE) {
+    return IsPatternWhileSemanticallyValid(pattern);
+  } else {
+    return false;
+  }
 }
 
-bool ParsedQueryValidator::ValidatePatternClause(ParsedQuery query) {
-  std::vector<Pattern> patterns = query.GetPatterns();
-  std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration().GetDeclarations();
-  bool is_valid = true;
-  if (!patterns.empty()) {
-    for (auto pattern : patterns) {
-      PqlToken pattern_syn = pattern.GetSynonym();
-      if (declarations.count(pattern_syn.value) == 0) {
-        return false;
-      }
-      DesignEntityType design_entity_type = declarations.at(pattern_syn.value);
-      if (design_entity_type == DesignEntityType::ASSIGN) {
-        is_valid = is_valid && ValidateAssignPatternArguments(pattern, declarations);
-      } else if (design_entity_type == DesignEntityType::WHILE) {
-        is_valid = is_valid && ValidateWhilePatternArguments(pattern, declarations);
-      } else if (design_entity_type == DesignEntityType::IF) {
-        is_valid = is_valid && ValidateIfPatternArguments(pattern, declarations);
-      } else {
-        return false;
-      }
-    }
-  }
-
-  return is_valid;
-}
-
-bool ParsedQueryValidator::ValidateAssignPatternArguments(Pattern pattern, std::unordered_map<std::string, DesignEntityType> declarations) {
-  PqlToken first_arg = pattern.GetFirst();
-  PqlToken second_arg = pattern.GetSecond();
-  if (!pattern.GetThird().value.empty()) {
-    throw "ERROR: Invalid assign pattern grammar!";
-  }
-  if (first_arg.type==PqlTokenType::SYNONYM) {
-    if (declarations.count(first_arg.value) == 0) {
-      return false;
-    }
-    if (declarations.at(first_arg.value) != DesignEntityType::VARIABLE) {
-      // pattern first argument synonym must be of type variable
-      return false;
-    }
-  }
-  return true;
-}
-
-bool ParsedQueryValidator::ValidateWhilePatternArguments(Pattern pattern, std::unordered_map<std::string, DesignEntityType> declarations) {
-  PqlToken first_arg = pattern.GetFirst();
-  PqlToken second_arg = pattern.GetSecond();
-  if (!pattern.GetThird().value.empty()) {
-    throw "ERROR: Invalid assign pattern grammar!";
-  }
-  if (first_arg.type==PqlTokenType::SYNONYM) {
-    if (declarations.count(first_arg.value) == 0) {
-      return false;
-    }
-    if (declarations.at(first_arg.value) != DesignEntityType::VARIABLE) {
-      // pattern first argument synonym must be of type variable
-      return false;
-    }
-  }
-  if (second_arg.type != PqlTokenType::UNDERSCORE) {
+bool ParsedQueryValidator::IsPatternAssignSemanticallyValid(Pattern pattern) {
+  PqlToken third_arg = pattern.GetThird();
+  if (!third_arg.value.empty()) {
     return false;
   }
   return true;
 }
 
-bool ParsedQueryValidator::ValidateIfPatternArguments(Pattern pattern, std::unordered_map<std::string, DesignEntityType> declarations) {
-  PqlToken first_arg = pattern.GetFirst();
+bool ParsedQueryValidator::IsPatternWhileSemanticallyValid(Pattern pattern) {
   PqlToken second_arg = pattern.GetSecond();
   PqlToken third_arg = pattern.GetThird();
-  if (pattern.GetThird().value.empty()) {
-    throw std::runtime_error("ERROR: Invalid assign pattern grammar!");
+  if (second_arg.type != PqlTokenType::UNDERSCORE || !third_arg.value.empty()) {
+    return false;
   }
-  if (first_arg.type==PqlTokenType::SYNONYM) {
-    if (declarations.count(first_arg.value) == 0) {
-      return false;
-    }
-    if (declarations.at(first_arg.value) != DesignEntityType::VARIABLE) {
-      // pattern first argument synonym must be of type variable
-      return false;
-    }
-  }
+  return true;
+}
+bool ParsedQueryValidator::IsPatternIfSemanticallyValid(Pattern pattern) {
+  PqlToken second_arg = pattern.GetSecond();
+  PqlToken third_arg = pattern.GetThird();
   if (second_arg.type != PqlTokenType::UNDERSCORE || third_arg.type != PqlTokenType::UNDERSCORE) {
     return false;
   }
   return true;
 }
 
-bool ParsedQueryValidator::ValidateWithClause(ParsedQuery query) {
+bool ParsedQueryValidator::IsWithClauseSemanticallyValid(ParsedQuery query) {
   std::vector<With> withs = query.GetWithClause();
   std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration().GetDeclarations();
+  bool is_valid = true;
   for (auto with : withs) {
     PqlToken first_arg = with.GetFirst();
     PqlToken second_arg = with.GetSecond();
     if (first_arg.type == PqlTokenType::ATTRIBUTE && second_arg.type == PqlTokenType::ATTRIBUTE) {
-      if (!IsAttributeSemanticallyValid(first_arg, declarations) || !IsAttributeSemanticallyValid(second_arg, declarations)) {
-        return false;
-      }
-      std::pair<std::pair<DesignEntityType, std::string>, AttriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
-      std::pair<std::pair<DesignEntityType, std::string>, AttriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
-      if (IsNameAttribute(first_attribute.second)) {
-        if (!IsNameAttribute(second_attribute.second)) {
-          return false;
-        }
-      } else if (IsIntegerAttribute(first_attribute.second)) {
-        if (!IsIntegerAttribute(second_attribute.second)) {
-          return false;
-        }
-      }
+      is_valid = is_valid && IsAttributeAttributeSemanticallyValid(first_arg, second_arg, declarations);
     } else if (first_arg.type == PqlTokenType::ATTRIBUTE) {
-      if (!IsAttributeSemanticallyValid(first_arg, declarations)) {
-        return false;
-      }
-      std::pair<std::pair<DesignEntityType, std::string>, AttriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
-      if (IsNameAttribute(first_attribute.second)) {
-        if (second_arg.type != PqlTokenType::IDENT_WITH_QUOTES) {
-          return false;
-        }
-      } else if (IsIntegerAttribute(first_attribute.second)) {
-        if (second_arg.type != PqlTokenType::NUMBER) {
-          return false;
-        }
-      }
+      is_valid = is_valid && IsAttributeOthersSemanticallyValid(first_arg, second_arg, declarations);
     } else if (second_arg.type == PqlTokenType::ATTRIBUTE) {
-      if (!IsAttributeSemanticallyValid(second_arg, declarations)) {
-        return false;
-      }
-      std::pair<std::pair<DesignEntityType, std::string>, AttriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
-      if (IsNameAttribute(second_attribute.second)) {
-        if (first_arg.type != PqlTokenType::IDENT_WITH_QUOTES) {
-          return false;
-        }
-      } else if (IsIntegerAttribute(second_attribute.second)) {
-        if (first_arg.type != PqlTokenType::NUMBER) {
-          return false;
-        }
-      }
+      is_valid = is_valid && IsOthersAttributeSemanticallyValid(first_arg, second_arg, declarations);
     }
   }
-  return true;
+  return is_valid;
 }
 
-bool ParsedQueryValidator::IsProc(DesignEntityType token_type) {
-  return token_type==DesignEntityType::PROCEDURE;
+bool ParsedQueryValidator::IsAttributeAttributeSemanticallyValid(PqlToken first_arg, PqlToken second_arg, std::unordered_map<std::string, DesignEntityType> declarations) {
+  if (!IsAttributeSemanticallyValid(first_arg, declarations) || !IsAttributeSemanticallyValid(second_arg, declarations)) {
+    return false;
+  }
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+  if (IsNameAttribute(first_attribute.second)) {
+    if (!IsNameAttribute(second_attribute.second)) {
+      return false;
+    }
+  } else if (IsIntegerAttribute(first_attribute.second)) {
+    if (!IsIntegerAttribute(second_attribute.second)) {
+      return false;
+    }
+  }
 }
 
-bool ParsedQueryValidator::IsStmt(DesignEntityType token_type) {
-  return token_type==DesignEntityType::STMT
-      || token_type==DesignEntityType::READ
-      || token_type==DesignEntityType::PRINT
-      || token_type==DesignEntityType::CALL
-      || token_type==DesignEntityType::WHILE
-      || token_type==DesignEntityType::IF
-      || token_type==DesignEntityType::ASSIGN;
+bool ParsedQueryValidator::IsAttributeOthersSemanticallyValid(PqlToken first_arg, PqlToken second_arg, std::unordered_map<std::string, DesignEntityType> declarations) {
+  if (!IsAttributeSemanticallyValid(first_arg, declarations)) {
+    return false;
+  }
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+  if (IsNameAttribute(first_attribute.second)) {
+    if (second_arg.type != PqlTokenType::IDENT_WITH_QUOTES) {
+      return false;
+    }
+  } else if (IsIntegerAttribute(first_attribute.second)) {
+    if (second_arg.type != PqlTokenType::NUMBER) {
+      return false;
+    }
+  }
 }
-
-bool ParsedQueryValidator::IsStmtRef(PqlTokenType token_type) {
-  return token_type==PqlTokenType::SYNONYM
-      || token_type==PqlTokenType::UNDERSCORE
-      || token_type==PqlTokenType::NUMBER;
-}
-
-bool ParsedQueryValidator::IsEntRef(PqlTokenType token_type) {
-  return token_type==PqlTokenType::SYNONYM
-      || token_type==PqlTokenType::UNDERSCORE
-      || token_type==PqlTokenType::IDENT_WITH_QUOTES;
-}
-
-bool ParsedQueryValidator::IsExpressionSpec(PqlTokenType token_type) {
-  // exact match not in iter 1
-  return token_type==PqlTokenType::UNDERSCORE
-      || token_type==PqlTokenType::SUB_EXPRESSION;
+bool ParsedQueryValidator::IsOthersAttributeSemanticallyValid(PqlToken first_arg, PqlToken second_arg, std::unordered_map<std::string, DesignEntityType> declarations) {
+  if (!IsAttributeSemanticallyValid(second_arg, declarations)) {
+    return false;
+  }
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+  if (IsNameAttribute(second_attribute.second)) {
+    if (first_arg.type != PqlTokenType::IDENT_WITH_QUOTES) {
+      return false;
+    }
+  } else if (IsIntegerAttribute(second_attribute.second)) {
+    if (first_arg.type != PqlTokenType::NUMBER) {
+      return false;
+    }
+  }
 }
 
 bool ParsedQueryValidator::IsNameAttribute(AttriName attri_name) {
