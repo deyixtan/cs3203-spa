@@ -72,10 +72,10 @@ class StmtStmtStore : public Store {
   void WipeNextStar();
   [[nodiscard]] bool IsValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsStarValid(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] std::string GetUpperOf(StoreType type, std::string const &stmt);
-  [[nodiscard]] std::string GetLowerOf(std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetUpperSetOf(StoreType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetLowerSetOf(StoreType type, std::string const &stmt);
+  [[nodiscard]] std::string GetUpperOf(StoreType store_type, StmtType stmt_type, std::string const &stmt);
+  [[nodiscard]] std::string GetLowerOf(StmtType stmt_type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetUpperSetOf(StoreType store_type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetLowerSetOf(StoreType store_type, StmtType stmt_type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetUpperStarOf(StoreType type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetLowerStarOf(StoreType type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetPairByType(StmtType type1,

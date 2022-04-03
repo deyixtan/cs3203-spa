@@ -131,7 +131,7 @@ Table ParentClause::HandleIntegerSynonym() {
 }
 
 Table ParentClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetParentStore()->GetChildOf(first_arg.value).empty();
+  bool is_false_clause = pkb->GetParentStore()->GetChildOf(STMT, first_arg.value).empty();
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();

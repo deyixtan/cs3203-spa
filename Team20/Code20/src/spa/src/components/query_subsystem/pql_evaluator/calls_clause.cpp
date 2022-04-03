@@ -22,9 +22,9 @@ Table CallsClause::Execute() {
   } else if (IsArgWildcard(first_arg) && IsArgIdent(second_arg)) {
     return HandleWildcardIdent();
   } else if (IsArgIdent(first_arg) && IsArgSynonym(second_arg)) {
-    return HandleIdentSynonym();
+    //return HandleIdentSynonym();
   } else if (IsArgIdent(first_arg) && IsArgWildcard(second_arg)) {
-    return HandleIdentWildcard();
+    //return HandleIdentWildcard();
   } else if (IsArgIdent(first_arg) && IsArgIdent(second_arg)) {
     return HandleIdentIdent();
   } else {
@@ -81,19 +81,19 @@ Table CallsClause::HandleWildcardIdent() {
   return table;
 }
 
-Table CallsClause::HandleIdentSynonym() {
-  auto single_constraints = pkb->GetCallStore()->GetCalleesOf(first_arg.value);
-  return {second_arg.value, single_constraints};
-}
-
-Table CallsClause::HandleIdentWildcard() {
-  bool is_empty = pkb->GetCallStore()->GetCalleesOf(first_arg.value).empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
-}
+//Table CallsClause::HandleIdentSynonym() {
+//  auto single_constraints = pkb->GetCallStore()->GetCalleesOf(first_arg.value);
+//  return {second_arg.value, single_constraints};
+//}
+//
+//Table CallsClause::HandleIdentWildcard() {
+//  bool is_empty = pkb->GetCallStore()->GetCalleesOf(first_arg.value).empty();
+//  Table table;
+//  if (is_empty) {
+//    table.ToggleFalseClause();
+//  }
+//  return table;
+//}
 
 Table CallsClause::HandleIdentIdent() {
   bool is_empty =

@@ -13,9 +13,8 @@ class ParentStore : public StmtStmtStore {
   void AddParent(std::string const &parent, std::string const &child);
   void AddParentStar(std::string const &stmt, std::vector<std::string> const &visited);
   [[nodiscard]] bool IsParentPairValid(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] StmtType GetTypeOfStmt(std::string stmt_no);
-  [[nodiscard]] std::string GetParentOf(std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetChildOf(std::string const &stmt);
+  [[nodiscard]] std::string GetParentOf(StmtType type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetChildOf(StmtType type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetAllAnceOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetAllDescOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetParentChildPairs();

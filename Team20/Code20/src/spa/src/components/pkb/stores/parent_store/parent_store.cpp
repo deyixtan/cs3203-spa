@@ -12,17 +12,17 @@ void ParentStore::AddParentStar(std::string const &stmt, std::vector<std::string
   AddUpperLowerStar(PARENT, "", stmt, visited);
 }
 
-// Used for Parent(s1, s2)
+// Parent(1, 2)
 bool ParentStore::IsParentPairValid(std::pair<std::string, std::string> const &pair) {
   return IsValid(pair);
 }
 
-std::string ParentStore::GetParentOf(std::string const &stmt) {
-  return GetUpperOf(PARENT, stmt);
+std::string ParentStore::GetParentOf(StmtType type, std::string const &stmt) {
+  return GetUpperOf(PARENT, type, stmt);
 }
 
-std::unordered_set<std::string> ParentStore::GetChildOf(std::string const &stmt) {
-  return GetLowerSetOf(PARENT, stmt);
+std::unordered_set<std::string> ParentStore::GetChildOf(StmtType type, std::string const &stmt) {
+  return GetLowerSetOf(PARENT, type, stmt);
 }
 
 std::unordered_set<std::string> ParentStore::GetAllAnceOf(std::string const &stmt) {

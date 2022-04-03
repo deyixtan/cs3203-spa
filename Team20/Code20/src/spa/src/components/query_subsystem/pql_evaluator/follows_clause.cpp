@@ -131,7 +131,7 @@ Table FollowsClause::HandleIntegerSynonym() {
 }
 
 Table FollowsClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetFollowsStore()->GetFollowingOf(first_arg.value)=="0";
+  bool is_false_clause = pkb->GetFollowsStore()->GetFollowingOf(STMT, first_arg.value)=="0";
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
@@ -140,7 +140,7 @@ Table FollowsClause::HandleIntegerWildcard() {
 }
 
 Table FollowsClause::HandleIntegerInteger() {
-  bool is_false_clause = pkb->GetFollowsStore()->GetFollowingOf(first_arg.value)!=second_arg.value;
+  bool is_false_clause = pkb->GetFollowsStore()->GetFollowingOf(STMT, first_arg.value)!=second_arg.value;
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();

@@ -14,7 +14,7 @@ class NextStore : public StmtStmtStore {
   [[nodiscard]] bool IsNextValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsNextStarValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetBeforeOf(std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetNextOf(std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetNextOf(StmtType type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetBeforeStarOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetNextStarOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetNextPairs();

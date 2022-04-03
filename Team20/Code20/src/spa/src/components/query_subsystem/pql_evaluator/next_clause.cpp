@@ -34,10 +34,10 @@ Table NextClause::Execute() {
     return HandleIntegerSynonym();
   } else if (IsArgInteger(first_arg) && IsArgWildcard(second_arg)) {
     // Next(1, _)
-    return HandleIntegerWildcard();
+    //return HandleIntegerWildcard();
   } else if (IsArgInteger(first_arg) && IsArgInteger(second_arg)) {
     // Next(1, 2)
-    return HandleIntegerInteger();
+    //return HandleIntegerInteger();
   } else {
     // throw exception???
     // return empty table???
@@ -129,23 +129,23 @@ Table NextClause::HandleIntegerSynonym() {
   return {second_arg.value, single_constraints};
 }
 
-Table NextClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetNextStore()->GetNextOf(first_arg.value).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
-}
-
-Table NextClause::HandleIntegerInteger() {
-  auto possible_next_values = pkb->GetNextStore()->GetNextOf(first_arg.value);
-  bool is_false_clause = possible_next_values.find(second_arg.value) == possible_next_values.end();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
-}
+//Table NextClause::HandleIntegerWildcard() {
+//  bool is_false_clause = pkb->GetNextStore()->GetNextOf(first_arg.value).empty();
+//  Table table;
+//  if (is_false_clause) {
+//    table.ToggleFalseClause();
+//  }
+//  return table;
+//}
+//
+//Table NextClause::HandleIntegerInteger() {
+//  auto possible_next_values = pkb->GetNextStore()->GetNextOf(first_arg.value);
+//  bool is_false_clause = possible_next_values.find(second_arg.value) == possible_next_values.end();
+//  Table table;
+//  if (is_false_clause) {
+//    table.ToggleFalseClause();
+//  }
+//  return table;
+//}
 
 }

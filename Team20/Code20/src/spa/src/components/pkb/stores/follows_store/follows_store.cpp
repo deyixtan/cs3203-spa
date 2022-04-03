@@ -24,12 +24,12 @@ bool FollowsStore::IsFollowsStarPairValid(std::pair<std::string, std::string> co
   return IsStarValid(pair);
 }
 
-std::string FollowsStore::GetFollowerOf(std::string const &stmt) {
-  return GetUpperOf(FOLLOWS, stmt);
+std::string FollowsStore::GetFollowerOf(StmtType type, std::string const &stmt) {
+  return GetUpperOf(FOLLOWS, type, stmt);
 }
 
-std::string FollowsStore::GetFollowingOf(std::string const &stmt) {
-  return GetLowerOf(stmt);
+std::string FollowsStore::GetFollowingOf(StmtType type, std::string const &stmt) {
+  return GetLowerOf(type, stmt);
 }
 
 std::unordered_set<std::string> FollowsStore::GetFollowerStarOf(std::string const &stmt) {

@@ -119,7 +119,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession
 
 // HELPER METHODS
 std::string AffectSession::GetFollowingOf(std::string stmt_no) {
-  return m_affects_store->GetFollowsStore()->GetFollowingOf(stmt_no);
+  return m_affects_store->GetFollowsStore()->GetFollowingOf(STMT, stmt_no);
 }
 
 std::unordered_set<std::string> AffectSession::GetVarModByStmt(std::string stmt_no) {

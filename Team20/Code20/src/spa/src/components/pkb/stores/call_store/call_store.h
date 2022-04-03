@@ -16,7 +16,7 @@ class CallStore : public StmtStmtStore {
   void AddCallStmtMap(std::string proc, std::string stmt);
   [[nodiscard]] std::unordered_set<std::string> GetCallStmtOf(std::string proc);
   [[nodiscard]] std::unordered_set<std::string> GetCallersOf(std::string const &proc);
-  [[nodiscard]] std::unordered_set<std::string> GetCalleesOf(std::string const &proc);
+  [[nodiscard]] std::unordered_set<std::string> GetCalleesOf(StmtType type, std::string const &proc);
   [[nodiscard]] std::unordered_set<std::string> GetCallersStarOf(std::string const &proc);
   [[nodiscard]] std::unordered_set<std::string> GetCalleesStarOf(std::string const &proc);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllCalls();

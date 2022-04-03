@@ -10,20 +10,18 @@ void StmtStmtStore::AddUpperLower(StoreType store_type,
   StmtType type1 = PROC;
   StmtType type2 = PROC;
 
-  if (store_type == FOLLOWS) {
-    type1 = m_stmt_type->at(upper);
-    type2 = m_stmt_type->at(lower);
-    AddFollows(false, upper, lower);
-  } else if (store_type == PARENT) {
-    type1 = m_stmt_type->at(upper);
-    type2 = m_stmt_type->at(lower);
-    AddParent(false, upper, lower, std::vector<std::string>());
-  } else if (store_type == CALLS) {
+  if (store_type == CALLS) {
     AddCalls(false, upper, lower);
-  } else if (store_type == NEXT) {
+  } else {
     type1 = m_stmt_type->at(upper);
     type2 = m_stmt_type->at(lower);
-    AddNext(false, upper, lower);
+    if (store_type == FOLLOWS) {
+      AddFollows(false, upper, lower);
+    } else if (store_type == PARENT) {
+      AddParent(false, upper, lower, std::vector<std::string>());
+    } else if (store_type == NEXT) {
+      AddNext(false, upper, lower);
+    }
   }
 
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
@@ -241,6 +239,39 @@ void StmtStmtStore::AddParent(bool is_star,
       star_type_pair_map.insert({ance_type, {}});
       star_type_pair_map.at(ance_type).insert({type1, set});
     }
+
+    if (star_type_pair_map.find(ance_type) != star_type_pair_map.end()) {
+      if (star_type_pair_map.at(ance_type).find(STMT) != star_type_pair_map.at(ance_type).end()) {
+        star_type_pair_map.at(ance_type).at(STMT).emplace(std::pair<std::string, std::string>(ance, lower));
+      } else {
+        star_type_pair_map.at(ance_type).insert({STMT, set});
+      }
+    } else {
+      star_type_pair_map.insert({ance_type, {}});
+      star_type_pair_map.at(ance_type).insert({STMT, set});
+    }
+
+    if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
+      if (star_type_pair_map.at(STMT).find(type1) != star_type_pair_map.at(STMT).end()) {
+        star_type_pair_map.at(STMT).at(type1).emplace(std::pair<std::string, std::string>(ance, lower));
+      } else {
+        star_type_pair_map.at(STMT).insert({type1, set});
+      }
+    } else {
+      star_type_pair_map.insert({STMT, {}});
+      star_type_pair_map.at(STMT).insert({type1, set});
+    }
+
+    if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
+      if (star_type_pair_map.at(STMT).find(STMT) != star_type_pair_map.at(STMT).end()) {
+        star_type_pair_map.at(STMT).at(STMT).emplace(std::pair<std::string, std::string>(ance, lower));
+      } else {
+        star_type_pair_map.at(STMT).insert({STMT, set});
+      }
+    } else {
+      star_type_pair_map.insert({STMT, {}});
+      star_type_pair_map.at(STMT).insert({STMT, set});
+    }
   }
 }
 
@@ -303,25 +334,30 @@ bool StmtStmtStore::IsStarValid(std::pair<std::string, std::string> const &pair)
   return all_star_pairs.find(pair) != all_star_pairs.end();
 }
 
-std::string StmtStmtStore::GetUpperOf(StoreType type, std::string const &stmt) {
-  if (type == FOLLOWS) {
-    if (follows_rs_map.find(stmt) != follows_rs_map.end()) {
-      return follows_rs_map.at(stmt).follower;
-    }
-  } else if (type == PARENT) {
-    if (parent_rs_map.find(stmt) != parent_rs_map.end()) {
-      return parent_rs_map.at(stmt).parent;
+std::string StmtStmtStore::GetUpperOf(StoreType store_type, StmtType stmt_type, std::string const &stmt) {
+  if (type_pair_map.find(stmt_type) != type_pair_map.end()) {
+    if (type_pair_map.at(stmt_type).find(STMT) != type_pair_map.at(stmt_type).end()) {
+      return type_pair_map.at(stmt_type).at(STMT).begin()->first;
     }
   }
   return "0";
 }
 
-std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType type, std::string const &stmt) {
-  if (type == NEXT) {
+std::string StmtStmtStore::GetLowerOf(StmtType stmt_type, std::string const &stmt) {
+  if (type_pair_map.find(STMT) != type_pair_map.end()) {
+    if (type_pair_map.at(STMT).find(stmt_type) != type_pair_map.at(STMT).end()) {
+      return type_pair_map.at(STMT).at(stmt_type).begin()->second;
+    }
+  }
+  return "0";
+}
+
+std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_type, std::string const &stmt) {
+  if (store_type == NEXT) {
     if (next_rs_map.find(stmt) != next_rs_map.end()) {
       return next_rs_map.at(stmt).before;
     }
-  } else if (type == CALLS) {
+  } else if (store_type == CALLS) {
     if (calls_rs_map.find(stmt) != calls_rs_map.end()) {
       return calls_rs_map.at(stmt).callers_set;
     }
@@ -330,12 +366,21 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType type, std
   }
 }
 
-std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType type, std::string const &stmt) {
-  if (type == PARENT) {
-    if (parent_rs_map.find(stmt) != parent_rs_map.end()) {
-      return parent_rs_map.at(stmt).child;
+std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType store_type, StmtType stmt_type, std::string const &stmt) {
+  std::unordered_set<std::string> result = {};
+
+  if (store_type == PARENT) {
+    if (type_pair_map.find(STMT) != type_pair_map.end()) {
+      if (type_pair_map.at(STMT).find(stmt_type) != type_pair_map.at(STMT).end()) {
+        for (auto &pair : type_pair_map.at(STMT).at(stmt_type)) {
+          if (pair.first == stmt) {
+            result.insert(pair.second);
+          }
+        }
+        return result;
+      }
     }
-  } else if (type == NEXT) {
+  } else if (store_type == NEXT) {
     if (next_rs_map.find(stmt) != next_rs_map.end()) {
       return next_rs_map.at(stmt).next;
     }
@@ -345,13 +390,6 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType type, std
     }
   }
   return {};
-}
-
-std::string StmtStmtStore::GetLowerOf(std::string const &stmt) {
-  if (follows_rs_map.find(stmt) != follows_rs_map.end()) {
-    return follows_rs_map.at(stmt).following;
-  }
-  return "0";
 }
 
 std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType type, std::string const &stmt) {

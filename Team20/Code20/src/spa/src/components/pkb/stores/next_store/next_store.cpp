@@ -25,8 +25,8 @@ std::unordered_set<std::string> NextStore::GetBeforeOf(std::string const &stmt) 
   return GetUpperSetOf(NEXT, stmt);
 }
 
-std::unordered_set<std::string> NextStore::GetNextOf(std::string const &stmt) {
-  return GetLowerSetOf(NEXT, stmt);
+std::unordered_set<std::string> NextStore::GetNextOf(StmtType type, std::string const &stmt) {
+  return GetLowerSetOf(NEXT, type, stmt);
 }
 
 std::unordered_set<std::string> NextStore::GetBeforeStarOf(std::string const &stmt) {
