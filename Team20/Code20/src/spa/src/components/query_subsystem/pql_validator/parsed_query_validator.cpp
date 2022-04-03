@@ -52,6 +52,17 @@ std::unordered_set<DesignEntityType> stmt_design_entities = {
     DesignEntityType::ASSIGN
 };
 
+std::unordered_set<DesignEntityType> stmt_proc_design_entities = {
+    DesignEntityType::STMT,
+    DesignEntityType::READ,
+    DesignEntityType::PRINT,
+    DesignEntityType::CALL,
+    DesignEntityType::WHILE,
+    DesignEntityType::IF,
+    DesignEntityType::ASSIGN,
+    DesignEntityType::PROCEDURE
+};
+
 std::unordered_set<DesignEntityType> variable_design_entity = {
     DesignEntityType::VARIABLE
 };
@@ -70,7 +81,7 @@ std::vector<std::unordered_set<DesignEntityType>> stmt_stmt_vector = {
 };
 
 std::vector<std::unordered_set<DesignEntityType>> stmt_var_vector = {
-    stmt_design_entities,
+    stmt_proc_design_entities,
     variable_design_entity
 };
 
