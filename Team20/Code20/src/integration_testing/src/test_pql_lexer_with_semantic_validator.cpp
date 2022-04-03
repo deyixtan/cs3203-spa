@@ -243,7 +243,6 @@ TEST_CASE("Test query correct Uses clause argument") {
   ParsedQuery parsed_query = pql_parser.ParseQuery();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
-  // hi deiyi
   REQUIRE(is_query_valid == true);
 }
 
