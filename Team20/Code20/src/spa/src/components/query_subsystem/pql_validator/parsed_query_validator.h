@@ -3,6 +3,7 @@
 
 #include "../pql_parser/parsed_query.h"
 #include "../pql_lexer/pql_token.h"
+#include "../utils.h"
 
 namespace pql_validator {
 

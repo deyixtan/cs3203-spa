@@ -3,6 +3,31 @@
 #include <vector>
 
 namespace pql_validator {
+std::unordered_set<AttriName> procedure_attribute_names = {
+    AttriName::PROCNAME
+};
+
+std::unordered_set<AttriName> call_attribute_names = {
+    AttriName::PROCNAME,
+    AttriName::STMTNO
+};
+
+std::unordered_set<AttriName> variable_attribute_names = {
+    AttriName::VARNAME
+};
+
+std::unordered_set<AttriName> read_and_print_attribute_names = {
+    AttriName::VARNAME,
+    AttriName::STMTNO
+};
+
+std::unordered_set<AttriName> constant_attribute_names = {
+    AttriName::VALUE
+};
+
+std::unordered_set<AttriName> stmt_attribute_names = {
+    AttriName::STMTNO
+};
 
 std::unordered_map<DesignEntityType, std::unordered_set<AttriName>> attribute_validation_map = {
     {DesignEntityType::STMT, stmt_attribute_names},
@@ -17,21 +42,62 @@ std::unordered_map<DesignEntityType, std::unordered_set<AttriName>> attribute_va
     {DesignEntityType::PROCEDURE, procedure_attribute_names}
 };
 
+std::unordered_set<DesignEntityType> stmt_design_entities = {
+    DesignEntityType::STMT,
+    DesignEntityType::READ,
+    DesignEntityType::PRINT,
+    DesignEntityType::CALL,
+    DesignEntityType::WHILE,
+    DesignEntityType::IF,
+    DesignEntityType::ASSIGN
+};
+
+std::unordered_set<DesignEntityType> variable_design_entity = {
+    DesignEntityType::VARIABLE
+};
+
+std::unordered_set<DesignEntityType> procedure_design_entity = {
+    DesignEntityType::PROCEDURE
+};
+
+std::unordered_set<DesignEntityType> assign_design_entity = {
+    DesignEntityType::ASSIGN
+};
+
+std::vector<std::unordered_set<DesignEntityType>> stmt_stmt_vector = {
+    stmt_design_entities,
+    stmt_design_entities
+};
+
+std::vector<std::unordered_set<DesignEntityType>> stmt_var_vector = {
+    stmt_design_entities,
+    variable_design_entity
+};
+
+std::vector<std::unordered_set<DesignEntityType>> proc_proc_vector = {
+    procedure_design_entity,
+    procedure_design_entity
+};
+
+std::vector<std::unordered_set<DesignEntityType>> assign_assign_vector = {
+    assign_design_entity,
+    assign_design_entity
+};
+
 std::unordered_map<PqlTokenType,
-std::pair<std::unordered_set<DesignEntityType>,
-std::unordered_set<DesignEntityType>>> rel_ref_validation_map = {
-    {PqlTokenType::FOLLOWS, std::make_pair(stmt_design_entities, stmt_design_entities)},
-    {PqlTokenType::FOLLOWS_T, std::make_pair(stmt_design_entities, stmt_design_entities)},
-    {PqlTokenType::PARENT, std::make_pair(stmt_design_entities, stmt_design_entities)},
-    {PqlTokenType::PARENT_T, std::make_pair(stmt_design_entities, stmt_design_entities)},
-    {PqlTokenType::USES, std::make_pair(stmt_design_entities, variable_design_entity)},
-    {PqlTokenType::MODIFIES, std::make_pair(stmt_design_entities, variable_design_entity)},
-    {PqlTokenType::CALLS, std::make_pair(procedure_design_entity, procedure_design_entity)},
-    {PqlTokenType::CALLS_T, std::make_pair(procedure_design_entity, procedure_design_entity)},
-    {PqlTokenType::NEXT, std::make_pair(stmt_design_entities, stmt_design_entities)},
-    {PqlTokenType::NEXT_T, std::make_pair(stmt_design_entities, stmt_design_entities)},
-    {PqlTokenType::AFFECTS, std::make_pair(assign_design_entity, assign_design_entity)},
-    {PqlTokenType::AFFECTS_T, std::make_pair(assign_design_entity, assign_design_entity)}
+std::vector<std::unordered_set<DesignEntityType>>> rel_ref_validation_map = {
+    {PqlTokenType::FOLLOWS, stmt_stmt_vector},
+    {PqlTokenType::FOLLOWS_T, stmt_stmt_vector},
+    {PqlTokenType::PARENT, stmt_stmt_vector},
+    {PqlTokenType::PARENT_T, stmt_stmt_vector},
+    {PqlTokenType::USES, stmt_var_vector},
+    {PqlTokenType::MODIFIES, stmt_var_vector},
+    {PqlTokenType::CALLS, proc_proc_vector},
+    {PqlTokenType::CALLS_T, proc_proc_vector},
+    {PqlTokenType::NEXT, stmt_stmt_vector},
+    {PqlTokenType::NEXT_T, stmt_stmt_vector},
+    {PqlTokenType::AFFECTS, assign_assign_vector},
+    {PqlTokenType::AFFECTS_T, assign_assign_vector}
 };
 
 std::unordered_set<PqlTokenType> invalid_underscore_rel_ref = {
@@ -122,8 +188,8 @@ bool ParsedQueryValidator::AreRelationshipArgsSemanticallyValid(Relationship rel
   PqlToken first_arg = relationship.GetFirst();
   PqlToken second_arg = relationship.GetSecond();
 
-  std::unordered_set<DesignEntityType> first_arg_set = rel_ref_validation_map.at(rel_ref.type).first;
-  std::unordered_set<DesignEntityType> second_arg_set = rel_ref_validation_map.at(rel_ref.type).second;
+  std::unordered_set<DesignEntityType> first_arg_set = rel_ref_validation_map.at(rel_ref.type)[0];
+  std::unordered_set<DesignEntityType> second_arg_set = rel_ref_validation_map.at(rel_ref.type)[1];
 
   if (first_arg.type == PqlTokenType::SYNONYM && !first_arg_set.count(declarations.at(first_arg.value))) {
     return false;
@@ -160,6 +226,9 @@ bool ParsedQueryValidator::ArePatternArgsSemanticallyValid(Pattern pattern, std:
   PqlToken first_arg = pattern.GetFirst();
   PqlToken second_arg = pattern.GetSecond();
   PqlToken third_arg = pattern.GetThird();
+  if (!IsSynonymDeclared(pattern_synonym, declarations)) {
+    return false;
+  }
   if (first_arg.type == PqlTokenType::SYNONYM) {
     if (!IsSynonymDeclared(first_arg, declarations) || declarations.at(first_arg.value) != DesignEntityType::VARIABLE) {
       return false;
@@ -234,6 +303,7 @@ bool ParsedQueryValidator::IsAttributeAttributeSemanticallyValid(PqlToken first_
       return false;
     }
   }
+  return true;
 }
 
 bool ParsedQueryValidator::IsAttributeOthersSemanticallyValid(PqlToken first_arg, PqlToken second_arg, std::unordered_map<std::string, DesignEntityType> declarations) {
@@ -250,6 +320,7 @@ bool ParsedQueryValidator::IsAttributeOthersSemanticallyValid(PqlToken first_arg
       return false;
     }
   }
+  return true;
 }
 bool ParsedQueryValidator::IsOthersAttributeSemanticallyValid(PqlToken first_arg, PqlToken second_arg, std::unordered_map<std::string, DesignEntityType> declarations) {
   if (!IsAttributeSemanticallyValid(second_arg, declarations)) {
@@ -265,6 +336,7 @@ bool ParsedQueryValidator::IsOthersAttributeSemanticallyValid(PqlToken first_arg
       return false;
     }
   }
+  return true;
 }
 
 bool ParsedQueryValidator::IsNameAttribute(AttriName attri_name) {

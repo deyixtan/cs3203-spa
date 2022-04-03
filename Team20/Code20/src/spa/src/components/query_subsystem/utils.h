@@ -36,16 +36,4 @@ class Utils {
   static std::vector<std::string> SplitString(std::string&, char);
 };
 
-extern std::unordered_set<AttriName> procedure_attribute_names;
-extern std::unordered_set<AttriName> call_attribute_names;
-extern std::unordered_set<AttriName> variable_attribute_names;
-extern std::unordered_set<AttriName> read_and_print_attribute_names;
-extern std::unordered_set<AttriName> constant_attribute_names;
-extern std::unordered_set<AttriName> stmt_attribute_names;
-
-extern std::unordered_set<DesignEntityType> stmt_design_entities;
-extern std::unordered_set<DesignEntityType> variable_design_entity;
-extern std::unordered_set<DesignEntityType> procedure_design_entity;
-extern std::unordered_set<DesignEntityType> assign_design_entity;
-
 #endif //UTILS_H
