@@ -66,6 +66,7 @@ std::unordered_set<PqlTokenType> rel_ref = {
     PqlTokenType::CALLS,
     PqlTokenType::CALLS_T,
     PqlTokenType::AFFECTS,
+    PqlTokenType::AFFECTS_T
 };
 
 std::unordered_set<PqlTokenType> design_entities = {
