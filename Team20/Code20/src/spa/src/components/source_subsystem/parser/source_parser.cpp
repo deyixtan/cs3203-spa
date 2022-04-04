@@ -166,7 +166,7 @@ ReadStatementNodePtr SourceParser::ParseReadStatement() {
   ProcessToken(TokenType::READ);
   TokenPtr identifier = ProcessToken(TokenType::NAME);
   ProcessToken(TokenType::SEMI_COLON);
-  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
+  VariableNodePtr variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
   return std::make_shared<ReadStatementNode>(stmt_no, variable);
 }
 
@@ -175,7 +175,7 @@ PrintStatementNodePtr SourceParser::ParsePrintStatement() {
   ProcessToken(TokenType::PRINT);
   TokenPtr identifier = ProcessToken(TokenType::NAME);
   ProcessToken(TokenType::SEMI_COLON);
-  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
+  VariableNodePtr variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
   return std::make_shared<PrintStatementNode>(stmt_no, variable);
 }
 
@@ -185,7 +185,7 @@ AssignStatementNodePtr SourceParser::ParseAssignStatement() {
   ProcessToken(TokenType::EQUAL);
   std::shared_ptr<ExpressionNode> expression = ParseExpression();
   ProcessToken(TokenType::SEMI_COLON);
-  std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
+  VariableNodePtr variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
   return std::make_shared<AssignStatementNode>(stmt_no, variable, expression);
 }
 
