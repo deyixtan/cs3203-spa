@@ -1,4 +1,5 @@
 #include "cfg_builder.h"
+#include "components/pkb/pkb.h"
 #include "components/source_subsystem/pkb_client.h"
 #include "../types/ast/node_program.h"
 #include "../types/ast/node_procedure.h"
@@ -22,12 +23,12 @@ void CfgBuilder::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node) {
   m_pkb_client->PopulateCfg(*program_cfg);
 }
 
-void CfgBuilder::IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root) {
+void CfgBuilder::IterateCfgAndPopulatePkb() {
   std::stack<std::shared_ptr<CfgNode>> node_stack;
   std::vector<Statement> prev_stmts;
   std::unordered_set<std::shared_ptr<CfgNode>> visited;
   std::unordered_map<std::string, std::unordered_set<std::string>> next_map;
-  std::unordered_map<std::string, std::shared_ptr<CfgNode>> prog = root->GetCfgMap();
+  std::unordered_map<std::string, std::shared_ptr<CfgNode>> prog = m_pkb_client->GetPKB()->GetProgCfg()->GetCfgMap();
   for (auto proc : prog) {
     std::shared_ptr<CfgNode> curr_proc = proc.second; // root node of cfg
     CfgProcessHandler(curr_proc, node_stack, prev_stmts, visited, next_map);
