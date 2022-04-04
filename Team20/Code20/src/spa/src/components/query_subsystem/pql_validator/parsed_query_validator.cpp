@@ -97,7 +97,7 @@ std::vector<std::unordered_set<DesignEntityType>> assign_assign_vector = {
 };
 
 std::unordered_map<PqlTokenType,
-std::vector<std::unordered_set<DesignEntityType>>> rel_ref_validation_map = {
+                   std::vector<std::unordered_set<DesignEntityType>>> rel_ref_validation_map = {
     {PqlTokenType::FOLLOWS, stmt_stmt_vector},
     {PqlTokenType::FOLLOWS_T, stmt_stmt_vector},
     {PqlTokenType::PARENT, stmt_stmt_vector},

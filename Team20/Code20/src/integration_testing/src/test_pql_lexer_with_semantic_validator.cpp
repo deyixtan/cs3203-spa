@@ -320,7 +320,7 @@ TEST_CASE("Test query correct next and affects clause argument") {
   ParsedQuery parsed_query = pql_parser.ParseQuery();
   pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
-  REQUIRE(is_query_valid == false);
+  REQUIRE(is_query_valid == true);
 }
 
 TEST_CASE("Test query correct assign pattern clause argument") {
