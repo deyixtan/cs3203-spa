@@ -188,8 +188,8 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
   }
 
   SECTION("Test Follows* relationship") {
-    std::vector<std::list<std::string>> expected_result = {{"3", "4", "2", "5"}, {"3", "4", "5"},
-                                                           {"4", "5"}, {"5"}, {}, {}, {},
+    std::vector<std::list<std::string>> expected_result = {{"5", "4", "3", "2"}, {"5", "4", "3"},
+                                                           {"5", "4"}, {"5"}, {}, {}, {},
                                                            {"9"}, {}, {"11"}, {}, {}, {"14"}};
     for (int i = 1; i < 14; i++) {
       std::string query = "stmt s ; Select s such that Follows*(" + std::to_string(i) + " ,s)";
