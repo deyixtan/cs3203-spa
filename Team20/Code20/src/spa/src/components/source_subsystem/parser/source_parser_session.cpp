@@ -7,17 +7,15 @@ std::string SourceParserSession::GetCurrProcedure() {
   return m_curr_parsed_procedure;
 }
 
-bool SourceParserSession::DoesProcedureExist(std::string procedure_name) {
+bool SourceParserSession::DoesProcedureExist(std::string const &procedure_name) {
   return m_procedures_parsed_set.find(procedure_name) != m_procedures_parsed_set.end();
 }
 
 bool SourceParserSession::DoesInvalidCallExist() {
-  for (auto const &procedure_called : m_procedures_called_set) {
-    if (m_procedures_parsed_set.find(procedure_called) == m_procedures_parsed_set.end()) {
-      return true;
-    }
-  }
-  return false;
+  auto predicate = [this](const std::string &procedure_called) {
+    return m_procedures_parsed_set.find(procedure_called) == m_procedures_parsed_set.end();
+  };
+  return std::any_of(m_procedures_called_set.begin(), m_procedures_called_set.end(), predicate);
 }
 
 bool SourceParserSession::DoesCyclicCallExist() {
@@ -66,18 +64,17 @@ bool SourceParserSession::DoesCyclicCallExist() {
   return processed != m_procedures_parsed_set.size();
 }
 
-void SourceParserSession::AddProcedure(std::string procedure_name) {
+void SourceParserSession::AddProcedure(std::string const &procedure_name) {
   if (DoesProcedureExist(procedure_name)) {
     throw ProcedureExistException();
   }
 
   m_curr_parsed_procedure = procedure_name;
   m_procedures_parsed_set.insert(m_curr_parsed_procedure);
-
   m_call_map.insert({m_curr_parsed_procedure, std::unordered_set<std::string>()});
 }
 
-void SourceParserSession::AddMethodCall(std::string callee_name) {
+void SourceParserSession::AddMethodCall(std::string const &callee_name) {
   m_procedures_called_set.insert(callee_name);
   m_call_map.at(m_curr_parsed_procedure).insert(callee_name);
 }

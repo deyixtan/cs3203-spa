@@ -14,11 +14,11 @@ class SourceParserSession {
 
  public:
   [[nodiscard]] std::string GetCurrProcedure();
-  [[nodiscard]] bool DoesProcedureExist(std::string procedure_name);
+  [[nodiscard]] bool DoesProcedureExist(std::string const &procedure_name);
   [[nodiscard]] bool DoesInvalidCallExist();
   [[nodiscard]] bool DoesCyclicCallExist();
-  void AddProcedure(std::string procedure_name);
-  void AddMethodCall(std::string callee_name);
+  void AddProcedure(std::string const &procedure_name);
+  void AddMethodCall(std::string const &callee_name);
 };
 
 }
