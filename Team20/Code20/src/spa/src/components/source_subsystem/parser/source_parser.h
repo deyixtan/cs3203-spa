@@ -23,7 +23,7 @@ class SourceParser {
   [[nodiscard]] ProcedureNodePtr ParseProcedure();
   [[nodiscard]] StatementListNodePtr ParseStatementList();
   [[nodiscard]] StatementNodePtr ParseStatement();
-  [[nodiscard]] std::shared_ptr<ReadStatementNode> ParseReadStatement();
+  [[nodiscard]] ReadStatementNodePtr ParseReadStatement();
   [[nodiscard]] std::shared_ptr<PrintStatementNode> ParsePrintStatement();
   [[nodiscard]] std::shared_ptr<WhileStatementNode> ParseWhileStatement();
   [[nodiscard]] std::shared_ptr<IfStatementNode> ParseIfStatement();

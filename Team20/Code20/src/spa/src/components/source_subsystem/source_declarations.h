@@ -50,6 +50,7 @@ namespace source {
   typedef std::shared_ptr<ProcedureNode> ProcedureNodePtr;
   typedef std::shared_ptr<StatementListNode> StatementListNodePtr;
   typedef std::shared_ptr<StatementNode> StatementNodePtr;
+  typedef std::shared_ptr<ReadStatementNode> ReadStatementNodePtr;
 
 }
 
