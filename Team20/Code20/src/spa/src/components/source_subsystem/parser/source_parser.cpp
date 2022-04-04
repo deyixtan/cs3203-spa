@@ -201,7 +201,7 @@ WhileStatementNodePtr SourceParser::ParseWhileStatement() {
   return std::make_shared<WhileStatementNode>(stmt_no, condition, stmt_list);
 }
 
-std::shared_ptr<IfStatementNode> SourceParser::ParseIfStatement() {
+IfStatementNodePtr SourceParser::ParseIfStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::IF);
   ProcessToken(TokenType::OPENED_PARENTHESIS);

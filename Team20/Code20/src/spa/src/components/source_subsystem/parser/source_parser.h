@@ -28,7 +28,7 @@ class SourceParser {
   [[nodiscard]] AssignStatementNodePtr ParseAssignStatement();
   [[nodiscard]] CallStatementNodePtr ParseCallStatement();
   [[nodiscard]] WhileStatementNodePtr ParseWhileStatement();
-  [[nodiscard]] std::shared_ptr<IfStatementNode> ParseIfStatement();
+  [[nodiscard]] IfStatementNodePtr ParseIfStatement();
   [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> ParseConditionalExpression();
   [[nodiscard]] std::shared_ptr<RelationalExpressionNode> ParseRelationalExpression();
   [[nodiscard]] std::shared_ptr<ExpressionNode> ParseRelationalFactor();
