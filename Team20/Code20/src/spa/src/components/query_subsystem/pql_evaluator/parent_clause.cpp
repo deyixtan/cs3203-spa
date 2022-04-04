@@ -47,6 +47,12 @@ Table ParentClause::Execute() {
 }
 
 Table ParentClause::HandleSynonymSynonym() {
+  if (first_arg.value==second_arg.value) {
+    Table table;
+    table.ToggleFalseClause();
+    return table;
+  }
+
   auto pair_constraints = pkb->GetParentStore()->GetAllParentStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))

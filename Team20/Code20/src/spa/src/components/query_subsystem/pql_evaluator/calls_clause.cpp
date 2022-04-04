@@ -34,6 +34,12 @@ Table CallsClause::Execute() {
 }
 
 Table CallsClause::HandleSynonymSynonym() {
+  if (first_arg.value==second_arg.value) {
+    Table table;
+    table.ToggleFalseClause();
+    return table;
+  }
+
   auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
   return {first_arg.value, second_arg.value, pair_constraints};
 }

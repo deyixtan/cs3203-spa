@@ -46,6 +46,12 @@ Table NextClause::Execute() {
 }
 
 Table NextClause::HandleSynonymSynonym() {
+  if (first_arg.value==second_arg.value) {
+    Table table;
+    table.ToggleFalseClause();
+    return table;
+  }
+
   auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))

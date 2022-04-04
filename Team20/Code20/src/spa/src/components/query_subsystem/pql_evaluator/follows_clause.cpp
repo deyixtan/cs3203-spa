@@ -47,6 +47,12 @@ Table FollowsClause::Execute() {
 }
 
 Table FollowsClause::HandleSynonymSynonym() {
+  if (first_arg.value==second_arg.value) {
+    Table table;
+    table.ToggleFalseClause();
+    return table;
+  }
+
   auto pair_constraints = pkb->GetFollowsStore()->GetAllFollowStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
@@ -104,7 +110,7 @@ Table FollowsClause::HandleWildcardWildcard() {
 Table FollowsClause::HandleWildcardInteger() {
   auto pair_constraints = pkb->GetFollowsStore()->GetAllFollowStmt(StmtType::STMT, StmtType::STMT);
   bool is_false_clause = true;
-  for (const auto& pair_constraint : pair_constraints) {
+  for (const auto &pair_constraint : pair_constraints) {
     if (pair_constraint.second==second_arg.value) {
       is_false_clause = false;
     }
@@ -122,7 +128,7 @@ Table FollowsClause::HandleIntegerSynonym() {
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
   );
   std::unordered_set<std::string> single_constraints;
-  for (const auto& pair_constraint : pair_constraints) {
+  for (const auto &pair_constraint : pair_constraints) {
     if (pair_constraint.first==first_arg.value) {
       single_constraints.insert(pair_constraint.second);
     }
