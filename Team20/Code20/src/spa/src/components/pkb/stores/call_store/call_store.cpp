@@ -40,12 +40,12 @@ std::unordered_set<std::string> CallStore::GetCalleesOf(std::string const &proc)
   return GetLowerSetOf(CALLS, PROC, proc);
 }
 
-std::unordered_set<std::string> CallStore::GetCallersStarOf(StmtType type, std::string const &proc) {
-  return GetUpperStarOf(CALLS, type, proc);
+std::unordered_set<std::string> CallStore::GetCallersStarOf(std::string const &proc) {
+  return GetUpperStarOf(CALLS, PROC, proc);
 }
 
-std::unordered_set<std::string> CallStore::GetCalleesStarOf(StmtType type, std::string const &proc) {
-  return GetLowerStarOf(CALLS, type, proc);
+std::unordered_set<std::string> CallStore::GetCalleesStarOf(std::string const &proc) {
+  return GetLowerStarOf(CALLS, PROC, proc);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> CallStore::GetAllCalls() {

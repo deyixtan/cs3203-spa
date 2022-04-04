@@ -53,7 +53,7 @@ Table CallsTClause::HandleSynonymWildcard() {
 }
 
 Table CallsTClause::HandleSynonymIdent() {
-  auto single_constraints = pkb->GetCallStore()->GetCallersStarOf(PROC, second_arg.value); //TODO: Fix StmtType
+  auto single_constraints = pkb->GetCallStore()->GetCallersStarOf(second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
@@ -73,17 +73,17 @@ Table CallsTClause::HandleWildcardWildcard() {
 }
 
 Table CallsTClause::HandleWildcardIdent() {
-  bool is_empty = pkb->GetCallStore()->GetCallersStarOf(PROC, second_arg.value).empty(); //TODO: Fix StmtType
+  bool is_empty = pkb->GetCallStore()->GetCallersStarOf(second_arg.value).empty();
   return ConstructEmptyTable(is_empty);
 }
 
 Table CallsTClause::HandleIdentSynonym() {
-  auto single_constraints = pkb->GetCallStore()->GetCalleesStarOf(PROC, first_arg.value); //TODO: Fix StmtType
+  auto single_constraints = pkb->GetCallStore()->GetCalleesStarOf(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table CallsTClause::HandleIdentWildcard() {
-  bool is_empty = pkb->GetCallStore()->GetCalleesStarOf(PROC, first_arg.value).empty(); //TODO: Fix StmtType
+  bool is_empty = pkb->GetCallStore()->GetCalleesStarOf(first_arg.value).empty();
   return ConstructEmptyTable(is_empty);
 }
 
