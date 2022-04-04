@@ -114,7 +114,7 @@ Table FollowsClause::HandleIntegerWildcard() {
 }
 
 Table FollowsClause::HandleIntegerInteger() {
-  bool is_false_clause = pkb->GetFollowsStore()->GetFollowingOf(STMT, first_arg.value)!=second_arg.value;
+  bool is_false_clause = !pkb->GetFollowsStore()->IsFollowsPairValid({first_arg.value, second_arg.value});
   return ConstructEmptyTable(is_false_clause);
 }
 
