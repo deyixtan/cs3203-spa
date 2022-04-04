@@ -1,26 +1,24 @@
 #include "pql_parser.h"
 
-PqlParser::PqlParser(std::vector<PqlToken> tokens) : tokens (tokens), cursor(0), pq(pq) {}
+PqlParser::PqlParser(std::vector<PqlToken> tokens) : tokens (tokens), cursor(0), pq(pq) {
+  rel_ref_arg_map = {
+      {PqlTokenType::FOLLOWS, std::make_pair(stmt_ref, stmt_ref)},
+      {PqlTokenType::FOLLOWS_T, std::make_pair(stmt_ref, stmt_ref)},
+      {PqlTokenType::PARENT, std::make_pair(stmt_ref, stmt_ref)},
+      {PqlTokenType::PARENT_T, std::make_pair(stmt_ref, stmt_ref)},
+      {PqlTokenType::USES, std::make_pair(stmt_ref_and_ent_ref, ent_ref)},
+      {PqlTokenType::MODIFIES, std::make_pair(stmt_ref_and_ent_ref, ent_ref)},
+      {PqlTokenType::CALLS, std::make_pair(ent_ref, ent_ref)},
+      {PqlTokenType::CALLS_T, std::make_pair(ent_ref, ent_ref)},
+      {PqlTokenType::NEXT, std::make_pair(stmt_ref, stmt_ref)},
+      {PqlTokenType::NEXT_T, std::make_pair(stmt_ref, stmt_ref)},
+      {PqlTokenType::AFFECTS, std::make_pair(stmt_ref, stmt_ref)},
+      {PqlTokenType::AFFECTS_T, std::make_pair(stmt_ref, stmt_ref)}
+  };
+}
 
 std::string BOOLEAN_SYNONYM_VALUE = "BOOLEAN";
 std::string INVALID_QUERY_FORMAT = "Invalid Query Format! \n";
-
-std::unordered_map<PqlTokenType,
-std::pair<std::unordered_set<PqlTokenType>,
-std::unordered_set<PqlTokenType>>> rel_ref_arg_map = {
-    {PqlTokenType::FOLLOWS, std::make_pair(stmt_ref, stmt_ref)},
-    {PqlTokenType::FOLLOWS_T, std::make_pair(stmt_ref, stmt_ref)},
-    {PqlTokenType::PARENT, std::make_pair(stmt_ref, stmt_ref)},
-    {PqlTokenType::PARENT_T, std::make_pair(stmt_ref, stmt_ref)},
-    {PqlTokenType::USES, std::make_pair(stmt_ref_and_ent_ref, ent_ref)},
-    {PqlTokenType::MODIFIES, std::make_pair(stmt_ref_and_ent_ref, ent_ref)},
-    {PqlTokenType::CALLS, std::make_pair(ent_ref, ent_ref)},
-    {PqlTokenType::CALLS_T, std::make_pair(ent_ref, ent_ref)},
-    {PqlTokenType::NEXT, std::make_pair(stmt_ref, stmt_ref)},
-    {PqlTokenType::NEXT_T, std::make_pair(stmt_ref, stmt_ref)},
-    {PqlTokenType::AFFECTS, std::make_pair(stmt_ref, stmt_ref)},
-    {PqlTokenType::AFFECTS_T, std::make_pair(stmt_ref, stmt_ref)}
-};
 
 void PqlParser::MoveCursor(int movement) {
   cursor += movement;
@@ -193,10 +191,12 @@ void PqlParser::ParseRelationshipClause() {
     PqlToken rel_ref_token = ValidateToken(rel_ref);
     ValidateToken(PqlTokenType::OPEN_PARENTHESIS);
     RevertToSynonymType();
-    PqlToken first_arg = ValidateToken(::rel_ref_arg_map[rel_ref_token.type].first);
+    std::unordered_set<PqlTokenType> rel_ref_arg_type_first = rel_ref_arg_map[rel_ref_token.type].first;
+    PqlToken first_arg = ValidateToken(rel_ref_arg_type_first);
     ValidateToken(PqlTokenType::COMMA);
     RevertToSynonymType();
-    PqlToken second_arg = ValidateToken(::rel_ref_arg_map[rel_ref_token.type].second);
+    std::unordered_set<PqlTokenType> rel_ref_arg_type_second = rel_ref_arg_map[rel_ref_token.type].second;
+    PqlToken second_arg = ValidateToken(rel_ref_arg_type_second);
     ValidateToken(PqlTokenType::CLOSED_PARENTHESIS);
     Relationship relationship = Relationship(rel_ref_token, first_arg, second_arg);
     pq.AddRelationship(relationship);
