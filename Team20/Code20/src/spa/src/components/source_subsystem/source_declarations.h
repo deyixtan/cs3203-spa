@@ -7,6 +7,8 @@
 #include <vector>
 
 namespace source {
+  // types
+  enum class TokenType;
   class SourceToken;
 
   class ProgramNode;
@@ -14,10 +16,23 @@ namespace source {
   class ProcedureNode;
   class StatementListNode;
   class StatementNode;
+  class ReadStatementNode;
+  class PrintStatementNode;
+  class AssignStatementNode;
+  class CallStatementNode;
+  class WhileStatementNode;
+  class IfStatementNode;
+  class ExpressionNode;
+  class ConditionalExpressionNode;
+  class RelationalExpressionNode;
+  class VariableNode;
+  class ConstantNode;
 
   class Cfg;
   class CfgNode;
 
+  // components
+  class SourceParserSession;
   class PkbClient;
 
   class DesignExtractor;
