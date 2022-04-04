@@ -5,6 +5,7 @@
 #include "components/source_subsystem/parser/source_parser.h"
 #include "components/source_subsystem/exceptions/empty_statement_list.h"
 #include "components/source_subsystem/iterator/cfg_builder.h"
+#include "components/source_subsystem/pkb_client.h"
 
 using namespace source;
 

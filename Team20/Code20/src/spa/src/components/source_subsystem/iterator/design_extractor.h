@@ -7,6 +7,8 @@
 #include <stack>
 #include "../../pkb/pkb.h"
 
+namespace source {
+
 class PkbClient;
 class CallGraph;
 class ProgramNode;
@@ -48,5 +50,7 @@ class DesignExtractor {
   void Visit(std::shared_ptr<VariableNode> node, std::string proc_name, bool is_uses);
   void Visit(std::shared_ptr<ConstantNode> node, std::string proc_name, bool is_uses);
 };
+
+}
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_DESIGN_EXTRACTOR_H_

@@ -4,9 +4,7 @@
 #include "node.h"
 #include "../../../pkb/stores/store.h"
 
-class DesignExtractor;
-class CfgBuilder;
-class CfgNode;
+namespace source {
 
 class StatementNode : public Node {
  protected:
@@ -25,5 +23,7 @@ class StatementNode : public Node {
   virtual void Accept(DesignExtractor *de, std::string proc_name) = 0;
   virtual std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) = 0;
 };
+
+}
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_

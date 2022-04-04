@@ -286,7 +286,7 @@ std::unordered_set<std::string> StmtStmtStore::GetHelper(StmtType type1,
 std::string StmtStmtStore::GetUpperOf(StmtType stmt_type, std::string const &stmt) {
   if (type_pair_map.find(stmt_type) != type_pair_map.end()) {
     if (type_pair_map.at(stmt_type).find(STMT) != type_pair_map.at(stmt_type).end()) {
-      return GetHelper(STMT, stmt_type, 0, stmt, false).empty() ? "0" : *(GetHelper(STMT, stmt_type, 0, stmt, false).begin());
+      return GetHelper(STMT, stmt_type, 1, stmt, false).empty() ? "0" : *(GetHelper(STMT, stmt_type, 1, stmt, false).begin());
     }
   }
   return "0";

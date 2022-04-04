@@ -3,6 +3,8 @@
 #include "../../iterator/cfg_builder.h"
 #include "../cfg/cfg_node.h"
 
+namespace source {
+
 AssignStatementNode::AssignStatementNode(int stmt_no,
                                          std::shared_ptr<VariableNode> identifier,
                                          std::shared_ptr<ExpressionNode> expression)
@@ -46,4 +48,6 @@ void AssignStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
 std::shared_ptr<CfgNode> AssignStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
   cfg_node->AddStatement(StmtType::ASSIGN, std::to_string(GetStatementNumber()));
   return cfg_node;
+}
+
 }

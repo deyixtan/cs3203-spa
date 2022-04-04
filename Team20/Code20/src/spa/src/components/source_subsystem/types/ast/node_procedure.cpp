@@ -1,9 +1,12 @@
 #include "node_procedure.h"
+#include "components/source_subsystem/pkb_client.h"
 #include "../../iterator/design_extractor.h"
 #include "../../iterator/cfg_builder.h"
 #include "node_statement_list.h"
 #include "node_statement.h"
 #include "../cfg/cfg_node.h"
+
+namespace source {
 
 ProcedureNode::ProcedureNode(std::string identifier, std::shared_ptr<StatementListNode> stmt_list) :
     m_identifier(identifier), m_stmt_list(stmt_list) {}
@@ -44,4 +47,6 @@ void ProcedureNode::Accept(DesignExtractor *de) {
 
 std::shared_ptr<CfgNode> ProcedureNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
   return cb->Visit(m_stmt_list, cfg_node);
+}
+
 }

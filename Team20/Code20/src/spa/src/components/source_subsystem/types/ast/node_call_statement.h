@@ -3,6 +3,8 @@
 
 #include "node_statement.h"
 
+namespace source {
+
 class CallStatementNode : public StatementNode {
  private:
   std::string m_identifier;
@@ -17,5 +19,7 @@ class CallStatementNode : public StatementNode {
   void Accept(DesignExtractor *de, std::string proc_name);
   std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
+
+}
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CALL_STATEMENT_H_

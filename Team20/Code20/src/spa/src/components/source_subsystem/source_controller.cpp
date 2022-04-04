@@ -1,4 +1,7 @@
 #include "source_controller.h"
+#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/exceptions/unexpected_token.h"
+#include "components/source_subsystem/types/ast/node_program.h"
 
 namespace source {
 
