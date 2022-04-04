@@ -73,8 +73,8 @@ Table FollowsClause::HandleSynonymWildcard() {
 Table FollowsClause::HandleSynonymInteger() {
   auto single_constraints =
       std::unordered_set{
-          pkb->GetFollowsStore()->GetFollowingOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
-                                                 second_arg.value)};
+          pkb->GetFollowsStore()->GetFollowerOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+                                                second_arg.value)};
   return {first_arg.value, single_constraints};
 }
 
