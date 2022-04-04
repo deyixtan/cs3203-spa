@@ -1,24 +1,18 @@
 #ifndef SOURCE_CONTROLLER_H
 #define SOURCE_CONTROLLER_H
 
-#include <iostream>
+#include "components/source_subsystem/source_declarations.h"
 
-#include "lexer/source_lexer.h"
-#include "parser/source_parser.h"
-#include "iterator/design_extractor.h"
-#include "iterator/cfg_builder.h"
-#include "utils/file_util.h"
-#include "source_declarations.h"
+class PKB;
 
 namespace source {
 
 class SourceController {
  public:
-  SourceController();
-  void Tokenize(std::string source, TokenStream &token_stream);
-  std::shared_ptr<ProgramNode> ParseTokenStream(std::vector<std::shared_ptr<SourceToken>> &tokens_ptr);
-  std::string RetrieveFileContent(std::string file_path);
-  void PopulatePKB(PKB *pkb, std::shared_ptr<ProgramNode> ast);
+  [[nodiscard]] static String RetrieveFileContent(String &file_path);
+  static void Tokenize(String &source, TokenStream &token_stream);
+  [[nodiscard]] static ProgramNodePtr ParseTokenStream(TokenStream &token_stream);
+  static void PopulatePKB(PKB *pkb, ProgramNodePtr &ast);
 };
 
 }
