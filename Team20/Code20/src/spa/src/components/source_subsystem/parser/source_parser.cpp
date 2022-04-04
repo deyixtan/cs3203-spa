@@ -26,26 +26,26 @@
 
 namespace source {
 
-SourceParser::SourceParser(std::vector<std::shared_ptr<SourceToken>> tokens_ptr)
+SourceParser::SourceParser(TokenStream tokens_ptr)
     : m_session(SourceParserSession()), m_cursor(0), m_curr_stmt_no(0), m_tokens_ptr(std::move(tokens_ptr)) {}
 
 bool SourceParser::AreTokensProcessed() {
   return m_cursor >= m_tokens_ptr.size();
 }
 
-std::shared_ptr<SourceToken> SourceParser::FetchToken(int tokens_ahead) {
+TokenPtr SourceParser::FetchToken(int tokens_ahead) {
   if (m_cursor + tokens_ahead >= m_tokens_ptr.size()) {
     throw EndOfStreamException();
   }
   return m_tokens_ptr[m_cursor + tokens_ahead];
 }
 
-std::shared_ptr<SourceToken> SourceParser::FetchCurrentToken() {
+TokenPtr SourceParser::FetchCurrentToken() {
   return FetchToken(0);
 }
 
-std::shared_ptr<SourceToken> SourceParser::ProcessToken(TokenType type) {
-  std::shared_ptr<SourceToken> token_ptr = FetchCurrentToken();
+TokenPtr SourceParser::ProcessToken(TokenType type) {
+  TokenPtr token_ptr = FetchCurrentToken();
 
   if (token_ptr->GetType() != type) {
     throw MismatchedTokenException();
@@ -121,7 +121,7 @@ std::shared_ptr<ProgramNode> SourceParser::ParseProgram() {
 
 std::shared_ptr<ProcedureNode> SourceParser::ParseProcedure() {
   ProcessToken(TokenType::PROCEDURE);
-  std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  TokenPtr identifier = ProcessToken(TokenType::NAME);
   std::string procedure_name = identifier->GetValue();
 
   // check procedure name duplication, may throw ProcedureExistException
@@ -150,7 +150,7 @@ std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
     return ParseAssignStatement();
   }
   // case 2: handle other type of supported statements
-  std::shared_ptr<SourceToken> token_ptr = FetchCurrentToken();
+  TokenPtr token_ptr = FetchCurrentToken();
   switch (token_ptr->GetType()) {
     case TokenType::READ:return ParseReadStatement();
     case TokenType::PRINT:return ParsePrintStatement();
@@ -164,7 +164,7 @@ std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
 std::shared_ptr<ReadStatementNode> SourceParser::ParseReadStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::READ);
-  std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  TokenPtr identifier = ProcessToken(TokenType::NAME);
   ProcessToken(TokenType::SEMI_COLON);
   std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
   return std::make_shared<ReadStatementNode>(stmt_no, variable);
@@ -173,7 +173,7 @@ std::shared_ptr<ReadStatementNode> SourceParser::ParseReadStatement() {
 std::shared_ptr<PrintStatementNode> SourceParser::ParsePrintStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::PRINT);
-  std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  TokenPtr identifier = ProcessToken(TokenType::NAME);
   ProcessToken(TokenType::SEMI_COLON);
   std::shared_ptr<VariableNode> variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
   return std::make_shared<PrintStatementNode>(stmt_no, variable);
@@ -210,7 +210,7 @@ std::shared_ptr<IfStatementNode> SourceParser::ParseIfStatement() {
 
 std::shared_ptr<AssignStatementNode> SourceParser::ParseAssignStatement() {
   int stmt_no = ++m_curr_stmt_no;
-  std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  TokenPtr identifier = ProcessToken(TokenType::NAME);
   ProcessToken(TokenType::EQUAL);
   std::shared_ptr<ExpressionNode> expression = ParseExpression();
   ProcessToken(TokenType::SEMI_COLON);
@@ -221,7 +221,7 @@ std::shared_ptr<AssignStatementNode> SourceParser::ParseAssignStatement() {
 std::shared_ptr<CallStatementNode> SourceParser::ParseCallStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::CALL);
-  std::shared_ptr<SourceToken> identifier = ProcessToken(TokenType::NAME);
+  TokenPtr identifier = ProcessToken(TokenType::NAME);
   std::string callee_name = identifier->GetValue();
 
   // add function calls to session, check for cyclic calls

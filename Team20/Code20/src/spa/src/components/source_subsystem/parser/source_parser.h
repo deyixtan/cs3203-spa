@@ -8,16 +8,16 @@ namespace source {
 
 class SourceParser {
  private:
-  SourceParserSession m_session;
   int m_cursor;
   int m_curr_stmt_no;
-  std::vector<std::shared_ptr<SourceToken>> m_tokens_ptr;
+  SourceParserSession m_session;
+  TokenStream m_tokens_ptr;
 
  private:
   [[nodiscard]] bool AreTokensProcessed();
-  [[nodiscard]] std::shared_ptr<SourceToken> FetchToken(int tokens_ahead);
-  [[nodiscard]] std::shared_ptr<SourceToken> FetchCurrentToken();
-  std::shared_ptr<SourceToken> ProcessToken(TokenType type);
+  [[nodiscard]] TokenPtr FetchToken(int tokens_ahead);
+  [[nodiscard]] TokenPtr FetchCurrentToken();
+  TokenPtr ProcessToken(TokenType type);
   [[nodiscard]] bool IsConditionalOperand(int &cursor);
   [[nodiscard]] bool IsConditionalExpression();
   [[nodiscard]] std::shared_ptr<ProcedureNode> ParseProcedure();
@@ -39,7 +39,7 @@ class SourceParser {
   [[nodiscard]] std::shared_ptr<ExpressionNode> ParseFactor();
 
  public:
-  SourceParser(std::vector<std::shared_ptr<SourceToken>> tokens_ptr);
+  SourceParser(TokenStream tokens_ptr);
   [[nodiscard]] std::shared_ptr<ProgramNode> ParseProgram();
 };
 
