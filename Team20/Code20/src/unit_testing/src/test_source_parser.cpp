@@ -1,7 +1,24 @@
 #include "catch.hpp"
+#include "components/source_subsystem/source_declarations.h"
 #include "components/source_subsystem/lexer/source_lexer.h"
 #include "components/source_subsystem/parser/source_parser.h"
+#include "components/source_subsystem/types/ast/node_program.h"
 #include "components/source_subsystem/types/ast/node_procedure.h"
+#include "components/source_subsystem/types/ast/node_statement_list.h"
+#include "components/source_subsystem/types/ast/node_statement.h"
+#include "components/source_subsystem/types/ast/node_read_statement.h"
+#include "components/source_subsystem/types/ast/node_print_statement.h"
+#include "components/source_subsystem/types/ast/node_assign_statement.h"
+#include "components/source_subsystem/types/ast/node_call_statement.h"
+#include "components/source_subsystem/types/ast/node_while_statement.h"
+#include "components/source_subsystem/types/ast/node_if_statement.h"
+#include "components/source_subsystem/types/ast/node_variable.h"
+#include "components/source_subsystem/types/ast/node_expression.h"
+#include "components/source_subsystem/types/ast/node_conditional_expression.h"
+#include "components/source_subsystem/types/ast/node_not_expression.h"
+#include "components/source_subsystem/types/ast/node_boolean_expression.h"
+#include "components/source_subsystem/types/ast/node_relational_expression.h"
+
 #include "components/source_subsystem/exceptions/empty_statement_list.h"
 #include "components/source_subsystem/exceptions/invalid_parse_condition.h"
 #include "components/source_subsystem/exceptions/invalid_parse_factor.h"
@@ -9,6 +26,7 @@
 #include "components/source_subsystem/exceptions/invalid_parse_statement.h"
 #include "components/source_subsystem/exceptions/mismatch_token.h"
 #include "components/source_subsystem/exceptions/unexpected_token.h"
+#include "components/source_subsystem/exceptions/end_of_stream.h"
 
 using namespace source;
 

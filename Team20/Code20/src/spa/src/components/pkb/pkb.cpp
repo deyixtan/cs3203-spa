@@ -51,7 +51,7 @@ void PKB::AddStmtToName(StmtType type, std::string const &stmt, std::string cons
   }
 }
 
-void PKB::AddProgramCfg(std::shared_ptr<Cfg> program_cfg) {
+void PKB::AddProgramCfg(std::shared_ptr<source::Cfg> program_cfg) {
   m_program_cfg = program_cfg;
   m_affect_store->AddProgramCfg(program_cfg);
 }
@@ -121,6 +121,6 @@ std::shared_ptr<AffectStore> PKB::GetAffectStore() {
   return m_affect_store;
 }
 
-std::shared_ptr<Cfg> PKB::GetProgCfg() {
+std::shared_ptr<source::Cfg> PKB::GetProgCfg() {
   return m_program_cfg;
 }

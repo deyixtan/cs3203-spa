@@ -4,7 +4,7 @@
 #include "node.h"
 #include "components/source_subsystem/pkb_client.h"
 
-class DesignExtractor;
+namespace source {
 
 enum class ConditionalType {
   BOOLEAN,
@@ -18,5 +18,7 @@ class ConditionalExpressionNode : public Node {
   [[nodiscard]] virtual bool operator==(const ConditionalExpressionNode &other) const = 0;
   virtual std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses) = 0;
 };
+
+}
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONDITIONAL_EXPRESSION_H_

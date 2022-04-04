@@ -5,6 +5,8 @@
 #include "../../iterator/design_extractor.h"
 #include "../../iterator/cfg_builder.h"
 
+namespace source {
+
 ProgramNode::ProgramNode() {}
 
 ProgramNode::ProgramNode(std::vector<std::shared_ptr<ProcedureNode>> procedures) :
@@ -51,4 +53,6 @@ std::unordered_map<std::string, std::shared_ptr<CfgNode>> ProgramNode::Accept(Cf
     heads.insert({procedure->GetIdentifier(), head});
   }
   return heads;
+}
+
 }

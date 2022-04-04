@@ -3,6 +3,8 @@
 #include "../../iterator/cfg_builder.h"
 #include "../cfg/cfg_node.h"
 
+namespace source {
+
 WhileStatementNode::WhileStatementNode(int stmt_no,
                                        std::shared_ptr<ConditionalExpressionNode> cond,
                                        std::shared_ptr<StatementListNode> stmt_list)
@@ -69,4 +71,6 @@ std::shared_ptr<CfgNode> WhileStatementNode::Accept(CfgBuilder *cb, std::shared_
   body_node = cb->Visit(m_stmt_list, body_node);
   body_node->AddNext(cfg_node);
   return next_node;
+}
+
 }

@@ -1,8 +1,11 @@
 #include "node_statement_list.h"
+#include "components/source_subsystem/pkb_client.h"
 #include "../../iterator/design_extractor.h"
 #include "../../iterator/cfg_builder.h"
 #include "node_statement.h"
 #include "../cfg/cfg_node.h"
+
+namespace source {
 
 StatementListNode::StatementListNode() : m_statements(std::vector<std::shared_ptr<StatementNode >>()) {}
 
@@ -68,11 +71,13 @@ std::shared_ptr<CfgNode> StatementListNode::Accept(CfgBuilder *cb, std::shared_p
   for (std::shared_ptr<StatementNode> stmt : m_statements) {
     bool is_empty_cfg_node = cfg_node->GetStatementList().size() == 0;
     if ((stmt->GetStatementType() == IF || stmt->GetStatementType() == WHILE) && !is_empty_cfg_node) {
-        std::shared_ptr<CfgNode> condition_node = std::make_shared<CfgNode>();
-        cfg_node->AddNext(condition_node);
-        cfg_node = condition_node;
+      std::shared_ptr<CfgNode> condition_node = std::make_shared<CfgNode>();
+      cfg_node->AddNext(condition_node);
+      cfg_node = condition_node;
     }
     cfg_node = cb->Visit(stmt, cfg_node);
   }
   return cfg_node;
+}
+
 }
