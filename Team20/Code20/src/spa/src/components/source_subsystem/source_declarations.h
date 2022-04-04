@@ -58,6 +58,7 @@ namespace source {
   typedef std::shared_ptr<IfStatementNode> IfStatementNodePtr;
 
   typedef std::shared_ptr<ConditionalExpressionNode> ConditionalExpressionNodePtr;
+  typedef std::shared_ptr<BooleanExpressionNode> BooleanExpressionNodePtr;
 }
 
 #endif //SOURCE_DECLARATIONS_H
