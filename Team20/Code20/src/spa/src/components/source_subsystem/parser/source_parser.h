@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_PARSER_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_PARSER_H_
+#ifndef SOURCE_PARSER_H
+#define SOURCE_PARSER_H
 
 #include "components/source_subsystem/source_declarations.h"
 #include "components/source_subsystem/parser/source_parser_session.h"
@@ -45,4 +45,4 @@ class SourceParser {
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_PARSER_H_
+#endif //SOURCE_PARSER_H
