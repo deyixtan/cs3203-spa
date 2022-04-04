@@ -22,7 +22,7 @@ class SourceParser {
   [[nodiscard]] bool IsConditionalExpression();
   [[nodiscard]] ProcedureNodePtr ParseProcedure();
   [[nodiscard]] StatementListNodePtr ParseStatementList();
-  [[nodiscard]] std::shared_ptr<StatementNode> ParseStatement();
+  [[nodiscard]] StatementNodePtr ParseStatement();
   [[nodiscard]] std::shared_ptr<ReadStatementNode> ParseReadStatement();
   [[nodiscard]] std::shared_ptr<PrintStatementNode> ParsePrintStatement();
   [[nodiscard]] std::shared_ptr<WhileStatementNode> ParseWhileStatement();

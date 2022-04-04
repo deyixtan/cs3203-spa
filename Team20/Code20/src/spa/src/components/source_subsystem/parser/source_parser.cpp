@@ -134,7 +134,7 @@ ProcedureNodePtr SourceParser::ParseProcedure() {
 }
 
 StatementListNodePtr SourceParser::ParseStatementList() {
-  std::vector<std::shared_ptr<StatementNode>> stmt_list;
+  std::vector<StatementNodePtr> stmt_list;
   while (FetchCurrentToken()->GetType() != TokenType::CLOSED_BRACES) {
     stmt_list.push_back(ParseStatement());
   }
@@ -144,7 +144,7 @@ StatementListNodePtr SourceParser::ParseStatementList() {
   return std::make_shared<StatementListNode>(stmt_list);
 }
 
-std::shared_ptr<StatementNode> SourceParser::ParseStatement() {
+StatementNodePtr SourceParser::ParseStatement() {
   // case 1: assignment by predicting if next token is '='
   if (FetchToken(1)->GetType() == TokenType::EQUAL) {
     return ParseAssignStatement();
