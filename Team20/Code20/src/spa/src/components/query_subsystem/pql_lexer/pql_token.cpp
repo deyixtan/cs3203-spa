@@ -101,6 +101,13 @@ std::unordered_set<PqlTokenType> stmt_ref = {
     PqlTokenType::NUMBER,
 };
 
+std::unordered_set<PqlTokenType> stmt_ref_and_ent_ref = {
+    PqlTokenType::SYNONYM,
+    PqlTokenType::UNDERSCORE,
+    PqlTokenType::NUMBER,
+    PqlTokenType::IDENT_WITH_QUOTES,
+};
+
 std::unordered_set<PqlTokenType> line_no_set = {
     PqlTokenType::STMT,
     PqlTokenType::READ,
@@ -144,20 +151,40 @@ std::unordered_set<PqlTokenType> allowed_synonyms = {
     PqlTokenType::BOOLEAN
 };
 
+std::unordered_set<PqlTokenType> result_cl = {
+    PqlTokenType::ATTRIBUTE,
+    PqlTokenType::TUPLE,
+    PqlTokenType::BOOLEAN,
+    PqlTokenType::SYNONYM,
+    PqlTokenType::FOLLOWS,
+    PqlTokenType::PARENT,
+    PqlTokenType::USES,
+    PqlTokenType::MODIFIES,
+    PqlTokenType::NEXT,
+    PqlTokenType::CALLS,
+    PqlTokenType::AFFECTS,
+    PqlTokenType::PATTERN,
+    PqlTokenType::STMT,
+    PqlTokenType::READ,
+    PqlTokenType::PRINT,
+    PqlTokenType::CALL,
+    PqlTokenType::WHILE,
+    PqlTokenType::IF,
+    PqlTokenType::ASSIGN,
+    PqlTokenType::VARIABLE,
+    PqlTokenType::CONSTANT,
+    PqlTokenType::PROCEDURE,
+    PqlTokenType::SUCH,
+    PqlTokenType::THAT,
+    PqlTokenType::WITH,
+    PqlTokenType::AND,
+    PqlTokenType::SELECT,
+};
+
 std::unordered_set<PqlTokenType> result_cl_excluding_synonym = {
     PqlTokenType::ATTRIBUTE,
     PqlTokenType::TUPLE,
     PqlTokenType::BOOLEAN
-};
-
-std::unordered_set<PqlTokenType> ent_ref_excluding_synonym = {
-    PqlTokenType::UNDERSCORE,
-    PqlTokenType::IDENT_WITH_QUOTES,
-};
-
-std::unordered_set<PqlTokenType> stmt_ref_excluding_synonym = {
-    PqlTokenType::UNDERSCORE,
-    PqlTokenType::NUMBER,
 };
 
 std::unordered_set<PqlTokenType> with_clause_ref = {
@@ -165,4 +192,3 @@ std::unordered_set<PqlTokenType> with_clause_ref = {
     PqlTokenType::NUMBER,
     PqlTokenType::ATTRIBUTE,
 };
-

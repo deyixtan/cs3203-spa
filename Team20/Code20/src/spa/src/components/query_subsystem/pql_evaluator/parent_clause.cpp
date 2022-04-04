@@ -47,6 +47,10 @@ Table ParentClause::Execute() {
 }
 
 Table ParentClause::HandleSynonymSynonym() {
+  if (first_arg.value==second_arg.value) {
+    return ConstructEmptyTable();
+  }
+
   auto pair_constraints = pkb->GetParentStore()->GetAllParentStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
@@ -94,11 +98,7 @@ Table ParentClause::HandleWildcardSynonym() {
 
 Table ParentClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetParentStore()->GetAllParentStmt(StmtType::STMT, StmtType::STMT).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table ParentClause::HandleWildcardInteger() {
@@ -109,11 +109,7 @@ Table ParentClause::HandleWildcardInteger() {
       is_false_clause = false;
     }
   }
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table ParentClause::HandleIntegerSynonym() {
@@ -132,20 +128,12 @@ Table ParentClause::HandleIntegerSynonym() {
 
 Table ParentClause::HandleIntegerWildcard() {
   bool is_false_clause = pkb->GetParentStore()->GetChildOf(first_arg.value).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table ParentClause::HandleIntegerInteger() {
   bool is_false_clause = !pkb->GetParentStore()->ParentChildValid({first_arg.value, second_arg.value});
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }

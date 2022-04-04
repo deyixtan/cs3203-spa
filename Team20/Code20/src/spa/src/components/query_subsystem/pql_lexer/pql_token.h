@@ -59,7 +59,9 @@ enum class PqlTokenType {
   SUB_EXPRESSION,
 
   ATTRIBUTE,
-  TUPLE
+  TUPLE,
+
+  DUMMY
 };
 
 class PqlToken {
@@ -79,12 +81,13 @@ extern std::unordered_set<PqlTokenType> design_entities;
 extern std::unordered_set<PqlTokenType> expression_spec;
 extern std::unordered_set<PqlTokenType> ent_ref;
 extern std::unordered_set<PqlTokenType> stmt_ref;
+extern std::unordered_set<PqlTokenType> stmt_ref_and_ent_ref;
 extern std::unordered_set<PqlTokenType> line_no_set;
 extern std::unordered_set<PqlTokenType> var_set;
 extern std::unordered_set<PqlTokenType> allowed_synonyms;
+extern std::unordered_set<PqlTokenType> result_cl;
 extern std::unordered_set<PqlTokenType> result_cl_excluding_synonym;
-extern std::unordered_set<PqlTokenType> ent_ref_excluding_synonym;
-extern std::unordered_set<PqlTokenType> stmt_ref_excluding_synonym;
 extern std::unordered_set<PqlTokenType> with_clause_ref;
+
 
 #endif

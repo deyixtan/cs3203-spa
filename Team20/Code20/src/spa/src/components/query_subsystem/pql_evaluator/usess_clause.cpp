@@ -65,21 +65,13 @@ Table UsesSClause::HandleIntegerSynonym() {
 
 Table UsesSClause::HandleIntegerWildcard() {
   bool is_empty = pkb->GetUsesStore()->GetVarUsedByStmt(first_arg.value).empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 Table UsesSClause::HandleIntegerIdent() {
   std::pair arg_pair(first_arg.value, second_arg.value);
   bool is_empty = !pkb->GetUsesStore()->IsStmtVarValid(arg_pair);
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 }
