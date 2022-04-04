@@ -71,16 +71,10 @@ Table ParentClause::HandleSynonymWildcard() {
 }
 
 Table ParentClause::HandleSynonymInteger() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStmt(
-      GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
-      StmtType::STMT
-  );
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      single_constraints.insert(pair_constraint.first);
-    }
-  }
+  auto single_constraints =
+      std::unordered_set{
+          pkb->GetParentStore()->GetParentOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+                                             second_arg.value)};
   return {first_arg.value, single_constraints};
 }
 
@@ -106,13 +100,7 @@ Table ParentClause::HandleWildcardWildcard() {
 }
 
 Table ParentClause::HandleWildcardInteger() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStmt(StmtType::STMT, StmtType::STMT);
-  bool is_false_clause = true;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      is_false_clause = false;
-    }
-  }
+  bool is_false_clause = pkb->GetParentStore()->GetParentOf(STMT, second_arg.value)=="0";
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
@@ -121,17 +109,11 @@ Table ParentClause::HandleWildcardInteger() {
 }
 
 Table ParentClause::HandleIntegerSynonym() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStmt(
-      StmtType::STMT,
-      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
-  );
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.first==first_arg.value) {
-      single_constraints.insert(pair_constraint.second);
-    }
-  }
-  return {second_arg.value, single_constraints};
+  auto single_constraints =
+      std::unordered_set{
+          pkb->GetParentStore()->GetChildOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
+                                            first_arg.value)};
+  return {second_arg.value, single_constraints}
 }
 
 Table ParentClause::HandleIntegerWildcard() {
