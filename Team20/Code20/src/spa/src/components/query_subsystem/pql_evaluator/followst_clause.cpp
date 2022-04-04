@@ -74,7 +74,7 @@ Table FollowsTClause::HandleSynonymInteger() {
   auto single_constraints =
       pkb->GetFollowsStore()->GetFollowingStarOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
                                                  second_arg.value);
-  return {first_arg.value, single_constraints}
+  return {first_arg.value, single_constraints};
 }
 
 Table FollowsTClause::HandleWildcardSynonym() {

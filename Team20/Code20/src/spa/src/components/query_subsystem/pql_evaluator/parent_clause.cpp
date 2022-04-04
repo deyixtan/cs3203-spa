@@ -113,7 +113,7 @@ Table ParentClause::HandleIntegerSynonym() {
       std::unordered_set{
           pkb->GetParentStore()->GetChildOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
                                             first_arg.value)};
-  return {second_arg.value, single_constraints}
+  return {second_arg.value, single_constraints};
 }
 
 Table ParentClause::HandleIntegerWildcard() {

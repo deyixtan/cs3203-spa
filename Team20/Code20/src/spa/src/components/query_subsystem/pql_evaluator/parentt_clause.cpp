@@ -74,7 +74,7 @@ Table ParentTClause::HandleSynonymInteger() {
   auto single_constraints =
       pkb->GetParentStore()->GetAllAnceOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
                                           second_arg.value);
-  return {first_arg.value, single_constraints}
+  return {first_arg.value, single_constraints};
 }
 
 Table ParentTClause::HandleWildcardSynonym() {
@@ -103,7 +103,7 @@ Table ParentTClause::HandleIntegerSynonym() {
   auto single_constraints =
       pkb->GetParentStore()->GetAllDescOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
                                           first_arg.value);
-  return {second_arg.value, single_constraints}
+  return {second_arg.value, single_constraints};
 }
 
 Table ParentTClause::HandleIntegerWildcard() {
