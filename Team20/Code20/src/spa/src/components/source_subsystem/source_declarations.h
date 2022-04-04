@@ -63,6 +63,7 @@ namespace source {
   typedef std::shared_ptr<NotExpressionNode> NotExpressionNodePtr;
   typedef std::shared_ptr<CombinationExpressionNode> CombinationExpressionNodePtr;
   typedef std::shared_ptr<VariableNode> VariableNodePtr;
+  typedef std::shared_ptr<ConstantNode> ConstantNodePtr;
 }
 
 #endif //SOURCE_DECLARATIONS_H
