@@ -15,9 +15,12 @@ class ResultClause {
   std::vector<PqlToken> values;
  public:
   ResultClause();
+  ResultClause(ResultClauseType);
   ResultClause(ResultClauseType, std::vector<PqlToken>);
   ResultClauseType GetType();
   std::vector<PqlToken> GetValues();
+  void AddValue(PqlToken);
+  void ModifyType(ResultClauseType);
 };
 
 #endif //RESULT_CLAUSE_H

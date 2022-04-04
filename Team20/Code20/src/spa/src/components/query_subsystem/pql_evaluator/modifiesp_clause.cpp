@@ -55,21 +55,13 @@ Table ModifiesPClause::HandleIdentSynonym() {
 
 Table ModifiesPClause::HandleIdentWildcard() {
   bool is_empty = pkb->GetModifiesStore()->GetVarModByStmt(first_arg.value).empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 Table ModifiesPClause::HandleIdentIdent() {
   std::pair arg_pair(first_arg.value, second_arg.value);
   bool is_empty = !pkb->GetModifiesStore()->IsStmtVarValid(arg_pair);
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 }
