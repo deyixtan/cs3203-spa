@@ -35,9 +35,7 @@ Table CallsTClause::Execute() {
 
 Table CallsTClause::HandleSynonymSynonym() {
   if (first_arg.value==second_arg.value) {
-    Table table;
-    table.ToggleFalseClause();
-    return table;
+    return ConstructEmptyTable();
   }
 
   auto pair_constraints = pkb->GetCallStore()->GetAllCallsStar();
@@ -71,20 +69,12 @@ Table CallsTClause::HandleWildcardSynonym() {
 
 Table CallsTClause::HandleWildcardWildcard() {
   bool is_empty = pkb->GetCallStore()->GetAllCallsStar().empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 Table CallsTClause::HandleWildcardIdent() {
   bool is_empty = pkb->GetCallStore()->GetCallersStarOf(second_arg.value).empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 Table CallsTClause::HandleIdentSynonym() {
@@ -94,20 +84,12 @@ Table CallsTClause::HandleIdentSynonym() {
 
 Table CallsTClause::HandleIdentWildcard() {
   bool is_empty = pkb->GetCallStore()->GetCalleesStarOf(first_arg.value).empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 Table CallsTClause::HandleIdentIdent() {
   bool is_empty = !pkb->GetCallStore()->IsCallsStarPairValid(first_arg.value, second_arg.value);
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 }

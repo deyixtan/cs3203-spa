@@ -48,9 +48,7 @@ Table ParentTClause::Execute() {
 
 Table ParentTClause::HandleSynonymSynonym() {
   if (first_arg.value==second_arg.value) {
-    Table table;
-    table.ToggleFalseClause();
-    return table;
+    return ConstructEmptyTable();
   }
 
   auto pair_constraints = pkb->GetParentStore()->GetAllParentStarStmt(
@@ -100,11 +98,7 @@ Table ParentTClause::HandleWildcardSynonym() {
 
 Table ParentTClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetParentStore()->GetAllParentStarStmt(StmtType::STMT, StmtType::STMT).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table ParentTClause::HandleWildcardInteger() {
@@ -115,11 +109,7 @@ Table ParentTClause::HandleWildcardInteger() {
       is_false_clause = false;
     }
   }
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table ParentTClause::HandleIntegerSynonym() {
@@ -138,21 +128,13 @@ Table ParentTClause::HandleIntegerSynonym() {
 
 Table ParentTClause::HandleIntegerWildcard() {
   bool is_false_clause = pkb->GetParentStore()->GetAllDescOf(first_arg.value).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table ParentTClause::HandleIntegerInteger() {
   auto descendants = pkb->GetParentStore()->GetAllDescOf(first_arg.value);
   bool is_false_clause = descendants.find(second_arg.value)==descendants.end();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }

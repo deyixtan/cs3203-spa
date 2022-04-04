@@ -47,9 +47,7 @@ Table NextClause::Execute() {
 
 Table NextClause::HandleSynonymSynonym() {
   if (first_arg.value==second_arg.value) {
-    Table table;
-    table.ToggleFalseClause();
-    return table;
+    return ConstructEmptyTable();
   }
 
   auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
@@ -99,11 +97,7 @@ Table NextClause::HandleWildcardSynonym() {
 
 Table NextClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetNextStore()->GetAllNextStmt(StmtType::STMT, StmtType::STMT).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextClause::HandleWildcardInteger() {
@@ -114,11 +108,7 @@ Table NextClause::HandleWildcardInteger() {
       is_false_clause = false;
     }
   }
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextClause::HandleIntegerSynonym() {
@@ -137,21 +127,13 @@ Table NextClause::HandleIntegerSynonym() {
 
 Table NextClause::HandleIntegerWildcard() {
   bool is_false_clause = pkb->GetNextStore()->GetNextOf(first_arg.value).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextClause::HandleIntegerInteger() {
   auto possible_next_values = pkb->GetNextStore()->GetNextOf(first_arg.value);
   bool is_false_clause = possible_next_values.find(second_arg.value) == possible_next_values.end();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }

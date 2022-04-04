@@ -48,9 +48,7 @@ Table FollowsTClause::Execute() {
 
 Table FollowsTClause::HandleSynonymSynonym() {
   if (first_arg.value==second_arg.value) {
-    Table table;
-    table.ToggleFalseClause();
-    return table;
+    return ConstructEmptyTable();
   }
 
   auto pair_constraints = pkb->GetFollowsStore()->GetAllFollowStarStmt(
@@ -100,11 +98,7 @@ Table FollowsTClause::HandleWildcardSynonym() {
 
 Table FollowsTClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetFollowsStore()->GetAllFollowStarStmt(StmtType::STMT, StmtType::STMT).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table FollowsTClause::HandleWildcardInteger() {
@@ -115,11 +109,7 @@ Table FollowsTClause::HandleWildcardInteger() {
       is_false_clause = false;
     }
   }
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table FollowsTClause::HandleIntegerSynonym() {
@@ -138,21 +128,13 @@ Table FollowsTClause::HandleIntegerSynonym() {
 
 Table FollowsTClause::HandleIntegerWildcard() {
   bool is_false_clause = pkb->GetFollowsStore()->GetFollowingStarOf(first_arg.value).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table FollowsTClause::HandleIntegerInteger() {
   auto following_star = pkb->GetFollowsStore()->GetFollowingStarOf(first_arg.value);
   bool is_false_clause = following_star.find(second_arg.value)==following_star.end();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }
