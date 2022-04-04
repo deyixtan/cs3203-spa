@@ -78,12 +78,12 @@ Table CallsClause::HandleWildcardIdent() {
 }
 
 Table CallsClause::HandleIdentSynonym() {
-  auto single_constraints = pkb->GetCallStore()->GetCalleesOf(PROC, first_arg.value); //TODO: Fix StmtType
+  auto single_constraints = pkb->GetCallStore()->GetCalleesOf(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table CallsClause::HandleIdentWildcard() {
-  bool is_empty = pkb->GetCallStore()->GetCalleesOf(PROC, first_arg.value).empty(); //TODO: Fix StmtType
+  bool is_empty = pkb->GetCallStore()->GetCalleesOf(first_arg.value).empty();
   return ConstructEmptyTable(is_empty);
 }
 
