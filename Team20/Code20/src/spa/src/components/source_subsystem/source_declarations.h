@@ -7,8 +7,14 @@
 #include <vector>
 
 namespace source {
-  // token-related types
+  // forward-declarations
+  // enum classes
   enum class TokenType;
+  enum class BooleanOperator;
+  enum class RelationOperator;
+  enum class ArithmeticOperator;
+
+  // token-related types
   class SourceToken;
 
   // ast-related types
@@ -44,8 +50,11 @@ namespace source {
   class PkbClient;
 
   // type definitions
+  // token-related types
   typedef std::shared_ptr<SourceToken> TokenPtr;
   typedef std::vector<TokenPtr> TokenStream;
+
+  // ast-related types
   typedef std::shared_ptr<ProgramNode> ProgramNodePtr;
   typedef std::shared_ptr<ProcedureNode> ProcedureNodePtr;
   typedef std::shared_ptr<StatementListNode> StatementListNodePtr;
@@ -64,6 +73,11 @@ namespace source {
   typedef std::shared_ptr<CombinationExpressionNode> CombinationExpressionNodePtr;
   typedef std::shared_ptr<VariableNode> VariableNodePtr;
   typedef std::shared_ptr<ConstantNode> ConstantNodePtr;
+
+  // ast-related types (stream)
+  typedef std::vector<ProcedureNodePtr> ProcedureNodeStream;
+  typedef std::vector<StatementNodePtr> StatementNodeStream;
+
 }
 
 #endif //SOURCE_DECLARATIONS_H

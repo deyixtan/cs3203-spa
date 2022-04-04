@@ -3,10 +3,12 @@
 #include "components/source_subsystem/exceptions/empty_statement_list.h"
 #include "components/source_subsystem/exceptions/end_of_stream.h"
 #include "components/source_subsystem/exceptions/invalid_call.h"
+#include "components/source_subsystem/exceptions/invalid_expression_operator.h"
 #include "components/source_subsystem/exceptions/invalid_parse_condition.h"
 #include "components/source_subsystem/exceptions/invalid_parse_factor.h"
 #include "components/source_subsystem/exceptions/invalid_parse_relation.h"
 #include "components/source_subsystem/exceptions/invalid_parse_statement.h"
+#include "components/source_subsystem/exceptions/invalid_term_operator.h"
 #include "components/source_subsystem/exceptions/mismatch_token.h"
 #include "components/source_subsystem/types/ast/node_assign_statement.h"
 #include "components/source_subsystem/types/ast/node_boolean_expression.h"
@@ -23,18 +25,20 @@
 
 namespace source {
 
-SourceParser::SourceParser(TokenStream tokens_ptr)
-    : m_session(SourceParserSession()), m_cursor(0), m_curr_stmt_no(0), m_tokens_ptr(std::move(tokens_ptr)) {}
+SourceParser::SourceParser(TokenStream token_stream)
+    : m_cursor(0), m_curr_stmt_no(0), m_token_stream(std::move(token_stream)), m_session(SourceParserSession()) {}
 
-bool SourceParser::AreTokensProcessed() {
-  return m_cursor >= m_tokens_ptr.size();
+bool SourceParser::HasMoreTokens() {
+  return m_cursor < m_token_stream.size();
 }
 
-TokenPtr SourceParser::FetchToken(int tokens_ahead) {
-  if (m_cursor + tokens_ahead >= m_tokens_ptr.size()) {
+TokenPtr SourceParser::FetchToken(int index) {
+  // index relative from cursor
+  int new_cursor_idx = m_cursor + index;
+  if (new_cursor_idx >= m_token_stream.size()) {
     throw EndOfStreamException();
   }
-  return m_tokens_ptr[m_cursor + tokens_ahead];
+  return m_token_stream[new_cursor_idx];
 }
 
 TokenPtr SourceParser::FetchCurrentToken() {
@@ -43,45 +47,43 @@ TokenPtr SourceParser::FetchCurrentToken() {
 
 TokenPtr SourceParser::ProcessToken(TokenType type) {
   TokenPtr token_ptr = FetchCurrentToken();
-
   if (token_ptr->GetType() != type) {
     throw MismatchedTokenException();
   }
 
-  m_cursor++;
+  m_cursor += 1;
   return token_ptr;
 }
 
 bool SourceParser::IsConditionalOperand(int &cursor) {
-  int nest = 0;
-
-  while (cursor < m_tokens_ptr.size()) {
-    TokenType type = m_tokens_ptr[cursor]->GetType();
-
+  // check for valid conditional operand
+  // by analysing its parenthesis
+  int parenthesis_count = 0;
+  while (cursor < m_token_stream.size()) {
+    TokenType type = m_token_stream[cursor]->GetType();
     if (type == TokenType::OPENED_PARENTHESIS) {
-      nest++;
+      parenthesis_count++;
     } else if (type == TokenType::CLOSED_PARENTHESIS) {
-      if (nest > 0) {
-        nest--;
-      } else if (nest == 0) {
+      if (parenthesis_count > 0) {
+        parenthesis_count--;
+      } else if (parenthesis_count == 0) {
         cursor++;
         break;
       } else {
         return false;
       }
     }
-
     cursor++;
   }
 
-  return cursor < m_tokens_ptr.size();
+  return cursor < m_token_stream.size();
 }
 
 bool SourceParser::IsConditionalExpression() {
   int tmp_cursor = m_cursor;
 
-  // check for valid start to conditional expression
-  if (m_tokens_ptr[tmp_cursor++]->GetType() != TokenType::OPENED_PARENTHESIS) {
+  // check for valid start of conditional expression
+  if (m_token_stream[tmp_cursor++]->GetType() != TokenType::OPENED_PARENTHESIS) {
     return false;
   }
 
@@ -91,7 +93,8 @@ bool SourceParser::IsConditionalExpression() {
   }
 
   // check if boolean operator is valid
-  if (m_tokens_ptr[tmp_cursor]->GetType() != TokenType::AND && m_tokens_ptr[tmp_cursor]->GetType() != TokenType::OR) {
+  if (m_token_stream[tmp_cursor]->GetType() != TokenType::AND
+      && m_token_stream[tmp_cursor]->GetType() != TokenType::OR) {
     return false;
   }
 
@@ -99,12 +102,108 @@ bool SourceParser::IsConditionalExpression() {
   return IsConditionalOperand(tmp_cursor);
 }
 
-ProgramNodePtr SourceParser::ParseProgram() {
-  std::vector<ProcedureNodePtr> procedures;
-  while (!AreTokensProcessed()) {
-    procedures.push_back(ParseProcedure());
+BooleanOperator SourceParser::GetBooleanOperator() {
+  TokenType curr_type = FetchCurrentToken()->GetType();
+  switch (curr_type) {
+    case TokenType::AND: {
+      ProcessToken(TokenType::AND);
+      return BooleanOperator::AND;
+    }
+    case TokenType::OR: {
+      ProcessToken(TokenType::OR);
+      return BooleanOperator::OR;
+    }
+    default: {
+      throw InvalidParseConditionException();
+    }
   }
-  if (procedures.size() == 0) {
+}
+
+RelationOperator SourceParser::GetRelationOperator() {
+  TokenType curr_type = FetchCurrentToken()->GetType();
+  switch (curr_type) {
+    case TokenType::IS_GREATER: {
+      ProcessToken(TokenType::IS_GREATER);
+      return RelationOperator::GREATER_THAN;
+    }
+    case TokenType::IS_GREATER_EQUAL: {
+      ProcessToken(TokenType::IS_GREATER_EQUAL);
+      return RelationOperator::GREATER_THAN_EQUALS;
+    }
+    case TokenType::IS_LESSER: {
+      ProcessToken(TokenType::IS_LESSER);
+      return RelationOperator::LESS_THAN;
+    }
+    case TokenType::IS_LESSER_EQUAL: {
+      ProcessToken(TokenType::IS_LESSER_EQUAL);
+      return RelationOperator::LESS_THAN_EQUALS;
+    }
+    case TokenType::IS_EQUAL: {
+      ProcessToken(TokenType::IS_EQUAL);
+      return RelationOperator::EQUALS;
+    }
+    case TokenType::IS_NOT_EQUAL: {
+      ProcessToken(TokenType::IS_NOT_EQUAL);
+      return RelationOperator::NOT_EQUALS;
+    }
+    default: {
+      throw InvalidParseRelationException();
+    }
+  }
+}
+
+ArithmeticOperator SourceParser::GetExpressionOperator() {
+  // subset of entire arithmetic operator values
+  // check for only addition and subtraction
+  TokenType curr_type = FetchCurrentToken()->GetType();
+  switch (curr_type) {
+    case TokenType::ADDITION: {
+      ProcessToken(TokenType::ADDITION);
+      return ArithmeticOperator::PLUS;
+    }
+    case TokenType::SUBTRACTION: {
+      ProcessToken(TokenType::SUBTRACTION);
+      return ArithmeticOperator::MINUS;
+    }
+    default: {
+      throw InvalidExpressionOperatorException();
+    }
+  }
+}
+
+ArithmeticOperator SourceParser::GetTermOperator() {
+  // subset of entire arithmetic operator values
+  // check for only multiplication, division and modulus
+  TokenType curr_type = FetchCurrentToken()->GetType();
+  switch (curr_type) {
+    case TokenType::MULTIPLICATION: {
+      ProcessToken(TokenType::MULTIPLICATION);
+      return ArithmeticOperator::MULTIPLY;
+    }
+    case TokenType::DIVISION: {
+      ProcessToken(TokenType::DIVISION);
+      return ArithmeticOperator::DIVIDE;
+    }
+    case TokenType::MODULUS: {
+      ProcessToken(TokenType::MODULUS);
+      return ArithmeticOperator::MOD;
+    }
+    default: {
+      throw InvalidTermOperatorException();
+    }
+  }
+}
+
+ProgramNodePtr SourceParser::ParseProgram() {
+  ProcedureNodeStream procedure_node_stream;
+
+  // recursive decent parsing
+  while (HasMoreTokens()) {
+    procedure_node_stream.push_back(ParseProcedure());
+  }
+
+  // validate parsed program
+  if (procedure_node_stream.empty()) {
     throw EmptyStatementListException();
   }
   if (m_session.DoesInvalidCallExist()) {
@@ -113,250 +212,272 @@ ProgramNodePtr SourceParser::ParseProgram() {
   if (m_session.DoesCyclicCallExist()) {
     throw CyclicCallException();
   }
-  return std::make_shared<ProgramNode>(procedures);
+
+  return std::make_shared<ProgramNode>(procedure_node_stream);
 }
 
 ProcedureNodePtr SourceParser::ParseProcedure() {
   ProcessToken(TokenType::PROCEDURE);
-  TokenPtr identifier = ProcessToken(TokenType::NAME);
-  std::string procedure_name = identifier->GetValue();
+  std::string proc_name = ProcessToken(TokenType::NAME)->GetValue();
 
-  // check procedure name duplication, may throw ProcedureExistException
-  m_session.AddProcedure(procedure_name);
+  // add procedure name into parser session
+  // to check for any procedure name duplication
+  m_session.AddProcedure(proc_name);
 
   ProcessToken(TokenType::OPENED_BRACES);
   StatementListNodePtr stmt_list = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
-  return std::make_shared<ProcedureNode>(procedure_name, stmt_list);
+
+  return std::make_shared<ProcedureNode>(proc_name, stmt_list);
 }
 
 StatementListNodePtr SourceParser::ParseStatementList() {
-  std::vector<StatementNodePtr> stmt_list;
+  StatementNodeStream stmt_node_stream;
+
+  // add all statements into a statement stream
   while (FetchCurrentToken()->GetType() != TokenType::CLOSED_BRACES) {
-    stmt_list.push_back(ParseStatement());
+    stmt_node_stream.push_back(ParseStatement());
   }
-  if (stmt_list.size() == 0) {
+
+  // validate statement stream
+  if (stmt_node_stream.empty()) {
     throw EmptyStatementListException();
   }
-  return std::make_shared<StatementListNode>(stmt_list);
+
+  return std::make_shared<StatementListNode>(stmt_node_stream);
 }
 
 StatementNodePtr SourceParser::ParseStatement() {
-  // case 1: assignment by predicting if next token is '='
-  if (FetchToken(1)->GetType() == TokenType::EQUAL) {
+  TokenPtr curr_token = FetchCurrentToken();
+  TokenPtr next_token = FetchToken(1);
+  TokenType curr_token_type = curr_token->GetType();
+  TokenType next_token_type = next_token->GetType();
+
+  // case 1: check if it is an assign statement
+  //         by predicting if next token is '='
+  if (next_token_type == TokenType::EQUAL) {
     return ParseAssignStatement();
   }
-  // case 2: handle other type of supported statements
-  TokenPtr token_ptr = FetchCurrentToken();
-  switch (token_ptr->GetType()) {
-    case TokenType::READ:return ParseReadStatement();
-    case TokenType::PRINT:return ParsePrintStatement();
-    case TokenType::WHILE:return ParseWhileStatement();
-    case TokenType::IF:return ParseIfStatement();
-    case TokenType::CALL:return ParseCallStatement();
-    default:throw InvalidParseStatementException();
+
+  // case 2: handle any other type of supported statements
+  switch (curr_token_type) {
+    case TokenType::READ: {
+      return ParseReadStatement();
+    }
+    case TokenType::PRINT: {
+      return ParsePrintStatement();
+    }
+    case TokenType::WHILE: {
+      return ParseWhileStatement();
+    }
+    case TokenType::IF: {
+      return ParseIfStatement();
+    }
+    case TokenType::CALL: {
+      return ParseCallStatement();
+    }
+    default: {
+      throw InvalidParseStatementException();
+    }
   }
 }
 
 ReadStatementNodePtr SourceParser::ParseReadStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::READ);
-  TokenPtr identifier = ProcessToken(TokenType::NAME);
+  std::string var_name = ProcessToken(TokenType::NAME)->GetValue();
   ProcessToken(TokenType::SEMI_COLON);
-  VariableNodePtr variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
-  return std::make_shared<ReadStatementNode>(stmt_no, variable);
+
+  VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name, std::to_string(stmt_no));
+  return std::make_shared<ReadStatementNode>(stmt_no, variable_node);
 }
 
 PrintStatementNodePtr SourceParser::ParsePrintStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::PRINT);
-  TokenPtr identifier = ProcessToken(TokenType::NAME);
+  std::string var_name = ProcessToken(TokenType::NAME)->GetValue();
   ProcessToken(TokenType::SEMI_COLON);
-  VariableNodePtr variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
-  return std::make_shared<PrintStatementNode>(stmt_no, variable);
+
+  VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name, std::to_string(stmt_no));
+  return std::make_shared<PrintStatementNode>(stmt_no, variable_node);
 }
 
 AssignStatementNodePtr SourceParser::ParseAssignStatement() {
   int stmt_no = ++m_curr_stmt_no;
-  TokenPtr identifier = ProcessToken(TokenType::NAME);
+  std::string lhs_var_name = ProcessToken(TokenType::NAME)->GetValue();
   ProcessToken(TokenType::EQUAL);
-  ExpressionNodePtr expression = ParseExpression();
+  ExpressionNodePtr rhs_expression_node = ParseExpression();
   ProcessToken(TokenType::SEMI_COLON);
-  VariableNodePtr variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
-  return std::make_shared<AssignStatementNode>(stmt_no, variable, expression);
+
+  VariableNodePtr lhs_variable_node = std::make_shared<VariableNode>(lhs_var_name, std::to_string(stmt_no));
+  return std::make_shared<AssignStatementNode>(stmt_no, lhs_variable_node, rhs_expression_node);
+}
+
+CallStatementNodePtr SourceParser::ParseCallStatement() {
+  int stmt_no = ++m_curr_stmt_no;
+  ProcessToken(TokenType::CALL);
+  std::string callee_name = ProcessToken(TokenType::NAME)->GetValue();
+
+  // add callee name into parser session
+  // to check for cyclic calls
+  m_session.AddMethodCall(callee_name);
+
+  ProcessToken(TokenType::SEMI_COLON);
+
+  std::string proc_name = m_session.GetCurrProcedure();
+  return std::make_shared<CallStatementNode>(stmt_no, proc_name, callee_name);
 }
 
 WhileStatementNodePtr SourceParser::ParseWhileStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::WHILE);
   ProcessToken(TokenType::OPENED_PARENTHESIS);
-  ConditionalExpressionNodePtr condition = ParseConditionalExpression();
+  ConditionalExpressionNodePtr condition_node = ParseConditionalExpression();
   ProcessToken(TokenType::CLOSED_PARENTHESIS);
   ProcessToken(TokenType::OPENED_BRACES);
-  StatementListNodePtr stmt_list = ParseStatementList();
+  StatementListNodePtr stmt_list_node = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
-  return std::make_shared<WhileStatementNode>(stmt_no, condition, stmt_list);
+
+  return std::make_shared<WhileStatementNode>(stmt_no, condition_node, stmt_list_node);
 }
 
 IfStatementNodePtr SourceParser::ParseIfStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::IF);
   ProcessToken(TokenType::OPENED_PARENTHESIS);
-  ConditionalExpressionNodePtr condition = ParseConditionalExpression();
+  ConditionalExpressionNodePtr condition_node = ParseConditionalExpression();
   ProcessToken(TokenType::CLOSED_PARENTHESIS);
   ProcessToken(TokenType::THEN);
   ProcessToken(TokenType::OPENED_BRACES);
-  StatementListNodePtr if_stmt_list = ParseStatementList();
+  StatementListNodePtr if_stmt_list_node = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
   ProcessToken(TokenType::ELSE);
   ProcessToken(TokenType::OPENED_BRACES);
-  StatementListNodePtr else_stmt_list = ParseStatementList();
+  StatementListNodePtr else_stmt_list_node = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
-  return std::make_shared<IfStatementNode>(stmt_no, condition, if_stmt_list, else_stmt_list);
-}
 
-CallStatementNodePtr SourceParser::ParseCallStatement() {
-  int stmt_no = ++m_curr_stmt_no;
-  ProcessToken(TokenType::CALL);
-  TokenPtr identifier = ProcessToken(TokenType::NAME);
-  std::string callee_name = identifier->GetValue();
-
-  // add function calls to session, check for cyclic calls
-  m_session.AddMethodCall(callee_name);
-
-  std::string proc_name = m_session.GetCurrProcedure();
-
-  ProcessToken(TokenType::SEMI_COLON);
-  return std::make_shared<CallStatementNode>(stmt_no, proc_name, callee_name);
+  return std::make_shared<IfStatementNode>(stmt_no, condition_node, if_stmt_list_node, else_stmt_list_node);
 }
 
 ConditionalExpressionNodePtr SourceParser::ParseConditionalExpression() {
-  TokenType type = FetchCurrentToken()->GetType();
-  if (type == TokenType::NOT) {
-    ProcessToken(TokenType::NOT);
-    ProcessToken(TokenType::OPENED_PARENTHESIS);
-    ConditionalExpressionNodePtr expression = ParseConditionalExpression();
-    ProcessToken(TokenType::CLOSED_PARENTHESIS);
-    return std::make_shared<NotExpressionNode>(expression);
+  TokenType curr_type = FetchCurrentToken()->GetType();
+  if (curr_type == TokenType::NOT) {
+    return ParseNotExpressionNode();
   } else if (IsConditionalExpression()) {
-    ProcessToken(TokenType::OPENED_PARENTHESIS);
-    ConditionalExpressionNodePtr left_expression = ParseConditionalExpression();
-    ProcessToken(TokenType::CLOSED_PARENTHESIS);
-    BooleanOperator boolean_operator;
-    switch (FetchCurrentToken()->GetType()) {
-      case TokenType::AND:ProcessToken(TokenType::AND);
-        boolean_operator = BooleanOperator::AND;
-        break;
-      case TokenType::OR:ProcessToken(TokenType::OR);
-        boolean_operator = BooleanOperator::OR;
-        break;
-      default:throw InvalidParseConditionException();
-    }
-    ProcessToken(TokenType::OPENED_PARENTHESIS);
-    ConditionalExpressionNodePtr right_expression = ParseConditionalExpression();
-    ProcessToken(TokenType::CLOSED_PARENTHESIS);
-    return std::make_shared<BooleanExpressionNode>(boolean_operator, left_expression, right_expression);
-  } else if (type == TokenType::OPENED_PARENTHESIS || type == TokenType::NAME || type == TokenType::INTEGER) {
-    // 'rel_expr' grammar can be reduced to 'factor'
+    return ParseBooleanExpressionNode();
+  } else if (curr_type == TokenType::NAME || curr_type == TokenType::INTEGER
+      || curr_type == TokenType::OPENED_PARENTHESIS) {
+    // 'rel_expr' grammar can be reduced to 'rel_factor'
+    // therefore just need to check if the starting token matches
+    // the starting token of 'var_name', 'const_value' or 'expr'
     return ParseRelationalExpression();
   }
+
   throw InvalidParseConditionException();
 }
 
+BooleanExpressionNodePtr SourceParser::ParseBooleanExpressionNode() {
+  ProcessToken(TokenType::OPENED_PARENTHESIS);
+  ConditionalExpressionNodePtr lhs_expression_node = ParseConditionalExpression();
+  ProcessToken(TokenType::CLOSED_PARENTHESIS);
+  BooleanOperator boolean_operator = GetBooleanOperator();
+  ProcessToken(TokenType::OPENED_PARENTHESIS);
+  ConditionalExpressionNodePtr rhs_expression = ParseConditionalExpression();
+  ProcessToken(TokenType::CLOSED_PARENTHESIS);
+
+  return std::make_shared<BooleanExpressionNode>(boolean_operator, lhs_expression_node, rhs_expression);
+}
+
 RelationalExpressionNodePtr SourceParser::ParseRelationalExpression() {
-  ExpressionNodePtr left_relation_factor = ParseRelationalFactor();
-  RelationOperator relation_operator;
-  switch (FetchCurrentToken()->GetType()) {
-    case TokenType::IS_GREATER:ProcessToken(TokenType::IS_GREATER);
-      relation_operator = RelationOperator::GREATER_THAN;
-      break;
-    case TokenType::IS_GREATER_EQUAL:ProcessToken(TokenType::IS_GREATER_EQUAL);
-      relation_operator = RelationOperator::GREATER_THAN_EQUALS;
-      break;
-    case TokenType::IS_LESSER:ProcessToken(TokenType::IS_LESSER);
-      relation_operator = RelationOperator::LESS_THAN;
-      break;
-    case TokenType::IS_LESSER_EQUAL:ProcessToken(TokenType::IS_LESSER_EQUAL);
-      relation_operator = RelationOperator::LESS_THAN_EQUALS;
-      break;
-    case TokenType::IS_EQUAL:ProcessToken(TokenType::IS_EQUAL);
-      relation_operator = RelationOperator::EQUALS;
-      break;
-    case TokenType::IS_NOT_EQUAL:ProcessToken(TokenType::IS_NOT_EQUAL);
-      relation_operator = RelationOperator::NOT_EQUALS;
-      break;
-    default:throw InvalidParseRelationException();
-  }
-  ExpressionNodePtr right_relation_factor = ParseRelationalFactor();
-  return std::make_shared<RelationalExpressionNode>(relation_operator, left_relation_factor, right_relation_factor);
+  ExpressionNodePtr lhs_rel_factor_node = ParseRelationalFactor();
+  RelationOperator relation_operator = GetRelationOperator();
+  ExpressionNodePtr rhs_rel_factor_node = ParseRelationalFactor();
+
+  return std::make_shared<RelationalExpressionNode>(relation_operator, lhs_rel_factor_node, rhs_rel_factor_node);
+}
+
+NotExpressionNodePtr SourceParser::ParseNotExpressionNode() {
+  ProcessToken(TokenType::NOT);
+  ProcessToken(TokenType::OPENED_PARENTHESIS);
+  ConditionalExpressionNodePtr conditional_expression_node = ParseConditionalExpression();
+  ProcessToken(TokenType::CLOSED_PARENTHESIS);
+
+  return std::make_shared<NotExpressionNode>(conditional_expression_node);
 }
 
 ExpressionNodePtr SourceParser::ParseRelationalFactor() {
   // rel_factor -> expr -> term -> factor -> 'var_name'/'const_value'
   // thus not required to check for 'var_name' and 'const_value'
-  // i.e. just evaluate expr
+  // i.e. just evaluate expression right away
   return ParseExpression();
 }
 
 ExpressionNodePtr SourceParser::ParseExpression() {
   // expr is essentially 'term (operator) term'
-  ExpressionNodePtr left_term = ParseTerm();
-  return ParseExpression(left_term);
+  ExpressionNodePtr left_term_node = ParseTerm();
+  return ParseExpression(left_term_node);
 }
 
-ExpressionNodePtr SourceParser::ParseExpression(ExpressionNodePtr left_term) {
+ExpressionNodePtr SourceParser::ParseExpression(ExpressionNodePtr left_term_node) {
   // recursively call and append '(add/minus) term' part of the expression
   ArithmeticOperator arithmetic_operator;
-  switch (FetchCurrentToken()->GetType()) {
-    case TokenType::ADDITION:ProcessToken(TokenType::ADDITION);
-      arithmetic_operator = ArithmeticOperator::PLUS;
-      break;
-    case TokenType::SUBTRACTION:ProcessToken(TokenType::SUBTRACTION);
-      arithmetic_operator = ArithmeticOperator::MINUS;
-      break;
-    default:return left_term;
+  try {
+    arithmetic_operator = GetExpressionOperator();
+  } catch (const InvalidExpressionOperatorException &invalid_expr_operator_exception) {
+    // when an exception is caught, it means no
+    // operator was found and also means no right term
+    return left_term_node;
   }
-  ExpressionNodePtr right_term = ParseTerm();
-  return ParseExpression(std::make_shared<CombinationExpressionNode>(arithmetic_operator, left_term, right_term));
+  ExpressionNodePtr right_term_node = ParseTerm();
+
+  return ParseExpression(std::make_shared<CombinationExpressionNode>(arithmetic_operator,
+                                                                     left_term_node,
+                                                                     right_term_node));
 }
 
 ExpressionNodePtr SourceParser::ParseTerm() {
-  // expr is essentially 'factor (multiply/divide/mod) factor'
-  ExpressionNodePtr left_factor = ParseFactor();
-  return ParseTerm(left_factor);
+  // term is essentially 'factor (multiply/divide/mod) factor'
+  ExpressionNodePtr left_factor_node = ParseFactor();
+  return ParseTerm(left_factor_node);
 }
 
-ExpressionNodePtr SourceParser::ParseTerm(ExpressionNodePtr left_factor) {
+ExpressionNodePtr SourceParser::ParseTerm(ExpressionNodePtr left_factor_node) {
   // recursively call and append '(operator) factor' part of the expression
   ArithmeticOperator arithmetic_operator;
-  switch (FetchCurrentToken()->GetType()) {
-    case TokenType::MULTIPLICATION:ProcessToken(TokenType::MULTIPLICATION);
-      arithmetic_operator = ArithmeticOperator::MULTIPLY;
-      break;
-    case TokenType::DIVISION:ProcessToken(TokenType::DIVISION);
-      arithmetic_operator = ArithmeticOperator::DIVIDE;
-      break;
-    case TokenType::MODULUS:ProcessToken(TokenType::MODULUS);
-      arithmetic_operator = ArithmeticOperator::MOD;
-      break;
-    default:return left_factor;
+  try {
+    arithmetic_operator = GetTermOperator();
+  } catch (const InvalidTermOperatorException &invalid_term_operator_exception) {
+    // when an exception is caught, it means no
+    // operator was found and also means no right factor
+    return left_factor_node;
   }
-  ExpressionNodePtr right_factor = ParseFactor();
-  return ParseTerm(std::make_shared<CombinationExpressionNode>(arithmetic_operator, left_factor, right_factor));
+  ExpressionNodePtr right_factor_node = ParseFactor();
+
+  return ParseTerm(std::make_shared<CombinationExpressionNode>(arithmetic_operator,
+                                                               left_factor_node,
+                                                               right_factor_node));
 }
 
 ExpressionNodePtr SourceParser::ParseFactor() {
   TokenType type = FetchCurrentToken()->GetType();
   switch (type) {
-    case TokenType::NAME:return std::make_shared<VariableNode>(ProcessToken(TokenType::NAME)->GetValue(), std::to_string(m_curr_stmt_no));
-    case TokenType::INTEGER:return std::make_shared<ConstantNode>(ProcessToken(TokenType::INTEGER)->GetValue());
+    case TokenType::NAME: {
+      std::string var_name = ProcessToken(TokenType::NAME)->GetValue();
+      return std::make_shared<VariableNode>(var_name, std::to_string(m_curr_stmt_no));
+    }
+    case TokenType::INTEGER: {
+      std::string constant_value = ProcessToken(TokenType::INTEGER)->GetValue();
+      return std::make_shared<ConstantNode>(constant_value);
+    }
     case TokenType::OPENED_PARENTHESIS: {
       ProcessToken(TokenType::OPENED_PARENTHESIS);
       ExpressionNodePtr expression = ParseExpression();
       ProcessToken(TokenType::CLOSED_PARENTHESIS);
       return expression;
     }
-    default:throw InvalidParseFactorException();
+    default: {
+      throw InvalidParseFactorException();
+    }
   }
 }
 

@@ -10,16 +10,20 @@ class SourceParser {
  private:
   int m_cursor;
   int m_curr_stmt_no;
+  TokenStream m_token_stream;
   SourceParserSession m_session;
-  TokenStream m_tokens_ptr;
 
  private:
-  [[nodiscard]] bool AreTokensProcessed();
-  [[nodiscard]] TokenPtr FetchToken(int tokens_ahead);
+  [[nodiscard]] bool HasMoreTokens();
+  [[nodiscard]] TokenPtr FetchToken(int index);
   [[nodiscard]] TokenPtr FetchCurrentToken();
   TokenPtr ProcessToken(TokenType type);
   [[nodiscard]] bool IsConditionalOperand(int &cursor);
   [[nodiscard]] bool IsConditionalExpression();
+  [[nodiscard]] BooleanOperator GetBooleanOperator();
+  [[nodiscard]] RelationOperator GetRelationOperator();
+  [[nodiscard]] ArithmeticOperator GetExpressionOperator();
+  [[nodiscard]] ArithmeticOperator GetTermOperator();
   [[nodiscard]] ProcedureNodePtr ParseProcedure();
   [[nodiscard]] StatementListNodePtr ParseStatementList();
   [[nodiscard]] StatementNodePtr ParseStatement();
@@ -30,7 +34,9 @@ class SourceParser {
   [[nodiscard]] WhileStatementNodePtr ParseWhileStatement();
   [[nodiscard]] IfStatementNodePtr ParseIfStatement();
   [[nodiscard]] ConditionalExpressionNodePtr ParseConditionalExpression();
+  [[nodiscard]] BooleanExpressionNodePtr ParseBooleanExpressionNode();
   [[nodiscard]] RelationalExpressionNodePtr ParseRelationalExpression();
+  [[nodiscard]] NotExpressionNodePtr ParseNotExpressionNode();
   [[nodiscard]] ExpressionNodePtr ParseRelationalFactor();
   [[nodiscard]] ExpressionNodePtr ParseExpression();
   [[nodiscard]] ExpressionNodePtr ParseExpression(ExpressionNodePtr left_term);
@@ -39,7 +45,7 @@ class SourceParser {
   [[nodiscard]] ExpressionNodePtr ParseFactor();
 
  public:
-  SourceParser(TokenStream tokens_ptr);
+  SourceParser(TokenStream token_stream);
   [[nodiscard]] ProgramNodePtr ParseProgram();
 };
 
