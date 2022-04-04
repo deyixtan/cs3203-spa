@@ -1,12 +1,13 @@
 #ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
 #define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
 
-#include <string>
+#include "source_declarations.h"
 
 #include "../pkb/stores/store.h"
 
 class PKB;
-class Cfg;
+
+namespace source {
 
 class PkbClient {
  private:
@@ -75,5 +76,7 @@ class PkbClient {
   void PopulateNextStar(std::string stmt1, std::string stmt2);
   void AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs);
 };
+
+}
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_

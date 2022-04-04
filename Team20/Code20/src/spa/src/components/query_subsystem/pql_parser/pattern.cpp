@@ -1,12 +1,12 @@
 #include "pattern.h"
 
 Pattern::Pattern() {}
-Pattern::Pattern(PqlToken syn_assign, PqlToken first, PqlToken second)
-    : synonym_(syn_assign),
+Pattern::Pattern(PqlToken synonym, PqlToken first, PqlToken second)
+    : synonym_(synonym),
       first_(first),
       second_(second) {}
-Pattern::Pattern(PqlToken syn_assign, PqlToken first, PqlToken second, PqlToken third)
-    : synonym_(syn_assign),
+Pattern::Pattern(PqlToken synonym, PqlToken first, PqlToken second, PqlToken third)
+    : synonym_(synonym),
       first_(first),
       second_(second),
       third_(third) {}

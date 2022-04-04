@@ -105,3 +105,20 @@ StmtType clause_util::GetStmtType(const DesignEntityType &design_entity) {
     }
   }
 }
+
+pql::Table clause_util::ConstructEmptyTable(bool is_false_clause) {
+  pql::Table table;
+  if (is_false_clause) {
+    table.ToggleFalseClause();
+  }
+  return table;
+}
+
+pql::Table clause_util::ConstructEmptyTable() {
+    pql::Table table;
+    table.ToggleFalseClause();
+    return table;
+}
+
+
+

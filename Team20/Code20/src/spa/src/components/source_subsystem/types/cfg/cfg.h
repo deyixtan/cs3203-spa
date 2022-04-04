@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 
+namespace source {
+
 class CfgNode;
 
 class Cfg {
@@ -15,5 +17,7 @@ class Cfg {
   std::shared_ptr<CfgNode> GetCfg(std::string procedure);
   std::unordered_map<std::string, std::shared_ptr<CfgNode>> GetCfgMap();
 };
+
+}
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_TYPES_CFG_CFG_H_

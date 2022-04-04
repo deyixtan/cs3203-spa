@@ -141,7 +141,7 @@ FALSE
 29 - if pattern 1 synonym false 2
 if ifs; variable v;
 Select BOOLEAN pattern ifs (v,_)
-none
+FALSE
 5000
 30 - while pattern 0 synonym true 1
 while w; variable v;
@@ -166,7 +166,7 @@ TRUE
 34 - while pattern 1 synonym false 1
 while w; variable v;
 Select BOOLEAN pattern w (v,_,_)
-none
+FALSE
 5000
 35 - while pattern 1 synonym false 2
 while w; variable v;

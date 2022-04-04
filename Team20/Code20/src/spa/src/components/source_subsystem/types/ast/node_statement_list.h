@@ -1,14 +1,9 @@
 #ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_LIST_H_
 #define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_LIST_H_
 
-#include <vector>
-
 #include "node.h"
 
-class DesignExtractor;
-class CfgBuilder;
-class StatementNode;
-class CfgNode;
+namespace source {
 
 class StatementListNode : public Node {
  private:
@@ -24,5 +19,7 @@ class StatementListNode : public Node {
   void Accept(DesignExtractor *de, std::string proc_name);
   std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
+
+}
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_LIST_H_

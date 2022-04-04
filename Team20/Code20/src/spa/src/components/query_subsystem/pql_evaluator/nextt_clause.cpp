@@ -99,11 +99,7 @@ Table NextTClause::HandleWildcardSynonym() {
 
 Table NextTClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetNextStore()->GetAllNextStarStmt(StmtType::STMT, StmtType::STMT).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextTClause::HandleWildcardInteger() {
@@ -114,11 +110,7 @@ Table NextTClause::HandleWildcardInteger() {
       is_false_clause = false;
     }
   }
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextTClause::HandleIntegerSynonym() {
@@ -137,21 +129,13 @@ Table NextTClause::HandleIntegerSynonym() {
 
 Table NextTClause::HandleIntegerWildcard() {
   bool is_false_clause = pkb->GetNextStore()->GetNextStarOf(first_arg.value).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextTClause::HandleIntegerInteger() {
   auto possible_next_values = pkb->GetNextStore()->GetNextStarOf(first_arg.value);
   bool is_false_clause = possible_next_values.find(second_arg.value)==possible_next_values.end();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }

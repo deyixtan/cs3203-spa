@@ -1,6 +1,8 @@
 #include "node_statement.h"
 #include "../../iterator/design_extractor.h"
 
+namespace source {
+
 StatementNode::StatementNode(int stmt_no) : m_stmt_no(stmt_no) {}
 
 int StatementNode::GetStatementNumber() {
@@ -22,4 +24,6 @@ std::string StatementNode::ToString() {
 
 std::string StatementNode::GetPatternFormat() {
   return "";
+}
+
 }

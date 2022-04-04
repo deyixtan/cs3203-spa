@@ -83,20 +83,12 @@ Table AffectsTClause::HandleWildcardSynonym() {
 
 Table AffectsTClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarPairs().empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table AffectsTClause::HandleWildcardInteger() {
   auto is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarOf(second_arg.value).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table AffectsTClause::HandleIntegerSynonym() {
@@ -106,21 +98,13 @@ Table AffectsTClause::HandleIntegerSynonym() {
 
 Table AffectsTClause::HandleIntegerWildcard() {
   bool is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectedStarOf(first_arg.value).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table AffectsTClause::HandleIntegerInteger() {
   auto is_false_clause =
       !pkb->GetAffectStore()->GetAffectSession()->DoesAffectStarExists({first_arg.value, second_arg.value});
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }

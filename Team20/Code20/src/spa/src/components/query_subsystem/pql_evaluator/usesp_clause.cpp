@@ -55,21 +55,13 @@ Table UsesPClause::HandleIdentSynonym() {
 
 Table UsesPClause::HandleIdentWildcard() {
   bool is_empty = pkb->GetUsesStore()->GetVarUsedByProc(first_arg.value).empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 Table UsesPClause::HandleIdentIdent() {
   std::pair arg_pair(first_arg.value, second_arg.value);
   bool is_empty = !pkb->GetUsesStore()->IsProcVarValid(arg_pair);
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 }

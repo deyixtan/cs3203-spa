@@ -5,7 +5,7 @@
 #include "node_conditional_expression.h"
 #include "components/source_subsystem/pkb_client.h"
 
-class DesignExtractor;
+namespace source {
 
 enum class RelationOperator {
   LESS_THAN,
@@ -35,5 +35,7 @@ class RelationalExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
   std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses);
 };
+
+}
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_RELATIONAL_EXPRESSION_H_
