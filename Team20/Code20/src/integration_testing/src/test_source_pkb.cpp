@@ -966,11 +966,11 @@ TEST_CASE("Test components between Source and PKB (Sample source 3)") {
   SECTION("Test Calls") {
     std::unordered_set<std::string> result1 = pkb->GetCallStore()->GetCallersOf("fizz");
     std::unordered_set<std::string> result2 = pkb->GetCallStore()->GetCallersOf("foo");
-    std::unordered_set<std::string> result3 = pkb->GetCallStore()->GetCallersStarOf(PROC, "fizz");
-    std::unordered_set<std::string> result4 = pkb->GetCallStore()->GetCalleesStarOf(PROC, "bar");
+    std::unordered_set<std::string> result3 = pkb->GetCallStore()->GetCallersStarOf("fizz");
+    std::unordered_set<std::string> result4 = pkb->GetCallStore()->GetCalleesStarOf("bar");
     std::unordered_set<std::string> result5 = pkb->GetCallStore()->GetCallersOf("buzz");
-    std::unordered_set<std::string> result6 = pkb->GetCallStore()->GetCallersStarOf(PROC, "buzz");
-    std::unordered_set<std::string> result7 = pkb->GetCallStore()->GetCalleesStarOf(PROC, "buzz");
+    std::unordered_set<std::string> result6 = pkb->GetCallStore()->GetCallersStarOf("buzz");
+    std::unordered_set<std::string> result7 = pkb->GetCallStore()->GetCalleesStarOf("buzz");
 
     std::unordered_set<std::string> expected_result1 = {"foo"};
     std::unordered_set<std::string> expected_result2 = {"bar"};
