@@ -2,8 +2,10 @@
 #define SOURCE_DECLARATIONS_H
 
 #include <memory>
+#include <queue>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 namespace source {

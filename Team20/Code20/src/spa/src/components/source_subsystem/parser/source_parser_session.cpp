@@ -1,6 +1,11 @@
 #include "source_parser_session.h"
+#include "components/source_subsystem/exceptions/procedure_exist.h"
 
 namespace source {
+
+std::string SourceParserSession::GetCurrProcedure() {
+  return m_curr_parsed_procedure;
+}
 
 bool SourceParserSession::DoesProcedureExist(std::string procedure_name) {
   return m_procedures_parsed_set.find(procedure_name) != m_procedures_parsed_set.end();
@@ -75,10 +80,6 @@ void SourceParserSession::AddProcedure(std::string procedure_name) {
 void SourceParserSession::AddMethodCall(std::string callee_name) {
   m_procedures_called_set.insert(callee_name);
   m_call_map.at(m_curr_parsed_procedure).insert(callee_name);
-}
-
-std::string SourceParserSession::GetCurrProcedure() {
-  return m_curr_parsed_procedure;
 }
 
 }

@@ -1,12 +1,7 @@
 #ifndef SOURCE_PARSER_SESSION_H
 #define SOURCE_PARSER_SESSION_H
 
-#include <queue>
-#include <string>
-#include <unordered_map>
-#include <unordered_set>
-
-#include "components/source_subsystem/exceptions/procedure_exist.h"
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
@@ -18,12 +13,12 @@ class SourceParserSession {
   std::unordered_map<std::string, std::unordered_set<std::string>> m_call_map; // <caller, callees>
 
  public:
+  [[nodiscard]] std::string GetCurrProcedure();
   [[nodiscard]] bool DoesProcedureExist(std::string procedure_name);
   [[nodiscard]] bool DoesInvalidCallExist();
   [[nodiscard]] bool DoesCyclicCallExist();
   void AddProcedure(std::string procedure_name);
   void AddMethodCall(std::string callee_name);
-  std::string GetCurrProcedure();
 };
 
 }
