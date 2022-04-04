@@ -46,7 +46,7 @@ PKB *GetCfgPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
   CfgBuilder cfg_builder = CfgBuilder(pkb_client);
   cfg_builder.IterateAstAndPopulatePkb(ast);
   design_extractor->IterateAstAndPopulatePkb(ast);
-  cfg_builder.IterateCfgAndPopulatePkb(pkb->GetProgCfg());
+  cfg_builder.IterateCfgAndPopulatePkb();
   return pkb;
 }
 
