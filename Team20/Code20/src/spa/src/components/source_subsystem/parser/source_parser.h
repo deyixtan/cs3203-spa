@@ -31,12 +31,12 @@ class SourceParser {
   [[nodiscard]] IfStatementNodePtr ParseIfStatement();
   [[nodiscard]] ConditionalExpressionNodePtr ParseConditionalExpression();
   [[nodiscard]] RelationalExpressionNodePtr ParseRelationalExpression();
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseRelationalFactor();
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseExpression();
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseExpression(std::shared_ptr<ExpressionNode> left_term);
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseTerm();
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseTerm(std::shared_ptr<ExpressionNode> left_factor);
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseFactor();
+  [[nodiscard]] ExpressionNodePtr ParseRelationalFactor();
+  [[nodiscard]] ExpressionNodePtr ParseExpression();
+  [[nodiscard]] ExpressionNodePtr ParseExpression(ExpressionNodePtr left_term);
+  [[nodiscard]] ExpressionNodePtr ParseTerm();
+  [[nodiscard]] ExpressionNodePtr ParseTerm(ExpressionNodePtr left_factor);
+  [[nodiscard]] ExpressionNodePtr ParseFactor();
 
  public:
   SourceParser(TokenStream tokens_ptr);

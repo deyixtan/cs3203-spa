@@ -56,7 +56,7 @@ namespace source {
   typedef std::shared_ptr<CallStatementNode> CallStatementNodePtr;
   typedef std::shared_ptr<WhileStatementNode> WhileStatementNodePtr;
   typedef std::shared_ptr<IfStatementNode> IfStatementNodePtr;
-
+  typedef std::shared_ptr<ExpressionNode> ExpressionNodePtr;
   typedef std::shared_ptr<ConditionalExpressionNode> ConditionalExpressionNodePtr;
   typedef std::shared_ptr<BooleanExpressionNode> BooleanExpressionNodePtr;
   typedef std::shared_ptr<RelationalExpressionNode> RelationalExpressionNodePtr;

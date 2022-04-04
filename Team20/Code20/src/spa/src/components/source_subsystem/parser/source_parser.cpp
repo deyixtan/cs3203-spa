@@ -183,7 +183,7 @@ AssignStatementNodePtr SourceParser::ParseAssignStatement() {
   int stmt_no = ++m_curr_stmt_no;
   TokenPtr identifier = ProcessToken(TokenType::NAME);
   ProcessToken(TokenType::EQUAL);
-  std::shared_ptr<ExpressionNode> expression = ParseExpression();
+  ExpressionNodePtr expression = ParseExpression();
   ProcessToken(TokenType::SEMI_COLON);
   VariableNodePtr variable = std::make_shared<VariableNode>(identifier->GetValue(), std::to_string(stmt_no));
   return std::make_shared<AssignStatementNode>(stmt_no, variable, expression);
@@ -267,7 +267,7 @@ ConditionalExpressionNodePtr SourceParser::ParseConditionalExpression() {
 }
 
 RelationalExpressionNodePtr SourceParser::ParseRelationalExpression() {
-  std::shared_ptr<ExpressionNode> left_relation_factor = ParseRelationalFactor();
+  ExpressionNodePtr left_relation_factor = ParseRelationalFactor();
   RelationOperator relation_operator;
   switch (FetchCurrentToken()->GetType()) {
     case TokenType::IS_GREATER:ProcessToken(TokenType::IS_GREATER);
@@ -290,24 +290,24 @@ RelationalExpressionNodePtr SourceParser::ParseRelationalExpression() {
       break;
     default:throw InvalidParseRelationException();
   }
-  std::shared_ptr<ExpressionNode> right_relation_factor = ParseRelationalFactor();
+  ExpressionNodePtr right_relation_factor = ParseRelationalFactor();
   return std::make_shared<RelationalExpressionNode>(relation_operator, left_relation_factor, right_relation_factor);
 }
 
-std::shared_ptr<ExpressionNode> SourceParser::ParseRelationalFactor() {
+ExpressionNodePtr SourceParser::ParseRelationalFactor() {
   // rel_factor -> expr -> term -> factor -> 'var_name'/'const_value'
   // thus not required to check for 'var_name' and 'const_value'
   // i.e. just evaluate expr
   return ParseExpression();
 }
 
-std::shared_ptr<ExpressionNode> SourceParser::ParseExpression() {
+ExpressionNodePtr SourceParser::ParseExpression() {
   // expr is essentially 'term (operator) term'
-  std::shared_ptr<ExpressionNode> left_term = ParseTerm();
+  ExpressionNodePtr left_term = ParseTerm();
   return ParseExpression(left_term);
 }
 
-std::shared_ptr<ExpressionNode> SourceParser::ParseExpression(std::shared_ptr<ExpressionNode> left_term) {
+ExpressionNodePtr SourceParser::ParseExpression(ExpressionNodePtr left_term) {
   // recursively call and append '(add/minus) term' part of the expression
   ArithmeticOperator arithmetic_operator;
   switch (FetchCurrentToken()->GetType()) {
@@ -319,17 +319,17 @@ std::shared_ptr<ExpressionNode> SourceParser::ParseExpression(std::shared_ptr<Ex
       break;
     default:return left_term;
   }
-  std::shared_ptr<ExpressionNode> right_term = ParseTerm();
+  ExpressionNodePtr right_term = ParseTerm();
   return ParseExpression(std::make_shared<CombinationExpressionNode>(arithmetic_operator, left_term, right_term));
 }
 
-std::shared_ptr<ExpressionNode> SourceParser::ParseTerm() {
+ExpressionNodePtr SourceParser::ParseTerm() {
   // expr is essentially 'factor (multiply/divide/mod) factor'
-  std::shared_ptr<ExpressionNode> left_factor = ParseFactor();
+  ExpressionNodePtr left_factor = ParseFactor();
   return ParseTerm(left_factor);
 }
 
-std::shared_ptr<ExpressionNode> SourceParser::ParseTerm(std::shared_ptr<ExpressionNode> left_factor) {
+ExpressionNodePtr SourceParser::ParseTerm(ExpressionNodePtr left_factor) {
   // recursively call and append '(operator) factor' part of the expression
   ArithmeticOperator arithmetic_operator;
   switch (FetchCurrentToken()->GetType()) {
@@ -344,18 +344,18 @@ std::shared_ptr<ExpressionNode> SourceParser::ParseTerm(std::shared_ptr<Expressi
       break;
     default:return left_factor;
   }
-  std::shared_ptr<ExpressionNode> right_factor = ParseFactor();
+  ExpressionNodePtr right_factor = ParseFactor();
   return ParseTerm(std::make_shared<CombinationExpressionNode>(arithmetic_operator, left_factor, right_factor));
 }
 
-std::shared_ptr<ExpressionNode> SourceParser::ParseFactor() {
+ExpressionNodePtr SourceParser::ParseFactor() {
   TokenType type = FetchCurrentToken()->GetType();
   switch (type) {
     case TokenType::NAME:return std::make_shared<VariableNode>(ProcessToken(TokenType::NAME)->GetValue(), std::to_string(m_curr_stmt_no));
     case TokenType::INTEGER:return std::make_shared<ConstantNode>(ProcessToken(TokenType::INTEGER)->GetValue());
     case TokenType::OPENED_PARENTHESIS: {
       ProcessToken(TokenType::OPENED_PARENTHESIS);
-      std::shared_ptr<ExpressionNode> expression = ParseExpression();
+      ExpressionNodePtr expression = ParseExpression();
       ProcessToken(TokenType::CLOSED_PARENTHESIS);
       return expression;
     }
