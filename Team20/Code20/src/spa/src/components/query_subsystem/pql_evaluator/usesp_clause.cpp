@@ -60,6 +60,7 @@ Table UsesPClause::HandleIdentWildcard() {
 
 Table UsesPClause::HandleIdentIdent() {
   std::pair arg_pair(first_arg.value, second_arg.value);
+  bool is_empty = !pkb->GetUsesStore()->IsStmtVarValid(arg_pair);
   return ConstructEmptyTable(is_empty);
 }
 
