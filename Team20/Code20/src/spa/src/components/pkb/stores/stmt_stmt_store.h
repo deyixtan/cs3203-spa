@@ -14,10 +14,24 @@ struct NextNode {
 class StmtStmtStore : public Store {
  private:
   std::unordered_map<StmtType,
-                     std::unordered_map<StmtType, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>>
+                     std::unordered_map<StmtType,
+                                        std::tuple<std::unordered_map<std::string,
+                                                                      std::unordered_set<std::string>>,
+                                                   std::unordered_map<std::string,
+                                                                      std::unordered_set<std::string>>,
+                                                   std::unordered_set<std::pair<std::string,
+                                                                                std::string>,
+                                                                      pair_hash>>>>
       type_pair_map;
   std::unordered_map<StmtType,
-                     std::unordered_map<StmtType, std::unordered_set<std::pair<std::string, std::string>, pair_hash>>>
+                     std::unordered_map<StmtType,
+                                        std::tuple<std::unordered_map<std::string,
+                                                                      std::unordered_set<std::string>>,
+                                                   std::unordered_map<std::string,
+                                                                      std::unordered_set<std::string>>,
+                                                   std::unordered_set<std::pair<std::string,
+                                                                                std::string>,
+                                                                      pair_hash>>>>
       star_type_pair_map;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_star_pairs;
@@ -49,9 +63,13 @@ class StmtStmtStore : public Store {
                             std::string lower,
                             std::unordered_map<StmtType,
                                                std::unordered_map<StmtType,
-                                                                  std::unordered_set<std::pair<std::string,
-                                                                                               std::string>,
-                                                                                     pair_hash>>> *pair_map);
+                                                                  std::tuple<std::unordered_map<std::string,
+                                                                                                std::unordered_set<std::string>>,
+                                                                             std::unordered_map<std::string,
+                                                                                                std::unordered_set<std::string>>,
+                                                                             std::unordered_set<std::pair<std::string,
+                                                                                                          std::string>,
+                                                                                                pair_hash>>>> *pair_map);
   void WipeNextStar();
   [[nodiscard]] bool IsValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsStarValid(std::pair<std::string, std::string> const &pair);
