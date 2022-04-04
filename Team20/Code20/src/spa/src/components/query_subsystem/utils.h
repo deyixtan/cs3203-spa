@@ -3,7 +3,7 @@
 
 #include "pql_lexer/pql_token.h"
 
-enum class AtrriName {
+enum class AttriName {
   PROCNAME,
   VARNAME,
   VALUE,
@@ -27,14 +27,13 @@ class Utils {
  public:
   static std::string RemoveSpace(const std::string &token);
   static bool ContainsDot(const std::string &token);
-  static AtrriName convertAttriName(std::string attriName);
-  static std::pair<std::pair<DesignEntityType, std::string>, AtrriName> ParseAttributeRef(PqlToken &token, std::unordered_map<std::string, DesignEntityType> declarations);
-  static std::pair<std::string, AtrriName> ParseAttributeRef(PqlToken &token);
+  static AttriName convertAttriName(std::string attriName);
+  static std::pair<std::pair<DesignEntityType, std::string>, AttriName> ParseAttributeRef(PqlToken &token, std::unordered_map<std::string, DesignEntityType> declarations);
+  static std::pair<std::string, AttriName> ParseAttributeRef(PqlToken &token);
   static std::string TrimQuotes(std::string&);
   static std::string TrimUnderscoreAndQuotes(std::string&);
-  static bool IsConversionNeeded(DesignEntityType, AtrriName);
+  static bool IsConversionNeeded(DesignEntityType, AttriName);
+  static std::vector<std::string> SplitString(std::string&, char);
 };
-
-extern std::unordered_set<DesignEntityType> int_ident_entities;
 
 #endif //UTILS_H

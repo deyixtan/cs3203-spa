@@ -35,8 +35,8 @@ Table WithClause::Execute() {
 }
 
 Table WithClause::HandleAttributeAttribute() {
-  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
-  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
 
   std::unordered_set<std::string> single_constraints_first;
   std::unordered_set<std::string> single_constraints_second;
@@ -102,7 +102,7 @@ Table WithClause::HandleAttributeAttribute() {
 }
 
 Table WithClause::HandleAttributeIdent() {
-  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
   std::unordered_set<std::string> single_constraints;
   Table table;
   bool is_conversion_needed = Utils::IsConversionNeeded(first_attribute.first.first, first_attribute.second);
@@ -127,7 +127,7 @@ Table WithClause::HandleAttributeIdent() {
 }
 
 Table WithClause::HandleAttributeInteger() {
-  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName> first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
   auto single_constraints = pkb->GetStmt(GetStmtType(first_attribute.first.first));
   Table table;
   if (single_constraints.count(second_arg.value) == 0) {
@@ -140,7 +140,7 @@ Table WithClause::HandleAttributeInteger() {
 }
 
 Table WithClause::HandleIntegerAttribute() {
-  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
   auto single_constraints = pkb->GetStmt(GetStmtType(second_attribute.first.first));
   Table table;
   if (single_constraints.count(first_arg.value) == 0) {
@@ -161,7 +161,7 @@ Table WithClause::HandleIntegerInteger() {
 }
 
 Table WithClause::HandleIdentAttribute() {
-  std::pair<std::pair<DesignEntityType, std::string>, AtrriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
   std::unordered_set<std::string> single_constraints; single_constraints;
   Table table;
   bool is_conversion_needed = Utils::IsConversionNeeded(second_attribute.first.first, second_attribute.second);

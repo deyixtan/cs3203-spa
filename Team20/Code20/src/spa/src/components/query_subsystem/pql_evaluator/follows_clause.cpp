@@ -47,6 +47,10 @@ Table FollowsClause::Execute() {
 }
 
 Table FollowsClause::HandleSynonymSynonym() {
+  if (first_arg.value==second_arg.value) {
+    return ConstructEmptyTable();
+  }
+
   auto pair_constraints = pkb->GetFollowsStore()->GetAllFollowStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
@@ -94,26 +98,18 @@ Table FollowsClause::HandleWildcardSynonym() {
 
 Table FollowsClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetFollowsStore()->GetAllFollowStmt(StmtType::STMT, StmtType::STMT).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table FollowsClause::HandleWildcardInteger() {
   auto pair_constraints = pkb->GetFollowsStore()->GetAllFollowStmt(StmtType::STMT, StmtType::STMT);
   bool is_false_clause = true;
-  for (const auto& pair_constraint : pair_constraints) {
+  for (const auto &pair_constraint : pair_constraints) {
     if (pair_constraint.second==second_arg.value) {
       is_false_clause = false;
     }
   }
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table FollowsClause::HandleIntegerSynonym() {
@@ -122,7 +118,7 @@ Table FollowsClause::HandleIntegerSynonym() {
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
   );
   std::unordered_set<std::string> single_constraints;
-  for (const auto& pair_constraint : pair_constraints) {
+  for (const auto &pair_constraint : pair_constraints) {
     if (pair_constraint.first==first_arg.value) {
       single_constraints.insert(pair_constraint.second);
     }
@@ -132,20 +128,12 @@ Table FollowsClause::HandleIntegerSynonym() {
 
 Table FollowsClause::HandleIntegerWildcard() {
   bool is_false_clause = pkb->GetFollowsStore()->GetFollowingOf(first_arg.value)=="0";
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table FollowsClause::HandleIntegerInteger() {
   bool is_false_clause = pkb->GetFollowsStore()->GetFollowingOf(first_arg.value)!=second_arg.value;
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }
