@@ -7,11 +7,11 @@
 #include <vector>
 
 namespace source {
-  // types
+  // token-related types
   enum class TokenType;
   class SourceToken;
 
-  class ProgramNode;
+  // ast-related types
   class ProgramNode;
   class ProcedureNode;
   class StatementListNode;
@@ -24,22 +24,29 @@ namespace source {
   class IfStatementNode;
   class ExpressionNode;
   class ConditionalExpressionNode;
+  class BooleanExpressionNode;
   class RelationalExpressionNode;
+  class NotExpressionNode;
+  class CombinationExpressionNode;
   class VariableNode;
   class ConstantNode;
 
+  // cfg-related types
   class Cfg;
   class CfgNode;
 
   // components
+  class SourceLexer;
+  class SourceParser;
   class SourceParserSession;
-  class PkbClient;
-
   class DesignExtractor;
   class CfgBuilder;
+  class PkbClient;
 
+  // type definitions
   typedef std::shared_ptr<SourceToken> TokenPtr;
   typedef std::vector<TokenPtr> TokenStream;
+
 }
 
 #endif //SOURCE_DECLARATIONS_H
