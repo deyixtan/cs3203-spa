@@ -3,7 +3,9 @@
 namespace pql {
 
 Table SelectBooleanClause::Execute() {
-  return clause_util::ConstructEmptyTable();
+  Table table;
+  table.ToggleBooleanResult();
+  return table;
 }
 
 }
