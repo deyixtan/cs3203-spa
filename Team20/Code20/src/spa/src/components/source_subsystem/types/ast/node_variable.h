@@ -2,7 +2,9 @@
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_VARIABLE_H_
 
 #include "node_expression.h"
-class DesignExtractor;
+
+namespace source {
+
 class VariableNode : public ExpressionNode {
  private:
   std::string m_identifier;
@@ -18,5 +20,7 @@ class VariableNode : public ExpressionNode {
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
   std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses);
 };
+
+}
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_VARIABLE_H_

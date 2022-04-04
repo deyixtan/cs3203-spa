@@ -1,4 +1,5 @@
 #include "cfg_builder.h"
+#include "components/source_subsystem/pkb_client.h"
 #include "../types/ast/node_program.h"
 #include "../types/ast/node_procedure.h"
 #include "../types/ast/node_statement_list.h"
@@ -6,6 +7,8 @@
 #include "../types/cfg/cfg.h"
 #include "../types/cfg/cfg_node.h"
 #include "../types/call_graph/call_graph.h"
+
+namespace source {
 
 CfgBuilder::CfgBuilder(std::shared_ptr<PkbClient> pkb_client) : m_pkb_client(std::move(pkb_client)) {}
 
@@ -119,4 +122,6 @@ std::shared_ptr<CfgNode> CfgBuilder::Visit(std::shared_ptr<StatementListNode> no
 std::shared_ptr<CfgNode> CfgBuilder::Visit(std::shared_ptr<StatementNode> node, std::shared_ptr<CfgNode> cfg_node) {
   // runtime polymorphism decides which specific StatementNode's Accept method to invoke
   return node->Accept(this, std::move(cfg_node));
+}
+
 }

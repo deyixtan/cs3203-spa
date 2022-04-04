@@ -1,6 +1,8 @@
 #include "node_relational_expression.h"
 #include "../../iterator/design_extractor.h"
 
+namespace source {
+
 RelationalExpressionNode::RelationalExpressionNode(RelationOperator relation_operator,
                                                    std::shared_ptr<ExpressionNode> left_expression,
                                                    std::shared_ptr<ExpressionNode> right_expression)
@@ -51,4 +53,6 @@ bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other
 std::string RelationalExpressionNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
   return "(" + de->Visit(m_left_expression, proc_name, is_uses) + GetRelationOperatorLabel(m_relation_operator)
       + de->Visit(m_right_expression, proc_name, is_uses) + ")";
+}
+
 }

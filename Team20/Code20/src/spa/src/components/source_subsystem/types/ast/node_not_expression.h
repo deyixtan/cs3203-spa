@@ -4,7 +4,7 @@
 #include "node_conditional_expression.h"
 #include "components/source_subsystem/pkb_client.h"
 
-class DesignExtractor;
+namespace source {
 
 class NotExpressionNode : public ConditionalExpressionNode {
  private:
@@ -19,5 +19,7 @@ class NotExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
   std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses);
 };
+
+}
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_NOT_EXPRESSION_H_

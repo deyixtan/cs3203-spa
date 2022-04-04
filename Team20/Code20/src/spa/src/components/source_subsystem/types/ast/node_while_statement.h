@@ -5,6 +5,8 @@
 #include "node_conditional_expression.h"
 #include "node_statement_list.h"
 
+namespace source {
+
 class WhileStatementNode : public StatementNode {
  private:
   std::shared_ptr<ConditionalExpressionNode> m_condition;
@@ -23,5 +25,7 @@ class WhileStatementNode : public StatementNode {
   void Accept(DesignExtractor *de, std::string proc_name);
   std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
+
+}
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_WHILE_STATEMENT_H_

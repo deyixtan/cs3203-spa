@@ -6,6 +6,8 @@
 #include "node_statement_list.h"
 #include "components/source_subsystem/pkb_client.h"
 
+namespace source {
+
 class IfStatementNode : public StatementNode {
  private:
   std::shared_ptr<ConditionalExpressionNode> m_condition;
@@ -28,5 +30,7 @@ class IfStatementNode : public StatementNode {
   void Accept(DesignExtractor *de, std::string proc_name);
   std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
+
+}
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_IF_STATEMENT_H_

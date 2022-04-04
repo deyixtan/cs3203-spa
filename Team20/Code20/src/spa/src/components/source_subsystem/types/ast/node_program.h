@@ -1,16 +1,9 @@
 #ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROGRAM_H_
 #define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROGRAM_H_
 
-#include <string>
-#include <unordered_map>
-#include <vector>
-
 #include "node.h"
 
-class ProcedureNode;
-class CfgNode;
-class DesignExtractor;
-class CfgBuilder;
+namespace source {
 
 class ProgramNode : public Node {
  private:
@@ -25,5 +18,7 @@ class ProgramNode : public Node {
   void Accept(DesignExtractor *de);
   std::unordered_map<std::string, std::shared_ptr<CfgNode>> Accept(CfgBuilder *cb);
 };
+
+}
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROGRAM_H_
