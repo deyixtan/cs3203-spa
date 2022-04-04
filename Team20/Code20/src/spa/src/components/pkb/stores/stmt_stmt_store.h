@@ -56,6 +56,19 @@ class StmtStmtStore : public Store {
                  std::vector<std::string> const &visited);
   void AddCalls(bool is_star, std::string const &upper, std::string const &lower);
   void AddNext(bool is_star, std::string const &upper, std::string const &lower);
+  void PopulatePairMap(StmtType type1,
+                       std::string upper,
+                       StmtType type2,
+                       std::string lower,
+                       std::unordered_map<StmtType,
+                                          std::unordered_map<StmtType,
+                                                             std::tuple<std::unordered_map<std::string,
+                                                                                           std::unordered_set<std::string>>,
+                                                                        std::unordered_map<std::string,
+                                                                                           std::unordered_set<std::string>>,
+                                                                        std::unordered_set<std::pair<std::string,
+                                                                                                     std::string>,
+                                                                                           pair_hash>>>> *pair_map);
   void ExhaustiveAddAllStmt(StmtType type1, std::string upper, StmtType type2, std::string lower, bool is_star);
   void ExhaustiveAddSubStmt(StmtType type1,
                             std::string upper,
@@ -73,7 +86,12 @@ class StmtStmtStore : public Store {
   void WipeNextStar();
   [[nodiscard]] bool IsValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsStarValid(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] std::string GetUpperOf(StoreType store_type, StmtType stmt_type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetHelper(StmtType type1,
+                                                          StmtType type2,
+                                                          int index,
+                                                          std::string const &stmt,
+                                                          bool is_star);
+  [[nodiscard]] std::string GetUpperOf(StmtType stmt_type, std::string const &stmt);
   [[nodiscard]] std::string GetLowerOf(StmtType stmt_type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetUpperSetOf(StoreType store_type, std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetLowerSetOf(StoreType store_type,

@@ -21,7 +21,7 @@ bool ParentStore::IsAnceDescValid(std::pair<std::string, std::string> const &pai
 }
 
 std::string ParentStore::GetParentOf(StmtType type, std::string const &stmt) {
-  return GetUpperOf(PARENT, type, stmt);
+  return GetUpperOf(type, stmt);
 }
 
 std::unordered_set<std::string> ParentStore::GetChildOf(StmtType type, std::string const &stmt) {

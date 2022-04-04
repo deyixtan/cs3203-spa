@@ -25,7 +25,7 @@ bool FollowsStore::IsFollowsStarPairValid(std::pair<std::string, std::string> co
 }
 
 std::string FollowsStore::GetFollowerOf(StmtType type, std::string const &stmt) {
-  return GetUpperOf(FOLLOWS, type, stmt);
+  return GetUpperOf(type, stmt);
 }
 
 std::string FollowsStore::GetFollowingOf(StmtType type, std::string const &stmt) {
