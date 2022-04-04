@@ -71,10 +71,13 @@ Table ParentClause::HandleSynonymWildcard() {
 }
 
 Table ParentClause::HandleSynonymInteger() {
-  auto single_constraints =
-      std::unordered_set{
-          pkb->GetParentStore()->GetParentOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
-                                             second_arg.value)};
+  std::unordered_set<std::string> single_constraints;
+  std::string parent =
+      pkb->GetParentStore()->GetParentOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+                                         second_arg.value);
+  if (parent!="0") {
+    single_constraints.emplace(parent);
+  }
   return {first_arg.value, single_constraints};
 }
 
@@ -110,9 +113,8 @@ Table ParentClause::HandleWildcardInteger() {
 
 Table ParentClause::HandleIntegerSynonym() {
   auto single_constraints =
-      std::unordered_set{
-          pkb->GetParentStore()->GetChildOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
-                                            first_arg.value)};
+      pkb->GetParentStore()->GetChildOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
+                                        first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
