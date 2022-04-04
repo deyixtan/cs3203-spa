@@ -103,7 +103,7 @@ bool SourceParser::IsConditionalExpression() {
 }
 
 ProgramNodePtr SourceParser::ParseProgram() {
-  std::vector<std::shared_ptr<ProcedureNode>> procedures;
+  std::vector<ProcedureNodePtr> procedures;
   while (!AreTokensProcessed()) {
     procedures.push_back(ParseProcedure());
   }
@@ -119,7 +119,7 @@ ProgramNodePtr SourceParser::ParseProgram() {
   return std::make_shared<ProgramNode>(procedures);
 }
 
-std::shared_ptr<ProcedureNode> SourceParser::ParseProcedure() {
+ProcedureNodePtr SourceParser::ParseProcedure() {
   ProcessToken(TokenType::PROCEDURE);
   TokenPtr identifier = ProcessToken(TokenType::NAME);
   std::string procedure_name = identifier->GetValue();
