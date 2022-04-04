@@ -70,6 +70,7 @@ Table NextClause::HandleSynonymWildcard() {
 }
 
 Table NextClause::HandleSynonymInteger() {
+  // TODO: BeforeOf -> Needs type -> GetUpperSetOf needs type
   auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       StmtType::STMT
@@ -101,6 +102,7 @@ Table NextClause::HandleWildcardWildcard() {
 }
 
 Table NextClause::HandleWildcardInteger() {
+  // TODO: Wait on GetBeforeOf with type
   auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(StmtType::STMT, StmtType::STMT);
   bool is_false_clause = true;
   for (const auto &pair_constraint : pair_constraints) {
@@ -112,27 +114,20 @@ Table NextClause::HandleWildcardInteger() {
 }
 
 Table NextClause::HandleIntegerSynonym() {
-  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
-      StmtType::STMT,
-      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
-  );
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.first==first_arg.value) {
-      single_constraints.insert(pair_constraint.second);
-    }
-  }
+  auto single_constraints =
+      pkb->GetNextStore()->GetNextOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)), first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table NextClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetNextStore()->GetNextOf(STMT, first_arg.value).empty(); //TODO: Fix StmtType
+  bool is_false_clause = pkb->GetNextStore()->GetNextOf(STMT, first_arg.value).empty();
   return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextClause::HandleIntegerInteger() {
+  // TODO: IsNextPairValid()
   auto possible_next_values = pkb->GetNextStore()->GetNextOf(STMT, first_arg.value); //TODO: Fix StmtType
-  bool is_false_clause = possible_next_values.find(second_arg.value) == possible_next_values.end();
+  bool is_false_clause = possible_next_values.find(second_arg.value)==possible_next_values.end();
   return ConstructEmptyTable(is_false_clause);
 }
 
