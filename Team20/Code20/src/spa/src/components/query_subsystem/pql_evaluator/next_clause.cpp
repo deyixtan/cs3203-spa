@@ -114,8 +114,19 @@ Table NextClause::HandleWildcardInteger() {
 }
 
 Table NextClause::HandleIntegerSynonym() {
-  auto single_constraints =
-      pkb->GetNextStore()->GetNextOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)), first_arg.value);
+  // TODO: Wait on new GetNextOf that is fixed
+//  auto single_constraints =
+//      pkb->GetNextStore()->GetNextOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)), first_arg.value);
+  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
+      StmtType::STMT,
+      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
+  );
+  std::unordered_set<std::string> single_constraints;
+  for (const auto &pair_constraint : pair_constraints) {
+    if (pair_constraint.first==first_arg.value) {
+      single_constraints.insert(pair_constraint.second);
+    }
+  }
   return {second_arg.value, single_constraints};
 }
 
