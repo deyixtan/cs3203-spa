@@ -189,7 +189,7 @@ AssignStatementNodePtr SourceParser::ParseAssignStatement() {
   return std::make_shared<AssignStatementNode>(stmt_no, variable, expression);
 }
 
-std::shared_ptr<WhileStatementNode> SourceParser::ParseWhileStatement() {
+WhileStatementNodePtr SourceParser::ParseWhileStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::WHILE);
   ProcessToken(TokenType::OPENED_PARENTHESIS);

@@ -54,6 +54,7 @@ namespace source {
   typedef std::shared_ptr<PrintStatementNode> PrintStatementNodePtr;
   typedef std::shared_ptr<AssignStatementNode> AssignStatementNodePtr;
   typedef std::shared_ptr<CallStatementNode> CallStatementNodePtr;
+  typedef std::shared_ptr<WhileStatementNode> WhileStatementNodePtr;
 }
 
 #endif //SOURCE_DECLARATIONS_H
