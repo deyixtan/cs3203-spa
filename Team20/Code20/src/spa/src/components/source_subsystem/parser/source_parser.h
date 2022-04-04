@@ -45,7 +45,7 @@ class SourceParser {
   [[nodiscard]] ExpressionNodePtr ParseFactor();
 
  public:
-  SourceParser(TokenStream token_stream);
+  explicit SourceParser(TokenStream token_stream);
   [[nodiscard]] ProgramNodePtr ParseProgram();
 };
 
