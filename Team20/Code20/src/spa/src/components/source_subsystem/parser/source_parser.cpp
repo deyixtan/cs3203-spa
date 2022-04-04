@@ -102,7 +102,7 @@ bool SourceParser::IsConditionalExpression() {
   return IsConditionalOperand(tmp_cursor);
 }
 
-std::shared_ptr<ProgramNode> SourceParser::ParseProgram() {
+ProgramNodePtr SourceParser::ParseProgram() {
   std::vector<std::shared_ptr<ProcedureNode>> procedures;
   while (!AreTokensProcessed()) {
     procedures.push_back(ParseProcedure());

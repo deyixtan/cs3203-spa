@@ -40,7 +40,7 @@ class SourceParser {
 
  public:
   SourceParser(TokenStream tokens_ptr);
-  [[nodiscard]] std::shared_ptr<ProgramNode> ParseProgram();
+  [[nodiscard]] ProgramNodePtr ParseProgram();
 };
 
 }

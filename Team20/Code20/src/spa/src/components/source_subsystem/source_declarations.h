@@ -46,6 +46,7 @@ namespace source {
   // type definitions
   typedef std::shared_ptr<SourceToken> TokenPtr;
   typedef std::vector<TokenPtr> TokenStream;
+  typedef std::shared_ptr<ProgramNode> ProgramNodePtr;
 
 }
 
