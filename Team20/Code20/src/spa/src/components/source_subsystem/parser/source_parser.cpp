@@ -266,7 +266,7 @@ ConditionalExpressionNodePtr SourceParser::ParseConditionalExpression() {
   throw InvalidParseConditionException();
 }
 
-std::shared_ptr<RelationalExpressionNode> SourceParser::ParseRelationalExpression() {
+RelationalExpressionNodePtr SourceParser::ParseRelationalExpression() {
   std::shared_ptr<ExpressionNode> left_relation_factor = ParseRelationalFactor();
   RelationOperator relation_operator;
   switch (FetchCurrentToken()->GetType()) {

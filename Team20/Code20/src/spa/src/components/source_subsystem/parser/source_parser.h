@@ -30,7 +30,7 @@ class SourceParser {
   [[nodiscard]] WhileStatementNodePtr ParseWhileStatement();
   [[nodiscard]] IfStatementNodePtr ParseIfStatement();
   [[nodiscard]] ConditionalExpressionNodePtr ParseConditionalExpression();
-  [[nodiscard]] std::shared_ptr<RelationalExpressionNode> ParseRelationalExpression();
+  [[nodiscard]] RelationalExpressionNodePtr ParseRelationalExpression();
   [[nodiscard]] std::shared_ptr<ExpressionNode> ParseRelationalFactor();
   [[nodiscard]] std::shared_ptr<ExpressionNode> ParseExpression();
   [[nodiscard]] std::shared_ptr<ExpressionNode> ParseExpression(std::shared_ptr<ExpressionNode> left_term);
