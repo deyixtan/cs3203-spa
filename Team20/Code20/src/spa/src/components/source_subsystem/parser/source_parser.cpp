@@ -193,7 +193,7 @@ WhileStatementNodePtr SourceParser::ParseWhileStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::WHILE);
   ProcessToken(TokenType::OPENED_PARENTHESIS);
-  std::shared_ptr<ConditionalExpressionNode> condition = ParseConditionalExpression();
+  ConditionalExpressionNodePtr condition = ParseConditionalExpression();
   ProcessToken(TokenType::CLOSED_PARENTHESIS);
   ProcessToken(TokenType::OPENED_BRACES);
   StatementListNodePtr stmt_list = ParseStatementList();
@@ -205,7 +205,7 @@ IfStatementNodePtr SourceParser::ParseIfStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::IF);
   ProcessToken(TokenType::OPENED_PARENTHESIS);
-  std::shared_ptr<ConditionalExpressionNode> condition = ParseConditionalExpression();
+  ConditionalExpressionNodePtr condition = ParseConditionalExpression();
   ProcessToken(TokenType::CLOSED_PARENTHESIS);
   ProcessToken(TokenType::THEN);
   ProcessToken(TokenType::OPENED_BRACES);
@@ -233,17 +233,17 @@ CallStatementNodePtr SourceParser::ParseCallStatement() {
   return std::make_shared<CallStatementNode>(stmt_no, proc_name, callee_name);
 }
 
-std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpression() {
+ConditionalExpressionNodePtr SourceParser::ParseConditionalExpression() {
   TokenType type = FetchCurrentToken()->GetType();
   if (type == TokenType::NOT) {
     ProcessToken(TokenType::NOT);
     ProcessToken(TokenType::OPENED_PARENTHESIS);
-    std::shared_ptr<ConditionalExpressionNode> expression = ParseConditionalExpression();
+    ConditionalExpressionNodePtr expression = ParseConditionalExpression();
     ProcessToken(TokenType::CLOSED_PARENTHESIS);
     return std::make_shared<NotExpressionNode>(expression);
   } else if (IsConditionalExpression()) {
     ProcessToken(TokenType::OPENED_PARENTHESIS);
-    std::shared_ptr<ConditionalExpressionNode> left_expression = ParseConditionalExpression();
+    ConditionalExpressionNodePtr left_expression = ParseConditionalExpression();
     ProcessToken(TokenType::CLOSED_PARENTHESIS);
     BooleanOperator boolean_operator;
     switch (FetchCurrentToken()->GetType()) {
@@ -256,7 +256,7 @@ std::shared_ptr<ConditionalExpressionNode> SourceParser::ParseConditionalExpress
       default:throw InvalidParseConditionException();
     }
     ProcessToken(TokenType::OPENED_PARENTHESIS);
-    std::shared_ptr<ConditionalExpressionNode> right_expression = ParseConditionalExpression();
+    ConditionalExpressionNodePtr right_expression = ParseConditionalExpression();
     ProcessToken(TokenType::CLOSED_PARENTHESIS);
     return std::make_shared<BooleanExpressionNode>(boolean_operator, left_expression, right_expression);
   } else if (type == TokenType::OPENED_PARENTHESIS || type == TokenType::NAME || type == TokenType::INTEGER) {
