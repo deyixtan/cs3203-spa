@@ -19,7 +19,7 @@ class CfgBuilder {
   explicit CfgBuilder(std::shared_ptr<PkbClient> m_pkb_client);
   [[nodiscard]] std::shared_ptr<PkbClient> GetPkbClient();
   void IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node);
-  void IterateCfgAndPopulatePkb(std::shared_ptr<Cfg> root);
+  void IterateCfgAndPopulatePkb();
   void CfgProcessHandler(std::shared_ptr<CfgNode> &curr_proc,
                          std::stack<std::shared_ptr<CfgNode>> &node_stack,
                          std::vector<Statement> &prev_stmts,

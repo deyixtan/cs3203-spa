@@ -1,6 +1,7 @@
 #ifndef SOURCE_DECLARATIONS_H
 #define SOURCE_DECLARATIONS_H
 
+#include <iostream>
 #include <memory>
 #include <queue>
 #include <string>
@@ -53,6 +54,7 @@ namespace source {
 
   // type definitions
   // general
+  typedef std::exception Exception;
   typedef std::string String;
   typedef std::queue<String> StringQueue;
   typedef std::unordered_set<String> StringSet;
@@ -86,6 +88,9 @@ namespace source {
   // ast-related types (stream)
   typedef std::vector<ProcedureNodePtr> ProcedureNodeStream;
   typedef std::vector<StatementNodePtr> StatementNodeStream;
+
+  // components
+  typedef std::shared_ptr<PkbClient> PkbClientPtr;
 }
 
 #endif //SOURCE_DECLARATIONS_H

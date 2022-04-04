@@ -240,7 +240,7 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   CfgBuilder cfg_builder = CfgBuilder(pkb_client);
   cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  cfg_builder.IterateCfgAndPopulatePkb(test_pkb->GetProgCfg());
+  cfg_builder.IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -447,7 +447,7 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   CfgBuilder cfg_builder = CfgBuilder(pkb_client);
   cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  cfg_builder.IterateCfgAndPopulatePkb(test_pkb->GetProgCfg());
+  cfg_builder.IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -566,7 +566,7 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   CfgBuilder cfg_builder = CfgBuilder(pkb_client);
   cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  cfg_builder.IterateCfgAndPopulatePkb(test_pkb->GetProgCfg());
+  cfg_builder.IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
