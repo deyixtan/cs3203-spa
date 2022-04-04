@@ -1,7 +1,8 @@
 #include "pattern_store.h"
 
-PatternStore::PatternStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    Store(move(stmt_vector)) {}
+PatternStore::PatternStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                           std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
+    Store(move(stmt_vector), move(stmt_type)) {}
 
 void PatternStore::AddStmtWithPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs) {
   m_stmt_pattern_pairs.insert({stmt, lhs});
@@ -99,7 +100,8 @@ std::unordered_set<std::string> PatternStore::GetStmtWithPatternWildcard(std::st
   return result;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
+std::unordered_set<std::pair<std::string, std::string>,
+                   pair_hash> PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result = {};
   expr = "(" + expr + ")";
 
@@ -116,7 +118,8 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore:
   return result;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) {
+std::unordered_set<std::pair<std::string, std::string>,
+                   pair_hash> PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> result = {};
   expr = "(" + expr + ")";
 

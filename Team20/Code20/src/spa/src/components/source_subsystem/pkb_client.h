@@ -21,9 +21,7 @@ class PkbClient {
   void PopulateFollows(std::string stmt1, std::string stmt2);
   void PopulateFollowsStar(std::string stmt1, std::string stmt2);
   void PopulateUses(std::string stmt, std::string var);
-  void PopulateUsesProc(std::string stmt, std::string var);
   void PopulateModifies(std::string stmt, std::string var);
-  void PopulateModifiesProc(std::string stmt, std::string var);
   void PopulateCalls(std::string caller, std::string callee);
   void PopulateProc(std::string name);
 
@@ -40,6 +38,7 @@ class PkbClient {
 
   void PopulateStmt(std::string stmt);
   void PopulateTypeOfStmt(std::string stmt, StmtType type);
+  StmtType GetTypeOfStmt(std::string stmt);
   void PopulateName(std::string name, StmtType type);
 
   void PopulateRead(std::vector<std::string> &visited, std::string &curr_stmt, std::string &var_name);

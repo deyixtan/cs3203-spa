@@ -34,12 +34,14 @@ Table ModifiesSClause::Execute() {
 }
 
 Table ModifiesSClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetModifiesStore()->GetAllModStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
+  auto pair_constraints =
+      pkb->GetModifiesStore()->GetAllModStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
 Table ModifiesSClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetModifiesStore()->GetAllModStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
+  auto pair_constraints =
+      pkb->GetModifiesStore()->GetAllModStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.first);
@@ -48,13 +50,9 @@ Table ModifiesSClause::HandleSynonymWildcard() {
 }
 
 Table ModifiesSClause::HandleSynonymIdent() {
-  auto pair_constraints = pkb->GetModifiesStore()->GetAllModStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      single_constraints.insert(pair_constraint.first);
-    }
-  }
+  auto single_constraints =
+      pkb->GetModifiesStore()->GetStmtModByVar(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+                                               second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
@@ -64,14 +62,13 @@ Table ModifiesSClause::HandleIntegerSynonym() {
 }
 
 Table ModifiesSClause::HandleIntegerWildcard() {
-  bool is_empty = pkb->GetModifiesStore()->GetVarModByStmt(first_arg.value).empty();
-  return ConstructEmptyTable(is_empty);
+  bool is_false_clause = pkb->GetModifiesStore()->GetVarModByStmt(first_arg.value).empty();
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table ModifiesSClause::HandleIntegerIdent() {
-  std::pair arg_pair(first_arg.value, second_arg.value);
-  bool is_empty = !pkb->GetModifiesStore()->IsStmtVarValid(arg_pair);
-  return ConstructEmptyTable(is_empty);
+  bool is_false_clause = !pkb->GetModifiesStore()->IsStmtVarValid({first_arg.value, second_arg.value});
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }

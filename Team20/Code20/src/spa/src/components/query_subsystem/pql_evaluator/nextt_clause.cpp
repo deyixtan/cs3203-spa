@@ -48,7 +48,8 @@ Table NextTClause::Execute() {
 
 Table NextTClause::HandleSynonymSynonym() {
   if (first_arg.value==second_arg.value) {
-    auto single_constraints = pkb ->GetNextStore()->GetNextStarSameStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
+    auto single_constraints =
+        pkb->GetNextStore()->GetNextStarSameStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
     return {first_arg.value, single_constraints};
   }
 
@@ -72,16 +73,9 @@ Table NextTClause::HandleSynonymWildcard() {
 }
 
 Table NextTClause::HandleSynonymInteger() {
-  auto pair_constraints = pkb->GetNextStore()->GetAllNextStarStmt(
-      GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
-      StmtType::STMT
-  );
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      single_constraints.insert(pair_constraint.first);
-    }
-  }
+  auto single_constraints =
+      pkb->GetNextStore()->GetBeforeStarOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+                                           second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
@@ -103,17 +97,15 @@ Table NextTClause::HandleWildcardWildcard() {
 }
 
 Table NextTClause::HandleWildcardInteger() {
-  auto pair_constraints = pkb->GetNextStore()->GetAllNextStarStmt(StmtType::STMT, StmtType::STMT);
-  bool is_false_clause = true;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      is_false_clause = false;
-    }
-  }
+  bool is_false_clause = pkb->GetNextStore()->GetBeforeStarOf(STMT, second_arg.value).empty();
   return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextTClause::HandleIntegerSynonym() {
+  //TODO: Wait on fix
+//  auto single_constraints =
+//      pkb->GetNextStore()->GetNextStarOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
+//                                         first_arg.value);
   auto pair_constraints = pkb->GetNextStore()->GetAllNextStarStmt(
       StmtType::STMT,
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
@@ -128,12 +120,13 @@ Table NextTClause::HandleIntegerSynonym() {
 }
 
 Table NextTClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetNextStore()->GetNextStarOf(first_arg.value).empty();
+  bool is_false_clause = pkb->GetNextStore()->GetNextStarOf(STMT, first_arg.value).empty();
   return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextTClause::HandleIntegerInteger() {
-  auto possible_next_values = pkb->GetNextStore()->GetNextStarOf(first_arg.value);
+  // TODO: IsNextStarPairValid()
+  auto possible_next_values = pkb->GetNextStore()->GetNextStarOf(STMT, first_arg.value);
   bool is_false_clause = possible_next_values.find(second_arg.value)==possible_next_values.end();
   return ConstructEmptyTable(is_false_clause);
 }

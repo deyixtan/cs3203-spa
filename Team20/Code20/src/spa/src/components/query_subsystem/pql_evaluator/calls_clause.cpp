@@ -45,7 +45,7 @@ Table CallsClause::HandleSynonymSynonym() {
 Table CallsClause::HandleSynonymWildcard() {
   auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
   std::unordered_set<std::string> single_constraints;
-  for (const auto& pair_constraint : pair_constraints) {
+  for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.first);
   }
 
@@ -60,7 +60,7 @@ Table CallsClause::HandleSynonymIdent() {
 Table CallsClause::HandleWildcardSynonym() {
   auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
   std::unordered_set<std::string> single_constraints;
-  for (const auto& pair_constraint : pair_constraints) {
+  for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.second);
   }
 
@@ -88,7 +88,8 @@ Table CallsClause::HandleIdentWildcard() {
 }
 
 Table CallsClause::HandleIdentIdent() {
-  bool is_empty = !pkb->GetCallStore()->IsCallsPairValid(first_arg.value, second_arg.value);
+  bool is_empty =
+      !pkb->GetCallStore()->IsCallsPairValid(std::pair<std::string, std::string>(first_arg.value, second_arg.value));
   return ConstructEmptyTable(is_empty);
 }
 
