@@ -128,12 +128,12 @@ ProcedureNodePtr SourceParser::ParseProcedure() {
   m_session.AddProcedure(procedure_name);
 
   ProcessToken(TokenType::OPENED_BRACES);
-  std::shared_ptr<StatementListNode> stmt_list = ParseStatementList();
+  StatementListNodePtr stmt_list = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
   return std::make_shared<ProcedureNode>(procedure_name, stmt_list);
 }
 
-std::shared_ptr<StatementListNode> SourceParser::ParseStatementList() {
+StatementListNodePtr SourceParser::ParseStatementList() {
   std::vector<std::shared_ptr<StatementNode>> stmt_list;
   while (FetchCurrentToken()->GetType() != TokenType::CLOSED_BRACES) {
     stmt_list.push_back(ParseStatement());
@@ -186,7 +186,7 @@ std::shared_ptr<WhileStatementNode> SourceParser::ParseWhileStatement() {
   std::shared_ptr<ConditionalExpressionNode> condition = ParseConditionalExpression();
   ProcessToken(TokenType::CLOSED_PARENTHESIS);
   ProcessToken(TokenType::OPENED_BRACES);
-  std::shared_ptr<StatementListNode> stmt_list = ParseStatementList();
+  StatementListNodePtr stmt_list = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
   return std::make_shared<WhileStatementNode>(stmt_no, condition, stmt_list);
 }
@@ -199,11 +199,11 @@ std::shared_ptr<IfStatementNode> SourceParser::ParseIfStatement() {
   ProcessToken(TokenType::CLOSED_PARENTHESIS);
   ProcessToken(TokenType::THEN);
   ProcessToken(TokenType::OPENED_BRACES);
-  std::shared_ptr<StatementListNode> if_stmt_list = ParseStatementList();
+  StatementListNodePtr if_stmt_list = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
   ProcessToken(TokenType::ELSE);
   ProcessToken(TokenType::OPENED_BRACES);
-  std::shared_ptr<StatementListNode> else_stmt_list = ParseStatementList();
+  StatementListNodePtr else_stmt_list = ParseStatementList();
   ProcessToken(TokenType::CLOSED_BRACES);
   return std::make_shared<IfStatementNode>(stmt_no, condition, if_stmt_list, else_stmt_list);
 }

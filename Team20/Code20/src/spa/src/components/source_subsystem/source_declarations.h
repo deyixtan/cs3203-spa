@@ -48,6 +48,7 @@ namespace source {
   typedef std::vector<TokenPtr> TokenStream;
   typedef std::shared_ptr<ProgramNode> ProgramNodePtr;
   typedef std::shared_ptr<ProcedureNode> ProcedureNodePtr;
+  typedef std::shared_ptr<StatementListNode> StatementListNodePtr;
 
 }
 
