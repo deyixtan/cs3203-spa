@@ -218,7 +218,7 @@ std::shared_ptr<IfStatementNode> SourceParser::ParseIfStatement() {
   return std::make_shared<IfStatementNode>(stmt_no, condition, if_stmt_list, else_stmt_list);
 }
 
-std::shared_ptr<CallStatementNode> SourceParser::ParseCallStatement() {
+CallStatementNodePtr SourceParser::ParseCallStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::CALL);
   TokenPtr identifier = ProcessToken(TokenType::NAME);
