@@ -170,7 +170,7 @@ ReadStatementNodePtr SourceParser::ParseReadStatement() {
   return std::make_shared<ReadStatementNode>(stmt_no, variable);
 }
 
-std::shared_ptr<PrintStatementNode> SourceParser::ParsePrintStatement() {
+PrintStatementNodePtr SourceParser::ParsePrintStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::PRINT);
   TokenPtr identifier = ProcessToken(TokenType::NAME);
