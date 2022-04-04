@@ -372,9 +372,9 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StoreType store_ty
     return res;
   }
 
-  if (star_type_pair_map.find(stmt_type) != star_type_pair_map.end()) {
-    if (star_type_pair_map.at(stmt_type).find(STMT) != star_type_pair_map.at(stmt_type).end()) {
-      return GetHelper(stmt_type, STMT, 0, stmt, true);
+  if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
+    if (star_type_pair_map.at(STMT).find(stmt_type) != star_type_pair_map.at(STMT).end()) {
+      return GetHelper(STMT, stmt_type, 0, stmt, true);
     }
   }
 
