@@ -3,6 +3,13 @@
 
 #include "components/pkb/stores/follows_store/follows_store.h"
 
+struct FollowsNode {
+  std::string follower;
+  std::string following;
+  std::unordered_set<std::string> follower_star;
+  std::unordered_set<std::string> following_star;
+};
+
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_set =
     {
         {"1", "2"},

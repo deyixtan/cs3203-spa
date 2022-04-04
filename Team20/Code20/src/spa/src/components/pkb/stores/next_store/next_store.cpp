@@ -1,7 +1,8 @@
 #include "next_store.h"
 
-NextStore::NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    StmtStmtStore(move(stmt_vector)) {}
+NextStore::NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                     std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
+    StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
 
 
 void NextStore::AddNext(std::string const &before, std::string const &next) {
@@ -10,22 +11,6 @@ void NextStore::AddNext(std::string const &before, std::string const &next) {
 
 void NextStore::WipeStar() {
   WipeNextStar();
-}
-
-bool NextStore::IsNext(std::string const &stmt) {
-  return IsUpper(stmt);
-}
-
-bool NextStore::IsBefore(std::string const &stmt) {
-  return IsLower(stmt);
-}
-
-bool NextStore::IsNextStar(std::string const &stmt) {
-  return IsNext(stmt);
-}
-
-bool NextStore::IsBeforeStar(const std::string &stmt) {
-  return IsBefore(stmt);
 }
 
 bool NextStore::IsNextValid(std::pair<std::string, std::string> const &pair) {
@@ -40,16 +25,16 @@ std::unordered_set<std::string> NextStore::GetBeforeOf(std::string const &stmt) 
   return GetUpperSetOf(NEXT, stmt);
 }
 
-std::unordered_set<std::string> NextStore::GetNextOf(std::string const &stmt) {
-  return GetLowerOf(NEXT, stmt);
+std::unordered_set<std::string> NextStore::GetNextOf(StmtType type, std::string const &stmt) {
+  return GetLowerSetOf(NEXT, type, stmt);
 }
 
-std::unordered_set<std::string> NextStore::GetBeforeStarOf(std::string const &stmt) {
-  return GetUpperStarOf(NEXT, stmt);
+std::unordered_set<std::string> NextStore::GetBeforeStarOf(StmtType type, std::string const &stmt) {
+  return GetUpperStarOf(NEXT, type, stmt);
 }
 
-std::unordered_set<std::string> NextStore::GetNextStarOf(std::string const &stmt) {
-  return GetLowerStarOf(NEXT, stmt);
+std::unordered_set<std::string> NextStore::GetNextStarOf(StmtType type, std::string const &stmt) {
+  return GetLowerStarOf(NEXT, type, stmt);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetNextPairs() {
@@ -57,7 +42,15 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::Ge
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetNextStarPairs() {
-  return GetAllNextStarPairs();
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> res;
+  for (auto pair : next_rs_map) {
+    std::string stmt = pair.first;
+    std::unordered_set<std::string> next_star_stmt = GetLowerStarOf(NEXT, STMT, stmt); //TODO: Fix StmtType
+    for (auto next_star : next_star_stmt){
+      res.insert({stmt, next_star});
+    }
+  }
+  return res;
 }
 
 std::unordered_set<std::string> NextStore::GetNextStarSameStmt(StmtType type) {
@@ -78,7 +71,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::Ge
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStmt(StmtType type1,
-                                                                                                 StmtType type2) {
+                                                                                             StmtType type2) {
   std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
   return Store::GetAllStmt(type1, type2, supported_types, GetAllNextStmt(type2), true);
 }
@@ -89,7 +82,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::Ge
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStarStmt(StmtType type1,
-                                                                                                     StmtType type2) {
+                                                                                                 StmtType type2) {
   std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
   return Store::GetAllStmt(type1, type2, supported_types, GetAllNextStarStmt(type2), true);
 }

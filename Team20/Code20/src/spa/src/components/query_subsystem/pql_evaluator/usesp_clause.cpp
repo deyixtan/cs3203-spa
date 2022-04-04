@@ -34,7 +34,7 @@ Table pql::UsesPClause::Execute() {
 }
 
 Table UsesPClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetUsesStore()->GetAllProcVar();
+  auto pair_constraints = pkb->GetUsesStore()->GetAllUsesStmt(PROC);
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
@@ -44,24 +44,23 @@ Table UsesPClause::HandleSynonymWildcard() {
 }
 
 Table UsesPClause::HandleSynonymIdent() {
-  auto single_constraints = pkb->GetUsesStore()->GetProcUsedByVar(second_arg.value);
+  auto single_constraints = pkb->GetUsesStore()->GetStmtUsedByVar(PROC, second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
 Table UsesPClause::HandleIdentSynonym() {
-  auto single_constraints = pkb->GetUsesStore()->GetVarUsedByProc(first_arg.value);
+  auto single_constraints = pkb->GetUsesStore()->GetVarUsedByStmt(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table UsesPClause::HandleIdentWildcard() {
-  bool is_empty = pkb->GetUsesStore()->GetVarUsedByProc(first_arg.value).empty();
-  return ConstructEmptyTable(is_empty);
+  bool is_false_clause = pkb->GetUsesStore()->GetVarUsedByStmt(first_arg.value).empty();
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table UsesPClause::HandleIdentIdent() {
-  std::pair arg_pair(first_arg.value, second_arg.value);
-  bool is_empty = !pkb->GetUsesStore()->IsProcVarValid(arg_pair);
-  return ConstructEmptyTable(is_empty);
+  bool is_false_clause = !pkb->GetUsesStore()->IsStmtVarValid({first_arg.value, second_arg.value});
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }

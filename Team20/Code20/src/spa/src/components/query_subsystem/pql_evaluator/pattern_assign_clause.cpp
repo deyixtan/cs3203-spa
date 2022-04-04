@@ -12,7 +12,6 @@ PatternAssignClause::PatternAssignClause(const std::string &assign_synonym,
     : assign_synonym(assign_synonym), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table PatternAssignClause::Execute() {
-  // TODO: update for exact match
   if (IsArgSynonym(first_arg) && IsArgWildcard(second_arg)) {
     // pattern a(v, _)
     return HandleSynonymWildcard();
