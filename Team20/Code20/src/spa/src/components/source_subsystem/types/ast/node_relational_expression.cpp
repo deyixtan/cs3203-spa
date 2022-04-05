@@ -1,24 +1,26 @@
 #include "node_relational_expression.h"
 #include "../../iterator/design_extractor.h"
+#include "node_combination_expression.h"
+#include "components/source_subsystem/pkb_client.h"
 
 namespace source {
 
 RelationalExpressionNode::RelationalExpressionNode(RelationOperator relation_operator,
-                                                   std::shared_ptr<ExpressionNode> left_expression,
-                                                   std::shared_ptr<ExpressionNode> right_expression)
+                                                   ExpressionNodePtr left_expression,
+                                                   ExpressionNodePtr right_expression)
     : m_relation_operator(relation_operator),
       m_left_expression(left_expression),
       m_right_expression(right_expression) {}
 
-std::shared_ptr<ExpressionNode> RelationalExpressionNode::GetLeftExpression() {
+ExpressionNodePtr RelationalExpressionNode::GetLeftExpression() {
   return m_left_expression;
 }
 
-std::shared_ptr<ExpressionNode> RelationalExpressionNode::GetRightExpression() {
+ExpressionNodePtr RelationalExpressionNode::GetRightExpression() {
   return m_right_expression;
 }
 
-std::string RelationalExpressionNode::GetRelationOperatorLabel(RelationOperator relation_operator) {
+String RelationalExpressionNode::GetRelationOperatorLabel(RelationOperator relation_operator) {
   switch (relation_operator) {
     case RelationOperator::LESS_THAN:return "<";
     case RelationOperator::LESS_THAN_EQUALS:return "<=";
@@ -34,13 +36,13 @@ ConditionalType RelationalExpressionNode::GetConditionalType() {
   return ConditionalType::RELATIONAL;
 }
 
-std::string RelationalExpressionNode::ToString() {
-  return "(" + m_left_expression->ToString() + " " + GetRelationOperatorLabel(m_relation_operator) + " "
-      + m_right_expression->ToString() + ")";
+String RelationalExpressionNode::GetPatternFormat() {
+  return "";
 }
 
-std::string RelationalExpressionNode::GetPatternFormat() {
-  return "";
+String RelationalExpressionNode::Accept(DesignExtractor *de, String proc_name, bool is_uses) {
+  return "(" + de->Visit(m_left_expression, proc_name, is_uses) + GetRelationOperatorLabel(m_relation_operator)
+      + de->Visit(m_right_expression, proc_name, is_uses) + ")";
 }
 
 bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other) const {
@@ -48,11 +50,6 @@ bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other
   return m_relation_operator == casted_other->m_relation_operator
       && *m_left_expression == *(casted_other->m_left_expression)
       && *m_right_expression == *(casted_other->m_right_expression);
-}
-
-std::string RelationalExpressionNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
-  return "(" + de->Visit(m_left_expression, proc_name, is_uses) + GetRelationOperatorLabel(m_relation_operator)
-      + de->Visit(m_right_expression, proc_name, is_uses) + ")";
 }
 
 }
