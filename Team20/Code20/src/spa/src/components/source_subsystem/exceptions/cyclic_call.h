@@ -10,9 +10,6 @@ class CyclicCallException : public Exception {
   String m_msg;
 
  public:
-  static String MESSAGE;
-
- public:
   CyclicCallException();
   [[nodiscard]] const char *what() const noexcept override;
 };
