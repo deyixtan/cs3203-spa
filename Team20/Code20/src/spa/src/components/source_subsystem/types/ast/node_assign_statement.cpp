@@ -19,10 +19,6 @@ ExpressionNodePtr AssignStatementNode::GetRhs() {
   return m_rhs;
 }
 
-String AssignStatementNode::GetPatternFormat() {
-  return "";
-}
-
 void AssignStatementNode::Accept(DesignExtractor *de, String proc_name) {
   String stmt_num = GetStatementNumber();
   de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, ASSIGN);

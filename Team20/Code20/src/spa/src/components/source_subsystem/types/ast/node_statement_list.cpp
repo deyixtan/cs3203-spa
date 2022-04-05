@@ -15,11 +15,6 @@ StatementListNode::StatementListNode(StatementNodeStream statements)
 StatementNodeStream StatementListNode::GetStatements() {
   return m_statements;
 }
-
-String StatementListNode::GetPatternFormat() {
-  return "";
-}
-
 void StatementListNode::Accept(DesignExtractor *de, String proc_name) {
   StatementNodeStream stmts = m_statements;
 

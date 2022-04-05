@@ -13,7 +13,6 @@ class ProgramNode : public Node {
  public:
   ProgramNode();
   explicit ProgramNode(ProcedureNodeStream procedures);
-  [[nodiscard]] String GetPatternFormat() override;
   void Accept(DesignExtractor *de);
   StringToCfgNodePtrMap Accept(CfgBuilder *cb);
   [[nodiscard]] bool operator==(const ProgramNode &other) const;

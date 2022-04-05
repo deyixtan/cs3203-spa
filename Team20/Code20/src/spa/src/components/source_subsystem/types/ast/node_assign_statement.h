@@ -15,7 +15,6 @@ class AssignStatementNode : public StatementNode {
   AssignStatementNode(String stmt_no, VariableNodePtr lhs, ExpressionNodePtr rhs);
   [[nodiscard]] VariableNodePtr GetLhs();
   [[nodiscard]] ExpressionNodePtr GetRhs();
-  [[nodiscard]] String GetPatternFormat() override;
   void Accept(DesignExtractor *de, String proc_name);
   CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const override;

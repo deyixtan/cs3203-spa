@@ -14,7 +14,6 @@ class PrintStatementNode : public StatementNode {
   PrintStatementNode(String stmt_no, VariableNodePtr identifier);
   [[nodiscard]] VariableNodePtr GetIdentifier();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] String GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
   void Accept(DesignExtractor *de, String proc_name);
   CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);

@@ -21,10 +21,6 @@ ConditionalType BooleanExpressionNode::GetConditionalType() {
   return ConditionalType::BOOLEAN;
 }
 
-String BooleanExpressionNode::GetPatternFormat() {
-  return "";
-}
-
 String BooleanExpressionNode::Accept(DesignExtractor *de, String proc_name, bool is_uses) {
   String lhs = de->Visit(m_left_expression, proc_name, is_uses);
   String rhs = de->Visit(m_right_expression, proc_name, is_uses);

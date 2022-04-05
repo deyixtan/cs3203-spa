@@ -36,10 +36,6 @@ ConditionalType RelationalExpressionNode::GetConditionalType() {
   return ConditionalType::RELATIONAL;
 }
 
-String RelationalExpressionNode::GetPatternFormat() {
-  return "";
-}
-
 String RelationalExpressionNode::Accept(DesignExtractor *de, String proc_name, bool is_uses) {
   return "(" + de->Visit(m_left_expression, proc_name, is_uses) + GetRelationOperatorLabel(m_relation_operator)
       + de->Visit(m_right_expression, proc_name, is_uses) + ")";

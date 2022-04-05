@@ -12,10 +12,6 @@ ProgramNode::ProgramNode() {}
 ProgramNode::ProgramNode(ProcedureNodeStream procedures) :
     m_procedures(procedures) {}
 
-String ProgramNode::GetPatternFormat() {
-  return "";
-}
-
 void ProgramNode::Accept(DesignExtractor *de) {
   for (auto &procedure : m_procedures) {
     de->Visit(procedure);

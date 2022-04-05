@@ -22,7 +22,6 @@ class IfStatementNode : public StatementNode {
   [[nodiscard]] StatementListNodePtr GetElseStatementList();
   [[nodiscard]] StatementNodeStream GetAllStatementList();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] String GetPatternFormat() override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
   void Accept(DesignExtractor *de, String proc_name);
   CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);

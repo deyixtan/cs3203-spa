@@ -24,7 +24,6 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] ConditionalExpressionNodePtr GetLeftExpression();
   [[nodiscard]] ConditionalExpressionNodePtr GetRightExpression();
   [[nodiscard]] ConditionalType GetConditionalType() override;
-  [[nodiscard]] String GetPatternFormat() override;
   String Accept(DesignExtractor *de, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };

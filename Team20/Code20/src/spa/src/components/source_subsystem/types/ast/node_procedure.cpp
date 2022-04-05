@@ -18,10 +18,6 @@ StatementListNodePtr ProcedureNode::GetStatementList() {
   return m_stmt_list;
 }
 
-String ProcedureNode::GetPatternFormat() {
-  return "";
-}
-
 bool ProcedureNode::operator==(const ProcedureNode &other) const {
   StatementNodeStream this_stmt_list = m_stmt_list->GetStatements();
   StatementNodeStream other_stmt_list = other.m_stmt_list->GetStatements();

@@ -15,7 +15,6 @@ class ProcedureNode : public Node {
   ProcedureNode(String identifier, StatementListNodePtr stmt_list);
   [[nodiscard]] String GetIdentifier();
   [[nodiscard]] StatementListNodePtr GetStatementList();
-  [[nodiscard]] String GetPatternFormat() override;
   CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const ProcedureNode &other) const;
   void Accept(DesignExtractor *de);

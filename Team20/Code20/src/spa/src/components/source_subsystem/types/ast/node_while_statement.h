@@ -16,7 +16,6 @@ class WhileStatementNode : public StatementNode {
   [[nodiscard]] ConditionalExpressionNodePtr GetCondition();
   [[nodiscard]] StatementListNodePtr GetStatementList();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] String GetPatternFormat() override;
   void Accept(DesignExtractor *de, String proc_name);
   CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const;

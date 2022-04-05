@@ -14,7 +14,6 @@ class StatementListNode : public Node {
   StatementListNode();
   explicit StatementListNode(StatementNodeStream statements);
   [[nodiscard]] StatementNodeStream GetStatements();
-  [[nodiscard]] String GetPatternFormat() override;
   void Accept(DesignExtractor *de, String proc_name);
   CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementListNode &other) const;

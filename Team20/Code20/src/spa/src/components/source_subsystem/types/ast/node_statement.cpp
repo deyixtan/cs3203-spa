@@ -9,8 +9,4 @@ String StatementNode::GetStatementNumber() {
   return m_stmt_no;
 }
 
-String StatementNode::GetPatternFormat() {
-  return "";
-}
-
 }

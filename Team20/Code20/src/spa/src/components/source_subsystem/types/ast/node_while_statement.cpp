@@ -22,10 +22,6 @@ StmtType WhileStatementNode::GetStatementType() {
   return StmtType::WHILE;
 }
 
-String WhileStatementNode::GetPatternFormat() {
-  return "";
-}
-
 void WhileStatementNode::Accept(DesignExtractor *de, String proc_name) {
   String stmt_num = GetStatementNumber();
   de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, WHILE);

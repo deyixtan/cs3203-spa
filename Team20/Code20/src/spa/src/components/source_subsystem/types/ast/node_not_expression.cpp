@@ -14,10 +14,6 @@ ConditionalType NotExpressionNode::GetConditionalType() {
   return ConditionalType::NOT;
 }
 
-String NotExpressionNode::GetPatternFormat() {
-  return "";
-}
-
 String NotExpressionNode::Accept(DesignExtractor *de, String proc_name, bool is_uses) {
   return de->Visit(m_expression, proc_name, is_uses);
 }

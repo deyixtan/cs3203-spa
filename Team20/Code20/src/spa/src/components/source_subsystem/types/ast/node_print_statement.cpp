@@ -16,10 +16,6 @@ StmtType PrintStatementNode::GetStatementType() {
   return StmtType::PRINT;
 }
 
-String PrintStatementNode::GetPatternFormat() {
-  return "";
-}
-
 void PrintStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   String stmt_num = GetStatementNumber();
   String var_name = m_identifier->GetIdentifier();

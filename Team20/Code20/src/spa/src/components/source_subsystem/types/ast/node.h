@@ -7,7 +7,8 @@ namespace source {
 
 class Node {
  public:
-  [[nodiscard]] virtual String GetPatternFormat() = 0;
+  virtual void Accept(DesignExtractor *de) = 0;
+  virtual StringToCfgNodePtrMap Accept(CfgBuilder *cb) = 0;
 };
 
 }

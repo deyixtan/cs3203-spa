@@ -40,10 +40,6 @@ StmtType IfStatementNode::GetStatementType() {
   return StmtType::IF;
 }
 
-String IfStatementNode::GetPatternFormat() {
-  return "";
-}
-
 bool IfStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const IfStatementNode *>(&other);
   StatementNodeStream if_this_stmt_list = m_if_stmt_list->GetStatements();
