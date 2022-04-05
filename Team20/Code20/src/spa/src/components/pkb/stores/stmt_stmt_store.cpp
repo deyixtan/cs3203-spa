@@ -20,7 +20,7 @@ void StmtStmtStore::AddUpperLower(StoreType store_type,
     } else if (store_type == PARENT) {
       AddParent(false, upper, lower, std::vector<std::string>());
     } else if (store_type == NEXT) {
-      AddNext(false, upper, lower);
+      AddNext(false, type1, upper, type2, lower);
     }
   }
 
@@ -51,7 +51,7 @@ void StmtStmtStore::AddUpperLowerStar(StoreType store_type,
   } else if (store_type == CALLS) {
     AddCalls(true, upper, lower);
   } else if (store_type == NEXT) {
-    AddNext(true, upper, lower);
+    AddNext(true, type2, upper, type1, lower);
   }
 }
 
@@ -91,21 +91,17 @@ void StmtStmtStore::AddParent(bool is_star,
   }
 }
 
-void StmtStmtStore::AddNext(bool is_star, std::string const &upper, std::string const &lower) {
-  if (next_rs_map.find(upper) == next_rs_map.end()) {
-    next_rs_map.insert({upper, {std::unordered_set<std::string>(), std::unordered_set<std::string>(),
-                                std::unordered_set<std::string>(),
-                                std::unordered_set<std::string>()}});
+void StmtStmtStore::AddNext(bool is_star,
+                            StmtType type1,
+                            std::string const &upper,
+                            StmtType type2,
+                            std::string const &lower) {
+  if (!is_star) {
+    all_pairs.emplace(std::pair<std::string, std::string>(upper, lower));
+  } else {
+    all_star_pairs.emplace(std::pair<std::string, std::string>(upper, lower));
+    ExhaustiveAddAllStmt(type1, upper, type2, lower, true);
   }
-
-  if (next_rs_map.find(lower) == next_rs_map.end()) {
-    next_rs_map.insert({lower, {std::unordered_set<std::string>(), std::unordered_set<std::string>(),
-                                std::unordered_set<std::string>(),
-                                std::unordered_set<std::string>()}});
-  }
-  all_pairs.insert(std::make_pair(upper, lower));
-  next_rs_map.at(lower).before.insert(upper);
-  next_rs_map.at(upper).next.insert(lower);
 }
 
 void StmtStmtStore::AddCalls(bool is_star, std::string const &upper, std::string const &lower) {
@@ -301,16 +297,15 @@ std::string StmtStmtStore::GetLowerOf(StmtType stmt_type, std::string const &stm
   return "0";
 }
 
-std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_type, std::string const &stmt) {
+std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_type, StmtType stmt_type, std::string const &stmt) {
+  StmtType rs_type = PROC;
   if (store_type == NEXT) {
-    if (next_rs_map.find(stmt) != next_rs_map.end()) {
-      return next_rs_map.at(stmt).before;
-    }
+   rs_type = STMT;
   }
 
-  if (type_pair_map.find(PROC) != type_pair_map.end()) {
-    if (type_pair_map.at(PROC).find(PROC) != type_pair_map.at(PROC).end()) {
-      return GetHelper(PROC, PROC, 1, stmt, false);
+  if (type_pair_map.find(rs_type) != type_pair_map.end()) {
+    if (type_pair_map.at(rs_type).find(stmt_type) != type_pair_map.at(rs_type).end()) {
+      return GetHelper(rs_type, stmt_type, 1, stmt, false);
     }
   }
   return {};
@@ -320,12 +315,6 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType store_typ
                                                              StmtType stmt_type,
                                                              std::string const &stmt) {
   std::unordered_set<std::string> result;
-
-  if (store_type == NEXT) {
-    if (next_rs_map.find(stmt) != next_rs_map.end()) {
-      return next_rs_map.at(stmt).next;
-    }
-  }
 
   if (type_pair_map.find(STMT) != type_pair_map.end()) {
     if (type_pair_map.at(STMT).find(stmt_type) != type_pair_map.at(STMT).end()) {

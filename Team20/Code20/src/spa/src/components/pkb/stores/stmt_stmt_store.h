@@ -55,7 +55,7 @@ class StmtStmtStore : public Store {
                  std::string const &lower,
                  std::vector<std::string> const &visited);
   void AddCalls(bool is_star, std::string const &upper, std::string const &lower);
-  void AddNext(bool is_star, std::string const &upper, std::string const &lower);
+  void AddNext(bool is_star, StmtType type1, std::string const &upper, StmtType type2, std::string const &lower);
   void PopulatePairMap(StmtType type1,
                        std::string upper,
                        StmtType type2,
@@ -93,7 +93,9 @@ class StmtStmtStore : public Store {
                                                           bool is_star);
   [[nodiscard]] std::string GetUpperOf(StmtType stmt_type, std::string const &stmt);
   [[nodiscard]] std::string GetLowerOf(StmtType stmt_type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetUpperSetOf(StoreType store_type, std::string const &stmt);
+  [[nodiscard]] std::unordered_set<std::string> GetUpperSetOf(StoreType store_type,
+                                                              StmtType stmt_type,
+                                                              std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetLowerSetOf(StoreType store_type,
                                                               StmtType stmt_type,
                                                               std::string const &stmt);

@@ -13,7 +13,7 @@ void NextStore::WipeStar() {
   WipeNextStar();
 }
 
-bool NextStore::IsNextValid(std::pair<std::string, std::string> const &pair) {
+bool NextStore::IsNextPairValid(std::pair<std::string, std::string> const &pair) {
   return IsValid(pair);
 }
 
@@ -21,8 +21,8 @@ bool NextStore::IsNextStarValid(std::pair<std::string, std::string> const &pair)
   return IsStarValid(pair);
 }
 
-std::unordered_set<std::string> NextStore::GetBeforeOf(std::string const &stmt) {
-  return GetUpperSetOf(NEXT, stmt);
+std::unordered_set<std::string> NextStore::GetBeforeOf(StmtType type, std::string const &stmt) {
+  return GetUpperSetOf(NEXT, type, stmt);
 }
 
 std::unordered_set<std::string> NextStore::GetNextOf(StmtType type, std::string const &stmt) {
@@ -65,15 +65,10 @@ std::unordered_set<std::string> NextStore::GetNextStarSameStmt(StmtType type) {
   return same_synonym_set;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  return Store::GetAllStmt(type, supported_types, GetNextPairs(), false);
-}
-
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStmt(StmtType type1,
                                                                                              StmtType type2) {
   std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  return Store::GetAllStmt(type1, type2, supported_types, GetAllNextStmt(type2), true);
+  return GetPairByType(type1, type2);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetAllNextStarStmt(StmtType type) {
