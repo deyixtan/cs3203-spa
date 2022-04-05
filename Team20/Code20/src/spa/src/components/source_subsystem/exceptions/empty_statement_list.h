@@ -1,23 +1,19 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_EMPTY_STATEMENT_LIST_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_EMPTY_STATEMENT_LIST_H_
+#ifndef EMPTY_STATEMENT_LIST_H_
+#define EMPTY_STATEMENT_LIST_H_
 
-#include <exception>
-#include <string>
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
-class EmptyStatementListException : public std::exception {
+class EmptyStatementListException : public Exception {
  private:
-  std::string m_msg;
-
- public:
-  static std::string MESSAGE;
+  String m_msg;
 
  public:
   EmptyStatementListException();
-  [[nodiscard]] virtual const char *what() const noexcept override;
+  [[nodiscard]] const char *what() const noexcept override;
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_EMPTY_STATEMENT_LIST_H_
+#endif //EMPTY_STATEMENT_LIST_H_
