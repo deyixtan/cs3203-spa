@@ -1,5 +1,5 @@
-#ifndef STATEMENT_LIST_H
-#define STATEMENT_LIST_H
+#ifndef NODE_STATEMENT_LIST_H
+#define NODE_STATEMENT_LIST_H
 
 #include "components/source_subsystem/source_declarations.h"
 #include "node.h"
@@ -21,4 +21,4 @@ class StatementListNode : public Node {
 
 }
 
-#endif //STATEMENT_LIST_H
+#endif //NODE_STATEMENT_LIST_H

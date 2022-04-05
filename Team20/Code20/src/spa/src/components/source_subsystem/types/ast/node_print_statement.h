@@ -1,5 +1,5 @@
-#ifndef PRINT_STATEMENT_H
-#define PRINT_STATEMENT_H
+#ifndef NODE_PRINT_STATEMENT_H
+#define NODE_PRINT_STATEMENT_H
 
 #include "components/source_subsystem/source_declarations.h"
 #include "node_statement.h"
@@ -21,4 +21,4 @@ class PrintStatementNode : public StatementNode {
 
 }
 
-#endif //PRINT_STATEMENT_H
+#endif //NODE_PRINT_STATEMENT_H

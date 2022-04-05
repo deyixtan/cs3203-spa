@@ -1,5 +1,5 @@
-#ifndef WHILE_STATEMENT_H
-#define WHILE_STATEMENT_H
+#ifndef NODE_WHILE_STATEMENT_H
+#define NODE_WHILE_STATEMENT_H
 
 #include "components/source_subsystem/source_declarations.h"
 #include "node_statement.h"
@@ -23,4 +23,4 @@ class WhileStatementNode : public StatementNode {
 
 }
 
-#endif //WHILE_STATEMENT_H
+#endif //NODE_WHILE_STATEMENT_H

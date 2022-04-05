@@ -1,5 +1,5 @@
-#ifndef READ_STATEMENT_H
-#define READ_STATEMENT_H
+#ifndef NODE_READ_STATEMENT_H
+#define NODE_READ_STATEMENT_H
 
 #include "components/source_subsystem/source_declarations.h"
 #include "node_statement.h"
@@ -22,4 +22,4 @@ class ReadStatementNode : public StatementNode {
 
 }
 
-#endif //READ_STATEMENT_H
+#endif //NODE_READ_STATEMENT_H

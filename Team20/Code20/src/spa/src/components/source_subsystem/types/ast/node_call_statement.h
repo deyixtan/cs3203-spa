@@ -1,5 +1,5 @@
-#ifndef CALL_STATEMENT_H
-#define CALL_STATEMENT_H
+#ifndef NODE_CALL_STATEMENT_H
+#define NODE_CALL_STATEMENT_H
 
 #include "components/source_subsystem/source_declarations.h"
 #include "node_statement.h"
@@ -22,4 +22,4 @@ class CallStatementNode : public StatementNode {
 
 }
 
-#endif //CALL_STATEMENT_H
+#endif //NODE_CALL_STATEMENT_H
