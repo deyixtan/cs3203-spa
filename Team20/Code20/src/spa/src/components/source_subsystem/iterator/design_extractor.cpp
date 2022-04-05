@@ -7,6 +7,7 @@
 #include "../types/ast/node_conditional_expression.h"
 #include "../types/ast/node_variable.h"
 #include "../types/ast/node_constant.h"
+#include "components/source_subsystem/pkb_client.h"
 
 namespace source {
 

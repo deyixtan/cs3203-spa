@@ -54,6 +54,10 @@ void IfStatementNode::Accept(DesignExtractor *design_extractor, String proc_name
 }
 
 CfgNodePtr IfStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
+  CfgNodePtr condition_node = std::make_shared<CfgNode>();
+  cfg_node->AddNext(condition_node);
+  cfg_node = condition_node;
+
   CfgNodePtr if_node = std::make_shared<CfgNode>();
   CfgNodePtr else_node = std::make_shared<CfgNode>();
   CfgNodePtr next_node = std::make_shared<CfgNode>();

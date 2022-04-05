@@ -15,7 +15,7 @@ VariableNodePtr ReadStatementNode::GetVariable() {
 
 void ReadStatementNode::Accept(DesignExtractor *de, String proc_name) {
   String stmt_num = GetStatementNumber();
-  String var_name = m_variable->GetIdentifier();
+  String var_name = m_variable->GetName();
   de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, READ);
 
   de->GetPkbClient()->PopulateRead(de->GetVisited(), stmt_num, var_name);

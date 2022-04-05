@@ -15,7 +15,7 @@ VariableNodePtr PrintStatementNode::GetVariable() {
 
 void PrintStatementNode::Accept(DesignExtractor *design_extractor, std::string proc_name) {
   String stmt_num = GetStatementNumber();
-  String var_name = m_variable->GetIdentifier();
+  String var_name = m_variable->GetName();
   design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, PRINT);
 
   design_extractor->Visit(m_variable, proc_name, true);
