@@ -1,5 +1,5 @@
-#ifndef EMPTY_STATEMENT_LIST_H_
-#define EMPTY_STATEMENT_LIST_H_
+#ifndef EMPTY_STATEMENT_LIST_H
+#define EMPTY_STATEMENT_LIST_H
 
 #include "components/source_subsystem/source_declarations.h"
 
@@ -16,4 +16,4 @@ class EmptyStatementListException : public Exception {
 
 }
 
-#endif //EMPTY_STATEMENT_LIST_H_
+#endif //EMPTY_STATEMENT_LIST_H

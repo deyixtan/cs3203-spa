@@ -1,5 +1,5 @@
-#ifndef CYCLIC_CALL_H_
-#define CYCLIC_CALL_H_
+#ifndef CYCLIC_CALL_H
+#define CYCLIC_CALL_H
 
 #include "components/source_subsystem/source_declarations.h"
 
@@ -16,4 +16,4 @@ class CyclicCallException : public Exception {
 
 }
 
-#endif //CYCLIC_CALL_H_
+#endif //CYCLIC_CALL_H
