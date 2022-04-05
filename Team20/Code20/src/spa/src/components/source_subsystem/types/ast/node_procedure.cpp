@@ -4,32 +4,27 @@
 #include "../../iterator/cfg_builder.h"
 #include "node_statement_list.h"
 #include "node_statement.h"
-#include "../cfg/cfg_node.h"
 
 namespace source {
 
-ProcedureNode::ProcedureNode(std::string identifier, std::shared_ptr<StatementListNode> stmt_list) :
+ProcedureNode::ProcedureNode(String identifier, StatementListNodePtr stmt_list) :
     m_identifier(identifier), m_stmt_list(stmt_list) {}
 
-std::string ProcedureNode::GetIdentifier() {
+String ProcedureNode::GetIdentifier() {
   return m_identifier;
 }
 
-std::shared_ptr<StatementListNode> ProcedureNode::GetStatementList() {
+StatementListNodePtr ProcedureNode::GetStatementList() {
   return m_stmt_list;
 }
 
-std::string ProcedureNode::ToString() {
-  return "procedure " + m_identifier + " {\n" + m_stmt_list->ToString() + "}\n";
-}
-
-std::string ProcedureNode::GetPatternFormat() {
+String ProcedureNode::GetPatternFormat() {
   return "";
 }
 
 bool ProcedureNode::operator==(const ProcedureNode &other) const {
-  std::vector<std::shared_ptr<StatementNode>> this_stmt_list = m_stmt_list->GetStatements();
-  std::vector<std::shared_ptr<StatementNode>> other_stmt_list = other.m_stmt_list->GetStatements();
+  StatementNodeStream this_stmt_list = m_stmt_list->GetStatements();
+  StatementNodeStream other_stmt_list = other.m_stmt_list->GetStatements();
   if (this_stmt_list.size() != other_stmt_list.size()) {
     return false;
   }
@@ -45,7 +40,7 @@ void ProcedureNode::Accept(DesignExtractor *de) {
   de->Visit(m_stmt_list, m_identifier);
 }
 
-std::shared_ptr<CfgNode> ProcedureNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
+CfgNodePtr ProcedureNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
   return cb->Visit(m_stmt_list, cfg_node);
 }
 
