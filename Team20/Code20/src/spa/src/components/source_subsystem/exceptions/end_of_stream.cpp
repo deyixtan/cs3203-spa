@@ -2,9 +2,7 @@
 
 namespace source {
 
-std::string EndOfStreamException::MESSAGE = "Reached end of stream.";
-
-EndOfStreamException::EndOfStreamException() : m_msg(MESSAGE) {}
+EndOfStreamException::EndOfStreamException() : m_msg("Reached end of stream.") {}
 
 const char *EndOfStreamException::what() const noexcept {
   return m_msg.c_str();
