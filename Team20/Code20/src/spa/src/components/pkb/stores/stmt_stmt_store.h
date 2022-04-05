@@ -3,14 +3,6 @@
 
 #include "store.h"
 
-// A struct to maintain every FollowsNode's relationships
-struct NextNode {
-  std::unordered_set<std::string> before;
-  std::unordered_set<std::string> next;
-  std::unordered_set<std::string> before_star_set;
-  std::unordered_set<std::string> next_star_set;
-};
-
 class StmtStmtStore : public Store {
  private:
   std::unordered_map<StmtType,
@@ -35,9 +27,6 @@ class StmtStmtStore : public Store {
       star_type_pair_map;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_star_pairs;
-
- protected:
-  std::unordered_map<std::string, NextNode> next_rs_map;
 
  public:
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
@@ -111,10 +100,12 @@ class StmtStmtStore : public Store {
                                                                                                      StmtType type2);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStarPairs();
-  [[nodiscard]] void GetLowerStarOfHelper(std::string const &stmt,
+  [[nodiscard]] void GetLowerStarOfHelper(StmtType stmt_type,
+                                          std::string const &stmt,
                                           std::unordered_set<std::string> &res,
                                           std::unordered_set<std::string> &visited);
-  [[nodiscard]] void GetUpperStarOfHelper(std::string const &stmt,
+  [[nodiscard]] void GetUpperStarOfHelper(StmtType stmt_type,
+                                          std::string const &stmt,
                                           std::unordered_set<std::string> &res,
                                           std::unordered_set<std::string> &visited);
 };
