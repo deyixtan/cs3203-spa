@@ -1,8 +1,10 @@
 1 - Syntactically invalid Next* (missing argument)
+
 Select BOOLEAN such that Next*(1)
 none
 5000
 2 - Syntactically invalid Next* (extra argument)
+
 Select BOOLEAN such that Next*(1, 2, 3)
 none
 5000
@@ -17,30 +19,37 @@ Select BOOLEAN such that Next*(s, v)
 FALSE
 5000
 5 - Next*(INT, INT) within same procedure
+
 Select BOOLEAN such that Next*(1, 3)
 TRUE
 5000
 6 - Next*(INT, INT) across procedure
+
 Select BOOLEAN such that Next*(3, 4)
 FALSE
 5000
 7 - Next*(INT, _) within same procedure first line
+
 Select BOOLEAN such that Next*(1, _)
 TRUE
 5000
 8 - Next*(INT, _) within same procedure last line
+
 Select BOOLEAN such that Next*(3, _)
 FALSE
 5000
 9 - Next*(_, INT) within same procedure first line
+
 Select BOOLEAN such that Next*(_, 1)
 FALSE
 5000
 10 - Next*(_, INT) within same procedure last line
+
 Select BOOLEAN such that Next*(_, 3)
 TRUE
 5000
 11 - Next*(_, _)
+
 Select BOOLEAN such that Next*(_, _)
 TRUE
 5000
@@ -120,17 +129,67 @@ Select s such that Next*(_, s)
 2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,19,20
 5000
 27 - Next*(_, READ)
+read rd;
+Select rd such that Next*(_, rd)
+2
+5000
 28 - Next*(_, PRINT)
+print pn;
+Select pn such that Next*(_, pn)
+5, 7, 20
+5000
 29 - Next*(_, ASSIGN)
+assign a;
+Select a such that Next*(_, a)
+6, 9, 11, 13, 14, 15, 16, 17, 19
+5000
 30 - Next*(_, CALL)
+call cl;
+Select cl such that Next*(_, cl)
+3, 10
+5000
 31 - Next*(_, WHILE)
+while w;
+Select w such that Next*(_, w)
+8
+5000
 32 - Next*(_, IF)
+if ifs;
+Select ifs such that Next*(_, ifs)
+12
+5000
 33 - Next*(STMT, _)
+stmt s;
+Select s such that Next*(s, _)
+1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19
+5000
 34 - Next*(READ, _)
+read rd;
+Select rd such that Next*(rd, _)
+1, 2
+5000
 35 - Next*(PRINT, _)
+print pn;
+Select pn such that Next*(pn, _)
+5, 7
+5000
 36 - Next*(ASSIGN, _)
+assign a;
+Select a such that Next*(a, _)
+4, 6, 9, 11, 13, 14, 15, 16
+5000
 37 - Next*(CALL, _)
+call cl;
+Select cl such that Next*(cl, _)
+10
+5000
 38 - Next*(WHILE, _)
+while w;
+Select w such that Next*(w, _)
+8
+5000
 39 - Next*(IF, _)
-40 - Next*(STMT, STMT)
-
+if ifs;
+Select ifs such that Next*(ifs, _)
+12
+5000
