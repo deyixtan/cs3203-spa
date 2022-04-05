@@ -89,6 +89,10 @@ namespace source {
   typedef std::vector<ProcedureNodePtr> ProcedureNodeStream;
   typedef std::vector<StatementNodePtr> StatementNodeStream;
 
+  // cfg-related types
+  typedef std::shared_ptr<Cfg> CfgPtr;
+  typedef std::shared_ptr<CfgNode> CfgNodePtr;
+
   // components
   typedef std::shared_ptr<PkbClient> PkbClientPtr;
 }
