@@ -2,7 +2,7 @@
 
 namespace source {
 
-std::string CyclicCallException::MESSAGE = "Detected cyclic procedure calls.";
+String CyclicCallException::MESSAGE = "Detected cyclic procedure calls.";
 
 CyclicCallException::CyclicCallException() : m_msg(MESSAGE) {}
 
