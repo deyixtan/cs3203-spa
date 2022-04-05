@@ -1,6 +1,7 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_NOT_EXPRESSION_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_NOT_EXPRESSION_H_
+#ifndef NODE_NOT_EXPRESSION_H
+#define NODE_NOT_EXPRESSION_H
 
+#include "components/source_subsystem/source_declarations.h"
 #include "node_conditional_expression.h"
 #include "components/source_subsystem/pkb_client.h"
 
@@ -8,18 +9,17 @@ namespace source {
 
 class NotExpressionNode : public ConditionalExpressionNode {
  private:
-  std::shared_ptr<ConditionalExpressionNode> m_expression;
+  ConditionalExpressionNodePtr m_expression;
 
  public:
-  NotExpressionNode(std::shared_ptr<ConditionalExpressionNode> expression);
-  [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetExpression();
+  NotExpressionNode(ConditionalExpressionNodePtr expression);
+  [[nodiscard]] ConditionalExpressionNodePtr GetExpression();
   [[nodiscard]] ConditionalType GetConditionalType() override;
-  [[nodiscard]] std::string ToString() override;
-  [[nodiscard]] std::string GetPatternFormat() override;
+  [[nodiscard]] String GetPatternFormat() override;
+  String Accept(DesignExtractor *de, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
-  std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses);
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_NOT_EXPRESSION_H_
+#endif //NODE_NOT_EXPRESSION_H

@@ -3,10 +3,10 @@
 
 namespace source {
 
-NotExpressionNode::NotExpressionNode(std::shared_ptr<ConditionalExpressionNode> expression)
+NotExpressionNode::NotExpressionNode(ConditionalExpressionNodePtr expression)
     : m_expression(expression) {}
 
-std::shared_ptr<ConditionalExpressionNode> NotExpressionNode::GetExpression() {
+ConditionalExpressionNodePtr NotExpressionNode::GetExpression() {
   return m_expression;
 }
 
@@ -14,21 +14,17 @@ ConditionalType NotExpressionNode::GetConditionalType() {
   return ConditionalType::NOT;
 }
 
-std::string NotExpressionNode::ToString() {
-  return "(!" + m_expression->ToString() + ")";
+String NotExpressionNode::GetPatternFormat() {
+  return "";
 }
 
-std::string NotExpressionNode::GetPatternFormat() {
-  return "";
+String NotExpressionNode::Accept(DesignExtractor *de, String proc_name, bool is_uses) {
+  return de->Visit(m_expression, proc_name, is_uses);
 }
 
 bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const NotExpressionNode *>(&other);
   return *m_expression == *(casted_other->m_expression);
-}
-
-std::string NotExpressionNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
-  return de->Visit(m_expression, proc_name, is_uses);
 }
 
 }
