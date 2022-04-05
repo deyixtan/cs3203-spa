@@ -534,7 +534,7 @@ TEST_CASE("Test query parser with attributes and value strings") {
   test_token_vect.push_back(equal_sign_token);
   test_token_vect.push_back(v_token);
 
-  std::string INVALID_QUERY_FORMAT = "Invalid Query Format! \n";
+  std::string INVALID_QUERY_FORMAT = "Invalid query format.";
   PqlParser pql_parser = PqlParser(test_token_vect);
   std::string error = INVALID_QUERY_FORMAT;
 
