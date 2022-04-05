@@ -14,7 +14,6 @@
 class TestWrapper : public AbstractWrapper {
  private:
   QueryController *query_controller;
-  source::SourceController *source_controller;
   PKB *pkb;
 
  public:

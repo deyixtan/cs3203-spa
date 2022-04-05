@@ -1,21 +1,17 @@
 #ifndef INVALID_TERM_OPERATOR_H
 #define INVALID_TERM_OPERATOR_H
 
-#include <exception>
-#include <string>
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
-class InvalidTermOperatorException : public std::exception {
+class InvalidTermOperatorException : public Exception {
  private:
-  std::string m_msg;
-
- public:
-  static std::string MESSAGE;
+  String m_msg;
 
  public:
   InvalidTermOperatorException();
-  [[nodiscard]] virtual const char *what() const noexcept override;
+  [[nodiscard]] const char *what() const noexcept override;
 };
 
 }

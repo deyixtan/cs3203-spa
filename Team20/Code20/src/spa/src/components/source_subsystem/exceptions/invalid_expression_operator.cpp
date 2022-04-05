@@ -2,9 +2,8 @@
 
 namespace source {
 
-std::string InvalidExpressionOperatorException::MESSAGE = "Invalid expression operator. Expected '+' or '-' operator.";
-
-InvalidExpressionOperatorException::InvalidExpressionOperatorException() : m_msg(MESSAGE) {}
+InvalidExpressionOperatorException::InvalidExpressionOperatorException() :
+    m_msg("Invalid expression operator. Expected '+' or '-' operator.") {}
 
 const char *InvalidExpressionOperatorException::what() const noexcept {
   return m_msg.c_str();

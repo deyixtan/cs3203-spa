@@ -2,9 +2,7 @@
 
 namespace source {
 
-std::string InvalidCallException::MESSAGE = "Invoked invalid method.";
-
-InvalidCallException::InvalidCallException() : m_msg(MESSAGE) {}
+InvalidCallException::InvalidCallException() : m_msg("Called invalid method.") {}
 
 const char *InvalidCallException::what() const noexcept {
   return m_msg.c_str();
