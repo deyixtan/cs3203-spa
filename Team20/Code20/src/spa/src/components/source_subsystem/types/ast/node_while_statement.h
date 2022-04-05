@@ -12,12 +12,11 @@ class WhileStatementNode : public StatementNode {
   StatementListNodePtr m_stmt_list;
 
  public:
-  WhileStatementNode(String stmt_no, ConditionalExpressionNodePtr condition, StatementListNodePtr stmt_list);
+  WhileStatementNode(String &stmt_no, ConditionalExpressionNodePtr condition, StatementListNodePtr stmt_list);
   [[nodiscard]] ConditionalExpressionNodePtr GetCondition();
   [[nodiscard]] StatementListNodePtr GetStatementList();
-  [[nodiscard]] StmtType GetStatementType() override;
-  void Accept(DesignExtractor *de, String proc_name);
-  CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);
+  void Accept(DesignExtractor *design_extractor, String proc_name);
+  CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const;
 };
 

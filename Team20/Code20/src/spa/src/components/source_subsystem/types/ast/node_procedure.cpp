@@ -7,15 +7,24 @@
 
 namespace source {
 
-ProcedureNode::ProcedureNode(String identifier, StatementListNodePtr stmt_list) :
-    m_identifier(identifier), m_stmt_list(stmt_list) {}
+ProcedureNode::ProcedureNode(String name, StatementListNodePtr stmt_list) :
+    m_name(std::move(name)), m_stmt_list(std::move(stmt_list)) {}
 
-String ProcedureNode::GetIdentifier() {
-  return m_identifier;
+String ProcedureNode::GetName() {
+  return m_name;
 }
 
 StatementListNodePtr ProcedureNode::GetStatementList() {
   return m_stmt_list;
+}
+
+void ProcedureNode::Accept(DesignExtractor *design_extractor) {
+  design_extractor->GetPkbClient()->PopulateProc(m_name);
+  design_extractor->Visit(m_stmt_list, m_name);
+}
+
+CfgNodePtr ProcedureNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
+  return cfg_builder->Visit(m_stmt_list, std::move(cfg_node));
 }
 
 bool ProcedureNode::operator==(const ProcedureNode &other) const {
@@ -28,16 +37,7 @@ bool ProcedureNode::operator==(const ProcedureNode &other) const {
     if (*(this_stmt_list.at(i)) == *(other_stmt_list.at(i))) {}
     else { return false; }
   }
-  return m_identifier == other.m_identifier;
-}
-
-void ProcedureNode::Accept(DesignExtractor *de) {
-  de->GetPkbClient()->PopulateProc(m_identifier);
-  de->Visit(m_stmt_list, m_identifier);
-}
-
-CfgNodePtr ProcedureNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
-  return cb->Visit(m_stmt_list, cfg_node);
+  return m_name == other.m_name;
 }
 
 }

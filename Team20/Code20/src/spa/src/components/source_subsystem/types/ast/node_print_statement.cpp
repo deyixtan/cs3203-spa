@@ -1,28 +1,25 @@
 #include "node_print_statement.h"
-#include "../../iterator/design_extractor.h"
-#include "../../iterator/cfg_builder.h"
-#include "node_variable.h"
+#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
+#include "components/source_subsystem/types/ast/node_variable.h"
+#include "components/source_subsystem/types/cfg/cfg_node.h"
 
 namespace source {
 
-PrintStatementNode::PrintStatementNode(String stmt_no, VariableNodePtr identifier)
-    : StatementNode(stmt_no), m_identifier(identifier) {}
+PrintStatementNode::PrintStatementNode(String &stmt_no, VariableNodePtr variable)
+    : StatementNode(stmt_no), m_variable(std::move(variable)) {}
 
-VariableNodePtr PrintStatementNode::GetIdentifier() {
-  return m_identifier;
+VariableNodePtr PrintStatementNode::GetVariable() {
+  return m_variable;
 }
 
-StmtType PrintStatementNode::GetStatementType() {
-  return StmtType::PRINT;
-}
-
-void PrintStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
+void PrintStatementNode::Accept(DesignExtractor *design_extractor, std::string proc_name) {
   String stmt_num = GetStatementNumber();
-  String var_name = m_identifier->GetIdentifier();
-  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, PRINT);
+  String var_name = m_variable->GetIdentifier();
+  design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, PRINT);
 
-  de->Visit(m_identifier, proc_name, true);
-  de->GetPkbClient()->PopulatePrint(de->GetVisited(), stmt_num, var_name);
+  design_extractor->Visit(m_variable, proc_name, true);
+  design_extractor->GetPkbClient()->PopulatePrint(design_extractor->GetVisited(), stmt_num, var_name);
 }
 
 CfgNodePtr PrintStatementNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
@@ -32,7 +29,7 @@ CfgNodePtr PrintStatementNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
 
 bool PrintStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const PrintStatementNode *>(&other);
-  return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier);
+  return m_stmt_no == casted_other->m_stmt_no && *m_variable == *(casted_other->m_variable);
 }
 
 }

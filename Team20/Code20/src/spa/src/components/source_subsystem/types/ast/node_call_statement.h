@@ -8,15 +8,15 @@ namespace source {
 
 class CallStatementNode : public StatementNode {
  private:
-  String m_identifier;
-  String proc_name;
+  String m_caller_name;
+  String m_callee_name;
 
  public:
-  CallStatementNode(String stmt_no, String proc_name, String m_identifier);
-  [[nodiscard]] String GetIdentifier();
-  [[nodiscard]] StmtType GetStatementType() override;
-  void Accept(DesignExtractor *de, String proc_name);
-  CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);
+  CallStatementNode(String &stmt_no, String caller_name, String callee_name);
+  [[nodiscard]] String GetCallerName();
+  [[nodiscard]] String GetCalleeName();
+  void Accept(DesignExtractor *design_extractor, String proc_name);
+  CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };
 

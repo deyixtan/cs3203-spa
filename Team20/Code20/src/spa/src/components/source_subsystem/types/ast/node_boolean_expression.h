@@ -13,17 +13,17 @@ enum class BooleanOperator {
 class BooleanExpressionNode : public ConditionalExpressionNode {
  private:
   BooleanOperator m_boolean_operator;
-  ConditionalExpressionNodePtr m_left_expression;
-  ConditionalExpressionNodePtr m_right_expression;
+  ConditionalExpressionNodePtr m_lhs;
+  ConditionalExpressionNodePtr m_rhs;
 
  public:
   BooleanExpressionNode(BooleanOperator boolean_operator,
-                        ConditionalExpressionNodePtr left_expression,
-                        ConditionalExpressionNodePtr right_expression);
-  [[nodiscard]] ConditionalExpressionNodePtr GetLeftExpression();
-  [[nodiscard]] ConditionalExpressionNodePtr GetRightExpression();
-  [[nodiscard]] ConditionalType GetConditionalType() override;
-  String Accept(DesignExtractor *de, String proc_name, bool is_uses);
+                        ConditionalExpressionNodePtr lhs,
+                        ConditionalExpressionNodePtr rhs);
+  [[nodiscard]] BooleanOperator GetOperator();
+  [[nodiscard]] ConditionalExpressionNodePtr GetLhs();
+  [[nodiscard]] ConditionalExpressionNodePtr GetRhs();
+  String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

@@ -1,21 +1,20 @@
 #include "node_if_statement.h"
-#include "../../iterator/design_extractor.h"
-#include "../../iterator/cfg_builder.h"
-#include "../cfg/cfg_node.h"
-#include "node_conditional_expression.h"
-#include "node_statement_list.h"
 #include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
+#include "components/source_subsystem/types/ast/node_conditional_expression.h"
+#include "components/source_subsystem/types/ast/node_statement_list.h"
 
 namespace source {
 
-IfStatementNode::IfStatementNode(String stmt_no,
+IfStatementNode::IfStatementNode(String &stmt_no,
                                  ConditionalExpressionNodePtr condition,
                                  StatementListNodePtr if_stmt_list,
                                  StatementListNodePtr else_stmt_list)
     : StatementNode(stmt_no),
-      m_condition(condition),
-      m_if_stmt_list(if_stmt_list),
-      m_else_stmt_list(else_stmt_list) {}
+      m_condition(std::move(condition)),
+      m_if_stmt_list(std::move(if_stmt_list)),
+      m_else_stmt_list(std::move(else_stmt_list)) {}
 
 ConditionalExpressionNodePtr IfStatementNode::GetCondition() {
   return m_condition;
@@ -36,8 +35,36 @@ StatementNodeStream IfStatementNode::GetAllStatementList() {
   return if_stmt_list;
 }
 
-StmtType IfStatementNode::GetStatementType() {
-  return StmtType::IF;
+void IfStatementNode::Accept(DesignExtractor *design_extractor, String proc_name) {
+  String stmt_num = GetStatementNumber();
+  design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, IF);
+
+  StatementListNodePtr if_block = m_if_stmt_list;
+  StatementListNodePtr else_block = m_else_stmt_list;
+  StatementNodeStream if_stmts = m_if_stmt_list->GetStatements();
+  StatementNodeStream else_stmts = m_else_stmt_list->GetStatements();
+
+  design_extractor->GetVisited().push_back(stmt_num);
+
+  String cond_expr = design_extractor->Visit(m_condition, proc_name, true);
+  design_extractor->Visit(if_block, proc_name);
+  design_extractor->Visit(else_block, proc_name);
+
+  design_extractor->GetPkbClient()->PopulateIf(design_extractor->GetVisited(), stmt_num, cond_expr);
+}
+
+CfgNodePtr IfStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
+  CfgNodePtr if_node = std::make_shared<CfgNode>();
+  CfgNodePtr else_node = std::make_shared<CfgNode>();
+  CfgNodePtr next_node = std::make_shared<CfgNode>();
+  cfg_node->AddStatement(StmtType::IF, GetStatementNumber());
+  cfg_node->AddNext(if_node);
+  cfg_node->AddNext(else_node);
+  if_node = cfg_builder->Visit(m_if_stmt_list, if_node);
+  if_node->AddNext(next_node);
+  else_node = cfg_builder->Visit(m_else_stmt_list, else_node);
+  else_node->AddNext(next_node);
+  return next_node;
 }
 
 bool IfStatementNode::operator==(const StatementNode &other) const {
@@ -64,38 +91,6 @@ bool IfStatementNode::operator==(const StatementNode &other) const {
   }
 
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
-}
-
-void IfStatementNode::Accept(DesignExtractor *de, String proc_name) {
-  String stmt_num = GetStatementNumber();
-  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, IF);
-
-  StatementListNodePtr if_block = m_if_stmt_list;
-  StatementListNodePtr else_block = m_else_stmt_list;
-  StatementNodeStream if_stmts = m_if_stmt_list->GetStatements();
-  StatementNodeStream else_stmts = m_else_stmt_list->GetStatements();
-
-  de->GetVisited().push_back(stmt_num);
-
-  String cond_expr = de->Visit(m_condition, proc_name, true);
-  de->Visit(if_block, proc_name);
-  de->Visit(else_block, proc_name);
-
-  de->GetPkbClient()->PopulateIf(de->GetVisited(), stmt_num, cond_expr);
-}
-
-CfgNodePtr IfStatementNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
-  CfgNodePtr if_node = std::make_shared<CfgNode>();
-  CfgNodePtr else_node = std::make_shared<CfgNode>();
-  CfgNodePtr next_node = std::make_shared<CfgNode>();
-  cfg_node->AddStatement(StmtType::IF, GetStatementNumber());
-  cfg_node->AddNext(if_node);
-  cfg_node->AddNext(else_node);
-  if_node = cb->Visit(m_if_stmt_list, if_node);
-  if_node->AddNext(next_node);
-  else_node = cb->Visit(m_else_stmt_list, else_node);
-  else_node->AddNext(next_node);
-  return next_node;
 }
 
 }

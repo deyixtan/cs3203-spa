@@ -13,8 +13,7 @@ class NotExpressionNode : public ConditionalExpressionNode {
  public:
   NotExpressionNode(ConditionalExpressionNodePtr expression);
   [[nodiscard]] ConditionalExpressionNodePtr GetExpression();
-  [[nodiscard]] ConditionalType GetConditionalType() override;
-  String Accept(DesignExtractor *de, String proc_name, bool is_uses);
+  String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

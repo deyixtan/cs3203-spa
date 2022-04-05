@@ -7,8 +7,9 @@ namespace source {
 
 class Node {
  public:
-  virtual void Accept(DesignExtractor *design_extractor) = 0;
-  virtual StringToCfgNodePtrMap Accept(CfgBuilder *cfg_builder) = 0;
+  // TODO: add back
+  //virtual void Accept(DesignExtractor *design_extractor) = 0;
+  //virtual StringToCfgNodePtrMap Accept(CfgBuilder *cfg_builder) = 0;
 };
 
 }

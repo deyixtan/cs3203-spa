@@ -12,11 +12,11 @@ class AssignStatementNode : public StatementNode {
   ExpressionNodePtr m_rhs;
 
  public:
-  AssignStatementNode(String stmt_no, VariableNodePtr lhs, ExpressionNodePtr rhs);
+  AssignStatementNode(String &stmt_no, VariableNodePtr lhs, ExpressionNodePtr rhs);
   [[nodiscard]] VariableNodePtr GetLhs();
   [[nodiscard]] ExpressionNodePtr GetRhs();
-  void Accept(DesignExtractor *de, String proc_name);
-  CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);
+  void Accept(DesignExtractor *design_extractor, String proc_name);
+  CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };
 

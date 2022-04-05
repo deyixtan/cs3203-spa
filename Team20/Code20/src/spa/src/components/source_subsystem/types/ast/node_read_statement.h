@@ -8,15 +8,14 @@ namespace source {
 
 class ReadStatementNode : public StatementNode {
  private:
-  VariableNodePtr m_identifier;
+  VariableNodePtr m_variable;
 
  public:
-  ReadStatementNode(String stmt_no, VariableNodePtr identifier);
-  [[nodiscard]] VariableNodePtr GetIdentifier();
-  [[nodiscard]] StmtType GetStatementType() override;
+  ReadStatementNode(String &stmt_no, VariableNodePtr variable);
+  [[nodiscard]] VariableNodePtr GetVariable();
+  void Accept(DesignExtractor *design_extractor, String proc_name);
+  CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
-  void Accept(DesignExtractor *de, String proc_name);
-  CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);
 };
 
 }

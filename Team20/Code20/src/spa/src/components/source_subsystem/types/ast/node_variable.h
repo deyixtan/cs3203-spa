@@ -8,16 +8,14 @@ namespace source {
 
 class VariableNode : public ExpressionNode {
  private:
-  String m_identifier;
-  String m_stmt;
+  String m_name;
+  String m_stmt_no;
 
  public:
-  VariableNode();
-  explicit VariableNode(String identifier, String stmt);
-  [[nodiscard]] String GetIdentifier();
-  [[nodiscard]] ExpressionType GetExpressionType() override;
+  explicit VariableNode(String name, String stmt_no);
+  [[nodiscard]] String GetName();
   [[nodiscard]] String GetPatternFormat() override;
-  String Accept(DesignExtractor *de, String proc_name, bool is_uses);
+  String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

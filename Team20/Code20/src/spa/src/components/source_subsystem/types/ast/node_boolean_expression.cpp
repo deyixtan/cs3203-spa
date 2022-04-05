@@ -5,25 +5,25 @@
 namespace source {
 
 BooleanExpressionNode::BooleanExpressionNode(BooleanOperator boolean_operator,
-                                             ConditionalExpressionNodePtr left_expression,
-                                             ConditionalExpressionNodePtr right_expression)
-    : m_boolean_operator(boolean_operator), m_left_expression(left_expression), m_right_expression(right_expression) {}
+                                             ConditionalExpressionNodePtr lhs,
+                                             ConditionalExpressionNodePtr rhs)
+    : m_boolean_operator(boolean_operator), m_lhs(std::move(lhs)), m_rhs(std::move(rhs)) {}
 
-ConditionalExpressionNodePtr BooleanExpressionNode::GetLeftExpression() {
-  return m_left_expression;
+BooleanOperator BooleanExpressionNode::GetOperator() {
+  return m_boolean_operator;
 }
 
-ConditionalExpressionNodePtr BooleanExpressionNode::GetRightExpression() {
-  return m_right_expression;
+ConditionalExpressionNodePtr BooleanExpressionNode::GetLhs() {
+  return m_lhs;
 }
 
-ConditionalType BooleanExpressionNode::GetConditionalType() {
-  return ConditionalType::BOOLEAN;
+ConditionalExpressionNodePtr BooleanExpressionNode::GetRhs() {
+  return m_rhs;
 }
 
-String BooleanExpressionNode::Accept(DesignExtractor *de, String proc_name, bool is_uses) {
-  String lhs = de->Visit(m_left_expression, proc_name, is_uses);
-  String rhs = de->Visit(m_right_expression, proc_name, is_uses);
+String BooleanExpressionNode::Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses) {
+  String lhs = design_extractor->Visit(m_lhs, proc_name, is_uses);
+  String rhs = design_extractor->Visit(m_rhs, proc_name, is_uses);
   if (m_boolean_operator == BooleanOperator::AND) {
     return lhs + "&&" + rhs;
   }
@@ -33,8 +33,8 @@ String BooleanExpressionNode::Accept(DesignExtractor *de, String proc_name, bool
 bool BooleanExpressionNode::operator==(const ConditionalExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const BooleanExpressionNode *>(&other);
   return m_boolean_operator == casted_other->m_boolean_operator
-      && *m_left_expression == *(casted_other->m_left_expression)
-      && *m_right_expression == *(casted_other->m_right_expression);
+      && *m_lhs == *(casted_other->m_lhs)
+      && *m_rhs == *(casted_other->m_rhs);
 }
 
 }

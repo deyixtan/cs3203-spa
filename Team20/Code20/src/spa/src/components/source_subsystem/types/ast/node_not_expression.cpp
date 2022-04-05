@@ -1,5 +1,5 @@
 #include "node_not_expression.h"
-#include "../../iterator/design_extractor.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
 
 namespace source {
 
@@ -10,12 +10,8 @@ ConditionalExpressionNodePtr NotExpressionNode::GetExpression() {
   return m_expression;
 }
 
-ConditionalType NotExpressionNode::GetConditionalType() {
-  return ConditionalType::NOT;
-}
-
-String NotExpressionNode::Accept(DesignExtractor *de, String proc_name, bool is_uses) {
-  return de->Visit(m_expression, proc_name, is_uses);
+String NotExpressionNode::Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses) {
+  return design_extractor->Visit(m_expression, proc_name, is_uses);
 }
 
 bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const {

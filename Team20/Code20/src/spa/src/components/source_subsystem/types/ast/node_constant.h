@@ -13,9 +13,8 @@ class ConstantNode : public ExpressionNode {
  public:
   explicit ConstantNode(String value);
   [[nodiscard]] String GetValue();
-  [[nodiscard]] ExpressionType GetExpressionType() override;
   [[nodiscard]] String GetPatternFormat() override;
-  std::string Accept(DesignExtractor *de, String proc_name, bool is_uses);
+  String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

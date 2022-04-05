@@ -1,24 +1,21 @@
 #include "node_constant.h"
-#include "../../iterator/design_extractor.h"
+#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
 
 namespace source {
 
-ConstantNode::ConstantNode(String value) : m_value(value) {}
+ConstantNode::ConstantNode(String value) : m_value(std::move(value)) {}
 
 String ConstantNode::GetValue() {
   return m_value;
-}
-
-ExpressionType ConstantNode::GetExpressionType() {
-  return ExpressionType::CONSTANT;
 }
 
 String ConstantNode::GetPatternFormat() {
   return "(" + m_value + ")";
 }
 
-String ConstantNode::Accept(DesignExtractor *de, String proc_name, bool is_uses) {
-  de->GetPkbClient()->PopulateConst(m_value);
+String ConstantNode::Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses) {
+  design_extractor->GetPkbClient()->PopulateConst(m_value);
   return GetPatternFormat();
 }
 

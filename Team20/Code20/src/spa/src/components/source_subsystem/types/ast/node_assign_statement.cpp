@@ -1,15 +1,13 @@
 #include "node_assign_statement.h"
-#include "../../iterator/design_extractor.h"
-#include "../../iterator/cfg_builder.h"
-#include "../cfg/cfg_node.h"
-#include "node_variable.h"
-#include "node_constant.h"
-#include "node_combination_expression.h"
+#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
+#include "components/source_subsystem/types/ast/node_variable.h"
+#include "components/source_subsystem/types/cfg/cfg_node.h"
 
 namespace source {
 
-AssignStatementNode::AssignStatementNode(String stmt_no, VariableNodePtr lhs, ExpressionNodePtr rhs)
-    : StatementNode(stmt_no), m_lhs(lhs), m_rhs(rhs) {}
+AssignStatementNode::AssignStatementNode(String &stmt_no, VariableNodePtr lhs, ExpressionNodePtr rhs)
+    : StatementNode(stmt_no), m_lhs(std::move(lhs)), m_rhs(std::move(rhs)) {}
 
 VariableNodePtr AssignStatementNode::GetLhs() {
   return m_lhs;
@@ -19,16 +17,16 @@ ExpressionNodePtr AssignStatementNode::GetRhs() {
   return m_rhs;
 }
 
-void AssignStatementNode::Accept(DesignExtractor *de, String proc_name) {
+void AssignStatementNode::Accept(DesignExtractor *design_extractor, String proc_name) {
   String stmt_num = GetStatementNumber();
-  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, ASSIGN);
+  design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, ASSIGN);
   String var_name = m_lhs->GetIdentifier();
-  de->Visit(m_lhs, proc_name, false);
-  String rhs_expr = de->Visit(m_rhs, proc_name, true);
-  de->GetPkbClient()->PopulateAssign(de->GetVisited(), proc_name, stmt_num, var_name, rhs_expr);
+  design_extractor->Visit(m_lhs, proc_name, false);
+  String rhs_expr = design_extractor->Visit(m_rhs, proc_name, true);
+  design_extractor->GetPkbClient()->PopulateAssign(design_extractor->GetVisited(), proc_name, stmt_num, var_name, rhs_expr);
 }
 
-CfgNodePtr AssignStatementNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
+CfgNodePtr AssignStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
   cfg_node->AddStatement(StmtType::ASSIGN, GetStatementNumber());
   return cfg_node;
 }

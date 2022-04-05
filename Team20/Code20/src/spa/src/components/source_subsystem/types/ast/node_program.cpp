@@ -25,7 +25,7 @@ StringToCfgNodePtrMap ProgramNode::Accept(CfgBuilder *cfg_builder) {
       CfgNodePtr dummy = std::make_shared<CfgNode>();
       tail->AddNext(dummy);
     }
-    heads.insert({procedure->GetIdentifier(), head});
+    heads.insert({procedure->GetName(), head});
   }
   return heads;
 }

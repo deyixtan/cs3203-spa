@@ -13,7 +13,7 @@ class IfStatementNode : public StatementNode {
   StatementListNodePtr m_else_stmt_list;
 
  public:
-  IfStatementNode(String stmt_no,
+  IfStatementNode(String &stmt_no,
                   ConditionalExpressionNodePtr condition,
                   StatementListNodePtr if_stmt_list,
                   StatementListNodePtr else_stmt_list);
@@ -21,10 +21,9 @@ class IfStatementNode : public StatementNode {
   [[nodiscard]] StatementListNodePtr GetIfStatementList();
   [[nodiscard]] StatementListNodePtr GetElseStatementList();
   [[nodiscard]] StatementNodeStream GetAllStatementList();
-  [[nodiscard]] StmtType GetStatementType() override;
+  void Accept(DesignExtractor *design_extractor, String proc_name);
+  CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
-  void Accept(DesignExtractor *de, String proc_name);
-  CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);
 };
 
 }

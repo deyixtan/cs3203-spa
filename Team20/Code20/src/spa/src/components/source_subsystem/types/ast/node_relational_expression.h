@@ -15,18 +15,16 @@ enum class RelationOperator {
 class RelationalExpressionNode : public ConditionalExpressionNode {
  private:
   RelationOperator m_relation_operator;
-  ExpressionNodePtr m_left_expression;
-  ExpressionNodePtr m_right_expression;
+  ExpressionNodePtr m_lhs;
+  ExpressionNodePtr m_rhs;
 
  public:
-  RelationalExpressionNode(RelationOperator relation_operator,
-                           ExpressionNodePtr left_expression,
-                           ExpressionNodePtr right_expression);
-  [[nodiscard]] ExpressionNodePtr GetLeftExpression();
-  [[nodiscard]] ExpressionNodePtr GetRightExpression();
-  [[nodiscard]] String GetRelationOperatorLabel(RelationOperator relation_operator);
-  [[nodiscard]] ConditionalType GetConditionalType() override;
-  String Accept(DesignExtractor *de, String proc_name, bool is_uses);
+  RelationalExpressionNode(RelationOperator relation_operator, ExpressionNodePtr lhs, ExpressionNodePtr rhs);
+  [[nodiscard]] RelationOperator GetOperator();
+  [[nodiscard]] static String GetOperatorLabel(RelationOperator relation_operator);
+  [[nodiscard]] ExpressionNodePtr GetLhs();
+  [[nodiscard]] ExpressionNodePtr GetRhs();
+  String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 
