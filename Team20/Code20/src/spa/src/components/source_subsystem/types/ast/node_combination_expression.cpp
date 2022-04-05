@@ -3,22 +3,21 @@
 
 namespace source {
 
-CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator,
-                                                     std::shared_ptr<ExpressionNode> right_expression)
+CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator, ExpressionNodePtr right_expression)
     : m_arithmetic_operator(arithmetic_operator), m_left_expression(NULL), m_right_expression(right_expression) {}
 
 CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator,
-                                                     std::shared_ptr<ExpressionNode> left_expression,
-                                                     std::shared_ptr<ExpressionNode> right_expression)
+                                                     ExpressionNodePtr left_expression,
+                                                     ExpressionNodePtr right_expression)
     : m_arithmetic_operator(arithmetic_operator),
       m_left_expression(left_expression),
       m_right_expression(right_expression) {}
 
-std::shared_ptr<ExpressionNode> CombinationExpressionNode::GetLeftExpression() {
+ExpressionNodePtr CombinationExpressionNode::GetLeftExpression() {
   return m_left_expression;
 }
 
-std::shared_ptr<ExpressionNode> CombinationExpressionNode::GetRightExpression() {
+ExpressionNodePtr CombinationExpressionNode::GetRightExpression() {
   return m_right_expression;
 }
 
@@ -26,7 +25,7 @@ ArithmeticOperator CombinationExpressionNode::GetArithmeticOperator() {
   return m_arithmetic_operator;
 }
 
-std::string CombinationExpressionNode::GetArithmeticOperatorLabel(ArithmeticOperator arithmetic_operator) {
+String CombinationExpressionNode::GetArithmeticOperatorLabel(ArithmeticOperator arithmetic_operator) {
   switch (arithmetic_operator) {
     case ArithmeticOperator::PLUS:return "+";
     case ArithmeticOperator::MINUS:return "-";
@@ -41,14 +40,14 @@ ExpressionType CombinationExpressionNode::GetExpressionType() {
   return ExpressionType::COMBINATION;
 }
 
-std::string CombinationExpressionNode::ToString() {
-  return "(" + m_left_expression->ToString() + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
-      + m_right_expression->ToString() + ")";
-}
-
-std::string CombinationExpressionNode::GetPatternFormat() {
+String CombinationExpressionNode::GetPatternFormat() {
   return "(" + m_left_expression->GetPatternFormat() + GetArithmeticOperatorLabel(m_arithmetic_operator)
       + m_right_expression->GetPatternFormat() + ")";
+}
+
+String CombinationExpressionNode::Accept(DesignExtractor *de, String proc_name, bool is_uses) {
+  return "(" + de->Visit(m_left_expression, proc_name, is_uses) + GetArithmeticOperatorLabel(m_arithmetic_operator)
+      + de->Visit(m_right_expression, proc_name, is_uses) + ")";
 }
 
 bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
@@ -56,11 +55,6 @@ bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
   return m_arithmetic_operator == casted_other->m_arithmetic_operator
       && *m_left_expression == *(casted_other->m_left_expression)
       && *m_right_expression == *(casted_other->m_right_expression);
-}
-
-std::string CombinationExpressionNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
-  return "(" + de->Visit(m_left_expression, proc_name, is_uses) + GetArithmeticOperatorLabel(m_arithmetic_operator)
-      + de->Visit(m_right_expression, proc_name, is_uses) + ")";
 }
 
 }

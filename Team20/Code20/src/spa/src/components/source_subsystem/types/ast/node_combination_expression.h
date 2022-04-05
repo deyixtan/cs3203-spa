@@ -1,16 +1,13 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_
+#ifndef NODE_COMBINATION_EXPRESSION_H
+#define NODE_COMBINATION_EXPRESSION_H
 
+#include "components/source_subsystem/source_declarations.h"
 #include "node_expression.h"
 
 namespace source {
 
 enum class ArithmeticOperator {
-  PLUS,
-  MINUS,
-  MULTIPLY,
-  DIVIDE,
-  MOD,
+  PLUS, MINUS, MULTIPLY, DIVIDE, MOD
 };
 
 class DesignExtractor;
@@ -18,25 +15,24 @@ class DesignExtractor;
 class CombinationExpressionNode : public ExpressionNode {
  private:
   ArithmeticOperator m_arithmetic_operator;
-  std::shared_ptr<ExpressionNode> m_left_expression;
-  std::shared_ptr<ExpressionNode> m_right_expression;
+  ExpressionNodePtr m_left_expression;
+  ExpressionNodePtr m_right_expression;
 
  public:
-  CombinationExpressionNode(ArithmeticOperator arithmetic_operator, std::shared_ptr<ExpressionNode> right_expression);
+  CombinationExpressionNode(ArithmeticOperator arithmetic_operator, ExpressionNodePtr right_expression);
   CombinationExpressionNode(ArithmeticOperator arithmetic_operator,
-                            std::shared_ptr<ExpressionNode> left_expression,
-                            std::shared_ptr<ExpressionNode> right_expression);
-  [[nodiscard]] std::shared_ptr<ExpressionNode> GetLeftExpression();
-  [[nodiscard]] std::shared_ptr<ExpressionNode> GetRightExpression();
+                            ExpressionNodePtr left_expression,
+                            ExpressionNodePtr right_expression);
+  [[nodiscard]] ExpressionNodePtr GetLeftExpression();
+  [[nodiscard]] ExpressionNodePtr GetRightExpression();
   [[nodiscard]] ArithmeticOperator GetArithmeticOperator();
-  [[nodiscard]] std::string GetArithmeticOperatorLabel(ArithmeticOperator arithmetic_operator);
+  [[nodiscard]] String GetArithmeticOperatorLabel(ArithmeticOperator arithmetic_operator);
   [[nodiscard]] ExpressionType GetExpressionType() override;
-  [[nodiscard]] std::string ToString() override;
-  [[nodiscard]] std::string GetPatternFormat();
+  [[nodiscard]] String GetPatternFormat();
+  String Accept(DesignExtractor *de, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
-  std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses);
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_COMBINATION_EXPRESSION_H_
+#endif //NODE_COMBINATION_EXPRESSION_H
