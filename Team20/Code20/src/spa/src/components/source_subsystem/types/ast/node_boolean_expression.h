@@ -7,8 +7,7 @@
 namespace source {
 
 enum class BooleanOperator {
-  AND,
-  OR
+  AND, OR
 };
 
 class BooleanExpressionNode : public ConditionalExpressionNode {

@@ -10,8 +10,6 @@ enum class ArithmeticOperator {
   PLUS, MINUS, MULTIPLY, DIVIDE, MOD
 };
 
-class DesignExtractor;
-
 class CombinationExpressionNode : public ExpressionNode {
  private:
   ArithmeticOperator m_arithmetic_operator;
