@@ -3,6 +3,8 @@
 #include "../../iterator/cfg_builder.h"
 #include "../cfg/cfg_node.h"
 
+namespace source {
+
 AssignStatementNode::AssignStatementNode(int stmt_no,
                                          std::shared_ptr<VariableNode> identifier,
                                          std::shared_ptr<ExpressionNode> expression)
@@ -36,17 +38,16 @@ bool AssignStatementNode::operator==(const StatementNode &other) const {
 
 void AssignStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  std::string var_name = "";
-  de->GetPkbClient()->PopulateStmt(stmt_num);
-  var_name = m_identifier->GetIdentifier();
+  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, ASSIGN);
+  std::string var_name = m_identifier->GetIdentifier();
   de->Visit(m_identifier, proc_name, false);
   std::string rhs_expr = de->Visit(m_expression, proc_name, true);
-  de->GetPkbClient()->AddPattern(STMT, stmt_num, var_name, rhs_expr);
-  de->GetPkbClient()->PopulateAssign(stmt_num);
-  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
+  de->GetPkbClient()->PopulateAssign(de->GetVisited(), proc_name, stmt_num, var_name, rhs_expr);
 }
 
 std::shared_ptr<CfgNode> AssignStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
   cfg_node->AddStatement(StmtType::ASSIGN, std::to_string(GetStatementNumber()));
   return cfg_node;
+}
+
 }

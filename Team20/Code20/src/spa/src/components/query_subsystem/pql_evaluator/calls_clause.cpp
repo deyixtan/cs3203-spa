@@ -34,6 +34,10 @@ Table CallsClause::Execute() {
 }
 
 Table CallsClause::HandleSynonymSynonym() {
+  if (first_arg.value==second_arg.value) {
+    return ConstructEmptyTable();
+  }
+
   auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
   return {first_arg.value, second_arg.value, pair_constraints};
 }
@@ -41,7 +45,7 @@ Table CallsClause::HandleSynonymSynonym() {
 Table CallsClause::HandleSynonymWildcard() {
   auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
   std::unordered_set<std::string> single_constraints;
-  for (const auto& pair_constraint : pair_constraints) {
+  for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.first);
   }
 
@@ -56,7 +60,7 @@ Table CallsClause::HandleSynonymIdent() {
 Table CallsClause::HandleWildcardSynonym() {
   auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
   std::unordered_set<std::string> single_constraints;
-  for (const auto& pair_constraint : pair_constraints) {
+  for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.second);
   }
 
@@ -65,20 +69,12 @@ Table CallsClause::HandleWildcardSynonym() {
 
 Table CallsClause::HandleWildcardWildcard() {
   bool is_empty = pkb->GetCallStore()->GetAllCalls().empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 Table CallsClause::HandleWildcardIdent() {
   bool is_empty = pkb->GetCallStore()->GetCallersOf(second_arg.value).empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 Table CallsClause::HandleIdentSynonym() {
@@ -88,20 +84,13 @@ Table CallsClause::HandleIdentSynonym() {
 
 Table CallsClause::HandleIdentWildcard() {
   bool is_empty = pkb->GetCallStore()->GetCalleesOf(first_arg.value).empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_empty);
 }
 
 Table CallsClause::HandleIdentIdent() {
-  bool is_empty = !pkb->GetCallStore()->IsCallsPairExists(first_arg.value, second_arg.value);
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  bool is_empty =
+      !pkb->GetCallStore()->IsCallsPairValid(std::pair<std::string, std::string>(first_arg.value, second_arg.value));
+  return ConstructEmptyTable(is_empty);
 }
 
 }

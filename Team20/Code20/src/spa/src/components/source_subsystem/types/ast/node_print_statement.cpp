@@ -3,6 +3,8 @@
 #include "../../iterator/cfg_builder.h"
 #include "../cfg/cfg_node.h"
 
+namespace source {
+
 PrintStatementNode::PrintStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier)
     : StatementNode(stmt_no), m_identifier(identifier) {}
 
@@ -23,21 +25,22 @@ std::string PrintStatementNode::GetPatternFormat() {
 }
 
 bool PrintStatementNode::operator==(const StatementNode &other) const {
-  const auto casted_other = dynamic_cast<const PrintStatementNode*>(&other);
+  const auto casted_other = dynamic_cast<const PrintStatementNode *>(&other);
   return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier);
 }
 
 void PrintStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  de->GetPkbClient()->PopulateStmt(stmt_num);
-  de->GetPkbClient()->PopulateName(m_identifier->GetIdentifier(), PRINT);
   std::string var_name = m_identifier->GetIdentifier();
-  de->GetPkbClient()->PopulatePrint(stmt_num, m_identifier->GetIdentifier());
-  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
+  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, PRINT);
+
   de->Visit(m_identifier, proc_name, true);
+  de->GetPkbClient()->PopulatePrint(de->GetVisited(), stmt_num, var_name);
 }
 
 std::shared_ptr<CfgNode> PrintStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
   cfg_node->AddStatement(StmtType::PRINT, std::to_string(GetStatementNumber()));
   return cfg_node;
+}
+
 }

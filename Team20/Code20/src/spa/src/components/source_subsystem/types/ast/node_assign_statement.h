@@ -6,8 +6,7 @@
 #include "node_constant.h"
 #include "node_combination_expression.h"
 
-class DesignExtractor;
-class CfgBuilder;
+namespace source {
 
 class AssignStatementNode : public StatementNode {
  private:
@@ -27,5 +26,7 @@ class AssignStatementNode : public StatementNode {
   void Accept(DesignExtractor *de, std::string proc_name);
   std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
+
+}
 
 #endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_ASSIGN_STATEMENT_H_

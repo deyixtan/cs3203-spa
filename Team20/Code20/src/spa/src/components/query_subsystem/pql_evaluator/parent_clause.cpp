@@ -47,6 +47,10 @@ Table ParentClause::Execute() {
 }
 
 Table ParentClause::HandleSynonymSynonym() {
+  if (first_arg.value==second_arg.value) {
+    return ConstructEmptyTable();
+  }
+
   auto pair_constraints = pkb->GetParentStore()->GetAllParentStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
@@ -67,15 +71,12 @@ Table ParentClause::HandleSynonymWildcard() {
 }
 
 Table ParentClause::HandleSynonymInteger() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStmt(
-      GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
-      StmtType::STMT
-  );
   std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      single_constraints.insert(pair_constraint.first);
-    }
+  std::string parent =
+      pkb->GetParentStore()->GetParentOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+                                         second_arg.value);
+  if (parent!="0") {
+    single_constraints.emplace(parent);
   }
   return {first_arg.value, single_constraints};
 }
@@ -102,13 +103,7 @@ Table ParentClause::HandleWildcardWildcard() {
 }
 
 Table ParentClause::HandleWildcardInteger() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStmt(StmtType::STMT, StmtType::STMT);
-  bool is_false_clause = true;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      is_false_clause = false;
-    }
-  }
+  bool is_false_clause = pkb->GetParentStore()->GetParentOf(STMT, second_arg.value)=="0";
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
@@ -117,21 +112,14 @@ Table ParentClause::HandleWildcardInteger() {
 }
 
 Table ParentClause::HandleIntegerSynonym() {
-  auto pair_constraints = pkb->GetParentStore()->GetAllParentStmt(
-      StmtType::STMT,
-      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
-  );
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.first==first_arg.value) {
-      single_constraints.insert(pair_constraint.second);
-    }
-  }
+  auto single_constraints =
+      pkb->GetParentStore()->GetChildOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
+                                        first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table ParentClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetParentStore()->GetChildOf(first_arg.value).empty();
+  bool is_false_clause = pkb->GetParentStore()->GetChildOf(STMT, first_arg.value).empty();
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
@@ -140,7 +128,7 @@ Table ParentClause::HandleIntegerWildcard() {
 }
 
 Table ParentClause::HandleIntegerInteger() {
-  bool is_false_clause = !pkb->GetParentStore()->ParentChildExists(first_arg.value,second_arg.value);
+  bool is_false_clause = !pkb->GetParentStore()->IsParentPairValid({first_arg.value, second_arg.value});
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();

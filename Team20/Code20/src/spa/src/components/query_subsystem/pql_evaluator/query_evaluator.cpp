@@ -22,8 +22,8 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
     }
   } else if (table.IsAttributeResult()) {
     ResultClause result_clause = query.GetResultClause();
-    std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration();
-    std::pair<std::pair<DesignEntityType, std::string>, AtrriName> attribute = Utils::ParseAttributeRef(result_clause.GetValues().front(), declarations);
+    std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration().GetDeclarations();
+    std::pair<std::pair<DesignEntityType, std::string>, AttriName> attribute = Utils::ParseAttributeRef(result_clause.GetValues().front(), declarations);
     auto projected_results = table.GetResult(attribute.first.second);
     if (Utils::IsConversionNeeded(attribute.first.first, attribute.second)) {
       std::unordered_set<std::string> temp_set;
@@ -44,40 +44,45 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
       results.emplace_back(result);
     }
   } else if (table.IsTupleResult()) {
-    auto projected_results = table.GetTupleResult(query.GetResultClause().GetValues(), query.GetDeclaration(), pkb);
+    auto projected_results = table.GetTupleResult(query.GetResultClause().GetValues(), query.GetDeclaration().GetDeclarations(), pkb);
     for (auto result : projected_results) {
       results.emplace_back(result);
     }
   }
+
+  pkb->GetAffectStore()->ClearAffectSession();
 }
 
 std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query) {
   std::queue<std::unique_ptr<pql::Clause> > clauses;
   for (const auto& relationship : query.GetRelationships()) {
-    auto clause = pql::ClauseFactory::Create(relationship, query.GetDeclaration(), pkb);
+    auto clause = pql::ClauseFactory::Create(relationship, query.GetDeclaration().GetDeclarations(), pkb);
     if (clause) {
       clauses.push(std::move(clause));
     }
   }
 
   for (const auto& pattern : query.GetPatterns()) {
-    auto clause = pql::ClauseFactory::Create(pattern, query.GetDeclaration(), pkb);
+    auto clause = pql::ClauseFactory::Create(pattern, query.GetDeclaration().GetDeclarations(), pkb);
     if (clause) {
       clauses.push(std::move(clause));
     }
   }
 
   for (const auto& with : query.GetWithClause()) {
-    auto clause = pql::ClauseFactory::Create(with, query.GetDeclaration(), pkb);
+    auto clause = pql::ClauseFactory::Create(with, query.GetDeclaration().GetDeclarations(), pkb);
     if (clause) {
       clauses.push(std::move(clause));
     }
   }
 
-  clauses.push(pql::ClauseFactory::Create(query.GetResultClause(), query.GetDeclaration(), pkb));
+  clauses.push(pql::ClauseFactory::Create(query.GetResultClause(), query.GetDeclaration().GetDeclarations(), pkb));
 
   return clauses;
 }
 
+void QueryEvaluator::WipeCache() {
+  pkb->GetNextStore()->WipeStar();
+}
 
 }

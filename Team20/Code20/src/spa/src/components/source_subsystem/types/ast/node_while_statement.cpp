@@ -3,6 +3,8 @@
 #include "../../iterator/cfg_builder.h"
 #include "../cfg/cfg_node.h"
 
+namespace source {
+
 WhileStatementNode::WhileStatementNode(int stmt_no,
                                        std::shared_ptr<ConditionalExpressionNode> cond,
                                        std::shared_ptr<StatementListNode> stmt_list)
@@ -37,9 +39,11 @@ bool WhileStatementNode::operator==(const StatementNode &other) const {
   if (this_stmt_list.size() != other_stmt_list.size()) {
     return false;
   }
+
   for (int i = 0; i < this_stmt_list.size(); i++) {
-    if (*(this_stmt_list.at(i)) == *(other_stmt_list.at(i))) {}
-    else { return false; }
+    if (!(*(this_stmt_list.at(i)) == *(other_stmt_list.at(i)))) {
+      return false;
+    }
   }
 
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
@@ -47,23 +51,16 @@ bool WhileStatementNode::operator==(const StatementNode &other) const {
 
 void WhileStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
-  de->GetPkbClient()->PopulateStmt(stmt_num);
-  std::string while_stmt_num = std::to_string(GetStatementNumber());
-  de->GetVisited().push_back(while_stmt_num);
-
-  std::string cond_expr = de->Visit(m_condition, proc_name, true);
-  de->GetPkbClient()->AddPattern(WHILE, stmt_num, cond_expr, "");
+  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, WHILE);
 
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
 
+  de->GetVisited().push_back(stmt_num);
+  std::string cond_expr = de->Visit(m_condition, proc_name, true);
+
   de->Visit(while_block, proc_name);
-
-  de->GetPkbClient()->PopulateWhile(stmt_num);
-  de->GetPkbClient()->PopulateParentStar(while_stmt_num, de->GetVisited());
-
-  de->GetVisited().pop_back();
-  de->GetPkbClient()->PopulateParentStar(stmt_num, de->GetVisited());
+  de->GetPkbClient()->PopulateWhile(de->GetVisited(), stmt_num, cond_expr);
 }
 
 std::shared_ptr<CfgNode> WhileStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
@@ -75,4 +72,6 @@ std::shared_ptr<CfgNode> WhileStatementNode::Accept(CfgBuilder *cb, std::shared_
   body_node = cb->Visit(m_stmt_list, body_node);
   body_node->AddNext(cfg_node);
   return next_node;
+}
+
 }

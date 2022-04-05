@@ -34,42 +34,33 @@ Table pql::UsesPClause::Execute() {
 }
 
 Table UsesPClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetUsageStore()->GetAllProcVar();
+  auto pair_constraints = pkb->GetUsesStore()->GetAllUsesStmt(PROC);
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
 Table UsesPClause::HandleSynonymWildcard() {
-  auto single_constraints = pkb->GetUsageStore()->GetAllProcUsing();
+  auto single_constraints = pkb->GetUsesStore()->GetAllProcUsing();
   return {first_arg.value, single_constraints};
 }
 
 Table UsesPClause::HandleSynonymIdent() {
-  auto single_constraints = pkb->GetUsageStore()->GetProcUsedByVar(second_arg.value);
+  auto single_constraints = pkb->GetUsesStore()->GetStmtUsedByVar(PROC, second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
 Table UsesPClause::HandleIdentSynonym() {
-  auto single_constraints = pkb->GetUsageStore()->GetVarUsedByProc(first_arg.value);
+  auto single_constraints = pkb->GetUsesStore()->GetVarUsedByStmt(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table UsesPClause::HandleIdentWildcard() {
-  bool is_empty = pkb->GetUsageStore()->GetVarUsedByProc(first_arg.value).empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  bool is_false_clause = pkb->GetUsesStore()->GetVarUsedByStmt(first_arg.value).empty();
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table UsesPClause::HandleIdentIdent() {
-  std::pair arg_pair(first_arg.value, second_arg.value);
-  bool is_empty = !pkb->GetUsageStore()->ProcVarExists(arg_pair);
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  bool is_false_clause = !pkb->GetUsesStore()->IsStmtVarValid({first_arg.value, second_arg.value});
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }

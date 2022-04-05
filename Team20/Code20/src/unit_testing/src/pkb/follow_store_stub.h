@@ -1,7 +1,14 @@
 #ifndef FOLLOW_STORE_STUB_H
 #define FOLLOW_STORE_STUB_H
 
-#include "components/pkb/stores/follow_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+
+struct FollowsNode {
+  std::string follower;
+  std::string following;
+  std::unordered_set<std::string> follower_star;
+  std::unordered_set<std::string> following_star;
+};
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_set =
     {
@@ -16,7 +23,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> follow_set =
         {"9", "10"},
     };
 
-std::unordered_map<std::string, FollowNode> rs_map =
+std::unordered_map<std::string, FollowsNode> rs_map =
     {
         {"1", {"0", "2", {}, {}}},
         {"2", {"1", "3", {}, {}}},

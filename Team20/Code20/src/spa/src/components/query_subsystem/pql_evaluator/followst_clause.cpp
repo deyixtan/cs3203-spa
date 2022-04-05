@@ -47,7 +47,11 @@ Table FollowsTClause::Execute() {
 }
 
 Table FollowsTClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetFollowStore()->GetAllFollowStarStmt(
+  if (first_arg.value==second_arg.value) {
+    return ConstructEmptyTable();
+  }
+
+  auto pair_constraints = pkb->GetFollowsStore()->GetAllFollowStarStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
   );
@@ -55,7 +59,7 @@ Table FollowsTClause::HandleSynonymSynonym() {
 }
 
 Table FollowsTClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetFollowStore()->GetAllFollowStarStmt(
+  auto pair_constraints = pkb->GetFollowsStore()->GetAllFollowStarStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       StmtType::STMT
   );
@@ -67,21 +71,14 @@ Table FollowsTClause::HandleSynonymWildcard() {
 }
 
 Table FollowsTClause::HandleSynonymInteger() {
-  auto pair_constraints = pkb->GetFollowStore()->GetAllFollowStarStmt(
-      GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
-      StmtType::STMT
-  );
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      single_constraints.insert(pair_constraint.first);
-    }
-  }
+  auto single_constraints =
+      pkb->GetFollowsStore()->GetFollowerStarOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+                                                second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
 Table FollowsTClause::HandleWildcardSynonym() {
-  auto pair_constraints = pkb->GetFollowStore()->GetAllFollowStarStmt(
+  auto pair_constraints = pkb->GetFollowsStore()->GetAllFollowStarStmt(
       StmtType::STMT,
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
   );
@@ -93,60 +90,30 @@ Table FollowsTClause::HandleWildcardSynonym() {
 }
 
 Table FollowsTClause::HandleWildcardWildcard() {
-  bool is_false_clause = pkb->GetFollowStore()->GetAllFollowStarStmt(StmtType::STMT, StmtType::STMT).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  bool is_false_clause = pkb->GetFollowsStore()->GetAllFollowStarStmt(StmtType::STMT, StmtType::STMT).empty();
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table FollowsTClause::HandleWildcardInteger() {
-  auto pair_constraints = pkb->GetFollowStore()->GetAllFollowStarStmt(StmtType::STMT, StmtType::STMT);
-  bool is_false_clause = true;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      is_false_clause = false;
-    }
-  }
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  auto is_false_clause = pkb->GetFollowsStore()->GetFollowerStarOf(STMT, second_arg.value).empty();
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table FollowsTClause::HandleIntegerSynonym() {
-  auto pair_constraints = pkb->GetFollowStore()->GetAllFollowStarStmt(
-      StmtType::STMT,
-      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
-  );
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.first==first_arg.value) {
-      single_constraints.insert(pair_constraint.second);
-    }
-  }
+  auto single_constraints =
+      pkb->GetFollowsStore()->GetFollowingStarOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
+                                                 first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table FollowsTClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetFollowStore()->GetFollowingStarOf(first_arg.value).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  bool is_false_clause = pkb->GetFollowsStore()->GetFollowingStarOf(STMT, first_arg.value).empty();
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table FollowsTClause::HandleIntegerInteger() {
-  auto following_star = pkb->GetFollowStore()->GetFollowingStarOf(first_arg.value);
-  bool is_false_clause = following_star.find(second_arg.value)==following_star.end();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  auto is_false_clause = !pkb->GetFollowsStore()->IsFollowsStarPairValid({first_arg.value, second_arg.value});
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }
