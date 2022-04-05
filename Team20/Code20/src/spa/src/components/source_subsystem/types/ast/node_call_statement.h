@@ -1,25 +1,25 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CALL_STATEMENT_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CALL_STATEMENT_H_
+#ifndef CALL_STATEMENT_H
+#define CALL_STATEMENT_H
 
+#include "components/source_subsystem/source_declarations.h"
 #include "node_statement.h"
 
 namespace source {
 
 class CallStatementNode : public StatementNode {
  private:
-  std::string m_identifier;
-  std::string proc_name;
+  String m_identifier;
+  String proc_name;
 
  public:
-  CallStatementNode(int stmt_no, std::string proc_name, std::string m_identifier);
-  [[nodiscard]] std::string GetIdentifier();
+  CallStatementNode(String stmt_no, String proc_name, String m_identifier);
+  [[nodiscard]] String GetIdentifier();
   [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] std::string ToString() override;
+  void Accept(DesignExtractor *de, String proc_name);
+  CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
-  void Accept(DesignExtractor *de, std::string proc_name);
-  std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CALL_STATEMENT_H_
+#endif //CALL_STATEMENT_H
