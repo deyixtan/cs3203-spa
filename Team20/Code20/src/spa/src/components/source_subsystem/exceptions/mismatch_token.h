@@ -1,23 +1,19 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_MISMATCH_TOKEN_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_MISMATCH_TOKEN_H_
+#ifndef MISMATCH_TOKEN_H
+#define MISMATCH_TOKEN_H
 
-#include <exception>
-#include <string>
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
-class MismatchedTokenException : public std::exception {
+class MismatchedTokenException : public Exception {
  private:
-  std::string m_msg;
-
- public:
-  static std::string MESSAGE;
+  String m_msg;
 
  public:
   MismatchedTokenException();
-  [[nodiscard]] virtual const char *what() const noexcept override;
+  [[nodiscard]] const char *what() const noexcept override;
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_MISMATCH_TOKEN_H_
+#endif //MISMATCH_TOKEN_H
