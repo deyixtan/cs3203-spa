@@ -1,6 +1,7 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
+#ifndef STATEMENT_H
+#define STATEMENT_H
 
+#include "components/source_subsystem/source_declarations.h"
 #include "node.h"
 #include "../../../pkb/stores/store.h"
 
@@ -8,22 +9,18 @@ namespace source {
 
 class StatementNode : public Node {
  protected:
-  int m_stmt_no;
-
- protected:
-  [[nodiscard]] std::string GetStatementLabel();
+  String m_stmt_no;
 
  public:
-  StatementNode(int stmt_no);
-  [[nodiscard]] int GetStatementNumber();
+  explicit StatementNode(String stmt_no);
+  [[nodiscard]] String GetStatementNumber();
   [[nodiscard]] virtual StmtType GetStatementType() = 0;
-  [[nodiscard]] std::string ToString() override;
-  [[nodiscard]] std::string GetPatternFormat() override;
+  [[nodiscard]] String GetPatternFormat() override;
+  virtual void Accept(DesignExtractor *de, String proc_name) = 0;
+  virtual CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node) = 0;
   virtual bool operator==(const StatementNode &other) const = 0;
-  virtual void Accept(DesignExtractor *de, std::string proc_name) = 0;
-  virtual std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) = 0;
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_STATEMENT_H_
+#endif //STATEMENT_H
