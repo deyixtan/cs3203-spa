@@ -3,6 +3,8 @@
 #include "../../iterator/cfg_builder.h"
 #include "../cfg/cfg_node.h"
 
+namespace source {
+
 WhileStatementNode::WhileStatementNode(int stmt_no,
                                        std::shared_ptr<ConditionalExpressionNode> cond,
                                        std::shared_ptr<StatementListNode> stmt_list)
@@ -49,6 +51,8 @@ bool WhileStatementNode::operator==(const StatementNode &other) const {
 
 void WhileStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
+  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, WHILE);
+
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
 
@@ -68,4 +72,6 @@ std::shared_ptr<CfgNode> WhileStatementNode::Accept(CfgBuilder *cb, std::shared_
   body_node = cb->Visit(m_stmt_list, body_node);
   body_node->AddNext(cfg_node);
   return next_node;
+}
+
 }

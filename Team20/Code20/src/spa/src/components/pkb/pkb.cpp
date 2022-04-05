@@ -2,6 +2,7 @@
 
 PKB::PKB()
     : m_stmt_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)),
+      m_stmt_type(std::make_shared<std::unordered_map<std::string, StmtType>>()),
       m_name_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)),
       m_name_to_stmt(std::make_shared<std::vector<std::unordered_map<std::string, std::unordered_set<std::string>>>>(
           COUNT)), m_stmt_to_name(std::make_shared<std::vector<std::unordered_map<std::string, std::string>>>(
@@ -10,18 +11,22 @@ PKB::PKB()
 }
 
 void PKB::InitRelationshipStores() {
-  m_follow_store = std::make_shared<FollowsStore>(m_stmt_vector);
-  m_modify_store = std::make_shared<ModifiesStore>(m_stmt_vector);
-  m_parent_store = std::make_shared<ParentStore>(m_stmt_vector);
-  m_usage_store = std::make_shared<UsesStore>(m_stmt_vector);
-  m_pattern_store = std::make_shared<PatternStore>(m_stmt_vector);
-  m_call_store = std::make_shared<CallStore>(m_stmt_vector);
-  m_next_store = std::make_shared<NextStore>(m_stmt_vector);
-  m_affect_store = std::make_shared<AffectStore>(m_stmt_vector, m_modify_store, m_usage_store);
+  m_follow_store = std::make_shared<FollowsStore>(m_stmt_vector, m_stmt_type);
+  m_modify_store = std::make_shared<ModifiesStore>(m_stmt_vector, m_stmt_type);
+  m_parent_store = std::make_shared<ParentStore>(m_stmt_vector, m_stmt_type);
+  m_usage_store = std::make_shared<UsesStore>(m_stmt_vector, m_stmt_type);
+  m_pattern_store = std::make_shared<PatternStore>(m_stmt_vector, m_stmt_type);
+  m_call_store = std::make_shared<CallStore>(m_stmt_vector, m_stmt_type);
+  m_next_store = std::make_shared<NextStore>(m_stmt_vector, m_stmt_type);
+  m_affect_store = std::make_shared<AffectStore>(m_stmt_vector, m_stmt_type, m_modify_store, m_usage_store, m_follow_store);
 }
 
 void PKB::AddStmt(std::string const &stmt, StmtType type) {
   m_stmt_vector->at(type).insert(stmt);
+}
+
+void PKB::AddTypeOfStmt(std::string const &stmt, StmtType type) {
+  m_stmt_type->insert({stmt, type});
 }
 
 void PKB::AddName(std::string const &name, StmtType type) {
@@ -46,13 +51,20 @@ void PKB::AddStmtToName(StmtType type, std::string const &stmt, std::string cons
   }
 }
 
-void PKB::AddProgramCfg(std::shared_ptr<Cfg> program_cfg) {
+void PKB::AddProgramCfg(std::shared_ptr<source::Cfg> program_cfg) {
   m_program_cfg = program_cfg;
   m_affect_store->AddProgramCfg(program_cfg);
 }
 
 std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
   return m_stmt_vector->at(type);
+}
+
+StmtType PKB::GetTypeOfStmt(std::string stmt_no) {
+  if (m_stmt_type->count(stmt_no) == 0)
+    // TODO: add custom exception
+    throw std::runtime_error("NO SUCH STMT_NO");
+  return m_stmt_type->at(stmt_no);
 }
 
 std::unordered_set<std::string> PKB::GetName(StmtType type) {
@@ -109,6 +121,6 @@ std::shared_ptr<AffectStore> PKB::GetAffectStore() {
   return m_affect_store;
 }
 
-std::shared_ptr<Cfg> PKB::GetProgCfg() {
+std::shared_ptr<source::Cfg> PKB::GetProgCfg() {
   return m_program_cfg;
 }

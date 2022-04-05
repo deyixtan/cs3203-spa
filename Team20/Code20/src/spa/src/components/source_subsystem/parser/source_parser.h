@@ -1,71 +1,54 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_PARSER_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_PARSER_H_
+#ifndef SOURCE_PARSER_H
+#define SOURCE_PARSER_H
 
-#include <vector>
-
-#include "../types/source_token/source_token.h"
-#include "source_parser_session.h"
-#include "components/source_subsystem/exceptions/cyclic_call.h"
-#include "components/source_subsystem/exceptions/empty_statement_list.h"
-#include "components/source_subsystem/exceptions/end_of_stream.h"
-#include "components/source_subsystem/exceptions/invalid_call.h"
-#include "components/source_subsystem/exceptions/invalid_parse_condition.h"
-#include "components/source_subsystem/exceptions/invalid_parse_factor.h"
-#include "components/source_subsystem/exceptions/invalid_parse_relation.h"
-#include "components/source_subsystem/exceptions/invalid_parse_statement.h"
-#include "components/source_subsystem/exceptions/mismatch_token.h"
-#include "components/source_subsystem/exceptions/unexpected_token.h"
-#include "components/source_subsystem/types/ast/node_program.h"
-#include "components/source_subsystem/types/ast/node_read_statement.h"
-#include "components/source_subsystem/types/ast/node_print_statement.h"
-#include "components/source_subsystem/types/ast/node_while_statement.h"
-#include "components/source_subsystem/types/ast/node_if_statement.h"
-#include "components/source_subsystem/types/ast/node_assign_statement.h"
-#include "components/source_subsystem/types/ast/node_boolean_expression.h"
-#include "components/source_subsystem/types/ast/node_call_statement.h"
-#include "components/source_subsystem/types/ast/node_relational_expression.h"
-#include "components/source_subsystem/types/ast/node_not_expression.h"
-#include "components/source_subsystem/types/ast/node_constant.h"
+#include "components/source_subsystem/source_declarations.h"
+#include "components/source_subsystem/parser/source_parser_session.h"
 
 namespace source {
 
 class SourceParser {
  private:
-  SourceParserSession m_session;
   int m_cursor;
   int m_curr_stmt_no;
-  std::vector<std::shared_ptr<SourceToken>> m_tokens_ptr;
+  TokenStream m_token_stream;
+  SourceParserSession m_session;
 
  private:
-  [[nodiscard]] bool AreTokensProcessed();
-  [[nodiscard]] std::shared_ptr<SourceToken> FetchToken(int tokens_ahead);
-  [[nodiscard]] std::shared_ptr<SourceToken> FetchCurrentToken();
-  std::shared_ptr<SourceToken> ProcessToken(TokenType type);
+  [[nodiscard]] bool HasMoreTokens();
+  [[nodiscard]] TokenPtr FetchToken(int index);
+  [[nodiscard]] TokenPtr FetchCurrentToken();
+  TokenPtr ProcessToken(TokenType type);
   [[nodiscard]] bool IsConditionalOperand(int &cursor);
   [[nodiscard]] bool IsConditionalExpression();
-  [[nodiscard]] std::shared_ptr<ProcedureNode> ParseProcedure();
-  [[nodiscard]] std::shared_ptr<StatementListNode> ParseStatementList();
-  [[nodiscard]] std::shared_ptr<StatementNode> ParseStatement();
-  [[nodiscard]] std::shared_ptr<ReadStatementNode> ParseReadStatement();
-  [[nodiscard]] std::shared_ptr<PrintStatementNode> ParsePrintStatement();
-  [[nodiscard]] std::shared_ptr<WhileStatementNode> ParseWhileStatement();
-  [[nodiscard]] std::shared_ptr<IfStatementNode> ParseIfStatement();
-  [[nodiscard]] std::shared_ptr<AssignStatementNode> ParseAssignStatement();
-  [[nodiscard]] std::shared_ptr<CallStatementNode> ParseCallStatement();
-  [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> ParseConditionalExpression();
-  [[nodiscard]] std::shared_ptr<RelationalExpressionNode> ParseRelationalExpression();
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseRelationalFactor();
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseExpression();
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseExpression(std::shared_ptr<ExpressionNode> left_term);
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseTerm();
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseTerm(std::shared_ptr<ExpressionNode> left_factor);
-  [[nodiscard]] std::shared_ptr<ExpressionNode> ParseFactor();
+  [[nodiscard]] BooleanOperator GetBooleanOperator();
+  [[nodiscard]] RelationOperator GetRelationOperator();
+  [[nodiscard]] ArithmeticOperator GetExpressionOperator();
+  [[nodiscard]] ArithmeticOperator GetTermOperator();
+  [[nodiscard]] ProcedureNodePtr ParseProcedure();
+  [[nodiscard]] StatementListNodePtr ParseStatementList();
+  [[nodiscard]] StatementNodePtr ParseStatement();
+  [[nodiscard]] ReadStatementNodePtr ParseReadStatement();
+  [[nodiscard]] PrintStatementNodePtr ParsePrintStatement();
+  [[nodiscard]] AssignStatementNodePtr ParseAssignStatement();
+  [[nodiscard]] CallStatementNodePtr ParseCallStatement();
+  [[nodiscard]] WhileStatementNodePtr ParseWhileStatement();
+  [[nodiscard]] IfStatementNodePtr ParseIfStatement();
+  [[nodiscard]] ConditionalExpressionNodePtr ParseConditionalExpression();
+  [[nodiscard]] BooleanExpressionNodePtr ParseBooleanExpressionNode();
+  [[nodiscard]] RelationalExpressionNodePtr ParseRelationalExpression();
+  [[nodiscard]] NotExpressionNodePtr ParseNotExpressionNode();
+  [[nodiscard]] ExpressionNodePtr ParseRelationalFactor();
+  [[nodiscard]] ExpressionNodePtr ParseExpression();
+  [[nodiscard]] ExpressionNodePtr ParseExpression(ExpressionNodePtr left_term);
+  [[nodiscard]] ExpressionNodePtr ParseTerm();
+  [[nodiscard]] ExpressionNodePtr ParseTerm(ExpressionNodePtr left_factor);
+  [[nodiscard]] ExpressionNodePtr ParseFactor();
 
  public:
-  SourceParser(std::vector<std::shared_ptr<SourceToken>> tokens_ptr);
-  [[nodiscard]] std::shared_ptr<ProgramNode> ParseProgram();
+  explicit SourceParser(TokenStream token_stream);
+  [[nodiscard]] ProgramNodePtr ParseProgram();
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_PARSER_H_
+#endif //SOURCE_PARSER_H

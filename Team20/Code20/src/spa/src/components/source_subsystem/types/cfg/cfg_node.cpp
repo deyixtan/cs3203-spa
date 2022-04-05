@@ -1,5 +1,7 @@
 #include "cfg_node.h"
 
+namespace source {
+
 CfgNode::CfgNode() {}
 
 std::vector<Statement> CfgNode::GetStatementList() {
@@ -16,4 +18,6 @@ void CfgNode::AddStatement(StmtType type, std::string stmt_no) {
 
 void CfgNode::AddNext(std::shared_ptr<CfgNode> cfg_node) {
   m_next_list.push_back(cfg_node);
+}
+
 }

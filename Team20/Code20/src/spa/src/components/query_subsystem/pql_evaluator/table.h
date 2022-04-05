@@ -64,6 +64,8 @@ class Table {
   std::vector<std::pair<size_t, size_t>> GetCommonAttributeIndexPairs(const Attributes &other_attributes);
   std::vector<size_t> GetOtherAttributeIndices(const Attributes &other_attributes);
   void NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t>> &common_attribute_index_pairs);
+  void HashJoin(Table &other_table, std::vector<std::pair<size_t, size_t>> &common_attribute_index_pairs);
+  void NestedLoopJoin(Table &other_table, std::vector<std::pair<size_t, size_t>> &common_attribute_index_pairs);
   void CrossJoin(Table &other_table);
   void UpdateResultType(const Table &other_table);
   static std::string JoinRecordBy(const Record &record, const std::string &delimiter);

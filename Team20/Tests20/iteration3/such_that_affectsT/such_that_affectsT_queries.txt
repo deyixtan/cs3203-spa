@@ -1,72 +1,52 @@
 1 - All Affects (First arg)
 stmt s1, s2;
 Select s1 such that Affects*(s1, s2)
-3,7,9,10,12,16,19,21,23,25,26,31,40,43,44,48
+23,12,3,16,7,10,9,19,21,25,26,31,40,43,44,48
 5000
 2 - All Affects (Second arg)
 stmt s1, s2;
 Select s2 such that Affects*(s1, s2)
-6,7,10,12,16,17,21,25,28,30,31,39,40,43,45
-5000
-3 - All Affects (tuple)
-stmt s1, s2;
-Select <s1, s2> such that Affects*(s1, s2)
-3 6, 3 7, 7 6, 9 10, 10 12, 10 16, 10 17, 10 30, 12 16, 12 17, 12 30, 16 17, 19 21, 23 25, 21 25, 25 28, 26 30, 23 30, 16 30, 23 31, 31 31, 40 43, 43 40, 44 40, 40 40, 9 12, 19 25, 19 28, 23 28, 21 28, 7 7, 48 39, 44 39, 43 39, 43 45, 44 45, 16 16, 9 16, 9 17, 9 30
+6,31,17,16,7,30,25,28,10,12,21,43,45,39
 5000
 4 - Double nested if stmt
 stmt s1, s2; procedure p;
 Select p such that Affects*(23, 28)
-europe, singapore, country, city
+city,europe,country,singapore
 5000
 5 - While loop affecting itself
 stmt s1, s2; procedure p;
 Select p such that Affects*(40, 40)
-europe, singapore, country, city
+none
 5000
 6 - While loop affecting itself
 stmt s1, s2; procedure p;
 Select p such that Affects*(31, 31)
-europe, singapore, country, city
-5000
-7 - Basic affects
-stmt s1; procedure p; assign a; while w;
-Select s1 such that Affects*(s1, 30)
-10,12,16,23,26
+city,europe,country,singapore
 5000
 8 - Basic affects
 stmt s1; procedure p; assign a; while w;
 Select p such that Affects*(23, 31)
-europe, singapore, country, city
+city,europe,country,singapore
 5000
 9 - Basic affects while loop
 stmt s1; procedure p; assign a; while w;
 Select p such that Affects*(7, 6)
-europe, singapore, country, city
+city,europe,country,singapore
 5000
 10 - Stmt affecting itself in while loop
 stmt s1; procedure p; assign a; while w;
 Select s1 such that Affects*(s1, s1)
-7,31,40,16
-5000
-11 - Basic affects one synonym
-stmt s1, s2; procedure p; assign a; while w;
-Select a such that Affects*(19, a)
-21,25,28
+7,31
 5000
 12 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(3, a)
 6,7
 5000
-13 - Basic affects* one synonym
-stmt s1, s2; procedure p; assign a; while w;
-Select a such that Affects*(9, a)
-10,12,16,17,30
-5000
 14 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(16, a)
-30,16
+17,30
 5000
 15 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
@@ -81,12 +61,12 @@ Select a such that Affects*(26, a)
 17 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(44, a)
-40,39,45
+45
 5000
 18 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(43, a)
-40,39,45
+45
 5000
 19 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
@@ -98,45 +78,30 @@ stmt s1, s2; procedure p; assign a; while w;
 Select s2 such that Affects*(23, s2)
 25,28,30,31
 5000
-21 - Basic affects* one synonym
-stmt s1, s2; procedure p; assign a; while w;
-Select a such that Affects*(a, 30)
-9,10,12,16,23,26
-5000
 22 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(a, 39)
-43,44
+48
 5000
 23 - Basic affects* one synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(a, 25)
-19,21,23
-5000
-24 - Basic affects* one synonym
-stmt s1, s2; procedure p; assign a; while w;
-Select a such that Affects*(a, 28)
-21,23,25
+23,19,21
 5000
 25 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(a, 40)
-40,43,44
+none
 5000
 26 - Basic affects* one synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(a, 12)
-9,10
+10,9
 5000
 27 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select a such that Affects*(a, 6)
 3,7
-5000
-28 - Basic affects one synonym
-stmt s1, s2; procedure p; assign a; while w;
-Select a such that Affects*(a, 17)
-16,10,12,9
 5000
 29 - Basic affects one synonym
 stmt s1, s2; procedure p; assign a; while w;
@@ -151,32 +116,32 @@ Select a such that Affects*(a, 7)
 31 - Basic affects* no synonym
 stmt s1, s2; procedure p; assign a; while w; if ifs;
 Select ifs such that Affects*(21, 28)
-1,11,24,27,41
+41,27,24,11,1
 5000
 32 - Basic affects* no synonym
 stmt s1, s2; procedure p; assign a; while w; if ifs;
 Select ifs such that Affects*(19, 21)
-1,11,24,27,41
+41,27,24,11,1
 5000
 33 - Basic affects* no synonym
 stmt s1, s2; procedure p; assign a; while w; if ifs;
 Select ifs such that Affects*(21, 25)
-1,11,24,27,41
+41,27,24,11,1
 5000
 34 - Basic affects* no synonym
 stmt s1, s2; procedure p; assign a; while w; if ifs;
 Select ifs such that Affects*(26, 30)
-1,10,11,12,24,27,41
+41,27,24,11,1
 5000
 35 - Basic affects* no synonym
 stmt s1, s2; procedure p; assign a; while w; if ifs;
 Select ifs such that Affects*(48, 39)
-1,11,24,27,41
+41,27,24,11,1
 5000
 36 - Basic affects* no synonym
 stmt s1, s2; procedure p; assign a; while w;
 Select w such that Affects*(9, 12)
-4,14,29,38
+38,29,14,4
 5000
 37 - No affects for read
 stmt s1; procedure p; assign a; while w;
@@ -191,7 +156,7 @@ none
 39 - No affects after if-else
 stmt s1; procedure p; assign a; while w;
 Select s1 such that Affects*(40, 45)
-none
+49,27,52,46,32,5,1,36,24,51,48,47,45,44,43,42,40,39,37,11,28,53,26,50,25,23,22,18,54,21,20,19,9,29,10,30,7,16,31,6,17,34,3,12,15,4,33,8,13,2,35,41,38,14
 5000
 40 - No affects for inter-procedure
 stmt s1; procedure p; assign a; while w;
@@ -281,37 +246,37 @@ none
 57 - Assign statements affecting itself
 stmt s1; procedure p; assign a; while w;
 Select a such that Affects*(a, a)
-7,31,40,16
+7,31
 5000
 58 - Synonym and wildcard
 stmt s1; procedure p; assign a; while w;
 Select p such that Affects*(_, a)
-europe, singapore, country, city
+city,europe,country,singapore
 5000
 59 - Synonym and wildcard
 stmt s1; procedure p; assign a; while w;
 Select p such that Affects*(_, s1)
-europe, singapore, country, city
+city,europe,country,singapore
 5000
 60 - Synonym and wildcard
 stmt s1; procedure p; assign a; while w;
 Select p such that Affects*(_, 6)
-europe, singapore, country, city
+city,europe,country,singapore
 5000
 61 - Synonym and wildcard
 stmt s1; procedure p; assign a; while w;
 Select p such that Affects*(9, _)
-europe, singapore, country, city
+city,europe,country,singapore
 5000
 62 - Synonym and wildcard
 stmt s1; procedure p; assign a; while w;
 Select p such that Affects*(s1, _)
-europe, singapore, country, city
+city,europe,country,singapore
 5000
 63 - Wildcard and wildcard
 stmt s1; procedure p; assign a; while w;
 Select p such that Affects*(_, _)
-europe, singapore, country, city
+city,europe,country,singapore
 5000
 64 - Invalid stmt refs
 stmt s1; procedure p; assign a; while w;

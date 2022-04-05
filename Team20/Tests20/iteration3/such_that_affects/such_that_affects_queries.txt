@@ -1,32 +1,32 @@
 1 - no synonym positive
 read rd;
 Select rd such that Affects(16, 17)
-2, 8, 13, 15, 18, 20, 33, 35
+50,18,33,15,20,8,2,35,13
 5000
 2 - no synonym positive
 read rd;
 Select rd such that Affects(44, 39)
-2, 8, 13, 15, 18, 20, 33, 35
+none
 5000
 3 - no synonym positive
 read rd;
 Select rd such that Affects(43, 39)
-2, 8, 13, 15, 18, 20, 33, 35
+none
 5000
 4 - no synonym positive
 read rd;
 Select rd such that Affects(43, 40)
-2, 8, 13, 15, 18, 20, 33, 35
+none
 5000
 5 - no synonym positive
 read rd;
 Select rd such that Affects(3, 6)
-2, 8, 13, 15, 18, 20, 33, 35
+50,18,33,15,20,8,2,35,13
 5000
 6 - no synonym positive
 read rd;
 Select rd such that Affects(7, 7)
-2, 8, 13, 15, 18, 20, 33, 35
+50,18,33,15,20,8,2,35,13
 5000
 7 - no synonym negative
 read rd;
@@ -91,12 +91,12 @@ none
 19 - one synonym positive
 assign a;
 Select a such that Affects(3, a)
-6
+6,7
 5000
 20 - one synonym positive
 assign a;
 Select a such that Affects(7, a)
-6, 7
+6,7
 5000
 21 - one synonym positive
 assign a;
@@ -106,12 +106,12 @@ Select a such that Affects(9, a)
 22 - one synonym positive
 assign a;
 Select a such that Affects(10, a)
-12
+12,16
 5000
 23 - one synonym positive
 assign a;
 Select a such that Affects(16, a)
-17, 30
+17,30
 5000
 24 - one synonym positive
 assign a;
@@ -126,7 +126,7 @@ Select a such that Affects(21, a)
 26 - one synonym positive
 assign a;
 Select a such that Affects(23, a)
-25, 30, 31
+25,30,31
 5000
 27 - one synonym positive
 assign a;
@@ -141,7 +141,7 @@ Select a such that Affects(26, a)
 29 - one synonym positive
 assign a;
 Select a such that Affects(31, a)
-31
+30,31
 5000
 30 - one synonym positive
 assign a;
@@ -161,12 +161,12 @@ Select a such that Affects(48, a)
 33 - one synonym positive
 assign a;
 Select a such that Affects(a, 6)
-3
+3,7
 5000
 34 - one synonym positive
 assign a;
 Select a such that Affects(a, 7)
-3
+3,7
 5000
 35 - one synonym positive
 assign a;
@@ -181,12 +181,12 @@ Select a such that Affects(a, 12)
 37 - one synonym positive
 assign a;
 Select a such that Affects(a, 16)
-16, 10, 12
+12,10
 5000
 38 - one synonym positive
 assign a;
 Select a such that Affects(a, 17)
-16, 10, 12
+16
 5000
 39 - one synonym positive
 assign a;
@@ -196,7 +196,7 @@ Select a such that Affects(a, 21)
 40 - one synonym positive
 assign a;
 Select a such that Affects(a, 25)
-23, 21
+23,21
 5000
 41 - one synonym positive
 assign a;
@@ -206,12 +206,12 @@ Select a such that Affects(a, 28)
 42 - one synonym positive
 assign a;
 Select a such that Affects(a, 30)
-26, 16, 23
+26,31,16,23
 5000
 43 - one synonym positive
 assign a;
 Select a such that Affects(a, 31)
-23, 31
+23,31
 5000
 44 - one synonym positive
 assign a;
@@ -221,7 +221,7 @@ Select a such that Affects(a, 39)
 45 - one synonym positive
 assign a;
 Select a such that Affects(a, 42)
-48
+none
 5000
 46 - one synonym positive
 assign a;
@@ -231,7 +231,7 @@ Select a such that Affects(a, 43)
 47 - one synonym positive
 assign a;
 Select a such that Affects(a, 45)
-43, 44
+43,44
 5000
 48 - one synonym negative
 assign a;
@@ -321,15 +321,15 @@ none
 65 - two synonyms positive
 assign a1, a2;
 Select a1 such that Affects(a1, a1)
-7, 31
+7,31
 5000
 66 - two synonyms positive
 assign a1, a2;
 Select a1 such that Affects(a1, a2)
-3, 7, 9, 10, 16, 19, 21, 23, 25, 26, 31, 40, 43, 48
+23,12,3,16,7,10,9,19,21,25,26,31,40,43,44,48
 5000
 67 - two synonyms positive
 assign a1, a2;
 Select a2 such that Affects(a1, a2)
-6, 7, 10, 12, 16, 17, 21, 25, 28, 30, 31, 39, 42, 43, 45
+17,6,31,7,30,16,25,10,12,21,28,43,45,39
 5000

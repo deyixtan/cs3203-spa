@@ -1,6 +1,8 @@
 #include "node_not_expression.h"
 #include "../../iterator/design_extractor.h"
 
+namespace source {
+
 NotExpressionNode::NotExpressionNode(std::shared_ptr<ConditionalExpressionNode> expression)
     : m_expression(expression) {}
 
@@ -27,4 +29,6 @@ bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const
 
 std::string NotExpressionNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
   return de->Visit(m_expression, proc_name, is_uses);
+}
+
 }

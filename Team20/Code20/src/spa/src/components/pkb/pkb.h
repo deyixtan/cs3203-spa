@@ -29,20 +29,23 @@ class PKB {
   std::shared_ptr<AffectStore> m_affect_store;
 
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;
+  std::shared_ptr<std::unordered_map<std::string, StmtType>> m_stmt_type;
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_name_vector;
   std::shared_ptr<std::vector<std::unordered_map<std::string, std::unordered_set<std::string>>>> m_name_to_stmt;
   std::shared_ptr<std::vector<std::unordered_map<std::string, std::string>>> m_stmt_to_name;
-  std::shared_ptr<Cfg> m_program_cfg;
+  std::shared_ptr<source::Cfg> m_program_cfg;
 
  public:
   PKB();
   void InitRelationshipStores();
   void AddStmt(std::string const &stmt, StmtType type);
+  void AddTypeOfStmt(std::string const &stmt, StmtType type);
   void AddName(std::string const &name, StmtType type);
   void AddNameToStmt(StmtType type, std::string const &name, std::string const &stmt);
   void AddStmtToName(StmtType type, std::string const &stmt, std::string const &name);
-  void AddProgramCfg(std::shared_ptr<Cfg> program_cfg);
+  void AddProgramCfg(std::shared_ptr<source::Cfg> program_cfg);
   [[nodiscard]] std::unordered_set<std::string> GetStmt(StmtType type);
+  [[nodiscard]] StmtType GetTypeOfStmt(std::string stmt_no);
   [[nodiscard]] std::unordered_set<std::string> GetName(StmtType type);
   [[nodiscard]] std::unordered_set<std::string> GetStmtByName(StmtType type, std::string name);
   [[nodiscard]] std::string GetNameByStmt(StmtType type, std::string stmt);
@@ -54,7 +57,7 @@ class PKB {
   [[nodiscard]] std::shared_ptr<PatternStore> GetPatternStore();
   [[nodiscard]] std::shared_ptr<NextStore> GetNextStore();
   [[nodiscard]] std::shared_ptr<AffectStore> GetAffectStore();
-  [[nodiscard]] std::shared_ptr<Cfg> GetProgCfg();
+  [[nodiscard]] std::shared_ptr<source::Cfg> GetProgCfg();
 };
 
 #endif //PKB_H

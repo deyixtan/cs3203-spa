@@ -2,6 +2,7 @@
 #define SELECT_BOOLEAN_CLAUSE_H_
 
 #include "clause.h"
+#include "clause_util.h"
 
 namespace pql {
 

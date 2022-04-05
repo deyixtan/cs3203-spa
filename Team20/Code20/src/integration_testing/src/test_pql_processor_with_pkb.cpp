@@ -2,8 +2,7 @@
 #include "components/pkb/pkb.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
 #include "components/query_subsystem/pql_lexer/pql_lexer.h"
-#include "components/query_subsystem/pql_parser/parsed_query_builder.h"
-#include "components/query_subsystem/pql_parser/query_validator.h"
+#include "components/query_subsystem/pql_parser/pql_parser.h"
 #include "components/query_subsystem/pql_evaluator/query_evaluator.h"
 
 PKB *set_up_pkb() {
@@ -59,21 +58,21 @@ PKB *set_up_pkb() {
   pkb->AddStmt("3", PRINT);
   pkb->AddStmt("13", PRINT);
 
-  pkb->GetUsesStore()->AddProcVar("main", "dog");
-  pkb->GetUsesStore()->AddProcVar("main", "cat");
-  pkb->GetUsesStore()->AddProcVar("main", "mouse");
-  pkb->GetUsesStore()->AddProcVar("main", "pig");
-  pkb->GetUsesStore()->AddProcVar("main", "ox");
-  pkb->GetUsesStore()->AddProcVar("main", "dragon");
-  pkb->GetUsesStore()->AddProcVar("main", "rabbit");
-  pkb->GetUsesStore()->AddProcVar("foo", "snake");
-  pkb->GetUsesStore()->AddProcVar("foo", "dog");
-  pkb->GetUsesStore()->AddProcVar("foo", "rabbit");
-  pkb->GetUsesStore()->AddProcVar("foo", "cat");
-  pkb->GetUsesStore()->AddProcVar("bar", "rabbit");
-  pkb->GetUsesStore()->AddProcVar("func", "monkey");
-  pkb->GetUsesStore()->AddProcVar("func", "tiger");
-  pkb->GetUsesStore()->AddProcVar("func", "dog");
+  pkb->AddTypeOfStmt("1", READ);
+  pkb->AddTypeOfStmt("2", STMT);
+  pkb->AddTypeOfStmt("3", PRINT);
+  pkb->AddTypeOfStmt("4", ASSIGN);
+  pkb->AddTypeOfStmt("5", STMT);
+  pkb->AddTypeOfStmt("6", STMT);
+  pkb->AddTypeOfStmt("7", ASSIGN);
+  pkb->AddTypeOfStmt("8", ASSIGN);
+  pkb->AddTypeOfStmt("9", STMT);
+  pkb->AddTypeOfStmt("10", ASSIGN);
+  pkb->AddTypeOfStmt("11", STMT);
+  pkb->AddTypeOfStmt("12", STMT);
+  pkb->AddTypeOfStmt("13", STMT);
+  pkb->AddTypeOfStmt("14", STMT);
+  pkb->AddTypeOfStmt("15", STMT);
 
   pkb->GetUsesStore()->AddStmtVar("3", "cat");
   pkb->GetUsesStore()->AddStmtVar("4", "dog");
@@ -99,12 +98,6 @@ PKB *set_up_pkb() {
   pkb->GetUsesStore()->AddStmtVar("15", "monkey");
   pkb->GetUsesStore()->AddStmtVar("15", "tiger");
   pkb->GetUsesStore()->AddStmtVar("15", "dog");
-
-  pkb->GetModifiesStore()->AddProcVar("main", "dog");
-  pkb->GetModifiesStore()->AddProcVar("main", "pig");
-  pkb->GetModifiesStore()->AddProcVar("main", "dragon");
-  pkb->GetModifiesStore()->AddProcVar("foo", "snake");
-  pkb->GetModifiesStore()->AddProcVar("func", "monkey");
 
   pkb->GetModifiesStore()->AddStmtVar("1", "dog");
   pkb->GetModifiesStore()->AddStmtVar("4", "dog");
@@ -157,10 +150,8 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
   SECTION("Test if-statement count and their statement number") {
     PqlLexer lexer{"if ifs; Select ifs"};
     std::vector<PqlToken> tokens = lexer.Lex();
-    QueryValidator query_validator = QueryValidator(tokens);
-    std::vector<PqlToken> validated_tokens = query_validator.CheckValidation();
-    ParsedQueryBuilder pqb(validated_tokens);
-    ParsedQuery parsed_query = pqb.Build();
+    PqlParser pql_parser = PqlParser(tokens);
+    ParsedQuery parsed_query = pql_parser.ParseQuery();
     std::list<std::string> results;
     evaluator->Evaluate(parsed_query, results);
     std::string result = results.front();
@@ -172,10 +163,8 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
   SECTION("Test assign statement count and their statement number") {
     PqlLexer lexer{"assign a; Select a"};
     std::vector<PqlToken> tokens = lexer.Lex();
-    QueryValidator query_validator = QueryValidator(tokens);
-    std::vector<PqlToken> validated_tokens = query_validator.CheckValidation();
-    ParsedQueryBuilder pqb(validated_tokens);
-    ParsedQuery parsed_query = pqb.Build();
+    PqlParser pql_parser = PqlParser(tokens);
+    ParsedQuery parsed_query = pql_parser.ParseQuery();
     std::list<std::string> results;
     evaluator->Evaluate(parsed_query, results);
     std::list<std::string> expected_result = {"15", "10", "8", "7", "4"};
@@ -190,10 +179,8 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
       std::string query = "stmt s ; Select s such that Follows(" + std::to_string(i) + " ,s)";
       PqlLexer lexer{query};
       std::vector<PqlToken> tokens = lexer.Lex();
-      QueryValidator query_validator = QueryValidator(tokens);
-      std::vector<PqlToken> validated_tokens = query_validator.CheckValidation();
-      ParsedQueryBuilder pqb(validated_tokens);
-      ParsedQuery parsed_query = pqb.Build();
+      PqlParser pql_parser = PqlParser(tokens);
+      ParsedQuery parsed_query = pql_parser.ParseQuery();
       std::list<std::string> results;
       evaluator->Evaluate(parsed_query, results);
       REQUIRE(results.front() == expected_result[i - 1]);
@@ -201,17 +188,15 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
   }
 
   SECTION("Test Follows* relationship") {
-    std::vector<std::list<std::string>> expected_result = {{"3", "4", "2", "5"}, {"3", "4", "5"},
-                                                           {"4", "5"}, {"5"}, {}, {}, {},
+    std::vector<std::list<std::string>> expected_result = {{"5", "4", "3", "2"}, {"5", "4", "3"},
+                                                           {"5", "4"}, {"5"}, {}, {}, {},
                                                            {"9"}, {}, {"11"}, {}, {}, {"14"}};
     for (int i = 1; i < 14; i++) {
       std::string query = "stmt s ; Select s such that Follows*(" + std::to_string(i) + " ,s)";
       PqlLexer lexer{query};
       std::vector<PqlToken> tokens = lexer.Lex();
-      QueryValidator query_validator = QueryValidator(tokens);
-      std::vector<PqlToken> validated_tokens = query_validator.CheckValidation();
-      ParsedQueryBuilder pqb(validated_tokens);
-      ParsedQuery parsed_query = pqb.Build();
+      PqlParser pql_parser = PqlParser(tokens);
+      ParsedQuery parsed_query = pql_parser.ParseQuery();
       std::list<std::string> results;
       evaluator->Evaluate(parsed_query, results);
       REQUIRE(results == expected_result[i - 1]);

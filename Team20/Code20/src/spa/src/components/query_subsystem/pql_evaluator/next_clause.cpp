@@ -46,6 +46,10 @@ Table NextClause::Execute() {
 }
 
 Table NextClause::HandleSynonymSynonym() {
+  if (first_arg.value==second_arg.value) {
+    return ConstructEmptyTable();
+  }
+
   auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
@@ -66,6 +70,7 @@ Table NextClause::HandleSynonymWildcard() {
 }
 
 Table NextClause::HandleSynonymInteger() {
+  // TODO: BeforeOf -> Needs type -> GetUpperSetOf needs type
   auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       StmtType::STMT
@@ -93,14 +98,11 @@ Table NextClause::HandleWildcardSynonym() {
 
 Table NextClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetNextStore()->GetAllNextStmt(StmtType::STMT, StmtType::STMT).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextClause::HandleWildcardInteger() {
+  // TODO: Wait on GetBeforeOf with type
   auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(StmtType::STMT, StmtType::STMT);
   bool is_false_clause = true;
   for (const auto &pair_constraint : pair_constraints) {
@@ -108,14 +110,13 @@ Table NextClause::HandleWildcardInteger() {
       is_false_clause = false;
     }
   }
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextClause::HandleIntegerSynonym() {
+  // TODO: Wait on new GetNextOf that is fixed
+//  auto single_constraints =
+//      pkb->GetNextStore()->GetNextOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)), first_arg.value);
   auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       StmtType::STMT,
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
@@ -130,22 +131,15 @@ Table NextClause::HandleIntegerSynonym() {
 }
 
 Table NextClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetNextStore()->GetNextOf(first_arg.value).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  bool is_false_clause = pkb->GetNextStore()->GetNextOf(STMT, first_arg.value).empty();
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextClause::HandleIntegerInteger() {
-  auto possible_next_values = pkb->GetNextStore()->GetNextOf(first_arg.value);
-  bool is_false_clause = possible_next_values.find(second_arg.value) == possible_next_values.end();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  // TODO: IsNextPairValid()
+  auto possible_next_values = pkb->GetNextStore()->GetNextOf(STMT, first_arg.value); //TODO: Fix StmtType
+  bool is_false_clause = possible_next_values.find(second_arg.value)==possible_next_values.end();
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }

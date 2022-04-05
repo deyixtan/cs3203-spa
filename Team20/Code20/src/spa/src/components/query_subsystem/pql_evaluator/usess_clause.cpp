@@ -34,12 +34,14 @@ Table UsesSClause::Execute() {
 }
 
 Table UsesSClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetUsesStore()->GetAllUsesStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
+  auto pair_constraints =
+      pkb->GetUsesStore()->GetAllUsesStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
 Table UsesSClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetUsesStore()->GetAllUsesStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
+  auto pair_constraints =
+      pkb->GetUsesStore()->GetAllUsesStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.first);
@@ -48,13 +50,9 @@ Table UsesSClause::HandleSynonymWildcard() {
 }
 
 Table UsesSClause::HandleSynonymIdent() {
-  auto pair_constraints = pkb->GetUsesStore()->GetAllUsesStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      single_constraints.insert(pair_constraint.first);
-    }
-  }
+  auto single_constraints =
+      pkb->GetUsesStore()->GetStmtUsedByVar(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+                                            second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
@@ -64,22 +62,13 @@ Table UsesSClause::HandleIntegerSynonym() {
 }
 
 Table UsesSClause::HandleIntegerWildcard() {
-  bool is_empty = pkb->GetUsesStore()->GetVarUsedByStmt(first_arg.value).empty();
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  bool is_false_clause = pkb->GetUsesStore()->GetVarUsedByStmt(first_arg.value).empty();
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table UsesSClause::HandleIntegerIdent() {
-  std::pair arg_pair(first_arg.value, second_arg.value);
-  bool is_empty = !pkb->GetUsesStore()->IsStmtVarValid(arg_pair);
-  Table table;
-  if (is_empty) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  bool is_false_clause = !pkb->GetUsesStore()->IsStmtVarValid({first_arg.value, second_arg.value});
+  return ConstructEmptyTable(is_false_clause);
 }
 
 }

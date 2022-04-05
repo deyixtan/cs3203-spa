@@ -1,6 +1,8 @@
 #include "node_variable.h"
 #include "../../iterator/design_extractor.h"
 
+namespace source {
+
 VariableNode::VariableNode() : m_identifier("") {}
 
 VariableNode::VariableNode(std::string identifier, std::string stmt) : m_identifier(identifier), m_stmt(stmt) {}
@@ -29,4 +31,6 @@ bool VariableNode::operator==(const ExpressionNode &other) const {
 std::string VariableNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
   de->GetPkbClient()->PopulateVars(de->GetVisited(), m_stmt, proc_name, m_identifier, is_uses);
   return GetPatternFormat();
+}
+
 }

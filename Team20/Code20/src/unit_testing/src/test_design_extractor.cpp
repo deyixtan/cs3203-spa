@@ -40,8 +40,8 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", READ);
   pkb->AddStmt("main", PROC);
+  pkb->AddTypeOfStmt("1", ASSIGN);
   pkb->GetModifiesStore()->AddStmtVar("1", "a");
-  pkb->GetModifiesStore()->AddProcVar("main", "a");
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
@@ -55,11 +55,8 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
   REQUIRE(test_pkb->GetStmt(PROC) == pkb->GetStmt(PROC));
   REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(STMT) == pkb->GetModifiesStore()->GetAllModStmt(STMT));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("1") == pkb->GetModifiesStore()->GetVarModByStmt("1"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar("a") == pkb->GetModifiesStore()->GetStmtModByVar("a"));
-  //REQUIRE(test_pkb->GetModifiesStore()->GetProcModByVar("a") == pkb->GetModifiesStore()->GetProcModByVar("a"));
-  //REQUIRE(test_pkb->GetModifiesStore()->GetVarModByProc("main") == pkb->GetModifiesStore()->GetVarModByProc("main"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a"));
   REQUIRE(test_pkb->GetModifiesStore()->GetAllStmtModify() == pkb->GetModifiesStore()->GetAllStmtModify());
-  //REQUIRE(test_pkb->GetModifiesStore()->GetAllProcModify() == pkb->GetModifiesStore()->GetAllProcModify());
 }
 
 TEST_CASE("Test DE population for single procedure with multiple statements") {
@@ -90,9 +87,9 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
   pkb->AddStmt("1", READ);
   pkb->AddStmt("2", PRINT);
   pkb->AddStmt("main", PROC);
+  pkb->AddTypeOfStmt("1", READ);
+  pkb->AddTypeOfStmt("2", ASSIGN);
   pkb->GetModifiesStore()->AddStmtVar("1", "a");
-  pkb->GetModifiesStore()->AddProcVar("main", "a");
-  pkb->GetUsesStore()->AddProcVar("main", "x");
   pkb->GetUsesStore()->AddStmtVar("2", "x");
   pkb->GetFollowsStore()->AddFollow("1", "2");
   pkb->GetFollowsStore()->AddFollowStar("1", "2");
@@ -110,15 +107,12 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
   REQUIRE(test_pkb->GetStmt(PROC) == pkb->GetStmt(PROC));
   REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(STMT) == pkb->GetModifiesStore()->GetAllModStmt(STMT));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("1") == pkb->GetModifiesStore()->GetVarModByStmt("1"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar("a") == pkb->GetModifiesStore()->GetStmtModByVar("a"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetProcModByVar("a") == pkb->GetModifiesStore()->GetProcModByVar("a"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetVarModByProc("main") == pkb->GetModifiesStore()->GetVarModByProc("main"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(STMT,"a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT,"a"));
   REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByStmt("2") == pkb->GetUsesStore()->GetVarUsedByStmt("2"));
-  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar("x") == pkb->GetUsesStore()->GetStmtUsedByVar("x"));
-  REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByProc("main") == pkb->GetUsesStore()->GetVarUsedByProc("main"));
-  REQUIRE(test_pkb->GetUsesStore()->GetProcUsedByVar("x") == pkb->GetUsesStore()->GetProcUsedByVar("x"));
+  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
+  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
   REQUIRE(test_pkb->GetUsesStore()->GetAllStmtUsing() == pkb->GetUsesStore()->GetAllStmtUsing());
-  REQUIRE(test_pkb->GetUsesStore()->GetAllProcUsing() == pkb->GetUsesStore()->GetAllProcUsing());
   REQUIRE(test_pkb->GetUsesStore()->GetAllUsesStmt(STMT) == pkb->GetUsesStore()->GetAllUsesStmt(STMT));
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT));
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT));
@@ -150,9 +144,8 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", ASSIGN);
   pkb->AddStmt("main", PROC);
+  pkb->AddTypeOfStmt("1", ASSIGN);
   pkb->GetModifiesStore()->AddStmtVar("1", "x");
-  pkb->GetModifiesStore()->AddProcVar("main", "x");
-  pkb->GetUsesStore()->AddProcVar("main", "x");
   pkb->GetUsesStore()->AddStmtVar("1", "x");
   pkb->GetPatternStore()->AddStmtWithPattern("1", "x", "((x)+(1))");
 
@@ -168,13 +161,11 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   REQUIRE(test_pkb->GetStmt(PROC) == pkb->GetStmt(PROC));
   REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(STMT) == pkb->GetModifiesStore()->GetAllModStmt(STMT));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("1") == pkb->GetModifiesStore()->GetVarModByStmt("1"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar("x") == pkb->GetModifiesStore()->GetStmtModByVar("x"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetProcModByVar("x") == pkb->GetModifiesStore()->GetProcModByVar("x"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetVarModByProc("main") == pkb->GetModifiesStore()->GetVarModByProc("main"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(STMT, "x") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "x"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(STMT, "x") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "x"));
   REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByStmt("1") == pkb->GetUsesStore()->GetVarUsedByStmt("1"));
-  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar("x") == pkb->GetUsesStore()->GetStmtUsedByVar("x"));
-  REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByProc("main") == pkb->GetUsesStore()->GetVarUsedByProc("main"));
-  REQUIRE(test_pkb->GetUsesStore()->GetProcUsedByVar("x") == pkb->GetUsesStore()->GetProcUsedByVar("x"));
+  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
+  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
   REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPatternExact("x", "x + 1") == pkb->GetPatternStore()->GetStmtWithPatternExact("x", "x + 1"));
 }
 
@@ -232,6 +223,9 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   pkb->AddStmt("3", STMT);
   pkb->AddStmt("3", ASSIGN);
   pkb->AddStmt("main", PROC);
+  pkb->AddTypeOfStmt("1", IF);
+  pkb->AddTypeOfStmt("2", ASSIGN);
+  pkb->AddTypeOfStmt("3", ASSIGN);
   pkb->GetParentStore()->AddParent("1", "2");
   pkb->GetParentStore()->AddParent("1", "3");
   pkb->GetUsesStore()->AddStmtVar("1", "a");
@@ -246,15 +240,15 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   CfgBuilder cfg_builder = CfgBuilder(pkb_client);
   cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  design_extractor->IterateCfgAndPopulatePkb(test_pkb->GetProgCfg());
+  cfg_builder.IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
   REQUIRE(test_pkb->GetStmt(IF) == pkb->GetStmt(IF));
   REQUIRE(test_pkb->GetStmt(ASSIGN) == pkb->GetStmt(ASSIGN));
   REQUIRE(test_pkb->GetStmt(PROC) == pkb->GetStmt(PROC));
-  REQUIRE(test_pkb->GetParentStore()->GetParentOf("2") == pkb->GetParentStore()->GetParentOf("2"));
-  REQUIRE(test_pkb->GetParentStore()->GetParentOf("3") == pkb->GetParentStore()->GetParentOf("3"));
+  REQUIRE(test_pkb->GetParentStore()->GetParentOf(STMT, "2") == pkb->GetParentStore()->GetParentOf(STMT, "2"));
+  REQUIRE(test_pkb->GetParentStore()->GetParentOf(STMT, "3") == pkb->GetParentStore()->GetParentOf(STMT, "3"));
   REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPatternExact("a", "2") == pkb->GetPatternStore()->GetStmtWithPatternExact("a", "2"));
   REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPatternExact("a", "3") == pkb->GetPatternStore()->GetStmtWithPatternExact("a", "3"));
   REQUIRE(test_pkb->GetPatternStore()->GetStmtWithPatternWildcard("a") == pkb->GetPatternStore()->GetStmtWithPatternWildcard("a"));
@@ -314,6 +308,8 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   pkb->AddStmt("2", STMT);
   pkb->AddStmt("2", ASSIGN);
   pkb->AddStmt("main", PROC);
+  pkb->AddTypeOfStmt("1", WHILE);
+  pkb->AddTypeOfStmt("2", ASSIGN);
   pkb->GetParentStore()->AddParent("1", "2");
   pkb->GetUsesStore()->AddStmtVar("1", "a");
   pkb->GetModifiesStore()->AddStmtVar("1", "a");
@@ -329,7 +325,7 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   REQUIRE(test_pkb->GetStmt(WHILE) == pkb->GetStmt(WHILE));
   REQUIRE(test_pkb->GetStmt(ASSIGN) == pkb->GetStmt(ASSIGN));
   REQUIRE(test_pkb->GetStmt(PROC) == pkb->GetStmt(PROC));
-  REQUIRE(test_pkb->GetParentStore()->GetParentOf("2") == pkb->GetParentStore()->GetParentOf("2"));
+  REQUIRE(test_pkb->GetParentStore()->GetParentOf(STMT, "2") == pkb->GetParentStore()->GetParentOf(STMT, "2"));
   REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByStmt("1") == pkb->GetUsesStore()->GetVarUsedByStmt("1"));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("1") == pkb->GetModifiesStore()->GetVarModByStmt("1"));
 }
@@ -431,6 +427,10 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   pkb->AddStmt("4", STMT);
   pkb->AddStmt("4", ASSIGN);
   pkb->AddStmt("main", PROC);
+  pkb->AddTypeOfStmt("1", WHILE);
+  pkb->AddTypeOfStmt("2", IF);
+  pkb->AddTypeOfStmt("3", ASSIGN);
+  pkb->AddTypeOfStmt("4", ASSIGN);
   pkb->GetParentStore()->AddParent("2", "3");
   pkb->GetParentStore()->AddParent("2", "4");
   pkb->GetParentStore()->AddParent("1", "2");
@@ -447,7 +447,7 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   CfgBuilder cfg_builder = CfgBuilder(pkb_client);
   cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  design_extractor->IterateCfgAndPopulatePkb(test_pkb->GetProgCfg());
+  cfg_builder.IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -455,21 +455,21 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   REQUIRE(test_pkb->GetStmt(IF) == pkb->GetStmt(IF));
   REQUIRE(test_pkb->GetStmt(ASSIGN) == pkb->GetStmt(ASSIGN));
   REQUIRE(test_pkb->GetStmt(PROC) == pkb->GetStmt(PROC));
-  REQUIRE(test_pkb->GetParentStore()->GetAllDescOf("1") == pkb->GetParentStore()->GetAllDescOf("1"));
-  REQUIRE(test_pkb->GetParentStore()->GetAllDescOf("2") == pkb->GetParentStore()->GetAllDescOf("2"));
-  REQUIRE(test_pkb->GetParentStore()->GetParentOf("2") == pkb->GetParentStore()->GetParentOf("2"));
-  REQUIRE(test_pkb->GetParentStore()->GetParentOf("3") == pkb->GetParentStore()->GetParentOf("3"));
-  REQUIRE(test_pkb->GetParentStore()->GetParentOf("4") == pkb->GetParentStore()->GetParentOf("4"));
-  REQUIRE(test_pkb->GetParentStore()->GetChildOf("1") == pkb->GetParentStore()->GetChildOf("1"));
-  REQUIRE(test_pkb->GetParentStore()->GetChildOf("2") == pkb->GetParentStore()->GetChildOf("2"));
-  REQUIRE(test_pkb->GetParentStore()->GetAllAnceOf("3") == pkb->GetParentStore()->GetAllAnceOf("3"));
-  REQUIRE(test_pkb->GetParentStore()->GetAllAnceOf("4") == pkb->GetParentStore()->GetAllAnceOf("4"));
-  REQUIRE(test_pkb->GetParentStore()->GetAllParentStmt(IF) == pkb->GetParentStore()->GetAllParentStmt(IF));
-  REQUIRE(test_pkb->GetParentStore()->GetAllParentStmt(WHILE) == pkb->GetParentStore()->GetAllParentStmt(WHILE));
+  REQUIRE(test_pkb->GetParentStore()->GetAllDescOf(STMT, "1") == pkb->GetParentStore()->GetAllDescOf(STMT, "1"));
+  REQUIRE(test_pkb->GetParentStore()->GetAllDescOf(STMT, "2") == pkb->GetParentStore()->GetAllDescOf(STMT, "2"));
+  REQUIRE(test_pkb->GetParentStore()->GetParentOf(STMT, "2") == pkb->GetParentStore()->GetParentOf(STMT, "2"));
+  REQUIRE(test_pkb->GetParentStore()->GetParentOf(STMT, "3") == pkb->GetParentStore()->GetParentOf(STMT, "3"));
+  REQUIRE(test_pkb->GetParentStore()->GetParentOf(STMT, "4") == pkb->GetParentStore()->GetParentOf(STMT, "4"));
+  REQUIRE(test_pkb->GetParentStore()->GetChildOf(STMT, "1") == pkb->GetParentStore()->GetChildOf(STMT, "1"));
+  REQUIRE(test_pkb->GetParentStore()->GetChildOf(STMT, "2") == pkb->GetParentStore()->GetChildOf(STMT, "2"));
+  REQUIRE(test_pkb->GetParentStore()->GetAllAnceOf(STMT, "3") == pkb->GetParentStore()->GetAllAnceOf(STMT, "3"));
+  REQUIRE(test_pkb->GetParentStore()->GetAllAnceOf(STMT, "4") == pkb->GetParentStore()->GetAllAnceOf(STMT, "4"));
+  REQUIRE(test_pkb->GetParentStore()->GetAllParentStmt(IF, STMT) == pkb->GetParentStore()->GetAllParentStmt(IF, STMT));
+  REQUIRE(test_pkb->GetParentStore()->GetAllParentStmt(WHILE, STMT) == pkb->GetParentStore()->GetAllParentStmt(WHILE, STMT));
   REQUIRE(test_pkb->GetParentStore()->GetAllParentStmt(IF, ASSIGN) == pkb->GetParentStore()->GetAllParentStmt(IF, ASSIGN));
   REQUIRE(test_pkb->GetParentStore()->GetAllParentStmt(WHILE, ASSIGN) == pkb->GetParentStore()->GetAllParentStmt(WHILE, ASSIGN));
-  REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(IF) == pkb->GetParentStore()->GetAllParentStarStmt(IF));
-  REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(WHILE) == pkb->GetParentStore()->GetAllParentStarStmt(WHILE));
+  REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(IF, STMT) == pkb->GetParentStore()->GetAllParentStarStmt(IF, STMT));
+  REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(WHILE, STMT) == pkb->GetParentStore()->GetAllParentStarStmt(WHILE, STMT));
   REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(IF, ASSIGN) == pkb->GetParentStore()->GetAllParentStarStmt(IF, ASSIGN));
   REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(WHILE, ASSIGN) == pkb->GetParentStore()->GetAllParentStarStmt(WHILE, ASSIGN));
   REQUIRE(test_pkb->GetParentStore()->GetParentChildPairs() == pkb->GetParentStore()->GetParentChildPairs());
@@ -539,6 +539,11 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   pkb->AddStmt("5", STMT);
   pkb->AddStmt("5", ASSIGN);
   pkb->AddStmt("main", PROC);
+  pkb->AddTypeOfStmt("1", ASSIGN);
+  pkb->AddTypeOfStmt("2", ASSIGN);
+  pkb->AddTypeOfStmt("3", ASSIGN);
+  pkb->AddTypeOfStmt("4", ASSIGN);
+  pkb->AddTypeOfStmt("5", ASSIGN);
   pkb->GetFollowsStore()->AddFollow("1", "2");
   pkb->GetFollowsStore()->AddFollow("2", "3");
   pkb->GetFollowsStore()->AddFollow("3", "4");
@@ -561,41 +566,41 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   CfgBuilder cfg_builder = CfgBuilder(pkb_client);
   cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  design_extractor->IterateCfgAndPopulatePkb(test_pkb->GetProgCfg());
+  cfg_builder.IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
   REQUIRE(test_pkb->GetStmt(ASSIGN) == pkb->GetStmt(ASSIGN));
   REQUIRE(test_pkb->GetStmt(PROC) == pkb->GetStmt(PROC));
 
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf("1") == pkb->GetFollowsStore()->GetFollowerOf("1"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf("2") == pkb->GetFollowsStore()->GetFollowerOf("2"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf("3") == pkb->GetFollowsStore()->GetFollowerOf("3"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf("4") == pkb->GetFollowsStore()->GetFollowerOf("4"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf("5") == pkb->GetFollowsStore()->GetFollowerOf("5"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf("1") == pkb->GetFollowsStore()->GetFollowingOf("1"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf("2") == pkb->GetFollowsStore()->GetFollowingOf("2"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf("3") == pkb->GetFollowsStore()->GetFollowingOf("3"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf("4") == pkb->GetFollowsStore()->GetFollowingOf("4"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf("5") == pkb->GetFollowsStore()->GetFollowingOf("5"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf(STMT, "1") == pkb->GetFollowsStore()->GetFollowerOf(STMT, "1"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf(STMT, "2") == pkb->GetFollowsStore()->GetFollowerOf(STMT, "2"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf(STMT, "3") == pkb->GetFollowsStore()->GetFollowerOf(STMT, "3"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf(STMT, "4") == pkb->GetFollowsStore()->GetFollowerOf(STMT, "4"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerOf(STMT, "5") == pkb->GetFollowsStore()->GetFollowerOf(STMT, "5"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf(STMT, "1") == pkb->GetFollowsStore()->GetFollowingOf(STMT, "1"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf(STMT, "2") == pkb->GetFollowsStore()->GetFollowingOf(STMT, "2"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf(STMT, "3") == pkb->GetFollowsStore()->GetFollowingOf(STMT, "3"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf(STMT, "4") == pkb->GetFollowsStore()->GetFollowingOf(STMT, "4"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingOf(STMT, "5") == pkb->GetFollowsStore()->GetFollowingOf(STMT, "5"));
 
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf("1") == pkb->GetFollowsStore()->GetFollowerStarOf("1"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf("2") == pkb->GetFollowsStore()->GetFollowerStarOf("2"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf("3") == pkb->GetFollowsStore()->GetFollowerStarOf("3"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf("4") == pkb->GetFollowsStore()->GetFollowerStarOf("4"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf("5") == pkb->GetFollowsStore()->GetFollowerStarOf("5"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf("1") == pkb->GetFollowsStore()->GetFollowingStarOf("1"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf("2") == pkb->GetFollowsStore()->GetFollowingStarOf("2"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf("3") == pkb->GetFollowsStore()->GetFollowingStarOf("3"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf("4") == pkb->GetFollowsStore()->GetFollowingStarOf("4"));
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf("5") == pkb->GetFollowsStore()->GetFollowingStarOf("5"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf(STMT, "1") == pkb->GetFollowsStore()->GetFollowerStarOf(STMT, "1"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf(STMT, "2") == pkb->GetFollowsStore()->GetFollowerStarOf(STMT, "2"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf(STMT, "3") == pkb->GetFollowsStore()->GetFollowerStarOf(STMT, "3"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf(STMT, "4") == pkb->GetFollowsStore()->GetFollowerStarOf(STMT, "4"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowerStarOf(STMT, "5") == pkb->GetFollowsStore()->GetFollowerStarOf(STMT, "5"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "1") == pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "1"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "2") == pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "2"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "3") == pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "3"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "4") == pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "4"));
+  REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "5") == pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "5"));
 
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowPairs() == pkb->GetFollowsStore()->GetFollowPairs());
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowStarPairs() == pkb->GetFollowsStore()->GetFollowStarPairs());
 
-  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(STMT) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT));
+  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(STMT, ASSIGN) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, ASSIGN));
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT));
-  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT));
+  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, ASSIGN) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, ASSIGN));
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT));
 }
 

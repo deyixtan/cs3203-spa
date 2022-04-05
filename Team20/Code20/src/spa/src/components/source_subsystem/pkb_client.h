@@ -1,12 +1,13 @@
 #ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
 #define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
 
-#include <string>
+#include "source_declarations.h"
 
 #include "../pkb/stores/store.h"
 
 class PKB;
-class Cfg;
+
+namespace source {
 
 class PkbClient {
  private:
@@ -20,9 +21,7 @@ class PkbClient {
   void PopulateFollows(std::string stmt1, std::string stmt2);
   void PopulateFollowsStar(std::string stmt1, std::string stmt2);
   void PopulateUses(std::string stmt, std::string var);
-  void PopulateUsesProc(std::string stmt, std::string var);
   void PopulateModifies(std::string stmt, std::string var);
-  void PopulateModifiesProc(std::string stmt, std::string var);
   void PopulateCalls(std::string caller, std::string callee);
   void PopulateProc(std::string name);
 
@@ -38,6 +37,8 @@ class PkbClient {
                     std::string &rhs_expr);
 
   void PopulateStmt(std::string stmt);
+  void PopulateTypeOfStmt(std::string stmt, StmtType type);
+  StmtType GetTypeOfStmt(std::string stmt);
   void PopulateName(std::string name, StmtType type);
 
   void PopulateRead(std::vector<std::string> &visited, std::string &curr_stmt, std::string &var_name);
@@ -70,8 +71,11 @@ class PkbClient {
                     std::string &proc_name,
                     std::string &callee_name);
   void PopulateCfg(Cfg &cfg);
-  void PopulateNext(std::unordered_map<std::string, std::unordered_set<std::string>> rs_map);
+  void PopulateNext(std::string stmt1, std::string stmt2);
+  void PopulateNextStar(std::string stmt1, std::string stmt2);
   void AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs);
 };
+
+}
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_

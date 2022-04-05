@@ -31,12 +31,13 @@ procedure singapore {
 	if (chinatown == 5) then {
 		somerset = chinatown + bayfront;
 		sentosa = harbourfront;
-		If (sentosa == 20) then {
+		if (sentosa == 20) then {
 			somerset = somerset + 50;
 		} else {
 			while (sentosa == 30) {
 				harbourfront = sentosa * (caldecott + chinatown);
 				chinatown = chinatown + 20;
+			}
 		}
 	} else {
 		call europe;
