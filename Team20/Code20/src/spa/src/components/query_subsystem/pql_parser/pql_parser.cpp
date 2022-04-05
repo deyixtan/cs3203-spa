@@ -18,7 +18,6 @@ PqlParser::PqlParser(std::vector<PqlToken> tokens) : tokens (tokens), cursor(0),
 }
 
 std::string BOOLEAN_SYNONYM_VALUE = "BOOLEAN";
-std::string INVALID_QUERY_FORMAT = "Invalid Query Format! \n";
 
 void PqlParser::MoveCursor(int movement) {
   cursor += movement;
@@ -41,7 +40,7 @@ PqlToken PqlParser::FetchNextToken() {
 PqlToken PqlParser::ValidateToken(std::unordered_set<PqlTokenType> allowed_types) {
   PqlToken token = FetchToken();
   if (!allowed_types.count(token.type)) {
-    throw INVALID_QUERY_FORMAT;
+    throw InvalidQueryFormatException();
   }
   MoveCursor(1);
   return token;
@@ -50,7 +49,7 @@ PqlToken PqlParser::ValidateToken(std::unordered_set<PqlTokenType> allowed_types
 PqlToken PqlParser::ValidateToken(PqlTokenType allowed_type) {
   PqlToken token = FetchToken();
   if (token.type != allowed_type) {
-    throw INVALID_QUERY_FORMAT;
+    throw InvalidQueryFormatException();
   }
   MoveCursor(1);
   return token;
@@ -127,7 +126,7 @@ void PqlParser::ParseSelectClause() {
     } else if (current_token.type == PqlTokenType::WITH) {
       ParseWithClause();
     } else {
-      throw INVALID_QUERY_FORMAT;
+      throw InvalidQueryFormatException();
     }
   }
 }
@@ -220,7 +219,7 @@ void PqlParser::ParsePatternClause() {
     } else if (next_token.type == PqlTokenType::CLOSED_PARENTHESIS) {
       MoveCursor(1);
     } else {
-      throw INVALID_QUERY_FORMAT;
+      throw InvalidQueryFormatException();
     }
     current_token = FetchToken();
     Pattern pattern = Pattern(pattern_syn, first_arg, second_arg, third_arg);
