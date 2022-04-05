@@ -63,14 +63,11 @@ void PqlParser::RevertToSynonymType() {
 }
 
 int PqlParser::GetEndOfDeclarationCursor() {
-  int last_semicolon;
+  int last_semicolon = -1;
   for (int i = 0; i < tokens.size(); i++) {
     if (tokens[i].type == PqlTokenType::SEMICOLON) {
       last_semicolon = i;
     }
-  }
-  if (!last_semicolon) {
-    throw INVALID_QUERY_FORMAT;
   }
   return last_semicolon;
 }
@@ -78,15 +75,14 @@ int PqlParser::GetEndOfDeclarationCursor() {
 void PqlParser::ParseDeclaration() {
   Declaration declarations;
   int after_declaration_cursor = GetEndOfDeclarationCursor() + 1;
-  while (cursor < after_declaration_cursor) {
-    PqlToken design_entity_token = ValidateToken(design_entities);
-    DesignEntityType design_entity_type = token_design_map[design_entity_token.type];
-    ParseDeclarationVariables(design_entity_type, declarations);
+  if (after_declaration_cursor != 0) {
+    while (cursor < after_declaration_cursor) {
+      PqlToken design_entity_token = ValidateToken(design_entities);
+      DesignEntityType design_entity_type = token_design_map[design_entity_token.type];
+      ParseDeclarationVariables(design_entity_type, declarations);
+    }
+    pq.SetDeclarations(declarations);
   }
-  if (declarations.GetDeclarations().empty()) {
-    throw INVALID_QUERY_FORMAT;
-  }
-  pq.SetDeclarations(declarations);
 }
 
 void PqlParser::ParseDeclarationVariables(DesignEntityType& design_entity_type, Declaration& declarations) {
