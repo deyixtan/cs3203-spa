@@ -10,4 +10,3 @@ const char *InvalidTermOperatorException::what() const noexcept {
 }
 
 }
-s
