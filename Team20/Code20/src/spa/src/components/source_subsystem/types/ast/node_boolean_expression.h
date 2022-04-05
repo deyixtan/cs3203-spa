@@ -1,8 +1,8 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
+#ifndef NODE_BOOLEAN_EXPRESSION_H
+#define NODE_BOOLEAN_EXPRESSION_H
 
+#include "components/source_subsystem/source_declarations.h"
 #include "node_conditional_expression.h"
-#include "components/source_subsystem/pkb_client.h"
 
 namespace source {
 
@@ -14,22 +14,21 @@ enum class BooleanOperator {
 class BooleanExpressionNode : public ConditionalExpressionNode {
  private:
   BooleanOperator m_boolean_operator;
-  std::shared_ptr<ConditionalExpressionNode> m_left_expression;
-  std::shared_ptr<ConditionalExpressionNode> m_right_expression;
+  ConditionalExpressionNodePtr m_left_expression;
+  ConditionalExpressionNodePtr m_right_expression;
 
  public:
   BooleanExpressionNode(BooleanOperator boolean_operator,
-                        std::shared_ptr<ConditionalExpressionNode> left_expression,
-                        std::shared_ptr<ConditionalExpressionNode> right_expression);
-  [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetLeftExpression();
-  [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetRightExpression();
+                        ConditionalExpressionNodePtr left_expression,
+                        ConditionalExpressionNodePtr right_expression);
+  [[nodiscard]] ConditionalExpressionNodePtr GetLeftExpression();
+  [[nodiscard]] ConditionalExpressionNodePtr GetRightExpression();
   [[nodiscard]] ConditionalType GetConditionalType() override;
-  [[nodiscard]] std::string ToString() override;
-  [[nodiscard]] std::string GetPatternFormat() override;
+  [[nodiscard]] String GetPatternFormat() override;
+  String Accept(DesignExtractor *de, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
-  std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses);
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
+#endif //NODE_BOOLEAN_EXPRESSION_H
