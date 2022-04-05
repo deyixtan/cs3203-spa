@@ -24,7 +24,7 @@ String AssignStatementNode::GetPatternFormat() {
 }
 
 void AssignStatementNode::Accept(DesignExtractor *de, String proc_name) {
-  String stmt_num = std::to_string(GetStatementNumber());
+  String stmt_num = GetStatementNumber();
   de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, ASSIGN);
   String var_name = m_lhs->GetIdentifier();
   de->Visit(m_lhs, proc_name, false);
@@ -33,7 +33,7 @@ void AssignStatementNode::Accept(DesignExtractor *de, String proc_name) {
 }
 
 CfgNodePtr AssignStatementNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
-  cfg_node->AddStatement(StmtType::ASSIGN, std::to_string(GetStatementNumber()));
+  cfg_node->AddStatement(StmtType::ASSIGN, GetStatementNumber());
   return cfg_node;
 }
 
