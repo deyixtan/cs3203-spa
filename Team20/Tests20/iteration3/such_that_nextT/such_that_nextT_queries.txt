@@ -16,8 +16,121 @@ variable v; stmt s;
 Select BOOLEAN such that Next*(s, v)
 FALSE
 5000
-5 - Next* within procedure (no synonyms)
-
-6 - Next* across procedure (no synonyms)
-
+5 - Next*(INT, INT) within same procedure
+Select BOOLEAN such that Next*(1, 3)
+TRUE
+5000
+6 - Next*(INT, INT) across procedure
+Select BOOLEAN such that Next*(3, 4)
+FALSE
+5000
+7 - Next*(INT, _) within same procedure first line
+Select BOOLEAN such that Next*(1, _)
+TRUE
+5000
+8 - Next*(INT, _) within same procedure last line
+Select BOOLEAN such that Next*(3, _)
+FALSE
+5000
+9 - Next*(_, INT) within same procedure first line
+Select BOOLEAN such that Next*(_, 1)
+FALSE
+5000
+10 - Next*(_, INT) within same procedure last line
+Select BOOLEAN such that Next*(_, 3)
+TRUE
+5000
+11 - Next*(_, _)
+Select BOOLEAN such that Next*(_, _)
+TRUE
+5000
+12 - Next*(INT, STMT)
+stmt s;
+Select s such that Next*(1, s)
+2, 3
+5000
+13 - Next*(INT, READ)
+read rd;
+Select rd such that Next*(1, rd)
+2
+5000
+14 - Next*(INT, PRINT)
+print pn;
+Select pn such that Next*(18, pn)
+20
+5000
+15 - Next*(INT, ASSIGN)
+assign a;
+Select a such that Next*(12, a)
+13, 14, 15, 16, 17
+5000
+16 - Next*(INT, CALL)
+call cl;
+Select cl such that Next*(1, cl)
+3
+5000
+17 - Next*(INT, WHILE)
+while w;
+Select w such that Next*(4, w)
+8
+5000
+18 - Next*(INT, IF)
+if ifs;
+Select ifs such that Next*(4, ifs)
+12
+5000
+19 - Next*(STMT, INT)
+stmt s;
+Select s such that Next*(s, 3)
+1, 2
+5000
+20 - Next*(READ, INT)
+read rd;
+Select rd such that Next*(rd, 3)
+1, 2
+5000
+21 - Next*(PRINT, INT)
+print pn;
+Select pn such that Next*(pn, 17)
+5, 7
+5000
+22 - Next*(ASSIGN, INT)
+assign a;
+Select a such that Next*(a, 20)
+18, 19
+5000
+23 - Next*(CALL, INT)
+call cl;
+Select cl such that Next*(cl, 3)
+none
+5000
+24 - Next*(WHILE, INT)
+while w;
+Select w such that Next*(w, 17)
+8
+5000
+25 - Next*(IF, INT)
+if ifs;
+Select ifs such that Next*(ifs, 17)
+12
+5000
+26 - Next*(_, STMT)
+stmt s;
+Select s such that Next*(_, s)
+2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,19,20
+5000
+27 - Next*(_, READ)
+28 - Next*(_, PRINT)
+29 - Next*(_, ASSIGN)
+30 - Next*(_, CALL)
+31 - Next*(_, WHILE)
+32 - Next*(_, IF)
+33 - Next*(STMT, _)
+34 - Next*(READ, _)
+35 - Next*(PRINT, _)
+36 - Next*(ASSIGN, _)
+37 - Next*(CALL, _)
+38 - Next*(WHILE, _)
+39 - Next*(IF, _)
+40 - Next*(STMT, STMT)
 

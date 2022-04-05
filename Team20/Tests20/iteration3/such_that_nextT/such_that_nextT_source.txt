@@ -6,7 +6,9 @@ procedure First {
 
 procedure Second {
   x = 0;
+  print x;
   i = 5;
+  print i;
   while (i!=0) {
       x = x + 2 * y;
       call Third;

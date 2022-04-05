@@ -6,24 +6,26 @@ procedure First {
 
 procedure Second {
 4   x = 0;
-5   i = 5;
-6   while (i!=0) {
-7       x = x + 2 * y;
-8       call Third;
-9       i = i - 1; 
+5   print x;
+6   i = 5;
+7   print i;
+8   while (i!=0) {
+9       x = x + 2 * y;
+10       call Third;
+11       i = i - 1; 
   }
-10   if (x==1) then {
-11       x = x + 1;
+12   if (x==1) then {
+13       x = x + 1;
   } else {
-12       z = 1;
+14       z = 1;
   }
-13   z = z + x + i;
-14   y = z + 2;
-15   x = x * y + z;
+15   z = z + x + i;
+16   y = z + 2;
+17   x = x * y + z;
 }
 
 procedure Third {
-16   z = 5;
-17   v = z;
-18   print v;
+18   z = 5;
+19   v = z;
+20   print v;
 }
