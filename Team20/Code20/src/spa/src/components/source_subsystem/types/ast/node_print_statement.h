@@ -2,7 +2,7 @@
 #define NODE_PRINT_STATEMENT_H
 
 #include "components/source_subsystem/source_declarations.h"
-#include "node_statement.h"
+#include "components/source_subsystem/types/ast/node_statement.h"
 
 namespace source {
 

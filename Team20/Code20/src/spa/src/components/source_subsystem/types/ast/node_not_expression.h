@@ -2,8 +2,7 @@
 #define NODE_NOT_EXPRESSION_H
 
 #include "components/source_subsystem/source_declarations.h"
-#include "node_conditional_expression.h"
-#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/types/ast/node_conditional_expression.h"
 
 namespace source {
 

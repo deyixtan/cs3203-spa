@@ -2,7 +2,7 @@
 #define NODE_STATEMENT_LIST_H
 
 #include "components/source_subsystem/source_declarations.h"
-#include "node.h"
+#include "components/source_subsystem/types/ast/node.h"
 
 namespace source {
 

@@ -2,7 +2,7 @@
 #define NODE_VARIABLE_H
 
 #include "components/source_subsystem/source_declarations.h"
-#include "node_expression.h"
+#include "components/source_subsystem/types/ast/node_expression.h"
 
 namespace source {
 
