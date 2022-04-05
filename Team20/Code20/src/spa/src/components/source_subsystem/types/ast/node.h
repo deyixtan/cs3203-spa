@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_H_
+#ifndef NODE_H
+#define NODE_H
 
 #include "components/source_subsystem/source_declarations.h"
 
@@ -7,10 +7,9 @@ namespace source {
 
 class Node {
  public:
-  [[nodiscard]] virtual std::string ToString() = 0;
-  [[nodiscard]] virtual std::string GetPatternFormat() = 0;
+  [[nodiscard]] virtual String GetPatternFormat() = 0;
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_H_
+#endif //NODE_H
