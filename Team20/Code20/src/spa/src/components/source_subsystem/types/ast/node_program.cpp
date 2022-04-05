@@ -9,19 +9,31 @@ namespace source {
 
 ProgramNode::ProgramNode() {}
 
-ProgramNode::ProgramNode(std::vector<std::shared_ptr<ProcedureNode>> procedures) :
+ProgramNode::ProgramNode(ProcedureNodeStream procedures) :
     m_procedures(procedures) {}
 
-std::string ProgramNode::ToString() {
-  std::string str = "";
-  for (std::shared_ptr<ProcedureNode> procedure : m_procedures) {
-    str += procedure->ToString() + "\n";
-  }
-  return str;
+String ProgramNode::GetPatternFormat() {
+  return "";
 }
 
-std::string ProgramNode::GetPatternFormat() {
-  return "";
+void ProgramNode::Accept(DesignExtractor *de) {
+  for (auto &procedure : m_procedures) {
+    de->Visit(procedure);
+  }
+}
+
+StringToCfgNodePtrMap ProgramNode::Accept(CfgBuilder *cb) {
+  StringToCfgNodePtrMap heads;
+  for (ProcedureNodePtr const &procedure : m_procedures) {
+    CfgNodePtr head = std::make_shared<CfgNode>();
+    CfgNodePtr tail = cb->Visit(procedure, head);
+    if (tail->GetStatementList().size() != 0) {
+      CfgNodePtr dummy = std::make_shared<CfgNode>();
+      tail->AddNext(dummy);
+    }
+    heads.insert({procedure->GetIdentifier(), head});
+  }
+  return heads;
 }
 
 bool ProgramNode::operator==(const ProgramNode &other) const {
@@ -33,26 +45,6 @@ bool ProgramNode::operator==(const ProgramNode &other) const {
     else { return false; }
   }
   return true;
-}
-
-void ProgramNode::Accept(DesignExtractor *de) {
-  for (auto &procedure : m_procedures) {
-    de->Visit(procedure);
-  }
-}
-
-std::unordered_map<std::string, std::shared_ptr<CfgNode>> ProgramNode::Accept(CfgBuilder *cb) {
-  std::unordered_map<std::string, std::shared_ptr<CfgNode>> heads;
-  for (std::shared_ptr<ProcedureNode> const &procedure : m_procedures) {
-    std::shared_ptr<CfgNode> head = std::make_shared<CfgNode>();
-    std::shared_ptr<CfgNode> tail = cb->Visit(procedure, head);
-    if (tail->GetStatementList().size() != 0) {
-      std::shared_ptr<CfgNode> dummy = std::make_shared<CfgNode>();
-      tail->AddNext(dummy);
-    }
-    heads.insert({procedure->GetIdentifier(), head});
-  }
-  return heads;
 }
 
 }
