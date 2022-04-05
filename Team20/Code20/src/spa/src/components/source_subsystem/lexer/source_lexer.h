@@ -10,7 +10,7 @@ class SourceToken;
 class SourceLexer {
  private:
   int m_cursor;
-  std::string m_source;
+  String m_source;
 
  private:
   [[nodiscard]] bool HasMoreTokens();
@@ -25,7 +25,7 @@ class SourceLexer {
   static void EncodeTokenHandler(TokenPtr &token, TokenPtr &next_token);
 
  public:
-  explicit SourceLexer(std::string source);
+  explicit SourceLexer(String source);
   void Tokenize(TokenStream &token_stream);
 };
 

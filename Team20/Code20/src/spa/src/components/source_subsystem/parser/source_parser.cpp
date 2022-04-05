@@ -218,7 +218,7 @@ ProgramNodePtr SourceParser::ParseProgram() {
 
 ProcedureNodePtr SourceParser::ParseProcedure() {
   ProcessToken(TokenType::PROCEDURE);
-  std::string proc_name = ProcessToken(TokenType::NAME)->GetValue();
+  String proc_name = ProcessToken(TokenType::NAME)->GetValue();
 
   // add procedure name into parser session
   // to check for any procedure name duplication
@@ -285,7 +285,7 @@ StatementNodePtr SourceParser::ParseStatement() {
 ReadStatementNodePtr SourceParser::ParseReadStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::READ);
-  std::string var_name = ProcessToken(TokenType::NAME)->GetValue();
+  String var_name = ProcessToken(TokenType::NAME)->GetValue();
   ProcessToken(TokenType::SEMI_COLON);
 
   VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name, std::to_string(stmt_no));
@@ -295,7 +295,7 @@ ReadStatementNodePtr SourceParser::ParseReadStatement() {
 PrintStatementNodePtr SourceParser::ParsePrintStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::PRINT);
-  std::string var_name = ProcessToken(TokenType::NAME)->GetValue();
+  String var_name = ProcessToken(TokenType::NAME)->GetValue();
   ProcessToken(TokenType::SEMI_COLON);
 
   VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name, std::to_string(stmt_no));
@@ -304,7 +304,7 @@ PrintStatementNodePtr SourceParser::ParsePrintStatement() {
 
 AssignStatementNodePtr SourceParser::ParseAssignStatement() {
   int stmt_no = ++m_curr_stmt_no;
-  std::string lhs_var_name = ProcessToken(TokenType::NAME)->GetValue();
+  String lhs_var_name = ProcessToken(TokenType::NAME)->GetValue();
   ProcessToken(TokenType::EQUAL);
   ExpressionNodePtr rhs_expression_node = ParseExpression();
   ProcessToken(TokenType::SEMI_COLON);
@@ -316,7 +316,7 @@ AssignStatementNodePtr SourceParser::ParseAssignStatement() {
 CallStatementNodePtr SourceParser::ParseCallStatement() {
   int stmt_no = ++m_curr_stmt_no;
   ProcessToken(TokenType::CALL);
-  std::string callee_name = ProcessToken(TokenType::NAME)->GetValue();
+  String callee_name = ProcessToken(TokenType::NAME)->GetValue();
 
   // add callee name into parser session
   // to check for cyclic calls
@@ -324,7 +324,7 @@ CallStatementNodePtr SourceParser::ParseCallStatement() {
 
   ProcessToken(TokenType::SEMI_COLON);
 
-  std::string proc_name = m_session.GetCurrProcedure();
+  String proc_name = m_session.GetCurrProcedure();
   return std::make_shared<CallStatementNode>(stmt_no, proc_name, callee_name);
 }
 
@@ -462,11 +462,11 @@ ExpressionNodePtr SourceParser::ParseFactor() {
   TokenType type = FetchCurrentToken()->GetType();
   switch (type) {
     case TokenType::NAME: {
-      std::string var_name = ProcessToken(TokenType::NAME)->GetValue();
+      String var_name = ProcessToken(TokenType::NAME)->GetValue();
       return std::make_shared<VariableNode>(var_name, std::to_string(m_curr_stmt_no));
     }
     case TokenType::INTEGER: {
-      std::string constant_value = ProcessToken(TokenType::INTEGER)->GetValue();
+      String constant_value = ProcessToken(TokenType::INTEGER)->GetValue();
       return std::make_shared<ConstantNode>(constant_value);
     }
     case TokenType::OPENED_PARENTHESIS: {

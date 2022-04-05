@@ -1,7 +1,7 @@
 #ifndef SOURCE_TOKEN_H
 #define SOURCE_TOKEN_H
 
-#include <string>
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
@@ -19,13 +19,13 @@ enum class TokenType {
 class SourceToken {
  private:
   TokenType m_type;
-  std::string m_value;
+  String m_value;
 
  public:
   SourceToken();
-  SourceToken(TokenType type, std::string value);
+  SourceToken(TokenType type, String value);
   [[nodiscard]] TokenType GetType();
-  [[nodiscard]] std::string GetValue();
+  [[nodiscard]] String GetValue();
 };
 
 }
