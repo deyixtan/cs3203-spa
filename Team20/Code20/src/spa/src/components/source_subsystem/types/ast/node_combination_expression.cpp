@@ -6,7 +6,9 @@ namespace source {
 CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator, ExpressionNodePtr rhs)
     : m_arithmetic_operator(arithmetic_operator), m_lhs(nullptr), m_rhs(std::move(rhs)) {}
 
-CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator, ExpressionNodePtr lhs, ExpressionNodePtr rhs)
+CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator,
+                                                     ExpressionNodePtr lhs,
+                                                     ExpressionNodePtr rhs)
     : m_arithmetic_operator(arithmetic_operator), m_lhs(std::move(lhs)), m_rhs(std::move(rhs)) {}
 
 ArithmeticOperator CombinationExpressionNode::GetOperator() {
@@ -15,12 +17,24 @@ ArithmeticOperator CombinationExpressionNode::GetOperator() {
 
 String CombinationExpressionNode::GetOperatorLabel(ArithmeticOperator arithmetic_operator) {
   switch (arithmetic_operator) {
-    case ArithmeticOperator::PLUS:return "+";
-    case ArithmeticOperator::MINUS:return "-";
-    case ArithmeticOperator::DIVIDE:return "/";
-    case ArithmeticOperator::MULTIPLY:return "*";
-    case ArithmeticOperator::MOD:return "%";
-    default:return "";
+    case ArithmeticOperator::PLUS: {
+      return "+";
+    }
+    case ArithmeticOperator::MINUS: {
+      return "-";
+    }
+    case ArithmeticOperator::DIVIDE: {
+      return "/";
+    }
+    case ArithmeticOperator::MULTIPLY: {
+      return "*";
+    }
+    case ArithmeticOperator::MOD: {
+      return "%";
+    }
+    default: {
+      return "";
+    }
   }
 }
 
@@ -33,14 +47,20 @@ ExpressionNodePtr CombinationExpressionNode::GetRhs() {
 }
 
 String CombinationExpressionNode::GetPatternFormat() {
-  return "(" + m_lhs->GetPatternFormat() + GetOperatorLabel(m_arithmetic_operator) + m_rhs->GetPatternFormat() + ")";
+  String arithmetic_operator = GetOperatorLabel(m_arithmetic_operator);
+  String lhs_pattern = m_lhs->GetPatternFormat();
+  String rhs_pattern = m_rhs->GetPatternFormat();
+  return "(" + lhs_pattern + arithmetic_operator + rhs_pattern + ")";
 }
 
 void CombinationExpressionNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(std::dynamic_pointer_cast<CombinationExpressionNode>(shared_from_this()));
+  CombinationExpressionNodePtr derived_ptr = std::dynamic_pointer_cast<CombinationExpressionNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
-CfgNodePtr CombinationExpressionNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {}
+CfgNodePtr CombinationExpressionNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  return cfg_node;
+}
 
 bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const CombinationExpressionNode *>(&other);

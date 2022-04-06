@@ -15,13 +15,27 @@ RelationOperator RelationalExpressionNode::GetOperator() {
 
 String RelationalExpressionNode::GetOperatorLabel(RelationOperator relation_operator) {
   switch (relation_operator) {
-    case RelationOperator::LESS_THAN:return "<";
-    case RelationOperator::LESS_THAN_EQUALS:return "<=";
-    case RelationOperator::GREATER_THAN:return ">";
-    case RelationOperator::GREATER_THAN_EQUALS:return ">=";
-    case RelationOperator::EQUALS:return "==";
-    case RelationOperator::NOT_EQUALS:return "!=";
-    default:return "";
+    case RelationOperator::EQUALS: {
+      return "==";
+    }
+    case RelationOperator::NOT_EQUALS: {
+      return "!=";
+    }
+    case RelationOperator::GREATER_THAN_EQUALS: {
+      return ">=";
+    }
+    case RelationOperator::LESS_THAN_EQUALS: {
+      return "<=";
+    }
+    case RelationOperator::GREATER_THAN: {
+      return ">";
+    }
+    case RelationOperator::LESS_THAN: {
+      return "<";
+    }
+    default: {
+      return "";
+    }
   }
 }
 
@@ -34,10 +48,13 @@ ExpressionNodePtr RelationalExpressionNode::GetRhs() {
 }
 
 void RelationalExpressionNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(std::dynamic_pointer_cast<RelationalExpressionNode>(shared_from_this()));
+  RelationalExpressionNodePtr derived_ptr = std::dynamic_pointer_cast<RelationalExpressionNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
-CfgNodePtr RelationalExpressionNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {}
+CfgNodePtr RelationalExpressionNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  return cfg_node;
+}
 
 bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const RelationalExpressionNode *>(&other);

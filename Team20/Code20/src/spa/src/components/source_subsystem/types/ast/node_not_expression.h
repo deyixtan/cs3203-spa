@@ -11,7 +11,7 @@ class NotExpressionNode : public ConditionalExpressionNode {
   ConditionalExpressionNodePtr m_expression;
 
  public:
-  NotExpressionNode(ConditionalExpressionNodePtr expression);
+  explicit NotExpressionNode(ConditionalExpressionNodePtr expression);
   [[nodiscard]] ConditionalExpressionNodePtr GetExpression();
   void Accept(DesignExtractorPtr design_extractor) override;
   CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override;

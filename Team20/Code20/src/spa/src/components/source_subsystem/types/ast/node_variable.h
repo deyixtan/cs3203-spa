@@ -9,10 +9,9 @@ namespace source {
 class VariableNode : public ExpressionNode {
  private:
   String m_name;
-  String m_stmt_no;
 
  public:
-  explicit VariableNode(String name, String stmt_no);
+  explicit VariableNode(String name);
   [[nodiscard]] String GetName();
   [[nodiscard]] String GetPatternFormat() override;
   void Accept(DesignExtractorPtr design_extractor) override;

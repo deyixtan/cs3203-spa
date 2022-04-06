@@ -6,15 +6,11 @@
 
 namespace source {
 
-enum class ExpressionType {
-  CONSTANT, COMBINATION, VARIABLE
-};
-
 class ExpressionNode : public Node {
  public:
   [[nodiscard]] virtual String GetPatternFormat() = 0;
-  void Accept(DesignExtractorPtr design_extractor) = 0;
-  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) = 0;
+  void Accept(DesignExtractorPtr design_extractor) override = 0;
+  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override = 0;
   [[nodiscard]] virtual bool operator==(const ExpressionNode &other) const = 0;
 };
 

@@ -3,7 +3,6 @@
 
 #include "components/source_subsystem/source_declarations.h"
 #include "components/source_subsystem/types/ast/node.h"
-#include "../../../pkb/stores/store.h"
 
 namespace source {
 
@@ -14,8 +13,8 @@ class StatementNode : public Node {
  public:
   explicit StatementNode(String stmt_no);
   [[nodiscard]] String GetStatementNumber();
-  void Accept(DesignExtractorPtr design_extractor) = 0;
-  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) = 0;
+  void Accept(DesignExtractorPtr design_extractor) override = 0;
+  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override = 0;
   virtual bool operator==(const StatementNode &other) const = 0;
 };
 

@@ -1,9 +1,7 @@
 #include "node_assign_statement.h"
-#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
 #include "components/source_subsystem/types/ast/node_variable.h"
-#include "components/source_subsystem/types/cfg/cfg_node.h"
-#include "components/source_subsystem/iterator/cfg_builder.h"
 
 namespace source {
 
@@ -19,17 +17,20 @@ ExpressionNodePtr AssignStatementNode::GetRhs() {
 }
 
 void AssignStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(std::dynamic_pointer_cast<AssignStatementNode>(shared_from_this()));
+  AssignStatementNodePtr derived_ptr = std::dynamic_pointer_cast<AssignStatementNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
 CfgNodePtr AssignStatementNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
-  return cfg_builder->Visit(std::dynamic_pointer_cast<AssignStatementNode>(shared_from_this()), cfg_node);
+  AssignStatementNodePtr derived_ptr = std::dynamic_pointer_cast<AssignStatementNode>(shared_from_this());
+  return cfg_builder->Visit(derived_ptr, cfg_node);
 }
 
 bool AssignStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const AssignStatementNode *>(&other);
-  return m_stmt_no == casted_other->m_stmt_no && *m_lhs == *(casted_other->m_lhs)
-      && *m_rhs == *(casted_other->m_rhs);
+  return m_stmt_no == casted_other->m_stmt_no &&
+      *m_lhs == *(casted_other->m_lhs) &&
+      *m_rhs == *(casted_other->m_rhs);
 }
 
 }

@@ -1,5 +1,4 @@
 #include "node_constant.h"
-#include "components/source_subsystem/pkb_client.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
 
 namespace source {
@@ -11,14 +10,18 @@ String ConstantNode::GetValue() {
 }
 
 String ConstantNode::GetPatternFormat() {
-  return "(" + m_value + ")";
+  String value = m_value;
+  return "(" + value + ")";
 }
 
 void ConstantNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(std::dynamic_pointer_cast<ConstantNode>(shared_from_this()));
+  ConstantNodePtr derived_ptr = std::dynamic_pointer_cast<ConstantNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
-CfgNodePtr ConstantNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {}
+CfgNodePtr ConstantNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  return cfg_node;
+}
 
 bool ConstantNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const ConstantNode *>(&other);

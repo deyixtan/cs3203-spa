@@ -15,11 +15,13 @@ ProcedureNodeStream ProgramNode::GetProcedures() {
 }
 
 void ProgramNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(std::dynamic_pointer_cast<ProgramNode>(shared_from_this()));
+  ProgramNodePtr derived_ptr = std::dynamic_pointer_cast<ProgramNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
 CfgNodePtr ProgramNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
-  return cfg_builder->Visit(std::dynamic_pointer_cast<ProgramNode>(shared_from_this()), cfg_node);
+  ProgramNodePtr derived_ptr = std::dynamic_pointer_cast<ProgramNode>(shared_from_this());
+  return cfg_builder->Visit(derived_ptr, cfg_node);
 }
 
 bool ProgramNode::operator==(const ProgramNode &other) const {

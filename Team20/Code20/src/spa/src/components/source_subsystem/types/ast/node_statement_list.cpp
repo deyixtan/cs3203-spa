@@ -1,8 +1,7 @@
 #include "node_statement_list.h"
-#include "components/source_subsystem/pkb_client.h"
-#include "../../iterator/design_extractor.h"
-#include "../../iterator/cfg_builder.h"
-#include "node_statement.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
+#include "components/source_subsystem/types/ast/node_statement.h"
 
 namespace source {
 
@@ -16,11 +15,13 @@ StatementNodeStream StatementListNode::GetStatements() {
 }
 
 void StatementListNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(std::dynamic_pointer_cast<StatementListNode>(shared_from_this()));
+  StatementListNodePtr derived_ptr = std::dynamic_pointer_cast<StatementListNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
 CfgNodePtr StatementListNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
-  return cfg_builder->Visit(std::dynamic_pointer_cast<StatementListNode>(shared_from_this()), cfg_node);
+  StatementListNodePtr derived_ptr = std::dynamic_pointer_cast<StatementListNode>(shared_from_this());
+  return cfg_builder->Visit(derived_ptr, cfg_node);
 }
 
 bool StatementListNode::operator==(const StatementListNode &other) const {

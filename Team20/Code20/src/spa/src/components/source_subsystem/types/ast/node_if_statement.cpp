@@ -1,5 +1,4 @@
 #include "node_if_statement.h"
-#include "components/source_subsystem/pkb_client.h"
 #include "components/source_subsystem/iterator/cfg_builder.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
 #include "components/source_subsystem/types/ast/node_conditional_expression.h"
@@ -36,11 +35,13 @@ StatementNodeStream IfStatementNode::GetAllStatementList() {
 }
 
 void IfStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(std::dynamic_pointer_cast<IfStatementNode>(shared_from_this()));
+  IfStatementNodePtr derived_ptr = std::dynamic_pointer_cast<IfStatementNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
 CfgNodePtr IfStatementNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
-  return cfg_builder->Visit(std::dynamic_pointer_cast<IfStatementNode>(shared_from_this()), cfg_node);
+  IfStatementNodePtr derived_ptr = std::dynamic_pointer_cast<IfStatementNode>(shared_from_this());
+  return cfg_builder->Visit(derived_ptr, cfg_node);
 }
 
 bool IfStatementNode::operator==(const StatementNode &other) const {
@@ -68,4 +69,5 @@ bool IfStatementNode::operator==(const StatementNode &other) const {
 
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
 }
+
 }

@@ -1,6 +1,5 @@
 #include "node_boolean_expression.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
-#include "components/source_subsystem/pkb_client.h"
 
 namespace source {
 
@@ -22,10 +21,13 @@ ConditionalExpressionNodePtr BooleanExpressionNode::GetRhs() {
 }
 
 void BooleanExpressionNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(std::dynamic_pointer_cast<BooleanExpressionNode>(shared_from_this()));
+  BooleanExpressionNodePtr derived_ptr = std::dynamic_pointer_cast<BooleanExpressionNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
-CfgNodePtr BooleanExpressionNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {}
+CfgNodePtr BooleanExpressionNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  return cfg_node;
+}
 
 bool BooleanExpressionNode::operator==(const ConditionalExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const BooleanExpressionNode *>(&other);

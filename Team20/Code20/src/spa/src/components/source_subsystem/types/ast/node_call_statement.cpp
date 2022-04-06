@@ -1,8 +1,5 @@
 #include "node_call_statement.h"
-#include "components/source_subsystem/pkb_client.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
-#include "components/source_subsystem/types/call_graph/call_graph.h"
-#include "components/source_subsystem/types/cfg/cfg_node.h"
 #include "components/source_subsystem/iterator/cfg_builder.h"
 
 namespace source {
@@ -19,11 +16,13 @@ String CallStatementNode::GetCalleeName() {
 }
 
 void CallStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(std::dynamic_pointer_cast<CallStatementNode>(shared_from_this()));
+  CallStatementNodePtr derived_ptr = std::dynamic_pointer_cast<CallStatementNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
 CfgNodePtr CallStatementNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
-  return cfg_builder->Visit(std::dynamic_pointer_cast<CallStatementNode>(shared_from_this()), cfg_node);
+  CallStatementNodePtr derived_ptr = std::dynamic_pointer_cast<CallStatementNode>(shared_from_this());
+  return cfg_builder->Visit(derived_ptr, cfg_node);
 }
 
 bool CallStatementNode::operator==(const StatementNode &other) const {

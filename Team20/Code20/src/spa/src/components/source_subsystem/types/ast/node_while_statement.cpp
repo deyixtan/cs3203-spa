@@ -1,7 +1,6 @@
 #include "node_while_statement.h"
-#include "components/source_subsystem/pkb_client.h"
-#include "components/source_subsystem/iterator/design_extractor.h"
 #include "components/source_subsystem/iterator/cfg_builder.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
 #include "components/source_subsystem/types/ast/node_conditional_expression.h"
 #include "components/source_subsystem/types/ast/node_statement_list.h"
 
@@ -19,11 +18,13 @@ StatementListNodePtr WhileStatementNode::GetStatementList() {
 }
 
 void WhileStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(std::dynamic_pointer_cast<WhileStatementNode>(shared_from_this()));
+  WhileStatementNodePtr derived_ptr = std::dynamic_pointer_cast<WhileStatementNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
 CfgNodePtr WhileStatementNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
-  return cfg_builder->Visit(std::dynamic_pointer_cast<WhileStatementNode>(shared_from_this()), cfg_node);
+  WhileStatementNodePtr derived_ptr = std::dynamic_pointer_cast<WhileStatementNode>(shared_from_this());
+  return cfg_builder->Visit(derived_ptr, cfg_node);
 }
 
 bool WhileStatementNode::operator==(const StatementNode &other) const {
