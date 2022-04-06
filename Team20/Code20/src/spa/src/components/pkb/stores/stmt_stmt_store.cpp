@@ -310,9 +310,9 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_typ
    rs_type = STMT;
   }
 
-  if (type_pair_map.find(rs_type) != type_pair_map.end()) {
-    if (type_pair_map.at(rs_type).find(stmt_type) != type_pair_map.at(rs_type).end()) {
-      return GetHelper(rs_type, stmt_type, 1, stmt, false);
+  if (type_pair_map.find(stmt_type) != type_pair_map.end()) {
+    if (type_pair_map.at(stmt_type).find(rs_type) != type_pair_map.at(rs_type).end()) {
+      return GetHelper(stmt_type, rs_type, 1, stmt, false);
     }
   }
   return {};
