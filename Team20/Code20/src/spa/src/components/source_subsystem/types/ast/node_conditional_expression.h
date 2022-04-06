@@ -1,24 +1,18 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONDITIONAL_EXPRESSION_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONDITIONAL_EXPRESSION_H_
+#ifndef NODE_CONDITIONAL_EXPRESSION_H
+#define NODE_CONDITIONAL_EXPRESSION_H
 
-#include "node.h"
-#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/source_declarations.h"
+#include "components/source_subsystem/types/ast/node.h"
 
 namespace source {
 
-enum class ConditionalType {
-  BOOLEAN,
-  NOT,
-  RELATIONAL
-};
-
 class ConditionalExpressionNode : public Node {
  public:
-  [[nodiscard]] virtual ConditionalType GetConditionalType() = 0;
+  void Accept(DesignExtractorPtr design_extractor) override = 0;
+  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override = 0;
   [[nodiscard]] virtual bool operator==(const ConditionalExpressionNode &other) const = 0;
-  virtual std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses) = 0;
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONDITIONAL_EXPRESSION_H_
+#endif //NODE_CONDITIONAL_EXPRESSION_H

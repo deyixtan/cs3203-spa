@@ -85,11 +85,20 @@ namespace source {
   typedef std::shared_ptr<VariableNode> VariableNodePtr;
   typedef std::shared_ptr<ConstantNode> ConstantNodePtr;
 
-  // ast-related types (stream)
+  // ast-related types (others)
   typedef std::vector<ProcedureNodePtr> ProcedureNodeStream;
   typedef std::vector<StatementNodePtr> StatementNodeStream;
 
+  // cfg-related types
+  typedef std::shared_ptr<Cfg> CfgPtr;
+  typedef std::shared_ptr<CfgNode> CfgNodePtr;
+
+  // cfg-related types (others)
+  typedef std::unordered_map<String , CfgNodePtr> StringToCfgNodePtrMap;
+
   // components
+  typedef std::shared_ptr<CfgBuilder> CfgBuilderPtr;
+  typedef std::shared_ptr<DesignExtractor> DesignExtractorPtr;
   typedef std::shared_ptr<PkbClient> PkbClientPtr;
 }
 
