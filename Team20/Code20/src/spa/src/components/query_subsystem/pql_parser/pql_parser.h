@@ -13,7 +13,6 @@ class PqlParser {
       rel_ref_arg_map;
   void MoveCursor(int);
   PqlToken FetchToken();
-  PqlToken FetchNextToken();
   PqlToken ValidateToken(std::unordered_set<PqlTokenType>);
   PqlToken ValidateToken(PqlTokenType);
   void RevertToSynonymType();
