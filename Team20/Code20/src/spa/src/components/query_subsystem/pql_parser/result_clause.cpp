@@ -1,5 +1,7 @@
 #include "result_clause.h"
 
+using namespace pql;
+
 ResultClause::ResultClause() {}
 ResultClause::ResultClause(ResultClauseType type): type(type), values(values) {}
 ResultClause::ResultClause(ResultClauseType type, std::vector<PqlToken> values): type(type), values(values) {}
