@@ -3,6 +3,8 @@
 
 #include "../pql_lexer/pql_token.h"
 
+using namespace pql;
+
 class Relationship {
  private:
   PqlToken rel_ref;

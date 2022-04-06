@@ -1,5 +1,7 @@
 #include "relationship.h"
 
+using namespace pql;
+
 Relationship::Relationship() {}
 Relationship::Relationship(PqlToken rel_ref) : rel_ref(rel_ref) {}
 Relationship::Relationship(PqlToken rel_ref, PqlToken first, PqlToken second): rel_ref(rel_ref), first(first), second(second) {}
