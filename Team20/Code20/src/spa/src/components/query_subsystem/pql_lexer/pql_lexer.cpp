@@ -6,6 +6,8 @@
 #include <stack>
 #include <sstream>
 #include "../utils.h"
+#include "../exceptions/unrecognised_token.h"
+
 // public
 PqlLexer::PqlLexer(std::string query) { this->query = query; }
 
@@ -40,7 +42,7 @@ std::vector<PqlToken> PqlLexer::Lex() {
       std::string no_space_token = Utils::RemoveSpace(token);
       tokens.push_back(PqlToken{PqlTokenType::SUB_EXPRESSION, Utils::TrimUnderscoreAndQuotes(no_space_token)});
     } else {
-      throw std::runtime_error("ERROR: Unrecognised token! \n");
+      throw UnrecognisedTokenException();
     }
   }
   return tokens;

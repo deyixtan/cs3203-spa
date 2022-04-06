@@ -18,7 +18,6 @@ PqlParser::PqlParser(std::vector<PqlToken> tokens) : tokens (tokens), cursor(0),
 }
 
 std::string BOOLEAN_SYNONYM_VALUE = "BOOLEAN";
-std::string INVALID_QUERY_FORMAT = "Invalid Query Format! \n";
 
 void PqlParser::MoveCursor(int movement) {
   cursor += movement;
@@ -41,7 +40,7 @@ PqlToken PqlParser::FetchNextToken() {
 PqlToken PqlParser::ValidateToken(std::unordered_set<PqlTokenType> allowed_types) {
   PqlToken token = FetchToken();
   if (!allowed_types.count(token.type)) {
-    throw INVALID_QUERY_FORMAT;
+    throw InvalidQueryFormatException();
   }
   MoveCursor(1);
   return token;
@@ -50,7 +49,7 @@ PqlToken PqlParser::ValidateToken(std::unordered_set<PqlTokenType> allowed_types
 PqlToken PqlParser::ValidateToken(PqlTokenType allowed_type) {
   PqlToken token = FetchToken();
   if (token.type != allowed_type) {
-    throw INVALID_QUERY_FORMAT;
+    throw InvalidQueryFormatException();
   }
   MoveCursor(1);
   return token;
@@ -63,14 +62,11 @@ void PqlParser::RevertToSynonymType() {
 }
 
 int PqlParser::GetEndOfDeclarationCursor() {
-  int last_semicolon;
+  int last_semicolon = -1;
   for (int i = 0; i < tokens.size(); i++) {
     if (tokens[i].type == PqlTokenType::SEMICOLON) {
       last_semicolon = i;
     }
-  }
-  if (!last_semicolon) {
-    throw INVALID_QUERY_FORMAT;
   }
   return last_semicolon;
 }
@@ -78,15 +74,14 @@ int PqlParser::GetEndOfDeclarationCursor() {
 void PqlParser::ParseDeclaration() {
   Declaration declarations;
   int after_declaration_cursor = GetEndOfDeclarationCursor() + 1;
-  while (cursor < after_declaration_cursor) {
-    PqlToken design_entity_token = ValidateToken(design_entities);
-    DesignEntityType design_entity_type = token_design_map[design_entity_token.type];
-    ParseDeclarationVariables(design_entity_type, declarations);
+  if (after_declaration_cursor != 0) {
+    while (cursor < after_declaration_cursor) {
+      PqlToken design_entity_token = ValidateToken(design_entities);
+      DesignEntityType design_entity_type = token_design_map[design_entity_token.type];
+      ParseDeclarationVariables(design_entity_type, declarations);
+    }
+    pq.SetDeclarations(declarations);
   }
-  if (declarations.GetDeclarations().empty()) {
-    throw INVALID_QUERY_FORMAT;
-  }
-  pq.SetDeclarations(declarations);
 }
 
 void PqlParser::ParseDeclarationVariables(DesignEntityType& design_entity_type, Declaration& declarations) {
@@ -131,7 +126,7 @@ void PqlParser::ParseSelectClause() {
     } else if (current_token.type == PqlTokenType::WITH) {
       ParseWithClause();
     } else {
-      throw INVALID_QUERY_FORMAT;
+      throw InvalidQueryFormatException();
     }
   }
 }
@@ -224,7 +219,7 @@ void PqlParser::ParsePatternClause() {
     } else if (next_token.type == PqlTokenType::CLOSED_PARENTHESIS) {
       MoveCursor(1);
     } else {
-      throw INVALID_QUERY_FORMAT;
+      throw InvalidQueryFormatException();
     }
     current_token = FetchToken();
     Pattern pattern = Pattern(pattern_syn, first_arg, second_arg, third_arg);
