@@ -152,10 +152,10 @@ void DesignExtractor::Visit(ReadStatementNodePtr read_stmt) {
   String var_name = var->GetName();
 
   m_curr_stmt_no = stmt_num;
-  GetPkbClient()->PopulateTypeOfStmt(stmt_num, PRINT);
-  m_is_uses = true;
+  GetPkbClient()->PopulateTypeOfStmt(stmt_num, READ);
+  m_is_uses = false;
   var->Accept(shared_from_this()); // apart from proc_name, true?
-  GetPkbClient()->PopulatePrint(GetVisited(), stmt_num, var_name);
+  GetPkbClient()->PopulateRead(GetVisited(), stmt_num, var_name);
 }
 
 void DesignExtractor::Visit(AssignStatementNodePtr assign_stmt) {
