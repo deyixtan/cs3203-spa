@@ -473,18 +473,17 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore::GetAllNextStarPairs() {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> res;
-  std::unordered_set<std::string> lower_star = GetLowerStarOf(NEXT, STMT, "1");
-//  for(auto pair : all_pairs) {
-//    std::string before_stmt = pair.first;
-//    std::string next_stmt = pair.second;
-//    std::unordered_set<std::string> lower_star = GetLowerStarOf(NEXT, STMT, before_stmt);
-//    for(auto next: lower_star) {
-//      res.insert({pair.first, next});
-//    }
-//    std::unordered_set<std::string> upper_star = GetUpperStarOf(NEXT, STMT, next_stmt);
-//    for(auto before: upper_star) {
-//      res.insert({before, pair.second});
-//    }
-//  }
+  for(auto pair : all_pairs) {
+    std::string before_stmt = pair.first;
+    std::string next_stmt = pair.second;
+    std::unordered_set<std::string> lower_star = GetLowerStarOf(NEXT, STMT, before_stmt);
+    for(auto next: lower_star) {
+      res.insert({pair.first, next});
+    }
+    std::unordered_set<std::string> upper_star = GetUpperStarOf(NEXT, STMT, next_stmt);
+    for(auto before: upper_star) {
+      res.insert({before, pair.second});
+    }
+  }
   return GetAllStarPairs();
 }
