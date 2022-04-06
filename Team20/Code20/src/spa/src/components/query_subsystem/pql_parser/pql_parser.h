@@ -2,6 +2,7 @@
 #define PQL_PARSER_H_
 
 #include "parsed_query.h"
+#include "../exceptions/invalid_query_format.h"
 
 class PqlParser {
  private:
