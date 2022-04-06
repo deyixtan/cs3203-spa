@@ -35,23 +35,27 @@ StatementNodeStream IfStatementNode::GetAllStatementList() {
   return if_stmt_list;
 }
 
-void IfStatementNode::Accept(DesignExtractor *design_extractor, String proc_name) {
-  String stmt_num = GetStatementNumber();
-  design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, IF);
-
-  StatementListNodePtr if_block = m_if_stmt_list;
-  StatementListNodePtr else_block = m_else_stmt_list;
-  StatementNodeStream if_stmts = m_if_stmt_list->GetStatements();
-  StatementNodeStream else_stmts = m_else_stmt_list->GetStatements();
-
-  design_extractor->GetVisited().push_back(stmt_num);
-
-  String cond_expr = design_extractor->Visit(m_condition, proc_name, true);
-  design_extractor->Visit(if_block, proc_name);
-  design_extractor->Visit(else_block, proc_name);
-
-  design_extractor->GetPkbClient()->PopulateIf(design_extractor->GetVisited(), stmt_num, cond_expr);
+void IfStatementNode::Accept(DesignExtractorPtr design_extractor) {
+  design_extractor->Visit(this);
 }
+
+//void IfStatementNode::Accept(DesignExtractor *design_extractor, String proc_name) {
+//  String stmt_num = GetStatementNumber();
+//  design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, IF);
+//
+//  StatementListNodePtr if_block = m_if_stmt_list;
+//  StatementListNodePtr else_block = m_else_stmt_list;
+//  StatementNodeStream if_stmts = m_if_stmt_list->GetStatements();
+//  StatementNodeStream else_stmts = m_else_stmt_list->GetStatements();
+//
+//  design_extractor->GetVisited().push_back(stmt_num);
+//
+//  String cond_expr = design_extractor->Visit(m_condition, proc_name, true);
+//  design_extractor->Visit(if_block, proc_name);
+//  design_extractor->Visit(else_block, proc_name);
+//
+//  design_extractor->GetPkbClient()->PopulateIf(design_extractor->GetVisited(), stmt_num, cond_expr);
+//}
 
 CfgNodePtr IfStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
 //  CfgNodePtr condition_node = std::make_shared<CfgNode>();

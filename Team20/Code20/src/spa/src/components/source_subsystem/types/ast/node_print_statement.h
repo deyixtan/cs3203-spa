@@ -13,7 +13,8 @@ class PrintStatementNode : public StatementNode {
  public:
   PrintStatementNode(String &stmt_no, VariableNodePtr variable);
   [[nodiscard]] VariableNodePtr GetVariable();
-  void Accept(DesignExtractor *design_extractor, String proc_name);
+  void Accept(DesignExtractorPtr design_extractor) override;
+  //void Accept(DesignExtractor *design_extractor, String proc_name);
   CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
   StmtType GetStatementType();

@@ -17,13 +17,17 @@ String CallStatementNode::GetCalleeName() {
   return m_callee_name;
 }
 
-void CallStatementNode::Accept(DesignExtractor *design_extractor, String proc_name) {
-  String stmt_num = GetStatementNumber();
-  String callee_name = m_callee_name;
-  design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, CALL);
-  design_extractor->GetPkbClient()->PopulateCall(design_extractor->GetVisited(), stmt_num, proc_name, callee_name);
-  design_extractor->GetCallGraph()->AddEdge(proc_name, callee_name);
+void CallStatementNode::Accept(DesignExtractorPtr design_extractor) {
+  design_extractor->Visit(this);
 }
+
+//void CallStatementNode::Accept(DesignExtractor *design_extractor, String proc_name) {
+//  String stmt_num = GetStatementNumber();
+//  String callee_name = m_callee_name;
+//  design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, CALL);
+//  design_extractor->GetPkbClient()->PopulateCall(design_extractor->GetVisited(), stmt_num, proc_name, callee_name);
+//  design_extractor->GetCallGraph()->AddEdge(proc_name, callee_name);
+//}
 
 CfgNodePtr CallStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
   cfg_node->AddStatement(StmtType::CALL, GetStatementNumber());

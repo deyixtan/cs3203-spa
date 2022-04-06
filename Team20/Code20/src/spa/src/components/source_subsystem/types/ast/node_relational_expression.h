@@ -24,7 +24,8 @@ class RelationalExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] static String GetOperatorLabel(RelationOperator relation_operator);
   [[nodiscard]] ExpressionNodePtr GetLhs();
   [[nodiscard]] ExpressionNodePtr GetRhs();
-  String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
+  void Accept(DesignExtractorPtr design_extractor) override;
+  //String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

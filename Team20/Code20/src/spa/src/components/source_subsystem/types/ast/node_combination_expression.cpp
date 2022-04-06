@@ -36,10 +36,14 @@ String CombinationExpressionNode::GetPatternFormat() {
   return "(" + m_lhs->GetPatternFormat() + GetOperatorLabel(m_arithmetic_operator) + m_rhs->GetPatternFormat() + ")";
 }
 
-String CombinationExpressionNode::Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses) {
-  return "(" + design_extractor->Visit(m_lhs, proc_name, is_uses) + GetOperatorLabel(m_arithmetic_operator)
-      + design_extractor->Visit(m_rhs, proc_name, is_uses) + ")";
+void CombinationExpressionNode::Accept(DesignExtractorPtr design_extractor) {
+  design_extractor->Visit(this);
 }
+
+//String CombinationExpressionNode::Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses) {
+//  return "(" + design_extractor->Visit(m_lhs, proc_name, is_uses) + GetOperatorLabel(m_arithmetic_operator)
+//      + design_extractor->Visit(m_rhs, proc_name, is_uses) + ")";
+//}
 
 bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const CombinationExpressionNode *>(&other);

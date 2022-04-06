@@ -15,7 +15,8 @@ class CallStatementNode : public StatementNode {
   CallStatementNode(String &stmt_no, String caller_name, String callee_name);
   [[nodiscard]] String GetCallerName();
   [[nodiscard]] String GetCalleeName();
-  void Accept(DesignExtractor *design_extractor, String proc_name);
+  void Accept(DesignExtractorPtr design_extractor) override;
+  //void Accept(DesignExtractor *design_extractor, String proc_name);
   CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
   StmtType GetStatementType();

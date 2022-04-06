@@ -18,10 +18,14 @@ StatementListNodePtr ProcedureNode::GetStatementList() {
   return m_stmt_list;
 }
 
-void ProcedureNode::Accept(DesignExtractor *design_extractor) {
-  design_extractor->GetPkbClient()->PopulateProc(m_name);
-  design_extractor->Visit(m_stmt_list, m_name);
+void ProcedureNode::Accept(DesignExtractorPtr design_extractor) {
+  design_extractor->Visit(this);
 }
+
+//void ProcedureNode::Accept(DesignExtractor *design_extractor) {
+//  design_extractor->GetPkbClient()->PopulateProc(m_name);
+//  design_extractor->Visit(m_stmt_list, m_name);
+//}
 
 CfgNodePtr ProcedureNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
   return cfg_builder->Visit(m_stmt_list, cfg_node);

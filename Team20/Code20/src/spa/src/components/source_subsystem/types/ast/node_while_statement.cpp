@@ -18,19 +18,23 @@ StatementListNodePtr WhileStatementNode::GetStatementList() {
   return m_stmt_list;
 }
 
-void WhileStatementNode::Accept(DesignExtractor *design_extractor, String proc_name) {
-  String stmt_num = GetStatementNumber();
-  design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, WHILE);
-
-  StatementListNodePtr while_block = GetStatementList();
-  StatementNodeStream while_stmts = while_block->GetStatements();
-
-  design_extractor->GetVisited().push_back(stmt_num);
-  String cond_expr = design_extractor->Visit(m_condition, proc_name, true);
-
-  design_extractor->Visit(while_block, proc_name);
-  design_extractor->GetPkbClient()->PopulateWhile(design_extractor->GetVisited(), stmt_num, cond_expr);
+void WhileStatementNode::Accept(DesignExtractorPtr design_extractor) {
+  design_extractor->Visit(this);
 }
+
+//void WhileStatementNode::Accept(DesignExtractor *design_extractor, String proc_name) {
+//  String stmt_num = GetStatementNumber();
+//  design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, WHILE);
+//
+//  StatementListNodePtr while_block = GetStatementList();
+//  StatementNodeStream while_stmts = while_block->GetStatements();
+//
+//  design_extractor->GetVisited().push_back(stmt_num);
+//  String cond_expr = design_extractor->Visit(m_condition, proc_name, true);
+//
+//  design_extractor->Visit(while_block, proc_name);
+//  design_extractor->GetPkbClient()->PopulateWhile(design_extractor->GetVisited(), stmt_num, cond_expr);
+//}
 
 CfgNodePtr WhileStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
 //  CfgNodePtr condition_node = std::make_shared<CfgNode>();

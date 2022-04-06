@@ -15,7 +15,8 @@ class VariableNode : public ExpressionNode {
   explicit VariableNode(String name, String stmt_no);
   [[nodiscard]] String GetName();
   [[nodiscard]] String GetPatternFormat() override;
-  String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
+  void Accept(DesignExtractorPtr design_extractor) override;
+  //String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

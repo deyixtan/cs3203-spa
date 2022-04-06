@@ -14,10 +14,14 @@ String ConstantNode::GetPatternFormat() {
   return "(" + m_value + ")";
 }
 
-String ConstantNode::Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses) {
-  design_extractor->GetPkbClient()->PopulateConst(m_value);
-  return GetPatternFormat();
+void ConstantNode::Accept(DesignExtractorPtr design_extractor) {
+  design_extractor->Visit(this);
 }
+
+//String ConstantNode::Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses) {
+//  design_extractor->GetPkbClient()->PopulateConst(m_value);
+//  return GetPatternFormat();
+//}
 
 bool ConstantNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const ConstantNode *>(&other);

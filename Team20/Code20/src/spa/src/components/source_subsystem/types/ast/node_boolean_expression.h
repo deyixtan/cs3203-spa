@@ -23,7 +23,8 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] BooleanOperator GetOperator();
   [[nodiscard]] ConditionalExpressionNodePtr GetLhs();
   [[nodiscard]] ConditionalExpressionNodePtr GetRhs();
-  String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
+  void Accept(DesignExtractorPtr design_extractor) override;
+  //String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

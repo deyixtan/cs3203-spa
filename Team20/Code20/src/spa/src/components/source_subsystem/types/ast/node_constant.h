@@ -14,7 +14,8 @@ class ConstantNode : public ExpressionNode {
   explicit ConstantNode(String value);
   [[nodiscard]] String GetValue();
   [[nodiscard]] String GetPatternFormat() override;
-  String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
+  void Accept(DesignExtractorPtr design_extractor) override;
+  //String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

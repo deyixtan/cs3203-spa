@@ -24,7 +24,8 @@ class CombinationExpressionNode : public ExpressionNode {
   [[nodiscard]] ExpressionNodePtr GetLhs();
   [[nodiscard]] ExpressionNodePtr GetRhs();
   [[nodiscard]] String GetPatternFormat();
-  String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
+  void Accept(DesignExtractorPtr design_extractor) override;
+  //String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

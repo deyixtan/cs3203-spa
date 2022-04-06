@@ -33,6 +33,10 @@ ExpressionNodePtr RelationalExpressionNode::GetRhs() {
   return m_rhs;
 }
 
+void RelationalExpressionNode::Accept(DesignExtractorPtr design_extractor) {
+  design_extractor->Visit(this);
+}
+
 String RelationalExpressionNode::Accept(DesignExtractor *de, String proc_name, bool is_uses) {
   return "(" + de->Visit(m_lhs, proc_name, is_uses) + GetOperatorLabel(m_relation_operator)
       + de->Visit(m_rhs, proc_name, is_uses) + ")";
