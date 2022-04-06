@@ -1,4 +1,4 @@
-jkprocedure First {
+procedure First {
 1   read x;
 2   read z;
 3   call Second;
