@@ -13,7 +13,7 @@ enum class ConditionalType {
 class ConditionalExpressionNode : public Node {
  public:
   void Accept(DesignExtractorPtr design_extractor) = 0;
-  //virtual String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses) = 0;
+  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) = 0;
   [[nodiscard]] virtual bool operator==(const ConditionalExpressionNode &other) const = 0;
 };
 

@@ -15,6 +15,7 @@ class ConstantNode : public ExpressionNode {
   [[nodiscard]] String GetValue();
   [[nodiscard]] String GetPatternFormat() override;
   void Accept(DesignExtractorPtr design_extractor) override;
+  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override;
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

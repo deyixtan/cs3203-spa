@@ -39,8 +39,8 @@ void IfStatementNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(std::dynamic_pointer_cast<IfStatementNode>(shared_from_this()));
 }
 
-void IfStatementNode::Accept(CfgBuilderPtr cfg_builder) {
-  cfg_builder->Visit(std::dynamic_pointer_cast<IfStatementNode>(shared_from_this()));
+CfgNodePtr IfStatementNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  return cfg_builder->Visit(std::dynamic_pointer_cast<IfStatementNode>(shared_from_this()), cfg_node);
 }
 
 bool IfStatementNode::operator==(const StatementNode &other) const {

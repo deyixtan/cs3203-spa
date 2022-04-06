@@ -14,6 +14,7 @@ class NotExpressionNode : public ConditionalExpressionNode {
   NotExpressionNode(ConditionalExpressionNodePtr expression);
   [[nodiscard]] ConditionalExpressionNodePtr GetExpression();
   void Accept(DesignExtractorPtr design_extractor) override;
+  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

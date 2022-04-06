@@ -14,6 +14,8 @@ void NotExpressionNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(std::dynamic_pointer_cast<NotExpressionNode>(shared_from_this()));
 }
 
+CfgNodePtr NotExpressionNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {}
+
 bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const NotExpressionNode *>(&other);
   return *m_expression == *(casted_other->m_expression);

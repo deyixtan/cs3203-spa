@@ -22,8 +22,8 @@ void WhileStatementNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(std::dynamic_pointer_cast<WhileStatementNode>(shared_from_this()));
 }
 
-void WhileStatementNode::Accept(CfgBuilderPtr cfg_builder) {
-  cfg_builder->Visit(std::dynamic_pointer_cast<WhileStatementNode>(shared_from_this()));
+CfgNodePtr WhileStatementNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  return cfg_builder->Visit(std::dynamic_pointer_cast<WhileStatementNode>(shared_from_this()), cfg_node);
 }
 
 bool WhileStatementNode::operator==(const StatementNode &other) const {

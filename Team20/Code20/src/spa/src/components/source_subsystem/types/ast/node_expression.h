@@ -14,7 +14,7 @@ class ExpressionNode : public Node {
  public:
   [[nodiscard]] virtual String GetPatternFormat() = 0;
   void Accept(DesignExtractorPtr design_extractor) = 0;
-  //virtual String Accept(DesignExtractor *de, String proc_name, bool is_uses) = 0;
+  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) = 0;
   [[nodiscard]] virtual bool operator==(const ExpressionNode &other) const = 0;
 };
 

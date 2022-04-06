@@ -245,10 +245,10 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
-  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
-  cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
+  CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
+  cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  cfg_builder.IterateCfgAndPopulatePkb();
+  cfg_builder->IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -459,10 +459,10 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
-  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
-  cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
+  CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
+  cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  cfg_builder.IterateCfgAndPopulatePkb();
+  cfg_builder->IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -583,10 +583,10 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
-  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
-  cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
+  CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
+  cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
   design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  cfg_builder.IterateCfgAndPopulatePkb();
+  cfg_builder->IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));

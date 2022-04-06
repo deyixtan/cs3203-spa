@@ -18,8 +18,8 @@ void PrintStatementNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(std::dynamic_pointer_cast<PrintStatementNode>(shared_from_this()));
 }
 
-void PrintStatementNode::Accept(CfgBuilderPtr cfg_builder) {
-  cfg_builder->Visit(std::dynamic_pointer_cast<PrintStatementNode>(shared_from_this()));
+CfgNodePtr PrintStatementNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  return cfg_builder->Visit(std::dynamic_pointer_cast<PrintStatementNode>(shared_from_this()), cfg_node);
 }
 
 bool PrintStatementNode::operator==(const StatementNode &other) const {

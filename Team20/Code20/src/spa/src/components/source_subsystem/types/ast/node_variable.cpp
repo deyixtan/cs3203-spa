@@ -18,6 +18,8 @@ void VariableNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(std::dynamic_pointer_cast<VariableNode>(shared_from_this()));
 }
 
+CfgNodePtr VariableNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {}
+
 bool VariableNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const VariableNode *>(&other);
   return m_name == casted_other->m_name;

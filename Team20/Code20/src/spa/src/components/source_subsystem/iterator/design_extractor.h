@@ -56,19 +56,12 @@ class DesignExtractor : public std::enable_shared_from_this<DesignExtractor> {
   void Visit(CallStatementNodePtr call_stmt);
   void Visit(WhileStatementNodePtr while_stmt);
   void Visit(IfStatementNodePtr if_stmt);
-
   void Visit(BooleanExpressionNodePtr boolean_expr_node);
   void Visit(RelationalExpressionNodePtr rel_expr_node);
   void Visit(NotExpressionNodePtr not_expr_node);
   void Visit(CombinationExpressionNodePtr combination_expr_node);
-
   void Visit(VariableNodePtr variable_node);
   void Visit(ConstantNodePtr constant_node);
-  ////////
-  [[nodiscard]] std::string Visit(std::shared_ptr<ExpressionNode> node, std::string proc_name, bool is_uses);
-  [[nodiscard]] std::string Visit(std::shared_ptr<ConditionalExpressionNode> node, std::string proc_name, bool is_uses);
-  void Visit(std::shared_ptr<VariableNode> node, std::string proc_name, bool is_uses);
-  void Visit(std::shared_ptr<ConstantNode> node, std::string proc_name, bool is_uses);
 };
 
 }

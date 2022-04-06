@@ -8,6 +8,12 @@
 #include "../types/cfg/cfg.h"
 #include "../types/cfg/cfg_node.h"
 #include "../types/call_graph/call_graph.h"
+#include "../types/ast/node_read_statement.h"
+#include "../types/ast/node_print_statement.h"
+#include "../types/ast/node_assign_statement.h"
+#include "../types/ast/node_call_statement.h"
+#include "../types/ast/node_while_statement.h"
+#include "../types/ast/node_if_statement.h"
 
 namespace source {
 
@@ -18,9 +24,12 @@ std::shared_ptr<PkbClient> CfgBuilder::GetPkbClient() {
   return m_pkb_client;
 }
 
-void CfgBuilder::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node) {
-  std::unordered_map<std::string, std::shared_ptr<CfgNode>> cfg_map = Visit(std::move(node));
-  std::shared_ptr<Cfg> program_cfg = std::make_shared<Cfg>(cfg_map);
+void CfgBuilder::IterateAstAndPopulatePkb(ProgramNodePtr node) {
+  // populates m_cfg_heads_map
+  CfgNodePtr tmp = std::make_shared<CfgNode>();
+  Visit(std::move(node), tmp);
+
+  std::shared_ptr<Cfg> program_cfg = std::make_shared<Cfg>(m_cfg_heads_map);
   m_pkb_client->PopulateCfg(*program_cfg);
 }
 
@@ -109,27 +118,26 @@ void CfgBuilder::NextNodeHandler(std::shared_ptr<CfgNode> &desc,
   }
 }
 
-void CfgBuilder::Visit(ProgramNodePtr program_node) {
+CfgNodePtr CfgBuilder::Visit(ProgramNodePtr program_node, CfgNodePtr cfg_node) {
   ProcedureNodeStream procedures = program_node->GetProcedures();
   for (ProcedureNodePtr &procedure : procedures) {
     CfgNodePtr head = std::make_shared<CfgNode>();
-    CfgNodePtr tail = procedure->Accept(procedure, head);
+    CfgNodePtr tail = procedure->Accept(shared_from_this(), head);
     if (!tail->GetStatementList().empty()) {
       CfgNodePtr dummy = std::make_shared<CfgNode>();
       tail->AddNext(dummy);
     }
     m_cfg_heads_map.insert({procedure->GetName(), head});
   }
-  // return heads;
+  return nullptr;
 }
 
-
-void CfgBuilder::Visit(ProcedureNodePtr procedure_node) {
+CfgNodePtr CfgBuilder::Visit(ProcedureNodePtr procedure_node, CfgNodePtr cfg_node) {
   StatementListNodePtr stmt_list = procedure_node->GetStatementList();
-  stmt_list->Accept(shared_from_this());
+  return stmt_list->Accept(shared_from_this(), cfg_node);
 }
 
-void CfgBuilder::Visit(StatementListNodePtr stmt_list_node) {
+CfgNodePtr CfgBuilder::Visit(StatementListNodePtr stmt_list_node, CfgNodePtr cfg_node) {
   StatementNodeStream statements = stmt_list_node->GetStatements();
   for (StatementNodePtr &statement : statements) {
     bool is_empty_cfg_node = cfg_node->GetStatementList().empty();
@@ -138,36 +146,36 @@ void CfgBuilder::Visit(StatementListNodePtr stmt_list_node) {
       cfg_node->AddNext(condition_node);
       cfg_node = condition_node;
     }
-    cfg_node = statement->Accept(shared_from_this());
+    cfg_node = statement->Accept(shared_from_this(), cfg_node);
   }
-  // return cfg_node
+  return cfg_node;
 }
 
-void CfgBuilder::Visit(ReadStatementNodePtr read_stmt) {
+CfgNodePtr CfgBuilder::Visit(ReadStatementNodePtr read_stmt, CfgNodePtr cfg_node) {
   String stmt_num = read_stmt->GetStatementNumber();
   cfg_node->AddStatement(StmtType::READ, stmt_num);
-  //return cfg_node;
+  return cfg_node;
 }
 
-void CfgBuilder::Visit(PrintStatementNodePtr print_stmt) {
+CfgNodePtr CfgBuilder::Visit(PrintStatementNodePtr print_stmt, CfgNodePtr cfg_node) {
   String stmt_num = print_stmt->GetStatementNumber();
   cfg_node->AddStatement(StmtType::PRINT, stmt_num);
-  //return cfg_node;
+  return cfg_node;
 }
 
-void CfgBuilder::Visit(AssignStatementNodePtr assign_stmt) {
+CfgNodePtr CfgBuilder::Visit(AssignStatementNodePtr assign_stmt, CfgNodePtr cfg_node) {
   String stmt_num = assign_stmt->GetStatementNumber();
   cfg_node->AddStatement(StmtType::ASSIGN, stmt_num);
-  //return cfg_node;
+  return cfg_node;
 }
 
-void CfgBuilder::Visit(CallStatementNodePtr call_stmt) {
+CfgNodePtr CfgBuilder::Visit(CallStatementNodePtr call_stmt, CfgNodePtr cfg_node) {
   String stmt_num = call_stmt->GetStatementNumber();
   cfg_node->AddStatement(StmtType::CALL, stmt_num);
-  //return cfg_node;
+  return cfg_node;
 }
 
-void CfgBuilder::Visit(WhileStatementNodePtr while_stmt) {
+CfgNodePtr CfgBuilder::Visit(WhileStatementNodePtr while_stmt, CfgNodePtr cfg_node) {
   String stmt_num = while_stmt->GetStatementNumber();
   StatementListNodePtr while_stmt_list = while_stmt->GetStatementList();
 
@@ -179,12 +187,12 @@ void CfgBuilder::Visit(WhileStatementNodePtr while_stmt) {
   cfg_node->AddStatement(StmtType::WHILE, stmt_num);
   cfg_node->AddNext(body_node);
   cfg_node->AddNext(next_node);
-  body_node = while_stmt_list->Accept(shared_from_this());
+  body_node = while_stmt_list->Accept(shared_from_this(), body_node);
   body_node->AddNext(cfg_node);
-  //return next_node;
+  return next_node;
 }
 
-void CfgBuilder::Visit(IfStatementNodePtr if_stmt) {
+CfgNodePtr CfgBuilder::Visit(IfStatementNodePtr if_stmt, CfgNodePtr cfg_node) {
   String stmt_num = if_stmt->GetStatementNumber();
   StatementListNodePtr if_stmt_list = if_stmt->GetIfStatementList();
   StatementListNodePtr else_else_list = if_stmt->GetElseStatementList();
@@ -198,11 +206,11 @@ void CfgBuilder::Visit(IfStatementNodePtr if_stmt) {
   cfg_node->AddStatement(StmtType::IF, stmt_num);
   cfg_node->AddNext(if_node);
   cfg_node->AddNext(else_node);
-  if_node = if_stmt_list->Accept(shared_from_this());
+  if_node = if_stmt_list->Accept(shared_from_this(), if_node);
   if_node->AddNext(next_node);
-  else_node = else_else_list->Accept(shared_from_this());
+  else_node = else_else_list->Accept(shared_from_this(), else_node);
   else_node->AddNext(next_node);
-  //return next_node;
+  return next_node;
 }
 
 }

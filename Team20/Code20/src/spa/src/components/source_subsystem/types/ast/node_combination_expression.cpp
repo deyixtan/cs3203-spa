@@ -40,6 +40,8 @@ void CombinationExpressionNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(std::dynamic_pointer_cast<CombinationExpressionNode>(shared_from_this()));
 }
 
+CfgNodePtr CombinationExpressionNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {}
+
 bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const CombinationExpressionNode *>(&other);
   return m_arithmetic_operator == casted_other->m_arithmetic_operator

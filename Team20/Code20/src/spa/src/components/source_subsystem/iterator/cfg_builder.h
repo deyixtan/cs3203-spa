@@ -35,15 +35,15 @@ class CfgBuilder : public std::enable_shared_from_this<CfgBuilder> {
                        std::unordered_set<std::shared_ptr<CfgNode>> &visited,
                        std::unordered_map<std::string,
                        std::unordered_set<std::string>> &next_map);
-  void Visit(ProgramNodePtr program_node);
-  void Visit(ProcedureNodePtr procedure_node);
-  void Visit(StatementListNodePtr stmt_list_node);
-  void Visit(ReadStatementNodePtr read_stmt);
-  void Visit(PrintStatementNodePtr print_stmt);
-  void Visit(AssignStatementNodePtr assign_stmt);
-  void Visit(CallStatementNodePtr call_stmt);
-  void Visit(WhileStatementNodePtr while_stmt);
-  void Visit(IfStatementNodePtr if_stmt);
+  CfgNodePtr Visit(ProgramNodePtr program_node, CfgNodePtr cfg_node);
+  CfgNodePtr Visit(ProcedureNodePtr procedure_node, CfgNodePtr cfg_node);
+  CfgNodePtr Visit(StatementListNodePtr stmt_list_node, CfgNodePtr cfg_node);
+  CfgNodePtr Visit(ReadStatementNodePtr read_stmt, CfgNodePtr cfg_node);
+  CfgNodePtr Visit(PrintStatementNodePtr print_stmt, CfgNodePtr cfg_node);
+  CfgNodePtr Visit(AssignStatementNodePtr assign_stmt, CfgNodePtr cfg_node);
+  CfgNodePtr Visit(CallStatementNodePtr call_stmt, CfgNodePtr cfg_node);
+  CfgNodePtr Visit(WhileStatementNodePtr while_stmt, CfgNodePtr cfg_node);
+  CfgNodePtr Visit(IfStatementNodePtr if_stmt, CfgNodePtr cfg_node);
 };
 
 }
