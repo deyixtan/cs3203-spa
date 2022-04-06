@@ -292,7 +292,7 @@ ReadStatementNodePtr SourceParser::ParseReadStatement() {
   String var_name = ProcessToken(TokenType::NAME)->GetValue();
   ProcessToken(TokenType::SEMI_COLON);
 
-  VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name, stmt_no);
+  VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name);
   return std::make_shared<ReadStatementNode>(stmt_no, variable_node);
 }
 
@@ -302,7 +302,7 @@ PrintStatementNodePtr SourceParser::ParsePrintStatement() {
   String var_name = ProcessToken(TokenType::NAME)->GetValue();
   ProcessToken(TokenType::SEMI_COLON);
 
-  VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name, stmt_no);
+  VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name);
   return std::make_shared<PrintStatementNode>(stmt_no, variable_node);
 }
 
@@ -313,7 +313,7 @@ AssignStatementNodePtr SourceParser::ParseAssignStatement() {
   ExpressionNodePtr rhs_expression_node = ParseExpression();
   ProcessToken(TokenType::SEMI_COLON);
 
-  VariableNodePtr lhs_variable_node = std::make_shared<VariableNode>(lhs_var_name, stmt_no);
+  VariableNodePtr lhs_variable_node = std::make_shared<VariableNode>(lhs_var_name);
   return std::make_shared<AssignStatementNode>(stmt_no, lhs_variable_node, rhs_expression_node);
 }
 
@@ -467,7 +467,7 @@ ExpressionNodePtr SourceParser::ParseFactor() {
   switch (type) {
     case TokenType::NAME: {
       String var_name = ProcessToken(TokenType::NAME)->GetValue();
-      return std::make_shared<VariableNode>(var_name, std::to_string(m_curr_stmt_no));
+      return std::make_shared<VariableNode>(var_name);
     }
     case TokenType::INTEGER: {
       String constant_value = ProcessToken(TokenType::INTEGER)->GetValue();

@@ -23,7 +23,7 @@ using namespace source;
 TEST_CASE("Test DE Modify population for single procedure with one read statement") {
   // set up AST for: procedure main { read a; }
   std::string stmt_no = "1";
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ReadStatementNode>
       assign_stmt = std::make_shared<ReadStatementNode>(stmt_no, variable_node);
 
@@ -64,12 +64,12 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
 TEST_CASE("Test DE population for single procedure with multiple statements") {
   // set up AST for: procedure main { read a; print x; }
   std::string stmt_no_a = "1";
-  std::shared_ptr<VariableNode> variable_node_a = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable_node_a = std::make_shared<VariableNode>("a");
   std::shared_ptr<ReadStatementNode>
       read_stmt = std::make_shared<ReadStatementNode>(stmt_no_a, variable_node_a);
 
   std::string stmt_no_b = "2";
-  std::shared_ptr<VariableNode> variable_node_x = std::make_shared<VariableNode>("x", "2");
+  std::shared_ptr<VariableNode> variable_node_x = std::make_shared<VariableNode>("x");
   std::shared_ptr<PrintStatementNode>
       print_stmt = std::make_shared<PrintStatementNode>(stmt_no_b, variable_node_x);
 
@@ -124,11 +124,11 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
 
 TEST_CASE("Test DE population for single procedure with pattern statements") {
   // set up AST for: procedure main { x = x + 1 }
-  std::shared_ptr<VariableNode> variable_node_x = std::make_shared<VariableNode>("x", "1");
+  std::shared_ptr<VariableNode> variable_node_x = std::make_shared<VariableNode>("x");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<CombinationExpressionNode> combination_node =
       std::make_shared<CombinationExpressionNode>(ArithmeticOperator::PLUS, variable_node_x, constant_node);
-  std::shared_ptr<VariableNode> variable_node_x_2 = std::make_shared<VariableNode>("x", "1");
+  std::shared_ptr<VariableNode> variable_node_x_2 = std::make_shared<VariableNode>("x");
 
   std::string stmt_no = "1";
   std::shared_ptr<AssignStatementNode>
@@ -179,7 +179,7 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
 
   // if's stmt_list
   std::string if_stmt_no = "2";
-  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
       if_assign_stmt = std::make_shared<AssignStatementNode>(if_stmt_no, if_variable_node, if_constant_node);
@@ -190,7 +190,7 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
 
   // else's stmt_list
   std::string ese_stmt_no = "3";
-  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3");
+  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       else_assign_stmt = std::make_shared<AssignStatementNode>(ese_stmt_no, else_variable_node, else_constant_node);
@@ -201,7 +201,7 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
 
   // condition
   std::string stmt_no = "1";
-  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -269,7 +269,7 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
 
   // while's stmt_list
   std::string condition_stmt_no = "2";
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(condition_stmt_no, variable_node, constant_node);
@@ -279,14 +279,14 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   std::shared_ptr<StatementListNode> while_stmt_list = std::make_shared<StatementListNode>(while_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> condition_constant_node1 = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node1 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
                                                  condition_variable_node1,
                                                  condition_constant_node1);
 
-  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> condition_constant_node2 = std::make_shared<ConstantNode>("2");
   std::shared_ptr<RelationalExpressionNode> condition_node2 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -355,7 +355,7 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
 
   // if's stmt_list
   std::string if_stmt_no = "3";
-  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "3");
+  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       if_assign_stmt = std::make_shared<AssignStatementNode>(if_stmt_no, if_variable_node, if_constant_node);
@@ -366,7 +366,7 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
 
   // else's stmt_list
   std::string else_stmt_no = "4";
-  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "4");
+  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("4");
   std::shared_ptr<AssignStatementNode>
       else_assign_stmt = std::make_shared<AssignStatementNode>(else_stmt_no, else_variable_node, else_constant_node);
@@ -377,7 +377,7 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
 
   // condition
   std::string condition_stmt_no = "2";
-  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("x", "2");
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("x");
   std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -389,7 +389,7 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
 
   // while's stmt_list
   std::string stmt_no = "2";
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "2");
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<AssignStatementNode>
       assign_stmt = std::make_shared<AssignStatementNode>(stmt_no, variable_node, constant_node);
@@ -399,14 +399,14 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   std::shared_ptr<StatementListNode> while_stmt_list = std::make_shared<StatementListNode>(while_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> condition_constant_node1 = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node1 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
                                                  condition_variable_node1,
                                                  condition_constant_node1);
 
-  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> condition_constant_node2 = std::make_shared<ConstantNode>("2");
   std::shared_ptr<RelationalExpressionNode> condition_node2 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -503,31 +503,31 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   // }
 
   std::string stmt_no_a = "1";
-  std::shared_ptr<VariableNode> variable_node_a = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> variable_node_a = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> constant_node_1 = std::make_shared<ConstantNode>("1");
   std::shared_ptr<AssignStatementNode>
       assign_stmt_1 = std::make_shared<AssignStatementNode>(stmt_no_a, variable_node_a, constant_node_1);
 
   std::string stmt_no_b = "2";
-  std::shared_ptr<VariableNode> variable_node_b = std::make_shared<VariableNode>("b", "2");
+  std::shared_ptr<VariableNode> variable_node_b = std::make_shared<VariableNode>("b");
   std::shared_ptr<ConstantNode> constant_node_2 = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
       assign_stmt_2 = std::make_shared<AssignStatementNode>(stmt_no_b, variable_node_b, constant_node_2);
 
   std::string stmt_no_c = "3";
-  std::shared_ptr<VariableNode> variable_node_c = std::make_shared<VariableNode>("c", "3");
+  std::shared_ptr<VariableNode> variable_node_c = std::make_shared<VariableNode>("c");
   std::shared_ptr<ConstantNode> constant_node_3 = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
       assign_stmt_3 = std::make_shared<AssignStatementNode>(stmt_no_c, variable_node_c, constant_node_3);
 
   std::string stmt_no_d = "4";
-  std::shared_ptr<VariableNode> variable_node_d = std::make_shared<VariableNode>("d", "4");
+  std::shared_ptr<VariableNode> variable_node_d = std::make_shared<VariableNode>("d");
   std::shared_ptr<ConstantNode> constant_node_4 = std::make_shared<ConstantNode>("4");
   std::shared_ptr<AssignStatementNode>
       assign_stmt_4 = std::make_shared<AssignStatementNode>(stmt_no_d, variable_node_d, constant_node_4);
 
   std::string stmt_no_e = "5";
-  std::shared_ptr<VariableNode> variable_node_e = std::make_shared<VariableNode>("e", "5");
+  std::shared_ptr<VariableNode> variable_node_e = std::make_shared<VariableNode>("e");
   std::shared_ptr<ConstantNode> constant_node_5 = std::make_shared<ConstantNode>("5");
   std::shared_ptr<AssignStatementNode>
       assign_stmt_5 = std::make_shared<AssignStatementNode>(stmt_no_e, variable_node_e, constant_node_5);
