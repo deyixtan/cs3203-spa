@@ -10,12 +10,12 @@ FALSE
 5000
 3. Select procedure (Valid)
 stmt s, s1; procedure p; assign a; print pn; read r; if ifs, ifs1; while w, w1; constant c; call cl; variable v;
-Select p such that Follows(w, ifs) and Follows*(pn, ifs) and Modifies(a, "clauses") such that Uses(s, "many") and Follows(_,_) and Next(s, _) and Modifies(p, _) and Calls(p, _) and Uses(pn, "more") and Modifies(r, v) such that Follows*(r, ifs) and Next*(17, 20) and Modifies(6, "add") such that Uses(s1, v) and Next*(3,3) and Follows(6,7) and Follows(7,8) and Next(10, 11) and Next(4,5) and Next*(20,20) and Calls("multi", "manymany") and Parent(w, w1) and Parent(9, 10)
+Select p such that Follows(w, ifs) and Follows*(pn, ifs) and Modifies(a, "clauses") such that Uses(s, "many") and Follows(_,_) and Next(s, _) and Modifies(p, _) and Calls(p, _) and Uses(pn, "many") and Modifies(r, v) such that Follows*(r, ifs) and Next*(17, 20) and Modifies(6, "add") such that Uses(s1, v) and Next*(3,3) and Follows(6,7) and Follows(7,8) and Next(10, 11) and Next(4,5) and Next*(20,20) and Calls("multi", "manymany") and Parent(w, w1) and Parent(9, 10)
 multi
 5000
 4. Select ifs (Valid)
 stmt s, s1; procedure p; assign a; print pn; read r; if ifs, ifs1; while w, w1; constant c; call cl; variable v;
-Select ifs such that Follows(w, ifs) and Follows*(pn, ifs) and Modifies(a, "clauses") such that Uses(s, "many") and Follows(_,_) and Next(s, _) and Modifies(p, _) and Calls(p, _) and Uses(pn, "more") and Modifies(r, v) such that Follows*(r, ifs) and Next*(17, 20) and Modifies(6, "add") such that Uses(s1, v) and Next*(3,3) and Follows(6,7) and Follows(7,8) and Next(10, 11) and Next(4,5) and Next*(20,20) and Calls("multi", "manymany") and Parent(w, w1) and Parent(9, 10) and Follows*(17,24)
+Select ifs such that Follows(w, ifs) and Follows*(pn, ifs) and Modifies(a, "clauses") such that Uses(s, "many") and Follows(_,_) and Next(s, _) and Modifies(p, _) and Calls(p, _) and Uses(pn, "many") and Modifies(r, v) such that Follows*(r, ifs) and Next*(17, 20) and Modifies(6, "add") such that Uses(s1, v) and Next*(3,3) and Follows(6,7) and Follows(7,8) and Next(10, 11) and Next(4,5) and Next*(20,20) and Calls("multi", "manymany") and Parent(w, w1) and Parent(9, 10) and Follows*(17,24)
 9
 5000
 5. Select boolean with pattern(valid)
@@ -30,7 +30,7 @@ FALSE
 5000
 7. Select a with pattern(Valid)
 stmt s, s1; procedure p; assign a; print pn; read r; if ifs, ifs1; while w, w1, w2; constant c; call cl; variable v;
-Select a such that Follows(w, ifs) and Follows*(pn, ifs) such that Uses(s, "many") and Next(s, _) and Modifies(p, _) and Calls(p, _) and Uses(pn, "more") and Parent*(w2, a) and Modifies(r, v) such that Follows*(r, ifs) and Next*(17, 20) and Modifies(6, "add") such that Uses(s1, v) and Next*(3,3) and Follows(6,7) and Follows(7,8) and Next(10, 11) and Next(4,5) and Next*(20,20) and Calls("multi", "manymany") and Parent(w, w1) and Parent(9, 10) and Follows*(17,24) such that Modifies(a, "clauses") pattern a("clauses", _"100 + 1000"_) such that Next*(17, a) and Next(a, 20)
+Select a such that Follows(w, ifs) and Follows*(pn, ifs) such that Uses(s, "many") and Next(s, _) and Modifies(p, _) and Calls(p, _) and Uses(pn, "many") and Parent*(w2, a) and Modifies(r, v) such that Follows*(r, ifs) and Next*(17, 20) and Modifies(6, "add") such that Uses(s1, v) and Next*(3,3) and Follows(6,7) and Follows(7,8) and Next(10, 11) and Next(4,5) and Next*(20,20) and Calls("multi", "manymany") and Parent(w, w1) and Parent(9, 10) and Follows*(17,24) such that Modifies(a, "clauses") pattern a("clauses", _"more + 100"_)
 21
 5000
 8. Select v with while pattern(Valid)
@@ -50,13 +50,13 @@ none
 5000
 11. Select a with pattern and attributes(Valid)
 stmt s, s1; procedure p; assign a; print pn; read r; if ifs, ifs1; while w, w1, w2; constant c; call cl; variable v;
-Select a such that Next*(r, ifs) and Parent(ifs, ifs2) and Follows(18,19) and Calls(p,"manymany") and Next*(s, 13) and Parent*(ifs, s) and Parent(ifs2, a) pattern a(_, _"super"_) with a.stmt# = s.stmt#
+Select a such that Next*(r, ifs) and Parent(ifs, ifs1) and Follows(18,19) and Calls(p,"manymany") and Next*(s, 15) and Parent*(ifs, s) and Parent(ifs1, a) pattern a(_, _"super"_) with a.stmt# = s.stmt#
 12, 13
 5000
 12. Select a with pattern and attributes(Valid)
 stmt s, s1; procedure p, p1; assign a; print pn; read r; if ifs, ifs1; while w, w1, w2; constant c; call cl; variable v;
 Select a such that Next*(a, s) and Uses(s, v) and Parent*(ifs, a) and Parent(ifs, s) and Calls(p, p1) and Next*(pn, a) and Follows(3, 9) and Uses(pn, v) pattern a(_, _"more"_) with v.varName = "more"
-21, 23
+21
 5000
 13. Select c.value with pattern and attributes(Valid)
 stmt s, s1; procedure p, p1; assign a; print pn; read r; if ifs, ifs1; while w, w1, w2; constant c; call cl; variable v;
@@ -70,7 +70,7 @@ none
 5000
 15. Overloaded clauses (Valid)
 stmt s, s1, s2; procedure p, p1; print pn, pn1; read r; if ifs, ifs1; while w, w1, w2, w3; constant c; call cl; assign a, a1; variable v, v1, v2;
-Select a such that Follows(w, ifs) and Follows*(pn, ifs) such that Uses(s, "many") and Next(s, _) and Affects*(8, _) and Modifies(p, _) and Calls(p, _) and Uses(pn, "many") and Parent*(w2, a) and Modifies(r, v) such that Follows*(r, ifs) and Next*(17, 20) and Modifies(6, "add") such that Uses(s1, v) and Next*(3,3) and Follows(6,7) and Follows(7,8) and Next(10, 11) and Next(4,5) and Next*(20,20) and Calls("multi", "manymany") and Parent(w, w1) and Parent(9, 10) and Follows*(3,9) such that Modifies(a, "clauses") pattern a("clauses", _"more + 100"_) such that Next*(17, a) and Next(20, a) and Next*(a, s2) and Uses(s2, v1) such that Modifies(a, v1) and Uses(8, v1) such that Follows*(2, _) and Affects(_, 13) and Calls*("multi", p1) such that Modifies(p,"long") and Uses(p,_) and Modifies(p, "clauses") and Next(ifs1, w2) and Next(w2, a) pattern w2("more", _) such that Uses(w2, v2) and Uses(23,v2) and Uses(pn1, v2) and Next*(1, 9) and Uses(13, v2) and Follows*(17, 24) and Next(_,3) and Follows(7, a1) such that Parent*(w3, a1) pattern a1(_, _"clauses + clauses"_)
+Select a such that Follows(w, ifs) and Follows*(pn, ifs) such that Uses(s, "many") and Next(s, _)  and Modifies(p, _) and Calls(p, _) and Uses(pn, "many") and Parent*(w2, a) and Modifies(r, v) such that Follows*(r, ifs) and Next*(17, 20) and Modifies(6, "add") such that Uses(s1, v) and Next*(3,3) and Follows(6,7) and Follows(7,8) and Next(10, 11) and Next(4,5) and Next*(20,20) and Calls("multi", "manymany") and Parent(w, w1) and Parent(9, 10) and Follows*(3,9) such that Modifies(a, "clauses") pattern a("clauses", _"more + 100"_) such that Next*(17, a) and Next(20, a) and Next*(a, s2) and Uses(s2, v1) such that Uses(a, v1) and Modifies(8, v1) such that Follows*(2, _) and Affects(_, 13) and Calls*("multi", p1) such that Modifies(p,"long") and Uses(p,_) and Modifies(p, "clauses") and Next(ifs1, w2) and Next(w2, a) pattern w2("more", _) such that Uses(w2, v2) and Uses(23,v2) and Uses(pn1, v2) and Next*(1, 9) and Uses(13, v2) and Follows*(17, 24) and Next(_,3) and Follows(7, a1) such that Parent*(w3, a1) pattern a1(_, _"clauses + clauses"_)
 21
 5000
 16. Overloaded clauses (Invalid)
@@ -105,7 +105,7 @@ none
 5000
 22. Overloaded clause of one type (Valid)
 stmt s, s1, s2, s3, s4; procedure p; assign a, a1; print pn, pn2; read r, r1, r2, r3; if ifs, ifs1; while w, w1, w2; constant c; call cl; variable v;
-Select ifs1 such that Next(s, w) and Next(w, r) and Next(r, w1) and Next(w1, r1) and Next(r1, a) and Next(a,s) and Next(w, ifs) and Next(ifs, s1) and Next(s1, r2) and Next(s3, cl) and Next(17, r3) and Next(s1, a1) and Next(a1, s2) and Next(ifs, pn) and Next(pn, s3) and Next(r3, ifs1) and Next(ifs1, w2) and Next(w2, 21) and Next(21, w2) and Next(w2, s4) and Next(ifs1, _) and Next(ifs1, pn2)
+Select ifs1 such that Next(s, w) and Next(w, r) and Next(r, w1) and Next(w1, r1) and Next(r1, a) and Next(a,s4) and Next(w, ifs) and Next(ifs, s1) and Next(s1, r2) and Next(s3, cl) and Next(17, r3) and Next(s1, a1) and Next(a1, s2) and Next(ifs, pn) and Next(pn, s3) and Next(r3, ifs1) and Next(ifs1, w2) and Next(w2, 21) and Next(21, w2) and Next(w2, s4) and Next(ifs1, _) and Next(ifs1, pn2)
 19
 5000
 23. Overloaded clauses (Valid)
