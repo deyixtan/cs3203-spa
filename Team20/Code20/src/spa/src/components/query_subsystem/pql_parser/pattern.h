@@ -5,10 +5,10 @@
 
 class Pattern {
  private:
-  PqlToken synonym_;
-  PqlToken first_;
-  PqlToken second_;
-  PqlToken third_;
+  PqlToken synonym;
+  PqlToken first;
+  PqlToken second;
+  PqlToken third;
 
  public:
   Pattern();

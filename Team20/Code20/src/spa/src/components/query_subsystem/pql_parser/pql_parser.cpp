@@ -31,12 +31,6 @@ PqlToken PqlParser::FetchToken() {
   }
 }
 
-PqlToken PqlParser::FetchNextToken() {
-  if (cursor + 1 < tokens.size()) {
-    return tokens[cursor + 1];
-  }
-}
-
 PqlToken PqlParser::ValidateToken(std::unordered_set<PqlTokenType> allowed_types) {
   PqlToken token = FetchToken();
   if (!allowed_types.count(token.type)) {

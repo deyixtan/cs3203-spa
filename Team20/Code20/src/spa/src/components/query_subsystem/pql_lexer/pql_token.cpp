@@ -181,12 +181,6 @@ std::unordered_set<PqlTokenType> result_cl = {
     PqlTokenType::SELECT,
 };
 
-std::unordered_set<PqlTokenType> result_cl_excluding_synonym = {
-    PqlTokenType::ATTRIBUTE,
-    PqlTokenType::TUPLE,
-    PqlTokenType::BOOLEAN
-};
-
 std::unordered_set<PqlTokenType> with_clause_ref = {
     PqlTokenType::IDENT_WITH_QUOTES,
     PqlTokenType::NUMBER,
