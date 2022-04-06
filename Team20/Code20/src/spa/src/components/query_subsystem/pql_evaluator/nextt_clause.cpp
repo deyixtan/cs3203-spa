@@ -114,9 +114,7 @@ Table NextTClause::HandleIntegerWildcard() {
 }
 
 Table NextTClause::HandleIntegerInteger() {
-  // TODO: IsNextStarPairValid()
-  auto possible_next_values = pkb->GetNextStore()->GetNextStarOf(STMT, first_arg.value);
-  bool is_false_clause = possible_next_values.find(second_arg.value)==possible_next_values.end();
+  bool is_false_clause = !pkb->GetNextStore()->IsNextStarPairValid({first_arg.value, second_arg.value});
   return ConstructEmptyTable(is_false_clause);
 }
 

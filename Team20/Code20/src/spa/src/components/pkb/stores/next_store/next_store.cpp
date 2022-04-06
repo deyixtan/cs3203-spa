@@ -18,7 +18,7 @@ bool NextStore::IsNextPairValid(std::pair<std::string, std::string> const &pair)
 }
 
 bool NextStore::IsNextStarValid(std::pair<std::string, std::string> const &pair) {
-  return IsStarValid(pair);
+  return IsNextStarPairValid(pair);
 }
 
 std::unordered_set<std::string> NextStore::GetBeforeOf(StmtType type, std::string const &stmt) {
@@ -38,19 +38,11 @@ std::unordered_set<std::string> NextStore::GetNextStarOf(StmtType type, std::str
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetNextPairs() {
-  return GetAllPairs();;
+  return GetAllPairs();
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> NextStore::GetNextStarPairs() {
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> res;
-  for (auto pair : next_rs_map) {
-    std::string stmt = pair.first;
-    std::unordered_set<std::string> next_star_stmt = GetLowerStarOf(NEXT, STMT, stmt); //TODO: Fix StmtType
-    for (auto next_star : next_star_stmt){
-      res.insert({stmt, next_star});
-    }
-  }
-  return res;
+  return GetAllNextStarPairs();
 }
 
 std::unordered_set<std::string> NextStore::GetNextStarSameStmt(StmtType type) {

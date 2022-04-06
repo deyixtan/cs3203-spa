@@ -75,6 +75,7 @@ class StmtStmtStore : public Store {
   void WipeNextStar();
   [[nodiscard]] bool IsValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] bool IsStarValid(std::pair<std::string, std::string> const &pair);
+  [[nodiscard]] bool IsNextStarPairValid(std::pair<std::string, std::string> const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetHelper(StmtType type1,
                                                           StmtType type2,
                                                           int index,
@@ -100,6 +101,7 @@ class StmtStmtStore : public Store {
                                                                                                      StmtType type2);
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStarPairs();
+  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStarPairs();
   [[nodiscard]] void GetLowerStarOfHelper(StmtType stmt_type,
                                           std::string const &stmt,
                                           std::unordered_set<std::string> &res,
