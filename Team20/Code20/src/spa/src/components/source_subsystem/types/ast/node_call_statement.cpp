@@ -18,7 +18,7 @@ String CallStatementNode::GetCalleeName() {
 }
 
 void CallStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<CallStatementNode>(shared_from_this()));
 }
 
 CfgNodePtr CallStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {

@@ -5,7 +5,7 @@
 
 namespace source {
 
-class Node {
+class Node : public std::enable_shared_from_this<Node> {
  public:
   virtual void Accept(DesignExtractorPtr design_extractor) = 0;
   //virtual void Accept(DesignExtractor *design_extractor) = 0;

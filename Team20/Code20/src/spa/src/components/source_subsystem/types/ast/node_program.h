@@ -6,7 +6,7 @@
 
 namespace source {
 
-class ProgramNode : public Node, std::enable_shared_from_this<ProgramNode> {
+class ProgramNode : public Node {
  private:
   ProcedureNodeStream m_procedures;
 

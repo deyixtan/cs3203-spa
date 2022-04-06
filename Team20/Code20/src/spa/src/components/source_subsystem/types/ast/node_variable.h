@@ -6,7 +6,7 @@
 
 namespace source {
 
-class VariableNode : public ExpressionNode, std::enable_shared_from_this<VariableNode> {
+class VariableNode : public ExpressionNode {
  private:
   String m_name;
   String m_stmt_no;

@@ -6,7 +6,7 @@
 
 namespace source {
 
-class CallStatementNode : public StatementNode, std::enable_shared_from_this<CallStatementNode> {
+class CallStatementNode : public StatementNode {
  private:
   String m_caller_name;
   String m_callee_name;

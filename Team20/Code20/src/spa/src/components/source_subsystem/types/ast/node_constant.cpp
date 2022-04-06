@@ -15,7 +15,7 @@ String ConstantNode::GetPatternFormat() {
 }
 
 void ConstantNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<ConstantNode>(shared_from_this()));
 }
 
 bool ConstantNode::operator==(const ExpressionNode &other) const {

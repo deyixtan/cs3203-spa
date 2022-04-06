@@ -14,7 +14,7 @@ VariableNodePtr ReadStatementNode::GetVariable() {
 }
 
 void ReadStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<ReadStatementNode>(shared_from_this()));
 }
 
 CfgNodePtr ReadStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {

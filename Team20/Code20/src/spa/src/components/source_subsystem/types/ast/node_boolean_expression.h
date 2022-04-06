@@ -10,7 +10,7 @@ enum class BooleanOperator {
   AND, OR
 };
 
-class BooleanExpressionNode : public ConditionalExpressionNode, std::enable_shared_from_this<BooleanExpressionNode> {
+class BooleanExpressionNode : public ConditionalExpressionNode {
  private:
   BooleanOperator m_boolean_operator;
   ConditionalExpressionNodePtr m_lhs;

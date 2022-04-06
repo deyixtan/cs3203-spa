@@ -19,7 +19,7 @@ StatementListNodePtr WhileStatementNode::GetStatementList() {
 }
 
 void WhileStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<WhileStatementNode>(shared_from_this()));
 }
 
 CfgNodePtr WhileStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {

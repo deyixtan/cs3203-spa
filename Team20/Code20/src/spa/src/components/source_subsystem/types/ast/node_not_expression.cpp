@@ -11,7 +11,7 @@ ConditionalExpressionNodePtr NotExpressionNode::GetExpression() {
 }
 
 void NotExpressionNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<NotExpressionNode>(shared_from_this()));
 }
 
 bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const {

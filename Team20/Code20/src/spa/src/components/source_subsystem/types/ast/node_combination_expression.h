@@ -10,7 +10,7 @@ enum class ArithmeticOperator {
   PLUS, MINUS, MULTIPLY, DIVIDE, MOD
 };
 
-class CombinationExpressionNode : public ExpressionNode, std::enable_shared_from_this<CombinationExpressionNode> {
+class CombinationExpressionNode : public ExpressionNode {
  private:
   ArithmeticOperator m_arithmetic_operator;
   ExpressionNodePtr m_lhs;

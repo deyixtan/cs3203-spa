@@ -6,7 +6,7 @@
 
 namespace source {
 
-class ProcedureNode : public Node, std::enable_shared_from_this<ProcedureNode> {
+class ProcedureNode : public Node {
  private:
   String m_name;
   StatementListNodePtr m_stmt_list;

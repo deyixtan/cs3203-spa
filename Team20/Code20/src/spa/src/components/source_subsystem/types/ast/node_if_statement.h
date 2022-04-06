@@ -6,7 +6,7 @@
 
 namespace source {
 
-class IfStatementNode : public StatementNode, std::enable_shared_from_this<IfStatementNode> {
+class IfStatementNode : public StatementNode {
  private:
   ConditionalExpressionNodePtr m_condition;
   StatementListNodePtr m_if_stmt_list;

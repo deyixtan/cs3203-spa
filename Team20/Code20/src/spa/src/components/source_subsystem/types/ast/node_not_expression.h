@@ -6,7 +6,7 @@
 
 namespace source {
 
-class NotExpressionNode : public ConditionalExpressionNode, std::enable_shared_from_this<NotExpressionNode> {
+class NotExpressionNode : public ConditionalExpressionNode {
  private:
   ConditionalExpressionNodePtr m_expression;
 

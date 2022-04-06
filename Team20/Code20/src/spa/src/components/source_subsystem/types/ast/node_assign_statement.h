@@ -6,7 +6,7 @@
 
 namespace source {
 
-class AssignStatementNode : public StatementNode, std::enable_shared_from_this<AssignStatementNode> {
+class AssignStatementNode : public StatementNode {
  private:
   VariableNodePtr m_lhs;
   ExpressionNodePtr m_rhs;

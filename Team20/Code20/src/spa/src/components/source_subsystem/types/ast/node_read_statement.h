@@ -6,7 +6,7 @@
 
 namespace source {
 
-class ReadStatementNode : public StatementNode, std::enable_shared_from_this<ReadStatementNode> {
+class ReadStatementNode : public StatementNode {
  private:
   VariableNodePtr m_variable;
 

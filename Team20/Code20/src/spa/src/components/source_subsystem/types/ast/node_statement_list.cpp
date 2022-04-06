@@ -17,7 +17,7 @@ StatementNodeStream StatementListNode::GetStatements() {
 }
 
 void StatementListNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<StatementListNode>(shared_from_this()));
 }
 
 CfgNodePtr StatementListNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {

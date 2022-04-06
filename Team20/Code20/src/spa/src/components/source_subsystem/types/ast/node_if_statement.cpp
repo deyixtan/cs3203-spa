@@ -36,7 +36,7 @@ StatementNodeStream IfStatementNode::GetAllStatementList() {
 }
 
 void IfStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<IfStatementNode>(shared_from_this()));
 }
 
 CfgNodePtr IfStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {

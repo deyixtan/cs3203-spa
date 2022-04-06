@@ -15,7 +15,7 @@ ProcedureNodeStream ProgramNode::GetProcedures() {
 }
 
 void ProgramNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<ProgramNode>(shared_from_this()));
 }
 
 StringToCfgNodePtrMap ProgramNode::Accept(CfgBuilder *cfg_builder) {

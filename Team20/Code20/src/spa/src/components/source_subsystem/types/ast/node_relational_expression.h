@@ -12,7 +12,7 @@ enum class RelationOperator {
   GREATER_THAN, LESS_THAN
 };
 
-class RelationalExpressionNode : public ConditionalExpressionNode, std::enable_shared_from_this<RelationalExpressionNode> {
+class RelationalExpressionNode : public ConditionalExpressionNode {
  private:
   RelationOperator m_relation_operator;
   ExpressionNodePtr m_lhs;

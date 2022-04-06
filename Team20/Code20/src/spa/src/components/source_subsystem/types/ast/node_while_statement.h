@@ -6,7 +6,7 @@
 
 namespace source {
 
-class WhileStatementNode : public StatementNode, std::enable_shared_from_this<WhileStatementNode> {
+class WhileStatementNode : public StatementNode {
  private:
   ConditionalExpressionNodePtr m_condition;
   StatementListNodePtr m_stmt_list;

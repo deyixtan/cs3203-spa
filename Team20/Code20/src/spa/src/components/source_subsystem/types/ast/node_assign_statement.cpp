@@ -18,7 +18,7 @@ ExpressionNodePtr AssignStatementNode::GetRhs() {
 }
 
 void AssignStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<AssignStatementNode>(shared_from_this()));
 }
 
 CfgNodePtr AssignStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {

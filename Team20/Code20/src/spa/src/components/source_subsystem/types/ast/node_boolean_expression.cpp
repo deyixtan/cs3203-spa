@@ -22,7 +22,7 @@ ConditionalExpressionNodePtr BooleanExpressionNode::GetRhs() {
 }
 
 void BooleanExpressionNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<BooleanExpressionNode>(shared_from_this()));
 }
 
 bool BooleanExpressionNode::operator==(const ConditionalExpressionNode &other) const {

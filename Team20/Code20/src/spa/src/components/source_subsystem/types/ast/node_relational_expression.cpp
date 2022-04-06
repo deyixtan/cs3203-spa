@@ -34,7 +34,7 @@ ExpressionNodePtr RelationalExpressionNode::GetRhs() {
 }
 
 void RelationalExpressionNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<RelationalExpressionNode>(shared_from_this()));
 }
 
 bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other) const {

@@ -15,7 +15,7 @@ String VariableNode::GetPatternFormat() {
 }
 
 void VariableNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(shared_from_this());
+  design_extractor->Visit(std::dynamic_pointer_cast<VariableNode>(shared_from_this()));
 }
 
 bool VariableNode::operator==(const ExpressionNode &other) const {

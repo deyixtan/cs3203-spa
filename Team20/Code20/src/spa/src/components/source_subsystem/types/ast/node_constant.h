@@ -6,7 +6,7 @@
 
 namespace source {
 
-class ConstantNode : public ExpressionNode, std::enable_shared_from_this<ConstantNode> {
+class ConstantNode : public ExpressionNode {
  private:
   String m_value;
 

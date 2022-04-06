@@ -6,7 +6,7 @@
 
 namespace source {
 
-class StatementListNode : public Node, std::enable_shared_from_this<StatementListNode> {
+class StatementListNode : public Node {
  private:
   StatementNodeStream m_statements;
 

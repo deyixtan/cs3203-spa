@@ -6,7 +6,7 @@
 
 namespace source {
 
-class PrintStatementNode : public StatementNode, std::enable_shared_from_this<PrintStatementNode> {
+class PrintStatementNode : public StatementNode {
  private:
   VariableNodePtr m_variable;
 
