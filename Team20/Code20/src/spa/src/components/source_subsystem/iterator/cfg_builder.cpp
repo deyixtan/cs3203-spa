@@ -140,12 +140,6 @@ CfgNodePtr CfgBuilder::Visit(ProcedureNodePtr procedure_node, CfgNodePtr cfg_nod
 CfgNodePtr CfgBuilder::Visit(StatementListNodePtr stmt_list_node, CfgNodePtr cfg_node) {
   StatementNodeStream statements = stmt_list_node->GetStatements();
   for (StatementNodePtr &statement : statements) {
-    bool is_empty_cfg_node = cfg_node->GetStatementList().empty();
-    if ((statement->GetStatementType() == IF || statement->GetStatementType() == WHILE) && !is_empty_cfg_node) {
-      CfgNodePtr condition_node = std::make_shared<CfgNode>();
-      cfg_node->AddNext(condition_node);
-      cfg_node = condition_node;
-    }
     cfg_node = statement->Accept(shared_from_this(), cfg_node);
   }
   return cfg_node;
@@ -179,9 +173,12 @@ CfgNodePtr CfgBuilder::Visit(WhileStatementNodePtr while_stmt, CfgNodePtr cfg_no
   String stmt_num = while_stmt->GetStatementNumber();
   StatementListNodePtr while_stmt_list = while_stmt->GetStatementList();
 
-  //  CfgNodePtr condition_node = std::make_shared<CfgNode>();
-  //  cfg_node->AddNext(condition_node);
-  //  cfg_node = condition_node;
+  bool is_empty_cfg_node = cfg_node->GetStatementList().empty();
+  if (!is_empty_cfg_node) {
+    CfgNodePtr condition_node = std::make_shared<CfgNode>();
+    cfg_node->AddNext(condition_node);
+    cfg_node = condition_node;
+  }
   CfgNodePtr body_node = std::make_shared<CfgNode>();
   CfgNodePtr next_node = std::make_shared<CfgNode>();
   cfg_node->AddStatement(StmtType::WHILE, stmt_num);
@@ -197,9 +194,12 @@ CfgNodePtr CfgBuilder::Visit(IfStatementNodePtr if_stmt, CfgNodePtr cfg_node) {
   StatementListNodePtr if_stmt_list = if_stmt->GetIfStatementList();
   StatementListNodePtr else_else_list = if_stmt->GetElseStatementList();
 
-  //  CfgNodePtr condition_node = std::make_shared<CfgNode>();
-  //  cfg_node->AddNext(condition_node);
-  //  cfg_node = condition_node;
+  bool is_empty_cfg_node = cfg_node->GetStatementList().empty();
+  if (!is_empty_cfg_node) {
+    CfgNodePtr condition_node = std::make_shared<CfgNode>();
+    cfg_node->AddNext(condition_node);
+    cfg_node = condition_node;
+  }
   CfgNodePtr if_node = std::make_shared<CfgNode>();
   CfgNodePtr else_node = std::make_shared<CfgNode>();
   CfgNodePtr next_node = std::make_shared<CfgNode>();

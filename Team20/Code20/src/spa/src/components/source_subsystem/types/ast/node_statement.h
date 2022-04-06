@@ -17,7 +17,6 @@ class StatementNode : public Node {
   void Accept(DesignExtractorPtr design_extractor) = 0;
   CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) = 0;
   virtual bool operator==(const StatementNode &other) const = 0;
-  [[nodiscard]] virtual StmtType GetStatementType() = 0;
 };
 
 }

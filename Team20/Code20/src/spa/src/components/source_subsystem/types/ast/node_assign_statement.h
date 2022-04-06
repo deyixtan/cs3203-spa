@@ -18,7 +18,6 @@ class AssignStatementNode : public StatementNode {
   void Accept(DesignExtractorPtr design_extractor) override;
   CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
-  [[nodiscard]] StmtType GetStatementType() override;
 };
 
 }

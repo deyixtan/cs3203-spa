@@ -31,8 +31,4 @@ bool CallStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && m_caller_name == casted_other->m_caller_name && m_callee_name == casted_other->m_callee_name;
 }
 
-StmtType CallStatementNode::GetStatementType() {
-  return StmtType::CALL;
-}
-
 }

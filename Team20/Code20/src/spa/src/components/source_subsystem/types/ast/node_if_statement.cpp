@@ -68,9 +68,4 @@ bool IfStatementNode::operator==(const StatementNode &other) const {
 
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
 }
-
-StmtType IfStatementNode::GetStatementType() {
-  return StmtType::IF;
-}
-
 }
