@@ -6,7 +6,7 @@
 
 namespace source {
 
-class ConstantNode : public ExpressionNode {
+class ConstantNode : public ExpressionNode, std::enable_shared_from_this<ConstantNode> {
  private:
   String m_value;
 
@@ -15,7 +15,6 @@ class ConstantNode : public ExpressionNode {
   [[nodiscard]] String GetValue();
   [[nodiscard]] String GetPatternFormat() override;
   void Accept(DesignExtractorPtr design_extractor) override;
-  //String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

@@ -6,7 +6,7 @@
 
 namespace source {
 
-class VariableNode : public ExpressionNode {
+class VariableNode : public ExpressionNode, std::enable_shared_from_this<VariableNode> {
  private:
   String m_name;
   String m_stmt_no;
@@ -16,7 +16,6 @@ class VariableNode : public ExpressionNode {
   [[nodiscard]] String GetName();
   [[nodiscard]] String GetPatternFormat() override;
   void Accept(DesignExtractorPtr design_extractor) override;
-  //String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

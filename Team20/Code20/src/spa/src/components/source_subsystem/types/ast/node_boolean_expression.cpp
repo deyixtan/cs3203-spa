@@ -22,17 +22,8 @@ ConditionalExpressionNodePtr BooleanExpressionNode::GetRhs() {
 }
 
 void BooleanExpressionNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(this);
+  design_extractor->Visit(shared_from_this());
 }
-
-//String BooleanExpressionNode::Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses) {
-//  String lhs = design_extractor->Visit(m_lhs, proc_name, is_uses);
-//  String rhs = design_extractor->Visit(m_rhs, proc_name, is_uses);
-//  if (m_boolean_operator == BooleanOperator::AND) {
-//    return lhs + "&&" + rhs;
-//  }
-//  return lhs + "||" + rhs;
-//}
 
 bool BooleanExpressionNode::operator==(const ConditionalExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const BooleanExpressionNode *>(&other);

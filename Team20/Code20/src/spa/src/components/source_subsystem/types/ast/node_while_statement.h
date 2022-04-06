@@ -6,7 +6,7 @@
 
 namespace source {
 
-class WhileStatementNode : public StatementNode {
+class WhileStatementNode : public StatementNode, std::enable_shared_from_this<WhileStatementNode> {
  private:
   ConditionalExpressionNodePtr m_condition;
   StatementListNodePtr m_stmt_list;
@@ -16,10 +16,9 @@ class WhileStatementNode : public StatementNode {
   [[nodiscard]] ConditionalExpressionNodePtr GetCondition();
   [[nodiscard]] StatementListNodePtr GetStatementList();
   void Accept(DesignExtractorPtr design_extractor) override;
-  //void Accept(DesignExtractor *design_extractor, String proc_name);
   CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const;
-  StmtType GetStatementType();
+  [[nodiscard]] StmtType GetStatementType() override;
 };
 
 }

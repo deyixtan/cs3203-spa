@@ -14,17 +14,8 @@ VariableNodePtr ReadStatementNode::GetVariable() {
 }
 
 void ReadStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(this);
+  design_extractor->Visit(shared_from_this());
 }
-
-//void ReadStatementNode::Accept(DesignExtractor *de, String proc_name) {
-//  String stmt_num = GetStatementNumber();
-//  String var_name = m_variable->GetName();
-//  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, READ);
-//
-//  de->GetPkbClient()->PopulateRead(de->GetVisited(), stmt_num, var_name);
-//  de->Visit(m_variable, proc_name, false);
-//}
 
 CfgNodePtr ReadStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
   cfg_node->AddStatement(StmtType::READ, GetStatementNumber());

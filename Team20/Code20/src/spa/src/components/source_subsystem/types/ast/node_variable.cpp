@@ -15,12 +15,7 @@ String VariableNode::GetPatternFormat() {
 }
 
 void VariableNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(this);
-}
-
-String VariableNode::Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses) {
-  design_extractor->GetPkbClient()->PopulateVars(design_extractor->GetVisited(), m_stmt_no, proc_name, m_name, is_uses);
-  return GetPatternFormat();
+  design_extractor->Visit(shared_from_this());
 }
 
 bool VariableNode::operator==(const ExpressionNode &other) const {

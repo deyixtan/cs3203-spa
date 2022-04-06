@@ -21,11 +21,15 @@ class ConditionalExpressionNode;
 class VariableNode;
 class ConstantNode;
 
-class DesignExtractor {
+class DesignExtractor : public std::enable_shared_from_this<DesignExtractor> {
  private:
   std::shared_ptr<PkbClient> m_pkb_client;
   std::shared_ptr<CallGraph> m_call_graph;
   std::vector<std::string> m_visited;
+  String m_curr_proc;
+  String m_curr_stmt_no;
+  bool m_is_uses;
+  String m_pattern;
 
  public:
   explicit DesignExtractor(std::shared_ptr<PkbClient> pkb_client);
@@ -42,10 +46,25 @@ class DesignExtractor {
                           std::unordered_set<std::string> const &vars,
                           std::unordered_set<std::string> const &ancestors,
                           std::unordered_set<std::string> const &callers);
-  void Visit(std::shared_ptr<ProgramNode> node);
-  void Visit(std::shared_ptr<ProcedureNode> mode);
-  void Visit(std::shared_ptr<StatementListNode> node, std::string proc_name);
-  void Visit(std::shared_ptr<StatementNode> node, std::string proc_name);
+
+  void Visit(ProgramNodePtr program_node);
+  void Visit(ProcedureNodePtr procedure_node);
+  void Visit(StatementListNodePtr stmt_list_node);
+  void Visit(ReadStatementNodePtr read_stmt);
+  void Visit(PrintStatementNodePtr print_stmt);
+  void Visit(AssignStatementNodePtr assign_stmt);
+  void Visit(CallStatementNodePtr call_stmt);
+  void Visit(WhileStatementNodePtr while_stmt);
+  void Visit(IfStatementNodePtr if_stmt);
+
+  void Visit(BooleanExpressionNodePtr boolean_expr_node);
+  void Visit(RelationalExpressionNodePtr rel_expr_node);
+  void Visit(NotExpressionNodePtr not_expr_node);
+  void Visit(CombinationExpressionNodePtr combination_expr_node);
+
+  void Visit(VariableNodePtr variable_node);
+  void Visit(ConstantNodePtr constant_node);
+  ////////
   [[nodiscard]] std::string Visit(std::shared_ptr<ExpressionNode> node, std::string proc_name, bool is_uses);
   [[nodiscard]] std::string Visit(std::shared_ptr<ConditionalExpressionNode> node, std::string proc_name, bool is_uses);
   void Visit(std::shared_ptr<VariableNode> node, std::string proc_name, bool is_uses);

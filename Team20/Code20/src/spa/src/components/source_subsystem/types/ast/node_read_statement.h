@@ -6,7 +6,7 @@
 
 namespace source {
 
-class ReadStatementNode : public StatementNode {
+class ReadStatementNode : public StatementNode, std::enable_shared_from_this<ReadStatementNode> {
  private:
   VariableNodePtr m_variable;
 
@@ -14,10 +14,9 @@ class ReadStatementNode : public StatementNode {
   ReadStatementNode(String &stmt_no, VariableNodePtr variable);
   [[nodiscard]] VariableNodePtr GetVariable();
   void Accept(DesignExtractorPtr design_extractor) override;
-  //void Accept(DesignExtractor *design_extractor, String proc_name);
   CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
-  StmtType GetStatementType();
+  [[nodiscard]] StmtType GetStatementType() override;
 };
 
 }

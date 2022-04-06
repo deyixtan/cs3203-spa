@@ -12,7 +12,7 @@ enum class RelationOperator {
   GREATER_THAN, LESS_THAN
 };
 
-class RelationalExpressionNode : public ConditionalExpressionNode {
+class RelationalExpressionNode : public ConditionalExpressionNode, std::enable_shared_from_this<RelationalExpressionNode> {
  private:
   RelationOperator m_relation_operator;
   ExpressionNodePtr m_lhs;
@@ -25,7 +25,6 @@ class RelationalExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] ExpressionNodePtr GetLhs();
   [[nodiscard]] ExpressionNodePtr GetRhs();
   void Accept(DesignExtractorPtr design_extractor) override;
-  //String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

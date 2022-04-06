@@ -6,7 +6,7 @@
 
 namespace source {
 
-class NotExpressionNode : public ConditionalExpressionNode {
+class NotExpressionNode : public ConditionalExpressionNode, std::enable_shared_from_this<NotExpressionNode> {
  private:
   ConditionalExpressionNodePtr m_expression;
 
@@ -14,7 +14,6 @@ class NotExpressionNode : public ConditionalExpressionNode {
   NotExpressionNode(ConditionalExpressionNodePtr expression);
   [[nodiscard]] ConditionalExpressionNodePtr GetExpression();
   void Accept(DesignExtractorPtr design_extractor) override;
-  //String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

@@ -10,15 +10,13 @@ ProgramNode::ProgramNode() = default;
 ProgramNode::ProgramNode(ProcedureNodeStream procedures) :
     m_procedures(std::move(procedures)) {}
 
-void ProgramNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(this);
+ProcedureNodeStream ProgramNode::GetProcedures() {
+  return m_procedures;
 }
 
-//void ProgramNode::Accept(DesignExtractor *design_extractor) {
-//  for (auto &procedure : m_procedures) {
-//    design_extractor->Visit(procedure);
-//  }
-//}
+void ProgramNode::Accept(DesignExtractorPtr design_extractor) {
+  design_extractor->Visit(shared_from_this());
+}
 
 StringToCfgNodePtrMap ProgramNode::Accept(CfgBuilder *cfg_builder) {
   StringToCfgNodePtrMap heads;

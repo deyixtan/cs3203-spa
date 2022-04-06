@@ -10,7 +10,7 @@ enum class BooleanOperator {
   AND, OR
 };
 
-class BooleanExpressionNode : public ConditionalExpressionNode {
+class BooleanExpressionNode : public ConditionalExpressionNode, std::enable_shared_from_this<BooleanExpressionNode> {
  private:
   BooleanOperator m_boolean_operator;
   ConditionalExpressionNodePtr m_lhs;
@@ -24,7 +24,6 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] ConditionalExpressionNodePtr GetLhs();
   [[nodiscard]] ConditionalExpressionNodePtr GetRhs();
   void Accept(DesignExtractorPtr design_extractor) override;
-  //String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

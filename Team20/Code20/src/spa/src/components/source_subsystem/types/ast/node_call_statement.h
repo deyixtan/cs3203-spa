@@ -6,7 +6,7 @@
 
 namespace source {
 
-class CallStatementNode : public StatementNode {
+class CallStatementNode : public StatementNode, std::enable_shared_from_this<CallStatementNode> {
  private:
   String m_caller_name;
   String m_callee_name;
@@ -16,10 +16,9 @@ class CallStatementNode : public StatementNode {
   [[nodiscard]] String GetCallerName();
   [[nodiscard]] String GetCalleeName();
   void Accept(DesignExtractorPtr design_extractor) override;
-  //void Accept(DesignExtractor *design_extractor, String proc_name);
   CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
-  StmtType GetStatementType();
+  [[nodiscard]] StmtType GetStatementType() override;
 };
 
 }

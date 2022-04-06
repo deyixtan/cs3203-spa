@@ -10,7 +10,7 @@ enum class ArithmeticOperator {
   PLUS, MINUS, MULTIPLY, DIVIDE, MOD
 };
 
-class CombinationExpressionNode : public ExpressionNode {
+class CombinationExpressionNode : public ExpressionNode, std::enable_shared_from_this<CombinationExpressionNode> {
  private:
   ArithmeticOperator m_arithmetic_operator;
   ExpressionNodePtr m_lhs;
@@ -25,7 +25,6 @@ class CombinationExpressionNode : public ExpressionNode {
   [[nodiscard]] ExpressionNodePtr GetRhs();
   [[nodiscard]] String GetPatternFormat();
   void Accept(DesignExtractorPtr design_extractor) override;
-  //String Accept(DesignExtractor *design_extractor, String proc_name, bool is_uses);
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

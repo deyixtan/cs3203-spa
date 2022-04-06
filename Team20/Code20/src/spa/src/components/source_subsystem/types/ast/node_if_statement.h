@@ -6,7 +6,7 @@
 
 namespace source {
 
-class IfStatementNode : public StatementNode {
+class IfStatementNode : public StatementNode, std::enable_shared_from_this<IfStatementNode> {
  private:
   ConditionalExpressionNodePtr m_condition;
   StatementListNodePtr m_if_stmt_list;
@@ -22,10 +22,9 @@ class IfStatementNode : public StatementNode {
   [[nodiscard]] StatementListNodePtr GetElseStatementList();
   [[nodiscard]] StatementNodeStream GetAllStatementList();
   void Accept(DesignExtractorPtr design_extractor) override;
-  //void Accept(DesignExtractor *design_extractor, String proc_name);
   CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
-  StmtType GetStatementType();
+  [[nodiscard]] StmtType GetStatementType() override;
 };
 
 }

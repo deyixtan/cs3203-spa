@@ -14,17 +14,8 @@ VariableNodePtr PrintStatementNode::GetVariable() {
 }
 
 void PrintStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(this);
+  design_extractor->Visit(shared_from_this());
 }
-
-//void PrintStatementNode::Accept(DesignExtractor *design_extractor, std::string proc_name) {
-//  String stmt_num = GetStatementNumber();
-//  String var_name = m_variable->GetName();
-//  design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, PRINT);
-//
-//  design_extractor->Visit(m_variable, proc_name, true);
-//  design_extractor->GetPkbClient()->PopulatePrint(design_extractor->GetVisited(), stmt_num, var_name);
-//}
 
 CfgNodePtr PrintStatementNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
   cfg_node->AddStatement(StmtType::PRINT, GetStatementNumber());

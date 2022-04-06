@@ -17,33 +17,8 @@ StatementNodeStream StatementListNode::GetStatements() {
 }
 
 void StatementListNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(this);
+  design_extractor->Visit(shared_from_this());
 }
-
-//void StatementListNode::Accept(DesignExtractor *de, String &proc_name) {
-//  StatementNodeStream stmts = m_statements;
-//
-//  for (int i = 0; i < stmts.size(); ++i) {
-//    StatementNodePtr stmt = stmts[i];
-//    de->Visit(stmt, proc_name);
-//    String stmt_num = stmt->GetStatementNumber();
-//    if (!de->GetVisited().empty()) {
-//      de->GetPkbClient()->PopulateParent(de->GetVisited().back(), stmt_num);
-//    }
-//
-//    if (i > 0) {
-//      String prev_stmt = stmts[i - 1]->GetStatementNumber();
-//      String curr_stmt = stmt->GetStatementNumber();
-//      de->GetPkbClient()->PopulateFollows(prev_stmt, curr_stmt);
-//
-//      // PopulateFollowsStar
-//      for (int j = i - 1; j >= 0; --j) {
-//        prev_stmt = stmts[j]->GetStatementNumber();
-//        de->GetPkbClient()->PopulateFollowsStar(prev_stmt, curr_stmt);
-//      }
-//    }
-//  }
-//}
 
 CfgNodePtr StatementListNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
   for (StatementNodePtr &stmt : m_statements) {

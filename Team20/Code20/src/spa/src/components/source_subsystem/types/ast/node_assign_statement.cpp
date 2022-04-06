@@ -18,18 +18,8 @@ ExpressionNodePtr AssignStatementNode::GetRhs() {
 }
 
 void AssignStatementNode::Accept(DesignExtractorPtr design_extractor) {
-  design_extractor->Visit(this);
+  design_extractor->Visit(shared_from_this());
 }
-
-//
-//void AssignStatementNode::Accept(DesignExtractor *design_extractor, String proc_name) {
-//  String stmt_num = GetStatementNumber();
-//  design_extractor->GetPkbClient()->PopulateTypeOfStmt(stmt_num, ASSIGN);
-//  String var_name = m_lhs->GetName();
-//  design_extractor->Visit(m_lhs, proc_name, false);
-//  String rhs_expr = design_extractor->Visit(m_rhs, proc_name, true);
-//  design_extractor->GetPkbClient()->PopulateAssign(design_extractor->GetVisited(), proc_name, stmt_num, var_name, rhs_expr);
-//}
 
 CfgNodePtr AssignStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
   cfg_node->AddStatement(StmtType::ASSIGN, GetStatementNumber());

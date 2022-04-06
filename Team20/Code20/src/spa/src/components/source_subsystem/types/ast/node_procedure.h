@@ -6,7 +6,7 @@
 
 namespace source {
 
-class ProcedureNode : public Node {
+class ProcedureNode : public Node, std::enable_shared_from_this<ProcedureNode> {
  private:
   String m_name;
   StatementListNodePtr m_stmt_list;
@@ -16,7 +16,6 @@ class ProcedureNode : public Node {
   [[nodiscard]] String GetName();
   [[nodiscard]] StatementListNodePtr GetStatementList();
   void Accept(DesignExtractorPtr design_extractor) override;
-  //void Accept(DesignExtractor *design_extractor);
   CfgNodePtr Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node);
   [[nodiscard]] bool operator==(const ProcedureNode &other) const;
 };

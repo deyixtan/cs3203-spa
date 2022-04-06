@@ -6,15 +6,15 @@
 
 namespace source {
 
-class ProgramNode : public Node {
+class ProgramNode : public Node, std::enable_shared_from_this<ProgramNode> {
  private:
   ProcedureNodeStream m_procedures;
 
  public:
   ProgramNode();
   explicit ProgramNode(ProcedureNodeStream procedures);
+  [[nodiscard]] ProcedureNodeStream GetProcedures();
   void Accept(DesignExtractorPtr design_extractor) override;
-  //void Accept(DesignExtractor *design_extractor);
   StringToCfgNodePtrMap Accept(CfgBuilder *cfg_builder);
   [[nodiscard]] bool operator==(const ProgramNode &other) const;
 };
