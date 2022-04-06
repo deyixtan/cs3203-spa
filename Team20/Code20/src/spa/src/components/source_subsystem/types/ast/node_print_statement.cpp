@@ -3,6 +3,7 @@
 #include "components/source_subsystem/iterator/design_extractor.h"
 #include "components/source_subsystem/types/ast/node_variable.h"
 #include "components/source_subsystem/types/cfg/cfg_node.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
 
 namespace source {
 
@@ -17,9 +18,8 @@ void PrintStatementNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(std::dynamic_pointer_cast<PrintStatementNode>(shared_from_this()));
 }
 
-CfgNodePtr PrintStatementNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
-  cfg_node->AddStatement(StmtType::PRINT, GetStatementNumber());
-  return cfg_node;
+void PrintStatementNode::Accept(CfgBuilderPtr cfg_builder) {
+  cfg_builder->Visit(std::dynamic_pointer_cast<PrintStatementNode>(shared_from_this()));
 }
 
 bool PrintStatementNode::operator==(const StatementNode &other) const {

@@ -18,18 +18,8 @@ void ProgramNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(std::dynamic_pointer_cast<ProgramNode>(shared_from_this()));
 }
 
-StringToCfgNodePtrMap ProgramNode::Accept(CfgBuilder *cfg_builder) {
-  StringToCfgNodePtrMap heads;
-  for (ProcedureNodePtr const &procedure : m_procedures) {
-    CfgNodePtr head = std::make_shared<CfgNode>();
-    CfgNodePtr tail = cfg_builder->Visit(procedure, head);
-    if (!tail->GetStatementList().empty()) {
-      CfgNodePtr dummy = std::make_shared<CfgNode>();
-      tail->AddNext(dummy);
-    }
-    heads.insert({procedure->GetName(), head});
-  }
-  return heads;
+void ProgramNode::Accept(CfgBuilderPtr cfg_builder) {
+  cfg_builder->Visit(std::dynamic_pointer_cast<ProgramNode>(shared_from_this()));
 }
 
 bool ProgramNode::operator==(const ProgramNode &other) const {

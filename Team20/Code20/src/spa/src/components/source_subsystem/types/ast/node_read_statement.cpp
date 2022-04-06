@@ -3,6 +3,7 @@
 #include "components/source_subsystem/iterator/design_extractor.h"
 #include "components/source_subsystem/types/ast/node_variable.h"
 #include "components/source_subsystem/types/cfg/cfg_node.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
 
 namespace source {
 
@@ -17,9 +18,8 @@ void ReadStatementNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(std::dynamic_pointer_cast<ReadStatementNode>(shared_from_this()));
 }
 
-CfgNodePtr ReadStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
-  cfg_node->AddStatement(StmtType::READ, GetStatementNumber());
-  return cfg_node;
+void ReadStatementNode::Accept(CfgBuilderPtr cfg_builder) {
+  cfg_builder->Visit(std::dynamic_pointer_cast<ReadStatementNode>(shared_from_this()));
 }
 
 bool ReadStatementNode::operator==(const StatementNode &other) const {

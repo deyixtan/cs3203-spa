@@ -3,7 +3,6 @@
 #include "../../iterator/design_extractor.h"
 #include "../../iterator/cfg_builder.h"
 #include "node_statement.h"
-#include "../cfg/cfg_node.h"
 
 namespace source {
 
@@ -20,18 +19,8 @@ void StatementListNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(std::dynamic_pointer_cast<StatementListNode>(shared_from_this()));
 }
 
-CfgNodePtr StatementListNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
-  for (StatementNodePtr &stmt : m_statements) {
-    // TODO: to remove
-    bool is_empty_cfg_node = cfg_node->GetStatementList().empty();
-    if ((stmt->GetStatementType() == IF || stmt->GetStatementType() == WHILE) && !is_empty_cfg_node) {
-      CfgNodePtr condition_node = std::make_shared<CfgNode>();
-      cfg_node->AddNext(condition_node);
-      cfg_node = condition_node;
-    }
-    cfg_node = cb->Visit(stmt, cfg_node);
-  }
-  return cfg_node;
+void StatementListNode::Accept(CfgBuilderPtr cfg_builder) {
+  cfg_builder->Visit(std::dynamic_pointer_cast<StatementListNode>(shared_from_this()));
 }
 
 bool StatementListNode::operator==(const StatementListNode &other) const {

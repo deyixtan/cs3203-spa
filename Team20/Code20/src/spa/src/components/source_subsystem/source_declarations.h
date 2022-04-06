@@ -97,6 +97,7 @@ namespace source {
   typedef std::unordered_map<String , CfgNodePtr> StringToCfgNodePtrMap;
 
   // components
+  typedef std::shared_ptr<CfgBuilder> CfgBuilderPtr;
   typedef std::shared_ptr<DesignExtractor> DesignExtractorPtr;
   typedef std::shared_ptr<PkbClient> PkbClientPtr;
 }

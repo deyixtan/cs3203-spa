@@ -22,8 +22,8 @@ void ProcedureNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(std::dynamic_pointer_cast<ProcedureNode>(shared_from_this()));
 }
 
-CfgNodePtr ProcedureNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
-  return cfg_builder->Visit(m_stmt_list, cfg_node);
+void ProcedureNode::Accept(CfgBuilderPtr cfg_builder) {
+  cfg_builder->Visit(std::dynamic_pointer_cast<ProcedureNode>(shared_from_this()));
 }
 
 bool ProcedureNode::operator==(const ProcedureNode &other) const {

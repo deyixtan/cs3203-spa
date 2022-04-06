@@ -15,7 +15,7 @@ class ProgramNode : public Node {
   explicit ProgramNode(ProcedureNodeStream procedures);
   [[nodiscard]] ProcedureNodeStream GetProcedures();
   void Accept(DesignExtractorPtr design_extractor) override;
-  StringToCfgNodePtrMap Accept(CfgBuilder *cfg_builder);
+  void Accept(CfgBuilderPtr cfg_builder) override;
   [[nodiscard]] bool operator==(const ProgramNode &other) const;
 };
 
