@@ -61,7 +61,7 @@ TEST_CASE("Valid next pair") {
   std::shared_ptr<NextStore> next_store = set_up_next();
   std::string stmt1 = "9";
   std::string stmt2 = "11";
-  bool actual = next_store->IsNextValid({stmt1, stmt2});
+  bool actual = next_store->IsNextPairValid({stmt1, stmt2});
   bool expected = all_next_pairs.find({stmt1, stmt2}) != all_next_pairs.end();
 
   REQUIRE(actual == expected);
@@ -71,7 +71,7 @@ TEST_CASE("Invalid next pair") {
   std::shared_ptr<NextStore> next_store = set_up_next();
   std::string stmt1 = "4";
   std::string stmt2 = "5";
-  bool actual = next_store->IsNextValid({stmt1, stmt2});
+  bool actual = next_store->IsNextPairValid({stmt1, stmt2});
   bool expected = all_next_pairs.find({stmt1, stmt2}) != all_next_pairs.end();
 
   REQUIRE(actual == expected);
@@ -92,7 +92,7 @@ TEST_CASE("Valid before of stmt") {
   std::shared_ptr<NextStore> next_store = set_up_next();
   std::string stmt1 = "15";
   std::unordered_set<std::string> actual = before_map.at(stmt1);
-  std::unordered_set<std::string> expected = next_store->GetBeforeOf(stmt1);
+  std::unordered_set<std::string> expected = next_store->GetBeforeOf(STMT, stmt1);
 
   REQUIRE(actual == expected);
 }
@@ -104,7 +104,7 @@ TEST_CASE("Invalid before of stmt") {
   actual.insert("9");
   actual.insert("10");
   actual.insert("14");
-  std::unordered_set<std::string> expected = next_store->GetBeforeOf(stmt1);
+  std::unordered_set<std::string> expected = next_store->GetBeforeOf(STMT, stmt1);
 
   REQUIRE(actual != expected);
 }
