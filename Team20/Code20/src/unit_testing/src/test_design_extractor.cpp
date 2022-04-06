@@ -112,7 +112,6 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
   REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByStmt("2") == pkb->GetUsesStore()->GetVarUsedByStmt("2"));
   REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
   REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
-  REQUIRE(test_pkb->GetUsesStore()->GetAllStmtUsing() == pkb->GetUsesStore()->GetAllStmtUsing());
   REQUIRE(test_pkb->GetUsesStore()->GetAllUsesStmt(STMT) == pkb->GetUsesStore()->GetAllUsesStmt(STMT));
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT));
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT));

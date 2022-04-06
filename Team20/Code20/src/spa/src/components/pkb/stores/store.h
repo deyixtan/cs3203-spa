@@ -40,17 +40,17 @@ class Store {
   std::shared_ptr<std::unordered_map<std::string, StmtType>> m_stmt_type;
 
  public:
-  typedef std::string STMT;
-  typedef std::vector<STMT> STMT_VECTOR;
-  typedef std::unordered_set<STMT> STMT_SET;
-  typedef std::pair<std::string, std::string> STMT_PAIR;
-  typedef std::unordered_map<STMT, std::unordered_set<STMT>> STMT_SET_MAP;
-  typedef std::unordered_set<STMT_PAIR, pair_hash> STMT_PAIR_SET;
+  typedef std::string IDENT;
+  typedef std::vector<IDENT> IDENT_VECTOR;
+  typedef std::unordered_set<IDENT> IDENT_SET;
+  typedef std::pair<std::string, std::string> IDENT_PAIR;
+  typedef std::unordered_map<IDENT, std::unordered_set<IDENT>> IDENT_SET_MAP;
+  typedef std::unordered_set<IDENT_PAIR, pair_hash> IDENT_PAIR_SET;
   typedef std::unordered_map<StmtType,
                              std::unordered_map<StmtType,
-                                                std::tuple<STMT_SET_MAP,
-                                                           STMT_SET_MAP,
-                                                           STMT_PAIR_SET>>> NESTED_MAP;
+                                                std::tuple<IDENT_SET_MAP,
+                                                           IDENT_SET_MAP,
+                                                           IDENT_PAIR_SET>>> NESTED_TUPLE_MAP;
 
   explicit Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector, std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStmt(StmtType type,

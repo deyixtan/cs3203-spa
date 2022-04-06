@@ -5,77 +5,77 @@
 
 class StmtStmtStore : public Store {
  private:
-  NESTED_MAP type_pair_map;
-  NESTED_MAP star_type_pair_map;
-  STMT_PAIR_SET all_pairs;
-  STMT_PAIR_SET all_star_pairs;
+  NESTED_TUPLE_MAP type_pair_map;
+  NESTED_TUPLE_MAP star_type_pair_map;
+  IDENT_PAIR_SET all_pairs;
+  IDENT_PAIR_SET all_star_pairs;
 
  public:
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                          std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
   void AddUpperLower(StoreType store_type,
-                     STMT const &upper,
-                     STMT const &lower);
+                     IDENT const &upper,
+                     IDENT const &lower);
   void AddUpperLowerStar(StoreType store_type,
-                         STMT const &upper,
-                         STMT const &lower,
-                         STMT_VECTOR const &visited);
-  void AddFollows(bool is_star, StmtType type1, STMT const &upper, StmtType type2, STMT const &lower);
+                         IDENT const &upper,
+                         IDENT const &lower,
+                         IDENT_VECTOR const &visited);
+  void AddFollows(bool is_star, StmtType type1, IDENT const &upper, StmtType type2, IDENT const &lower);
   void AddParent(bool is_star,
-                 STMT const &upper,
-                 STMT const &lower,
-                 STMT_VECTOR const &visited);
-  void AddCalls(bool is_star, STMT const &upper, STMT const &lower);
-  void AddNext(bool is_star, StmtType type1, STMT const &upper, StmtType type2, STMT const &lower);
+                 IDENT const &upper,
+                 IDENT const &lower,
+                 IDENT_VECTOR const &visited);
+  void AddCalls(bool is_star, IDENT const &upper, IDENT const &lower);
+  void AddNext(bool is_star, StmtType type1, IDENT const &upper, StmtType type2, IDENT const &lower);
   void PopulatePairMap(StmtType type1,
-                       STMT upper,
+                       IDENT upper,
                        StmtType type2,
-                       STMT lower,
-                       NESTED_MAP *pair_map);
-  void ExhaustiveAddAllStmt(StmtType type1, std::string upper, StmtType type2, std::string lower, bool is_star);
+                       IDENT lower,
+                       NESTED_TUPLE_MAP *pair_map);
+  void ExhaustiveAddAllStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, bool is_star);
   void ExhaustiveAddSubStmt(StmtType type1,
-                            STMT upper,
+                            IDENT upper,
                             StmtType type2,
-                            STMT lower,
-                            NESTED_MAP *pair_map);
+                            IDENT lower,
+                            NESTED_TUPLE_MAP *pair_map);
   void WipeNextStar();
-  [[nodiscard]] bool IsValid(STMT_PAIR const &pair);
-  [[nodiscard]] bool IsStarValid(STMT_PAIR const &pair);
-  [[nodiscard]] bool IsNextStarPairValid(STMT_PAIR const &pair);
+  [[nodiscard]] bool IsValid(IDENT_PAIR const &pair);
+  [[nodiscard]] bool IsStarValid(IDENT_PAIR const &pair);
+  [[nodiscard]] bool IsNextStarPairValid(IDENT_PAIR const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetHelper(StmtType type1,
                                                           StmtType type2,
                                                           int index,
-                                                          STMT const &stmt,
+                                                          IDENT const &stmt,
                                                           bool is_star);
-  [[nodiscard]] STMT GetUpperOf(StmtType stmt_type, STMT const &stmt);
-  [[nodiscard]] STMT GetLowerOf(StmtType stmt_type, STMT const &stmt);
-  [[nodiscard]] STMT_SET GetUpperSetOf(StoreType store_type,
+  [[nodiscard]] IDENT GetUpperOf(StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT GetLowerOf(StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetUpperSetOf(StoreType store_type,
                                        StmtType stmt_type,
-                                       STMT const &stmt);
-  [[nodiscard]] STMT_SET GetLowerSetOf(StoreType store_type,
+                                       IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetLowerSetOf(StoreType store_type,
                                        StmtType stmt_type,
-                                       STMT const &stmt);
-  [[nodiscard]] STMT_SET GetUpperStarOf(StoreType store_type,
+                                       IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetUpperStarOf(StoreType store_type,
                                         StmtType stmt_type,
-                                        STMT const &stmt);
-  [[nodiscard]] STMT_SET GetLowerStarOf(StoreType store_type,
+                                        IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetLowerStarOf(StoreType store_type,
                                         StmtType stmt_type,
-                                        STMT const &stmt);
-  [[nodiscard]] STMT_PAIR_SET GetPairByType(StmtType type1,
+                                        IDENT const &stmt);
+  [[nodiscard]] IDENT_PAIR_SET GetPairByType(StmtType type1,
                                             StmtType type2);
-  [[nodiscard]] STMT_PAIR_SET GetStarPairByType(StmtType type1,
+  [[nodiscard]] IDENT_PAIR_SET GetStarPairByType(StmtType type1,
                                                 StmtType type2);
-  [[nodiscard]] STMT_PAIR_SET GetAllPairs();
-  [[nodiscard]] STMT_PAIR_SET GetAllStarPairs();
-  [[nodiscard]] STMT_PAIR_SET GetAllNextStarPairs();
+  [[nodiscard]] IDENT_PAIR_SET GetAllPairs();
+  [[nodiscard]] IDENT_PAIR_SET GetAllStarPairs();
+  [[nodiscard]] IDENT_PAIR_SET GetAllNextStarPairs();
   void GetLowerStarOfHelper(StmtType stmt_type,
-                            STMT const &stmt,
-                            STMT_SET &res,
-                            STMT_SET &visited);
+                            IDENT const &stmt,
+                            IDENT_SET &res,
+                            IDENT_SET &visited);
   void GetUpperStarOfHelper(StmtType stmt_type,
-                            STMT const &stmt,
-                            STMT_SET &res,
-                            STMT_SET &visited);
+                            IDENT const &stmt,
+                            IDENT_SET &res,
+                            IDENT_SET &visited);
 };
 
 #endif //FOLLOWS_PARENT_STORE_H
