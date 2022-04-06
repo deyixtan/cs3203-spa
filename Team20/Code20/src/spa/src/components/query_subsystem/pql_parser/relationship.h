@@ -3,11 +3,13 @@
 
 #include "../pql_lexer/pql_token.h"
 
+using namespace pql;
+
 class Relationship {
  private:
-  PqlToken rel_ref_;
-  PqlToken first_;
-  PqlToken second_;
+  PqlToken rel_ref;
+  PqlToken first;
+  PqlToken second;
 
  public:
   Relationship();

@@ -12,7 +12,6 @@ void QueryController::ProcessQuery(std::string query, std::list<std::string> &re
     ParsedQuery parsed_query = pql_parser.ParseQuery();
     if (validator_->IsQuerySemanticallyValid(parsed_query)) {
       evaluator_->Evaluate(parsed_query, results);
-      evaluator_->WipeCache();
     } else if (parsed_query.GetResultClause().GetType() == ResultClauseType::BOOLEAN){
       results.push_back("FALSE");
     }
