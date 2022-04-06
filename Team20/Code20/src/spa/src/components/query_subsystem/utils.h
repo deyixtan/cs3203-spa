@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include "pql_lexer/pql_token.h"
+#include <algorithm>
 
 enum class AttriName {
   PROCNAME,

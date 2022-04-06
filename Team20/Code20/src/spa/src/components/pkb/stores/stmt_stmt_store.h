@@ -102,11 +102,11 @@ class StmtStmtStore : public Store {
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStarPairs();
   [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStarPairs();
-  [[nodiscard]] void GetLowerStarOfHelper(StmtType stmt_type,
+  void GetLowerStarOfHelper(StmtType stmt_type,
                                           std::string const &stmt,
                                           std::unordered_set<std::string> &res,
                                           std::unordered_set<std::string> &visited);
-  [[nodiscard]] void GetUpperStarOfHelper(StmtType stmt_type,
+  void GetUpperStarOfHelper(StmtType stmt_type,
                                           std::string const &stmt,
                                           std::unordered_set<std::string> &res,
                                           std::unordered_set<std::string> &visited);

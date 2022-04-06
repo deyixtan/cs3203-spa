@@ -5,6 +5,8 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <memory>
+#include <algorithm>
 
 #include "../../../utils/pair_hash.h"
 
