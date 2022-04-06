@@ -43,8 +43,9 @@ class Store {
   typedef std::string IDENT;
   typedef std::vector<IDENT> IDENT_VECTOR;
   typedef std::unordered_set<IDENT> IDENT_SET;
-  typedef std::pair<std::string, std::string> IDENT_PAIR;
-  typedef std::unordered_map<IDENT, std::unordered_set<IDENT>> IDENT_SET_MAP;
+  typedef std::pair<IDENT, IDENT> IDENT_PAIR;
+  typedef std::unordered_map<IDENT, IDENT_SET> IDENT_SET_MAP;
+  typedef std::unordered_map<IDENT, IDENT_PAIR> IDENT_PAIR_MAP;
   typedef std::unordered_set<IDENT_PAIR, pair_hash> IDENT_PAIR_SET;
   typedef std::unordered_map<StmtType,
                              std::unordered_map<StmtType,
@@ -52,20 +53,21 @@ class Store {
                                                            IDENT_SET_MAP,
                                                            IDENT_PAIR_SET>>> NESTED_TUPLE_MAP;
 
-  explicit Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector, std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStmt(StmtType type,
-                                                                                std::vector<StmtType> &supported_types,
-                                                                                std::unordered_set<std::pair<std::string,
-                                                                                                             std::string>,
-                                                                                                   pair_hash> const &list,
-                                                                                bool checkPairFirst);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStmt(StmtType type1,
-                                                                                StmtType type2,
-                                                                                std::vector<StmtType> &supported_types,
-                                                                                std::unordered_set<std::pair<std::string,
-                                                                                                             std::string>,
-                                                                                                   pair_hash> const &list,
-                                                                                bool checkPairFirst);
+  explicit Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                 std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
+  IDENT_PAIR_SET GetAllStmt(StmtType type,
+                            std::vector<StmtType> &supported_types,
+                            std::unordered_set<std::pair<std::string,
+                                                         std::string>,
+                                               pair_hash> const &list,
+                            bool checkPairFirst);
+  IDENT_PAIR_SET GetAllStmt(StmtType type1,
+                            StmtType type2,
+                            std::vector<StmtType> &supported_types,
+                            std::unordered_set<std::pair<std::string,
+                                                         std::string>,
+                                               pair_hash> const &list,
+                            bool checkPairFirst);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
