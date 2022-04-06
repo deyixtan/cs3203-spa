@@ -15,8 +15,10 @@ class StatementNode : public Node {
   explicit StatementNode(String stmt_no);
   [[nodiscard]] String GetStatementNumber();
   virtual void Accept(DesignExtractor *de, String proc_name) = 0;
+  //TODO: to remove
   virtual CfgNodePtr Accept(CfgBuilder *cb, CfgNodePtr cfg_node) = 0;
   virtual bool operator==(const StatementNode &other) const = 0;
+  virtual StmtType GetStatementType() = 0;
 };
 
 }

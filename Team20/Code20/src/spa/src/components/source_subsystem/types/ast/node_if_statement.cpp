@@ -54,9 +54,9 @@ void IfStatementNode::Accept(DesignExtractor *design_extractor, String proc_name
 }
 
 CfgNodePtr IfStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
-  CfgNodePtr condition_node = std::make_shared<CfgNode>();
-  cfg_node->AddNext(condition_node);
-  cfg_node = condition_node;
+//  CfgNodePtr condition_node = std::make_shared<CfgNode>();
+//  cfg_node->AddNext(condition_node);
+//  cfg_node = condition_node;
 
   CfgNodePtr if_node = std::make_shared<CfgNode>();
   CfgNodePtr else_node = std::make_shared<CfgNode>();
@@ -95,6 +95,10 @@ bool IfStatementNode::operator==(const StatementNode &other) const {
   }
 
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
+}
+
+StmtType IfStatementNode::GetStatementType() {
+  return StmtType::IF;
 }
 
 }

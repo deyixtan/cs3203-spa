@@ -43,12 +43,12 @@ void StatementListNode::Accept(DesignExtractor *de, String &proc_name) {
 CfgNodePtr StatementListNode::Accept(CfgBuilder *cb, CfgNodePtr cfg_node) {
   for (StatementNodePtr &stmt : m_statements) {
     // TODO: to remove
-//    bool is_empty_cfg_node = cfg_node->GetStatementList().empty();
-//    if ((stmt->GetStatementType() == IF || stmt->GetStatementType() == WHILE) && !is_empty_cfg_node) {
-//      CfgNodePtr condition_node = std::make_shared<CfgNode>();
-//      cfg_node->AddNext(condition_node);
-//      cfg_node = condition_node;
-//    }
+    bool is_empty_cfg_node = cfg_node->GetStatementList().empty();
+    if ((stmt->GetStatementType() == IF || stmt->GetStatementType() == WHILE) && !is_empty_cfg_node) {
+      CfgNodePtr condition_node = std::make_shared<CfgNode>();
+      cfg_node->AddNext(condition_node);
+      cfg_node = condition_node;
+    }
     cfg_node = cb->Visit(stmt, cfg_node);
   }
   return cfg_node;

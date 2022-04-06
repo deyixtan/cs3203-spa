@@ -33,9 +33,9 @@ void WhileStatementNode::Accept(DesignExtractor *design_extractor, String proc_n
 }
 
 CfgNodePtr WhileStatementNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
-  CfgNodePtr condition_node = std::make_shared<CfgNode>();
-  cfg_node->AddNext(condition_node);
-  cfg_node = condition_node;
+//  CfgNodePtr condition_node = std::make_shared<CfgNode>();
+//  cfg_node->AddNext(condition_node);
+//  cfg_node = condition_node;
 
   CfgNodePtr body_node = std::make_shared<CfgNode>();
   CfgNodePtr next_node = std::make_shared<CfgNode>();
@@ -63,6 +63,10 @@ bool WhileStatementNode::operator==(const StatementNode &other) const {
   }
 
   return m_stmt_no == casted_other->m_stmt_no && *m_condition == *(casted_other->m_condition);
+}
+
+StmtType WhileStatementNode::GetStatementType() {
+  return StmtType::WHILE;
 }
 
 }

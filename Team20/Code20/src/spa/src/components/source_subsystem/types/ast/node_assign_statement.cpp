@@ -37,4 +37,8 @@ bool AssignStatementNode::operator==(const StatementNode &other) const {
       && *m_rhs == *(casted_other->m_rhs);
 }
 
+StmtType AssignStatementNode::GetStatementType() {
+  return StmtType::ASSIGN;
+}
+
 }

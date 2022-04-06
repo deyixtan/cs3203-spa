@@ -32,4 +32,8 @@ bool ReadStatementNode::operator==(const StatementNode &other) const {
   return m_stmt_no == casted_other->m_stmt_no && *m_variable == *(casted_other->m_variable);
 }
 
+StmtType ReadStatementNode::GetStatementType() {
+  return StmtType::READ;
+}
+
 }

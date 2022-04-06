@@ -24,7 +24,7 @@ void ProcedureNode::Accept(DesignExtractor *design_extractor) {
 }
 
 CfgNodePtr ProcedureNode::Accept(CfgBuilder *cfg_builder, CfgNodePtr cfg_node) {
-  return cfg_builder->Visit(m_stmt_list, std::move(cfg_node));
+  return cfg_builder->Visit(m_stmt_list, cfg_node);
 }
 
 bool ProcedureNode::operator==(const ProcedureNode &other) const {
