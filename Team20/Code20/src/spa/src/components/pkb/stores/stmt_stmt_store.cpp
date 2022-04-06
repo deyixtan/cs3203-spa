@@ -412,13 +412,7 @@ void StmtStmtStore::GetUpperStarOfHelper(StmtType stmt_type,
   if (visited.find(stmt) != visited.end()) {
     bool is_loop = false;
     for (auto next : visited) {
-      if (next == stmt) {
-        is_loop = true;
-      }
       AddNext(true,stmt_type,stmt,STMT,next);
-      if (is_loop) {
-        AddNext(true,stmt_type,stmt,STMT,next);
-      }
       res.insert(stmt);
     }
     return;
@@ -447,13 +441,7 @@ void StmtStmtStore::GetLowerStarOfHelper(StmtType stmt_type,
   if (visited.find(stmt) != visited.end()) {
     bool is_loop = false;
     for (auto before : visited) {
-      if (before == stmt) {
-        is_loop = true;
-      }
       AddNext(true,STMT,before,stmt_type,stmt);
-      if (is_loop) {
-        AddNext(true,STMT,before,stmt_type,stmt);
-      }
       res.insert(stmt);
     }
     return;
@@ -485,17 +473,18 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore::GetAllNextStarPairs() {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> res;
-  for(auto pair : all_pairs) {
-    std::string before_stmt = pair.first;
-    std::string next_stmt = pair.second;
-    std::unordered_set<std::string> lower_star = GetLowerStarOf(NEXT, STMT, before_stmt);
-    for(auto next: lower_star) {
-      res.insert({pair.first, next});
-    }
-    std::unordered_set<std::string> upper_star = GetUpperStarOf(NEXT, STMT, next_stmt);
-    for(auto before: upper_star) {
-      res.insert({before, pair.second});
-    }
-  }
-  return res;
+  std::unordered_set<std::string> lower_star = GetLowerStarOf(NEXT, STMT, "1");
+//  for(auto pair : all_pairs) {
+//    std::string before_stmt = pair.first;
+//    std::string next_stmt = pair.second;
+//    std::unordered_set<std::string> lower_star = GetLowerStarOf(NEXT, STMT, before_stmt);
+//    for(auto next: lower_star) {
+//      res.insert({pair.first, next});
+//    }
+//    std::unordered_set<std::string> upper_star = GetUpperStarOf(NEXT, STMT, next_stmt);
+//    for(auto before: upper_star) {
+//      res.insert({before, pair.second});
+//    }
+//  }
+  return GetAllStarPairs();
 }
