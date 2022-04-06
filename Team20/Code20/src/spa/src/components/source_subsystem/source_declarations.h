@@ -41,8 +41,9 @@ namespace source {
   class ConstantNode;
 
   // cfg-related types
-  class Cfg;
+  struct CfgNodeStatement;
   class CfgNode;
+  class Cfg;
 
   // components
   class SourceLexer;
@@ -90,10 +91,12 @@ namespace source {
   typedef std::vector<StatementNodePtr> StatementNodeStream;
 
   // cfg-related types
-  typedef std::shared_ptr<Cfg> CfgPtr;
   typedef std::shared_ptr<CfgNode> CfgNodePtr;
+  typedef std::shared_ptr<Cfg> CfgPtr;
 
   // cfg-related types (others)
+  typedef std::vector<CfgNodeStatement> CfgNodeStatementStream;
+  typedef std::vector<CfgNodePtr> CfgNodeStream;
   typedef std::unordered_map<String , CfgNodePtr> StringToCfgNodePtrMap;
 
   // components

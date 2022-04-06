@@ -35,7 +35,7 @@ void CfgBuilder::IterateAstAndPopulatePkb(ProgramNodePtr node) {
 
 void CfgBuilder::IterateCfgAndPopulatePkb() {
   std::stack<std::shared_ptr<CfgNode>> node_stack;
-  std::vector<Statement> prev_stmts;
+  std::vector<CfgNodeStatement> prev_stmts;
   std::unordered_set<std::shared_ptr<CfgNode>> visited;
   std::unordered_map<std::string, std::unordered_set<std::string>> next_map;
   std::unordered_map<std::string, std::shared_ptr<CfgNode>> prog = m_pkb_client->GetPKB()->GetProgCfg()->GetCfgMap();
@@ -47,7 +47,7 @@ void CfgBuilder::IterateCfgAndPopulatePkb() {
 
 void CfgBuilder::CfgProcessHandler(std::shared_ptr<CfgNode> &curr_proc,
                                    std::stack<std::shared_ptr<CfgNode>> &node_stack,
-                                   std::vector<Statement> &prev_stmts,
+                                   std::vector<CfgNodeStatement> &prev_stmts,
                                    std::unordered_set<std::shared_ptr<CfgNode>> &visited,
                                    std::unordered_map<std::string, std::unordered_set<std::string>> &next_map) {
   node_stack.push(curr_proc);
@@ -58,8 +58,8 @@ void CfgBuilder::CfgProcessHandler(std::shared_ptr<CfgNode> &curr_proc,
     node_stack.pop();
     visited.insert(curr);
 
-    std::vector<Statement> curr_stmts = curr->GetStatementList(); // get all stmt in node
-    std::vector<std::shared_ptr<CfgNode>> next_nodes = curr->GetDescendants(); // get all possible next nodes
+    std::vector<CfgNodeStatement> curr_stmts = curr->GetStatementList(); // get all stmt in node
+    std::vector<std::shared_ptr<CfgNode>> next_nodes = curr->GetNextList(); // get all possible next nodes
 
     // check if actual dummy node
     if (curr_stmts.empty() && next_nodes.empty()) {
@@ -75,7 +75,7 @@ void CfgBuilder::CfgProcessHandler(std::shared_ptr<CfgNode> &curr_proc,
 
     // recurse until next_node.front() != dummy node
     while (!next_nodes.empty() && next_nodes.front()->GetStatementList().empty()) {
-      next_nodes = next_nodes.front()->GetDescendants(); // becomes next_nodes = 11
+      next_nodes = next_nodes.front()->GetNextList(); // becomes next_nodes = 11
     }
 
     for (auto &desc : next_nodes) {
@@ -84,7 +84,7 @@ void CfgBuilder::CfgProcessHandler(std::shared_ptr<CfgNode> &curr_proc,
   }
 }
 
-void CfgBuilder::MultipleStmtsNodeHandler(std::vector<Statement> &curr_stmts,
+void CfgBuilder::MultipleStmtsNodeHandler(std::vector<CfgNodeStatement> &curr_stmts,
                                           std::unordered_map<std::string,
                                                              std::unordered_set<std::string>> &next_map) {
   int start = 0;
@@ -98,17 +98,17 @@ void CfgBuilder::MultipleStmtsNodeHandler(std::vector<Statement> &curr_stmts,
 
 void CfgBuilder::NextNodeHandler(std::shared_ptr<CfgNode> &desc,
                                  std::stack<std::shared_ptr<CfgNode>> &node_stack,
-                                 std::vector<Statement> &curr_stmts,
+                                 std::vector<CfgNodeStatement> &curr_stmts,
                                  std::unordered_set<std::shared_ptr<CfgNode>> &visited,
                                  std::unordered_map<std::string,
                                                     std::unordered_set<std::string>> &next_map) {
   if (!curr_stmts.empty()) {
     // force desc to legit node
-    while (desc->GetStatementList().empty() && !desc->GetDescendants().empty()) {
-      desc = desc->GetDescendants().front();
+    while (desc->GetStatementList().empty() && !desc->GetNextList().empty()) {
+      desc = desc->GetNextList().front();
     }
 
-    std::vector<Statement> next_stmts = desc->GetStatementList();
+    std::vector<CfgNodeStatement> next_stmts = desc->GetStatementList();
     if (!next_stmts.empty()) {
       m_pkb_client->PopulateNext(curr_stmts[curr_stmts.size() - 1].stmt_no, next_stmts.front().stmt_no);
     }
