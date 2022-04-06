@@ -1,9 +1,12 @@
 #ifndef SOURCE_DECLARATIONS_H
 #define SOURCE_DECLARATIONS_H
 
+#include <iostream>
 #include <memory>
+#include <queue>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 namespace source {
@@ -50,6 +53,14 @@ namespace source {
   class PkbClient;
 
   // type definitions
+  // general
+  typedef std::exception Exception;
+  typedef std::string String;
+  typedef std::queue<String> StringQueue;
+  typedef std::unordered_set<String> StringSet;
+  typedef std::unordered_map<std::string, int> StringToIntMap;
+  typedef std::unordered_map<String, StringSet> StringToStringSetMap;
+
   // token-related types
   typedef std::shared_ptr<SourceToken> TokenPtr;
   typedef std::vector<TokenPtr> TokenStream;
@@ -78,6 +89,8 @@ namespace source {
   typedef std::vector<ProcedureNodePtr> ProcedureNodeStream;
   typedef std::vector<StatementNodePtr> StatementNodeStream;
 
+  // components
+  typedef std::shared_ptr<PkbClient> PkbClientPtr;
 }
 
 #endif //SOURCE_DECLARATIONS_H

@@ -4,13 +4,13 @@ namespace source {
 
 SourceToken::SourceToken() : SourceToken(TokenType::UNKNOWN, "") {}
 
-SourceToken::SourceToken(TokenType type, std::string value) : m_type(type), m_value(std::move(value)) {}
+SourceToken::SourceToken(TokenType type, String value) : m_type(type), m_value(std::move(value)) {}
 
 TokenType SourceToken::GetType() {
   return m_type;
 }
 
-std::string SourceToken::GetValue() {
+String SourceToken::GetValue() {
   return m_value;
 }
 

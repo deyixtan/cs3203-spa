@@ -51,6 +51,8 @@ bool WhileStatementNode::operator==(const StatementNode &other) const {
 
 void WhileStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
+  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, WHILE);
+
   std::shared_ptr<StatementListNode> while_block = GetStatementList();
   std::vector<std::shared_ptr<StatementNode>> while_stmts = while_block->GetStatements();
 
@@ -59,7 +61,6 @@ void WhileStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
 
   de->Visit(while_block, proc_name);
   de->GetPkbClient()->PopulateWhile(de->GetVisited(), stmt_num, cond_expr);
-  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, WHILE);
 }
 
 std::shared_ptr<CfgNode> WhileStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {

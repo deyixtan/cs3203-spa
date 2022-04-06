@@ -11,14 +11,14 @@ PKB::PKB()
 }
 
 void PKB::InitRelationshipStores() {
-  m_follow_store = std::make_shared<FollowsStore>(m_stmt_vector);
-  m_modify_store = std::make_shared<ModifiesStore>(m_stmt_vector);
-  m_parent_store = std::make_shared<ParentStore>(m_stmt_vector);
-  m_usage_store = std::make_shared<UsesStore>(m_stmt_vector);
-  m_pattern_store = std::make_shared<PatternStore>(m_stmt_vector);
-  m_call_store = std::make_shared<CallStore>(m_stmt_vector);
-  m_next_store = std::make_shared<NextStore>(m_stmt_vector);
-  m_affect_store = std::make_shared<AffectStore>(m_stmt_vector, m_modify_store, m_usage_store, m_follow_store);
+  m_follow_store = std::make_shared<FollowsStore>(m_stmt_vector, m_stmt_type);
+  m_modify_store = std::make_shared<ModifiesStore>(m_stmt_vector, m_stmt_type);
+  m_parent_store = std::make_shared<ParentStore>(m_stmt_vector, m_stmt_type);
+  m_usage_store = std::make_shared<UsesStore>(m_stmt_vector, m_stmt_type);
+  m_pattern_store = std::make_shared<PatternStore>(m_stmt_vector, m_stmt_type);
+  m_call_store = std::make_shared<CallStore>(m_stmt_vector, m_stmt_type);
+  m_next_store = std::make_shared<NextStore>(m_stmt_vector, m_stmt_type);
+  m_affect_store = std::make_shared<AffectStore>(m_stmt_vector, m_stmt_type, m_modify_store, m_usage_store, m_follow_store);
 }
 
 void PKB::AddStmt(std::string const &stmt, StmtType type) {

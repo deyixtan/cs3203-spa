@@ -4,7 +4,7 @@
 
 namespace source {
 
-SourceLexer::SourceLexer(std::string source) : m_cursor(0), m_source(std::move(source)) {}
+SourceLexer::SourceLexer(String source) : m_cursor(0), m_source(std::move(source)) {}
 
 void SourceLexer::Tokenize(TokenStream &token_stream) {
   while (HasMoreTokens()) {
@@ -21,7 +21,7 @@ bool SourceLexer::HasMoreTokens() {
 
 TokenPtr SourceLexer::GetNextToken() {
   TokenPtr token = std::make_shared<SourceToken>();
-  std::string remaining_source = m_source.substr(m_cursor);
+  String remaining_source = m_source.substr(m_cursor);
   char curr_char = remaining_source.at(0);
 
   if (remaining_source.length() > 1) {
@@ -73,7 +73,7 @@ void SourceLexer::OneCharTokenHandler(TokenPtr &token, char curr_char) {
     token = std::make_shared<SourceToken>(TokenType::WHITE_SPACE, "");
   } else if (curr_char == '\n') {
     token = std::make_shared<SourceToken>(TokenType::NEW_LINE, "");
-  } if (curr_char == '\t') {
+  } else if (curr_char == '\t') {
     token = std::make_shared<SourceToken>(TokenType::TAB, "");
   } else if (curr_char == '{') {
     token = std::make_shared<SourceToken>(TokenType::OPENED_BRACES, "");
@@ -121,8 +121,8 @@ void SourceLexer::MultipleCharsTokenHandler(TokenPtr &token, char curr_char) {
 }
 
 void SourceLexer::IntegerTokenHandler(TokenPtr &token, char curr_char) {
-  std::string remaining_source;
-  std::string value;
+  String remaining_source;
+  String value;
   while (std::isdigit(curr_char) != 0) {
     value += curr_char;
     remaining_source = m_source.substr(++m_cursor);
@@ -136,8 +136,8 @@ void SourceLexer::IntegerTokenHandler(TokenPtr &token, char curr_char) {
 }
 
 void SourceLexer::NameTokenHandler(TokenPtr &token, char curr_char) {
-  std::string remaining_source;
-  std::string value;
+  String remaining_source;
+  String value;
 
   value += curr_char;
   remaining_source = m_source.substr(++m_cursor);
@@ -191,7 +191,7 @@ void SourceLexer::EncodeTokenStream(TokenStream &token_stream) {
 void SourceLexer::EncodeTokenHandler(TokenPtr &token, TokenPtr &next_token) {
   // attempt to modify (re-encode) current token
   TokenType next_type = next_token->GetType();
-  std::string value = token->GetValue();
+  String value = token->GetValue();
 
   if (value == "read" && next_type == TokenType::NAME) {
     token = std::make_shared<SourceToken>(TokenType::READ, "");

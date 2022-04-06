@@ -2,9 +2,7 @@
 
 namespace source {
 
-std::string InvalidParseConditionException::MESSAGE = "Unable to parse conditional expression.";
-
-InvalidParseConditionException::InvalidParseConditionException() : m_msg(MESSAGE) {}
+InvalidParseConditionException::InvalidParseConditionException() : m_msg("Unable to parse conditional expression.") {}
 
 const char *InvalidParseConditionException::what() const noexcept {
   return m_msg.c_str();

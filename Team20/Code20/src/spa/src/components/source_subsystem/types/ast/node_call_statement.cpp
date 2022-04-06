@@ -29,9 +29,9 @@ bool CallStatementNode::operator==(const StatementNode &other) const {
 void CallStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
   std::string stmt_num = std::to_string(GetStatementNumber());
   std::string callee_name = m_identifier;
+  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, CALL);
   de->GetPkbClient()->PopulateCall(de->GetVisited(), stmt_num, proc_name, callee_name);
   de->GetCallGraph()->AddEdge(proc_name, callee_name);
-  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, CALL);
 }
 
 std::shared_ptr<CfgNode> CallStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {

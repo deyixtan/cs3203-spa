@@ -2,9 +2,7 @@
 
 namespace source {
 
-std::string UnexpectedTokenException::MESSAGE = "Unexpected token.";
-
-UnexpectedTokenException::UnexpectedTokenException() : m_msg(MESSAGE) {}
+UnexpectedTokenException::UnexpectedTokenException() : m_msg("Unexpected token.") {}
 
 const char *UnexpectedTokenException::what() const noexcept {
   return m_msg.c_str();
