@@ -3,6 +3,8 @@
 
 #include "components/query_subsystem/pql_lexer/pql_token.h"
 
+using namespace pql;
+
 extern PqlToken comma_token;
 extern PqlToken semicolon_token;
 extern PqlToken open_parenthesis_token;
