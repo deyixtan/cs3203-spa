@@ -193,3 +193,284 @@ if ifs;
 Select ifs such that Next*(ifs, _)
 12
 5000
+40 - Next*(STMT, STMT)
+stmt s1, s2;
+Select s2 such that Next*(s1, s2)
+2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,19,20
+5000
+41 - Next*(STMT, READ)
+stmt s; read rd;
+Select rd such that Next*(s, rd)
+2
+5000
+42 - Next*(STMT, PRINT)
+stmt s; print pn;
+Select pn such that Next*(s, pn)
+5,7,20
+5000
+43 - Next*(STMT, ASSIGN)
+stmt s; assign a;
+Select a such that Next*(s, a)
+6,9,11,13,14,15,16,17,19
+5000
+44 - Next*(STMT, CALL)
+stmt s; call cl;
+Select cl such that Next*(s, cl)
+3,10
+5000
+45 - Next*(STMT, WHILE)
+stmt s; while w;
+Select w such that Next*(s, w)
+8
+5000
+46 - Next*(STMT, IF)
+stmt s; if ifs;
+Select ifs such that Next*(s, ifs)
+12
+5000
+47 - Next*(READ, STMT)
+read rd; stmt s;
+Select s such that Next*(rd, s)
+2,3
+5000
+48 - Next*(READ, READ)
+read rd1, rd2;
+Select rd2 such that Next*(rd1, rd2)
+2
+5000
+49 - Next*(READ, PRINT)
+read rd; print pn;
+Select pn such that Next*(rd, pn)
+none
+5000
+50 - Next*(READ, ASSIGN)
+read rd; assign a;
+Select a such that Next*(rd, a)
+none
+5000
+51 - Next*(READ, CALL)
+read rd; call cl;
+Select cl such that Next*(rd, cl)
+3
+5000
+52 - Next*(READ, WHILE)
+read rd; while w;
+Select w such that Next*(rd, w)
+none
+5000
+53 - Next*(READ, IF)
+read rd; if ifs;
+Select ifs such that Next*(rd, ifs)
+none
+5000
+54 - Next*(PRINT, STMT)
+print pn; stmt s;
+Select s such that Next*(pn, s)
+6,7,8,9,10,11,12,13,14,15,16,17
+5000
+55 - Next*(PRINT, READ)
+print pn; read rd;
+Select rd such that Next*(pn, rd)
+none
+5000
+56 - Next*(PRINT, PRINT)
+print pn1, pn2;
+Select pn2 such that Next*(pn1, pn2)
+7
+5000
+57 - Next*(PRINT, ASSIGN)
+print pn; assign a;
+Select a such that Next*(pn, a)
+6,9,11,13,14,15,16,17
+5000
+58 - Next*(PRINT, CALL)
+print pn; call cl;
+Select cl such that Next*(pn, cl)
+10
+5000
+59 - Next*(PRINT, WHILE)
+print pn; while w;
+Select w such that Next*(pn, w)
+8
+5000
+60 - Next*(PRINT, IF)
+print pn; if ifs;
+Select ifs such that Next*(pn, ifs)
+12
+5000
+61 - Next*(ASSIGN, STMT)
+assign a; stmt s;
+Select s such that Next*(a, s)
+5,6,7,8,9,10,11,12,13,14,15,16,17,19,20
+5000
+62 - Next*(ASSIGN, READ)
+assign a; read rd;
+Select rd such that Next*(a, rd)
+none
+5000
+63 - Next*(ASSIGN, PRINT)
+assign a; print pn;
+Select pn such that Next*(a, pn)
+5,7,20
+5000
+64 - Next*(ASSIGN, ASSIGN)
+assign a1, a2;
+Select a2 such that Next*(a1, a2)
+6,9,11,13,14,15,16,17,19
+5000
+65 - Next*(ASSIGN, CALL)
+assign a; call cl;
+Select cl such that Next*(a, cl)
+10
+5000
+66 - Next*(ASSIGN, WHILE)
+assign a; while w;
+Select w such that Next*(a, w)
+8
+5000
+67 - Next*(ASSIGN, IF)
+assign a; if ifs;
+Select ifs such that Next*(a, ifs)
+12
+5000
+68 - Next*(CALL, STMT)
+call cl; stmt s;
+Select s such that Next*(cl, s)
+8,9,10,11,12,13,14,15,16,17
+5000
+69 - Next*(CALL, READ)
+call cl; read rd;
+Select rd such that Next*(cl, rd)
+none
+5000
+70 - Next*(CALL, PRINT)
+call cl; print pn;
+Select pn such that Next*(cl, pn)
+none
+5000
+71 - Next*(CALL, ASSIGN)
+call cl; assign a;
+Select a such that Next*(cl, a)
+9,11,13,14,15,16,17
+5000
+72 - Next*(CALL, CALL)
+call cl1, cl2;
+Select cl2 such that Next*(cl1, cl2)
+none
+5000
+73 - Next*(CALL, WHILE)
+call cl; while w;
+Select w such that Next*(cl, w)
+8
+5000
+74 - Next*(CALL, IF)
+call cl; if ifs;
+Select ifs such that Next*(cl, ifs)
+12
+5000
+75 - Next*(WHILE, STMT)
+while w; stmt s;
+Select s such that Next*(w, s)
+8,9,10,11,12,13,14,15,16,17
+5000
+76 - Next*(WHILE, READ)
+while w; read rd;
+Select rd such that Next*(w, rd)
+none
+5000
+77 - Next*(WHILE, PRINT)
+while w; print pn;
+Select pn such that Next*(w, pn)
+none
+5000
+78 - Next*(WHILE, ASSIGN)
+while w; assign a;
+Select a such that Next*(w, a)
+9,11,13,14,15,16,17
+5000
+79 - Next*(WHILE, CALL)
+while w; call cl;
+Select cl such that Next*(w, cl)
+10
+5000
+80 - Next*(WHILE, WHILE)
+while w1, w2;
+Select w2 such that Next*(w1, w2)
+8
+5000
+81 - Next*(WHILE, IF)
+while w; if ifs;
+Select ifs such that Next*(w, ifs)
+12
+5000
+82 - Next*(IF, STMT)
+if ifs; stmt s;
+Select s such that Next*(ifs, s)
+13,14,15,16,17
+5000
+83 - Next*(IF, READ)
+if ifs; read rd;
+Select rd such that Next*(ifs, rd)
+none
+5000
+84 - Next*(IF, PRINT)
+if ifs; print pn;
+Select pn such that Next*(ifs, pn)
+none
+5000
+85 - Next*(IF, ASSIGN)
+if ifs; assign a;
+Select a such that Next*(ifs, a)
+13,14,15,16,17
+none
+5000
+86 - Next*(IF, CALL)
+if ifs; call cl;
+Select cl such that Next*(ifs, cl)
+none
+5000
+87 - Next*(IF, WHILE)
+if ifs; while w;
+Select w such that Next*(ifs, w)
+none
+5000
+88 - Next*(IF, IF)
+if ifs1, ifs2;
+Select ifs2 such that Next*(ifs1, ifs2)
+none
+5000
+89 - Next*(STMT, STMT) same synonym
+stmt s;
+Select s such that Next*(s, s)
+8,9,10,11
+5000
+90 - Next*(READ, READ) same synonym
+read rd;
+Select rd such that Next*(rd, rd)
+none
+5000
+91 - Next*(PRINT, PRINT) same synonym
+print pn;
+Select pn such that Next*(pn, pn)
+none
+5000
+92 - Next*(ASSIGN, ASSIGN) same synonym
+assign a;
+Select a such that Next*(a, a)
+9, 11
+5000
+93 - Next*(CALL, CALL) same synonym
+call cl;
+Select cl such that Next*(cl, cl)
+10
+5000
+94 - Next*(WHILE, WHILE) same synonym
+while w;
+Select w such that Next*(w, w)
+8
+5000
+95 - Next*(IF, IF) same synonym
+if ifs;
+Select ifs such that Next*(ifs, ifs)
+none
+5000
