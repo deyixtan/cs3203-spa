@@ -1,84 +1,53 @@
 #include "follows_store.h"
 
-FollowsStore::FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    StmtStmtStore(move(stmt_vector)) {}
+FollowsStore::FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                           std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
+    StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
 
-void FollowsStore::AddFollow(std::string const &follower, std::string const &following) {
+void FollowsStore::AddFollow(IDENT const &follower, IDENT const &following) {
   AddUpperLower(FOLLOWS, follower, following);
 }
 
-void FollowsStore::AddFollowStar(std::string const &follower, std::string const &following) {
+void FollowsStore::AddFollowStar(IDENT const &follower, IDENT const &following) {
   AddUpperLowerStar(FOLLOWS, follower, following, std::vector<std::string>());
 }
 
-bool FollowsStore::IsFollower(std::string const &stmt) {
-  return IsUpper(stmt);
-}
-
-bool FollowsStore::IsFollowing(std::string const &stmt) {
-  return IsLower(stmt);
-}
-
-bool FollowsStore::IsFollowerStar(std::string const &stmt) {
-  return IsUpperStar(stmt);
-}
-
-bool FollowsStore::IsFollowingStar(std::string const &stmt) {
-  return IsLowerStar(stmt);
-}
-
-// Used for follower(s1, s2)
-bool FollowsStore::IsFollowValid(std::pair<std::string, std::string> const &pair) {
+bool FollowsStore::IsFollowsPairValid(IDENT_PAIR const &pair) {
   return IsValid(pair);
 }
 
-// Used for follower*(s1, s2)
-bool FollowsStore::IsFollowStarValid(std::pair<std::string, std::string> const &pair) {
+bool FollowsStore::IsFollowsStarPairValid(IDENT_PAIR const &pair) {
   return IsStarValid(pair);
 }
 
-std::string FollowsStore::GetFollowerOf(std::string const &stmt) {
-  return GetUpperOf(FOLLOWS, stmt);
+IDENT FollowsStore::GetFollowerOf(StmtType type, IDENT const &stmt) {
+  return GetUpperOf(type, stmt);
 }
 
-std::string FollowsStore::GetFollowingOf(std::string const &stmt) {
-  return GetLowerOf(stmt);
+IDENT FollowsStore::GetFollowingOf(StmtType type, IDENT const &stmt) {
+  return GetLowerOf(type, stmt);
 }
 
-std::unordered_set<std::string> FollowsStore::GetFollowerStarOf(std::string const &stmt) {
-  return GetUpperStarOf(FOLLOWS, stmt);
+IDENT_SET FollowsStore::GetFollowerStarOf(StmtType type, IDENT const &stmt) {
+  return GetUpperStarOf(FOLLOWS, type, stmt);
 }
 
-std::unordered_set<std::string> FollowsStore::GetFollowingStarOf(std::string const &stmt) {
-  return GetLowerStarOf(FOLLOWS, stmt);
+IDENT_SET FollowsStore::GetFollowingStarOf(StmtType type, IDENT const &stmt) {
+  return GetLowerStarOf(FOLLOWS, type, stmt);
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowsStore::GetFollowPairs() {
+IDENT_PAIR_SET FollowsStore::GetFollowPairs() {
   return GetAllPairs();
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowsStore::GetFollowStarPairs() {
+IDENT_PAIR_SET FollowsStore::GetFollowStarPairs() {
   return GetAllStarPairs();
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowsStore::GetAllFollowStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  return Store::GetAllStmt(type, supported_types, GetFollowPairs(), false);
+IDENT_PAIR_SET FollowsStore::GetAllFollowStmt(StmtType type1, StmtType type2) {
+  return GetPairByType(type1, type2);
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowsStore::GetAllFollowStmt(StmtType type1,
-                                                                                                 StmtType type2) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  return Store::GetAllStmt(type1, type2, supported_types, GetAllFollowStmt(type2), true);
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowsStore::GetAllFollowStarStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  return Store::GetAllStmt(type, supported_types, GetFollowStarPairs(), false);
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> FollowsStore::GetAllFollowStarStmt(StmtType type1,
-                                                                                                     StmtType type2) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  return Store::GetAllStmt(type1, type2, supported_types, GetAllFollowStarStmt(type2), true);
+IDENT_PAIR_SET FollowsStore::GetAllFollowStarStmt(StmtType type1, StmtType type2) {
+  return GetStarPairByType(type1, type2);
 }

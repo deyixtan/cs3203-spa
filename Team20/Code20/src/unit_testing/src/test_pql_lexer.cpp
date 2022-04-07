@@ -570,53 +570,53 @@ TEST_CASE("Test tuple with attribute") {
 TEST_CASE("Test declarations with incomplete double quote token") {
   PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
                                 "Select s such that Uses (s, \"x\") pattern a (\"x\", \"y)");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "Unrecognised token.");
 }
 
 TEST_CASE("Test invalid string") {
   PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, \"+y\")");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "Unrecognised token.");
 }
 
 TEST_CASE("Test invalid sub-expression") {
   PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, _\"y\"x_)");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "Unrecognised token.");
 }
 
 TEST_CASE("Test declarations with unrecognised token") {
   PqlLexer pql_lexer = PqlLexer("stmt s; variable v;\n"
                                 "Select s such that Uses (s, \"x\") && Modifies (s, v)");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "Unrecognised token.");
 }
 
 TEST_CASE("Test invalid integer") {
   PqlLexer pql_lexer = PqlLexer("Select s such that Uses (s, \"x\") pattern a (_, _\"0123\"_)");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "Unrecognised token.");
 }
 
 TEST_CASE("Test invalid attribute") {
   PqlLexer pql_lexer = PqlLexer("Select s.stmtNo such that Uses (s, \"x\") pattern a (_, _)");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "Unrecognised token.");
 }
 
 TEST_CASE("Test invalid tuple") {
   PqlLexer pql_lexer = PqlLexer("Select <s,t,> such that Uses (s, \"x\") pattern a (_, _)");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "Unrecognised token.");
 }
 
 TEST_CASE("Test invalid tuple 2") {
   PqlLexer pql_lexer = PqlLexer("Select <a, b, c, d, e,       >");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "Unrecognised token.");
 }
 
 TEST_CASE("Test invalid tuple 3") {
   PqlLexer pql_lexer = PqlLexer("Select <s.t.stmt# >");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "Unrecognised token.");
 }
 
 TEST_CASE("Test invalid attribute 2") {
   PqlLexer pql_lexer = PqlLexer("Select a.val such that Uses (s, \"x\") pattern a (_, _)");
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "Unrecognised token.");
 }
 
 TEST_CASE("Test pattern clause with and") {
@@ -700,7 +700,7 @@ TEST_CASE("Test pattern clause for ifs with 3 args") {
 TEST_CASE("Test invalid synonym in pattern sub-expression") {
   std::string query = "assign a, a1; variable v; Select  a pattern a(_, _\" 1 * re d\"_)";
   PqlLexer pql_lexer = PqlLexer(query);
-  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "ERROR: Unrecognised token! \n");
+  REQUIRE_THROWS_WITH(pql_lexer.Lex(), "Unrecognised token.");
 }
 
 TEST_CASE("Test extra open parenthesis in pattern sub-expression") {

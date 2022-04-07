@@ -1,19 +1,23 @@
 #include "cfg_node.h"
 
-CfgNode::CfgNode() {}
+namespace source {
 
-std::vector<Statement> CfgNode::GetStatementList() {
-  return m_stmt_no_list;
+CfgNode::CfgNode() = default;
+
+CfgNodeStatementStream CfgNode::GetStatementList() {
+  return m_stmt_list;
 }
 
-std::vector<std::shared_ptr<CfgNode>> CfgNode::GetDescendants() {
+CfgNodeStream CfgNode::GetNextList() {
   return m_next_list;
 }
 
-void CfgNode::AddStatement(StmtType type, std::string stmt_no) {
-  m_stmt_no_list.push_back({type, stmt_no});
+void CfgNode::AddStatement(StmtType type, String &stmt_no) {
+  m_stmt_list.push_back({type, stmt_no});
 }
 
-void CfgNode::AddNext(std::shared_ptr<CfgNode> cfg_node) {
+void CfgNode::AddNext(std::shared_ptr<CfgNode> &cfg_node) {
   m_next_list.push_back(cfg_node);
+}
+
 }

@@ -7,11 +7,11 @@ namespace pql {
 
 using namespace clause_util;
 
-Table::Table(): attributes({}), records({}) {}
+Table::Table() : attributes({}), records({}) {}
 
-Table::Table(const std::string& synonym, std::unordered_set<std::string>& single_constraints) {
+Table::Table(const std::string &synonym, std::unordered_set<std::string> &single_constraints) {
   attributes.emplace_back(synonym);
-  for (const auto& single_constraint : single_constraints) {
+  for (const auto &single_constraint : single_constraints) {
     records.emplace_back(std::initializer_list<std::string>{single_constraint});
   }
   if (single_constraints.empty()) {
@@ -24,15 +24,13 @@ Table::Table(const std::string &first_synonym,
              std::unordered_set<std::pair<std::string, std::string>, pair_hash> &pair_constraints) {
   attributes.emplace_back(first_synonym);
   attributes.emplace_back(second_synonym);
-  for (const auto& pair_constraint : pair_constraints) {
+  for (const auto &pair_constraint : pair_constraints) {
     records.emplace_back(std::initializer_list<std::string>{pair_constraint.first, pair_constraint.second});
   }
   if (pair_constraints.empty()) {
     ToggleFalseClause();
   }
 }
-
-
 
 void Table::Merge(Table &other_table) {
   UpdateResultType(other_table);
@@ -72,7 +70,7 @@ std::vector<std::pair<size_t, size_t>> Table::GetCommonAttributeIndexPairs(const
   }
   for (size_t i = 0; i < other_attributes.size(); ++i) {
     auto it = attributes_to_index.find(other_attributes.at(i));
-    if (it != attributes_to_index.end()) {
+    if (it!=attributes_to_index.end()) {
       common_attribute_index_pairs.emplace_back(it->second, i);
     }
   }
@@ -87,15 +85,62 @@ std::vector<size_t> Table::GetOtherAttributeIndices(const Attributes &other_attr
   }
   for (size_t i = 0; i < other_attributes.size(); ++i) {
     auto it = attributes_to_index.find(other_attributes.at(i));
-    if (it == attributes_to_index.end()) {
+    if (it==attributes_to_index.end()) {
       other_attribute_indices.emplace_back(i);
     }
   }
   return other_attribute_indices;
 }
 
-//TODO: Replace with Hash Join
 void Table::NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t>> &common_attribute_index_pairs) {
+  HashJoin(other_table, common_attribute_index_pairs);
+}
+
+void Table::HashJoin(Table &other_table, std::vector<std::pair<size_t, size_t>> &common_attribute_index_pairs) {
+  auto other_attribute_indices = GetOtherAttributeIndices(other_table.attributes);
+  for (size_t i : other_attribute_indices) {
+    attributes.emplace_back(other_table.attributes.at(i));
+  }
+
+  std::multimap<Record, Record> common_record_to_other_record;
+  for (auto other_table_record : other_table.records) {
+    Record common_record;
+    common_record.reserve(common_attribute_index_pairs.size());
+    for (auto common_attribute_index_pair : common_attribute_index_pairs) {
+      common_record.emplace_back(other_table_record.at(common_attribute_index_pair.second));
+    }
+
+    Record other_record;
+    other_record.reserve(other_attribute_indices.size());
+    for (auto other_attribute_index : other_attribute_indices) {
+      other_record.emplace_back(other_table_record.at(other_attribute_index));
+    }
+
+    common_record_to_other_record.emplace(common_record, other_record);
+  }
+
+  Records new_records;
+  for (auto record : records) {
+    Record common_record;
+    common_record.reserve(common_attribute_index_pairs.size());
+    for (auto common_attribute_index_pair : common_attribute_index_pairs) {
+      common_record.emplace_back(record.at(common_attribute_index_pair.first));
+    }
+
+    auto range = common_record_to_other_record.equal_range(common_record);
+    for (auto it = range.first; it!=range.second; ++it) {
+      Record new_record = record;
+      for (auto value : it->second) {
+        new_record.emplace_back(value);
+      }
+      new_records.emplace_back(new_record);
+    }
+  }
+
+  records = std::move(new_records);
+}
+
+void Table::NestedLoopJoin(Table &other_table, std::vector<std::pair<size_t, size_t>> &common_attribute_index_pairs) {
   auto other_attribute_indices = GetOtherAttributeIndices(other_table.attributes);
 
   for (size_t i : other_attribute_indices) {
@@ -103,11 +148,11 @@ void Table::NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t
   }
 
   Records new_records;
-  for (auto & record : records) {
-    for (auto & other_record_it : other_table.records) {
+  for (auto &record : records) {
+    for (auto &other_record_it : other_table.records) {
       bool record_match_on_common_attribute_indices = true;
       for (auto common_attribute_index_pair : common_attribute_index_pairs) {
-        if (record.at(common_attribute_index_pair.first) != other_record_it.at(common_attribute_index_pair.second)){
+        if (record.at(common_attribute_index_pair.first)!=other_record_it.at(common_attribute_index_pair.second)) {
           record_match_on_common_attribute_indices = false;
           break;
         }
@@ -124,6 +169,7 @@ void Table::NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t
   }
   records = std::move(new_records);
 }
+
 void Table::CrossJoin(Table &other_table) {
   attributes.insert(attributes.end(), other_table.attributes.begin(), other_table.attributes.end());
   if (other_table.IsRecordsEmpty()) {
@@ -134,8 +180,8 @@ void Table::CrossJoin(Table &other_table) {
   }
 
   Records new_records;
-  for (const auto& record : records) {
-    for (const auto& other_record : other_table.records) {
+  for (const auto &record : records) {
+    for (const auto &other_record : other_table.records) {
       auto new_record = record;
       new_record.reserve(record.size() + other_record.size());
       new_record.insert(new_record.end(), other_record.begin(), other_record.end());
@@ -146,10 +192,10 @@ void Table::CrossJoin(Table &other_table) {
   records = std::move(new_records);
 }
 
-std::unordered_set<std::string> Table::GetResult(const std::string& select_synonym) {
+std::unordered_set<std::string> Table::GetResult(const std::string &select_synonym) {
   std::unordered_set<std::string> result({});
   auto itr = std::find(attributes.begin(), attributes.end(), select_synonym);
-  if (itr != attributes.cend()) {
+  if (itr!=attributes.cend()) {
     int index = std::distance(attributes.begin(), itr);
     for (auto row : records) {
       result.insert(row[index]);
@@ -158,7 +204,10 @@ std::unordered_set<std::string> Table::GetResult(const std::string& select_synon
   return result;
 }
 
-std::unordered_set<std::string> Table::GetTupleResult(const std::vector<PqlToken> &tuple, const std::unordered_map<std::string, DesignEntityType> &declarations, PKB *pkb) {
+std::unordered_set<std::string> Table::GetTupleResult(const std::vector<PqlToken> &tuple,
+                                                      const std::unordered_map<std::string,
+                                                                               DesignEntityType> &declarations,
+                                                      PKB *pkb) {
   std::unordered_set<std::string> result;
   const std::string WHITESPACE = " ";
 
@@ -187,7 +236,8 @@ std::unordered_set<std::string> Table::GetTupleResult(const std::vector<PqlToken
   return result;
 }
 
-size_t Table::GetAttributeIdxFromElem(PqlToken& elem, const std::unordered_map<std::string, DesignEntityType> &declarations) {
+size_t Table::GetAttributeIdxFromElem(PqlToken &elem,
+                                      const std::unordered_map<std::string, DesignEntityType> &declarations) {
   if (elem.type==PqlTokenType::ATTRIBUTE) {
     auto parsed_attr_ref = Utils::ParseAttributeRef(elem, declarations);
     auto attr_ref_synonym = parsed_attr_ref.first.second;
@@ -204,23 +254,23 @@ std::string Table::ConvertAttrRef(const DesignEntityType &attr_ref_design_entity
   return new_value;
 }
 
-std::string Table::JoinRecordBy(const Record& record, const std::string &delimiter) {
+std::string Table::JoinRecordBy(const Record &record, const std::string &delimiter) {
   std::string result_string;
   for (size_t i = 0; i < record.size(); ++i) {
-    result_string += record[i] + (i != record.size() - 1 ? delimiter : "");
+    result_string += record[i] + (i!=record.size() - 1 ? delimiter : "");
   }
   return result_string;
 }
 
-std::ostream& operator<<(std::ostream& os, const Table& table) {
-  for (const auto& attribute : table.attributes) {
+std::ostream &operator<<(std::ostream &os, const Table &table) {
+  for (const auto &attribute : table.attributes) {
     os << attribute << "\t";
   }
   os << std::endl;
   os << "_______________________________________________________" << std::endl;
 
-  for (const auto& record : table.records) {
-    for (const auto& value : record) {
+  for (const auto &record : table.records) {
+    for (const auto &value : record) {
       os << value << "\t";
     }
     os << std::endl;

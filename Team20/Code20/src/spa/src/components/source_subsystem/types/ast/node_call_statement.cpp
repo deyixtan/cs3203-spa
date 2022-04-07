@@ -1,37 +1,33 @@
 #include "node_call_statement.h"
-#include "../../iterator/design_extractor.h"
-#include "../call_graph/call_graph.h"
-#include "../../iterator/cfg_builder.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
 
-CallStatementNode::CallStatementNode(int stmt_no, std::string proc, std::string identifier)
-    : StatementNode(stmt_no), proc_name(proc), m_identifier(identifier) {}
+namespace source {
 
-std::string CallStatementNode::GetIdentifier() {
-  return m_identifier;
+CallStatementNode::CallStatementNode(String &stmt_no, String caller_name, String callee_name)
+    : StatementNode(stmt_no), m_caller_name(std::move(caller_name)), m_callee_name(std::move(callee_name)) {}
+
+String CallStatementNode::GetCallerName() {
+  return m_caller_name;
 }
 
-StmtType CallStatementNode::GetStatementType() {
-  return StmtType::CALL;
+String CallStatementNode::GetCalleeName() {
+  return m_callee_name;
 }
 
-std::string CallStatementNode::ToString() {
-  return "call " + m_identifier + ";\n";
+void CallStatementNode::Accept(DesignExtractorPtr design_extractor) {
+  CallStatementNodePtr derived_ptr = std::dynamic_pointer_cast<CallStatementNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
+}
+
+CfgNodePtr CallStatementNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  CallStatementNodePtr derived_ptr = std::dynamic_pointer_cast<CallStatementNode>(shared_from_this());
+  return cfg_builder->Visit(derived_ptr, cfg_node);
 }
 
 bool CallStatementNode::operator==(const StatementNode &other) const {
-  const auto casted_other = dynamic_cast<const CallStatementNode*>(&other);
-  return m_stmt_no == casted_other->m_stmt_no && m_identifier == casted_other->m_identifier;
+  const auto casted_other = dynamic_cast<const CallStatementNode *>(&other);
+  return m_stmt_no == casted_other->m_stmt_no && m_caller_name == casted_other->m_caller_name && m_callee_name == casted_other->m_callee_name;
 }
 
-void CallStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
-  std::string stmt_num = std::to_string(GetStatementNumber());
-  std::string callee_name = m_identifier;
-  de->GetPkbClient()->PopulateCall(de->GetVisited(), stmt_num, proc_name, callee_name);
-  de->GetCallGraph()->AddEdge(proc_name, callee_name);
-  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, CALL);
-}
-
-std::shared_ptr<CfgNode> CallStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
-  cfg_node->AddStatement(StmtType::CALL, std::to_string(GetStatementNumber()));
-  return cfg_node;
 }

@@ -1,4 +1,4 @@
-procedure singapore {
+    procedure singapore {
 1    	if (merlion == 5) then {
 2    		read bishan;
 3    		merlion = merlion * bishan + serangoon;
@@ -31,12 +31,13 @@ procedure singapore {
 24    	if (chinatown == 5) then {
 25    		somerset = chinatown + bayfront;
 26    		sentosa = harbourfront;
-27    		If (sentosa == 20) then {
+27    		if (sentosa == 20) then {
 28    			somerset = somerset + 50;
     		} else {
 29    			while (sentosa == 30) {
 30    				harbourfront = sentosa * (caldecott + chinatown);
 31    				chinatown = chinatown + 20;
+                }
     		}
     	} else {
 32    		call europe;

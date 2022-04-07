@@ -1,27 +1,25 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROCEDURE_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROCEDURE_H_
+#ifndef NODE_PROCEDURE_H
+#define NODE_PROCEDURE_H
 
-#include "node.h"
+#include "components/source_subsystem/source_declarations.h"
+#include "components/source_subsystem/types/ast/node.h"
 
-class DesignExtractor;
-class CfgBuilder;
-class StatementListNode;
-class CfgNode;
+namespace source {
 
 class ProcedureNode : public Node {
  private:
-  std::string m_identifier;
-  std::shared_ptr<StatementListNode> m_stmt_list;
+  String m_name;
+  StatementListNodePtr m_stmt_list;
 
  public:
-  ProcedureNode(std::string identifier, std::shared_ptr<StatementListNode> stmt_list);
-  [[nodiscard]] std::string GetIdentifier();
-  [[nodiscard]] std::shared_ptr<StatementListNode> GetStatementList();
-  [[nodiscard]] std::string ToString() override;
-  [[nodiscard]] std::string GetPatternFormat() override;
+  ProcedureNode(String name, StatementListNodePtr stmt_list);
+  [[nodiscard]] String GetName();
+  [[nodiscard]] StatementListNodePtr GetStatementList();
+  void Accept(DesignExtractorPtr design_extractor) override;
+  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override;
   [[nodiscard]] bool operator==(const ProcedureNode &other) const;
-  void Accept(DesignExtractor *de);
-  std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROCEDURE_H_
+}
+
+#endif //NODE_PROCEDURE_H

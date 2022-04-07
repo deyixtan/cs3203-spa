@@ -1,33 +1,25 @@
 #include "modifies_store.h"
 
-ModifiesStore::ModifiesStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    StmtVarStore(move(stmt_vector)) {}
+ModifiesStore::ModifiesStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                             std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
+    StmtVarStore(move(stmt_vector), move(stmt_type)) {}
 
-std::unordered_set<std::string> ModifiesStore::GetVarModByStmt(std::string const &stmt) {
+IDENT_SET ModifiesStore::GetVarModByStmt(IDENT const &stmt) {
   return GetVarByStmt(stmt);
 }
 
-std::unordered_set<std::string> ModifiesStore::GetStmtModByVar(std::string const &var) {
-  return GetStmtByVar(var);
+IDENT_SET ModifiesStore::GetStmtModByVar(StmtType type, IDENT const &var) {
+  return GetStmtByVar(type, var);
 }
 
-std::unordered_set<std::string> ModifiesStore::GetVarModByProc(std::string const &proc) {
-  return GetVarByProc(proc);
-}
-
-std::unordered_set<std::string> ModifiesStore::GetProcModByVar(std::string const &var) {
-  return GetProcByVar(var);
-}
-
-std::unordered_set<std::string> ModifiesStore::GetAllStmtModify() {
+IDENT_SET ModifiesStore::GetAllStmtModify() {
   return GetAllStmt();
 }
 
-std::unordered_set<std::string> ModifiesStore::GetAllProcModify() {
+IDENT_SET ModifiesStore::GetAllProcModify() {
   return GetAllProc();
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> ModifiesStore::GetAllModStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, WHILE, IF, ASSIGN, CALL};
-  return Store::GetAllStmt(type, supported_types, GetAllStmtVar(), true);
+IDENT_PAIR_SET ModifiesStore::GetAllModStmt(StmtType type) {
+  return GetPairByType(type);
 }

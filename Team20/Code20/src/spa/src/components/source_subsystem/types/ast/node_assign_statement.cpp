@@ -1,49 +1,36 @@
 #include "node_assign_statement.h"
-#include "../../iterator/design_extractor.h"
-#include "../../iterator/cfg_builder.h"
-#include "../cfg/cfg_node.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
+#include "components/source_subsystem/types/ast/node_variable.h"
 
-AssignStatementNode::AssignStatementNode(int stmt_no,
-                                         std::shared_ptr<VariableNode> identifier,
-                                         std::shared_ptr<ExpressionNode> expression)
-    : StatementNode(stmt_no), m_identifier(identifier), m_expression(expression) {}
+namespace source {
 
-std::shared_ptr<VariableNode> AssignStatementNode::GetIdentifier() {
-  return m_identifier;
+AssignStatementNode::AssignStatementNode(String &stmt_no, VariableNodePtr lhs, ExpressionNodePtr rhs)
+    : StatementNode(stmt_no), m_lhs(std::move(lhs)), m_rhs(std::move(rhs)) {}
+
+VariableNodePtr AssignStatementNode::GetLhs() {
+  return m_lhs;
 }
 
-std::shared_ptr<ExpressionNode> AssignStatementNode::GetExpression() {
-  return m_expression;
+ExpressionNodePtr AssignStatementNode::GetRhs() {
+  return m_rhs;
 }
 
-StmtType AssignStatementNode::GetStatementType() {
-  return StmtType::ASSIGN;
+void AssignStatementNode::Accept(DesignExtractorPtr design_extractor) {
+  AssignStatementNodePtr derived_ptr = std::dynamic_pointer_cast<AssignStatementNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
-std::string AssignStatementNode::ToString() {
-  return StatementNode::ToString() + m_identifier->ToString() + " = " + m_expression->ToString() + ";\n";
-}
-
-std::string AssignStatementNode::GetPatternFormat() {
-  return "";
+CfgNodePtr AssignStatementNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  AssignStatementNodePtr derived_ptr = std::dynamic_pointer_cast<AssignStatementNode>(shared_from_this());
+  return cfg_builder->Visit(derived_ptr, cfg_node);
 }
 
 bool AssignStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const AssignStatementNode *>(&other);
-  return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier)
-      && *m_expression == *(casted_other->m_expression);
+  return m_stmt_no == casted_other->m_stmt_no &&
+      *m_lhs == *(casted_other->m_lhs) &&
+      *m_rhs == *(casted_other->m_rhs);
 }
 
-void AssignStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
-  std::string stmt_num = std::to_string(GetStatementNumber());
-  std::string var_name = m_identifier->GetIdentifier();
-  de->Visit(m_identifier, proc_name, false);
-  std::string rhs_expr = de->Visit(m_expression, proc_name, true);
-  de->GetPkbClient()->PopulateAssign(de->GetVisited(), proc_name, stmt_num, var_name, rhs_expr);
-  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, ASSIGN);
-}
-
-std::shared_ptr<CfgNode> AssignStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
-  cfg_node->AddStatement(StmtType::ASSIGN, std::to_string(GetStatementNumber()));
-  return cfg_node;
 }

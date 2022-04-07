@@ -1,10 +1,69 @@
 #include "pkb_client.h"
 #include "../pkb/pkb.h"
 
+namespace source {
+
 PkbClient::PkbClient(PKB *pkb) : pkb(pkb) {}
 
-PKB *PkbClient::GetPKB() {
-  return pkb;
+StringSet PkbClient::GetVarUsedByStmt(String stmt) {
+ return pkb->GetUsesStore()->GetVarUsedByStmt(stmt);
+}
+
+StringSet PkbClient::GetVarModByStmt(String stmt) {
+  return pkb->GetModifiesStore()->GetVarModByStmt(stmt);
+}
+
+StringSet PkbClient::GetCallStmtOf(String stmt) {
+  return pkb->GetCallStore()->GetCallStmtOf(stmt);
+}
+
+StringSet PkbClient::GetCallersOf(String stmt) {
+  return pkb->GetCallStore()->GetCallersOf(stmt);
+}
+
+StringSet PkbClient::GetAllAnceOf(String stmt) {
+  return pkb->GetParentStore()->GetAllAnceOf(STMT, stmt);
+}
+
+CfgPtr PkbClient::GetProgramCfg() {
+  return pkb->GetProgCfg();
+}
+
+void PkbClient::UpdateCallUsesModifies(String &proc) {
+  StringSet uses_vars = GetVarUsedByStmt(proc);
+  StringSet mod_vars = GetVarModByStmt(proc);
+  StringSet call_stmts = GetCallStmtOf(proc);
+  StringSet callers = GetCallersOf(proc);
+
+  for (auto call_stmt : call_stmts) {
+    StringSet ancestors = GetAllAnceOf(call_stmt);
+    UpdateCallUses(call_stmt, uses_vars, ancestors, callers);
+    UpdateCallModifies(call_stmt, mod_vars, ancestors, callers);
+  }
+}
+
+void PkbClient::UpdateCallUses(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers) {
+  for (auto &var : vars) {
+    PopulateUses(call_stmt, var);
+    for (auto &ance : ancestors) {
+      PopulateUses(ance, var);
+    }
+    for (auto &caller : callers) {
+      PopulateUses(caller, var);
+    }
+  }
+}
+
+void PkbClient::UpdateCallModifies(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers) {
+  for (auto &var : vars) {
+    PopulateModifies(call_stmt, var);
+    for (auto &ance : ancestors) {
+      PopulateModifies(ance, var);
+    }
+    for (auto &caller : callers) {
+      PopulateModifies(caller, var);
+    }
+  }
 }
 
 void PkbClient::PopulateParent(std::string stmt1, std::string stmt2) {
@@ -27,16 +86,8 @@ void PkbClient::PopulateUses(std::string stmt, std::string var) {
   pkb->GetUsesStore()->AddStmtVar(stmt, var);
 }
 
-void PkbClient::PopulateUsesProc(std::string proc, std::string var) {
-  pkb->GetUsesStore()->AddProcVar(proc, var);
-}
-
 void PkbClient::PopulateModifies(std::string stmt, std::string var) {
   pkb->GetModifiesStore()->AddStmtVar(stmt, var);
-}
-
-void PkbClient::PopulateModifiesProc(std::string proc, std::string var) {
-  pkb->GetModifiesStore()->AddProcVar(proc, var);
 }
 
 void PkbClient::PopulateCalls(std::string caller, std::string callee) {
@@ -72,6 +123,10 @@ void PkbClient::PopulateStmt(std::string stmt) {
 
 void PkbClient::PopulateTypeOfStmt(std::string stmt, StmtType type) {
   pkb->AddTypeOfStmt(stmt, type);
+}
+
+StmtType PkbClient::GetTypeOfStmt(std::string stmt) {
+  return pkb->GetTypeOfStmt(stmt);
 }
 
 void PkbClient::PopulateName(std::string name, StmtType type) {
@@ -122,13 +177,13 @@ void PkbClient::VarsHelper(std::vector<std::string> &visited,
     for (std::string s : visited) {
       PopulateModifies(s, var_name);
     }
-    PopulateModifiesProc(proc_name, var_name);
+    PopulateModifies(proc_name, var_name);
     PopulateModifies(curr_stmt, var_name);
   } else {
     for (std::string s : visited) {
       PopulateUses(s, var_name);
     }
-    PopulateUsesProc(proc_name, var_name);
+    PopulateUses(proc_name, var_name);
     PopulateUses(curr_stmt, var_name);
   }
 }
@@ -183,10 +238,8 @@ void PkbClient::PopulateCfg(Cfg &cfg) {
   pkb->AddProgramCfg(std::make_shared<Cfg>(cfg));
 }
 
-void PkbClient::PopulateNext(std::unordered_map<std::string, std::unordered_set<std::string>> rs_map) {
-  pkb->GetNextStore()->AddNextMap(rs_map);
-  pkb->GetNextStore()->AddBeforeMap(rs_map);
-  pkb->GetNextStore()->ConstructNextPairs();
+void PkbClient::PopulateNext(std::string stmt1, std::string stmt2) {
+  pkb->GetNextStore()->AddNext(stmt1, stmt2);
 }
 
 void PkbClient::AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs) {
@@ -197,4 +250,6 @@ void PkbClient::AddPattern(StmtType type, std::string stmt, std::string lhs, std
   } else if (type == StmtType::IF) {
     pkb->GetPatternStore()->AddIfWithPattern(stmt, lhs);
   }
+}
+
 }

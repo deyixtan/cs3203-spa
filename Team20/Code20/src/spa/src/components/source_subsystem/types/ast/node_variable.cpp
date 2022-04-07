@@ -1,32 +1,31 @@
 #include "node_variable.h"
-#include "../../iterator/design_extractor.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
 
-VariableNode::VariableNode() : m_identifier("") {}
+namespace source {
 
-VariableNode::VariableNode(std::string identifier, std::string stmt) : m_identifier(identifier), m_stmt(stmt) {}
+VariableNode::VariableNode(String name) : m_name(std::move(name)) {}
 
-std::string VariableNode::GetIdentifier() {
-  return m_identifier;
+String VariableNode::GetName() {
+  return m_name;
 }
 
-ExpressionType VariableNode::GetExpressionType() {
-  return ExpressionType::VARIABLE;
+String VariableNode::GetPatternFormat() {
+  String name = m_name;
+  return "(" + name + ")";
 }
 
-std::string VariableNode::ToString() {
-  return "$" + m_identifier;
+void VariableNode::Accept(DesignExtractorPtr design_extractor) {
+  VariableNodePtr derived_ptr = std::dynamic_pointer_cast<VariableNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
-std::string VariableNode::GetPatternFormat() {
-  return "(" + m_identifier + ")";
+CfgNodePtr VariableNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  return cfg_node;
 }
 
 bool VariableNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const VariableNode *>(&other);
-  return m_identifier == casted_other->m_identifier;
+  return m_name == casted_other->m_name;
 }
 
-std::string VariableNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
-  de->GetPkbClient()->PopulateVars(de->GetVisited(), m_stmt, proc_name, m_identifier, is_uses);
-  return GetPatternFormat();
 }

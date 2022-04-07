@@ -1,28 +1,27 @@
 #include "node_statement_list.h"
-#include "../../iterator/design_extractor.h"
-#include "../../iterator/cfg_builder.h"
-#include "node_statement.h"
-#include "../cfg/cfg_node.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
+#include "components/source_subsystem/types/ast/node_statement.h"
 
-StatementListNode::StatementListNode() : m_statements(std::vector<std::shared_ptr<StatementNode >>()) {}
+namespace source {
 
-StatementListNode::StatementListNode(std::vector<std::shared_ptr<StatementNode>> statements)
-    : m_statements(statements) {}
+StatementListNode::StatementListNode() : m_statements(StatementNodeStream()) {}
 
-std::vector<std::shared_ptr<StatementNode>> StatementListNode::GetStatements() {
+StatementListNode::StatementListNode(StatementNodeStream statements)
+    : m_statements(std::move(statements)) {}
+
+StatementNodeStream StatementListNode::GetStatements() {
   return m_statements;
 }
 
-std::string StatementListNode::ToString() {
-  std::string str = "";
-  for (std::shared_ptr<StatementNode> statement : m_statements) {
-    str += statement->ToString();
-  }
-  return str;
+void StatementListNode::Accept(DesignExtractorPtr design_extractor) {
+  StatementListNodePtr derived_ptr = std::dynamic_pointer_cast<StatementListNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
-std::string StatementListNode::GetPatternFormat() {
-  return "";
+CfgNodePtr StatementListNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  StatementListNodePtr derived_ptr = std::dynamic_pointer_cast<StatementListNode>(shared_from_this());
+  return cfg_builder->Visit(derived_ptr, cfg_node);
 }
 
 bool StatementListNode::operator==(const StatementListNode &other) const {
@@ -36,43 +35,4 @@ bool StatementListNode::operator==(const StatementListNode &other) const {
   return true;
 }
 
-void StatementListNode::Accept(DesignExtractor *de, std::string proc_name) {
-  std::vector<std::shared_ptr<StatementNode>> stmts = m_statements;
-
-  for (int i = 0; i < stmts.size(); ++i) {
-    std::shared_ptr<StatementNode> stmt = stmts[i];
-    std::string stmt_num = std::to_string(stmt->GetStatementNumber());
-    std::string var_name = "";
-    if (de->GetVisited().size() > 0)
-      de->GetPkbClient()->PopulateParent(de->GetVisited().back(), stmt_num);
-
-    if (stmt != stmts.back()) {
-      int curr_stmt = stmt->GetStatementNumber();
-      int next_stmt = stmts[i + 1]->GetStatementNumber();
-      de->GetPkbClient()->PopulateFollows(std::to_string(curr_stmt), std::to_string(next_stmt));
-
-      // PopulateFollowsStar
-      int curr_stmt_star = stmts[i]->GetStatementNumber();
-
-      for (int j = i + 1; j < stmts.size(); ++j) {
-        int next_stmt_star = stmts[j]->GetStatementNumber();
-        de->GetPkbClient()->PopulateFollowsStar(std::to_string(curr_stmt_star), std::to_string(next_stmt_star));
-      }
-    }
-
-    de->Visit(stmt, proc_name);
-  }
-}
-
-std::shared_ptr<CfgNode> StatementListNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
-  for (std::shared_ptr<StatementNode> stmt : m_statements) {
-    bool is_empty_cfg_node = cfg_node->GetStatementList().size() == 0;
-    if ((stmt->GetStatementType() == IF || stmt->GetStatementType() == WHILE) && !is_empty_cfg_node) {
-        std::shared_ptr<CfgNode> condition_node = std::make_shared<CfgNode>();
-        cfg_node->AddNext(condition_node);
-        cfg_node = condition_node;
-    }
-    cfg_node = cb->Visit(stmt, cfg_node);
-  }
-  return cfg_node;
 }

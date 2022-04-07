@@ -1,29 +1,30 @@
 #include "call_store.h"
 
-CallStore::CallStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector) :
-    StmtStmtStore(move(stmt_vector)) {}
+CallStore::CallStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                     std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
+    StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
 
 void CallStore::AddCallerHelper(std::string const &caller, std::string const &callee) {
   AddUpperLower(CALLS, caller, callee);
   AddUpperLowerStar(CALLS, caller, callee, std::vector<std::string>());
 }
 
-bool CallStore::IsCallsPairValid(std::string const &first_proc, std::string const &second_proc) {
-  return IsValid(std::make_pair(first_proc, second_proc));
+bool CallStore::IsCallsPairValid(IDENT_PAIR const &pair) {
+  return IsValid(pair);
 }
 
-bool CallStore::IsCallsStarPairValid(const std::string &first_proc, const std::string &second_proc) {
-  return IsStarValid(std::make_pair(first_proc, second_proc));
+bool CallStore::IsCallsStarPairValid(IDENT_PAIR const &pair) {
+  return IsStarValid(pair);
 }
 
-std::unordered_set<std::string> CallStore::GetCallStmtOf(std::string proc) {
+IDENT_SET CallStore::GetCallStmtOf(IDENT proc) {
   if (call_stmt_map.find(proc) == call_stmt_map.end()) {
     return {};
   }
   return call_stmt_map.at(proc);
 }
 
-void CallStore::AddCallStmtMap(std::string proc, std::string stmt) {
+void CallStore::AddCallStmtMap(IDENT proc, IDENT stmt) {
   if (call_stmt_map.find(proc) == call_stmt_map.end()) {
     call_stmt_map.insert({proc, {stmt}});
   } else {
@@ -31,26 +32,26 @@ void CallStore::AddCallStmtMap(std::string proc, std::string stmt) {
   }
 }
 
-std::unordered_set<std::string> CallStore::GetCallersOf(std::string const &proc){
-  return GetUpperOf(proc);
+IDENT_SET CallStore::GetCallersOf(IDENT const &proc){
+  return GetUpperSetOf(CALLS, PROC, proc);
 }
 
-std::unordered_set<std::string> CallStore::GetCalleesOf(std::string const &proc) {
-  return GetLowerOf(CALLS, proc);
+IDENT_SET CallStore::GetCalleesOf(IDENT const &proc) {
+  return GetLowerSetOf(CALLS, PROC, proc);
 }
 
-std::unordered_set<std::string> CallStore::GetCallersStarOf(std::string const &proc) {
-  return GetUpperStarOf(CALLS, proc);
+IDENT_SET CallStore::GetCallersStarOf(IDENT const &proc) {
+  return GetUpperStarOf(CALLS, PROC, proc);
 }
 
-std::unordered_set<std::string> CallStore::GetCalleesStarOf(std::string const &proc) {
-  return GetLowerStarOf(CALLS, proc);
+IDENT_SET CallStore::GetCalleesStarOf(IDENT const &proc) {
+  return GetLowerStarOf(CALLS, PROC, proc);
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> CallStore::GetAllCalls() {
+IDENT_PAIR_SET CallStore::GetAllCalls() {
   return GetAllPairs();
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> CallStore::GetAllCallsStar(){
+IDENT_PAIR_SET CallStore::GetAllCallsStar() {
   return GetAllStarPairs();
 }

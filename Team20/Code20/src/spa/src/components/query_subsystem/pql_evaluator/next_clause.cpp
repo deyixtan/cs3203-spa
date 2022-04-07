@@ -46,6 +46,10 @@ Table NextClause::Execute() {
 }
 
 Table NextClause::HandleSynonymSynonym() {
+  if (first_arg.value==second_arg.value) {
+    return ConstructEmptyTable();
+  }
+
   auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
       GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
       GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
@@ -66,16 +70,9 @@ Table NextClause::HandleSynonymWildcard() {
 }
 
 Table NextClause::HandleSynonymInteger() {
-  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
-      GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
-      StmtType::STMT
-  );
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      single_constraints.insert(pair_constraint.first);
-    }
-  }
+  std::unordered_set<std::string> single_constraints =
+      pkb->GetNextStore()->GetBeforeOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+                                            second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
@@ -93,54 +90,28 @@ Table NextClause::HandleWildcardSynonym() {
 
 Table NextClause::HandleWildcardWildcard() {
   bool is_false_clause = pkb->GetNextStore()->GetAllNextStmt(StmtType::STMT, StmtType::STMT).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextClause::HandleWildcardInteger() {
-  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(StmtType::STMT, StmtType::STMT);
-  bool is_false_clause = true;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.second==second_arg.value) {
-      is_false_clause = false;
-    }
-  }
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  bool is_false_clause = pkb->GetNextStore()->GetBeforeOf(STMT, second_arg.value).empty();
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextClause::HandleIntegerSynonym() {
-  auto pair_constraints = pkb->GetNextStore()->GetAllNextStmt(
-      StmtType::STMT,
-      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
-  );
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.first==first_arg.value) {
-      single_constraints.insert(pair_constraint.second);
-    }
-  }
+  std::unordered_set<std::string> single_constraints =
+      pkb->GetNextStore()->GetNextOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
+                                             first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table NextClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetNextStore()->GetNextOf(first_arg.value).empty();
-  Table table;
-  if (is_false_clause) {
-    table.ToggleFalseClause();
-  }
-  return table;
+  bool is_false_clause = pkb->GetNextStore()->GetNextOf(STMT, first_arg.value).empty();
+  return ConstructEmptyTable(is_false_clause);
 }
 
 Table NextClause::HandleIntegerInteger() {
-  auto possible_next_values = pkb->GetNextStore()->GetNextOf(first_arg.value);
-  bool is_false_clause = possible_next_values.find(second_arg.value) == possible_next_values.end();
+  bool is_false_clause = !pkb->GetNextStore()->IsNextPairValid({first_arg.value, second_arg.value});
   Table table;
   if (is_false_clause) {
     table.ToggleFalseClause();
