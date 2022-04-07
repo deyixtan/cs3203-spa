@@ -97,6 +97,7 @@ namespace source {
   // cfg-related types (others)
   typedef std::vector<CfgNodeStatement> CfgNodeStatementStream;
   typedef std::vector<CfgNodePtr> CfgNodeStream;
+  typedef std::unordered_set<CfgNodePtr> CfgNodeSet;
   typedef std::unordered_map<String , CfgNodePtr> StringToCfgNodePtrMap;
 
   // components
