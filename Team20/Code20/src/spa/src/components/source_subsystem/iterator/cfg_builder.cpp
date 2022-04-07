@@ -19,7 +19,7 @@ namespace source {
 CfgBuilder::CfgBuilder(PkbClientPtr pkb_client)
     : m_pkb_client(std::move(pkb_client)), m_cfg_map(StringToCfgNodePtrMap()) {}
 
-void CfgBuilder::IterateAstAndPopulatePkb(ProgramNodePtr node) {
+void CfgBuilder::IterateAst(ProgramNodePtr node) {
   // populates m_cfg_heads_map
   CfgNodePtr tmp = std::make_shared<CfgNode>();
   Visit(std::move(node), tmp);
@@ -28,7 +28,7 @@ void CfgBuilder::IterateAstAndPopulatePkb(ProgramNodePtr node) {
   m_pkb_client->PopulateCfg(*program_cfg);
 }
 
-void CfgBuilder::IterateCfgAndPopulatePkb() {
+void CfgBuilder::IterateCfg() {
   std::stack<CfgNodePtr> node_stack;
   CfgNodeStatementStream prev_stmts;
   CfgNodeSet visited;
