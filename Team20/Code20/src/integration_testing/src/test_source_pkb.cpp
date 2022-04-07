@@ -31,10 +31,10 @@ PKB *GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
   PKB *pkb = new PKB();
 
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
+  DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAstAndPopulatePkb(ast);
-  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
-  cfg_builder.IterateAstAndPopulatePkb(ast);
+  CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
+  cfg_builder->IterateAstAndPopulatePkb(ast);
   return pkb;
 }
 
@@ -42,11 +42,11 @@ PKB *GetCfgPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
   PKB *pkb = new PKB();
 
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
-  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
-  cfg_builder.IterateAstAndPopulatePkb(ast);
+  DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
+  CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
+  cfg_builder->IterateAstAndPopulatePkb(ast);
   design_extractor->IterateAstAndPopulatePkb(ast);
-  cfg_builder.IterateCfgAndPopulatePkb();
+  cfg_builder->IterateCfgAndPopulatePkb();
   return pkb;
 }
 
@@ -997,9 +997,9 @@ TEST_CASE("Test components between Source and PKB for Next (Sample source 5)") {
     std::unordered_set<std::string> result1 = pkb->GetNextStore()->GetNextOf(STMT, "13");
     std::unordered_set<std::string> result2 = pkb->GetNextStore()->GetNextOf(STMT, "2");
     std::unordered_set<std::string> result3 = pkb->GetNextStore()->GetNextOf(STMT, "15");
-    std::unordered_set<std::string> result4 = pkb->GetNextStore()->GetBeforeOf("12");
-    std::unordered_set<std::string> result5 = pkb->GetNextStore()->GetBeforeOf("5");
-    std::unordered_set<std::string> result6 = pkb->GetNextStore()->GetBeforeOf("8");
+    std::unordered_set<std::string> result4 = pkb->GetNextStore()->GetBeforeOf(STMT, "12");
+    std::unordered_set<std::string> result5 = pkb->GetNextStore()->GetBeforeOf(STMT, "5");
+    std::unordered_set<std::string> result6 = pkb->GetNextStore()->GetBeforeOf(STMT, "8");
     std::unordered_set<std::string> result7 = pkb->GetNextStore()->GetNextOf(STMT, "4");
     std::unordered_set<std::string> result8 = pkb->GetNextStore()->GetNextOf(STMT, "12");
 

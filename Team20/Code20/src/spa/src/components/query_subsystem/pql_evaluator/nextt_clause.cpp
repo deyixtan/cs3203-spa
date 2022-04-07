@@ -102,20 +102,9 @@ Table NextTClause::HandleWildcardInteger() {
 }
 
 Table NextTClause::HandleIntegerSynonym() {
-  //TODO: Wait on fix
-//  auto single_constraints =
-//      pkb->GetNextStore()->GetNextStarOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
-//                                         first_arg.value);
-  auto pair_constraints = pkb->GetNextStore()->GetAllNextStarStmt(
-      StmtType::STMT,
-      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
-  );
-  std::unordered_set<std::string> single_constraints;
-  for (const auto &pair_constraint : pair_constraints) {
-    if (pair_constraint.first==first_arg.value) {
-      single_constraints.insert(pair_constraint.second);
-    }
-  }
+  auto single_constraints =
+      pkb->GetNextStore()->GetNextStarOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
+                                         first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
@@ -125,9 +114,7 @@ Table NextTClause::HandleIntegerWildcard() {
 }
 
 Table NextTClause::HandleIntegerInteger() {
-  // TODO: IsNextStarPairValid()
-  auto possible_next_values = pkb->GetNextStore()->GetNextStarOf(STMT, first_arg.value);
-  bool is_false_clause = possible_next_values.find(second_arg.value)==possible_next_values.end();
+  bool is_false_clause = !pkb->GetNextStore()->IsNextStarPairValid({first_arg.value, second_arg.value});
   return ConstructEmptyTable(is_false_clause);
 }
 

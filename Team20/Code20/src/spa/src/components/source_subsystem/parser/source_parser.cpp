@@ -13,6 +13,8 @@
 #include "components/source_subsystem/types/ast/node_assign_statement.h"
 #include "components/source_subsystem/types/ast/node_boolean_expression.h"
 #include "components/source_subsystem/types/ast/node_call_statement.h"
+#include "components/source_subsystem/types/ast/node_combination_expression.h"
+#include "components/source_subsystem/types/ast/node_constant.h"
 #include "components/source_subsystem/types/ast/node_if_statement.h"
 #include "components/source_subsystem/types/ast/node_not_expression.h"
 #include "components/source_subsystem/types/ast/node_print_statement.h"
@@ -20,6 +22,8 @@
 #include "components/source_subsystem/types/ast/node_program.h"
 #include "components/source_subsystem/types/ast/node_read_statement.h"
 #include "components/source_subsystem/types/ast/node_relational_expression.h"
+#include "components/source_subsystem/types/ast/node_statement_list.h"
+#include "components/source_subsystem/types/ast/node_variable.h"
 #include "components/source_subsystem/types/ast/node_while_statement.h"
 #include "components/source_subsystem/types/source_token/source_token.h"
 
@@ -283,38 +287,38 @@ StatementNodePtr SourceParser::ParseStatement() {
 }
 
 ReadStatementNodePtr SourceParser::ParseReadStatement() {
-  int stmt_no = ++m_curr_stmt_no;
+  String stmt_no = std::to_string(++m_curr_stmt_no);
   ProcessToken(TokenType::READ);
   String var_name = ProcessToken(TokenType::NAME)->GetValue();
   ProcessToken(TokenType::SEMI_COLON);
 
-  VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name, std::to_string(stmt_no));
+  VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name);
   return std::make_shared<ReadStatementNode>(stmt_no, variable_node);
 }
 
 PrintStatementNodePtr SourceParser::ParsePrintStatement() {
-  int stmt_no = ++m_curr_stmt_no;
+  String stmt_no = std::to_string(++m_curr_stmt_no);
   ProcessToken(TokenType::PRINT);
   String var_name = ProcessToken(TokenType::NAME)->GetValue();
   ProcessToken(TokenType::SEMI_COLON);
 
-  VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name, std::to_string(stmt_no));
+  VariableNodePtr variable_node = std::make_shared<VariableNode>(var_name);
   return std::make_shared<PrintStatementNode>(stmt_no, variable_node);
 }
 
 AssignStatementNodePtr SourceParser::ParseAssignStatement() {
-  int stmt_no = ++m_curr_stmt_no;
+  String stmt_no = std::to_string(++m_curr_stmt_no);
   String lhs_var_name = ProcessToken(TokenType::NAME)->GetValue();
   ProcessToken(TokenType::EQUAL);
   ExpressionNodePtr rhs_expression_node = ParseExpression();
   ProcessToken(TokenType::SEMI_COLON);
 
-  VariableNodePtr lhs_variable_node = std::make_shared<VariableNode>(lhs_var_name, std::to_string(stmt_no));
+  VariableNodePtr lhs_variable_node = std::make_shared<VariableNode>(lhs_var_name);
   return std::make_shared<AssignStatementNode>(stmt_no, lhs_variable_node, rhs_expression_node);
 }
 
 CallStatementNodePtr SourceParser::ParseCallStatement() {
-  int stmt_no = ++m_curr_stmt_no;
+  String stmt_no = std::to_string(++m_curr_stmt_no);
   ProcessToken(TokenType::CALL);
   String callee_name = ProcessToken(TokenType::NAME)->GetValue();
 
@@ -329,7 +333,7 @@ CallStatementNodePtr SourceParser::ParseCallStatement() {
 }
 
 WhileStatementNodePtr SourceParser::ParseWhileStatement() {
-  int stmt_no = ++m_curr_stmt_no;
+  String stmt_no = std::to_string(++m_curr_stmt_no);
   ProcessToken(TokenType::WHILE);
   ProcessToken(TokenType::OPENED_PARENTHESIS);
   ConditionalExpressionNodePtr condition_node = ParseConditionalExpression();
@@ -342,7 +346,7 @@ WhileStatementNodePtr SourceParser::ParseWhileStatement() {
 }
 
 IfStatementNodePtr SourceParser::ParseIfStatement() {
-  int stmt_no = ++m_curr_stmt_no;
+  String stmt_no = std::to_string(++m_curr_stmt_no);
   ProcessToken(TokenType::IF);
   ProcessToken(TokenType::OPENED_PARENTHESIS);
   ConditionalExpressionNodePtr condition_node = ParseConditionalExpression();
@@ -463,7 +467,7 @@ ExpressionNodePtr SourceParser::ParseFactor() {
   switch (type) {
     case TokenType::NAME: {
       String var_name = ProcessToken(TokenType::NAME)->GetValue();
-      return std::make_shared<VariableNode>(var_name, std::to_string(m_curr_stmt_no));
+      return std::make_shared<VariableNode>(var_name);
     }
     case TokenType::INTEGER: {
       String constant_value = ProcessToken(TokenType::INTEGER)->GetValue();

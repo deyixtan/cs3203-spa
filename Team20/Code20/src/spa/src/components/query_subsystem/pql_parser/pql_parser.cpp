@@ -1,6 +1,126 @@
 #include "pql_parser.h"
 
+using namespace pql;
+
 PqlParser::PqlParser(std::vector<PqlToken> tokens) : tokens (tokens), cursor(0), pq(pq) {
+  rel_ref = {
+      PqlTokenType::FOLLOWS,
+      PqlTokenType::FOLLOWS_T,
+      PqlTokenType::PARENT,
+      PqlTokenType::PARENT_T,
+      PqlTokenType::USES,
+      PqlTokenType::MODIFIES,
+      PqlTokenType::NEXT,
+      PqlTokenType::NEXT_T,
+      PqlTokenType::CALLS,
+      PqlTokenType::CALLS_T,
+      PqlTokenType::AFFECTS,
+      PqlTokenType::AFFECTS_T
+  };
+
+  design_entities = {
+      PqlTokenType::STMT,
+      PqlTokenType::READ,
+      PqlTokenType::PRINT,
+      PqlTokenType::CALL,
+      PqlTokenType::WHILE,
+      PqlTokenType::IF,
+      PqlTokenType::ASSIGN,
+      PqlTokenType::VARIABLE,
+      PqlTokenType::CONSTANT,
+      PqlTokenType::PROCEDURE
+  };
+
+  expression_spec = {
+      PqlTokenType::EXPR,
+      PqlTokenType::SUB_EXPRESSION,
+      PqlTokenType::UNDERSCORE,
+      PqlTokenType::IDENT_WITH_QUOTES
+  };
+
+  ent_ref = {
+      PqlTokenType::SYNONYM,
+      PqlTokenType::UNDERSCORE,
+      PqlTokenType::IDENT_WITH_QUOTES,
+  };
+
+  stmt_ref = {
+      PqlTokenType::SYNONYM,
+      PqlTokenType::UNDERSCORE,
+      PqlTokenType::NUMBER,
+  };
+
+  stmt_ref_and_ent_ref = {
+      PqlTokenType::SYNONYM,
+      PqlTokenType::UNDERSCORE,
+      PqlTokenType::NUMBER,
+      PqlTokenType::IDENT_WITH_QUOTES,
+  };
+
+  allowed_synonyms = {
+      PqlTokenType::SYNONYM,
+      PqlTokenType::FOLLOWS,
+      PqlTokenType::PARENT,
+      PqlTokenType::USES,
+      PqlTokenType::MODIFIES,
+      PqlTokenType::NEXT,
+      PqlTokenType::CALLS,
+      PqlTokenType::AFFECTS,
+      PqlTokenType::PATTERN,
+      PqlTokenType::STMT,
+      PqlTokenType::READ,
+      PqlTokenType::PRINT,
+      PqlTokenType::CALL,
+      PqlTokenType::WHILE,
+      PqlTokenType::IF,
+      PqlTokenType::ASSIGN,
+      PqlTokenType::VARIABLE,
+      PqlTokenType::CONSTANT,
+      PqlTokenType::PROCEDURE,
+      PqlTokenType::SUCH,
+      PqlTokenType::THAT,
+      PqlTokenType::WITH,
+      PqlTokenType::AND,
+      PqlTokenType::SELECT,
+      PqlTokenType::BOOLEAN
+  };
+
+  result_cl = {
+      PqlTokenType::ATTRIBUTE,
+      PqlTokenType::TUPLE,
+      PqlTokenType::BOOLEAN,
+      PqlTokenType::SYNONYM,
+      PqlTokenType::FOLLOWS,
+      PqlTokenType::PARENT,
+      PqlTokenType::USES,
+      PqlTokenType::MODIFIES,
+      PqlTokenType::NEXT,
+      PqlTokenType::CALLS,
+      PqlTokenType::AFFECTS,
+      PqlTokenType::PATTERN,
+      PqlTokenType::STMT,
+      PqlTokenType::READ,
+      PqlTokenType::PRINT,
+      PqlTokenType::CALL,
+      PqlTokenType::WHILE,
+      PqlTokenType::IF,
+      PqlTokenType::ASSIGN,
+      PqlTokenType::VARIABLE,
+      PqlTokenType::CONSTANT,
+      PqlTokenType::PROCEDURE,
+      PqlTokenType::SUCH,
+      PqlTokenType::THAT,
+      PqlTokenType::WITH,
+      PqlTokenType::AND,
+      PqlTokenType::SELECT,
+  };
+
+  with_clause_ref = {
+      PqlTokenType::IDENT_WITH_QUOTES,
+      PqlTokenType::NUMBER,
+      PqlTokenType::ATTRIBUTE,
+  };
+
   rel_ref_arg_map = {
       {PqlTokenType::FOLLOWS, std::make_pair(stmt_ref, stmt_ref)},
       {PqlTokenType::FOLLOWS_T, std::make_pair(stmt_ref, stmt_ref)},
@@ -18,7 +138,6 @@ PqlParser::PqlParser(std::vector<PqlToken> tokens) : tokens (tokens), cursor(0),
 }
 
 std::string BOOLEAN_SYNONYM_VALUE = "BOOLEAN";
-std::string INVALID_QUERY_FORMAT = "Invalid Query Format! \n";
 
 void PqlParser::MoveCursor(int movement) {
   cursor += movement;
@@ -32,16 +151,10 @@ PqlToken PqlParser::FetchToken() {
   }
 }
 
-PqlToken PqlParser::FetchNextToken() {
-  if (cursor + 1 < tokens.size()) {
-    return tokens[cursor + 1];
-  }
-}
-
 PqlToken PqlParser::ValidateToken(std::unordered_set<PqlTokenType> allowed_types) {
   PqlToken token = FetchToken();
   if (!allowed_types.count(token.type)) {
-    throw INVALID_QUERY_FORMAT;
+    throw InvalidQueryFormatException();
   }
   MoveCursor(1);
   return token;
@@ -50,7 +163,7 @@ PqlToken PqlParser::ValidateToken(std::unordered_set<PqlTokenType> allowed_types
 PqlToken PqlParser::ValidateToken(PqlTokenType allowed_type) {
   PqlToken token = FetchToken();
   if (token.type != allowed_type) {
-    throw INVALID_QUERY_FORMAT;
+    throw InvalidQueryFormatException();
   }
   MoveCursor(1);
   return token;
@@ -127,7 +240,7 @@ void PqlParser::ParseSelectClause() {
     } else if (current_token.type == PqlTokenType::WITH) {
       ParseWithClause();
     } else {
-      throw INVALID_QUERY_FORMAT;
+      throw InvalidQueryFormatException();
     }
   }
 }
@@ -220,7 +333,7 @@ void PqlParser::ParsePatternClause() {
     } else if (next_token.type == PqlTokenType::CLOSED_PARENTHESIS) {
       MoveCursor(1);
     } else {
-      throw INVALID_QUERY_FORMAT;
+      throw InvalidQueryFormatException();
     }
     current_token = FetchToken();
     Pattern pattern = Pattern(pattern_syn, first_arg, second_arg, third_arg);
@@ -246,6 +359,7 @@ ParsedQuery PqlParser::ParseQuery() {
   ParseSelectClause();
   return pq;
 }
+
 
 
 

@@ -1,23 +1,19 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_CYCLIC_CALL_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_CYCLIC_CALL_H_
+#ifndef CYCLIC_CALL_H
+#define CYCLIC_CALL_H
 
-#include <exception>
-#include <string>
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
-class CyclicCallException : public std::exception {
+class CyclicCallException : public Exception {
  private:
-  std::string m_msg;
-
- public:
-  static std::string MESSAGE;
+  String m_msg;
 
  public:
   CyclicCallException();
-  [[nodiscard]] virtual const char *what() const noexcept override;
+  [[nodiscard]] const char *what() const noexcept override;
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_CYCLIC_CALL_H_
+#endif //CYCLIC_CALL_H

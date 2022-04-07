@@ -1,47 +1,30 @@
 #include "node_read_statement.h"
-#include "../../iterator/design_extractor.h"
-#include "../../iterator/cfg_builder.h"
-#include "../cfg/cfg_node.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
+#include "components/source_subsystem/types/ast/node_variable.h"
 
 namespace source {
 
-ReadStatementNode::ReadStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier)
-    : StatementNode(stmt_no),
-      m_identifier(identifier) {}
+ReadStatementNode::ReadStatementNode(String &stmt_no, VariableNodePtr variable)
+    : StatementNode(stmt_no), m_variable(std::move(variable)) {}
 
-std::shared_ptr<VariableNode> ReadStatementNode::GetIdentifier() {
-  return m_identifier;
+VariableNodePtr ReadStatementNode::GetVariable() {
+  return m_variable;
 }
 
-StmtType ReadStatementNode::GetStatementType() {
-  return StmtType::READ;
+void ReadStatementNode::Accept(DesignExtractorPtr design_extractor) {
+  ReadStatementNodePtr derived_ptr = std::dynamic_pointer_cast<ReadStatementNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
-std::string ReadStatementNode::ToString() {
-  return StatementNode::ToString() + "read " + m_identifier->ToString() + ";\n";
-}
-
-std::string ReadStatementNode::GetPatternFormat() {
-  return "";
+CfgNodePtr ReadStatementNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+  ReadStatementNodePtr derived_ptr = std::dynamic_pointer_cast<ReadStatementNode>(shared_from_this());
+  return cfg_builder->Visit(derived_ptr, cfg_node);
 }
 
 bool ReadStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const ReadStatementNode *>(&other);
-  return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier);
-}
-
-void ReadStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
-  std::string stmt_num = std::to_string(GetStatementNumber());
-  std::string var_name = m_identifier->GetIdentifier();
-  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, READ);
-
-  de->GetPkbClient()->PopulateRead(de->GetVisited(), stmt_num, var_name);
-  de->Visit(m_identifier, proc_name, false);
-}
-
-std::shared_ptr<CfgNode> ReadStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
-  cfg_node->AddStatement(StmtType::READ, std::to_string(GetStatementNumber()));
-  return cfg_node;
+  return m_stmt_no == casted_other->m_stmt_no && *m_variable == *(casted_other->m_variable);
 }
 
 }

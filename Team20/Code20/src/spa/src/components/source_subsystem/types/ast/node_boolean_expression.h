@@ -1,35 +1,33 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
+#ifndef NODE_BOOLEAN_EXPRESSION_H
+#define NODE_BOOLEAN_EXPRESSION_H
 
-#include "node_conditional_expression.h"
-#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/source_declarations.h"
+#include "components/source_subsystem/types/ast/node_conditional_expression.h"
 
 namespace source {
 
 enum class BooleanOperator {
-  AND,
-  OR
+  AND, OR
 };
 
 class BooleanExpressionNode : public ConditionalExpressionNode {
  private:
   BooleanOperator m_boolean_operator;
-  std::shared_ptr<ConditionalExpressionNode> m_left_expression;
-  std::shared_ptr<ConditionalExpressionNode> m_right_expression;
+  ConditionalExpressionNodePtr m_lhs;
+  ConditionalExpressionNodePtr m_rhs;
 
  public:
   BooleanExpressionNode(BooleanOperator boolean_operator,
-                        std::shared_ptr<ConditionalExpressionNode> left_expression,
-                        std::shared_ptr<ConditionalExpressionNode> right_expression);
-  [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetLeftExpression();
-  [[nodiscard]] std::shared_ptr<ConditionalExpressionNode> GetRightExpression();
-  [[nodiscard]] ConditionalType GetConditionalType() override;
-  [[nodiscard]] std::string ToString() override;
-  [[nodiscard]] std::string GetPatternFormat() override;
+                        ConditionalExpressionNodePtr lhs,
+                        ConditionalExpressionNodePtr rhs);
+  [[nodiscard]] BooleanOperator GetOperator();
+  [[nodiscard]] ConditionalExpressionNodePtr GetLhs();
+  [[nodiscard]] ConditionalExpressionNodePtr GetRhs();
+  void Accept(DesignExtractorPtr design_extractor) override;
+  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
-  std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses);
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_BOOLEAN_EXPRESSION_H_
+#endif //NODE_BOOLEAN_EXPRESSION_H
