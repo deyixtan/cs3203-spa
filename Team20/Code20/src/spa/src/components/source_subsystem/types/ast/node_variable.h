@@ -15,7 +15,6 @@ class VariableNode : public ExpressionNode {
   [[nodiscard]] String GetName();
   [[nodiscard]] String GetPatternFormat() override;
   void Accept(DesignExtractorPtr design_extractor) override;
-  void Accept(CfgBuilderPtr cfg_builder) override;
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
 };
 

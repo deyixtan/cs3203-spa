@@ -58,8 +58,6 @@ void CombinationExpressionNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(derived_ptr);
 }
 
-void CombinationExpressionNode::Accept(CfgBuilderPtr cfg_builder) {}
-
 bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const CombinationExpressionNode *>(&other);
   return m_arithmetic_operator == casted_other->m_arithmetic_operator

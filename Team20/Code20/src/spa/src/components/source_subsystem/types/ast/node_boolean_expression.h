@@ -24,7 +24,6 @@ class BooleanExpressionNode : public ConditionalExpressionNode {
   [[nodiscard]] ConditionalExpressionNodePtr GetLhs();
   [[nodiscard]] ConditionalExpressionNodePtr GetRhs();
   void Accept(DesignExtractorPtr design_extractor) override;
-  void Accept(CfgBuilderPtr cfg_builder) override;
   [[nodiscard]] bool operator==(const ConditionalExpressionNode &other) const override;
 };
 

@@ -10,7 +10,6 @@ class ExpressionNode : public Node {
  public:
   [[nodiscard]] virtual String GetPatternFormat() = 0;
   void Accept(DesignExtractorPtr design_extractor) override = 0;
-  void Accept(CfgBuilderPtr cfg_builder) override = 0;
   [[nodiscard]] virtual bool operator==(const ExpressionNode &other) const = 0;
 };
 

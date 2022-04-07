@@ -52,8 +52,6 @@ void RelationalExpressionNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(derived_ptr);
 }
 
-void RelationalExpressionNode::Accept(CfgBuilderPtr cfg_builder) {}
-
 bool RelationalExpressionNode::operator==(const ConditionalExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const RelationalExpressionNode *>(&other);
   return m_relation_operator == casted_other->m_relation_operator
