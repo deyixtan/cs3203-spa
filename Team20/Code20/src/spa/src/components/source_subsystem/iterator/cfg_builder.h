@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_CFG_BUILDER_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_CFG_BUILDER_H_
+#ifndef CFG_BUILDER_H
+#define CFG_BUILDER_H
 
 #include "components/source_subsystem/source_declarations.h"
 #include <memory>
@@ -48,4 +48,4 @@ class CfgBuilder : public std::enable_shared_from_this<CfgBuilder> {
 
 }
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_CFG_BUILDER_H_
+#endif //CFG_BUILDER_H
