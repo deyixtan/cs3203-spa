@@ -14,16 +14,20 @@ StringSet PkbClient::GetVarModByStmt(String stmt) {
 }
 
 StringSet PkbClient::GetCallStmtOf(String stmt) {
-  return pkb->GetCallStore()->GetCallStmtOf(stmt)
-}
-
-StringSet PkbClient::GetAllAnceOf(String stmt) {
-  return pkb->GetCallStore()->GetCallersOf(stmt);
+  return pkb->GetCallStore()->GetCallStmtOf(stmt);
 }
 
 StringSet PkbClient::GetCallersOf(String stmt) {
+  return pkb->GetCallStore()->GetCallersOf(stmt);
+}
+
+StringSet PkbClient::GetAllAnceOf(String stmt) {
   //TODO: Fix StmtType
-  return pkb->GetParentStore()->GetAllAnceOf(STMT, stmt)
+  return pkb->GetParentStore()->GetAllAnceOf(STMT, stmt);
+}
+
+CfgPtr PkbClient::GetProgramCfg() {
+  return pkb->GetProgCfg();
 }
 
 void PkbClient::PopulateParent(std::string stmt1, std::string stmt2) {

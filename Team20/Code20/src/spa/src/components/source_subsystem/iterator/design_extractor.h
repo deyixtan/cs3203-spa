@@ -18,8 +18,6 @@ class DesignExtractor : public std::enable_shared_from_this<DesignExtractor> {
   bool m_is_uses;
 
  private:
-  [[nodiscard]] CallGraphPtr GetCallGraph();
-  [[nodiscard]] StringStream GetVisited(); // remove &
   void UpdateCallUsesModifies(String &proc);
   void UpdateCallUses(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers);
   void UpdateCallModifies(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers);

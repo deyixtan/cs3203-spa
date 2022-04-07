@@ -21,23 +21,21 @@
 namespace source {
 
 DesignExtractor::DesignExtractor(PkbClientPtr pkb_client) :
-    m_pkb_client(std::move(pkb_client)), m_call_graph(CallGraphPtr()), m_visited(StringStream()), m_is_uses(true) {}
+    m_pkb_client(std::move(pkb_client)), m_call_graph(std::make_shared<CallGraph>()), m_visited(StringStream()), m_is_uses(true) {}
 
 void DesignExtractor::IterateAstAndPopulatePkb(ProgramNodePtr &program_node) {
   Visit(program_node);
 
   StringStream topological_order = m_call_graph->TopoSort();
-  for (unsigned int i = topological_order.size() - 1; i >= 0; i--) {
+  int topological_size = topological_order.size();
+
+  if (topological_size == 0) {
+    return;
+  }
+
+  for (unsigned int i = topological_size - 1; i > 0; i--) {
     UpdateCallUsesModifies(topological_order.at(i));
   }
-}
-
-CallGraphPtr DesignExtractor::GetCallGraph() {
-  return m_call_graph;
-}
-
-StringStream DesignExtractor::GetVisited() {
-  return m_visited;
 }
 
 void DesignExtractor::UpdateCallUsesModifies(String &proc) {
@@ -103,8 +101,8 @@ void DesignExtractor::Visit(StatementListNodePtr &stmt_list_node) {
     statement->Accept(shared_from_this());
 
     String stmt_num = statement->GetStatementNumber();
-    if (!GetVisited().empty()) {
-      m_pkb_client->PopulateParent(GetVisited().back(), stmt_num);
+    if (!m_visited.empty()) {
+      m_pkb_client->PopulateParent(m_visited.back(), stmt_num);
     }
 
     if (i > 0) {
@@ -169,7 +167,7 @@ void DesignExtractor::Visit(CallStatementNodePtr &call_stmt) {
   m_curr_stmt_no = stmt_num;
   m_pkb_client->PopulateTypeOfStmt(stmt_num, CALL);
   m_pkb_client->PopulateCall(m_visited, stmt_num, caller_name, callee_name);
-  GetCallGraph()->AddEdge(caller_name, callee_name);
+  m_call_graph->AddEdge(caller_name, callee_name);
 }
 
 void DesignExtractor::Visit(WhileStatementNodePtr &while_stmt) {
@@ -179,7 +177,7 @@ void DesignExtractor::Visit(WhileStatementNodePtr &while_stmt) {
 
   m_curr_stmt_no = stmt_num;
   m_pkb_client->PopulateTypeOfStmt(stmt_num, WHILE);
-  GetVisited().push_back(stmt_num);
+  m_visited.push_back(stmt_num);
   // TODO: rename cond_expr2
   m_is_uses = true;
   cond_expr->Accept(shared_from_this()); // apart from proc_name, true?
@@ -196,7 +194,7 @@ void DesignExtractor::Visit(IfStatementNodePtr &if_stmt) {
 
   m_curr_stmt_no = stmt_num;
   m_pkb_client->PopulateTypeOfStmt(stmt_num, IF);
-  GetVisited().push_back(stmt_num);
+  m_visited.push_back(stmt_num);
   // TODO: rename cond_expr2
   m_is_uses = true;
   cond_expr->Accept(shared_from_this()); // apart from proc_name, true?

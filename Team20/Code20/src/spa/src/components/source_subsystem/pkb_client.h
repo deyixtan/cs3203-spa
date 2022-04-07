@@ -20,6 +20,7 @@ class PkbClient {
   StringSet GetCallStmtOf(String stmt);
   StringSet GetAllAnceOf(String stmt);
   StringSet GetCallersOf(String stmt);
+  CfgPtr GetProgramCfg();
 
   void PopulateParent(std::string stmt1, std::string stmt2);
   void PopulateParentStar(std::string stmt, std::vector<std::string> visited);
