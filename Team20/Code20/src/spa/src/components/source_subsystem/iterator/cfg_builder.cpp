@@ -14,14 +14,11 @@
 namespace source {
 
 CfgBuilder::CfgBuilder(PkbClientPtr pkb_client)
-    : m_pkb_client(pkb_client), m_cfg_map(StringToCfgNodePtrMap()) {}
+    : m_pkb_client(std::move(pkb_client)), m_cfg_map(StringToCfgNodePtrMap()) {}
 
-void CfgBuilder::IterateAst(ProgramNodePtr node) {
-  // populates m_cfg_heads_map
-  Visit(node, nullptr);
-
-  CfgPtr program_cfg = std::make_shared<Cfg>(m_cfg_map);
-  m_pkb_client->PopulateCfg(*program_cfg);
+void CfgBuilder::IterateAst(ProgramNodePtr &program_node) {
+  // iterates AST and populate PKB
+  Visit(program_node, nullptr);
 }
 
 void CfgBuilder::IterateCfg() {
@@ -30,7 +27,7 @@ void CfgBuilder::IterateCfg() {
   CfgNodeSet visited;
   StringToStringSetMap next_map;
   StringToCfgNodePtrMap cfg_map = m_pkb_client->GetProgramCfg()->GetCfgMap();
-  for (auto proc : cfg_map) {
+  for (auto &proc : cfg_map) {
     CfgNodePtr curr_proc = proc.second; // root node of cfg
     CfgProcessHandler(curr_proc, node_stack, prev_stmts, visited, next_map);
   }
@@ -111,12 +108,17 @@ CfgNodePtr CfgBuilder::Visit(ProgramNodePtr program_node, CfgNodePtr cfg_node) {
   for (ProcedureNodePtr &procedure : procedures) {
     CfgNodePtr head = std::make_shared<CfgNode>();
     CfgNodePtr tail = procedure->Accept(shared_from_this(), head);
+
+    // create empty tail node and link to end of current Cfg
     if (!tail->GetStatementList().empty()) {
       CfgNodePtr dummy = std::make_shared<CfgNode>();
       tail->AddNext(dummy);
     }
     m_cfg_map.insert({procedure->GetName(), head});
   }
+
+  CfgPtr program_cfg = std::make_shared<Cfg>(m_cfg_map);
+  m_pkb_client->PopulateCfg(*program_cfg); // TODO: change to shared_ptr
   return nullptr;
 }
 
@@ -161,18 +163,25 @@ CfgNodePtr CfgBuilder::Visit(WhileStatementNodePtr while_stmt, CfgNodePtr cfg_no
   String stmt_num = while_stmt->GetStatementNumber();
   StatementListNodePtr while_stmt_list = while_stmt->GetStatementList();
 
+  // add dummy node for this Visit() to work on
   bool is_empty_cfg_node = cfg_node->GetStatementList().empty();
   if (!is_empty_cfg_node) {
     CfgNodePtr condition_node = std::make_shared<CfgNode>();
     cfg_node->AddNext(condition_node);
     cfg_node = condition_node;
   }
+
   CfgNodePtr body_node = std::make_shared<CfgNode>();
   CfgNodePtr next_node = std::make_shared<CfgNode>();
+
   cfg_node->AddStatement(StmtType::WHILE, stmt_num);
   cfg_node->AddNext(body_node);
   cfg_node->AddNext(next_node);
+
+  // Populate body_node
   body_node = while_stmt_list->Accept(shared_from_this(), body_node);
+
+  // Points tail of body node back to next_node (condition) to create a loop
   body_node->AddNext(cfg_node);
   return next_node;
 }
@@ -182,21 +191,28 @@ CfgNodePtr CfgBuilder::Visit(IfStatementNodePtr if_stmt, CfgNodePtr cfg_node) {
   StatementListNodePtr if_stmt_list = if_stmt->GetIfStatementList();
   StatementListNodePtr else_else_list = if_stmt->GetElseStatementList();
 
+  // add dummy node for this Visit() to work on
   bool is_empty_cfg_node = cfg_node->GetStatementList().empty();
   if (!is_empty_cfg_node) {
     CfgNodePtr condition_node = std::make_shared<CfgNode>();
     cfg_node->AddNext(condition_node);
     cfg_node = condition_node;
   }
+
   CfgNodePtr if_node = std::make_shared<CfgNode>();
   CfgNodePtr else_node = std::make_shared<CfgNode>();
   CfgNodePtr next_node = std::make_shared<CfgNode>();
+
   cfg_node->AddStatement(StmtType::IF, stmt_num);
   cfg_node->AddNext(if_node);
   cfg_node->AddNext(else_node);
+
+  // Populate if_node and else_node
   if_node = if_stmt_list->Accept(shared_from_this(), if_node);
-  if_node->AddNext(next_node);
   else_node = else_else_list->Accept(shared_from_this(), else_node);
+
+  // Points tail of if-block and else-block to next_node
+  if_node->AddNext(next_node);
   else_node->AddNext(next_node);
   return next_node;
 }

@@ -13,7 +13,7 @@ class CfgBuilder : public std::enable_shared_from_this<CfgBuilder> {
 
  public:
   explicit CfgBuilder(PkbClientPtr m_pkb_client);
-  void IterateAst(ProgramNodePtr node);
+  void IterateAst(ProgramNodePtr &program_node);
   void IterateCfg();
   void CfgProcessHandler(CfgNodePtr &curr_proc,
                          std::stack<CfgNodePtr> &node_stack,
