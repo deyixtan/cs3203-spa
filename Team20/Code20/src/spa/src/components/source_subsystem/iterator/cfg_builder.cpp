@@ -103,7 +103,7 @@ void CfgBuilder::NextNodeHandler(CfgNodePtr &desc,
   }
 }
 
-void CfgBuilder::Visit(ProgramNodePtr program_node) {
+void CfgBuilder::Visit(ProgramNodePtr &program_node) {
   ProcedureNodeStream procedures = program_node->GetProcedures();
   for (ProcedureNodePtr &procedure : procedures) {
     m_curr_cfg_node = std::make_shared<CfgNode>();
@@ -122,39 +122,39 @@ void CfgBuilder::Visit(ProgramNodePtr program_node) {
   m_pkb_client->PopulateCfg(*program_cfg); // TODO: change to shared_ptr
 }
 
-void CfgBuilder::Visit(ProcedureNodePtr procedure_node) {
+void CfgBuilder::Visit(ProcedureNodePtr &procedure_node) {
   StatementListNodePtr stmt_list = procedure_node->GetStatementList();
   stmt_list->Accept(shared_from_this());
 }
 
-void CfgBuilder::Visit(StatementListNodePtr stmt_list_node) {
+void CfgBuilder::Visit(StatementListNodePtr &stmt_list_node) {
   StatementNodeStream statements = stmt_list_node->GetStatements();
   for (StatementNodePtr &statement : statements) {
     statement->Accept(shared_from_this());
   }
 }
 
-void CfgBuilder::Visit(ReadStatementNodePtr read_stmt) {
+void CfgBuilder::Visit(ReadStatementNodePtr &read_stmt) {
   String stmt_num = read_stmt->GetStatementNumber();
   m_curr_cfg_node->AddStatement(StmtType::READ, stmt_num);
 }
 
-void CfgBuilder::Visit(PrintStatementNodePtr print_stmt) {
+void CfgBuilder::Visit(PrintStatementNodePtr &print_stmt) {
   String stmt_num = print_stmt->GetStatementNumber();
   m_curr_cfg_node->AddStatement(StmtType::PRINT, stmt_num);
 }
 
-void CfgBuilder::Visit(AssignStatementNodePtr assign_stmt) {
+void CfgBuilder::Visit(AssignStatementNodePtr &assign_stmt) {
   String stmt_num = assign_stmt->GetStatementNumber();
   m_curr_cfg_node->AddStatement(StmtType::ASSIGN, stmt_num);
 }
 
-void CfgBuilder::Visit(CallStatementNodePtr call_stmt) {
+void CfgBuilder::Visit(CallStatementNodePtr &call_stmt) {
   String stmt_num = call_stmt->GetStatementNumber();
   m_curr_cfg_node->AddStatement(StmtType::CALL, stmt_num);
 }
 
-void CfgBuilder::Visit(WhileStatementNodePtr while_stmt) {
+void CfgBuilder::Visit(WhileStatementNodePtr &while_stmt) {
   String stmt_num = while_stmt->GetStatementNumber();
   StatementListNodePtr while_stmt_list = while_stmt->GetStatementList();
 
@@ -183,7 +183,7 @@ void CfgBuilder::Visit(WhileStatementNodePtr while_stmt) {
   m_curr_cfg_node = next_node;
 }
 
-void CfgBuilder::Visit(IfStatementNodePtr if_stmt) {
+void CfgBuilder::Visit(IfStatementNodePtr &if_stmt) {
   String stmt_num = if_stmt->GetStatementNumber();
   StatementListNodePtr if_stmt_list = if_stmt->GetIfStatementList();
   StatementListNodePtr else_stmt_list = if_stmt->GetElseStatementList();

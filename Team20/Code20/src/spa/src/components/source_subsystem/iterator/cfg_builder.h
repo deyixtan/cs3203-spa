@@ -26,15 +26,15 @@ class CfgBuilder : public std::enable_shared_from_this<CfgBuilder> {
                        CfgNodeStatementStream &curr_stmts,
                        CfgNodeSet &visited,
                        StringToStringSetMap &next_map);
-  void Visit(ProgramNodePtr program_node);
-  void Visit(ProcedureNodePtr procedure_node);
-  void Visit(StatementListNodePtr stmt_list_node);
-  void Visit(ReadStatementNodePtr read_stmt);
-  void Visit(PrintStatementNodePtr print_stmt);
-  void Visit(AssignStatementNodePtr assign_stmt);
-  void Visit(CallStatementNodePtr call_stmt);
-  void Visit(WhileStatementNodePtr while_stmt);
-  void Visit(IfStatementNodePtr if_stmt);
+  void Visit(ProgramNodePtr &program_node);
+  void Visit(ProcedureNodePtr &procedure_node);
+  void Visit(StatementListNodePtr &stmt_list_node);
+  void Visit(ReadStatementNodePtr &read_stmt);
+  void Visit(PrintStatementNodePtr &print_stmt);
+  void Visit(AssignStatementNodePtr &assign_stmt);
+  void Visit(CallStatementNodePtr &call_stmt);
+  void Visit(WhileStatementNodePtr &while_stmt);
+  void Visit(IfStatementNodePtr &if_stmt);
 };
 
 }
