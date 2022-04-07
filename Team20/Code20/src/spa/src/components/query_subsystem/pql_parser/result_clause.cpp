@@ -2,8 +2,8 @@
 
 using namespace pql;
 
-ResultClause::ResultClause() {}
-ResultClause::ResultClause(ResultClauseType type): type(type), values(values) {}
+ResultClause::ResultClause(): type(ResultClauseType()), values(std::vector<PqlToken>()) {}
+ResultClause::ResultClause(ResultClauseType type): type(type), values(std::vector<PqlToken>()) {}
 ResultClause::ResultClause(ResultClauseType type, std::vector<PqlToken> values): type(type), values(values) {}
 ResultClauseType ResultClause::GetType() {
   return type;

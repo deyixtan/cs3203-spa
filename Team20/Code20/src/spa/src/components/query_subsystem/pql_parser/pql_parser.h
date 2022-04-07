@@ -9,7 +9,7 @@ using namespace pql;
 class PqlParser {
  private:
   std::vector<PqlToken> tokens;
-  ParsedQuery pq = ParseQuery();
+  ParsedQuery pq;
   int cursor;
   std::unordered_map<PqlTokenType, std::pair<std::unordered_set<PqlTokenType>, std::unordered_set<PqlTokenType>>>
       rel_ref_arg_map;

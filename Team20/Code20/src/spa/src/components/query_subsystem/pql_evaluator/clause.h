@@ -8,6 +8,7 @@ namespace pql {
 class Clause {
  public:
   virtual Table Execute() = 0;
+  virtual ~Clause() = default;
 };
 
 }

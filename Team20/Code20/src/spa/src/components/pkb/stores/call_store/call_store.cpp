@@ -9,22 +9,22 @@ void CallStore::AddCallerHelper(std::string const &caller, std::string const &ca
   AddUpperLowerStar(CALLS, caller, callee, std::vector<std::string>());
 }
 
-bool CallStore::IsCallsPairValid(std::pair<std::string, std::string> const &pair) {
+bool CallStore::IsCallsPairValid(IDENT_PAIR const &pair) {
   return IsValid(pair);
 }
 
-bool CallStore::IsCallsStarPairValid(std::pair<std::string, std::string> const &pair) {
+bool CallStore::IsCallsStarPairValid(IDENT_PAIR const &pair) {
   return IsStarValid(pair);
 }
 
-std::unordered_set<std::string> CallStore::GetCallStmtOf(std::string proc) {
+IDENT_SET CallStore::GetCallStmtOf(IDENT proc) {
   if (call_stmt_map.find(proc) == call_stmt_map.end()) {
     return {};
   }
   return call_stmt_map.at(proc);
 }
 
-void CallStore::AddCallStmtMap(std::string proc, std::string stmt) {
+void CallStore::AddCallStmtMap(IDENT proc, IDENT stmt) {
   if (call_stmt_map.find(proc) == call_stmt_map.end()) {
     call_stmt_map.insert({proc, {stmt}});
   } else {
@@ -32,26 +32,26 @@ void CallStore::AddCallStmtMap(std::string proc, std::string stmt) {
   }
 }
 
-std::unordered_set<std::string> CallStore::GetCallersOf(std::string const &proc){
+IDENT_SET CallStore::GetCallersOf(IDENT const &proc){
   return GetUpperSetOf(CALLS, PROC, proc);
 }
 
-std::unordered_set<std::string> CallStore::GetCalleesOf(std::string const &proc) {
+IDENT_SET CallStore::GetCalleesOf(IDENT const &proc) {
   return GetLowerSetOf(CALLS, PROC, proc);
 }
 
-std::unordered_set<std::string> CallStore::GetCallersStarOf(std::string const &proc) {
+IDENT_SET CallStore::GetCallersStarOf(IDENT const &proc) {
   return GetUpperStarOf(CALLS, PROC, proc);
 }
 
-std::unordered_set<std::string> CallStore::GetCalleesStarOf(std::string const &proc) {
+IDENT_SET CallStore::GetCalleesStarOf(IDENT const &proc) {
   return GetLowerStarOf(CALLS, PROC, proc);
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> CallStore::GetAllCalls() {
+IDENT_PAIR_SET CallStore::GetAllCalls() {
   return GetAllPairs();
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> CallStore::GetAllCallsStar() {
+IDENT_PAIR_SET CallStore::GetAllCallsStar() {
   return GetAllStarPairs();
 }

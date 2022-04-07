@@ -10,20 +10,18 @@ class ParentStore : public StmtStmtStore {
  public:
   explicit ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                        std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
-  void AddParent(std::string const &parent, std::string const &child);
-  void AddParentStar(std::string const &stmt, std::vector<std::string> const &visited);
-  [[nodiscard]] bool IsParentPairValid(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] bool IsAnceDescValid(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] std::string GetParentOf(StmtType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetChildOf(StmtType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetAllAnceOf(StmtType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetAllDescOf(StmtType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetParentChildPairs();
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAnceDescPairs();
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStmt(StmtType type1,
-                                                                                                    StmtType type2);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllParentStarStmt(StmtType type1,
-                                                                                                        StmtType type2);
+  void AddParent(IDENT const &parent, IDENT const &child);
+  void AddParentStar(IDENT const &stmt, IDENT_VECTOR const &visited);
+  [[nodiscard]] bool IsParentPairValid(IDENT_PAIR const &pair);
+  [[nodiscard]] bool IsAnceDescValid(IDENT_PAIR const &pair);
+  [[nodiscard]] IDENT GetParentOf(StmtType type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetChildOf(StmtType type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetAllAnceOf(StmtType type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetAllDescOf(StmtType type, IDENT const &stmt);
+  [[nodiscard]] IDENT_PAIR_SET GetParentChildPairs();
+  [[nodiscard]] IDENT_PAIR_SET GetAnceDescPairs();
+  [[nodiscard]] IDENT_PAIR_SET GetAllParentStmt(StmtType type1, StmtType type2);
+  [[nodiscard]] IDENT_PAIR_SET GetAllParentStarStmt(StmtType type1, StmtType type2);
 };
 
 #endif //PARENT_STORE_H
