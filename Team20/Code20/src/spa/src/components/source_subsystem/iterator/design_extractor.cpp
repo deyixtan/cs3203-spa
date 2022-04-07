@@ -35,45 +35,7 @@ void DesignExtractor::IterateAstAndPopulatePkb(ProgramNodePtr &program_node) {
 
   unsigned int topological_size = topological_order.size();
   for (unsigned int i = topological_size - 1; i > 0; i--) {
-    UpdateCallUsesModifies(topological_order.at(i));
-  }
-}
-
-void DesignExtractor::UpdateCallUsesModifies(String &proc) {
-  StringSet uses_vars = m_pkb_client->GetVarUsedByStmt(proc);
-  StringSet mod_vars = m_pkb_client->GetVarModByStmt(proc);
-  StringSet call_stmts = m_pkb_client->GetCallStmtOf(proc);
-  StringSet callers = m_pkb_client->GetCallersOf(proc);
-
-  for (auto call_stmt : call_stmts) {
-    StringSet ancestors = m_pkb_client->GetAllAnceOf(call_stmt);
-    UpdateCallUses(call_stmt, uses_vars, ancestors, callers);
-    UpdateCallModifies(call_stmt, mod_vars, ancestors, callers);
-  }
-}
-
-void DesignExtractor::UpdateCallUses(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers) {
-  for (auto &var : vars) {
-    m_pkb_client->PopulateUses(call_stmt, var);
-    for (auto &ance : ancestors) {
-      m_pkb_client->PopulateUses(ance, var);
-    }
-    for (auto &caller : callers) {
-      m_pkb_client->PopulateUses(caller, var);
-    }
-  }
-}
-
-void DesignExtractor::UpdateCallModifies(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers) {
-  for (auto &var : vars) {
-    m_pkb_client->PopulateModifies(call_stmt, var);
-    for (auto &ance : ancestors) {
-      m_pkb_client->PopulateModifies(ance, var);
-    }
-    for (auto &caller : callers) {
-      m_pkb_client->PopulateModifies(caller, var);
-    }
-
+    m_pkb_client->UpdateCallUsesModifies(topological_order.at(i));
   }
 }
 

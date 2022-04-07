@@ -17,11 +17,6 @@ class DesignExtractor : public std::enable_shared_from_this<DesignExtractor> {
   String m_pattern;
   bool m_is_uses;
 
- private:
-  void UpdateCallUsesModifies(String &proc);
-  void UpdateCallUses(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers);
-  void UpdateCallModifies(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers);
-
  public:
   explicit DesignExtractor(PkbClientPtr pkb_client);
   void IterateAstAndPopulatePkb(ProgramNodePtr &program_node);
