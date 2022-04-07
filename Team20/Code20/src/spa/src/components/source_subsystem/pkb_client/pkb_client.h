@@ -1,9 +1,9 @@
 #ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
 #define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
 
-#include "source_declarations.h"
+#include "components/source_subsystem/source_declarations.h"
 
-#include "../pkb/stores/store.h"
+#include "components/pkb/stores/store.h"
 
 class PKB;
 

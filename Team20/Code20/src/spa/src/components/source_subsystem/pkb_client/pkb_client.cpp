@@ -1,5 +1,5 @@
 #include "pkb_client.h"
-#include "../pkb/pkb.h"
+#include "components/pkb/pkb.h"
 
 namespace source {
 

@@ -1,5 +1,5 @@
 #include "design_extractor.h"
-#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/pkb_client/pkb_client.h"
 #include "components/source_subsystem/types/ast/node_assign_statement.h"
 #include "components/source_subsystem/types/ast/node_boolean_expression.h"
 #include "components/source_subsystem/types/ast/node_call_statement.h"
