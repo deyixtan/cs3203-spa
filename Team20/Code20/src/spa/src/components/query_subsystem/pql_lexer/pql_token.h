@@ -1,6 +1,7 @@
 #ifndef PQL_TOKEN_H
 #define PQL_TOKEN_H
 
+#include <algorithm>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>

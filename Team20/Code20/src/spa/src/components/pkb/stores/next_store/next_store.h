@@ -9,22 +9,20 @@ class NextStore : public StmtStmtStore {
  public:
   explicit NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                      std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
-  void AddNext(std::string const &before, std::string const &next);
+  void AddNext(IDENT const &before, IDENT const &next);
   void WipeStar();
-  [[nodiscard]] bool IsNextPairValid(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] bool IsNextStarValid(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] std::unordered_set<std::string> GetBeforeOf(StmtType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetNextOf(StmtType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetBeforeStarOf(StmtType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetNextStarOf(StmtType type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetNextPairs();
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetNextStarPairs();
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStmt(StmtType type1,
-                                                                                                  StmtType type2);
-  [[nodiscard]] std::unordered_set<std::string> GetNextStarSameStmt(StmtType type);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStarStmt(StmtType type);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStarStmt(StmtType type1,
-                                                                                                      StmtType type2);
+  [[nodiscard]] bool IsNextPairValid(IDENT_PAIR const &pair);
+  [[nodiscard]] bool IsNextStarValid(IDENT_PAIR const &pair);
+  [[nodiscard]] IDENT_SET GetBeforeOf(StmtType type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetNextOf(StmtType type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetBeforeStarOf(StmtType type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetNextStarOf(StmtType type, IDENT const &stmt);
+  [[nodiscard]] IDENT_PAIR_SET GetNextPairs();
+  [[nodiscard]] IDENT_PAIR_SET GetNextStarPairs();
+  [[nodiscard]] IDENT_PAIR_SET GetAllNextStmt(StmtType type1, StmtType type2);
+  [[nodiscard]] IDENT_SET GetNextStarSameStmt(StmtType type);
+  [[nodiscard]] IDENT_PAIR_SET GetAllNextStarStmt(StmtType type);
+  [[nodiscard]] IDENT_PAIR_SET GetAllNextStarStmt(StmtType type1, StmtType type2);
 };
 
 #endif //NEXT_STORE_H

@@ -339,7 +339,7 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType store_ty
   if (store_type == NEXT) {
     if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
       if (star_type_pair_map.at(STMT).find(stmt_type) != star_type_pair_map.at(STMT).end()) {
-        if(get<1>(star_type_pair_map.at(STMT).at(stmt_type)).find(stmt) != get<1>(star_type_pair_map.at(STMT).at(stmt_type)).end()) {
+        if(std::get<1>(star_type_pair_map.at(STMT).at(stmt_type)).find(stmt) != std::get<1>(star_type_pair_map.at(STMT).at(stmt_type)).end()) {
           return GetHelper(STMT, stmt_type, 1, stmt, true);
         }
       }
@@ -365,7 +365,7 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StoreType store_ty
   if (store_type == NEXT) {
     if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
       if (star_type_pair_map.at(STMT).find(stmt_type) != star_type_pair_map.at(STMT).end()) {
-        if(get<0>(star_type_pair_map.at(STMT).at(stmt_type)).find(stmt) != get<0>(star_type_pair_map.at(STMT).at(stmt_type)).end()) {
+        if(std::get<0>(star_type_pair_map.at(STMT).at(stmt_type)).find(stmt) != std::get<0>(star_type_pair_map.at(STMT).at(stmt_type)).end()) {
           return GetHelper(STMT, stmt_type, 0, stmt, true);
         }
       }
