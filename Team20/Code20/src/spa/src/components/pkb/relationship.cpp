@@ -7,7 +7,7 @@ IDENT_SET_MAP Relationship::GetUpperToLowerSet() {
 }
 
 IDENT_SET_MAP Relationship::GetLowerToUpperSet() {
-  return lower_to_upper_set
+  return lower_to_upper_set;
 }
 
 IDENT_PAIR_SET Relationship::GetPairSet() {

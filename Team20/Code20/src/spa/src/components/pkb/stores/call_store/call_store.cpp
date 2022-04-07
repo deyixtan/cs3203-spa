@@ -17,7 +17,7 @@ bool CallStore::IsCallsStarPairValid(IDENT_PAIR const &pair) {
   return IsStarValid(pair);
 }
 
-CallStore::IDENT_SET CallStore::GetCallStmtOf(IDENT proc) {
+IDENT_SET CallStore::GetCallStmtOf(IDENT proc) {
   if (call_stmt_map.find(proc) == call_stmt_map.end()) {
     return {};
   }
@@ -32,26 +32,26 @@ void CallStore::AddCallStmtMap(IDENT proc, IDENT stmt) {
   }
 }
 
-CallStore::IDENT_SET CallStore::GetCallersOf(IDENT const &proc){
+IDENT_SET CallStore::GetCallersOf(IDENT const &proc){
   return GetUpperSetOf(CALLS, PROC, proc);
 }
 
-CallStore::IDENT_SET CallStore::GetCalleesOf(IDENT const &proc) {
+IDENT_SET CallStore::GetCalleesOf(IDENT const &proc) {
   return GetLowerSetOf(CALLS, PROC, proc);
 }
 
-CallStore::IDENT_SET CallStore::GetCallersStarOf(IDENT const &proc) {
+IDENT_SET CallStore::GetCallersStarOf(IDENT const &proc) {
   return GetUpperStarOf(CALLS, PROC, proc);
 }
 
-CallStore::IDENT_SET CallStore::GetCalleesStarOf(IDENT const &proc) {
+IDENT_SET CallStore::GetCalleesStarOf(IDENT const &proc) {
   return GetLowerStarOf(CALLS, PROC, proc);
 }
 
-CallStore::IDENT_PAIR_SET CallStore::GetAllCalls() {
+IDENT_PAIR_SET CallStore::GetAllCalls() {
   return GetAllPairs();
 }
 
-CallStore::IDENT_PAIR_SET CallStore::GetAllCallsStar() {
+IDENT_PAIR_SET CallStore::GetAllCallsStar() {
   return GetAllStarPairs();
 }

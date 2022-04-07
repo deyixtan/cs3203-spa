@@ -20,34 +20,34 @@ bool ParentStore::IsAnceDescValid(IDENT_PAIR const &pair) {
   return IsStarValid(pair);
 }
 
-ParentStore::IDENT ParentStore::GetParentOf(StmtType type, IDENT const &stmt) {
+IDENT ParentStore::GetParentOf(StmtType type, IDENT const &stmt) {
   return GetUpperOf(type, stmt);
 }
 
-ParentStore::IDENT_SET ParentStore::GetChildOf(StmtType type, IDENT const &stmt) {
+IDENT_SET ParentStore::GetChildOf(StmtType type, IDENT const &stmt) {
   return GetLowerSetOf(PARENT, type, stmt);
 }
 
-ParentStore::IDENT_SET ParentStore::GetAllAnceOf(StmtType type, IDENT const &stmt) {
+IDENT_SET ParentStore::GetAllAnceOf(StmtType type, IDENT const &stmt) {
   return GetUpperStarOf(PARENT, type, stmt);
 }
 
-ParentStore::IDENT_SET ParentStore::GetAllDescOf(StmtType type, IDENT const &stmt) {
+IDENT_SET ParentStore::GetAllDescOf(StmtType type, IDENT const &stmt) {
   return GetLowerStarOf(PARENT, type, stmt);
 }
 
-ParentStore::IDENT_PAIR_SET ParentStore::GetParentChildPairs() {
+IDENT_PAIR_SET ParentStore::GetParentChildPairs() {
   return GetAllPairs();
 }
 
-ParentStore::IDENT_PAIR_SET ParentStore::GetAnceDescPairs() {
+IDENT_PAIR_SET ParentStore::GetAnceDescPairs() {
   return GetAllStarPairs();
 }
 
-ParentStore::IDENT_PAIR_SET ParentStore::GetAllParentStmt(StmtType type1, StmtType type2) {
+IDENT_PAIR_SET ParentStore::GetAllParentStmt(StmtType type1, StmtType type2) {
   return GetPairByType(type1, type2);
 }
 
-ParentStore::IDENT_PAIR_SET ParentStore::GetAllParentStarStmt(StmtType type1, StmtType type2) {
+IDENT_PAIR_SET ParentStore::GetAllParentStarStmt(StmtType type1, StmtType type2) {
   return GetStarPairByType(type1, type2);
 }

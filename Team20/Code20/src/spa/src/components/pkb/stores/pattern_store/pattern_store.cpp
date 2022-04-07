@@ -35,7 +35,7 @@ void PatternStore::AddIfWithPattern(std::string const &stmt, std::string const &
   }
 }
 
-PatternStore::IDENT_SET PatternStore::GetStmtWithPatternExact(std::string lhs, std::string rhs) {
+IDENT_SET PatternStore::GetStmtWithPatternExact(std::string lhs, std::string rhs) {
   IDENT_SET result = {};
   rhs = "(" + rhs + ")";
 
@@ -61,7 +61,7 @@ PatternStore::IDENT_SET PatternStore::GetStmtWithPatternExact(std::string lhs, s
   return result;
 }
 
-PatternStore::IDENT_SET PatternStore::GetStmtWithPatternPartial(IDENT lhs, IDENT rhs) {
+IDENT_SET PatternStore::GetStmtWithPatternPartial(IDENT lhs, IDENT rhs) {
   IDENT_SET result = {};
   rhs = "(" + rhs + ")";
 
@@ -84,7 +84,7 @@ PatternStore::IDENT_SET PatternStore::GetStmtWithPatternPartial(IDENT lhs, IDENT
   return result;
 }
 
-PatternStore::IDENT_SET PatternStore::GetStmtWithPatternWildcard(std::string lhs) {
+IDENT_SET PatternStore::GetStmtWithPatternWildcard(std::string lhs) {
   IDENT_SET result = {};
 
   for (auto const&[key, val] : m_stmt_pattern_map) {
@@ -100,7 +100,7 @@ PatternStore::IDENT_SET PatternStore::GetStmtWithPatternWildcard(std::string lhs
   return result;
 }
 
-PatternStore::IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
+IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
   IDENT_PAIR_SET result = {};
   expr = "(" + expr + ")";
 
@@ -117,7 +117,7 @@ PatternStore::IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymExact(std::s
   return result;
 }
 
-PatternStore::IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) {
+IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) {
   IDENT_PAIR_SET result = {};
   expr = "(" + expr + ")";
 
@@ -134,11 +134,11 @@ PatternStore::IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymPartial(std:
   return result;
 }
 
-PatternStore::IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymWildcard() {
+IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymWildcard() {
   return m_stmt_pattern_pairs;
 }
 
-PatternStore::IDENT_SET PatternStore::GetIfWithPattern(std::string var) {
+IDENT_SET PatternStore::GetIfWithPattern(std::string var) {
   IDENT_SET result = {};
 
   for (auto pair : m_if_pattern_pairs) {
@@ -155,7 +155,7 @@ PatternStore::IDENT_SET PatternStore::GetIfWithPattern(std::string var) {
   return result;
 }
 
-PatternStore::IDENT_SET PatternStore::GetWhileWithPattern(std::string var) {
+IDENT_SET PatternStore::GetWhileWithPattern(std::string var) {
   IDENT_SET result = {};
 
   for (auto pair : m_while_pattern_pairs) {
@@ -172,10 +172,10 @@ PatternStore::IDENT_SET PatternStore::GetWhileWithPattern(std::string var) {
   return result;
 }
 
-PatternStore::IDENT_PAIR_SET PatternStore::GetIfWithPatternSynonym() {
+IDENT_PAIR_SET PatternStore::GetIfWithPatternSynonym() {
   return m_if_pattern_pairs;
 }
 
-PatternStore::IDENT_PAIR_SET PatternStore::GetWhileWithPatternSynonym() {
+IDENT_PAIR_SET PatternStore::GetWhileWithPatternSynonym() {
   return m_while_pattern_pairs;
 }
