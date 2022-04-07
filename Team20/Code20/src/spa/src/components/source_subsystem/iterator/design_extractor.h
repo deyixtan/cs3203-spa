@@ -20,7 +20,7 @@ class DesignExtractor : public std::enable_shared_from_this<DesignExtractor> {
  private:
   void PostIteratePopulate();
   void PopulateFollowsHelper(StatementNodeStream statements, int index);
-  void PopulateParentHelper(String stmt_no);
+  void PopulateParentHelper(String &stmt_no);
 
  public:
   explicit DesignExtractor(PkbClientPtr pkb_client);

@@ -65,7 +65,7 @@ void DesignExtractor::PopulateFollowsHelper(StatementNodeStream statements, int 
   }
 }
 
-void DesignExtractor::PopulateParentHelper(String stmt_no) {
+void DesignExtractor::PopulateParentHelper(String &stmt_no) {
   if (m_visited.empty()) {
     return;
   }
