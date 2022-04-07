@@ -20,28 +20,28 @@ class DesignExtractor : public std::enable_shared_from_this<DesignExtractor> {
  private:
   [[nodiscard]] CallGraphPtr GetCallGraph();
   [[nodiscard]] StringStream GetVisited(); // remove &
-  void UpdateCallUsesModifies(String proc);
-  void UpdateCallUses(String call_stmt, StringSet vars, StringSet ancestors, StringSet callers);
-  void UpdateCallModifies(String call_stmt, StringSet vars, StringSet ancestors, StringSet callers);
+  void UpdateCallUsesModifies(String &proc);
+  void UpdateCallUses(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers);
+  void UpdateCallModifies(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers);
 
  public:
   explicit DesignExtractor(PkbClientPtr pkb_client);
-  void IterateAstAndPopulatePkb(ProgramNodePtr program_node);
-  void Visit(ProgramNodePtr program_node);
-  void Visit(ProcedureNodePtr procedure_node);
-  void Visit(StatementListNodePtr stmt_list_node);
-  void Visit(ReadStatementNodePtr read_stmt);
-  void Visit(PrintStatementNodePtr print_stmt);
-  void Visit(AssignStatementNodePtr assign_stmt);
-  void Visit(CallStatementNodePtr call_stmt);
-  void Visit(WhileStatementNodePtr while_stmt);
-  void Visit(IfStatementNodePtr if_stmt);
-  void Visit(BooleanExpressionNodePtr boolean_expr_node);
-  void Visit(RelationalExpressionNodePtr rel_expr_node);
-  void Visit(NotExpressionNodePtr not_expr_node);
-  void Visit(CombinationExpressionNodePtr combination_expr_node);
-  void Visit(VariableNodePtr variable_node);
-  void Visit(ConstantNodePtr constant_node);
+  void IterateAstAndPopulatePkb(ProgramNodePtr &program_node);
+  void Visit(ProgramNodePtr &program_node);
+  void Visit(ProcedureNodePtr &procedure_node);
+  void Visit(StatementListNodePtr &stmt_list_node);
+  void Visit(ReadStatementNodePtr &read_stmt);
+  void Visit(PrintStatementNodePtr &print_stmt);
+  void Visit(AssignStatementNodePtr &assign_stmt);
+  void Visit(CallStatementNodePtr &call_stmt);
+  void Visit(WhileStatementNodePtr &while_stmt);
+  void Visit(IfStatementNodePtr &if_stmt);
+  void Visit(BooleanExpressionNodePtr &boolean_expr_node);
+  void Visit(RelationalExpressionNodePtr &rel_expr_node);
+  void Visit(NotExpressionNodePtr &not_expr_node);
+  void Visit(CombinationExpressionNodePtr &combination_expr_node);
+  void Visit(VariableNodePtr &variable_node);
+  void Visit(ConstantNodePtr &constant_node);
 };
 
 }
