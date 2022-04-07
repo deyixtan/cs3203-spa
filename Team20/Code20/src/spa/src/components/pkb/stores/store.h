@@ -8,31 +8,8 @@
 #include <memory>
 #include <algorithm>
 
+#include "../common.h"
 #include "../../../utils/pair_hash.h"
-
-enum StmtType {
-  STMT,
-  READ,
-  PRINT,
-  WHILE,
-  IF,
-  ASSIGN,
-  VARS,
-  CONSTS,
-  PROC,
-  CALL,
-  COUNT = CALL + 1 // get max value of StmtType
-};
-
-enum StoreType {
-  USES,
-  MODIFIES,
-  FOLLOWS,
-  PARENT,
-  CALLS,
-  NEXT,
-  AFFECTS
-};
 
 class Store {
  protected:
@@ -40,19 +17,6 @@ class Store {
   std::shared_ptr<std::unordered_map<std::string, StmtType>> m_stmt_type;
 
  public:
-  typedef std::string IDENT;
-  typedef std::vector<IDENT> IDENT_VECTOR;
-  typedef std::unordered_set<IDENT> IDENT_SET;
-  typedef std::pair<IDENT, IDENT> IDENT_PAIR;
-  typedef std::unordered_map<IDENT, IDENT_SET> IDENT_SET_MAP;
-  typedef std::unordered_map<IDENT, IDENT_PAIR> IDENT_PAIR_MAP;
-  typedef std::unordered_set<IDENT_PAIR, pair_hash> IDENT_PAIR_SET;
-  typedef std::unordered_map<StmtType,
-                             std::unordered_map<StmtType,
-                                                std::tuple<IDENT_SET_MAP,
-                                                           IDENT_SET_MAP,
-                                                           IDENT_PAIR_SET>>> NESTED_TUPLE_MAP;
-
   explicit Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                  std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
   IDENT_PAIR_SET GetAllStmt(StmtType type,
