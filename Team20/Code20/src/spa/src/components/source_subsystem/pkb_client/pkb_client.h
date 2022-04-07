@@ -2,87 +2,89 @@
 #define PKB_CLIENT_H
 
 #include "components/source_subsystem/source_declarations.h"
-
 #include "components/pkb/stores/store.h"
 
+// TODO: remove this
 class PKB;
+typedef std::shared_ptr<PKB> PkbPtr;
 
 namespace source {
 
 class PkbClient {
  private:
-  PKB *pkb;
+  PkbPtr m_pkb;
 
  public:
-  explicit PkbClient(PKB *pkb);
+  explicit PkbClient(PkbPtr pkb);
   StringSet GetVarUsedByStmt(String stmt);
   StringSet GetVarModByStmt(String stmt);
   StringSet GetCallStmtOf(String stmt);
   StringSet GetAllAnceOf(String stmt);
   StringSet GetCallersOf(String stmt);
+
   CfgPtr GetProgramCfg();
   void UpdateCallUsesModifies(String &proc);
   void UpdateCallUses(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers);
   void UpdateCallModifies(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers);
 
-  void PopulateParent(std::string stmt1, std::string stmt2);
-  void PopulateParentStar(std::string stmt, std::vector<std::string> visited);
-  void PopulateFollows(std::string stmt1, std::string stmt2);
-  void PopulateFollowsStar(std::string stmt1, std::string stmt2);
-  void PopulateUses(std::string stmt, std::string var);
-  void PopulateModifies(std::string stmt, std::string var);
-  void PopulateCalls(std::string caller, std::string callee);
-  void PopulateProc(std::string name);
+  void PopulateParent(String stmt1, String stmt2);
+  void PopulateParentStar(String stmt, StringStream visited);
+  void PopulateFollows(String stmt1, String stmt2);
+  void PopulateFollowsStar(String stmt1, String stmt2);
+  void PopulateUses(String stmt, String var);
+  void PopulateModifies(String stmt, String var);
+  void PopulateCalls(String caller, String callee);
+  void PopulateProc(String name);
 
-  void PopulateAssign(std::vector<std::string> &visited,
-                      std::string &proc_name,
-                      std::string &curr_stmt,
-                      std::string &var_name,
-                      std::string &rhs_expr);
-  void AssignHelper(std::vector<std::string> &visited,
-                    std::string &proc_name,
-                    std::string &curr_stmt,
-                    std::string &var_name,
-                    std::string &rhs_expr);
+  void PopulateAssign(StringStream &visited,
+                      String &proc_name,
+                      String &curr_stmt,
+                      String &var_name,
+                      String &rhs_expr);
+  void AssignHelper(StringStream &visited,
+                    String &proc_name,
+                    String &curr_stmt,
+                    String &var_name,
+                    String &rhs_expr);
 
-  void PopulateStmt(std::string stmt);
-  void PopulateTypeOfStmt(std::string stmt, StmtType type);
-  StmtType GetTypeOfStmt(std::string stmt);
-  void PopulateName(std::string name, StmtType type);
+  void PopulateStmt(String stmt);
+  void PopulateTypeOfStmt(String stmt, StmtType type);
+  StmtType GetTypeOfStmt(String stmt);
+  void PopulateName(String name, StmtType type);
 
-  void PopulateRead(std::vector<std::string> &visited, std::string &curr_stmt, std::string &var_name);
-  void ReadHelper(std::vector<std::string> &visited, std::string &curr_stmt, std::string &var_name);
+  void PopulateRead(StringStream &visited, String &curr_stmt, String &var_name);
+  void ReadHelper(StringStream &visited, String &curr_stmt, String &var_name);
 
-  void PopulatePrint(std::vector<std::string> &visited, std::string &curr_stmt, std::string &var_name);
-  void PrintHelper(std::vector<std::string> &visited, std::string &curr_stmt);
+  void PopulatePrint(StringStream &visited, String &curr_stmt, String &var_name);
+  void PrintHelper(StringStream &visited, String &curr_stmt);
 
-  void PopulateVars(std::vector<std::string> &visited,
-                    std::string &curr_stmt,
-                    std::string &proc_name,
-                    std::string &var_name,
+  void PopulateVars(StringStream &visited,
+                    String &curr_stmt,
+                    String &proc_name,
+                    String &var_name,
                     bool is_uses);
-  void VarsHelper(std::vector<std::string> &visited,
-                  std::string &curr_stmt,
-                  std::string &proc_name,
-                  std::string &var_name,
+  void VarsHelper(StringStream &visited,
+                  String &curr_stmt,
+                  String &proc_name,
+                  String &var_name,
                   bool is_uses);
 
-  void PopulateWhile(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr);
-  void WhileHelper(std::vector<std::string> &visited, std::string &curr_stmt, std::string cond_expr);
+  void PopulateWhile(StringStream &visited, String &curr_stmt, String cond_expr);
+  void WhileHelper(StringStream &visited, String &curr_stmt, String cond_expr);
 
-  void PopulateIf(std::vector<std::string> &visited, std::string curr_stmt, std::string cond_expr);
-  void IfHelper(std::vector<std::string> &visited, std::string curr_stmt, std::string cond_expr);
+  void PopulateIf(StringStream &visited, String curr_stmt, String cond_expr);
+  void IfHelper(StringStream &visited, String curr_stmt, String cond_expr);
 
-  void PopulateConst(std::string name);
-  void PopulateCallStmt(std::string proc, std::string stmt);
-  void PopulateCall(std::vector<std::string> &visited,
-                    std::string &curr_stmt,
-                    std::string &proc_name,
-                    std::string &callee_name);
+  void PopulateConst(String name);
+  void PopulateCallStmt(String proc, String stmt);
+  void PopulateCall(StringStream &visited,
+                    String &curr_stmt,
+                    String &proc_name,
+                    String &callee_name);
   void PopulateCfg(CfgPtr cfg);
-  void PopulateNext(std::string stmt1, std::string stmt2);
-  void PopulateNextStar(std::string stmt1, std::string stmt2);
-  void AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs);
+  void PopulateNext(String stmt1, String stmt2);
+  void PopulateNextStar(String stmt1, String stmt2);
+  void AddPattern(StmtType type, String stmt, String lhs, String rhs);
 };
 
 }
