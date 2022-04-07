@@ -1,28 +1,24 @@
 #include "cfg_builder.h"
-#include "components/pkb/pkb.h"
 #include "components/source_subsystem/pkb_client.h"
-#include "../types/ast/node_program.h"
-#include "../types/ast/node_procedure.h"
-#include "../types/ast/node_statement_list.h"
-#include "../types/ast/node_statement.h"
-#include "../types/cfg/cfg_node.h"
-#include "../types/call_graph/call_graph.h"
-#include "../types/ast/node_read_statement.h"
-#include "../types/ast/node_print_statement.h"
-#include "../types/ast/node_assign_statement.h"
-#include "../types/ast/node_call_statement.h"
-#include "../types/ast/node_while_statement.h"
-#include "../types/ast/node_if_statement.h"
+#include "components/source_subsystem/types/ast/node_assign_statement.h"
+#include "components/source_subsystem/types/ast/node_call_statement.h"
+#include "components/source_subsystem/types/ast/node_if_statement.h"
+#include "components/source_subsystem/types/ast/node_print_statement.h"
+#include "components/source_subsystem/types/ast/node_procedure.h"
+#include "components/source_subsystem/types/ast/node_program.h"
+#include "components/source_subsystem/types/ast/node_read_statement.h"
+#include "components/source_subsystem/types/ast/node_statement_list.h"
+#include "components/source_subsystem/types/ast/node_while_statement.h"
+#include "components/source_subsystem/types/cfg/cfg_node.h"
 
 namespace source {
 
 CfgBuilder::CfgBuilder(PkbClientPtr pkb_client)
-    : m_pkb_client(std::move(pkb_client)), m_cfg_map(StringToCfgNodePtrMap()) {}
+    : m_pkb_client(pkb_client), m_cfg_map(StringToCfgNodePtrMap()) {}
 
 void CfgBuilder::IterateAst(ProgramNodePtr node) {
   // populates m_cfg_heads_map
-  CfgNodePtr tmp = std::make_shared<CfgNode>();
-  Visit(std::move(node), tmp);
+  Visit(node, nullptr);
 
   CfgPtr program_cfg = std::make_shared<Cfg>(m_cfg_map);
   m_pkb_client->PopulateCfg(*program_cfg);
@@ -33,8 +29,8 @@ void CfgBuilder::IterateCfg() {
   CfgNodeStatementStream prev_stmts;
   CfgNodeSet visited;
   StringToStringSetMap next_map;
-  StringToCfgNodePtrMap prog = m_pkb_client->GetProgramCfg()->GetCfgMap();
-  for (auto proc : prog) {
+  StringToCfgNodePtrMap cfg_map = m_pkb_client->GetProgramCfg()->GetCfgMap();
+  for (auto proc : cfg_map) {
     CfgNodePtr curr_proc = proc.second; // root node of cfg
     CfgProcessHandler(curr_proc, node_stack, prev_stmts, visited, next_map);
   }
@@ -55,7 +51,7 @@ void CfgBuilder::CfgProcessHandler(CfgNodePtr &curr_proc,
 
     CfgNodeStatementStream curr_stmts = curr->GetStatementList(); // get all stmt in node
     CfgNodeStream next_nodes = curr->GetNextList(); // get all possible next nodes
- 
+
     // check if actual dummy node
     if (curr_stmts.empty() && next_nodes.empty()) {
       if (node_stack.empty()) {
