@@ -18,10 +18,8 @@ namespace source {
   enum class RelationOperator;
   enum class ArithmeticOperator;
 
-  // token-related types
-  class SourceToken;
-
   // ast-related types
+  class SourceToken;
   class ProgramNode;
   class ProcedureNode;
   class StatementListNode;
@@ -42,6 +40,7 @@ namespace source {
   class ConstantNode;
 
   // cfg-related types
+  class CallGraph;
   struct CfgNodeStatement;
   class CfgNode;
   class Cfg;
@@ -58,16 +57,14 @@ namespace source {
   // general
   typedef std::exception Exception;
   typedef std::string String;
+  typedef std::vector<String> StringStream;
   typedef std::queue<String> StringQueue;
   typedef std::unordered_set<String> StringSet;
   typedef std::unordered_map<std::string, int> StringToIntMap;
   typedef std::unordered_map<String, StringSet> StringToStringSetMap;
 
-  // token-related types
-  typedef std::shared_ptr<SourceToken> TokenPtr;
-  typedef std::vector<TokenPtr> TokenStream;
-
   // ast-related types
+  typedef std::shared_ptr<SourceToken> TokenPtr;
   typedef std::shared_ptr<ProgramNode> ProgramNodePtr;
   typedef std::shared_ptr<ProcedureNode> ProcedureNodePtr;
   typedef std::shared_ptr<StatementListNode> StatementListNodePtr;
@@ -88,10 +85,12 @@ namespace source {
   typedef std::shared_ptr<ConstantNode> ConstantNodePtr;
 
   // ast-related types (others)
+  typedef std::vector<TokenPtr> TokenStream;
   typedef std::vector<ProcedureNodePtr> ProcedureNodeStream;
   typedef std::vector<StatementNodePtr> StatementNodeStream;
 
   // cfg-related types
+  typedef std::shared_ptr<CallGraph> CallGraphPtr;
   typedef std::shared_ptr<CfgNode> CfgNodePtr;
   typedef std::shared_ptr<Cfg> CfgPtr;
 

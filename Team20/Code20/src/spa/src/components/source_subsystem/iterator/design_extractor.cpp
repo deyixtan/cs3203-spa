@@ -1,232 +1,210 @@
 #include "design_extractor.h"
-#include "../types/call_graph/call_graph.h"
-#include "../types/ast/node_program.h"
-#include "../types/ast/node_procedure.h"
-#include "../types/ast/node_statement_list.h"
-#include "../types/ast/node_statement.h"
-#include "../types/ast/node_read_statement.h"
-#include "../types/ast/node_print_statement.h"
-#include "../types/ast/node_assign_statement.h"
-#include "../types/ast/node_call_statement.h"
-#include "../types/ast/node_while_statement.h"
-#include "../types/ast/node_if_statement.h"
-#include "../types/ast/node_conditional_expression.h"
-#include "../types/ast/node_relational_expression.h"
-#include "../types/ast/node_boolean_expression.h"
-#include "../types/ast/node_not_expression.h"
-#include "../types/ast/node_combination_expression.h"
-#include "../types/ast/node_variable.h"
-#include "../types/ast/node_constant.h"
 #include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/types/ast/node_assign_statement.h"
+#include "components/source_subsystem/types/ast/node_boolean_expression.h"
+#include "components/source_subsystem/types/ast/node_call_statement.h"
+#include "components/source_subsystem/types/ast/node_combination_expression.h"
+#include "components/source_subsystem/types/ast/node_constant.h"
+#include "components/source_subsystem/types/ast/node_if_statement.h"
+#include "components/source_subsystem/types/ast/node_not_expression.h"
+#include "components/source_subsystem/types/ast/node_print_statement.h"
+#include "components/source_subsystem/types/ast/node_procedure.h"
+#include "components/source_subsystem/types/ast/node_program.h"
+#include "components/source_subsystem/types/ast/node_read_statement.h"
+#include "components/source_subsystem/types/ast/node_relational_expression.h"
+#include "components/source_subsystem/types/ast/node_statement_list.h"
+#include "components/source_subsystem/types/ast/node_variable.h"
+#include "components/source_subsystem/types/ast/node_while_statement.h"
+#include "components/source_subsystem/types/call_graph/call_graph.h"
 
 namespace source {
 
-DesignExtractor::DesignExtractor(std::shared_ptr<PkbClient> pkb_client)
-    : m_pkb_client(std::move(pkb_client)),
-      m_call_graph(std::make_shared<CallGraph>()),
-      m_visited(std::vector<std::string>()) {}
+DesignExtractor::DesignExtractor(PkbClientPtr pkb_client) :
+    m_pkb_client(std::move(pkb_client)),
+    m_call_graph(std::make_shared<CallGraph>()),
+    m_visited(StringStream()),
+    m_is_uses_stmt(true) {}
 
-std::shared_ptr<PkbClient> DesignExtractor::GetPkbClient() {
-  return m_pkb_client;
+void DesignExtractor::IterateAst(ProgramNodePtr &program_node) {
+  // iterates AST and populate PKB
+  Visit(program_node);
+  // populate stuff that can only be done after
+  // iterating entire AST
+  PostIteratePopulate();
 }
 
-std::shared_ptr<CallGraph> DesignExtractor::GetCallGraph() {
-  return m_call_graph;
-}
+void DesignExtractor::PostIteratePopulate() {
+  // this method updates Uses and Modifies
+  // for Call statements
+  StringStream topological_order = m_call_graph->TopoSort();
+  if (topological_order.empty()) {
+    return;
+  }
 
-std::vector<std::string> &DesignExtractor::GetVisited() {
-  return m_visited;
-}
-
-void DesignExtractor::IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node) {
-  Visit(std::move(node));
-  std::vector<std::string> topo_order = m_call_graph->TopoSort();
-  for (int i = topo_order.size() - 1; i >= 0; i--) {
-    UpdateCallUsesModifies(topo_order.at(i));
+  unsigned int topological_size = topological_order.size();
+  for (unsigned int i = topological_size - 1; i > 0; i--) {
+    m_pkb_client->UpdateCallUsesModifies(topological_order.at(i));
   }
 }
 
-void DesignExtractor::UpdateCallUsesModifies(std::string proc) {
-  std::unordered_set<std::string> uses_vars = m_pkb_client->GetPKB()->GetUsesStore()->GetVarUsedByStmt(proc);
-  std::unordered_set<std::string> mod_vars = m_pkb_client->GetPKB()->GetModifiesStore()->GetVarModByStmt(proc);
-  std::unordered_set<std::string> call_stmts = m_pkb_client->GetPKB()->GetCallStore()->GetCallStmtOf(proc);
-  std::unordered_set<std::string> callers = m_pkb_client->GetPKB()->GetCallStore()->GetCallersOf(proc);
+void DesignExtractor::PopulateFollowsHelper(StatementNodeStream statements, int index) {
+  if (index < 1) {
+    return;
+  }
 
-  for (auto &call_stmt : call_stmts) {
-    std::unordered_set<std::string> ancestors = m_pkb_client->GetPKB()->GetParentStore()->GetAllAnceOf(STMT, call_stmt); //TODO: Fix StmtType
+  String prev_stmt = statements[index - 1]->GetStatementNumber();
+  String curr_stmt = statements[index]->GetStatementNumber();
 
-    UpdateCallUses(call_stmt, uses_vars, ancestors, callers);
-    UpdateCallModifies(call_stmt, mod_vars, ancestors, callers);
+  // Populate Follows
+  m_pkb_client->PopulateFollows(prev_stmt, curr_stmt);
+
+  // Populate Follows*
+  for (int i = index - 1; i >= 0; i--) {
+    prev_stmt = statements[i]->GetStatementNumber();
+    m_pkb_client->PopulateFollowsStar(prev_stmt, curr_stmt);
   }
 }
 
-void DesignExtractor::UpdateCallUses(std::string const &call_stmt,
-                                     std::unordered_set<std::string> const &vars,
-                                     std::unordered_set<std::string> const &ancestors,
-                                     std::unordered_set<std::string> const &callers) {
-  for (auto &var : vars) {
-    m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(call_stmt, var);
-    for (auto &ance : ancestors) {
-      m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(ance, var);
-    }
-    for (auto &caller : callers) {
-      m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(caller, var);
-    }
+void DesignExtractor::PopulateParentHelper(String &stmt_no) {
+  if (m_visited.empty()) {
+    return;
   }
+  m_pkb_client->PopulateParent(m_visited.back(), stmt_no);
 }
 
-void DesignExtractor::UpdateCallModifies(std::string const &call_stmt,
-                                         std::unordered_set<std::string> const &vars,
-                                         std::unordered_set<std::string> const &ancestors,
-                                         std::unordered_set<std::string> const &callers) {
-  for (auto &var : vars) {
-    m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(call_stmt, var);
-    for (auto &ance : ancestors) {
-      m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(ance, var);
-    }
-    for (auto &caller : callers) {
-      m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(caller, var);
-    }
-
-  }
-}
-
-void DesignExtractor::Visit(ProgramNodePtr program_node) {
+void DesignExtractor::Visit(ProgramNodePtr &program_node) {
   ProcedureNodeStream procedures = program_node->GetProcedures();
   for (ProcedureNodePtr &procedure : procedures) {
     procedure->Accept(shared_from_this());
   }
 }
 
-void DesignExtractor::Visit(ProcedureNodePtr procedure_node) {
+void DesignExtractor::Visit(ProcedureNodePtr &procedure_node) {
   String proc_name = procedure_node->GetName();
   StatementListNodePtr stmt_list = procedure_node->GetStatementList();
 
-  // populate pkb
+  // update m_curr_proc, needed to be done before Accept()
+  // as underlying logic may require the current parsed
+  // procedure name
   m_curr_proc = proc_name;
-  GetPkbClient()->PopulateProc(proc_name);
 
   stmt_list->Accept(shared_from_this());
+  m_pkb_client->PopulateProc(proc_name);
 }
 
-void DesignExtractor::Visit(StatementListNodePtr stmt_list_node) {
+void DesignExtractor::Visit(StatementListNodePtr &stmt_list_node) {
   StatementNodeStream statements = stmt_list_node->GetStatements();
-  for (int i = 0; i < statements.size(); ++i) {
+  for (int i = 0; i < statements.size(); i++) {
     StatementNodePtr statement = statements[i];
+    String stmt_no = statement->GetStatementNumber();
+
+    // update m_curr_stmt_no, needed to be done before Accept()
+    // as underlying logic may require the current parsed
+    // statement number
+    m_curr_stmt_no = stmt_no;
+
     statement->Accept(shared_from_this());
-
-    String stmt_num = statement->GetStatementNumber();
-    if (!GetVisited().empty()) {
-      GetPkbClient()->PopulateParent(GetVisited().back(), stmt_num);
-    }
-
-    if (i > 0) {
-      String prev_stmt = statements[i - 1]->GetStatementNumber();
-      String curr_stmt = statement->GetStatementNumber();
-      GetPkbClient()->PopulateFollows(prev_stmt, curr_stmt);
-
-      // PopulateFollowsStar
-      for (int j = i - 1; j >= 0; --j) {
-        prev_stmt = statements[j]->GetStatementNumber();
-        GetPkbClient()->PopulateFollowsStar(prev_stmt, curr_stmt);
-      }
-    }
+    PopulateFollowsHelper(statements, i);
+    PopulateParentHelper(stmt_no);
   }
 }
 
-void DesignExtractor::Visit(PrintStatementNodePtr print_stmt) {
-  String stmt_num = print_stmt->GetStatementNumber();
-  VariableNodePtr var = print_stmt->GetVariable();
-  String var_name = var->GetName();
-
-  m_curr_stmt_no = stmt_num;
-  GetPkbClient()->PopulateTypeOfStmt(stmt_num, PRINT);
-  m_is_uses = true;
-  var->Accept(shared_from_this()); // apart from proc_name, true?
-  GetPkbClient()->PopulatePrint(GetVisited(), stmt_num, var_name);
-}
-
-void DesignExtractor::Visit(ReadStatementNodePtr read_stmt) {
+void DesignExtractor::Visit(ReadStatementNodePtr &read_stmt) {
   String stmt_num = read_stmt->GetStatementNumber();
   VariableNodePtr var = read_stmt->GetVariable();
   String var_name = var->GetName();
 
-  m_curr_stmt_no = stmt_num;
-  GetPkbClient()->PopulateTypeOfStmt(stmt_num, READ);
-  m_is_uses = false;
-  var->Accept(shared_from_this()); // apart from proc_name, true?
-  GetPkbClient()->PopulateRead(GetVisited(), stmt_num, var_name);
+  m_pkb_client->PopulateTypeOfStmt(stmt_num, READ);
+  m_is_uses_stmt = false;
+  var->Accept(shared_from_this());
+  m_pkb_client->PopulateRead(m_visited, stmt_num, var_name);
 }
 
-void DesignExtractor::Visit(AssignStatementNodePtr assign_stmt) {
+void DesignExtractor::Visit(PrintStatementNodePtr &print_stmt) {
+  String stmt_num = print_stmt->GetStatementNumber();
+  VariableNodePtr var = print_stmt->GetVariable();
+  String var_name = var->GetName();
+
+  m_pkb_client->PopulateTypeOfStmt(stmt_num, PRINT);
+  m_is_uses_stmt = true;
+  var->Accept(shared_from_this());
+  m_pkb_client->PopulatePrint(m_visited, stmt_num, var_name);
+}
+
+void DesignExtractor::Visit(AssignStatementNodePtr &assign_stmt) {
   String stmt_num = assign_stmt->GetStatementNumber();
   VariableNodePtr var = assign_stmt->GetLhs();
   String var_name = var->GetName();
   ExpressionNodePtr expr = assign_stmt->GetRhs();
 
-  m_curr_stmt_no = stmt_num;
-  GetPkbClient()->PopulateTypeOfStmt(stmt_num, ASSIGN);
-  m_is_uses = false;
-  var->Accept(shared_from_this()); // apart from proc_name, false?
-  m_is_uses = true;
-  expr->Accept(shared_from_this()); // apart from proc_name, true?
+  m_pkb_client->PopulateTypeOfStmt(stmt_num, ASSIGN);
+  m_is_uses_stmt = false;
+  var->Accept(shared_from_this());
+  m_is_uses_stmt = true;
+  expr->Accept(shared_from_this());
+
+  // m_pattern being modified from underlying expr Accept()
   String rhs_expr = m_pattern;
-  GetPkbClient()->PopulateAssign(GetVisited(), m_curr_proc, stmt_num, var_name, rhs_expr);
+  m_pkb_client->PopulateAssign(m_visited, m_curr_proc, stmt_num, var_name, rhs_expr);
 }
 
-void DesignExtractor::Visit(CallStatementNodePtr call_stmt) {
+void DesignExtractor::Visit(CallStatementNodePtr &call_stmt) {
   String stmt_num = call_stmt->GetStatementNumber();
   String callee_name = call_stmt->GetCalleeName();
   String caller_name = call_stmt->GetCallerName();
 
-  m_curr_stmt_no = stmt_num;
-  GetPkbClient()->PopulateTypeOfStmt(stmt_num, CALL);
-  GetPkbClient()->PopulateCall(GetVisited(), stmt_num, caller_name, callee_name);
-  GetCallGraph()->AddEdge(caller_name, callee_name);
+  m_pkb_client->PopulateTypeOfStmt(stmt_num, CALL);
+  m_pkb_client->PopulateCall(m_visited, stmt_num, caller_name, callee_name);
+  m_call_graph->AddEdge(caller_name, callee_name);
 }
 
-void DesignExtractor::Visit(WhileStatementNodePtr while_stmt) {
+void DesignExtractor::Visit(WhileStatementNodePtr &while_stmt) {
   String stmt_num = while_stmt->GetStatementNumber();
   ConditionalExpressionNodePtr cond_expr = while_stmt->GetCondition();
   StatementListNodePtr while_stmt_list = while_stmt->GetStatementList();
 
-  m_curr_stmt_no = stmt_num;
-  GetPkbClient()->PopulateTypeOfStmt(stmt_num, WHILE);
-  GetVisited().push_back(stmt_num);
-  // TODO: rename cond_expr2
-  m_is_uses = true;
-  cond_expr->Accept(shared_from_this()); // apart from proc_name, true?
-  String cond_expr2 = m_pattern;
+  m_pkb_client->PopulateTypeOfStmt(stmt_num, WHILE);
+  m_visited.push_back(stmt_num);
+  m_is_uses_stmt = true;
+  cond_expr->Accept(shared_from_this());
+
+  // m_pattern being modified from underlying expr Accept()
+  String cond_pattern = m_pattern;
+
   while_stmt_list->Accept(shared_from_this());
-  GetPkbClient()->PopulateWhile(GetVisited(), stmt_num, cond_expr2);
+  m_pkb_client->PopulateWhile(m_visited, stmt_num, cond_pattern);
 }
 
-void DesignExtractor::Visit(IfStatementNodePtr if_stmt) {
+void DesignExtractor::Visit(IfStatementNodePtr &if_stmt) {
   String stmt_num = if_stmt->GetStatementNumber();
   ConditionalExpressionNodePtr cond_expr = if_stmt->GetCondition();
   StatementListNodePtr if_stmt_list = if_stmt->GetIfStatementList();
   StatementListNodePtr else_else_list = if_stmt->GetElseStatementList();
 
-  m_curr_stmt_no = stmt_num;
-  GetPkbClient()->PopulateTypeOfStmt(stmt_num, IF);
-  GetVisited().push_back(stmt_num);
-  // TODO: rename cond_expr2
-  m_is_uses = true;
-  cond_expr->Accept(shared_from_this()); // apart from proc_name, true?
-  String cond_expr2 = m_pattern;
+  m_pkb_client->PopulateTypeOfStmt(stmt_num, IF);
+  m_visited.push_back(stmt_num);
+  m_is_uses_stmt = true;
+  cond_expr->Accept(shared_from_this());
+
+  // m_pattern being modified from underlying expr Accept()
+  String cond_pattern = m_pattern;
+
   if_stmt_list->Accept(shared_from_this());
   else_else_list->Accept(shared_from_this());
-  GetPkbClient()->PopulateIf(GetVisited(), stmt_num, cond_expr2);
+  m_pkb_client->PopulateIf(m_visited, stmt_num, cond_pattern);
 }
 
-void DesignExtractor::Visit(BooleanExpressionNodePtr boolean_expr_node) {
+void DesignExtractor::Visit(BooleanExpressionNodePtr &boolean_expr_node) {
   BooleanOperator boolean_operator = boolean_expr_node->GetOperator();
   ConditionalExpressionNodePtr lhs_cond_expr = boolean_expr_node->GetLhs();
   ConditionalExpressionNodePtr rhs_cond_expr = boolean_expr_node->GetRhs();
 
-  lhs_cond_expr->Accept(shared_from_this()); // is_uses?
+  lhs_cond_expr->Accept(shared_from_this());
+  // m_pattern being modified from underlying expr Accept()
   String lhs = m_pattern;
-  rhs_cond_expr->Accept(shared_from_this()); // is_uses?
+
+  rhs_cond_expr->Accept(shared_from_this());
+  // m_pattern being modified from underlying expr Accept()
   String rhs = m_pattern;
 
   if (boolean_operator == BooleanOperator::AND) {
@@ -236,48 +214,54 @@ void DesignExtractor::Visit(BooleanExpressionNodePtr boolean_expr_node) {
   m_pattern = lhs + "||" + rhs;
 }
 
-void DesignExtractor::Visit(RelationalExpressionNodePtr rel_expr_node) {
+void DesignExtractor::Visit(RelationalExpressionNodePtr &rel_expr_node) {
   RelationOperator relation_operator = rel_expr_node->GetOperator();
   String relation_operator_label = RelationalExpressionNode::GetOperatorLabel(relation_operator);
   ExpressionNodePtr lhs_expr = rel_expr_node->GetLhs();
   ExpressionNodePtr rhs_expr = rel_expr_node->GetRhs();
 
   lhs_expr->Accept(shared_from_this());
+  // m_pattern being modified from underlying expr Accept()
   String lhs = m_pattern;
+
   rhs_expr->Accept(shared_from_this());
+  // m_pattern being modified from underlying expr Accept()
   String rhs = m_pattern;
+
   m_pattern = "(" + lhs + relation_operator_label + rhs + ")";
 }
 
-
-void DesignExtractor::Visit(NotExpressionNodePtr not_expr_node) {
+void DesignExtractor::Visit(NotExpressionNodePtr &not_expr_node) {
   ConditionalExpressionNodePtr cond_expr = not_expr_node->GetExpression();
   cond_expr->Accept(shared_from_this());
 }
 
-void DesignExtractor::Visit(CombinationExpressionNodePtr combination_expr_node) {
+void DesignExtractor::Visit(CombinationExpressionNodePtr &combination_expr_node) {
   ArithmeticOperator arithmetic_operator = combination_expr_node->GetOperator();
   String arithmetic_operator_label = CombinationExpressionNode::GetOperatorLabel(arithmetic_operator);
   ExpressionNodePtr lhs_expr = combination_expr_node->GetLhs();
   ExpressionNodePtr rhs_expr = combination_expr_node->GetRhs();
 
   lhs_expr->Accept(shared_from_this());
+  // m_pattern being modified from underlying expr Accept()
   String lhs = m_pattern;
+
   rhs_expr->Accept(shared_from_this());
+  // m_pattern being modified from underlying expr Accept()
   String rhs = m_pattern;
+
   m_pattern = "(" + lhs + arithmetic_operator_label + rhs + ")";
 }
 
-void DesignExtractor::Visit(VariableNodePtr variable_node) {
+void DesignExtractor::Visit(VariableNodePtr &variable_node) {
   String var_name = variable_node->GetName();
-
-  GetPkbClient()->PopulateVars(GetVisited(), m_curr_stmt_no, m_curr_proc, var_name, m_is_uses);
+  m_pkb_client->PopulateVars(m_visited, m_curr_stmt_no, m_curr_proc, var_name, m_is_uses_stmt);
   m_pattern = variable_node->GetPatternFormat();
 }
 
-void DesignExtractor::Visit(ConstantNodePtr constant_node) {
+void DesignExtractor::Visit(ConstantNodePtr &constant_node) {
   String value = constant_node->GetValue();
-  GetPkbClient()->PopulateConst(value);
+  m_pkb_client->PopulateConst(value);
   m_pattern = constant_node->GetPatternFormat();
 }
 

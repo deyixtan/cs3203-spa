@@ -38,7 +38,7 @@ void CfgBuilder::IterateCfgAndPopulatePkb() {
   std::vector<CfgNodeStatement> prev_stmts;
   std::unordered_set<std::shared_ptr<CfgNode>> visited;
   std::unordered_map<std::string, std::unordered_set<std::string>> next_map;
-  std::unordered_map<std::string, std::shared_ptr<CfgNode>> prog = m_pkb_client->GetPKB()->GetProgCfg()->GetCfgMap();
+  std::unordered_map<std::string, std::shared_ptr<CfgNode>> prog = m_pkb_client->GetProgramCfg()->GetCfgMap();
   for (auto proc : prog) {
     std::shared_ptr<CfgNode> curr_proc = proc.second; // root node of cfg
     CfgProcessHandler(curr_proc, node_stack, prev_stmts, visited, next_map);
