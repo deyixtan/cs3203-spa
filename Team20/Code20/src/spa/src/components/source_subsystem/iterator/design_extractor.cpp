@@ -12,7 +12,6 @@
 #include "components/source_subsystem/types/ast/node_program.h"
 #include "components/source_subsystem/types/ast/node_read_statement.h"
 #include "components/source_subsystem/types/ast/node_relational_expression.h"
-#include "components/source_subsystem/types/ast/node_statement.h"
 #include "components/source_subsystem/types/ast/node_statement_list.h"
 #include "components/source_subsystem/types/ast/node_variable.h"
 #include "components/source_subsystem/types/ast/node_while_statement.h"
@@ -21,18 +20,20 @@
 namespace source {
 
 DesignExtractor::DesignExtractor(PkbClientPtr pkb_client) :
-    m_pkb_client(std::move(pkb_client)), m_call_graph(std::make_shared<CallGraph>()), m_visited(StringStream()), m_is_uses(true) {}
+    m_pkb_client(std::move(pkb_client)),
+    m_call_graph(std::make_shared<CallGraph>()),
+    m_visited(StringStream()),
+    m_is_uses(true) {}
 
 void DesignExtractor::IterateAstAndPopulatePkb(ProgramNodePtr &program_node) {
   Visit(program_node);
 
   StringStream topological_order = m_call_graph->TopoSort();
-  int topological_size = topological_order.size();
-
-  if (topological_size == 0) {
+  if (topological_order.empty()) {
     return;
   }
 
+  unsigned int topological_size = topological_order.size();
   for (unsigned int i = topological_size - 1; i > 0; i--) {
     UpdateCallUsesModifies(topological_order.at(i));
   }
