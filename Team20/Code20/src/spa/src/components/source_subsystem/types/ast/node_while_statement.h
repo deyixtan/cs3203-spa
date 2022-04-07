@@ -16,7 +16,7 @@ class WhileStatementNode : public StatementNode {
   [[nodiscard]] ConditionalExpressionNodePtr GetCondition();
   [[nodiscard]] StatementListNodePtr GetStatementList();
   void Accept(DesignExtractorPtr design_extractor) override;
-  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override;
+  void Accept(CfgBuilderPtr cfg_builder) override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
 };
 

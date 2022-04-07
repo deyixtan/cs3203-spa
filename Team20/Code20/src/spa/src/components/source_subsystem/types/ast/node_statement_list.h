@@ -15,7 +15,7 @@ class StatementListNode : public Node {
   explicit StatementListNode(StatementNodeStream statements);
   [[nodiscard]] StatementNodeStream GetStatements();
   void Accept(DesignExtractorPtr design_extractor) override;
-  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override;
+  void Accept(CfgBuilderPtr cfg_builder) override;
   [[nodiscard]] bool operator==(const StatementListNode &other) const;
 };
 

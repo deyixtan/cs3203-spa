@@ -19,9 +19,9 @@ void ProgramNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(derived_ptr);
 }
 
-CfgNodePtr ProgramNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+void ProgramNode::Accept(CfgBuilderPtr cfg_builder) {
   ProgramNodePtr derived_ptr = std::dynamic_pointer_cast<ProgramNode>(shared_from_this());
-  return cfg_builder->Visit(derived_ptr, cfg_node);
+  cfg_builder->Visit(derived_ptr);
 }
 
 bool ProgramNode::operator==(const ProgramNode &other) const {

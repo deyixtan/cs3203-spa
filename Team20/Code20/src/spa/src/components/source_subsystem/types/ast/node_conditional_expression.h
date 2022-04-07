@@ -9,7 +9,7 @@ namespace source {
 class ConditionalExpressionNode : public Node {
  public:
   void Accept(DesignExtractorPtr design_extractor) override = 0;
-  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override = 0;
+  void Accept(CfgBuilderPtr cfg_builder) override = 0;
   [[nodiscard]] virtual bool operator==(const ConditionalExpressionNode &other) const = 0;
 };
 

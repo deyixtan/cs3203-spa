@@ -25,9 +25,7 @@ void BooleanExpressionNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(derived_ptr);
 }
 
-CfgNodePtr BooleanExpressionNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
-  return cfg_node;
-}
+void BooleanExpressionNode::Accept(CfgBuilderPtr cfg_builder) {}
 
 bool BooleanExpressionNode::operator==(const ConditionalExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const BooleanExpressionNode *>(&other);
