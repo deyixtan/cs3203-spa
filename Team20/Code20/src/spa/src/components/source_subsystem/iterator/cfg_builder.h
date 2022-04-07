@@ -11,10 +11,7 @@ class CfgBuilder : public std::enable_shared_from_this<CfgBuilder> {
   StringToCfgNodePtrMap m_cfg_map;
   CfgNodePtr m_curr_cfg_node;
 
- public:
-  explicit CfgBuilder(PkbClientPtr m_pkb_client);
-  void IterateAst(ProgramNodePtr &program_node);
-  void IterateCfg();
+ private:
   void CfgProcessHandler(CfgNodePtr &curr_proc,
                          CfgNodeStack &node_stack,
                          CfgNodeStatementStream &prev_stmts,
@@ -26,6 +23,11 @@ class CfgBuilder : public std::enable_shared_from_this<CfgBuilder> {
                        CfgNodeStatementStream &curr_stmts,
                        CfgNodeSet &visited,
                        StringToStringSetMap &next_map);
+
+ public:
+  explicit CfgBuilder(PkbClientPtr m_pkb_client);
+  void IterateAst(ProgramNodePtr &program_node);
+  void IterateCfg();
   void Visit(ProgramNodePtr &program_node);
   void Visit(ProcedureNodePtr &procedure_node);
   void Visit(StatementListNodePtr &stmt_list_node);

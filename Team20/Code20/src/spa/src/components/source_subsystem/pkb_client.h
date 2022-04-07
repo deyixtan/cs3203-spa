@@ -79,7 +79,7 @@ class PkbClient {
                     std::string &curr_stmt,
                     std::string &proc_name,
                     std::string &callee_name);
-  void PopulateCfg(Cfg &cfg);
+  void PopulateCfg(CfgPtr cfg);
   void PopulateNext(std::string stmt1, std::string stmt2);
   void PopulateNextStar(std::string stmt1, std::string stmt2);
   void AddPattern(StmtType type, std::string stmt, std::string lhs, std::string rhs);

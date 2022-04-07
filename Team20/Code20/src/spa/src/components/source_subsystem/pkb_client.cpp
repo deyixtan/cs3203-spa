@@ -234,8 +234,8 @@ void PkbClient::PopulateCallStmt(std::string proc, std::string stmt) {
   pkb->GetCallStore()->AddCallStmtMap(proc, stmt);
 }
 
-void PkbClient::PopulateCfg(Cfg &cfg) {
-  pkb->AddProgramCfg(std::make_shared<Cfg>(cfg));
+void PkbClient::PopulateCfg(CfgPtr cfg) {
+  pkb->AddProgramCfg(cfg);
 }
 
 void PkbClient::PopulateNext(std::string stmt1, std::string stmt2) {
