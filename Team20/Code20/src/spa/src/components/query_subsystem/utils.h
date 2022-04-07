@@ -2,7 +2,6 @@
 #define UTILS_H
 
 #include "pql_lexer/pql_token.h"
-#include <algorithm>
 
 using namespace pql;
 
