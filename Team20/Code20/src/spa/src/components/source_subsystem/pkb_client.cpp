@@ -5,8 +5,25 @@ namespace source {
 
 PkbClient::PkbClient(PKB *pkb) : pkb(pkb) {}
 
-PKB *PkbClient::GetPKB() {
-  return pkb;
+StringSet PkbClient::GetVarUsedByStmt(String stmt) {
+ return pkb->GetUsesStore()->GetVarUsedByStmt(stmt);
+}
+
+StringSet PkbClient::GetVarModByStmt(String stmt) {
+  return pkb->GetModifiesStore()->GetVarModByStmt(stmt);
+}
+
+StringSet PkbClient::GetCallStmtOf(String stmt) {
+  return pkb->GetCallStore()->GetCallStmtOf(stmt)
+}
+
+StringSet PkbClient::GetAllAnceOf(String stmt) {
+  return pkb->GetCallStore()->GetCallersOf(stmt);
+}
+
+StringSet PkbClient::GetCallersOf(String stmt) {
+  //TODO: Fix StmtType
+  return pkb->GetParentStore()->GetAllAnceOf(STMT, stmt)
 }
 
 void PkbClient::PopulateParent(std::string stmt1, std::string stmt2) {

@@ -41,13 +41,13 @@ StringStream DesignExtractor::GetVisited() {
 }
 
 void DesignExtractor::UpdateCallUsesModifies(String proc) {
-  StringSet uses_vars = m_pkb_client->GetPKB()->GetUsesStore()->GetVarUsedByStmt(proc);
-  StringSet mod_vars = m_pkb_client->GetPKB()->GetModifiesStore()->GetVarModByStmt(proc);
-  StringSet call_stmts = m_pkb_client->GetPKB()->GetCallStore()->GetCallStmtOf(proc);
-  StringSet callers = m_pkb_client->GetPKB()->GetCallStore()->GetCallersOf(proc);
+  StringSet uses_vars = m_pkb_client->GetVarUsedByStmt(proc);
+  StringSet mod_vars = m_pkb_client->GetVarModByStmt(proc);
+  StringSet call_stmts = m_pkb_client->GetCallStmtOf(proc);
+  StringSet callers = m_pkb_client->GetCallersOf(proc);
 
   for (auto &call_stmt : call_stmts) {
-    StringSet ancestors = m_pkb_client->GetPKB()->GetParentStore()->GetAllAnceOf(STMT, call_stmt); //TODO: Fix StmtType
+    StringSet ancestors = m_pkb_client->GetAllAnceOf(call_stmt);
     UpdateCallUses(call_stmt, uses_vars, ancestors, callers);
     UpdateCallModifies(call_stmt, mod_vars, ancestors, callers);
   }
@@ -55,24 +55,24 @@ void DesignExtractor::UpdateCallUsesModifies(String proc) {
 
 void DesignExtractor::UpdateCallUses(String call_stmt, StringSet vars, StringSet ancestors, StringSet callers) {
   for (auto &var : vars) {
-    m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(call_stmt, var);
+    m_pkb_client->PopulateUses(call_stmt, var);
     for (auto &ance : ancestors) {
-      m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(ance, var);
+      m_pkb_client->PopulateUses(ance, var);
     }
     for (auto &caller : callers) {
-      m_pkb_client->GetPKB()->GetUsesStore()->AddStmtVar(caller, var);
+      m_pkb_client->PopulateUses(caller, var);
     }
   }
 }
 
 void DesignExtractor::UpdateCallModifies(String call_stmt, StringSet vars, StringSet ancestors, StringSet callers) {
   for (auto &var : vars) {
-    m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(call_stmt, var);
+    m_pkb_client->PopulateModifies(call_stmt, var);
     for (auto &ance : ancestors) {
-      m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(ance, var);
+      m_pkb_client->PopulateModifies(ance, var);
     }
     for (auto &caller : callers) {
-      m_pkb_client->GetPKB()->GetModifiesStore()->AddStmtVar(caller, var);
+      m_pkb_client->PopulateModifies(caller, var);
     }
 
   }

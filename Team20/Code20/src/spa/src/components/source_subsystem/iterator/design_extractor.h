@@ -23,6 +23,10 @@ class DesignExtractor : public std::enable_shared_from_this<DesignExtractor> {
   void UpdateCallUsesModifies(String proc);
   void UpdateCallUses(String call_stmt, StringSet vars, StringSet ancestors, StringSet callers);
   void UpdateCallModifies(String call_stmt, StringSet vars, StringSet ancestors, StringSet callers);
+
+ public:
+  explicit DesignExtractor(PkbClientPtr pkb_client);
+  void IterateAstAndPopulatePkb(ProgramNodePtr program_node);
   void Visit(ProgramNodePtr program_node);
   void Visit(ProcedureNodePtr procedure_node);
   void Visit(StatementListNodePtr stmt_list_node);
@@ -38,10 +42,6 @@ class DesignExtractor : public std::enable_shared_from_this<DesignExtractor> {
   void Visit(CombinationExpressionNodePtr combination_expr_node);
   void Visit(VariableNodePtr variable_node);
   void Visit(ConstantNodePtr constant_node);
-
- public:
-  explicit DesignExtractor(PkbClientPtr pkb_client);
-  void IterateAstAndPopulatePkb(ProgramNodePtr program_node);
 };
 
 }
