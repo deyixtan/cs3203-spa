@@ -24,16 +24,19 @@ class CfgBuilder {
                          std::stack<std::shared_ptr<CfgNode>> &node_stack,
                          std::vector<Statement> &prev_stmts,
                          std::unordered_set<std::shared_ptr<CfgNode>> &visited,
-                         std::unordered_map<std::string, std::unordered_set<std::string>> &next_map);
+                         std::unordered_map<std::string, std::unordered_set<std::string>> &next_map,
+                         std::string proc_name);
   void MultipleStmtsNodeHandler(std::vector<Statement> &curr_stmts,
                                 std::unordered_map<std::string,
-                                std::unordered_set<std::string>> &next_map);
+                                std::unordered_set<std::string>> &next_map,
+                                std::string proc_name);
   void NextNodeHandler(std::shared_ptr<CfgNode> &desc,
                        std::stack<std::shared_ptr<CfgNode>> &node_stack,
                        std::vector<Statement> &curr_stmts,
                        std::unordered_set<std::shared_ptr<CfgNode>> &visited,
                        std::unordered_map<std::string,
-                       std::unordered_set<std::string>> &next_map);
+                       std::unordered_set<std::string>> &next_map,
+                       std::string proc_name);
   [[nodiscard]] std::unordered_map<std::string, std::shared_ptr<CfgNode>> Visit(std::shared_ptr<ProgramNode> node);
   [[nodiscard]] std::shared_ptr<CfgNode> Visit(std::shared_ptr<ProcedureNode> node, std::shared_ptr<CfgNode> cfg_node);
   [[nodiscard]] std::shared_ptr<CfgNode> Visit(std::shared_ptr<StatementListNode> node,

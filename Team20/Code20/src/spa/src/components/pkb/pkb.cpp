@@ -17,7 +17,7 @@ void PKB::InitRelationshipStores() {
   m_usage_store = std::make_shared<UsesStore>(m_stmt_vector, m_stmt_type);
   m_pattern_store = std::make_shared<PatternStore>(m_stmt_vector, m_stmt_type);
   m_call_store = std::make_shared<CallStore>(m_stmt_vector, m_stmt_type);
-  m_next_store = std::make_shared<NextStore>(m_stmt_vector, m_stmt_type);
+  m_next_store = std::make_shared<NextStore>(m_stmt_vector, m_stmt_type, m_parent_store);
   m_affect_store = std::make_shared<AffectStore>(m_stmt_vector, m_stmt_type, m_modify_store, m_usage_store, m_follow_store);
 }
 
@@ -27,6 +27,10 @@ void PKB::AddStmt(std::string const &stmt, StmtType type) {
 
 void PKB::AddTypeOfStmt(std::string const &stmt, StmtType type) {
   m_stmt_type->insert({stmt, type});
+}
+
+void PKB::AddStmtToProc(std::string const &proc, std::string const &stmt) {
+  m_next_store->AddStmtProc(proc,stmt);
 }
 
 void PKB::AddName(std::string const &name, StmtType type) {

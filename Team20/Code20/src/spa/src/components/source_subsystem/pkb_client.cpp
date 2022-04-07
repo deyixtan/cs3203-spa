@@ -68,6 +68,10 @@ void PkbClient::PopulateTypeOfStmt(std::string stmt, StmtType type) {
   pkb->AddTypeOfStmt(stmt, type);
 }
 
+void PkbClient::PopulateStmtProc(std::string proc_name, std::string stmt) {
+  pkb->GetNextStore()->AddStmtProc(proc_name, stmt);
+}
+
 StmtType PkbClient::GetTypeOfStmt(std::string stmt) {
   return pkb->GetTypeOfStmt(stmt);
 }

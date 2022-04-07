@@ -1,8 +1,16 @@
 #include "stmt_stmt_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include <set>
 
 StmtStmtStore::StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                              std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type)
     : Store(move(stmt_vector), move(stmt_type)) {}
+
+    StmtStmtStore::StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                             std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
+                                 std::shared_ptr<ParentStore> parent_store)
+    : Store(move(stmt_vector), move(stmt_type)),
+    m_parent_store(parent_store){}
 
 void StmtStmtStore::AddUpperLower(StoreType store_type,
                                   std::string const &upper,
@@ -346,7 +354,7 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType store_ty
     }
       std::unordered_set<std::string> res;
       std::unordered_set<std::string> visited;
-      GetUpperStarOfHelper(stmt_type, stmt, res, visited);
+      GetUpperStarOfHelper(stmt_type, stmt, res, visited, "0");
       return res;
   }
 
@@ -408,29 +416,32 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore
 void StmtStmtStore::GetUpperStarOfHelper(StmtType stmt_type,
                                          std::string const &stmt,
                                          std::unordered_set<std::string> &res,
-                                         std::unordered_set<std::string> &visited) {
+                                         std::unordered_set<std::string> &visited,
+                                         std::string prev) {
   if (visited.find(stmt) != visited.end()) {
-    bool is_loop = false;
-    for (auto next : visited) {
-      AddNext(true,stmt_type,stmt,STMT,next);
+    for (auto before : visited) {
+      AddNext(true,STMT,before,stmt_type,stmt);
       res.insert(stmt);
     }
-    return;
+    std::string parent = m_parent_store->GetParentOf(WHILE, prev);
+    if(parent != stmt) {
+      return;
+    }
   }
   if(visited.size() > 0) {
     res.insert(stmt);
   }
-  for (auto next : visited) {
-    AddNext(true,stmt_type,stmt,STMT,next);
+  for (auto before : visited) {
+    AddNext(true,STMT,before,stmt_type,stmt);
   }
   visited.insert(stmt);
-  std::unordered_set<std::string> before_set = GetUpperSetOf(NEXT, STMT, stmt);
-  for (auto before : before_set) {
+  std::unordered_set<std::string> next_set = GetLowerSetOf(NEXT, STMT, stmt);
+  for (auto next : next_set) {
     std::unordered_set<std::string> new_visited;
     for (auto stmt : visited) {
       new_visited.insert(stmt);
     }
-    GetUpperStarOfHelper(stmt_type, before, res, new_visited);
+    GetUpperStarOfHelper(stmt_type, next, res, new_visited, stmt);
   }
 }
 
@@ -439,7 +450,6 @@ void StmtStmtStore::GetLowerStarOfHelper(StmtType stmt_type,
                                          std::unordered_set<std::string> &res,
                                          std::unordered_set<std::string> &visited) {
   if (visited.find(stmt) != visited.end()) {
-    bool is_loop = false;
     for (auto before : visited) {
       AddNext(true,STMT,before,stmt_type,stmt);
       res.insert(stmt);
@@ -476,14 +486,14 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore
   for(auto pair : all_pairs) {
     std::string before_stmt = pair.first;
     std::string next_stmt = pair.second;
-    std::unordered_set<std::string> lower_star = GetLowerStarOf(NEXT, STMT, before_stmt);
-    for(auto next: lower_star) {
-      res.insert({pair.first, next});
-    }
-    std::unordered_set<std::string> upper_star = GetUpperStarOf(NEXT, STMT, next_stmt);
-    for(auto before: upper_star) {
-      res.insert({before, pair.second});
-    }
+    GetLowerStarOf(NEXT, STMT, before_stmt);
+//    for(auto next: lower_star) {
+//      res.insert({pair.first, next});
+//    }
+    GetUpperStarOf(NEXT, STMT, next_stmt);
+//    for(auto before: upper_star) {
+//      res.insert({before, pair.second});
+//    }
   }
   return GetAllStarPairs();
 }

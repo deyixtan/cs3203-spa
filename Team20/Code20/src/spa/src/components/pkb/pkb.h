@@ -12,10 +12,10 @@
 #include "components/pkb/stores/parent_store/parent_store.h"
 #include "components/pkb/stores/call_store/call_store.h"
 #include "components/pkb/stores/pattern_store/pattern_store.h"
-#include "components/pkb/stores/next_store/next_store.h"
 #include "components/pkb/stores/affect_store/affect_store.h"
 #include "components/pkb/stores/pattern_store/expression_tree/expression_tree.h"
 #include "../source_subsystem/types/cfg/cfg.h"
+#include "components/pkb/stores/next_store/next_store.h"
 
 class PKB {
  private:
@@ -40,6 +40,7 @@ class PKB {
   void InitRelationshipStores();
   void AddStmt(std::string const &stmt, StmtType type);
   void AddTypeOfStmt(std::string const &stmt, StmtType type);
+  void AddStmtToProc(std::string const &proc, std::string const &stmt);
   void AddName(std::string const &name, StmtType type);
   void AddNameToStmt(StmtType type, std::string const &name, std::string const &stmt);
   void AddStmtToName(StmtType type, std::string const &stmt, std::string const &name);

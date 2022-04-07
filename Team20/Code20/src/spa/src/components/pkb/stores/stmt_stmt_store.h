@@ -2,6 +2,9 @@
 #define FOLLOWS_PARENT_STORE_H
 
 #include "store.h"
+#include "parent_store/parent_store.h"
+
+class ParentStore;
 
 class StmtStmtStore : public Store {
  private:
@@ -29,8 +32,12 @@ class StmtStmtStore : public Store {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_star_pairs;
 
  public:
+  std::shared_ptr<ParentStore> m_parent_store;
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                          std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
+  explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                         std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
+                         std::shared_ptr<ParentStore> parent_store);
   void AddUpperLower(StoreType store_type,
                      std::string const &upper,
                      std::string const &lower);
@@ -109,7 +116,8 @@ class StmtStmtStore : public Store {
   [[nodiscard]] void GetUpperStarOfHelper(StmtType stmt_type,
                                           std::string const &stmt,
                                           std::unordered_set<std::string> &res,
-                                          std::unordered_set<std::string> &visited);
+                                          std::unordered_set<std::string> &visited,
+                                          std::string prev);
 };
 
 #endif //FOLLOWS_PARENT_STORE_H

@@ -38,6 +38,7 @@ class PkbClient {
 
   void PopulateStmt(std::string stmt);
   void PopulateTypeOfStmt(std::string stmt, StmtType type);
+  void PopulateStmtProc(std::string proc_name, std::string stmt);
   StmtType GetTypeOfStmt(std::string stmt);
   void PopulateName(std::string name, StmtType type);
 

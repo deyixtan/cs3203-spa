@@ -1,16 +1,31 @@
 #include "next_store.h"
+#include <set>
 
 NextStore::NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
-                     std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
-    StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
-
+                     std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
+                     std::shared_ptr<ParentStore> parent_store) :
+    StmtStmtStore(move(stmt_vector), move(stmt_type)),
+    m_parent_store(parent_store),
+    m_proc_stmt_map({}) {}
 
 void NextStore::AddNext(std::string const &before, std::string const &next) {
   AddUpperLower(NEXT, before, next);
 }
 
-void NextStore::WipeStar() {
-  WipeNextStar();
+void NextStore::AddStmtProc(std::string const &proc, std::string const &stmt) {
+  if(m_proc_stmt_map.find(proc) == m_proc_stmt_map.end()) {
+    m_proc_stmt_map.insert({proc, {stmt}});
+  } else {
+    m_proc_stmt_map.at(proc).insert(stmt);
+  }
+}
+
+std::shared_ptr<ParentStore> NextStore::GetParentStore() {
+  return m_parent_store;
+}
+
+std::unordered_set<std::string> NextStore::GetStmtProc() {
+  return m_proc_stmt_map.at("affectsFiveHundred");
 }
 
 bool NextStore::IsNextPairValid(std::pair<std::string, std::string> const &pair) {
@@ -30,7 +45,7 @@ std::unordered_set<std::string> NextStore::GetNextOf(StmtType type, std::string 
 }
 
 std::unordered_set<std::string> NextStore::GetBeforeStarOf(StmtType type, std::string const &stmt) {
-  return GetUpperStarOf(NEXT, type, stmt);
+  return GetBeforeStarOf(type, stmt);
 }
 
 std::unordered_set<std::string> NextStore::GetNextStarOf(StmtType type, std::string const &stmt) {
