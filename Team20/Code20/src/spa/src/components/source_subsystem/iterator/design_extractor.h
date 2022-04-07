@@ -15,11 +15,16 @@ class DesignExtractor : public std::enable_shared_from_this<DesignExtractor> {
   String m_curr_proc;
   String m_curr_stmt_no;
   String m_pattern;
-  bool m_is_uses;
+  bool m_is_uses_stmt; // true -> uses, false -> modifies/anything else
+
+ private:
+  void PostIteratePopulate();
+  void PopulateFollowsHelper(StatementNodeStream statements, int index);
+  void PopulateParentHelper(String stmt_no);
 
  public:
   explicit DesignExtractor(PkbClientPtr pkb_client);
-  void IterateAstAndPopulatePkb(ProgramNodePtr &program_node);
+  void IterateAst(ProgramNodePtr &program_node);
   void Visit(ProgramNodePtr &program_node);
   void Visit(ProcedureNodePtr &procedure_node);
   void Visit(StatementListNodePtr &stmt_list_node);

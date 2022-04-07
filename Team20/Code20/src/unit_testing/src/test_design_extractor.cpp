@@ -49,7 +49,7 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateAst(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -102,7 +102,7 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateAst(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -158,7 +158,7 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateAst(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -247,7 +247,7 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
   cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateAst(expected_program_node);
   cfg_builder->IterateCfgAndPopulatePkb();
 
   // test
@@ -328,7 +328,7 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateAst(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -461,7 +461,7 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
   cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateAst(expected_program_node);
   cfg_builder->IterateCfgAndPopulatePkb();
 
   // test
@@ -585,7 +585,7 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
   cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateAst(expected_program_node);
   cfg_builder->IterateCfgAndPopulatePkb();
 
   // test
