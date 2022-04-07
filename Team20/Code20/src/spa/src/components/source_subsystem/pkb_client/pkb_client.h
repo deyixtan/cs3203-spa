@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
+#ifndef PKB_CLIENT_H
+#define PKB_CLIENT_H
 
 #include "components/source_subsystem/source_declarations.h"
 
@@ -87,4 +87,4 @@ class PkbClient {
 
 }
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_PKB_CLIENT_H_
+#endif //PKB_CLIENT_H
