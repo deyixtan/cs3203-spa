@@ -1,32 +1,25 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_ASSIGN_STATEMENT_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_ASSIGN_STATEMENT_H_
+#ifndef NODE_ASSIGN_STATEMENT_H
+#define NODE_ASSIGN_STATEMENT_H
 
-#include "node_statement.h"
-#include "node_variable.h"
-#include "node_constant.h"
-#include "node_combination_expression.h"
+#include "components/source_subsystem/source_declarations.h"
+#include "components/source_subsystem/types/ast/node_statement.h"
 
 namespace source {
 
 class AssignStatementNode : public StatementNode {
  private:
-  std::shared_ptr<VariableNode> m_identifier;
-  std::shared_ptr<ExpressionNode> m_expression;
+  VariableNodePtr m_lhs;
+  ExpressionNodePtr m_rhs;
 
  public:
-  AssignStatementNode(int stmt_no,
-                      std::shared_ptr<VariableNode> identifier,
-                      std::shared_ptr<ExpressionNode> expression);
-  [[nodiscard]] std::shared_ptr<VariableNode> GetIdentifier();
-  [[nodiscard]] std::shared_ptr<ExpressionNode> GetExpression();
-  [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] std::string ToString() override;
-  [[nodiscard]] std::string GetPatternFormat() override;
+  AssignStatementNode(String &stmt_no, VariableNodePtr lhs, ExpressionNodePtr rhs);
+  [[nodiscard]] VariableNodePtr GetLhs();
+  [[nodiscard]] ExpressionNodePtr GetRhs();
+  void Accept(DesignExtractorPtr design_extractor) override;
+  CfgNodePtr Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
-  void Accept(DesignExtractor *de, std::string proc_name);
-  std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_ASSIGN_STATEMENT_H_
+#endif //NODE_ASSIGN_STATEMENT_H

@@ -1,5 +1,7 @@
 #include "utils.h"
 
+using namespace pql;
+
 std::string Utils::RemoveSpace(const std::string &token) {
   std::string token_no_space(token);
   token_no_space.erase(std::remove_if(token_no_space.begin(), token_no_space.end(), isspace), token_no_space.end());

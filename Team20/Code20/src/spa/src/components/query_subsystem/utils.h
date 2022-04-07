@@ -4,6 +4,8 @@
 #include "pql_lexer/pql_token.h"
 #include <algorithm>
 
+using namespace pql;
+
 enum class AttriName {
   PROCNAME,
   VARNAME,
