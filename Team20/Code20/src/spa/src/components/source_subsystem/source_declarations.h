@@ -1,6 +1,7 @@
 #ifndef SOURCE_DECLARATIONS_H
 #define SOURCE_DECLARATIONS_H
 
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <queue>

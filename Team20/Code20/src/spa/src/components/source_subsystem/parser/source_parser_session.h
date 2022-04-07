@@ -2,7 +2,6 @@
 #define SOURCE_PARSER_SESSION_H
 
 #include "components/source_subsystem/source_declarations.h"
-#include <algorithm>
 
 namespace source {
 
