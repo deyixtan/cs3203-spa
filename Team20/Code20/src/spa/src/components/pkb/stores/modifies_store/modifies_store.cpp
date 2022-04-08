@@ -20,6 +20,6 @@ IDENT_SET ModifiesStore::GetAllProcModify() {
   return GetAllProc();
 }
 
-IDENT_PAIR_SET ModifiesStore::GetAllModStmt(StmtType type) {
+IDENT_PAIR_VECTOR ModifiesStore::GetAllModStmt(StmtType type) {
   return GetPairByType(type);
 }

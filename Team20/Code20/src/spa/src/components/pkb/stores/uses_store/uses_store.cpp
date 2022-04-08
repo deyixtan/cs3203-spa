@@ -19,6 +19,6 @@ IDENT_SET UsesStore::GetAllProcUsing() {
   return GetAllProc();
 }
 
-IDENT_PAIR_SET UsesStore::GetAllUsesStmt(StmtType type) {
+IDENT_PAIR_VECTOR UsesStore::GetAllUsesStmt(StmtType type) {
   return GetPairByType(type);
 }

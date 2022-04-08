@@ -1,5 +1,5 @@
 #include "cfg_builder.h"
-#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/pkb_client/pkb_client.h"
 #include "components/source_subsystem/types/ast/node_assign_statement.h"
 #include "components/source_subsystem/types/ast/node_call_statement.h"
 #include "components/source_subsystem/types/ast/node_if_statement.h"
@@ -158,7 +158,7 @@ void CfgBuilder::CfgProcessHandler(CfgNodePtr &curr_proc,
                                    String proc_name) {
   node_stack.push(curr_proc);
   CfgNodeStatementStream first_block = curr_proc->GetStatementList();
-  m_pkb_client->PopulateStmtProc(proc_name, first_block.begin()->stmt_no);
+  m_pkb_client->PopulateProcStmt(proc_name, first_block.begin()->stmt_no);
 
   // per cfg logic
   while (!node_stack.empty()) {

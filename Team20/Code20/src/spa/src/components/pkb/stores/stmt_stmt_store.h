@@ -9,10 +9,9 @@ class StmtStmtStore : public Store {
  private:
   NESTED_TUPLE_MAP type_pair_map;
   NESTED_TUPLE_MAP star_type_pair_map;
-  IDENT_PAIR_SET all_pairs;
-  IDENT_PAIR_SET all_star_pairs;
   std::shared_ptr<ParentStore> m_parent_store;
-  std::vector<std::pair<std::string, std::string>> m_next_star_pairs;
+  IDENT_PAIR_VECTOR all_pairs;
+  IDENT_PAIR_VECTOR all_star_pairs;
 
  public:
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
@@ -40,11 +39,11 @@ class StmtStmtStore : public Store {
   [[nodiscard]] IDENT_SET GetLowerSetOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetUpperStarOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetLowerStarOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
-  [[nodiscard]] IDENT_PAIR_SET GetPairByType(StmtType type1, StmtType type2);
-  [[nodiscard]] IDENT_PAIR_SET GetStarPairByType(StmtType type1, StmtType type2);
-  [[nodiscard]] IDENT_PAIR_SET GetAllPairs();
-  [[nodiscard]] IDENT_PAIR_SET GetAllStarPairs();
-  [[nodiscard]] std::vector<std::pair<std::string, std::string>> GetAllNextStarPairs(std::vector<std::string> stmt_list);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetPairByType(StmtType type1, StmtType type2);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetStarPairByType(StmtType type1, StmtType type2);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAllPairs();
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAllStarPairs();
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAllNextStarPairs(std::vector<std::string> stmt_list);
   void GetLowerStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited, IDENT const &prev);
   void GetUpperStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited, IDENT const &prev);
 };

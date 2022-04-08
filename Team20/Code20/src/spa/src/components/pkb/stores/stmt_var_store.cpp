@@ -28,11 +28,11 @@ void StmtVarStore::AddStmtVarHelper(StmtType type, std::string stmt, std::string
     stmt_var_map.at(stmt).emplace(var);
   }
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
+  IDENT_PAIR_VECTOR set = {};
   if (type_pair_map.find(type) != type_pair_map.end()) {
-    type_pair_map.at(type).emplace(std::pair<std::string, std::string>(stmt, var));
+    type_pair_map.at(type).push_back({stmt, var});
   } else {
-    set.insert(std::pair<std::string, std::string>(stmt, var));
+    set.push_back({stmt, var});
     type_pair_map.insert({type, set});
   }
 
@@ -76,7 +76,7 @@ std::unordered_set<std::string> StmtVarStore::GetStmtByVar(StmtType type, std::s
   return {};
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtVarStore::GetPairByType(StmtType type) {
+IDENT_PAIR_VECTOR StmtVarStore::GetPairByType(StmtType type) {
   if (type_pair_map.find(type) != type_pair_map.end()) {
     return type_pair_map.at(type);
   }

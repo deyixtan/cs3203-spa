@@ -12,7 +12,7 @@ class ModifiesStore : public StmtVarStore {
   [[nodiscard]] IDENT_SET GetStmtModByVar(StmtType type, IDENT const &var);
   [[nodiscard]] IDENT_SET GetAllStmtModify();
   [[nodiscard]] IDENT_SET GetAllProcModify();
-  [[nodiscard]] IDENT_PAIR_SET GetAllModStmt(StmtType type);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAllModStmt(StmtType type);
 };
 
 #endif //MODIFY_STORE_H

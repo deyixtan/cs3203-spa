@@ -100,21 +100,21 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAllAffectsStmt(StmtType type) {
-  return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_pairs, type);
+  //return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_pairs, type);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAllAffectsStarStmt(StmtType type) {
-  return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_star_pairs, type);
+  //return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_star_pairs, type);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAllAffectsStmt(StmtType type1,
                                                                                                     StmtType type2) {
-  return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_pairs, type1, type2);
+  //return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_pairs, type1, type2);
 }
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAllAffectsStarStmt(StmtType type1,
                                                                                                         StmtType type2) {
-  return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_star_pairs, type1, type2);
+  //return m_affects_store->GetAllAffectsStmtHelper(m_all_affects_star_pairs, type1, type2);
 }
 
 // HELPER METHODS
