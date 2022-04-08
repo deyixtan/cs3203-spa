@@ -1,6 +1,6 @@
 #include "query_evaluator.h"
 
-namespace pql_evaluator {
+namespace pql {
 
 void QueryEvaluator::Evaluate(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results) {
   pql::Table table;

@@ -14,7 +14,7 @@
 #include <list>
 #include <queue>
 
-namespace pql_evaluator {
+namespace pql {
 
 class QueryEvaluator {
  public:

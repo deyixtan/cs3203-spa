@@ -12,9 +12,6 @@
 
 namespace pql {
 
-using pql_validator::ParsedQueryValidator;
-using pql_evaluator::QueryEvaluator;
-
 class QueryController {
  public:
   static void ProcessQuery(std::string query, const PkbPtr &pkb, std::list<std::string> &results);

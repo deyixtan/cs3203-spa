@@ -5,7 +5,7 @@
 #include "../pql_lexer/pql_token.h"
 #include "../utils.h"
 
-namespace pql_validator {
+namespace pql {
 
 class ParsedQueryValidator {
  public:
