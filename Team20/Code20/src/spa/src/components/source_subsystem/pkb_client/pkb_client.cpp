@@ -21,8 +21,8 @@ void PkbClient::AssignHelper(StringStream &visited,
                              String &var_name,
                              String &rhs_expr) {
   PopulateStmt(curr_stmt);
-  AddPattern(STMT, curr_stmt, var_name, rhs_expr);
   PopulateParentStar(curr_stmt, visited);
+  m_pkb->GetPatternStore()->AddStmtWithPattern(curr_stmt, var_name, rhs_expr);
 }
 
 void PkbClient::PopulateCallStmt(String proc, String stmt) {
@@ -55,16 +55,14 @@ void PkbClient::UpdateCallModifies(String &call_stmt, StringSet &vars, StringSet
 
 void PkbClient::WhileHelper(StringStream &visited, String &curr_stmt, String cond_expr) {
   PopulateStmt(curr_stmt);
-  AddPattern(WHILE, curr_stmt, cond_expr, "");
   PopulateParentStar(curr_stmt, visited);
-  visited.pop_back();
+  m_pkb->GetPatternStore()->AddWhileWithPattern(curr_stmt, cond_expr);
 }
 
 void PkbClient::IfHelper(StringStream &visited, String curr_stmt, String cond_expr) {
   PopulateStmt(curr_stmt);
-  AddPattern(IF, curr_stmt, cond_expr, "");
   PopulateParentStar(curr_stmt, visited);
-  visited.pop_back();
+  m_pkb->GetPatternStore()->AddIfWithPattern(curr_stmt, cond_expr);
 }
 
 void PkbClient::VarsHelper(StringStream &visited,
@@ -240,16 +238,6 @@ void PkbClient::UpdateCallUsesModifies(String &proc) {
 
 void PkbClient::PopulateNext(String stmt1, String stmt2) {
   m_pkb->GetNextStore()->AddNext(stmt1, stmt2);
-}
-
-void PkbClient::AddPattern(StmtType type, String stmt, String lhs, String rhs) {
-  if (type == StmtType::STMT) {
-    m_pkb->GetPatternStore()->AddStmtWithPattern(stmt, lhs, rhs);
-  } else if (type == StmtType::WHILE) {
-    m_pkb->GetPatternStore()->AddWhileWithPattern(stmt, lhs);
-  } else if (type == StmtType::IF) {
-    m_pkb->GetPatternStore()->AddIfWithPattern(stmt, lhs);
-  }
 }
 
 }
