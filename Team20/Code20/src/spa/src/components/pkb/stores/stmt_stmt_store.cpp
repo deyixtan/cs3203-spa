@@ -64,9 +64,8 @@ void StmtStmtStore::AddFollows(bool is_star,
     all_pairs.push_back({upper, lower});
   } else {
     all_star_pairs.push_back({upper, lower});
+    ExhaustiveAddAllStmt(type1, upper, type2, lower, true);
   }
-
-  ExhaustiveAddAllStmt(type1, upper, type2, lower, is_star);
 }
 
 void StmtStmtStore::AddParent(bool is_star,
