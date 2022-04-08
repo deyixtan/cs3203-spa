@@ -33,9 +33,12 @@ class Table {
   Records records;
 
   Table();
-  Table(const std::string &synonym, std::unordered_set<std::string> &single_constraint);
+  Table(const std::string &synonym, std::unordered_set<std::string> &single_constraints);
+  Table(const std::string &synonym, std::vector<std::string> &single_constraints);
   Table(const std::string &first_synonym, const std::string &second_synonym,
         std::unordered_set<std::pair<std::string, std::string>, pair_hash> &pair_constraints);
+  Table(const std::string &first_synonym, const std::string &second_synonym,
+        std::vector<std::pair<std::string, std::string>> &pair_constraints);
   void Merge(Table &other_table);
   void ToggleFalseClause();
   void ToggleBooleanResult();
