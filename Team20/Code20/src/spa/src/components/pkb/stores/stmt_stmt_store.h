@@ -44,7 +44,7 @@ class StmtStmtStore : public Store {
   [[nodiscard]] IDENT_PAIR_SET GetAllPairs();
   [[nodiscard]] IDENT_PAIR_SET GetAllStarPairs();
   [[nodiscard]] IDENT_PAIR_SET GetAllNextStarPairs();
-  void GetLowerStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited);
+  void GetLowerStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited, IDENT const &prev);
   void GetUpperStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited, IDENT const &prev);
 };
 
