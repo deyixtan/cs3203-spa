@@ -5,7 +5,7 @@ PatternStore::PatternStore(std::shared_ptr<std::vector<std::unordered_set<std::s
     Store(move(stmt_vector), move(stmt_type)) {}
 
 void PatternStore::AddStmtWithPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs) {
-  m_stmt_pattern_pairs.insert({stmt, lhs});
+  m_stmt_pattern_pairs.push_back({stmt, lhs});
   m_stmt_pattern_map[stmt] = {lhs, rhs};
 }
 
@@ -16,7 +16,7 @@ void PatternStore::AddWhileWithPattern(std::string const &stmt, std::string cons
     if (isalnum(c)) {
       var += c;
     } else if (!var.empty()) {
-      m_while_pattern_pairs.insert({stmt, var});
+      m_while_pattern_pairs.push_back({stmt, var});
       var.clear();
     }
   }
@@ -29,7 +29,7 @@ void PatternStore::AddIfWithPattern(std::string const &stmt, std::string const &
     if (isalnum(c)) {
       var += c;
     } else if (!var.empty()) {
-      m_if_pattern_pairs.insert({stmt, var});
+      m_if_pattern_pairs.push_back({stmt, var});
       var.clear();
     }
   }
@@ -111,7 +111,7 @@ IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
   for (auto const&[key, val] : m_stmt_pattern_map) {
     //EXACT MATCH RHS: pattern a(v, "x+1")
     if (val.second == sub_pattern) {
-      result.insert({key, val.first});
+      result.push_back({key, val.first});
     }
   }
   return result;
@@ -128,7 +128,7 @@ IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) 
   for (auto const&[key, val] : m_stmt_pattern_map) {
     //PARTIAL MATCH RHS: pattern a(v, _"x+1"_)
     if (val.second.find(sub_pattern) != std::string::npos) {
-      result.insert({key, val.first});
+      result.push_back({key, val.first});
     }
   }
   return result;

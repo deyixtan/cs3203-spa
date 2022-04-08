@@ -7,7 +7,7 @@ class StmtVarStore : public Store {
  private:
   IDENT_SET_MAP stmt_var_map;
   std::unordered_map<std::string, std::unordered_map<StmtType, std::unordered_set<std::string>>> var_stmt_map;
-  std::unordered_map<StmtType, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> type_pair_map;
+  std::unordered_map<StmtType, IDENT_PAIR_SET> type_pair_map;
   IDENT_SET all_stmt;
   IDENT_SET all_proc;
 

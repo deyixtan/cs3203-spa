@@ -44,29 +44,29 @@ IDENT_PAIR_SET NextStore::GetNextStarPairs() {
   return GetAllNextStarPairs();
 }
 
-IDENT_SET NextStore::GetNextStarSameStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_pairs = GetAllNextStarStmt(type, type);
-  std::unordered_set<std::string> same_synonym_set;
-  for (auto pair : all_pairs) {
-    if (pair.first == pair.second) {
-      same_synonym_set.insert(pair.first);
-    }
-  }
-  return same_synonym_set;
-}
+//IDENT_SET NextStore::GetNextStarSameStmt(StmtType type) {
+//  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
+//  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_pairs = GetAllNextStarStmt(type, type);
+//  std::unordered_set<std::string> same_synonym_set;
+//  for (auto pair : all_pairs) {
+//    if (pair.first == pair.second) {
+//      same_synonym_set.insert(pair.first);
+//    }
+//  }
+//  return same_synonym_set;
+//}
 
 IDENT_PAIR_SET NextStore::GetAllNextStmt(StmtType type1, StmtType type2) {
   std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
   return GetPairByType(type1, type2);
 }
 
-IDENT_PAIR_SET NextStore::GetAllNextStarStmt(StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  return Store::GetAllStmt(type, supported_types, GetNextStarPairs(), false);
-}
-
-IDENT_PAIR_SET NextStore::GetAllNextStarStmt(StmtType type1, StmtType type2) {
-  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  return Store::GetAllStmt(type1, type2, supported_types, GetAllNextStarStmt(type2), true);
-}
+//IDENT_PAIR_SET NextStore::GetAllNextStarStmt(StmtType type) {
+//  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
+//  return Store::GetAllStmt(type, supported_types, GetNextStarPairs(), false);
+//}
+//
+//IDENT_PAIR_SET NextStore::GetAllNextStarStmt(StmtType type1, StmtType type2) {
+//  std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
+//  return Store::GetAllStmt(type1, type2, supported_types, GetAllNextStarStmt(type2), true);
+//}
