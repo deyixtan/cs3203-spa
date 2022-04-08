@@ -567,15 +567,15 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   pkb->GetFollowsStore()->AddFollow("3", "4");
   pkb->GetFollowsStore()->AddFollow("4", "5");
   pkb->GetFollowsStore()->AddFollowStar("1", "2");
-  pkb->GetFollowsStore()->AddFollowStar("1", "3");
-  pkb->GetFollowsStore()->AddFollowStar("1", "4");
-  pkb->GetFollowsStore()->AddFollowStar("1", "5");
   pkb->GetFollowsStore()->AddFollowStar("2", "3");
-  pkb->GetFollowsStore()->AddFollowStar("2", "4");
-  pkb->GetFollowsStore()->AddFollowStar("2", "5");
+  pkb->GetFollowsStore()->AddFollowStar("1", "3");
   pkb->GetFollowsStore()->AddFollowStar("3", "4");
-  pkb->GetFollowsStore()->AddFollowStar("3", "5");
+  pkb->GetFollowsStore()->AddFollowStar("2", "4");
+  pkb->GetFollowsStore()->AddFollowStar("1", "4");
   pkb->GetFollowsStore()->AddFollowStar("4", "5");
+  pkb->GetFollowsStore()->AddFollowStar("3", "5");
+  pkb->GetFollowsStore()->AddFollowStar("2", "5");
+  pkb->GetFollowsStore()->AddFollowStar("1", "5");
 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();

@@ -184,7 +184,7 @@ std::unordered_set<std::string> all_proc_using = {"main", "foo", "bar", "func"};
 
 /* MODIFY STORE */
 
-std::unordered_map<StmtType, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> mod_proc_to_var =
+std::unordered_map<StmtType, std::vector<std::pair<std::string, std::string>>> mod_proc_to_var =
     {
         {PROC, {{"main", "dog"}, {"main", "pig"}, {"main", "dragon"}, {"main", "snake"}, {"main", "monkey"}, {"foo", "snake"}, {"foo", "monkey"}, {"func", "monkey"}, {"bar", "monkey"}}},
     };
@@ -389,7 +389,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_pairs
         {"monkey", "((tiger)+(dog))"}
     };
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_pairs_synonym =
+std::vector<std::pair<std::string, std::string>> pattern_pairs_synonym =
     {
         {"4", "dog"},
         {"7", "pig"},

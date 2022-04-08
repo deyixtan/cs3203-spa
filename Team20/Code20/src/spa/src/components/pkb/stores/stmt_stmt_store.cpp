@@ -66,7 +66,7 @@ void StmtStmtStore::AddFollows(bool is_star,
     all_star_pairs.push_back({upper, lower});
   }
 
-  ExhaustiveAddAllStmt(type1, upper, type2, lower, true);
+  ExhaustiveAddAllStmt(type1, upper, type2, lower, is_star);
 }
 
 void StmtStmtStore::AddParent(bool is_star,
@@ -134,15 +134,7 @@ void StmtStmtStore::ExhaustiveAddAllStmt(StmtType type1,
                                          StmtType type2,
                                          std::string lower,
                                          bool is_star) {
-  std::unordered_map<StmtType,
-                     std::unordered_map<StmtType,
-                                        std::tuple<std::unordered_map<std::string,
-                                                                      std::unordered_set<std::string>>,
-                                                   std::unordered_map<std::string,
-                                                                      std::unordered_set<std::string>>,
-                                                   std::vector<std::pair<std::string,
-                                                                         std::string>>>>>
-      *pair_map;
+  NESTED_TUPLE_MAP *pair_map;
 
   if (!is_star) {
     pair_map = &type_pair_map;
@@ -160,17 +152,7 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
                                          std::string upper,
                                          StmtType type2,
                                          std::string lower,
-                                         std::unordered_map<StmtType,
-                                                            std::unordered_map<StmtType,
-                                                                               std::tuple<std::unordered_map<std::string,
-                                                                                                             std::unordered_set<
-                                                                                                                 std::string>>,
-                                                                                          std::unordered_map<std::string,
-                                                                                                             std::unordered_set<
-                                                                                                                 std::string>>,
-                                                                                          std::vector<std::pair<
-                                                                                              std::string,
-                                                                                              std::string>>>>> *pair_map) {
+                                         NESTED_TUPLE_MAP *pair_map) {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
   set.insert(std::pair<std::string, std::string>(upper, lower));
 
@@ -196,16 +178,7 @@ void StmtStmtStore::PopulatePairMap(StmtType type1,
                                     std::string upper,
                                     StmtType type2,
                                     std::string lower,
-                                    std::unordered_map<StmtType,
-                                                       std::unordered_map<StmtType,
-                                                                          std::tuple<std::unordered_map<std::string,
-                                                                                                        std::unordered_set<
-                                                                                                            std::string>>,
-                                                                                     std::unordered_map<std::string,
-                                                                                                        std::unordered_set<
-                                                                                                            std::string>>,
-                                                                                     std::vector<std::pair<std::string,
-                                                                                                           std::string>>>>> *pair_map) {
+                                    NESTED_TUPLE_MAP *pair_map) {
   //Map upper to lower set (first elem in tuple)
   if (std::get<0>(pair_map->at(type1).at(type2)).find(upper)
       != std::get<0>(pair_map->at(type1).at(type2)).end()) {
@@ -254,14 +227,8 @@ std::unordered_set<std::string> StmtStmtStore::GetHelper(StmtType type1,
                                                          std::string const &stmt,
                                                          bool is_star) {
 
-  std::unordered_map<StmtType,
-                     std::unordered_map<StmtType,
-                                        std::tuple<std::unordered_map<std::string,
-                                                                      std::unordered_set<std::string>>,
-                                                   std::unordered_map<std::string,
-                                                                      std::unordered_set<std::string>>,
-                                                   std::vector<std::pair<std::string,
-                                                                         std::string>>>>> *pair_map;
+  NESTED_TUPLE_MAP *pair_map;
+
   if (!is_star) {
     pair_map = &type_pair_map;
   } else {
