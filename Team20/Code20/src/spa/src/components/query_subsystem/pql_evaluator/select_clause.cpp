@@ -2,7 +2,7 @@
 
 namespace pql {
 
-SelectClause::SelectClause(const PqlToken &result_clause, const std::unordered_map<std::string, DesignEntityType> &declarations_, PKB *pkb_)
+SelectClause::SelectClause(const PqlToken &result_clause, const std::unordered_map<std::string, DesignEntityType> declarations_, PKB *pkb_)
     : result_clause(result_clause), declarations(declarations_), pkb(pkb_) {}
 
 Table SelectClause::Execute() {

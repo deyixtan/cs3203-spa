@@ -151,7 +151,7 @@ void AffectSession::TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node, std:
   }
 
   // process statements in a cfg_node
-  std::vector<source::Statement> statements = cfg_node->GetStatementList();
+  std::vector<source::CfgNodeStatement> statements = cfg_node->GetStatementList();
   for (auto const &stmt : statements) {
     std::string stmt_no = stmt.stmt_no;
     StmtType type = stmt.type;
@@ -171,11 +171,11 @@ void AffectSession::TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node, std:
   }
 
   // check if there are no next nodes
-  if (cfg_node->GetDescendants().size() == 0) {
+  if (cfg_node->GetNextList().size() == 0) {
     return;
   }
 
-  std::shared_ptr<source::CfgNode> next_node = cfg_node->GetDescendants().back();
+  std::shared_ptr<source::CfgNode> next_node = cfg_node->GetNextList().back();
   TraverseCfg(next_node, terminating_node, last_modified_map, last_modified_star_map);
 }
 
@@ -311,7 +311,7 @@ void AffectSession::HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_n
   // create a copy of last_modified_map, to be served to the "else" cfg node
   std::unordered_map<std::string, std::unordered_set<std::string>> last_modified_map_clone = last_modified_map;
   std::unordered_map<std::string, std::unordered_set<std::string>> last_modified_star_map_clone = last_modified_star_map;
-  std::shared_ptr<source::CfgNode> start_node = cfg_node->GetDescendants().front();
+  std::shared_ptr<source::CfgNode> start_node = cfg_node->GetNextList().front();
   std::shared_ptr<source::CfgNode> end_node = cfg_node;
 
   // traverse twice to populate modified table properly
@@ -343,8 +343,8 @@ void AffectSession::HandleIfStatement(std::string stmt_no, std::shared_ptr<sourc
   std::unordered_map<std::string, std::unordered_set<std::string>> last_modified_map_clone = last_modified_map;
   std::unordered_map<std::string, std::unordered_set<std::string>> last_modified_star_map_clone = last_modified_star_map;
 
-  std::shared_ptr<source::CfgNode> if_cfg_node = cfg_node->GetDescendants()[0];
-  std::shared_ptr<source::CfgNode> else_cfg_node = cfg_node->GetDescendants()[1];
+  std::shared_ptr<source::CfgNode> if_cfg_node = cfg_node->GetNextList()[0];
+  std::shared_ptr<source::CfgNode> else_cfg_node = cfg_node->GetNextList()[1];
   std::shared_ptr<source::CfgNode> end_node = std::make_shared<source::CfgNode>();
   std::string end_node_stmt_no = GetFollowingOf(stmt_no);
   end_node->AddStatement(StmtType::STMT, end_node_stmt_no);

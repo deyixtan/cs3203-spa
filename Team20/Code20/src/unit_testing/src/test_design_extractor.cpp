@@ -5,6 +5,7 @@
 #include "components/source_subsystem/exceptions/unexpected_token.h"
 #include "components/source_subsystem/types/ast/node_program.h"
 #include "components/source_subsystem/types/ast/node_procedure.h"
+#include "components/source_subsystem/types/ast/node_statement_list.h"
 #include "components/source_subsystem/types/ast/node_variable.h"
 #include "components/source_subsystem/types/ast/node_read_statement.h"
 #include "components/source_subsystem/types/ast/node_print_statement.h"
@@ -21,9 +22,10 @@ using namespace source;
 
 TEST_CASE("Test DE Modify population for single procedure with one read statement") {
   // set up AST for: procedure main { read a; }
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "1");
+  std::string stmt_no = "1";
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ReadStatementNode>
-      assign_stmt = std::make_shared<ReadStatementNode>(1, variable_node);
+      assign_stmt = std::make_shared<ReadStatementNode>(stmt_no, variable_node);
 
   std::vector<std::shared_ptr<StatementNode>> statements;
   statements.emplace_back(assign_stmt);
@@ -46,8 +48,8 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
+  design_extractor->IterateAst(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -61,13 +63,15 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
 
 TEST_CASE("Test DE population for single procedure with multiple statements") {
   // set up AST for: procedure main { read a; print x; }
-  std::shared_ptr<VariableNode> variable_node_a = std::make_shared<VariableNode>("a", "1");
+  std::string stmt_no_a = "1";
+  std::shared_ptr<VariableNode> variable_node_a = std::make_shared<VariableNode>("a");
   std::shared_ptr<ReadStatementNode>
-      read_stmt = std::make_shared<ReadStatementNode>(1, variable_node_a);
+      read_stmt = std::make_shared<ReadStatementNode>(stmt_no_a, variable_node_a);
 
-  std::shared_ptr<VariableNode> variable_node_x = std::make_shared<VariableNode>("x", "2");
+  std::string stmt_no_b = "2";
+  std::shared_ptr<VariableNode> variable_node_x = std::make_shared<VariableNode>("x");
   std::shared_ptr<PrintStatementNode>
-      print_stmt = std::make_shared<PrintStatementNode>(2, variable_node_x);
+      print_stmt = std::make_shared<PrintStatementNode>(stmt_no_b, variable_node_x);
 
   std::vector<std::shared_ptr<StatementNode>> statements;
   statements.emplace_back(read_stmt);
@@ -97,8 +101,8 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
+  design_extractor->IterateAst(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -120,14 +124,15 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
 
 TEST_CASE("Test DE population for single procedure with pattern statements") {
   // set up AST for: procedure main { x = x + 1 }
-  std::shared_ptr<VariableNode> variable_node_x = std::make_shared<VariableNode>("x", "1");
+  std::shared_ptr<VariableNode> variable_node_x = std::make_shared<VariableNode>("x");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<CombinationExpressionNode> combination_node =
       std::make_shared<CombinationExpressionNode>(ArithmeticOperator::PLUS, variable_node_x, constant_node);
-  std::shared_ptr<VariableNode> variable_node_x_2 = std::make_shared<VariableNode>("x", "1");
+  std::shared_ptr<VariableNode> variable_node_x_2 = std::make_shared<VariableNode>("x");
 
+  std::string stmt_no = "1";
   std::shared_ptr<AssignStatementNode>
-      assign_stmt = std::make_shared<AssignStatementNode>(1, variable_node_x_2, combination_node);
+      assign_stmt = std::make_shared<AssignStatementNode>(stmt_no, variable_node_x_2, combination_node);
 
   std::vector<std::shared_ptr<StatementNode>> statements;
   statements.emplace_back(assign_stmt);
@@ -152,8 +157,8 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
+  design_extractor->IterateAst(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -173,27 +178,30 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   // set up AST for: procedure main { if (a == 1) then { a = 2; } else { a = 3; } }
 
   // if's stmt_list
-  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "2");
+  std::string if_stmt_no = "2";
+  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
-      if_assign_stmt = std::make_shared<AssignStatementNode>(2, if_variable_node, if_constant_node);
+      if_assign_stmt = std::make_shared<AssignStatementNode>(if_stmt_no, if_variable_node, if_constant_node);
 
   std::vector<std::shared_ptr<StatementNode>> if_statements;
   if_statements.emplace_back(if_assign_stmt);
   std::shared_ptr<StatementListNode> if_stmt_list = std::make_shared<StatementListNode>(if_statements);
 
   // else's stmt_list
-  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "3");
+  std::string ese_stmt_no = "3";
+  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
-      else_assign_stmt = std::make_shared<AssignStatementNode>(3, else_variable_node, else_constant_node);
+      else_assign_stmt = std::make_shared<AssignStatementNode>(ese_stmt_no, else_variable_node, else_constant_node);
 
   std::vector<std::shared_ptr<StatementNode>> else_statements;
   else_statements.emplace_back(else_assign_stmt);
   std::shared_ptr<StatementListNode> else_stmt_list = std::make_shared<StatementListNode>(else_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a", "1");
+  std::string stmt_no = "1";
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -201,7 +209,7 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
                                                  condition_constant_node);
 
   std::shared_ptr<IfStatementNode>
-      if_stmt = std::make_shared<IfStatementNode>(1, condition_node, if_stmt_list, else_stmt_list);
+      if_stmt = std::make_shared<IfStatementNode>(stmt_no, condition_node, if_stmt_list, else_stmt_list);
 
   // if_stmt to procedure's stmt_list
   std::vector<std::shared_ptr<StatementNode>> statements;
@@ -236,11 +244,11 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
-  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
-  cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  cfg_builder.IterateCfgAndPopulatePkb();
+  DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
+  CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
+  cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateAst(expected_program_node);
+  cfg_builder->IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -260,24 +268,25 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   // set up AST for: procedure main { while ((a == 1) && (a == 2)) { a = 3; } }
 
   // while's stmt_list
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "2");
+  std::string condition_stmt_no = "2";
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
-      assign_stmt = std::make_shared<AssignStatementNode>(2, variable_node, constant_node);
+      assign_stmt = std::make_shared<AssignStatementNode>(condition_stmt_no, variable_node, constant_node);
 
   std::vector<std::shared_ptr<StatementNode>> while_statements;
   while_statements.emplace_back(assign_stmt);
   std::shared_ptr<StatementListNode> while_stmt_list = std::make_shared<StatementListNode>(while_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> condition_constant_node1 = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node1 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
                                                  condition_variable_node1,
                                                  condition_constant_node1);
 
-  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> condition_constant_node2 = std::make_shared<ConstantNode>("2");
   std::shared_ptr<RelationalExpressionNode> condition_node2 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -287,8 +296,9 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   std::shared_ptr<BooleanExpressionNode> condition_variable_node3 =
       std::make_shared<BooleanExpressionNode>(BooleanOperator::AND, condition_node1, condition_node2);
 
+  std::string stmt_no = "1";
   std::shared_ptr<WhileStatementNode>
-      while_stmt = std::make_shared<WhileStatementNode>(1, condition_variable_node3, while_stmt_list);
+      while_stmt = std::make_shared<WhileStatementNode>(stmt_no, condition_variable_node3, while_stmt_list);
 
   // while_stmt to procedure's stmt_list
   std::vector<std::shared_ptr<StatementNode>> statements;
@@ -317,8 +327,8 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
+  DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
+  design_extractor->IterateAst(expected_program_node);
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -344,27 +354,30 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
 //   }
 
   // if's stmt_list
-  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a", "3");
+  std::string if_stmt_no = "3";
+  std::shared_ptr<VariableNode> if_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> if_constant_node = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
-      if_assign_stmt = std::make_shared<AssignStatementNode>(3, if_variable_node, if_constant_node);
+      if_assign_stmt = std::make_shared<AssignStatementNode>(if_stmt_no, if_variable_node, if_constant_node);
 
   std::vector<std::shared_ptr<StatementNode>> if_statements;
   if_statements.emplace_back(if_assign_stmt);
   std::shared_ptr<StatementListNode> if_stmt_list = std::make_shared<StatementListNode>(if_statements);
 
   // else's stmt_list
-  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a", "4");
+  std::string else_stmt_no = "4";
+  std::shared_ptr<VariableNode> else_variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> else_constant_node = std::make_shared<ConstantNode>("4");
   std::shared_ptr<AssignStatementNode>
-      else_assign_stmt = std::make_shared<AssignStatementNode>(4, else_variable_node, else_constant_node);
+      else_assign_stmt = std::make_shared<AssignStatementNode>(else_stmt_no, else_variable_node, else_constant_node);
 
   std::vector<std::shared_ptr<StatementNode>> else_statements;
   else_statements.emplace_back(else_assign_stmt);
   std::shared_ptr<StatementListNode> else_stmt_list = std::make_shared<StatementListNode>(else_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("x", "2");
+  std::string condition_stmt_no = "2";
+  std::shared_ptr<VariableNode> condition_variable_node = std::make_shared<VariableNode>("x");
   std::shared_ptr<ConstantNode> condition_constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -372,27 +385,28 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
                                                  condition_constant_node);
 
   std::shared_ptr<IfStatementNode>
-      if_stmt = std::make_shared<IfStatementNode>(2, condition_node, if_stmt_list, else_stmt_list);
+      if_stmt = std::make_shared<IfStatementNode>(condition_stmt_no, condition_node, if_stmt_list, else_stmt_list);
 
   // while's stmt_list
-  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a", "2");
+  std::string stmt_no = "2";
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> constant_node = std::make_shared<ConstantNode>("1");
   std::shared_ptr<AssignStatementNode>
-      assign_stmt = std::make_shared<AssignStatementNode>(2, variable_node, constant_node);
+      assign_stmt = std::make_shared<AssignStatementNode>(stmt_no, variable_node, constant_node);
 
   std::vector<std::shared_ptr<StatementNode>> while_statements;
   while_statements.emplace_back(if_stmt);
   std::shared_ptr<StatementListNode> while_stmt_list = std::make_shared<StatementListNode>(while_statements);
 
   // condition
-  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node1 = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> condition_constant_node1 = std::make_shared<ConstantNode>("1");
   std::shared_ptr<RelationalExpressionNode> condition_node1 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
                                                  condition_variable_node1,
                                                  condition_constant_node1);
 
-  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a", "1");
+  std::shared_ptr<VariableNode> condition_variable_node2 = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> condition_constant_node2 = std::make_shared<ConstantNode>("2");
   std::shared_ptr<RelationalExpressionNode> condition_node2 =
       std::make_shared<RelationalExpressionNode>(RelationOperator::EQUALS,
@@ -402,8 +416,9 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   std::shared_ptr<BooleanExpressionNode> condition_variable_node3 =
       std::make_shared<BooleanExpressionNode>(BooleanOperator::AND, condition_node1, condition_node2);
 
+  std::string stmt_no3 = "1";
   std::shared_ptr<WhileStatementNode>
-      while_stmt = std::make_shared<WhileStatementNode>(1, condition_variable_node3, while_stmt_list);
+      while_stmt = std::make_shared<WhileStatementNode>(stmt_no3, condition_variable_node3, while_stmt_list);
 
   // while_stmt to procedure's stmt_list
   std::vector<std::shared_ptr<StatementNode>> statements;
@@ -443,11 +458,11 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
-  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
-  cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  cfg_builder.IterateCfgAndPopulatePkb();
+  DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
+  CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
+  cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateAst(expected_program_node);
+  cfg_builder->IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -487,30 +502,35 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   //     e = 5;       5
   // }
 
-  std::shared_ptr<VariableNode> variable_node_a = std::make_shared<VariableNode>("a", "1");
+  std::string stmt_no_a = "1";
+  std::shared_ptr<VariableNode> variable_node_a = std::make_shared<VariableNode>("a");
   std::shared_ptr<ConstantNode> constant_node_1 = std::make_shared<ConstantNode>("1");
   std::shared_ptr<AssignStatementNode>
-      assign_stmt_1 = std::make_shared<AssignStatementNode>(1, variable_node_a, constant_node_1);
+      assign_stmt_1 = std::make_shared<AssignStatementNode>(stmt_no_a, variable_node_a, constant_node_1);
 
-  std::shared_ptr<VariableNode> variable_node_b = std::make_shared<VariableNode>("b", "2");
+  std::string stmt_no_b = "2";
+  std::shared_ptr<VariableNode> variable_node_b = std::make_shared<VariableNode>("b");
   std::shared_ptr<ConstantNode> constant_node_2 = std::make_shared<ConstantNode>("2");
   std::shared_ptr<AssignStatementNode>
-      assign_stmt_2 = std::make_shared<AssignStatementNode>(2, variable_node_b, constant_node_2);
+      assign_stmt_2 = std::make_shared<AssignStatementNode>(stmt_no_b, variable_node_b, constant_node_2);
 
-  std::shared_ptr<VariableNode> variable_node_c = std::make_shared<VariableNode>("c", "3");
+  std::string stmt_no_c = "3";
+  std::shared_ptr<VariableNode> variable_node_c = std::make_shared<VariableNode>("c");
   std::shared_ptr<ConstantNode> constant_node_3 = std::make_shared<ConstantNode>("3");
   std::shared_ptr<AssignStatementNode>
-      assign_stmt_3 = std::make_shared<AssignStatementNode>(3, variable_node_c, constant_node_3);
+      assign_stmt_3 = std::make_shared<AssignStatementNode>(stmt_no_c, variable_node_c, constant_node_3);
 
-  std::shared_ptr<VariableNode> variable_node_d = std::make_shared<VariableNode>("d", "4");
+  std::string stmt_no_d = "4";
+  std::shared_ptr<VariableNode> variable_node_d = std::make_shared<VariableNode>("d");
   std::shared_ptr<ConstantNode> constant_node_4 = std::make_shared<ConstantNode>("4");
   std::shared_ptr<AssignStatementNode>
-      assign_stmt_4 = std::make_shared<AssignStatementNode>(4, variable_node_d, constant_node_4);
+      assign_stmt_4 = std::make_shared<AssignStatementNode>(stmt_no_d, variable_node_d, constant_node_4);
 
-  std::shared_ptr<VariableNode> variable_node_e = std::make_shared<VariableNode>("e", "5");
+  std::string stmt_no_e = "5";
+  std::shared_ptr<VariableNode> variable_node_e = std::make_shared<VariableNode>("e");
   std::shared_ptr<ConstantNode> constant_node_5 = std::make_shared<ConstantNode>("5");
   std::shared_ptr<AssignStatementNode>
-      assign_stmt_5 = std::make_shared<AssignStatementNode>(5, variable_node_e, constant_node_5);
+      assign_stmt_5 = std::make_shared<AssignStatementNode>(stmt_no_e, variable_node_e, constant_node_5);
 
   std::vector<std::shared_ptr<StatementNode>> statements;
   statements.emplace_back(assign_stmt_1);
@@ -562,11 +582,11 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   // set up actual traverse of DE
   PKB *test_pkb = new PKB();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
-  DesignExtractor *design_extractor = new DesignExtractor(pkb_client);
-  CfgBuilder cfg_builder = CfgBuilder(pkb_client);
-  cfg_builder.IterateAstAndPopulatePkb(expected_program_node);
-  design_extractor->IterateAstAndPopulatePkb(expected_program_node);
-  cfg_builder.IterateCfgAndPopulatePkb();
+  DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
+  CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
+  cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
+  design_extractor->IterateAst(expected_program_node);
+  cfg_builder->IterateCfgAndPopulatePkb();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));

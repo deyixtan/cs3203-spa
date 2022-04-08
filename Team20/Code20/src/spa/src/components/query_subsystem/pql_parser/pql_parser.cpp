@@ -2,7 +2,7 @@
 
 using namespace pql;
 
-PqlParser::PqlParser(std::vector<PqlToken> tokens) : tokens (tokens), cursor(0), pq(pq) {
+PqlParser::PqlParser(std::vector<PqlToken> tokens) : tokens(tokens), cursor(0), pq(ParsedQuery()) {
   rel_ref = {
       PqlTokenType::FOLLOWS,
       PqlTokenType::FOLLOWS_T,
@@ -186,7 +186,7 @@ int PqlParser::GetEndOfDeclarationCursor() {
 }
 
 void PqlParser::ParseDeclaration() {
-  Declaration declarations;
+  Declaration declarations = Declaration();
   int after_declaration_cursor = GetEndOfDeclarationCursor() + 1;
   if (after_declaration_cursor != 0) {
     while (cursor < after_declaration_cursor) {

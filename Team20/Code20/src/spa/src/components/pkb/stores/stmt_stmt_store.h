@@ -2,122 +2,50 @@
 #define FOLLOWS_PARENT_STORE_H
 
 #include "store.h"
-#include "parent_store/parent_store.h"
 
 class ParentStore;
 
 class StmtStmtStore : public Store {
  private:
-  std::unordered_map<StmtType,
-                     std::unordered_map<StmtType,
-                                        std::tuple<std::unordered_map<std::string,
-                                                                      std::unordered_set<std::string>>,
-                                                   std::unordered_map<std::string,
-                                                                      std::unordered_set<std::string>>,
-                                                   std::unordered_set<std::pair<std::string,
-                                                                                std::string>,
-                                                                      pair_hash>>>>
-      type_pair_map;
-  std::unordered_map<StmtType,
-                     std::unordered_map<StmtType,
-                                        std::tuple<std::unordered_map<std::string,
-                                                                      std::unordered_set<std::string>>,
-                                                   std::unordered_map<std::string,
-                                                                      std::unordered_set<std::string>>,
-                                                   std::unordered_set<std::pair<std::string,
-                                                                                std::string>,
-                                                                      pair_hash>>>>
-      star_type_pair_map;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_pairs;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_star_pairs;
+  NESTED_TUPLE_MAP type_pair_map;
+  NESTED_TUPLE_MAP star_type_pair_map;
+  IDENT_PAIR_SET all_pairs;
+  IDENT_PAIR_SET all_star_pairs;
+  std::shared_ptr<ParentStore> m_parent_store;
 
  public:
-  std::shared_ptr<ParentStore> m_parent_store;
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                          std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
-                         std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
-                         std::shared_ptr<ParentStore> parent_store);
-  void AddUpperLower(StoreType store_type,
-                     std::string const &upper,
-                     std::string const &lower);
-  void AddUpperLowerStar(StoreType store_type,
-                         std::string const &upper,
-                         std::string const &lower,
-                         std::vector<std::string> const &visited);
-  void AddFollows(bool is_star, StmtType type1, std::string const &upper, StmtType type2, std::string const &lower);
-  void AddParent(bool is_star,
-                 std::string const &upper,
-                 std::string const &lower,
-                 std::vector<std::string> const &visited);
-  void AddCalls(bool is_star, std::string const &upper, std::string const &lower);
-  void AddNext(bool is_star, StmtType type1, std::string const &upper, StmtType type2, std::string const &lower);
-  void PopulatePairMap(StmtType type1,
-                       std::string upper,
-                       StmtType type2,
-                       std::string lower,
-                       std::unordered_map<StmtType,
-                                          std::unordered_map<StmtType,
-                                                             std::tuple<std::unordered_map<std::string,
-                                                                                           std::unordered_set<std::string>>,
-                                                                        std::unordered_map<std::string,
-                                                                                           std::unordered_set<std::string>>,
-                                                                        std::unordered_set<std::pair<std::string,
-                                                                                                     std::string>,
-                                                                                           pair_hash>>>> *pair_map);
-  void ExhaustiveAddAllStmt(StmtType type1, std::string upper, StmtType type2, std::string lower, bool is_star);
-  void ExhaustiveAddSubStmt(StmtType type1,
-                            std::string upper,
-                            StmtType type2,
-                            std::string lower,
-                            std::unordered_map<StmtType,
-                                               std::unordered_map<StmtType,
-                                                                  std::tuple<std::unordered_map<std::string,
-                                                                                                std::unordered_set<std::string>>,
-                                                                             std::unordered_map<std::string,
-                                                                                                std::unordered_set<std::string>>,
-                                                                             std::unordered_set<std::pair<std::string,
-                                                                                                          std::string>,
-                                                                                                pair_hash>>>> *pair_map);
+                               std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
+                               std::shared_ptr<ParentStore> parent_store);
+  void AddUpperLower(StoreType store_type, IDENT const &upper, IDENT const &lower);
+  void AddUpperLowerStar(StoreType store_type, IDENT const &upper, IDENT const &lower, IDENT_VECTOR const &visited);
+  void AddFollows(bool is_star, StmtType type1, IDENT const &upper, StmtType type2, IDENT const &lower);
+  void AddParent(bool is_star, IDENT const &upper, IDENT const &lower, IDENT_VECTOR const &visited);
+  void AddCalls(bool is_star, IDENT const &upper, IDENT const &lower);
+  void AddNext(bool is_star, StmtType type1, IDENT const &upper, StmtType type2, IDENT const &lower);
+  void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_TUPLE_MAP *pair_map);
+  void ExhaustiveAddAllStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, bool is_star);
+  void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_TUPLE_MAP *pair_map);
   void WipeNextStar();
-  [[nodiscard]] bool IsValid(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] bool IsStarValid(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] bool IsNextStarPairValid(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] std::unordered_set<std::string> GetHelper(StmtType type1,
-                                                          StmtType type2,
-                                                          int index,
-                                                          std::string const &stmt,
-                                                          bool is_star);
-  [[nodiscard]] std::string GetUpperOf(StmtType stmt_type, std::string const &stmt);
-  [[nodiscard]] std::string GetLowerOf(StmtType stmt_type, std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetUpperSetOf(StoreType store_type,
-                                                              StmtType stmt_type,
-                                                              std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetLowerSetOf(StoreType store_type,
-                                                              StmtType stmt_type,
-                                                              std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetUpperStarOf(StoreType store_type,
-                                                               StmtType stmt_type,
-                                                               std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetLowerStarOf(StoreType store_type,
-                                                               StmtType stmt_type,
-                                                               std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetPairByType(StmtType type1,
-                                                                                                 StmtType type2);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetStarPairByType(StmtType type1,
-                                                                                                     StmtType type2);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllPairs();
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStarPairs();
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllNextStarPairs();
-  [[nodiscard]] void GetLowerStarOfHelper(StmtType stmt_type,
-                                          std::string const &stmt,
-                                          std::unordered_set<std::string> &res,
-                                          std::unordered_set<std::string> &visited);
-  [[nodiscard]] void GetUpperStarOfHelper(StmtType stmt_type,
-                                          std::string const &stmt,
-                                          std::unordered_set<std::string> &res,
-                                          std::unordered_set<std::string> &visited,
-                                          std::string prev);
+  [[nodiscard]] bool IsValid(IDENT_PAIR const &pair);
+  [[nodiscard]] bool IsStarValid(IDENT_PAIR const &pair);
+  [[nodiscard]] bool IsNextStarPairValid(IDENT_PAIR const &pair);
+  [[nodiscard]] std::unordered_set<std::string> GetHelper(StmtType type1, StmtType type2, int index, IDENT const &stmt, bool is_star);
+  [[nodiscard]] IDENT GetUpperOf(StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT GetLowerOf(StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetUpperSetOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetLowerSetOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetUpperStarOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetLowerStarOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT_PAIR_SET GetPairByType(StmtType type1, StmtType type2);
+  [[nodiscard]] IDENT_PAIR_SET GetStarPairByType(StmtType type1, StmtType type2);
+  [[nodiscard]] IDENT_PAIR_SET GetAllPairs();
+  [[nodiscard]] IDENT_PAIR_SET GetAllStarPairs();
+  [[nodiscard]] IDENT_PAIR_SET GetAllNextStarPairs();
+  void GetLowerStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited);
+  void GetUpperStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited, IDENT const &prev);
 };
 
 #endif //FOLLOWS_PARENT_STORE_H

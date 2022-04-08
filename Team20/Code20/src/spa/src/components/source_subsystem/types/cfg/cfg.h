@@ -1,23 +1,20 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_TYPES_CFG_CFG_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_TYPES_CFG_CFG_H_
+#ifndef CFG_CFG_H
+#define CFG_CFG_H
 
-#include <string>
-#include <unordered_map>
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
-class CfgNode;
-
 class Cfg {
  private:
-  std::unordered_map<std::string, std::shared_ptr<CfgNode>> m_heads;
+  // <proc_name, cfg_head>
+  StringToCfgNodePtrMap m_cfg_map;
 
  public:
-  Cfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> heads);
-  std::shared_ptr<CfgNode> GetCfg(std::string procedure);
-  std::unordered_map<std::string, std::shared_ptr<CfgNode>> GetCfgMap();
+  explicit Cfg(StringToCfgNodePtrMap cfg_map);
+  [[nodiscard]] StringToCfgNodePtrMap GetCfgMap();
 };
 
 }
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_TYPES_CFG_CFG_H_
+#endif //CFG_CFG_H

@@ -5,8 +5,65 @@ namespace source {
 
 PkbClient::PkbClient(PKB *pkb) : pkb(pkb) {}
 
-PKB *PkbClient::GetPKB() {
-  return pkb;
+StringSet PkbClient::GetVarUsedByStmt(String stmt) {
+ return pkb->GetUsesStore()->GetVarUsedByStmt(stmt);
+}
+
+StringSet PkbClient::GetVarModByStmt(String stmt) {
+  return pkb->GetModifiesStore()->GetVarModByStmt(stmt);
+}
+
+StringSet PkbClient::GetCallStmtOf(String stmt) {
+  return pkb->GetCallStore()->GetCallStmtOf(stmt);
+}
+
+StringSet PkbClient::GetCallersOf(String stmt) {
+  return pkb->GetCallStore()->GetCallersOf(stmt);
+}
+
+StringSet PkbClient::GetAllAnceOf(String stmt) {
+  return pkb->GetParentStore()->GetAllAnceOf(STMT, stmt);
+}
+
+CfgPtr PkbClient::GetProgramCfg() {
+  return pkb->GetProgCfg();
+}
+
+void PkbClient::UpdateCallUsesModifies(String &proc) {
+  StringSet uses_vars = GetVarUsedByStmt(proc);
+  StringSet mod_vars = GetVarModByStmt(proc);
+  StringSet call_stmts = GetCallStmtOf(proc);
+  StringSet callers = GetCallersOf(proc);
+
+  for (auto call_stmt : call_stmts) {
+    StringSet ancestors = GetAllAnceOf(call_stmt);
+    UpdateCallUses(call_stmt, uses_vars, ancestors, callers);
+    UpdateCallModifies(call_stmt, mod_vars, ancestors, callers);
+  }
+}
+
+void PkbClient::UpdateCallUses(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers) {
+  for (auto &var : vars) {
+    PopulateUses(call_stmt, var);
+    for (auto &ance : ancestors) {
+      PopulateUses(ance, var);
+    }
+    for (auto &caller : callers) {
+      PopulateUses(caller, var);
+    }
+  }
+}
+
+void PkbClient::UpdateCallModifies(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers) {
+  for (auto &var : vars) {
+    PopulateModifies(call_stmt, var);
+    for (auto &ance : ancestors) {
+      PopulateModifies(ance, var);
+    }
+    for (auto &caller : callers) {
+      PopulateModifies(caller, var);
+    }
+  }
 }
 
 void PkbClient::PopulateParent(std::string stmt1, std::string stmt2) {
