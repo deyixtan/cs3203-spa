@@ -2,11 +2,7 @@
 #define PKB_CLIENT_H
 
 #include "components/source_subsystem/source_declarations.h"
-#include "components/pkb/stores/store.h"
-
-// TODO: remove this
-class PKB;
-typedef std::shared_ptr<PKB> PkbPtr;
+#include "components/pkb/common.h"
 
 namespace source {
 
