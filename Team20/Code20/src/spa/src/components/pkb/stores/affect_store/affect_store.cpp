@@ -50,14 +50,17 @@ std::shared_ptr<FollowsStore> AffectStore::GetFollowsStore() {
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectStore::GetAllAffectsStmtHelper(
     std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs,
     StmtType type) {
-  std::vector<StmtType> supported_types = {STMT, ASSIGN};
-  return Store::GetAllStmt(type, supported_types, all_affects_pairs, false);
+  return std::unordered_set<std::pair<std::string, std::string>, pair_hash>();
+//  std::vector<StmtType> supported_types = {STMT, ASSIGN};
+//  return Store::GetAllStmt(type, supported_types, all_affects_pairs, false);
 }
+
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectStore::GetAllAffectsStmtHelper(
     std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs,
     StmtType type1,
     StmtType type2) {
-  std::vector<StmtType> supported_types = {STMT, ASSIGN};
-  return Store::GetAllStmt(type1, type2, supported_types, GetAllAffectsStmtHelper(all_affects_pairs, type2), true);
+  return std::unordered_set<std::pair<std::string, std::string>, pair_hash>();
+//  std::vector<StmtType> supported_types = {STMT, ASSIGN};
+//  return Store::GetAllStmt(type1, type2, supported_types, GetAllAffectsStmtHelper(all_affects_pairs, type2), true);
 }

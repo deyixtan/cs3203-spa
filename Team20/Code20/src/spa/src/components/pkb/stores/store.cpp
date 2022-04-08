@@ -3,23 +3,19 @@
 Store::Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector, std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type)
     : m_stmt_vector(move(stmt_vector)), m_stmt_type(move(stmt_type)) {}
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> Store::GetAllStmt(StmtType type,
+std::vector<std::pair<std::string, std::string>> Store::GetAllStmt(StmtType type,
                                                                                      std::vector<StmtType> &supported_types,
-                                                                                     std::unordered_set<std::pair<std::string,
-                                                                                                                  std::string>,
-                                                                                                        pair_hash> const &list,
+                                                                   std::vector<std::pair<std::string, std::string>> const &list,
                                                                                      bool checkPairFirst) {
   return GetAllStmt(type, type, supported_types, list, checkPairFirst);
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> Store::GetAllStmt(StmtType type1,
+std::vector<std::pair<std::string, std::string>> Store::GetAllStmt(StmtType type1,
                                                                                      StmtType type2,
                                                                                      std::vector<StmtType> &supported_types,
-                                                                                     std::unordered_set<std::pair<std::string,
-                                                                                                                  std::string>,
-                                                                                                        pair_hash> const &list,
+                                                                   std::vector<std::pair<std::string, std::string>> const &list,
                                                                                      bool checkPairFirst) {
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
+  std::vector<std::pair<std::string, std::string>> result;
 
   if (std::find(supported_types.begin(), supported_types.end(), type1) == supported_types.end()) {
     return result;
@@ -29,12 +25,12 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> Store::GetAll
     for (auto const &j : m_stmt_vector->at(type1)) {
       if (checkPairFirst) {
         if (i.first == j) {
-          result.insert(i);
+          result.push_back(i);
         }
         continue;
       }
       if (i.second == j) {
-        result.insert(i);
+        result.push_back(i);
       }
     }
   }

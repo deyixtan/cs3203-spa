@@ -109,7 +109,8 @@ void StmtStmtStore::AddNext(bool is_star,
     all_pairs.emplace(std::pair<std::string, std::string>(upper, lower));
     ExhaustiveAddAllStmt(type1, upper, type2, lower, false);
   } else {
-    all_star_pairs.emplace(std::pair<std::string, std::string>(upper, lower));
+    m_next_star_pairs.push_back({upper, lower});
+//    all_star_pairs.emplace(std::pair<std::string, std::string>(upper, lower));
     ExhaustiveAddAllStmt(type1, upper, type2, lower, true);
   }
 }
@@ -457,8 +458,10 @@ void StmtStmtStore::GetLowerStarOfHelper(StmtType stmt_type,
       AddNext(true,STMT,before,stmt_type,stmt);
       res.insert(stmt);
     }
-    std::string parent = m_parent_store->GetParentOf(WHILE, prev);
-    if(parent != stmt) {
+    res.insert(stmt);
+    std::string next_stmt = GetLowerOf(STMT, stmt);
+    std::unordered_set<std::string> children = m_parent_store->GetChildOf(WHILE, prev);
+    if(children.find(next_stmt) == children.end()) {
       return;
     }
   }
@@ -487,13 +490,10 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore
   return all_star_pairs;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtStmtStore::GetAllNextStarPairs() {
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> res;
-  for(auto pair : all_pairs) {
-    std::string before_stmt = pair.first;
-    std::string next_stmt = pair.second;
-    GetLowerStarOf(NEXT, STMT, before_stmt);
-    GetUpperStarOf(NEXT, STMT, next_stmt);
+std::vector<std::pair<std::string, std::string>> StmtStmtStore::GetAllNextStarPairs(std::vector<std::string> stmt_list) {
+  std::vector<std::pair<std::string, std::string>> res;
+  for(auto s : stmt_list) {
+    GetLowerStarOf(NEXT, STMT, s);
   }
-  return GetAllStarPairs();
+  return m_next_star_pairs;
 }

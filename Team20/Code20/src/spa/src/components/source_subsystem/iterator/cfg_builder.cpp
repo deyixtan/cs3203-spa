@@ -157,6 +157,8 @@ void CfgBuilder::CfgProcessHandler(CfgNodePtr &curr_proc,
                                    StringToStringSetMap &next_map,
                                    String proc_name) {
   node_stack.push(curr_proc);
+  CfgNodeStatementStream first_block = curr_proc->GetStatementList();
+  m_pkb_client->PopulateStmtProc(proc_name, first_block.begin()->stmt_no);
 
   // per cfg logic
   while (!node_stack.empty()) {
@@ -176,7 +178,7 @@ void CfgBuilder::CfgProcessHandler(CfgNodePtr &curr_proc,
     }
 
     // node with more than one statement
-    MultipleStmtsNodeHandler(curr_stmts, next_map, proc_name);
+    MultipleStmtsNodeHandler(curr_stmts, next_map);
 
     // recurse until next_node.front() != dummy node
     while (!next_nodes.empty() && next_nodes.front()->GetStatementList().empty()) {
@@ -184,17 +186,15 @@ void CfgBuilder::CfgProcessHandler(CfgNodePtr &curr_proc,
     }
 
     for (auto &desc : next_nodes) {
-      NextNodeHandler(desc, node_stack, curr_stmts, visited, next_map, proc_name);
+      NextNodeHandler(desc, node_stack, curr_stmts, visited, next_map);
     }
   }
 }
 
-void CfgBuilder::MultipleStmtsNodeHandler(CfgNodeStatementStream &curr_stmts, StringToStringSetMap &next_map, String proc_name) {
+void CfgBuilder::MultipleStmtsNodeHandler(CfgNodeStatementStream &curr_stmts, StringToStringSetMap &next_map) {
   int start = 0;
   int next = 1;
-  m_pkb_client->PopulateStmtProc(proc_name, curr_stmts[start].stmt_no);
   while (curr_stmts.size() > next) {
-    m_pkb_client->PopulateStmtProc(proc_name, curr_stmts[next].stmt_no);
     m_pkb_client->PopulateNext(curr_stmts[start].stmt_no, curr_stmts[next].stmt_no);
     start++;
     next++;
@@ -205,8 +205,7 @@ void CfgBuilder::NextNodeHandler(CfgNodePtr &desc,
                                  CfgNodeStack &node_stack,
                                  CfgNodeStatementStream &curr_stmts,
                                  CfgNodeSet &visited,
-                                 StringToStringSetMap &next_map,
-                                 String proc_name) {
+                                 StringToStringSetMap &next_map) {
   if (!curr_stmts.empty()) {
     // force desc to legit node
     while (desc->GetStatementList().empty() && !desc->GetNextList().empty()) {
@@ -214,9 +213,6 @@ void CfgBuilder::NextNodeHandler(CfgNodePtr &desc,
     }
 
     CfgNodeStatementStream next_stmts = desc->GetStatementList();
-    for(auto next : next_stmts) {
-      m_pkb_client->PopulateStmtProc(proc_name, next.stmt_no);
-    }
     if (!next_stmts.empty()) {
       m_pkb_client->PopulateNext(curr_stmts[curr_stmts.size() - 1].stmt_no, next_stmts.front().stmt_no);
     }

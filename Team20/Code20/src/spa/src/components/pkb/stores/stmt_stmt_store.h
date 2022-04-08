@@ -12,6 +12,7 @@ class StmtStmtStore : public Store {
   IDENT_PAIR_SET all_pairs;
   IDENT_PAIR_SET all_star_pairs;
   std::shared_ptr<ParentStore> m_parent_store;
+  std::vector<std::pair<std::string, std::string>> m_next_star_pairs;
 
  public:
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
@@ -43,7 +44,7 @@ class StmtStmtStore : public Store {
   [[nodiscard]] IDENT_PAIR_SET GetStarPairByType(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_PAIR_SET GetAllPairs();
   [[nodiscard]] IDENT_PAIR_SET GetAllStarPairs();
-  [[nodiscard]] IDENT_PAIR_SET GetAllNextStarPairs();
+  [[nodiscard]] std::vector<std::pair<std::string, std::string>> GetAllNextStarPairs(std::vector<std::string> stmt_list);
   void GetLowerStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited, IDENT const &prev);
   void GetUpperStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited, IDENT const &prev);
 };

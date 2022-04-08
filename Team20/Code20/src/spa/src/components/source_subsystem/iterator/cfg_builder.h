@@ -18,13 +18,12 @@ class CfgBuilder : public std::enable_shared_from_this<CfgBuilder> {
                          CfgNodeSet &visited,
                          StringToStringSetMap &next_map,
                          String proc_name);
-  void MultipleStmtsNodeHandler(CfgNodeStatementStream &curr_stmts, StringToStringSetMap &next_map, String proc_name);
+  void MultipleStmtsNodeHandler(CfgNodeStatementStream &curr_stmts, StringToStringSetMap &next_map);
   void NextNodeHandler(CfgNodePtr &desc,
                        CfgNodeStack &node_stack,
                        CfgNodeStatementStream &curr_stmts,
                        CfgNodeSet &visited,
-                       StringToStringSetMap &next_map,
-                       String proc_name);
+                       StringToStringSetMap &next_map);
 
  public:
   explicit CfgBuilder(PkbClientPtr m_pkb_client);

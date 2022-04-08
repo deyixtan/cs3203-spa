@@ -13,11 +13,7 @@ void NextStore::AddNext(IDENT const &before, IDENT const &next) {
 }
 
 void NextStore::AddStmtProc(std::string const &proc, std::string const &stmt) {
-  if(m_proc_stmt_map.find(proc) == m_proc_stmt_map.end()) {
-    m_proc_stmt_map.insert({proc, {stmt}});
-  } else {
-    m_proc_stmt_map.at(proc).insert(stmt);
-  }
+    m_proc_stmt_map.insert({proc, stmt});
 }
 
 bool NextStore::IsNextPairValid(IDENT_PAIR const &pair) {
@@ -48,13 +44,17 @@ IDENT_PAIR_SET NextStore::GetNextPairs() {
   return GetAllPairs();
 }
 
-IDENT_PAIR_SET NextStore::GetNextStarPairs() {
-  return GetAllNextStarPairs();
+std::vector<std::pair<std::string, std::string>> NextStore::GetNextStarPairs() {
+  std::vector<std::string> stmt_list;
+  for(auto p : m_proc_stmt_map) {
+    stmt_list.push_back(p.second);
+  }
+  return GetAllNextStarPairs(stmt_list);
 }
 
 IDENT_SET NextStore::GetNextStarSameStmt(StmtType type) {
   std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_pairs = GetAllNextStarStmt(type, type);
+  std::vector<std::pair<std::string, std::string>> all_pairs = GetAllNextStarStmt(type, type);
   std::unordered_set<std::string> same_synonym_set;
   for (auto pair : all_pairs) {
     if (pair.first == pair.second) {
@@ -69,12 +69,12 @@ IDENT_PAIR_SET NextStore::GetAllNextStmt(StmtType type1, StmtType type2) {
   return GetPairByType(type1, type2);
 }
 
-IDENT_PAIR_SET NextStore::GetAllNextStarStmt(StmtType type) {
+std::vector<std::pair<std::string, std::string>>NextStore::GetAllNextStarStmt(StmtType type) {
   std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
   return Store::GetAllStmt(type, supported_types, GetNextStarPairs(), false);
 }
 
-IDENT_PAIR_SET NextStore::GetAllNextStarStmt(StmtType type1, StmtType type2) {
+std::vector<std::pair<std::string, std::string>> NextStore::GetAllNextStarStmt(StmtType type1, StmtType type2) {
   std::vector<StmtType> supported_types = {STMT, READ, PRINT, WHILE, IF, ASSIGN, CALL};
   return Store::GetAllStmt(type1, type2, supported_types, GetAllNextStarStmt(type2), true);
 }
