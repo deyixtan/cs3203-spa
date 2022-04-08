@@ -15,7 +15,7 @@ using pql_evaluator::QueryEvaluator;
 
 class QueryController {
  public:
-  QueryController(PKB *pkb);
+  QueryController(PkbPtr pkb);
   void ProcessQuery(std::string query, std::list<std::string> &results);
 
  private:

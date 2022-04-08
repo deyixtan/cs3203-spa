@@ -31,6 +31,9 @@ enum StoreType {
   AFFECTS
 };
 
+class PKB;
+typedef std::shared_ptr<PKB> PkbPtr;
+
 typedef std::string IDENT;
 typedef std::vector<IDENT> IDENT_VECTOR;
 typedef std::unordered_set<IDENT> IDENT_SET;

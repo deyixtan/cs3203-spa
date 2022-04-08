@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "components/pkb/pkb.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
-#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/pkb_client/pkb_client.h"
 #include "components/source_subsystem/exceptions/unexpected_token.h"
 #include "components/source_subsystem/types/ast/node_program.h"
 #include "components/source_subsystem/types/ast/node_procedure.h"
@@ -38,7 +38,7 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", READ);
   pkb->AddStmt("main", PROC);
@@ -46,7 +46,7 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
   pkb->GetModifiesStore()->AddStmtVar("1", "a");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(expected_program_node);
@@ -85,7 +85,7 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("2", STMT);
   pkb->AddStmt("1", READ);
@@ -99,7 +99,7 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
   pkb->GetFollowsStore()->AddFollowStar("1", "2");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(expected_program_node);
@@ -145,7 +145,7 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", ASSIGN);
   pkb->AddStmt("main", PROC);
@@ -155,7 +155,7 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   pkb->GetPatternStore()->AddStmtWithPattern("1", "x", "((x)+(1))");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(expected_program_node);
@@ -223,7 +223,7 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", IF);
   pkb->AddStmt("2", STMT);
@@ -242,7 +242,7 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   pkb->GetPatternStore()->AddStmtWithPattern("3", "a", "(3)");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
@@ -312,7 +312,7 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", WHILE);
   pkb->AddStmt("2", STMT);
@@ -325,7 +325,7 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   pkb->GetModifiesStore()->AddStmtVar("1", "a");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(expected_program_node);
@@ -432,7 +432,7 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", WHILE);
   pkb->AddStmt("2", STMT);
@@ -456,7 +456,7 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   pkb->GetParentStore()->AddParentStar("2", parent_star_2);
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
@@ -545,7 +545,7 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", ASSIGN);
   pkb->AddStmt("2", STMT);
@@ -578,7 +578,7 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   pkb->GetFollowsStore()->AddFollowStar("1", "5");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
@@ -618,4 +618,3 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, ASSIGN) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, ASSIGN));
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT));
 }
-
