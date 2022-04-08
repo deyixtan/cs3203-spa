@@ -21,16 +21,14 @@ class Store {
                  std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
   IDENT_PAIR_SET GetAllStmt(StmtType type,
                             std::vector<StmtType> &supported_types,
-                            std::unordered_set<std::pair<std::string,
-                                                         std::string>,
-                                               pair_hash> const &list,
+                            std::vector<std::pair<std::string,
+                                                  std::string>> const &list,
                             bool checkPairFirst);
   IDENT_PAIR_SET GetAllStmt(StmtType type1,
                             StmtType type2,
                             std::vector<StmtType> &supported_types,
-                            std::unordered_set<std::pair<std::string,
-                                                         std::string>,
-                                               pair_hash> const &list,
+                            std::vector<std::pair<std::string,
+                                                  std::string>> const &list,
                             bool checkPairFirst);
 };
 

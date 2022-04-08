@@ -21,7 +21,6 @@ class NextStore : public StmtStmtStore {
   [[nodiscard]] IDENT_PAIR_SET GetNextStarPairs();
   [[nodiscard]] IDENT_PAIR_SET GetAllNextStmt(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_SET GetNextStarSameStmt(StmtType type);
-  [[nodiscard]] IDENT_PAIR_SET GetAllNextStarStmt(StmtType type);
   [[nodiscard]] IDENT_PAIR_SET GetAllNextStarStmt(StmtType type1, StmtType type2);
 };
 

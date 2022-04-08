@@ -38,10 +38,10 @@ class AffectStore : public Store {
   [[nodiscard]] std::shared_ptr<ModifiesStore> GetModifyStore();
   [[nodiscard]] std::shared_ptr<UsesStore> GetUsageStore();
   [[nodiscard]] std::shared_ptr<FollowsStore> GetFollowsStore();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmtHelper(
-      std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs, StmtType type);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmtHelper(
-      std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs, StmtType type1, StmtType type2);
+//  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmtHelper(
+//      std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs, StmtType type);
+//  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmtHelper(
+//      std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs, StmtType type1, StmtType type2);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECTS_STORE_H_
