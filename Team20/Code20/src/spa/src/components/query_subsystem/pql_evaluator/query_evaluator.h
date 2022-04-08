@@ -24,7 +24,7 @@ class QueryEvaluator {
  private:
   std::unordered_set<std::string> result;
   PKB *pkb;
-  std::queue<std::unique_ptr<pql::Clause> > ExtractClauses(ParsedQuery& query);
+  std::queue<std::shared_ptr<pql::Clause> > ExtractClauses(ParsedQuery& query);
 };
 
 }

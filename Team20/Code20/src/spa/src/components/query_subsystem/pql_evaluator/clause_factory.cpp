@@ -27,57 +27,57 @@ namespace pql {
 
 using namespace ::clause_util;
 
-std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
+std::shared_ptr<Clause> ClauseFactory::Create(Relationship relationship,
                                               const std::unordered_map<std::string, DesignEntityType> &declarations,
                                               PKB *pkb) {
   switch (relationship.GetRelRef().type) {
     case PqlTokenType::MODIFIES: {
       if (IsArgIdent(relationship.GetFirst()) || IsFirstArgProcRelationship(relationship.GetFirst(), declarations)) {
-        return std::make_unique<ModifiesPClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+        return std::make_shared<ModifiesPClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
       } else if (IsArgInteger(relationship.GetFirst()) || IsFirstArgStmtRelationship(relationship.GetFirst(), declarations)) {
-        return std::make_unique<ModifiesSClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+        return std::make_shared<ModifiesSClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
       } else {
         return nullptr;
       }
     }
     case PqlTokenType::USES: {
       if (IsArgIdent(relationship.GetFirst()) || IsFirstArgProcRelationship(relationship.GetFirst(), declarations)) {
-        return std::make_unique<UsesPClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+        return std::make_shared<UsesPClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
       } else if (IsArgInteger(relationship.GetFirst()) || IsFirstArgStmtRelationship(relationship.GetFirst(), declarations)) {
-        return std::make_unique<UsesSClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+        return std::make_shared<UsesSClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
       } else {
         return nullptr;
       }
     }
     case PqlTokenType::FOLLOWS: {
-      return std::make_unique<FollowsClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+      return std::make_shared<FollowsClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     case PqlTokenType::FOLLOWS_T: {
-      return std::make_unique<FollowsTClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+      return std::make_shared<FollowsTClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     case PqlTokenType::PARENT: {
-      return std::make_unique<ParentClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+      return std::make_shared<ParentClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     case PqlTokenType::PARENT_T: {
-      return std::make_unique<ParentTClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+      return std::make_shared<ParentTClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     case PqlTokenType::CALLS: {
-      return std::make_unique<CallsClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
+      return std::make_shared<CallsClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     case PqlTokenType::CALLS_T: {
-      return std::make_unique<CallsTClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
+      return std::make_shared<CallsTClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     case PqlTokenType::NEXT: {
-      return std::make_unique<NextClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+      return std::make_shared<NextClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     case PqlTokenType::NEXT_T: {
-      return std::make_unique<NextTClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
+      return std::make_shared<NextTClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     case PqlTokenType::AFFECTS: {
-      return std::make_unique<AffectsClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
+      return std::make_shared<AffectsClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     case PqlTokenType::AFFECTS_T: {
-      return std::make_unique<AffectsTClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
+      return std::make_shared<AffectsTClause>(relationship.GetFirst(), relationship.GetSecond(), pkb);
     }
     default: {
       return nullptr;
@@ -85,24 +85,24 @@ std::unique_ptr<Clause> ClauseFactory::Create(Relationship relationship,
   }
 }
 
-std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern,
+std::shared_ptr<Clause> ClauseFactory::Create(Pattern pattern,
                                               const std::unordered_map<std::string, DesignEntityType> &declarations,
                                               PKB *pkb) {
   auto pattern_synonym_design_entity_type = GetSynonymDesignEntity(pattern.GetSynonym(), declarations);
   switch (pattern_synonym_design_entity_type) {
     case DesignEntityType::ASSIGN: {
-      return std::make_unique<PatternAssignClause>(pattern.GetSynonym().value,
+      return std::make_shared<PatternAssignClause>(pattern.GetSynonym().value,
                                                    pattern.GetFirst(),
                                                    pattern.GetSecond(),
                                                    pkb);
     }
     case DesignEntityType::WHILE: {
-      return std::make_unique<PatternWhileClause>(pattern.GetSynonym().value,
+      return std::make_shared<PatternWhileClause>(pattern.GetSynonym().value,
                                                   pattern.GetFirst(),
                                                   pkb);
     }
     case DesignEntityType::IF: {
-      return std::make_unique<PatternIfClause>(pattern.GetSynonym().value,
+      return std::make_shared<PatternIfClause>(pattern.GetSynonym().value,
                                                pattern.GetFirst(),
                                                pkb);
     }
@@ -112,35 +112,35 @@ std::unique_ptr<Clause> ClauseFactory::Create(Pattern pattern,
   }
 }
 
-std::unique_ptr<Clause> ClauseFactory::Create(const PqlToken &selected_synonym,
+std::shared_ptr<Clause> ClauseFactory::Create(const PqlToken &selected_synonym,
                                               const std::unordered_map<std::string, DesignEntityType> &declarations,
                                               PKB *pkb) {
-  return std::make_unique<SelectClause>(selected_synonym, declarations, pkb);
+  return std::make_shared<SelectClause>(selected_synonym, declarations, pkb);
 }
 
-std::unique_ptr<Clause> ClauseFactory::Create(With with,
+std::shared_ptr<Clause> ClauseFactory::Create(With with,
                                               const std::unordered_map<std::string, DesignEntityType> &declarations,
                                               PKB *pkb) {
-  return std::make_unique<WithClause>(declarations, with.GetFirst(), with.GetSecond(), pkb);
+  return std::make_shared<WithClause>(declarations, with.GetFirst(), with.GetSecond(), pkb);
 }
 
-std::unique_ptr<Clause> ClauseFactory::Create(ResultClause result_clause,
+std::shared_ptr<Clause> ClauseFactory::Create(ResultClause result_clause,
                                               const std::unordered_map<std::string, DesignEntityType> &declarations,
                                               PKB *pkb) {
   ResultClauseType result_clause_type = result_clause.GetType();
   if (result_clause_type==ResultClauseType::BOOLEAN) {
-    return std::make_unique<SelectBooleanClause>();
+    return std::make_shared<SelectBooleanClause>();
   } else if (result_clause_type==ResultClauseType::SYNONYM) {
-    return std::make_unique<SelectClause>(result_clause.GetValues().front(), declarations, pkb);
+    return std::make_shared<SelectClause>(result_clause.GetValues().front(), declarations, pkb);
 //    auto selected_synonym = result_clause.GetValues().front();
-//    return std::make_unique<SelectSynonymClause>(selected_synonym, declarations, pkb);
+//    return std::make_shared<SelectSynonymClause>(selected_synonym, declarations, pkb);
   } else if (result_clause_type==ResultClauseType::ATTRIBUTE) {
-    return std::make_unique<SelectClause>(result_clause.GetValues().front(), declarations, pkb);
+    return std::make_shared<SelectClause>(result_clause.GetValues().front(), declarations, pkb);
 //    auto selected_attribute = result_clause.GetValues().front();
-//    return std::make_unique<SelectAttributeClause>(selected_attribute, declarations, pkb);
+//    return std::make_shared<SelectAttributeClause>(selected_attribute, declarations, pkb);
   } else { // result_clause_type==ResultClauseType::TUPLE
     auto selected_tuple = result_clause.GetValues();
-    return std::make_unique<SelectTupleClause>(selected_tuple, declarations, pkb);
+    return std::make_shared<SelectTupleClause>(selected_tuple, declarations, pkb);
   }
 }
 

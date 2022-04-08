@@ -54,8 +54,8 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
   pkb->GetNextStore()->WipeStar();
 }
 
-std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query) {
-  std::queue<std::unique_ptr<pql::Clause> > clauses;
+std::queue<std::shared_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query) {
+  std::queue<std::shared_ptr<pql::Clause> > clauses;
   for (const auto& relationship : query.GetRelationships()) {
     auto clause = pql::ClauseFactory::Create(relationship, query.GetDeclaration().GetDeclarations(), pkb);
     if (clause) {
