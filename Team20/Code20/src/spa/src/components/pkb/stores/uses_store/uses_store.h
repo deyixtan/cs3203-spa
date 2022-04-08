@@ -12,7 +12,7 @@ class UsesStore : public StmtVarStore {
   [[nodiscard]] IDENT_SET GetStmtUsedByVar(StmtType type, std::string const &var);
   [[nodiscard]] IDENT_SET GetAllStmtUsing();
   [[nodiscard]] IDENT_SET GetAllProcUsing();
-  [[nodiscard]] IDENT_PAIR_SET GetAllUsesStmt(StmtType type);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAllUsesStmt(StmtType type);
 };
 
 #endif //USAGE_STORE_H
