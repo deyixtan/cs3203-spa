@@ -1,4 +1,5 @@
 #include "pkb.h"
+#include "pkb_relationship.h"
 
 PKB::PKB()
     : m_stmt_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)),
