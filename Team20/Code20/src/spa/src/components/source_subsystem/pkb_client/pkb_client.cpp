@@ -5,41 +5,28 @@ namespace source {
 
 PkbClient::PkbClient(PkbPtr pkb) : m_pkb(pkb) {}
 
-StringSet PkbClient::GetVarUsedByStmt(String stmt) {
-  return m_pkb->GetUsesStore()->GetVarUsedByStmt(stmt);
+void PkbClient::ReadHelper(StringStream &visited, String &curr_stmt, String &var_name) {
+  PopulateStmt(curr_stmt);
+  PopulateParentStar(curr_stmt, visited);
 }
 
-StringSet PkbClient::GetVarModByStmt(String stmt) {
-  return m_pkb->GetModifiesStore()->GetVarModByStmt(stmt);
+void PkbClient::PrintHelper(StringStream &visited, String &curr_stmt) {
+  PopulateStmt(curr_stmt);
+  PopulateParentStar(curr_stmt, visited);
 }
 
-StringSet PkbClient::GetCallStmtOf(String stmt) {
-  return m_pkb->GetCallStore()->GetCallStmtOf(stmt);
+void PkbClient::AssignHelper(StringStream &visited,
+                             String &proc_name,
+                             String &curr_stmt,
+                             String &var_name,
+                             String &rhs_expr) {
+  PopulateStmt(curr_stmt);
+  AddPattern(STMT, curr_stmt, var_name, rhs_expr);
+  PopulateParentStar(curr_stmt, visited);
 }
 
-StringSet PkbClient::GetCallersOf(String stmt) {
-  return m_pkb->GetCallStore()->GetCallersOf(stmt);
-}
-
-StringSet PkbClient::GetAllAnceOf(String stmt) {
-  return m_pkb->GetParentStore()->GetAllAnceOf(STMT, stmt);
-}
-
-CfgPtr PkbClient::GetProgramCfg() {
-  return m_pkb->GetProgCfg();
-}
-
-void PkbClient::UpdateCallUsesModifies(String &proc) {
-  StringSet uses_vars = GetVarUsedByStmt(proc);
-  StringSet mod_vars = GetVarModByStmt(proc);
-  StringSet call_stmts = GetCallStmtOf(proc);
-  StringSet callers = GetCallersOf(proc);
-
-  for (auto call_stmt : call_stmts) {
-    StringSet ancestors = GetAllAnceOf(call_stmt);
-    UpdateCallUses(call_stmt, uses_vars, ancestors, callers);
-    UpdateCallModifies(call_stmt, mod_vars, ancestors, callers);
-  }
+void PkbClient::PopulateCallStmt(String proc, String stmt) {
+  m_pkb->GetCallStore()->AddCallStmtMap(proc, stmt);
 }
 
 void PkbClient::UpdateCallUses(String &call_stmt, StringSet &vars, StringSet &ancestors, StringSet &callers) {
@@ -66,106 +53,18 @@ void PkbClient::UpdateCallModifies(String &call_stmt, StringSet &vars, StringSet
   }
 }
 
-void PkbClient::PopulateParent(String stmt1, String stmt2) {
-  m_pkb->GetParentStore()->AddParent(stmt1, stmt2);
-}
-
-void PkbClient::PopulateParentStar(String stmt, StringStream visited) {
-  m_pkb->GetParentStore()->AddParentStar(stmt, visited);
-}
-
-void PkbClient::PopulateFollows(String stmt1, String stmt2) {
-  m_pkb->GetFollowsStore()->AddFollow(stmt1, stmt2);
-}
-
-void PkbClient::PopulateFollowsStar(String stmt1, String stmt2) {
-  m_pkb->GetFollowsStore()->AddFollowStar(stmt1, stmt2);
-}
-
-void PkbClient::PopulateUses(String stmt, String var) {
-  m_pkb->GetUsesStore()->AddStmtVar(stmt, var);
-}
-
-void PkbClient::PopulateModifies(String stmt, String var) {
-  m_pkb->GetModifiesStore()->AddStmtVar(stmt, var);
-}
-
-void PkbClient::PopulateCalls(String caller, String callee) {
-  m_pkb->GetCallStore()->AddCallerHelper(caller, callee);
-}
-
-void PkbClient::PopulateProc(String name) {
-  m_pkb->AddStmt(name, PROC);
-}
-
-void PkbClient::PopulateAssign(StringStream &visited,
-                               String &proc_name,
-                               String &curr_stmt,
-                               String &var_name,
-                               String &rhs_expr) {
-  m_pkb->AddStmt(curr_stmt, ASSIGN);
-  AssignHelper(visited, proc_name, curr_stmt, var_name, rhs_expr);
-}
-
-void PkbClient::AssignHelper(StringStream &visited,
-                             String &proc_name,
-                             String &curr_stmt,
-                             String &var_name,
-                             String &rhs_expr) {
+void PkbClient::WhileHelper(StringStream &visited, String &curr_stmt, String cond_expr) {
   PopulateStmt(curr_stmt);
-  AddPattern(STMT, curr_stmt, var_name, rhs_expr);
+  AddPattern(WHILE, curr_stmt, cond_expr, "");
   PopulateParentStar(curr_stmt, visited);
+  visited.pop_back();
 }
 
-void PkbClient::PopulateStmt(String stmt) {
-  m_pkb->AddStmt(stmt, STMT);
-}
-
-void PkbClient::PopulateTypeOfStmt(String stmt, StmtType type) {
-  m_pkb->AddTypeOfStmt(stmt, type);
-}
-
-StmtType PkbClient::GetTypeOfStmt(String stmt) {
-  return m_pkb->GetTypeOfStmt(stmt);
-}
-
-void PkbClient::PopulateName(String name, StmtType type) {
-  m_pkb->AddName(name, type);
-}
-
-void PkbClient::PopulateRead(StringStream &visited, String &curr_stmt, String &var_name) {
-  m_pkb->AddStmt(curr_stmt, READ);
-  m_pkb->AddStmtToName(READ, curr_stmt, var_name);
-  m_pkb->AddNameToStmt(READ, var_name, curr_stmt);
-  PopulateName(var_name, READ);
-  ReadHelper(visited, curr_stmt, var_name);
-}
-
-void PkbClient::ReadHelper(StringStream &visited, String &curr_stmt, String &var_name) {
+void PkbClient::IfHelper(StringStream &visited, String curr_stmt, String cond_expr) {
   PopulateStmt(curr_stmt);
+  AddPattern(IF, curr_stmt, cond_expr, "");
   PopulateParentStar(curr_stmt, visited);
-}
-
-void PkbClient::PopulatePrint(StringStream &visited, String &curr_stmt, String &var_name) {
-  m_pkb->AddStmt(curr_stmt, PRINT);
-  m_pkb->AddStmtToName(PRINT, curr_stmt, var_name);
-  m_pkb->AddNameToStmt(PRINT, var_name, curr_stmt);
-  PopulateName(var_name, PRINT);
-  PrintHelper(visited, curr_stmt);
-}
-
-void PkbClient::PrintHelper(StringStream &visited, String &curr_stmt) {
-  PopulateStmt(curr_stmt);
-  PopulateParentStar(curr_stmt, visited);
-}
-
-void PkbClient::PopulateVars(StringStream &visited,
-                             String &curr_stmt,
-                             String &proc_name,
-                             String &var_name,
-                             bool is_uses) {
-  m_pkb->AddStmt(var_name, VARS);
-  VarsHelper(visited, curr_stmt, proc_name, var_name, is_uses);
+  visited.pop_back();
 }
 
 void PkbClient::VarsHelper(StringStream &visited,
@@ -188,32 +87,77 @@ void PkbClient::VarsHelper(StringStream &visited,
   }
 }
 
-void PkbClient::PopulateWhile(StringStream &visited, String &curr_stmt, String cond_expr) {
-  m_pkb->AddStmt(curr_stmt, WHILE);
-  WhileHelper(visited, curr_stmt, cond_expr);
+CfgPtr PkbClient::GetProgramCfg() {
+  return m_pkb->GetProgCfg();
 }
 
-void PkbClient::WhileHelper(StringStream &visited, String &curr_stmt, String cond_expr) {
-  PopulateStmt(curr_stmt);
-  AddPattern(WHILE, curr_stmt, cond_expr, "");
-  PopulateParentStar(curr_stmt, visited);
-  visited.pop_back();
+StmtType PkbClient::GetTypeOfStmt(String stmt) {
+  return m_pkb->GetTypeOfStmt(stmt);
 }
 
-void PkbClient::PopulateIf(StringStream &visited, String curr_stmt, String cond_expr) {
-  m_pkb->AddStmt(curr_stmt, IF);
-  IfHelper(visited, curr_stmt, cond_expr);
+StringSet PkbClient::GetVarUsedByStmt(String stmt) {
+  return m_pkb->GetUsesStore()->GetVarUsedByStmt(stmt);
 }
 
-void PkbClient::IfHelper(StringStream &visited, String curr_stmt, String cond_expr) {
-  PopulateStmt(curr_stmt);
-  AddPattern(IF, curr_stmt, cond_expr, "");
-  PopulateParentStar(curr_stmt, visited);
-  visited.pop_back();
+StringSet PkbClient::GetVarModByStmt(String stmt) {
+  return m_pkb->GetModifiesStore()->GetVarModByStmt(stmt);
 }
 
-void PkbClient::PopulateConst(String name) {
-  m_pkb->AddStmt(name, CONSTS);
+StringSet PkbClient::GetCallersOf(String stmt) {
+  return m_pkb->GetCallStore()->GetCallersOf(stmt);
+}
+
+StringSet PkbClient::GetCallStmtOf(String stmt) {
+  return m_pkb->GetCallStore()->GetCallStmtOf(stmt);
+}
+
+StringSet PkbClient::GetAllAnceOf(String stmt) {
+  return m_pkb->GetParentStore()->GetAllAnceOf(STMT, stmt);
+}
+
+void PkbClient::PopulateCfg(CfgPtr cfg) {
+  m_pkb->AddProgramCfg(cfg);
+}
+
+void PkbClient::PopulateProc(String name) {
+  m_pkb->AddStmt(name, PROC);
+}
+
+void PkbClient::PopulateName(String name, StmtType type) {
+  m_pkb->AddName(name, type);
+}
+
+void PkbClient::PopulateTypeOfStmt(String stmt, StmtType type) {
+  m_pkb->AddTypeOfStmt(stmt, type);
+}
+
+void PkbClient::PopulateStmt(String stmt) {
+  m_pkb->AddStmt(stmt, STMT);
+}
+
+void PkbClient::PopulateRead(StringStream &visited, String &curr_stmt, String &var_name) {
+  m_pkb->AddStmt(curr_stmt, READ);
+  m_pkb->AddStmtToName(READ, curr_stmt, var_name);
+  m_pkb->AddNameToStmt(READ, var_name, curr_stmt);
+  PopulateName(var_name, READ);
+  ReadHelper(visited, curr_stmt, var_name);
+}
+
+void PkbClient::PopulatePrint(StringStream &visited, String &curr_stmt, String &var_name) {
+  m_pkb->AddStmt(curr_stmt, PRINT);
+  m_pkb->AddStmtToName(PRINT, curr_stmt, var_name);
+  m_pkb->AddNameToStmt(PRINT, var_name, curr_stmt);
+  PopulateName(var_name, PRINT);
+  PrintHelper(visited, curr_stmt);
+}
+
+void PkbClient::PopulateAssign(StringStream &visited,
+                               String &proc_name,
+                               String &curr_stmt,
+                               String &var_name,
+                               String &rhs_expr) {
+  m_pkb->AddStmt(curr_stmt, ASSIGN);
+  AssignHelper(visited, proc_name, curr_stmt, var_name, rhs_expr);
 }
 
 void PkbClient::PopulateCall(StringStream &visited,
@@ -230,12 +174,68 @@ void PkbClient::PopulateCall(StringStream &visited,
   PopulateParentStar(curr_stmt, visited);
 }
 
-void PkbClient::PopulateCallStmt(String proc, String stmt) {
-  m_pkb->GetCallStore()->AddCallStmtMap(proc, stmt);
+void PkbClient::PopulateWhile(StringStream &visited, String &curr_stmt, String cond_expr) {
+  m_pkb->AddStmt(curr_stmt, WHILE);
+  WhileHelper(visited, curr_stmt, cond_expr);
 }
 
-void PkbClient::PopulateCfg(CfgPtr cfg) {
-  m_pkb->AddProgramCfg(cfg);
+void PkbClient::PopulateIf(StringStream &visited, String curr_stmt, String cond_expr) {
+  m_pkb->AddStmt(curr_stmt, IF);
+  IfHelper(visited, curr_stmt, cond_expr);
+}
+
+void PkbClient::PopulateVars(StringStream &visited,
+                             String &curr_stmt,
+                             String &proc_name,
+                             String &var_name,
+                             bool is_uses) {
+  m_pkb->AddStmt(var_name, VARS);
+  VarsHelper(visited, curr_stmt, proc_name, var_name, is_uses);
+}
+
+void PkbClient::PopulateConst(String name) {
+  m_pkb->AddStmt(name, CONSTS);
+}
+
+void PkbClient::PopulateUses(String stmt, String var) {
+  m_pkb->GetUsesStore()->AddStmtVar(stmt, var);
+}
+
+void PkbClient::PopulateModifies(String stmt, String var) {
+  m_pkb->GetModifiesStore()->AddStmtVar(stmt, var);
+}
+
+void PkbClient::PopulateFollows(String stmt1, String stmt2) {
+  m_pkb->GetFollowsStore()->AddFollow(stmt1, stmt2);
+}
+
+void PkbClient::PopulateFollowsStar(String stmt1, String stmt2) {
+  m_pkb->GetFollowsStore()->AddFollowStar(stmt1, stmt2);
+}
+
+void PkbClient::PopulateParent(String stmt1, String stmt2) {
+  m_pkb->GetParentStore()->AddParent(stmt1, stmt2);
+}
+
+void PkbClient::PopulateParentStar(String stmt, StringStream visited) {
+  m_pkb->GetParentStore()->AddParentStar(stmt, visited);
+}
+
+void PkbClient::PopulateCalls(String caller, String callee) {
+  m_pkb->GetCallStore()->AddCallerHelper(caller, callee);
+}
+
+void PkbClient::UpdateCallUsesModifies(String &proc) {
+  StringSet uses_vars = GetVarUsedByStmt(proc);
+  StringSet mod_vars = GetVarModByStmt(proc);
+  StringSet call_stmts = GetCallStmtOf(proc);
+  StringSet callers = GetCallersOf(proc);
+
+  for (auto call_stmt : call_stmts) {
+    StringSet ancestors = GetAllAnceOf(call_stmt);
+    UpdateCallUses(call_stmt, uses_vars, ancestors, callers);
+    UpdateCallModifies(call_stmt, mod_vars, ancestors, callers);
+  }
 }
 
 void PkbClient::PopulateNext(String stmt1, String stmt2) {
