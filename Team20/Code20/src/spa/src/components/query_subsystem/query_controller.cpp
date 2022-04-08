@@ -2,7 +2,7 @@
 #include "components/query_subsystem/pql_lexer/pql_lexer.h"
 #include "components/query_subsystem/pql_parser/pql_parser.h"
 
-QueryController::QueryController(PKB *pkb): validator_{new pql_validator::ParsedQueryValidator()}, evaluator_{new pql_evaluator::QueryEvaluator(pkb)} {}
+QueryController::QueryController(PkbPtr pkb): validator_{new pql_validator::ParsedQueryValidator()}, evaluator_{new pql_evaluator::QueryEvaluator(pkb.get())} {}
 
 void QueryController::ProcessQuery(std::string query, std::list<std::string> &results) {
   try {
