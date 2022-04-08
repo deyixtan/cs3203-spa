@@ -11,7 +11,7 @@ volatile bool AbstractWrapper::GlobalStop = false;
 
 // a default constructor
 TestWrapper::TestWrapper() {
-  pkb = new PKB();
+  pkb = std::make_shared<PKB>();
   query_controller = new QueryController(pkb);
 }
 

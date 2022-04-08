@@ -1,5 +1,5 @@
 #include "design_extractor.h"
-#include "components/source_subsystem/pkb_client.h"
+#include "components/source_subsystem/pkb_client/pkb_client.h"
 #include "components/source_subsystem/types/ast/node_assign_statement.h"
 #include "components/source_subsystem/types/ast/node_boolean_expression.h"
 #include "components/source_subsystem/types/ast/node_call_statement.h"
@@ -173,6 +173,7 @@ void DesignExtractor::Visit(WhileStatementNodePtr &while_stmt) {
 
   while_stmt_list->Accept(shared_from_this());
   m_pkb_client->PopulateWhile(m_visited, stmt_num, cond_pattern);
+  m_visited.pop_back();
 }
 
 void DesignExtractor::Visit(IfStatementNodePtr &if_stmt) {
@@ -192,6 +193,7 @@ void DesignExtractor::Visit(IfStatementNodePtr &if_stmt) {
   if_stmt_list->Accept(shared_from_this());
   else_else_list->Accept(shared_from_this());
   m_pkb_client->PopulateIf(m_visited, stmt_num, cond_pattern);
+  m_visited.pop_back();
 }
 
 void DesignExtractor::Visit(BooleanExpressionNodePtr &boolean_expr_node) {
