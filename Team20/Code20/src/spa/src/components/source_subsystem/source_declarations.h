@@ -5,6 +5,7 @@
 #include <iostream>
 #include <memory>
 #include <queue>
+#include <stack>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -96,6 +97,8 @@ namespace source {
 
   // cfg-related types (others)
   typedef std::vector<CfgNodeStatement> CfgNodeStatementStream;
+  typedef std::unordered_set<CfgNodePtr> CfgNodeSet;
+  typedef std::stack<CfgNodePtr> CfgNodeStack;
   typedef std::vector<CfgNodePtr> CfgNodeStream;
   typedef std::unordered_map<String , CfgNodePtr> StringToCfgNodePtrMap;
 

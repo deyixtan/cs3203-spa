@@ -19,10 +19,6 @@ void ConstantNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(derived_ptr);
 }
 
-CfgNodePtr ConstantNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
-  return cfg_node;
-}
-
 bool ConstantNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const ConstantNode *>(&other);
   return m_value == casted_other->m_value;

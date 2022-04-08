@@ -34,7 +34,7 @@ PKB *GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(ast);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
-  cfg_builder->IterateAstAndPopulatePkb(ast);
+  cfg_builder->IterateAst(ast);
   return pkb;
 }
 
@@ -44,9 +44,9 @@ PKB *GetCfgPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
-  cfg_builder->IterateAstAndPopulatePkb(ast);
+  cfg_builder->IterateAst(ast);
   design_extractor->IterateAst(ast);
-  cfg_builder->IterateCfgAndPopulatePkb();
+  cfg_builder->IterateCfg();
   return pkb;
 }
 
