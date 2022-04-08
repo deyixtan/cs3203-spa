@@ -32,6 +32,19 @@ Table::Table(const std::string &first_synonym,
   }
 }
 
+Table::Table(const std::string &first_synonym,
+             const std::string &second_synonym,
+             std::vector<std::pair<std::string, std::string>> &pair_constraints) {
+  attributes.emplace_back(first_synonym);
+  attributes.emplace_back(second_synonym);
+  for (const auto &pair_constraint : pair_constraints) {
+    records.emplace_back(std::initializer_list<std::string>{pair_constraint.first, pair_constraint.second});
+  }
+  if (pair_constraints.empty()) {
+    ToggleFalseClause();
+  }
+}
+
 void Table::Merge(Table &other_table) {
   UpdateResultType(other_table);
 
