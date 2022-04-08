@@ -37,11 +37,11 @@ typedef std::unordered_set<IDENT> IDENT_SET;
 typedef std::pair<IDENT, IDENT> IDENT_PAIR;
 typedef std::unordered_map<IDENT, IDENT_SET> IDENT_SET_MAP;
 typedef std::unordered_map<IDENT, IDENT_PAIR> IDENT_PAIR_MAP;
-typedef std::vector<IDENT_PAIR> IDENT_PAIR_SET;
+typedef std::vector<IDENT_PAIR> IDENT_PAIR_VECTOR;
 typedef std::unordered_map<StmtType,
                            std::unordered_map<StmtType,
                                               std::tuple<IDENT_SET_MAP,
                                                          IDENT_SET_MAP,
-                                                         IDENT_PAIR_SET>>> NESTED_TUPLE_MAP;
+                                                         IDENT_PAIR_VECTOR>>> NESTED_TUPLE_MAP;
 
 #endif //COMMON_H

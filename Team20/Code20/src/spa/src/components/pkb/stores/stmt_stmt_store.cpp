@@ -360,7 +360,7 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StoreType store_ty
   return {};
 }
 
-IDENT_PAIR_SET StmtStmtStore::GetPairByType(StmtType type1, StmtType type2) {
+IDENT_PAIR_VECTOR StmtStmtStore::GetPairByType(StmtType type1, StmtType type2) {
   if (type_pair_map.find(type1) != type_pair_map.end()) {
     if (type_pair_map.at(type1).find(type2) != type_pair_map.at(type1).end()) {
       return std::get<2>(type_pair_map.at(type1).at(type2));
@@ -369,7 +369,7 @@ IDENT_PAIR_SET StmtStmtStore::GetPairByType(StmtType type1, StmtType type2) {
   return {};
 }
 
-IDENT_PAIR_SET StmtStmtStore::GetStarPairByType(StmtType type1, StmtType type2) {
+IDENT_PAIR_VECTOR StmtStmtStore::GetStarPairByType(StmtType type1, StmtType type2) {
   if (star_type_pair_map.find(type1) != star_type_pair_map.end()) {
     if (star_type_pair_map.at(type1).find(type2) != star_type_pair_map.at(type1).end()) {
       return std::get<2>(star_type_pair_map.at(type1).at(type2));
@@ -448,15 +448,15 @@ void StmtStmtStore::GetLowerStarOfHelper(StmtType stmt_type,
   }
 }
 
-IDENT_PAIR_SET StmtStmtStore::GetAllPairs() {
+IDENT_PAIR_VECTOR StmtStmtStore::GetAllPairs() {
   return all_pairs;
 }
 
-IDENT_PAIR_SET StmtStmtStore::GetAllStarPairs() {
+IDENT_PAIR_VECTOR StmtStmtStore::GetAllStarPairs() {
   return all_star_pairs;
 }
 
-IDENT_PAIR_SET StmtStmtStore::GetAllNextStarPairs() {
+IDENT_PAIR_VECTOR StmtStmtStore::GetAllNextStarPairs() {
   std::vector<std::pair<std::string, std::string>> res;
   for (auto pair : all_pairs) {
     std::string before_stmt = pair.first;

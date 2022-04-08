@@ -48,10 +48,10 @@ IDENT_SET CallStore::GetCalleesStarOf(IDENT const &proc) {
   return GetLowerStarOf(CALLS, PROC, proc);
 }
 
-IDENT_PAIR_SET CallStore::GetAllCalls() {
+IDENT_PAIR_VECTOR CallStore::GetAllCalls() {
   return GetAllPairs();
 }
 
-IDENT_PAIR_SET CallStore::GetAllCallsStar() {
+IDENT_PAIR_VECTOR CallStore::GetAllCallsStar() {
   return GetAllStarPairs();
 }

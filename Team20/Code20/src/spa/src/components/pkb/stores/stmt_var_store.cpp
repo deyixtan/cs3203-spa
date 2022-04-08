@@ -28,7 +28,7 @@ void StmtVarStore::AddStmtVarHelper(StmtType type, std::string stmt, std::string
     stmt_var_map.at(stmt).emplace(var);
   }
 
-  IDENT_PAIR_SET set = {};
+  IDENT_PAIR_VECTOR set = {};
   if (type_pair_map.find(type) != type_pair_map.end()) {
     type_pair_map.at(type).push_back({stmt, var});
   } else {
@@ -76,7 +76,7 @@ std::unordered_set<std::string> StmtVarStore::GetStmtByVar(StmtType type, std::s
   return {};
 }
 
-IDENT_PAIR_SET StmtVarStore::GetPairByType(StmtType type) {
+IDENT_PAIR_VECTOR StmtVarStore::GetPairByType(StmtType type) {
   if (type_pair_map.find(type) != type_pair_map.end()) {
     return type_pair_map.at(type);
   }

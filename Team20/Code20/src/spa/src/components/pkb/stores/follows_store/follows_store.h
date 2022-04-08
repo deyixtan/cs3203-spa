@@ -18,8 +18,8 @@ class FollowsStore : public StmtStmtStore {
   [[nodiscard]] IDENT GetFollowingOf(StmtType type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetFollowerStarOf(StmtType type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetFollowingStarOf(StmtType type, IDENT const &stmt);
-  [[nodiscard]] IDENT_PAIR_SET GetAllFollowStmt(StmtType type1, StmtType type2);
-  [[nodiscard]] IDENT_PAIR_SET GetAllFollowStarStmt(StmtType type1, StmtType type2);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAllFollowStmt(StmtType type1, StmtType type2);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAllFollowStarStmt(StmtType type1, StmtType type2);
 };
 
 #endif //FOLLOW_STORE_H

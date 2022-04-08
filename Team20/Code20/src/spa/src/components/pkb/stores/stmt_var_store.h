@@ -7,7 +7,7 @@ class StmtVarStore : public Store {
  private:
   IDENT_SET_MAP stmt_var_map;
   std::unordered_map<std::string, std::unordered_map<StmtType, std::unordered_set<std::string>>> var_stmt_map;
-  std::unordered_map<StmtType, IDENT_PAIR_SET> type_pair_map;
+  std::unordered_map<StmtType, IDENT_PAIR_VECTOR> type_pair_map;
   IDENT_SET all_stmt;
   IDENT_SET all_proc;
 
@@ -19,7 +19,7 @@ class StmtVarStore : public Store {
   [[nodiscard]] bool IsStmtVarValid(IDENT_PAIR const &pair);
   [[nodiscard]] IDENT_SET GetVarByStmt(IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetStmtByVar(StmtType type, IDENT const &var);
-  [[nodiscard]] IDENT_PAIR_SET GetPairByType(StmtType type);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetPairByType(StmtType type);
   [[nodiscard]] IDENT_SET GetAllStmt();
   [[nodiscard]] IDENT_SET GetAllProc();
 };

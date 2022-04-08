@@ -36,10 +36,10 @@ IDENT_SET ParentStore::GetAllDescOf(StmtType type, IDENT const &stmt) {
   return GetLowerStarOf(PARENT, type, stmt);
 }
 
-IDENT_PAIR_SET ParentStore::GetAllParentStmt(StmtType type1, StmtType type2) {
+IDENT_PAIR_VECTOR ParentStore::GetAllParentStmt(StmtType type1, StmtType type2) {
   return GetPairByType(type1, type2);
 }
 
-IDENT_PAIR_SET ParentStore::GetAllParentStarStmt(StmtType type1, StmtType type2) {
+IDENT_PAIR_VECTOR ParentStore::GetAllParentStarStmt(StmtType type1, StmtType type2) {
   return GetStarPairByType(type1, type2);
 }

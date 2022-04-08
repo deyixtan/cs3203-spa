@@ -100,8 +100,8 @@ IDENT_SET PatternStore::GetStmtWithPatternWildcard(std::string lhs) {
   return result;
 }
 
-IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
-  IDENT_PAIR_SET result = {};
+IDENT_PAIR_VECTOR PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
+  IDENT_PAIR_VECTOR result = {};
   expr = "(" + expr + ")";
 
   ExpressionTree expr_tree = ExpressionTree();
@@ -117,8 +117,8 @@ IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
   return result;
 }
 
-IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) {
-  IDENT_PAIR_SET result = {};
+IDENT_PAIR_VECTOR PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) {
+  IDENT_PAIR_VECTOR result = {};
   expr = "(" + expr + ")";
 
   ExpressionTree expr_tree = ExpressionTree();
@@ -134,7 +134,7 @@ IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) 
   return result;
 }
 
-IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymWildcard() {
+IDENT_PAIR_VECTOR PatternStore::GetStmtWithPatternSynonymWildcard() {
   return m_stmt_pattern_pairs;
 }
 
@@ -172,10 +172,10 @@ IDENT_SET PatternStore::GetWhileWithPattern(std::string var) {
   return result;
 }
 
-IDENT_PAIR_SET PatternStore::GetIfWithPatternSynonym() {
+IDENT_PAIR_VECTOR PatternStore::GetIfWithPatternSynonym() {
   return m_if_pattern_pairs;
 }
 
-IDENT_PAIR_SET PatternStore::GetWhileWithPatternSynonym() {
+IDENT_PAIR_VECTOR PatternStore::GetWhileWithPatternSynonym() {
   return m_while_pattern_pairs;
 }

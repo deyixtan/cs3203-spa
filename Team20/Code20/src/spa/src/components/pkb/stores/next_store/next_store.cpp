@@ -36,11 +36,11 @@ IDENT_SET NextStore::GetNextStarOf(StmtType type, IDENT const &stmt) {
   return GetLowerStarOf(NEXT, type, stmt);
 }
 
-IDENT_PAIR_SET NextStore::GetNextPairs() {
+IDENT_PAIR_VECTOR NextStore::GetNextPairs() {
   return GetAllPairs();
 }
 
-IDENT_PAIR_SET NextStore::GetNextStarPairs() {
+IDENT_PAIR_VECTOR NextStore::GetNextStarPairs() {
   return GetAllNextStarPairs();
 }
 
@@ -56,10 +56,10 @@ IDENT_SET NextStore::GetNextStarSameStmt(StmtType type) {
   return same_synonym_set;
 }
 
-IDENT_PAIR_SET NextStore::GetAllNextStmt(StmtType type1, StmtType type2) {
+IDENT_PAIR_VECTOR NextStore::GetAllNextStmt(StmtType type1, StmtType type2) {
   return GetPairByType(type1, type2);
 }
 
-IDENT_PAIR_SET NextStore::GetAllNextStarStmt(StmtType type1, StmtType type2) {
+IDENT_PAIR_VECTOR NextStore::GetAllNextStarStmt(StmtType type1, StmtType type2) {
   return GetStarPairByType(type1, type2);
 }

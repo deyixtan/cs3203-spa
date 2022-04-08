@@ -18,8 +18,8 @@ class ParentStore : public StmtStmtStore {
   [[nodiscard]] IDENT_SET GetChildOf(StmtType type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetAllAnceOf(StmtType type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetAllDescOf(StmtType type, IDENT const &stmt);
-  [[nodiscard]] IDENT_PAIR_SET GetAllParentStmt(StmtType type1, StmtType type2);
-  [[nodiscard]] IDENT_PAIR_SET GetAllParentStarStmt(StmtType type1, StmtType type2);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAllParentStmt(StmtType type1, StmtType type2);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAllParentStarStmt(StmtType type1, StmtType type2);
 };
 
 #endif //PARENT_STORE_H
