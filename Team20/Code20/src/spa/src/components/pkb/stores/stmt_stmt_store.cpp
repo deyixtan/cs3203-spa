@@ -232,20 +232,20 @@ void StmtStmtStore::WipeNextStar() {
 }
 
 bool StmtStmtStore::IsValid(IDENT_PAIR const &pair) {
-  
+  return std::find(all_pairs.begin(), all_pairs.end(), pair) != all_pairs.end();
 }
 
 bool StmtStmtStore::IsStarValid(IDENT_PAIR const &pair) {
-
+  return std::find(all_star_pairs.begin(), all_star_pairs.end(), pair) != all_star_pairs.end();
 }
 
 bool StmtStmtStore::IsNextStarPairValid(std::pair<std::string, std::string> const &pair) {
-//  if(all_star_pairs.find(pair) != all_star_pairs.end()) {
-//    return true;
-//  } else {
-//    std::unordered_set<std::string> next_star = GetLowerStarOf(NEXT, STMT, pair.first);
-//    return next_star.find(pair.second) != next_star.end();
-//  }
+  if (std::find(all_star_pairs.begin(), all_star_pairs.end(), pair) != all_star_pairs.end()) {
+    return true;
+  } else {
+    std::unordered_set<std::string> next_star = GetLowerStarOf(NEXT, STMT, pair.first);
+    return next_star.find(pair.second) != next_star.end();
+  }
 }
 
 std::unordered_set<std::string> StmtStmtStore::GetHelper(StmtType type1,
@@ -491,15 +491,15 @@ IDENT_PAIR_SET StmtStmtStore::GetAllStarPairs() {
 
 IDENT_PAIR_SET StmtStmtStore::GetAllNextStarPairs() {
   std::vector<std::pair<std::string, std::string>> res;
-  for(auto pair : all_pairs) {
+  for (auto pair : all_pairs) {
     std::string before_stmt = pair.first;
     std::string next_stmt = pair.second;
     std::unordered_set<std::string> lower_star = GetLowerStarOf(NEXT, STMT, before_stmt);
-    for(auto next: lower_star) {
+    for (auto next : lower_star) {
       res.push_back({pair.first, next});
     }
     std::unordered_set<std::string> upper_star = GetUpperStarOf(NEXT, STMT, next_stmt);
-    for(auto before: upper_star) {
+    for (auto before : upper_star) {
       res.push_back({before, pair.second});
     }
   }
