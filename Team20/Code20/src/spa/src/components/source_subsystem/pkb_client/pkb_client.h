@@ -1,8 +1,8 @@
 #ifndef PKB_CLIENT_H
 #define PKB_CLIENT_H
 
-#include "components/source_subsystem/source_declarations.h"
 #include "components/pkb/common.h"
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
