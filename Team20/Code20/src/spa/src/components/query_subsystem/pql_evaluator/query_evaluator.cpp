@@ -2,9 +2,9 @@
 
 namespace pql_evaluator {
 
-void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &results) {
+void QueryEvaluator::Evaluate(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results) {
   pql::Table table;
-  auto clauses = ExtractClauses(query);
+  auto clauses = ExtractClauses(query, pkb);
   // extract clause -> optimizer -> sort clauses?
   // or insert a new sorter in here after extracting?
   while (!clauses.empty()) {
@@ -23,7 +23,8 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
   } else if (table.IsAttributeResult()) {
     ResultClause result_clause = query.GetResultClause();
     std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration().GetDeclarations();
-    std::pair<std::pair<DesignEntityType, std::string>, AttriName> attribute = Utils::ParseAttributeRef(result_clause.GetValues().front(), declarations);
+    std::pair<std::pair<DesignEntityType, std::string>, AttriName>
+        attribute = Utils::ParseAttributeRef(result_clause.GetValues().front(), declarations);
     auto projected_results = table.GetResult(attribute.first.second);
     if (Utils::IsConversionNeeded(attribute.first.first, attribute.second)) {
       std::unordered_set<std::string> temp_set;
@@ -44,7 +45,8 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
       results.emplace_back(result);
     }
   } else if (table.IsTupleResult()) {
-    auto projected_results = table.GetTupleResult(query.GetResultClause().GetValues(), query.GetDeclaration().GetDeclarations(), pkb);
+    auto projected_results =
+        table.GetTupleResult(query.GetResultClause().GetValues(), query.GetDeclaration().GetDeclarations(), pkb);
     for (auto result : projected_results) {
       results.emplace_back(result);
     }
@@ -54,23 +56,23 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
   pkb->GetNextStore()->WipeStar();
 }
 
-std::queue<std::shared_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query) {
+std::queue<std::shared_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query, const PkbPtr &pkb) {
   std::queue<std::shared_ptr<pql::Clause> > clauses;
-  for (const auto& relationship : query.GetRelationships()) {
+  for (const auto &relationship : query.GetRelationships()) {
     auto clause = pql::ClauseFactory::Create(relationship, query.GetDeclaration().GetDeclarations(), pkb);
     if (clause) {
       clauses.push(std::move(clause));
     }
   }
 
-  for (const auto& pattern : query.GetPatterns()) {
+  for (const auto &pattern : query.GetPatterns()) {
     auto clause = pql::ClauseFactory::Create(pattern, query.GetDeclaration().GetDeclarations(), pkb);
     if (clause) {
       clauses.push(std::move(clause));
     }
   }
 
-  for (const auto& with : query.GetWithClause()) {
+  for (const auto &with : query.GetWithClause()) {
     auto clause = pql::ClauseFactory::Create(with, query.GetDeclaration().GetDeclarations(), pkb);
     if (clause) {
       clauses.push(std::move(clause));

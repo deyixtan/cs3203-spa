@@ -8,7 +8,7 @@ using namespace clause_util;
 FollowsClause::FollowsClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
                              const PqlToken &first_arg,
                              const PqlToken &second_arg,
-                             PKB *pkb)
+                             const PkbPtr &pkb)
     : declarations(declarations), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table FollowsClause::Execute() {

@@ -11,13 +11,13 @@ class PatternWhileClause : public Clause {
  public:
   PatternWhileClause(const std::string &while_synonym,
                      const PqlToken &first_arg,
-                     PKB *pkb);
+                     const PkbPtr &pkb);
 
   Table Execute() override;
  private:
   std::string while_synonym;
   PqlToken first_arg;
-  PKB *pkb;
+  const PkbPtr &pkb;
   Table HandleSynonym();
   Table HandleWildcard();
   Table HandleIdent();

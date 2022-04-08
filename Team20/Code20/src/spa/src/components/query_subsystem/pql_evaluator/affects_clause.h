@@ -11,12 +11,12 @@ class AffectsClause : public Clause {
  public:
   AffectsClause(const PqlToken &first_arg,
                 const PqlToken &second_arg,
-                PKB *pkb);
+                const PkbPtr &pkb);
   Table Execute() override;
  private:
   PqlToken first_arg;
   PqlToken second_arg;
-  PKB *pkb;
+  const PkbPtr &pkb;
   Table HandleSynonymSynonym();
   Table HandleSynonymWildcard();
   Table HandleSynonymInteger();

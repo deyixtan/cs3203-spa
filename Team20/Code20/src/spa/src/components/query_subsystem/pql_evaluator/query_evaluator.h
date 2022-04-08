@@ -18,13 +18,10 @@ namespace pql_evaluator {
 
 class QueryEvaluator {
  public:
-  explicit QueryEvaluator(PKB* pkb): pkb{pkb} {};
-  void Evaluate(ParsedQuery&, std::list<std::string>&);
+  static void Evaluate(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results);
 
  private:
-  std::unordered_set<std::string> result;
-  PKB *pkb;
-  std::queue<std::shared_ptr<pql::Clause> > ExtractClauses(ParsedQuery& query);
+  static std::queue<std::shared_ptr<pql::Clause> > ExtractClauses(ParsedQuery &query, const PkbPtr &pkb);
 };
 
 }

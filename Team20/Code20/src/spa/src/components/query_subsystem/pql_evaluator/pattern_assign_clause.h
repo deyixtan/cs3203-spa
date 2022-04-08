@@ -12,14 +12,14 @@ class PatternAssignClause : public Clause {
   PatternAssignClause(const std::string &assign_synonym,
                       const PqlToken &first_arg,
                       const PqlToken &second_arg,
-                      PKB *pkb);
+                      const PkbPtr &pkb);
 
   Table Execute() override;
  private:
   std::string assign_synonym;
   PqlToken first_arg;
   PqlToken second_arg;
-  PKB *pkb;
+  const PkbPtr &pkb;
   Table HandleSynonymWildcard();
   Table HandleSynonymExact();
   Table HandleSynonymPartial();

@@ -14,13 +14,13 @@ class UsesSClause : public Clause {
   UsesSClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
               const PqlToken &first_arg,
               const PqlToken &second_arg,
-              PKB *pkb);
+              const PkbPtr &pkb);
   Table Execute() override;
  private:
   std::unordered_map<std::string, DesignEntityType> declarations;
   PqlToken first_arg;
   PqlToken second_arg;
-  PKB *pkb;
+  const PkbPtr &pkb;
   Table HandleSynonymSynonym();
   Table HandleSynonymWildcard();
   Table HandleSynonymIdent();

@@ -11,12 +11,12 @@ class PatternIfClause : public Clause {
  public:
   PatternIfClause(const std::string &if_synonym,
                   const PqlToken &first_arg,
-                  PKB *pkb);
+                  const PkbPtr &pkb);
   Table Execute() override;
  private:
   std::string if_synonym;
   PqlToken first_arg;
-  PKB *pkb;
+  const PkbPtr &pkb;
   Table HandleSynonym();
   Table HandleWildcard();
   Table HandleIdent();

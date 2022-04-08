@@ -230,7 +230,7 @@ std::unordered_set<std::string> Table::GetResult(const std::string &select_synon
 std::unordered_set<std::string> Table::GetTupleResult(const std::vector<PqlToken> &tuple,
                                                       const std::unordered_map<std::string,
                                                                                DesignEntityType> &declarations,
-                                                      PKB *pkb) {
+                                                      const PkbPtr &pkb) {
   std::unordered_set<std::string> result;
   const std::string WHITESPACE = " ";
 
@@ -272,7 +272,7 @@ size_t Table::GetAttributeIdxFromElem(PqlToken &elem,
   }
 }
 
-std::string Table::ConvertAttrRef(const DesignEntityType &attr_ref_design_entity, std::string value, PKB *pkb) {
+std::string Table::ConvertAttrRef(const DesignEntityType &attr_ref_design_entity, std::string value, const PkbPtr &pkb) {
   auto new_value = pkb->GetNameByStmt(GetStmtType(attr_ref_design_entity), value);
   return new_value;
 }

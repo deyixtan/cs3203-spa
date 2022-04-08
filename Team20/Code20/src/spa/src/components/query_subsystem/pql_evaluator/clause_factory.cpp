@@ -29,12 +29,13 @@ using namespace ::clause_util;
 
 std::shared_ptr<Clause> ClauseFactory::Create(Relationship relationship,
                                               const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                              PKB *pkb) {
+                                              const PkbPtr &pkb) {
   switch (relationship.GetRelRef().type) {
     case PqlTokenType::MODIFIES: {
       if (IsArgIdent(relationship.GetFirst()) || IsFirstArgProcRelationship(relationship.GetFirst(), declarations)) {
         return std::make_shared<ModifiesPClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
-      } else if (IsArgInteger(relationship.GetFirst()) || IsFirstArgStmtRelationship(relationship.GetFirst(), declarations)) {
+      } else if (IsArgInteger(relationship.GetFirst())
+          || IsFirstArgStmtRelationship(relationship.GetFirst(), declarations)) {
         return std::make_shared<ModifiesSClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
       } else {
         return nullptr;
@@ -43,7 +44,8 @@ std::shared_ptr<Clause> ClauseFactory::Create(Relationship relationship,
     case PqlTokenType::USES: {
       if (IsArgIdent(relationship.GetFirst()) || IsFirstArgProcRelationship(relationship.GetFirst(), declarations)) {
         return std::make_shared<UsesPClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
-      } else if (IsArgInteger(relationship.GetFirst()) || IsFirstArgStmtRelationship(relationship.GetFirst(), declarations)) {
+      } else if (IsArgInteger(relationship.GetFirst())
+          || IsFirstArgStmtRelationship(relationship.GetFirst(), declarations)) {
         return std::make_shared<UsesSClause>(declarations, relationship.GetFirst(), relationship.GetSecond(), pkb);
       } else {
         return nullptr;
@@ -87,7 +89,7 @@ std::shared_ptr<Clause> ClauseFactory::Create(Relationship relationship,
 
 std::shared_ptr<Clause> ClauseFactory::Create(Pattern pattern,
                                               const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                              PKB *pkb) {
+                                              const PkbPtr &pkb) {
   auto pattern_synonym_design_entity_type = GetSynonymDesignEntity(pattern.GetSynonym(), declarations);
   switch (pattern_synonym_design_entity_type) {
     case DesignEntityType::ASSIGN: {
@@ -114,19 +116,19 @@ std::shared_ptr<Clause> ClauseFactory::Create(Pattern pattern,
 
 std::shared_ptr<Clause> ClauseFactory::Create(const PqlToken &selected_synonym,
                                               const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                              PKB *pkb) {
+                                              const PkbPtr &pkb) {
   return std::make_shared<SelectClause>(selected_synonym, declarations, pkb);
 }
 
 std::shared_ptr<Clause> ClauseFactory::Create(With with,
                                               const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                              PKB *pkb) {
+                                              const PkbPtr &pkb) {
   return std::make_shared<WithClause>(declarations, with.GetFirst(), with.GetSecond(), pkb);
 }
 
 std::shared_ptr<Clause> ClauseFactory::Create(ResultClause result_clause,
                                               const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                              PKB *pkb) {
+                                              const PkbPtr &pkb) {
   ResultClauseType result_clause_type = result_clause.GetType();
   if (result_clause_type==ResultClauseType::BOOLEAN) {
     return std::make_shared<SelectBooleanClause>();

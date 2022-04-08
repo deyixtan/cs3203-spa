@@ -8,7 +8,7 @@ using namespace clause_util;
 PatternAssignClause::PatternAssignClause(const std::string &assign_synonym,
                                          const PqlToken &first_arg,
                                          const PqlToken &second_arg,
-                                         PKB *pkb)
+                                         const PkbPtr &pkb)
     : assign_synonym(assign_synonym), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table PatternAssignClause::Execute() {

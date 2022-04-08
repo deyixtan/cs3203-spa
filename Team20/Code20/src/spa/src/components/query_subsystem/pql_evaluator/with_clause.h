@@ -9,17 +9,17 @@
 namespace pql {
 
 class WithClause : public Clause {
-public:
+ public:
   WithClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
-                const PqlToken &first_arg,
-                const PqlToken &second_arg,
-                PKB *pkb);
+             const PqlToken &first_arg,
+             const PqlToken &second_arg,
+             const PkbPtr &pkb);
   Table Execute() override;
  private:
   std::unordered_map<std::string, DesignEntityType> declarations;
   PqlToken first_arg;
   PqlToken second_arg;
-  PKB *pkb;
+  const PkbPtr &pkb;
   Table HandleAttributeAttribute();
   Table HandleAttributeInteger();
   Table HandleAttributeIdent();
@@ -27,8 +27,10 @@ public:
   Table HandleIntegerInteger();
   Table HandleIdentAttribute();
   Table HandleIdentIdent();
-  std::unordered_set<std::string> HandleSetIntersectionSingleColumn(std::unordered_set<std::string>, std::unordered_set<std::string>);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> HandleSetIntersection(std::unordered_set<std::string>, std::unordered_set<std::string>);
+  std::unordered_set<std::string> HandleSetIntersectionSingleColumn(std::unordered_set<std::string>,
+                                                                    std::unordered_set<std::string>);
+  std::unordered_set<std::pair<std::string, std::string>,
+                     pair_hash> HandleSetIntersection(std::unordered_set<std::string>, std::unordered_set<std::string>);
 };
 
 }

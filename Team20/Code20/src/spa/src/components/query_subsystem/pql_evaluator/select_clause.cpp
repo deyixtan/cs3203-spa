@@ -2,13 +2,16 @@
 
 namespace pql {
 
-SelectClause::SelectClause(const PqlToken &result_clause, const std::unordered_map<std::string, DesignEntityType> declarations_, PKB *pkb_)
+SelectClause::SelectClause(const PqlToken &result_clause,
+                           const std::unordered_map<std::string, DesignEntityType> declarations_,
+                           const PkbPtr &pkb_)
     : result_clause(result_clause), declarations(declarations_), pkb(pkb_) {}
 
 Table SelectClause::Execute() {
   std::unordered_set<std::string> single_constraints;
-  if (result_clause.type == PqlTokenType::ATTRIBUTE) {
-    std::pair<std::pair<DesignEntityType, std::string>, AttriName> attribute = Utils::ParseAttributeRef(result_clause, declarations);
+  if (result_clause.type==PqlTokenType::ATTRIBUTE) {
+    std::pair<std::pair<DesignEntityType, std::string>, AttriName>
+        attribute = Utils::ParseAttributeRef(result_clause, declarations);
     single_constraints = pkb->GetStmt(clause_util::GetStmtType(attribute.first.first));
     Table table = Table(attribute.first.second, single_constraints);
     table.ToggleAttributeResult();

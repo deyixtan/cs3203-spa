@@ -7,7 +7,7 @@ using namespace clause_util;
 
 SelectTupleClause::SelectTupleClause(std::vector<PqlToken> &tuple,
                                      const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                     PKB *pkb) : tuple(tuple), declarations(declarations), pkb(pkb) {}
+                                     const PkbPtr &pkb) : tuple(tuple), declarations(declarations), pkb(pkb) {}
 
 Table SelectTupleClause::Execute() {
   Table table;

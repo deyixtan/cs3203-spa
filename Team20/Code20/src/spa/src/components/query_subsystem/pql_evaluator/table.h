@@ -55,7 +55,7 @@ class Table {
   std::unordered_set<std::string> GetResult(const std::string &select_synonym);
   std::unordered_set<std::string> GetTupleResult(const std::vector<PqlToken> &tuple,
                                                  const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                                 PKB *pkb);
+                                                 const PkbPtr &pkb);
   friend std::ostream &operator<<(std::ostream &os, const Table &table);
 
  private:
@@ -73,7 +73,7 @@ class Table {
   void UpdateResultType(const Table &other_table);
   static std::string JoinRecordBy(const Record &record, const std::string &delimiter);
   size_t GetAttributeIdxFromElem(PqlToken &elem, const std::unordered_map<std::string, DesignEntityType> &declarations);
-  static std::string ConvertAttrRef(const DesignEntityType &attr_ref, std::string value, PKB *pkb);
+  static std::string ConvertAttrRef(const DesignEntityType &attr_ref, std::string value, const PkbPtr &pkb);
 };
 
 }

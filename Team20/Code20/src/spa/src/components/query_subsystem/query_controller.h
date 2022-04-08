@@ -10,17 +10,16 @@
 #include <memory>
 #include <iostream>
 
+namespace pql {
+
 using pql_validator::ParsedQueryValidator;
 using pql_evaluator::QueryEvaluator;
 
 class QueryController {
  public:
-  QueryController(PkbPtr pkb);
-  void ProcessQuery(std::string query, std::list<std::string> &results);
-
- private:
-  std::unique_ptr<ParsedQueryValidator> validator_;
-  std::unique_ptr<QueryEvaluator> evaluator_;
+  static void ProcessQuery(std::string query, const PkbPtr &pkb, std::list<std::string> &results);
 };
+
+}
 
 #endif

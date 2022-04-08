@@ -8,7 +8,7 @@ using namespace clause_util;
 
 AffectsClause::AffectsClause(const PqlToken &first_arg,
                              const PqlToken &second_arg,
-                             PKB *pkb)
+                             const PkbPtr &pkb)
     : first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table AffectsClause::Execute() {

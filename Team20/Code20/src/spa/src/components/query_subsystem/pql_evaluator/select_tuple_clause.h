@@ -11,12 +11,12 @@ class SelectTupleClause : public Clause {
  public:
   SelectTupleClause(std::vector<PqlToken> &tuple,
                     const std::unordered_map<std::string, DesignEntityType> &declarations,
-                    PKB *pkb);
+                    const PkbPtr &pkb);
   Table Execute() override;
  private:
   std::vector<PqlToken> tuple;
   std::unordered_map<std::string, DesignEntityType> declarations;
-  PKB *pkb;
+  const PkbPtr &pkb;
   Table HandleSynonymElem(const PqlToken &synonym);
   Table HandleAttrRefElem(PqlToken &attr_ref);
 };
