@@ -36,14 +36,6 @@ IDENT_SET FollowsStore::GetFollowingStarOf(StmtType type, IDENT const &stmt) {
   return GetLowerStarOf(FOLLOWS, type, stmt);
 }
 
-IDENT_PAIR_SET FollowsStore::GetFollowPairs() {
-  return GetAllPairs();
-}
-
-IDENT_PAIR_SET FollowsStore::GetFollowStarPairs() {
-  return GetAllStarPairs();
-}
-
 IDENT_PAIR_SET FollowsStore::GetAllFollowStmt(StmtType type1, StmtType type2) {
   return GetPairByType(type1, type2);
 }

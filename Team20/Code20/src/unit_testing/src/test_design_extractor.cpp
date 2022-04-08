@@ -487,8 +487,6 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(WHILE, STMT) == pkb->GetParentStore()->GetAllParentStarStmt(WHILE, STMT));
   REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(IF, ASSIGN) == pkb->GetParentStore()->GetAllParentStarStmt(IF, ASSIGN));
   REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(WHILE, ASSIGN) == pkb->GetParentStore()->GetAllParentStarStmt(WHILE, ASSIGN));
-  REQUIRE(test_pkb->GetParentStore()->GetParentChildPairs() == pkb->GetParentStore()->GetParentChildPairs());
-  REQUIRE(test_pkb->GetParentStore()->GetAnceDescPairs() == pkb->GetParentStore()->GetAnceDescPairs());
 }
 
 TEST_CASE("Test DE follows population for single procedure with multiple assign statements") {
@@ -614,9 +612,6 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "3") == pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "3"));
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "4") == pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "4"));
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "5") == pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "5"));
-
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowPairs() == pkb->GetFollowsStore()->GetFollowPairs());
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowStarPairs() == pkb->GetFollowsStore()->GetFollowStarPairs());
 
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(STMT, ASSIGN) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, ASSIGN));
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT));

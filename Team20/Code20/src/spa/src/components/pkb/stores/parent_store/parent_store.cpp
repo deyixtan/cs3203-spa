@@ -36,14 +36,6 @@ IDENT_SET ParentStore::GetAllDescOf(StmtType type, IDENT const &stmt) {
   return GetLowerStarOf(PARENT, type, stmt);
 }
 
-IDENT_PAIR_SET ParentStore::GetParentChildPairs() {
-  return GetAllPairs();
-}
-
-IDENT_PAIR_SET ParentStore::GetAnceDescPairs() {
-  return GetAllStarPairs();
-}
-
 IDENT_PAIR_SET ParentStore::GetAllParentStmt(StmtType type1, StmtType type2) {
   return GetPairByType(type1, type2);
 }

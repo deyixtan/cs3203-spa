@@ -607,10 +607,6 @@ std::unordered_set<std::string> GetFollowerStarOf(std::string stmt);
 
 std::unordered_set<std::string> GetFollowingStarOf(std::string stmt);
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowPairs();
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowStarPairs();
-
 
 /* PARENT STORE */
 
