@@ -89,7 +89,7 @@ std::vector<std::pair<size_t, size_t>> Table::GetCommonAttributeIndexPairs(const
   std::vector<std::pair<size_t, size_t>> common_attribute_index_pairs;
   std::unordered_map<std::string, size_t> attributes_to_index;
   for (size_t i = 0; i < attributes.size(); ++i) {
-    attributes_to_index.insert({attributes.at(i), i});
+    attributes_to_index.emplace(attributes.at(i), i);
   }
   for (size_t i = 0; i < other_attributes.size(); ++i) {
     auto it = attributes_to_index.find(other_attributes.at(i));
@@ -104,7 +104,7 @@ std::vector<size_t> Table::GetOtherAttributeIndices(const Attributes &other_attr
   std::vector<size_t> other_attribute_indices;
   std::unordered_map<std::string, size_t> attributes_to_index;
   for (size_t i = 0; i < attributes.size(); ++i) {
-    attributes_to_index.insert({attributes.at(i), i});
+    attributes_to_index.emplace(attributes.at(i), i);
   }
   for (size_t i = 0; i < other_attributes.size(); ++i) {
     auto it = attributes_to_index.find(other_attributes.at(i));
