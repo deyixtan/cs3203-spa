@@ -1,11 +1,13 @@
 #include "parsed_query.h"
 #include <vector>
 
-ParsedQuery::ParsedQuery() : declarations(declarations),
-                             result_clause(result_clause),
-                             relationships(relationships),
-                             patterns(patterns),
-                             withs(withs) {}
+ParsedQuery::ParsedQuery() {
+  result_clause = ResultClause();
+  declarations = Declaration();
+  relationships = std::vector<Relationship>();
+  patterns = std::vector<Pattern>();
+  withs = std::vector<With>();
+}
 
 void ParsedQuery::SetResultClause(ResultClause parsed_result_clause) {
   result_clause = parsed_result_clause;
@@ -23,7 +25,7 @@ void ParsedQuery::AddWithClause(With parsed_with_clause) {
   withs.push_back(parsed_with_clause);
 }
 
-void ParsedQuery::SetDeclarations(Declaration parsed_declarations) {
+void ParsedQuery::SetDeclarations(Declaration &parsed_declarations) {
   declarations = parsed_declarations;
 }
 
@@ -47,7 +49,7 @@ std::vector<With> ParsedQuery::GetWithClause() {
   return withs;
 }
 
-std::unordered_map<PqlTokenType, DesignEntityType> token_design_map {
+std::unordered_map<PqlTokenType, DesignEntityType> token_design_map{
     {PqlTokenType::STMT, DesignEntityType::STMT},
     {PqlTokenType::ASSIGN, DesignEntityType::ASSIGN},
     {PqlTokenType::PRINT, DesignEntityType::PRINT},
@@ -60,7 +62,7 @@ std::unordered_map<PqlTokenType, DesignEntityType> token_design_map {
     {PqlTokenType::CONSTANT, DesignEntityType::CONSTANT},
 };
 
-std::unordered_map<PqlTokenType, ResultClauseType> token_result_map {
+std::unordered_map<PqlTokenType, ResultClauseType> token_result_map{
     {PqlTokenType::SYNONYM, ResultClauseType::SYNONYM},
     {PqlTokenType::ATTRIBUTE, ResultClauseType::ATTRIBUTE},
     {PqlTokenType::BOOLEAN, ResultClauseType::BOOLEAN},

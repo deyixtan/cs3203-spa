@@ -1,10 +1,13 @@
 #ifndef PQL_TOKEN_H
 #define PQL_TOKEN_H
 
+#include <algorithm>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
+namespace pql {
 
 enum class PqlTokenType {
   SYNONYM,
@@ -64,6 +67,7 @@ enum class PqlTokenType {
   DUMMY
 };
 
+
 class PqlToken {
  public:
   PqlTokenType type;
@@ -75,19 +79,5 @@ class PqlToken {
   PqlToken(PqlTokenType specified_token_type, std::string specified_value);
 };
 
-extern std::unordered_map<std::string, PqlTokenType> string_token_map;
-extern std::unordered_set<PqlTokenType> rel_ref;
-extern std::unordered_set<PqlTokenType> design_entities;
-extern std::unordered_set<PqlTokenType> expression_spec;
-extern std::unordered_set<PqlTokenType> ent_ref;
-extern std::unordered_set<PqlTokenType> stmt_ref;
-extern std::unordered_set<PqlTokenType> stmt_ref_and_ent_ref;
-extern std::unordered_set<PqlTokenType> line_no_set;
-extern std::unordered_set<PqlTokenType> var_set;
-extern std::unordered_set<PqlTokenType> allowed_synonyms;
-extern std::unordered_set<PqlTokenType> result_cl;
-extern std::unordered_set<PqlTokenType> result_cl_excluding_synonym;
-extern std::unordered_set<PqlTokenType> with_clause_ref;
-
-
+}
 #endif

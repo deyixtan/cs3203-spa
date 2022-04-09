@@ -2,7 +2,7 @@
 #include "components/query_subsystem/pql_lexer/pql_lexer.h"
 #include "components/query_subsystem/pql_parser/pql_parser.h"
 
-QueryController::QueryController(PKB *pkb): validator_{new pql_validator::ParsedQueryValidator()}, evaluator_{new pql_evaluator::QueryEvaluator(pkb)} {}
+QueryController::QueryController(PkbPtr pkb): validator_{new pql_validator::ParsedQueryValidator()}, evaluator_{new pql_evaluator::QueryEvaluator(pkb.get())} {}
 
 void QueryController::ProcessQuery(std::string query, std::list<std::string> &results) {
   try {
@@ -12,7 +12,6 @@ void QueryController::ProcessQuery(std::string query, std::list<std::string> &re
     ParsedQuery parsed_query = pql_parser.ParseQuery();
     if (validator_->IsQuerySemanticallyValid(parsed_query)) {
       evaluator_->Evaluate(parsed_query, results);
-      evaluator_->WipeCache();
     } else if (parsed_query.GetResultClause().GetType() == ResultClauseType::BOOLEAN){
       results.push_back("FALSE");
     }

@@ -19,9 +19,32 @@ Table::Table(const std::string &synonym, std::unordered_set<std::string> &single
   }
 }
 
+Table::Table(const std::string &synonym, std::vector<std::string> &single_constraints) {
+  attributes.emplace_back(synonym);
+  for (const auto &single_constraint : single_constraints) {
+    records.emplace_back(std::initializer_list<std::string>{single_constraint});
+  }
+  if (single_constraints.empty()) {
+    ToggleFalseClause();
+  }
+}
+
 Table::Table(const std::string &first_synonym,
              const std::string &second_synonym,
              std::unordered_set<std::pair<std::string, std::string>, pair_hash> &pair_constraints) {
+  attributes.emplace_back(first_synonym);
+  attributes.emplace_back(second_synonym);
+  for (const auto &pair_constraint : pair_constraints) {
+    records.emplace_back(std::initializer_list<std::string>{pair_constraint.first, pair_constraint.second});
+  }
+  if (pair_constraints.empty()) {
+    ToggleFalseClause();
+  }
+}
+
+Table::Table(const std::string &first_synonym,
+             const std::string &second_synonym,
+             std::vector<std::pair<std::string, std::string>> &pair_constraints) {
   attributes.emplace_back(first_synonym);
   attributes.emplace_back(second_synonym);
   for (const auto &pair_constraint : pair_constraints) {
@@ -66,7 +89,7 @@ std::vector<std::pair<size_t, size_t>> Table::GetCommonAttributeIndexPairs(const
   std::vector<std::pair<size_t, size_t>> common_attribute_index_pairs;
   std::unordered_map<std::string, size_t> attributes_to_index;
   for (size_t i = 0; i < attributes.size(); ++i) {
-    attributes_to_index.insert({attributes.at(i), i});
+    attributes_to_index.emplace(attributes.at(i), i);
   }
   for (size_t i = 0; i < other_attributes.size(); ++i) {
     auto it = attributes_to_index.find(other_attributes.at(i));
@@ -81,7 +104,7 @@ std::vector<size_t> Table::GetOtherAttributeIndices(const Attributes &other_attr
   std::vector<size_t> other_attribute_indices;
   std::unordered_map<std::string, size_t> attributes_to_index;
   for (size_t i = 0; i < attributes.size(); ++i) {
-    attributes_to_index.insert({attributes.at(i), i});
+    attributes_to_index.emplace(attributes.at(i), i);
   }
   for (size_t i = 0; i < other_attributes.size(); ++i) {
     auto it = attributes_to_index.find(other_attributes.at(i));

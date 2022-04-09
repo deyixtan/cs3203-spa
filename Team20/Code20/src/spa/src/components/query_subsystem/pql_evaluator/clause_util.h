@@ -5,6 +5,7 @@
 #include "components/pkb/stores/store.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
 #include "components/query_subsystem/pql_evaluator/table.h"
+#include <cassert>
 
 namespace clause_util {
 

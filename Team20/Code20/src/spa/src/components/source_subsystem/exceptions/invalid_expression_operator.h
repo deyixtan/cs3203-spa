@@ -1,21 +1,17 @@
 #ifndef INVALID_EXPRESSION_OPERATOR_H
 #define INVALID_EXPRESSION_OPERATOR_H
 
-#include <exception>
-#include <string>
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
-class InvalidExpressionOperatorException : public std::exception {
+class InvalidExpressionOperatorException : public Exception {
  private:
-  std::string m_msg;
-
- public:
-  static std::string MESSAGE;
+  String m_msg;
 
  public:
   InvalidExpressionOperatorException();
-  [[nodiscard]] virtual const char *what() const noexcept override;
+  [[nodiscard]] const char *what() const noexcept override;
 };
 
 }

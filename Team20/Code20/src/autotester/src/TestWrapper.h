@@ -7,15 +7,15 @@
 
 // include your other headers here
 #include "AbstractWrapper.h"
+#include "components/pkb/common.h"
 #include "components/query_subsystem/query_controller.h"
 #include "components/source_subsystem/source_controller.h"
 #include "components/source_subsystem/source_declarations.h"
 
 class TestWrapper : public AbstractWrapper {
  private:
+  PkbPtr pkb;
   QueryController *query_controller;
-  source::SourceController *source_controller;
-  PKB *pkb;
 
  public:
   // default constructor

@@ -1,24 +1,23 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONSTANT_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONSTANT_H_
+#ifndef NODE_CONSTANT_H
+#define NODE_CONSTANT_H
 
-#include "node_expression.h"
+#include "components/source_subsystem/source_declarations.h"
+#include "components/source_subsystem/types/ast/node_expression.h"
 
 namespace source {
 
 class ConstantNode : public ExpressionNode {
  private:
-  std::string m_value;
+  String m_value;
 
  public:
-  explicit ConstantNode(std::string value);
-  [[nodiscard]] std::string GetValue();
-  [[nodiscard]] ExpressionType GetExpressionType() override;
-  [[nodiscard]] std::string ToString() override;
-  [[nodiscard]] std::string GetPatternFormat() override;
+  explicit ConstantNode(String value);
+  [[nodiscard]] String GetValue();
+  [[nodiscard]] String GetPatternFormat() override;
+  void Accept(DesignExtractorPtr design_extractor) override;
   [[nodiscard]] bool operator==(const ExpressionNode &other) const override;
-  std::string Accept(DesignExtractor *de, std::string proc_name, bool is_uses);
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CONSTANT_H_
+#endif //NODE_CONSTANT_H

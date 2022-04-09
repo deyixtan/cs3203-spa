@@ -162,7 +162,7 @@ Table WithClause::HandleIntegerInteger() {
 
 Table WithClause::HandleIdentAttribute() {
   std::pair<std::pair<DesignEntityType, std::string>, AttriName> second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
-  std::unordered_set<std::string> single_constraints; single_constraints;
+  std::unordered_set<std::string> single_constraints;
   Table table;
   bool is_conversion_needed = Utils::IsConversionNeeded(second_attribute.first.first, second_attribute.second);
   if (is_conversion_needed) {

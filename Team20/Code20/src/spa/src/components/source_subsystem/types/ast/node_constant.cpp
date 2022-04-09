@@ -1,34 +1,27 @@
 #include "node_constant.h"
-#include "../../iterator/design_extractor.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
 
 namespace source {
 
-ConstantNode::ConstantNode(std::string value) : m_value(value) {}
+ConstantNode::ConstantNode(String value) : m_value(std::move(value)) {}
 
-std::string ConstantNode::GetValue() {
+String ConstantNode::GetValue() {
   return m_value;
 }
 
-ExpressionType ConstantNode::GetExpressionType() {
-  return ExpressionType::CONSTANT;
+String ConstantNode::GetPatternFormat() {
+  String value = m_value;
+  return "(" + value + ")";
 }
 
-std::string ConstantNode::ToString() {
-  return m_value;
-}
-
-std::string ConstantNode::GetPatternFormat() {
-  return "(" + m_value + ")";
+void ConstantNode::Accept(DesignExtractorPtr design_extractor) {
+  ConstantNodePtr derived_ptr = std::dynamic_pointer_cast<ConstantNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
 bool ConstantNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const ConstantNode *>(&other);
   return m_value == casted_other->m_value;
-}
-
-std::string ConstantNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
-  de->GetPkbClient()->PopulateConst(m_value);
-  return GetPatternFormat();
 }
 
 }

@@ -11,7 +11,7 @@ namespace pql {
 
 class SelectClause : public Clause {
  public:
-  SelectClause(const PqlToken &result_clause, const std::unordered_map<std::string, DesignEntityType> &declarations, PKB *pkb);
+  SelectClause(const PqlToken &result_clause, const std::unordered_map<std::string, DesignEntityType> declarations, PKB *pkb);
   Table Execute() override;
  private:
   PqlToken result_clause;

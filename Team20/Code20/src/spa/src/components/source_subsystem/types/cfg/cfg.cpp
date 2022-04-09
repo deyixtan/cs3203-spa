@@ -2,16 +2,10 @@
 
 namespace source {
 
-Cfg::Cfg(std::unordered_map<std::string, std::shared_ptr<CfgNode>> heads) {
-  m_heads = heads;
-}
+Cfg::Cfg(StringToCfgNodePtrMap cfg_map) : m_cfg_map(std::move(cfg_map)) {}
 
-std::shared_ptr<CfgNode> Cfg::GetCfg(std::string procedure) {
-  return m_heads.at(procedure);
-}
-
-std::unordered_map<std::string, std::shared_ptr<CfgNode>> Cfg::GetCfgMap() {
-  return m_heads;
+StringToCfgNodePtrMap Cfg::GetCfgMap() {
+  return m_cfg_map;
 }
 
 }

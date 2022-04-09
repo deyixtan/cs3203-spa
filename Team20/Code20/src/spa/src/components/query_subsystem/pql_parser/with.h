@@ -3,10 +3,12 @@
 
 #include "../pql_lexer/pql_token.h"
 
+using namespace pql;
+
 class With {
  private:
-  PqlToken first_;
-  PqlToken second_;
+  PqlToken first;
+  PqlToken second;
 
  public:
   With();

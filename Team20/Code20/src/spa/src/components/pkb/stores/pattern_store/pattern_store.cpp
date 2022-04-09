@@ -5,7 +5,7 @@ PatternStore::PatternStore(std::shared_ptr<std::vector<std::unordered_set<std::s
     Store(move(stmt_vector), move(stmt_type)) {}
 
 void PatternStore::AddStmtWithPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs) {
-  m_stmt_pattern_pairs.insert({stmt, lhs});
+  m_stmt_pattern_pairs.push_back({stmt, lhs});
   m_stmt_pattern_map[stmt] = {lhs, rhs};
 }
 
@@ -16,7 +16,7 @@ void PatternStore::AddWhileWithPattern(std::string const &stmt, std::string cons
     if (isalnum(c)) {
       var += c;
     } else if (!var.empty()) {
-      m_while_pattern_pairs.insert({stmt, var});
+      m_while_pattern_pairs.push_back({stmt, var});
       var.clear();
     }
   }
@@ -29,14 +29,14 @@ void PatternStore::AddIfWithPattern(std::string const &stmt, std::string const &
     if (isalnum(c)) {
       var += c;
     } else if (!var.empty()) {
-      m_if_pattern_pairs.insert({stmt, var});
+      m_if_pattern_pairs.push_back({stmt, var});
       var.clear();
     }
   }
 }
 
-std::unordered_set<std::string> PatternStore::GetStmtWithPatternExact(std::string lhs, std::string rhs) {
-  std::unordered_set<std::string> result = {};
+IDENT_SET PatternStore::GetStmtWithPatternExact(std::string lhs, std::string rhs) {
+  IDENT_SET result = {};
   rhs = "(" + rhs + ")";
 
   ExpressionTree expr_tree = ExpressionTree();
@@ -61,8 +61,8 @@ std::unordered_set<std::string> PatternStore::GetStmtWithPatternExact(std::strin
   return result;
 }
 
-std::unordered_set<std::string> PatternStore::GetStmtWithPatternPartial(std::string lhs, std::string rhs) {
-  std::unordered_set<std::string> result = {};
+IDENT_SET PatternStore::GetStmtWithPatternPartial(IDENT lhs, IDENT rhs) {
+  IDENT_SET result = {};
   rhs = "(" + rhs + ")";
 
   ExpressionTree expr_tree = ExpressionTree();
@@ -84,8 +84,8 @@ std::unordered_set<std::string> PatternStore::GetStmtWithPatternPartial(std::str
   return result;
 }
 
-std::unordered_set<std::string> PatternStore::GetStmtWithPatternWildcard(std::string lhs) {
-  std::unordered_set<std::string> result = {};
+IDENT_SET PatternStore::GetStmtWithPatternWildcard(std::string lhs) {
+  IDENT_SET result = {};
 
   for (auto const&[key, val] : m_stmt_pattern_map) {
     //pattern a(_, _)
@@ -100,9 +100,8 @@ std::unordered_set<std::string> PatternStore::GetStmtWithPatternWildcard(std::st
   return result;
 }
 
-std::unordered_set<std::pair<std::string, std::string>,
-                   pair_hash> PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result = {};
+IDENT_PAIR_VECTOR PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
+  IDENT_PAIR_VECTOR result = {};
   expr = "(" + expr + ")";
 
   ExpressionTree expr_tree = ExpressionTree();
@@ -112,15 +111,14 @@ std::unordered_set<std::pair<std::string, std::string>,
   for (auto const&[key, val] : m_stmt_pattern_map) {
     //EXACT MATCH RHS: pattern a(v, "x+1")
     if (val.second == sub_pattern) {
-      result.insert({key, val.first});
+      result.push_back({key, val.first});
     }
   }
   return result;
 }
 
-std::unordered_set<std::pair<std::string, std::string>,
-                   pair_hash> PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) {
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result = {};
+IDENT_PAIR_VECTOR PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) {
+  IDENT_PAIR_VECTOR result = {};
   expr = "(" + expr + ")";
 
   ExpressionTree expr_tree = ExpressionTree();
@@ -130,18 +128,18 @@ std::unordered_set<std::pair<std::string, std::string>,
   for (auto const&[key, val] : m_stmt_pattern_map) {
     //PARTIAL MATCH RHS: pattern a(v, _"x+1"_)
     if (val.second.find(sub_pattern) != std::string::npos) {
-      result.insert({key, val.first});
+      result.push_back({key, val.first});
     }
   }
   return result;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetStmtWithPatternSynonymWildcard() {
+IDENT_PAIR_VECTOR PatternStore::GetStmtWithPatternSynonymWildcard() {
   return m_stmt_pattern_pairs;
 }
 
-std::unordered_set<std::string> PatternStore::GetIfWithPattern(std::string var) {
-  std::unordered_set<std::string> result = {};
+IDENT_SET PatternStore::GetIfWithPattern(std::string var) {
+  IDENT_SET result = {};
 
   for (auto pair : m_if_pattern_pairs) {
     //pattern ifs(_, _, _)
@@ -157,8 +155,8 @@ std::unordered_set<std::string> PatternStore::GetIfWithPattern(std::string var) 
   return result;
 }
 
-std::unordered_set<std::string> PatternStore::GetWhileWithPattern(std::string var) {
-  std::unordered_set<std::string> result = {};
+IDENT_SET PatternStore::GetWhileWithPattern(std::string var) {
+  IDENT_SET result = {};
 
   for (auto pair : m_while_pattern_pairs) {
     //pattern w(_, _)
@@ -174,10 +172,10 @@ std::unordered_set<std::string> PatternStore::GetWhileWithPattern(std::string va
   return result;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetIfWithPatternSynonym() {
+IDENT_PAIR_VECTOR PatternStore::GetIfWithPatternSynonym() {
   return m_if_pattern_pairs;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> PatternStore::GetWhileWithPatternSynonym() {
+IDENT_PAIR_VECTOR PatternStore::GetWhileWithPatternSynonym() {
   return m_while_pattern_pairs;
 }

@@ -1,23 +1,19 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_PROCEDURE_EXIST_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_PROCEDURE_EXIST_H_
+#ifndef PROCEDURE_EXIST_H
+#define PROCEDURE_EXIST_H
 
-#include <exception>
-#include <string>
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
-class ProcedureExistException : public std::exception {
+class ProcedureExistException : public Exception {
  private:
-  std::string m_msg;
-
- public:
-  static std::string MESSAGE;
+  String m_msg;
 
  public:
   ProcedureExistException();
-  [[nodiscard]] virtual const char *what() const noexcept override;
+  [[nodiscard]] const char *what() const noexcept override;
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_PROCEDURE_EXIST_H_
+#endif //PROCEDURE_EXIST_H

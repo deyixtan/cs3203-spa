@@ -1,6 +1,7 @@
 #ifndef SOURCE_CONTROLLER_H
 #define SOURCE_CONTROLLER_H
 
+#include "components/pkb/common.h"
 #include "components/source_subsystem/source_declarations.h"
 
 class PKB;
@@ -12,7 +13,7 @@ class SourceController {
   [[nodiscard]] static String RetrieveFileContent(String &file_path);
   static void Tokenize(String &source, TokenStream &token_stream);
   [[nodiscard]] static ProgramNodePtr ParseTokenStream(TokenStream &token_stream);
-  static void PopulatePKB(PKB *pkb, ProgramNodePtr &ast);
+  static void PopulatePKB(PkbPtr &pkb, ProgramNodePtr &ast);
 };
 
 }

@@ -1,8 +1,5 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_INVALID_PARSE_FACTOR_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_INVALID_PARSE_FACTOR_H_
-
-#include <exception>
-#include <string>
+#ifndef INVALID_PARSE_FACTOR_H
+#define INVALID_PARSE_FACTOR_H
 
 #include "invalid_parse.h"
 
@@ -10,16 +7,13 @@ namespace source {
 
 class InvalidParseFactorException : public InvalidParseException {
  private:
-  std::string m_msg;
-
- public:
-  static std::string MESSAGE;
+  String m_msg;
 
  public:
   InvalidParseFactorException();
-  [[nodiscard]] virtual const char *what() const noexcept override;
+  [[nodiscard]] const char *what() const noexcept override;
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_INVALID_PARSE_FACTOR_H_
+#endif //INVALID_PARSE_FACTOR_H
