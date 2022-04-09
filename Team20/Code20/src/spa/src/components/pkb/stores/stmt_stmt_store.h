@@ -12,6 +12,8 @@ class StmtStmtStore : public Store {
   std::shared_ptr<ParentStore> m_parent_store;
   IDENT_PAIR_VECTOR all_pairs;
   IDENT_PAIR_VECTOR all_star_pairs;
+  std::string SMALLEST_STMT_NO = "0";
+  std::string LARGEST_STMT_NO = "501";
 
  public:
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
@@ -44,9 +46,9 @@ class StmtStmtStore : public Store {
   [[nodiscard]] IDENT_PAIR_VECTOR GetStarPairByType(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllPairs();
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllStarPairs();
-  [[nodiscard]] IDENT_PAIR_VECTOR GetAllNextStarPairs(std::vector<std::string> stmt_list);
-  void GetLowerStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited, IDENT const &prev);
-  void GetUpperStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited, IDENT const &prev);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAllNextStarPairs(std::unordered_map<std::string, std::vector<std::string>> stmt_list);
+  void GetLowerStarOfHelper(IDENT const &stmt, IDENT_SET &res, std::unordered_map<std::string, std::vector<std::string>> stmt_list);
+  void GetUpperStarOfHelper(IDENT const &stmt, IDENT_SET &res, std::unordered_map<std::string, std::vector<std::string>> stmt_list);
 };
 
 #endif //FOLLOWS_PARENT_STORE_H

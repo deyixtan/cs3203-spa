@@ -319,21 +319,6 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType store_ty
                                                               StmtType stmt_type,
                                                               std::string const &stmt) {
 
-  if (store_type == NEXT) {
-    if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(STMT).find(stmt_type) != star_type_pair_map.at(STMT).end()) {
-        if (std::get<1>(star_type_pair_map.at(STMT).at(stmt_type)).find(stmt)
-            != std::get<1>(star_type_pair_map.at(STMT).at(stmt_type)).end()) {
-          return GetHelper(STMT, stmt_type, 1, stmt, true);
-        }
-      }
-    }
-    std::unordered_set<std::string> res;
-    std::unordered_set<std::string> visited;
-    GetUpperStarOfHelper(stmt_type, stmt, res, visited, "0");
-    return res;
-  }
-
   if (star_type_pair_map.find(stmt_type) != star_type_pair_map.end()) {
     if (star_type_pair_map.at(stmt_type).find(STMT) != star_type_pair_map.at(stmt_type).end()) {
       return GetHelper(stmt_type, STMT, 1, stmt, true);
@@ -345,21 +330,6 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType store_ty
 std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StoreType store_type,
                                                               StmtType stmt_type,
                                                               std::string const &stmt) {
-
-  if (store_type == NEXT) {
-    if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
-      if (star_type_pair_map.at(STMT).find(stmt_type) != star_type_pair_map.at(STMT).end()) {
-        if (std::get<0>(star_type_pair_map.at(STMT).at(stmt_type)).find(stmt)
-            != std::get<0>(star_type_pair_map.at(STMT).at(stmt_type)).end()) {
-          return GetHelper(STMT, stmt_type, 0, stmt, true);
-        }
-      }
-    }
-    std::unordered_set<std::string> res;
-    std::unordered_set<std::string> visited;
-    GetLowerStarOfHelper(stmt_type, stmt, res, visited, "0");
-    return res;
-  }
 
   if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
     if (star_type_pair_map.at(STMT).find(stmt_type) != star_type_pair_map.at(STMT).end()) {
@@ -388,97 +358,92 @@ IDENT_PAIR_VECTOR StmtStmtStore::GetStarPairByType(StmtType type1, StmtType type
   return {};
 }
 
-void StmtStmtStore::GetUpperStarOfHelper(StmtType stmt_type,
-                                         std::string const &stmt,
+void StmtStmtStore::GetUpperStarOfHelper(std::string const &stmt,
                                          std::unordered_set<std::string> &res,
-                                         std::unordered_set<std::string> &visited,
-                                         std::string const &prev) {
-  if (visited.find(stmt) != visited.end()) {
-    for (auto next : visited) {
-      AddNext(true,STMT,stmt,stmt_type,next);
+                                         std::unordered_map<std::string, std::vector<std::string>> proc_list) {
+  std::string first_stmt_no;
+  for(auto proc : proc_list) {
+    std::string first_stmt = proc.second.front();
+    std::string last_stmt = proc.second.back();
+    if(stoi(stmt) <= stoi(last_stmt) && stoi(stmt) >= stoi(first_stmt)) {
+      first_stmt_no = first_stmt;
+      break;
+    }
+  }
+  std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
+  if(ansc_set.empty()) {
+    for(int n = stoi(first_stmt_no); n <= stoi(stmt) - 1; n++) {
+      res.insert(std::to_string(n));
+    }
+    std::string parent = m_parent_store->GetParentOf(WHILE, std::to_string(stoi(stmt) + 1));
+    if(parent == stmt) {
       res.insert(stmt);
     }
-    std::string parent = m_parent_store->GetParentOf(WHILE, prev);
-    if(parent != stmt) {
-      return;
+    return;
+  }
+  std::string smallest_stmt = LARGEST_STMT_NO;
+  for(auto s : ansc_set) {
+    if(stoi(s) < stoi(smallest_stmt)) {
+      smallest_stmt = s;
     }
   }
-  if(visited.size() > 0) {
-    res.insert(stmt);
-  }
-  for (auto next : visited) {
-    AddNext(true,STMT,stmt,stmt_type,next);
-  }
-  visited.insert(stmt);
-  std::unordered_set<std::string> next_set = GetUpperSetOf(NEXT, STMT, stmt);
-  for (auto next : next_set) {
-    std::unordered_set<std::string> new_visited;
-    for (auto stmt : visited) {
-      new_visited.insert(stmt);
+  std::unordered_set<std::string> children_set = m_parent_store->GetChildOf(STMT, smallest_stmt);
+  std::string largest_stmt = SMALLEST_STMT_NO;
+  for(auto s : children_set) {
+    if(stoi(s) > stoi(largest_stmt)) {
+      largest_stmt = s;
     }
-    GetUpperStarOfHelper(stmt_type, next, res, new_visited, stmt);
+  }
+  for(int j = stoi(smallest_stmt); j <= stoi(largest_stmt); j++) {
+    res.insert(std::to_string(j));
+  }
+  for(int j = stoi(first_stmt_no); j <= stoi(smallest_stmt) - 1; j++) {
+    res.insert(std::to_string(j));
   }
 }
 
-void StmtStmtStore::GetLowerStarOfHelper(StmtType stmt_type,
-                                         std::string const &stmt,
+void StmtStmtStore::GetLowerStarOfHelper(std::string const &stmt,
                                          std::unordered_set<std::string> &res,
-                                         std::unordered_set<std::string> &visited,
-                                         std::string const &prev) {
-  // Detect loops
-//  if (visited.find(stmt) != visited.end()) {
-    if(std::stoi(prev) > std::stoi(stmt)) {
-      std::queue<std::string> stmt_q;
-      std::unordered_set<std::string> next = GetLowerSetOf(NEXT, STMT, stmt);
-      AddNext(true, STMT, stmt, stmt_type, stmt);
-      res.insert(stmt);
-      for(auto s : next) {
-        stmt_q.push(s);
+                                         std::unordered_map<std::string, std::vector<std::string>> proc_list) {
+  std::string last_stmt_no;
+  for(auto proc : proc_list) {
+    std::string first_stmt = proc.second.front();
+    std::string last_stmt = proc.second.back();
+    if(stoi(stmt) <= stoi(last_stmt) && stoi(stmt) >= stoi(first_stmt)) {
+      last_stmt_no = last_stmt;
+      break;
+    }
+  }
+    std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
+    if(ansc_set.empty()) {
+      for(int n = stoi(stmt) + 1; n <= stoi(last_stmt_no); n++) {
+        res.insert(std::to_string(n));
       }
-      std::unordered_set<std::string> loop_prev = {stmt};
-      while(true) {
-        std::unordered_set<std::string> next_stmts;
-        while (stmt_q.size() > 0) {
-          std::string s = stmt_q.front();
-          stmt_q.pop();
-          if (s == stmt) {
-            return;
-          }
-          visited.insert(s);
-          AddNext(true, STMT, s, stmt_type, s);
-          res.insert(s);
-          for (auto prev_stmt : loop_prev) {
-            AddNext(true, STMT, s, stmt_type, prev_stmt);
-            std::unordered_set<std::string> next_set = GetLowerSetOf(NEXT, STMT, s);
-            std::string pr = "0";
-            for (auto n : next_set) {
-              stmt_q.push(n);
-              if (pr != "0") {
-                AddNext(true, STMT, pr, stmt_type, n);
-              }
-              pr = n;
-            }
-          }
-          loop_prev.insert(s);
-        }
-        break;
+      std::string parent = m_parent_store->GetParentOf(WHILE, std::to_string(stoi(stmt) + 1));
+      if(parent == stmt) {
+        res.insert(stmt);
+      }
+      return;
+    }
+    std::string smallest_stmt = LARGEST_STMT_NO;
+    for(auto s : ansc_set) {
+      if(stoi(s) < stoi(smallest_stmt)) {
+        smallest_stmt = s;
       }
     }
-  if(visited.size() > 0) {
-    res.insert(stmt);
-  }
-  for (auto before : visited) {
-    AddNext(true,STMT,before,stmt_type,stmt);
-  }
-  visited.insert(stmt);
-  std::unordered_set<std::string> next_set = GetLowerSetOf(NEXT, STMT, stmt);
-  for (auto next : next_set) {
-    std::unordered_set<std::string> new_visited;
-    for (auto stmt : visited) {
-      new_visited.insert(stmt);
+    std::unordered_set<std::string> children_set = m_parent_store->GetChildOf(STMT, smallest_stmt);
+    std::string largest_stmt = SMALLEST_STMT_NO;
+    for(auto s : children_set) {
+      if(stoi(s) > stoi(largest_stmt)) {
+        largest_stmt = s;
+      }
     }
-    GetLowerStarOfHelper(stmt_type, next, res, new_visited, stmt);
-  }
+    for(int j = stoi(smallest_stmt); j <= stoi(largest_stmt); j++) {
+      res.insert(std::to_string(j));
+    }
+    for(int j = stoi(largest_stmt) + 1; j <= stoi(last_stmt_no); j++) {
+      res.insert(std::to_string(j));
+    }
 }
 
 IDENT_PAIR_VECTOR StmtStmtStore::GetAllPairs() {
@@ -489,16 +454,45 @@ IDENT_PAIR_VECTOR StmtStmtStore::GetAllStarPairs() {
   return all_star_pairs;
 }
 
-
-IDENT_PAIR_VECTOR StmtStmtStore::GetAllNextStarPairs(std::vector<std::string> stmt_list) {
-  if(all_star_pairs.size() > 0) {
-    return all_star_pairs;
+IDENT_PAIR_VECTOR StmtStmtStore::GetAllNextStarPairs(std::unordered_map<std::string, std::vector<std::string>> proc_list) {
+  IDENT_PAIR_VECTOR result_list = IDENT_PAIR_VECTOR();
+  for(auto proc : proc_list) {
+    int last_stmt = stoi(proc.second.back());
+    int first_stmt = stoi(proc.second.front());
+    for(int i = first_stmt; i <= last_stmt; i++) {
+      std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, std::to_string(i));
+      if(ansc_set.empty()) {
+        for(int n = i + 1; n <= last_stmt; n++) {
+          result_list.emplace_back(std::to_string(i), std::to_string(n));
+        }
+        std::string parent = m_parent_store->GetParentOf(WHILE, std::to_string(i + 1));
+        if(parent == std::to_string(i)) {
+          result_list.emplace_back(std::to_string(i), std::to_string(i));
+        }
+        continue;
+      }
+      std::string smallest_stmt = LARGEST_STMT_NO;
+      for(auto s : ansc_set) {
+        if(stoi(s) < stoi(smallest_stmt)) {
+          smallest_stmt = s;
+        }
+      }
+      std::unordered_set<std::string> children_set = m_parent_store->GetChildOf(STMT, smallest_stmt);
+      std::string largest_stmt = SMALLEST_STMT_NO;
+      for(auto s : children_set) {
+        if(stoi(s) > stoi(largest_stmt)) {
+          largest_stmt = s;
+        }
+      }
+      for(int j = stoi(smallest_stmt); j <= stoi(largest_stmt); j++) {
+        result_list.emplace_back(std::to_string(i), std::to_string(j));
+      }
+      for(int j = stoi(largest_stmt) + 1; j <= last_stmt; j++) {
+        result_list.emplace_back(std::to_string(i), std::to_string(j));
+      }
+    }
   }
-  std::vector<std::pair<std::string, std::string>> res;
-  for(auto s : stmt_list) {
-    GetLowerStarOf(NEXT, STMT, s);
-  }
-  return all_star_pairs;
+  return result_list;
 }
 
 void StmtStmtStore::ClearNextStarCache() {

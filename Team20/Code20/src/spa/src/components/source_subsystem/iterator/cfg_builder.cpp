@@ -198,7 +198,7 @@ void CfgBuilder::MultipleStmtsNodeHandler(CfgNodeStatementStream &curr_stmts, St
   int next = 1;
   while (curr_stmts.size() > next) {
     m_pkb_client->PopulateNext(curr_stmts[start].stmt_no, curr_stmts[next].stmt_no);
-    if(curr_stmts[next].stmt_no.compare(max_stmt_no) > 0) {
+    if(stoi(curr_stmts[next].stmt_no) > stoi(max_stmt_no)) {
       max_stmt_no = curr_stmts[next].stmt_no;
     }
     if(stoi(curr_stmts[start].stmt_no) > stoi(max_stmt_no)) {

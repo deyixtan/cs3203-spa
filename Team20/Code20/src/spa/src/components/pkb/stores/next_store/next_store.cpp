@@ -41,11 +41,15 @@ IDENT_SET NextStore::GetNextOf(StmtType type, IDENT const &stmt) {
 }
 
 IDENT_SET NextStore::GetBeforeStarOf(StmtType type, IDENT const &stmt) {
-  return GetUpperStarOf(NEXT, type, stmt);
+  std::unordered_set<std::string> res;
+  GetUpperStarOfHelper(stmt, res, m_proc_stmt_map);
+  return res;
 }
 
 IDENT_SET NextStore::GetNextStarOf(StmtType type, IDENT const &stmt) {
-  return GetLowerStarOf(NEXT, type, stmt);
+  std::unordered_set<std::string> res;
+  GetLowerStarOfHelper(stmt, res, m_proc_stmt_map);
+  return res;
 }
 
 IDENT_PAIR_VECTOR NextStore::GetNextPairs() {
@@ -53,11 +57,7 @@ IDENT_PAIR_VECTOR NextStore::GetNextPairs() {
 }
 
 IDENT_PAIR_VECTOR NextStore::GetNextStarPairs() {
-  std::vector<std::string> stmt_list;
-  for (auto p : m_proc_stmt_map) {
-    stmt_list.push_back(*p.second.begin());
-  }
-  return GetAllNextStarPairs(stmt_list);
+  return GetAllNextStarPairs(m_proc_stmt_map);
 }
 
 IDENT_SET NextStore::GetNextStarSameStmt(StmtType type) {
