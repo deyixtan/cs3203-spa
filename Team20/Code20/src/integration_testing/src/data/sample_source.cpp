@@ -109,3 +109,13 @@ std::string sample_source5 =
    "        }"
    "    }"
    "}";
+
+std::string sample_source6 =
+    "procedure foo {"
+    "    call foo;" // 1
+    "}";
+
+std::string sample_source7 =
+    "procedure foo {"
+    "    call bar;" // 1
+    "}";
