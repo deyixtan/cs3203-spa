@@ -25,7 +25,6 @@ class StmtStmtStore : public Store {
   void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_STMT_STMT_MAP *pair_map);
   void ExhaustiveAddAllStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, bool is_star);
   void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_STMT_STMT_MAP *pair_map);
-  [[nodiscard]] int IsMapContains(StmtType type1, StmtType type2, NESTED_STMT_STMT_MAP *pair_map);
   [[nodiscard]] bool IsValid(IDENT_PAIR const &pair); //Affects(1, 2)
   [[nodiscard]] bool IsStarValid(IDENT_PAIR const &pair); //Affects*(1, 2)
   [[nodiscard]] std::unordered_set<std::string> GetHelper(StmtType type1, StmtType type2, int index, IDENT const &stmt, bool is_star);

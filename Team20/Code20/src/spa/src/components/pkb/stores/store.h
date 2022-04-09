@@ -19,6 +19,7 @@ class Store {
  public:
   explicit Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                  std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
+  [[nodiscard]] int IsMapContains(StmtType type1, StmtType type2, NESTED_STMT_STMT_MAP *pair_map);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
