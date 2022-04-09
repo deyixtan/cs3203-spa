@@ -24,6 +24,10 @@ bool NextStore::IsNextStarValid(IDENT_PAIR const &pair) {
   return IsNextStarPairValid(pair);
 }
 
+void NextStore::WipeNextStar() {
+  return ClearNextStarCache();
+}
+
 IDENT_SET NextStore::GetBeforeOf(StmtType type, IDENT const &stmt) {
   return GetUpperSetOf(NEXT, type, stmt);
 }

@@ -2,6 +2,7 @@
 #include "components/pkb/stores/follows_store/follows_store.h"
 #include "components/pkb/stores/parent_store/parent_store.h"
 #include <set>
+#include <queue>
 
 StmtStmtStore::StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                              std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type)
@@ -73,7 +74,7 @@ void StmtStmtStore::AddFollows(bool is_star,
     all_pairs.push_back({upper, lower});
   } else {
     all_star_pairs.push_back({upper, lower});
-    ExhaustiveAddAllStmt(type1, upper, type2, lower, true);
+    ExhaustiveAddSubStmt(type1, upper, type2, lower, &star_type_pair_map);
   }
 }
 
@@ -109,6 +110,7 @@ void StmtStmtStore::AddNext(bool is_star,
     ExhaustiveAddAllStmt(type1, upper, type2, lower, false);
   } else {
     all_star_pairs.push_back({upper, lower});
+    ExhaustiveAddSubStmt(type1, upper, type2, lower, &star_type_pair_map);
   }
 }
 
@@ -423,18 +425,45 @@ void StmtStmtStore::GetLowerStarOfHelper(StmtType stmt_type,
                                          std::unordered_set<std::string> &res,
                                          std::unordered_set<std::string> &visited,
                                          std::string const &prev) {
-  if (visited.find(stmt) != visited.end()) {
-    for (auto before : visited) {
-      AddNext(true,STMT,before,stmt_type,stmt);
+  // Detect loops
+//  if (visited.find(stmt) != visited.end()) {
+    if(std::stoi(prev) > std::stoi(stmt)) {
+      std::queue<std::string> stmt_q;
+      std::unordered_set<std::string> next = GetLowerSetOf(NEXT, STMT, stmt);
+      AddNext(true, STMT, stmt, stmt_type, stmt);
       res.insert(stmt);
+      for(auto s : next) {
+        stmt_q.push(s);
+      }
+      std::unordered_set<std::string> loop_prev = {stmt};
+      while(true) {
+        std::unordered_set<std::string> next_stmts;
+        while (stmt_q.size() > 0) {
+          std::string s = stmt_q.front();
+          stmt_q.pop();
+          if (s == stmt) {
+            return;
+          }
+          visited.insert(s);
+          AddNext(true, STMT, s, stmt_type, s);
+          res.insert(s);
+          for (auto prev_stmt : loop_prev) {
+            AddNext(true, STMT, s, stmt_type, prev_stmt);
+            std::unordered_set<std::string> next_set = GetLowerSetOf(NEXT, STMT, s);
+            std::string pr = "0";
+            for (auto n : next_set) {
+              stmt_q.push(n);
+              if (pr != "0") {
+                AddNext(true, STMT, pr, stmt_type, n);
+              }
+              pr = n;
+            }
+          }
+          loop_prev.insert(s);
+        }
+        break;
+      }
     }
-    res.insert(stmt);
-    std::string next_stmt = GetLowerOf(STMT, stmt);
-    std::unordered_set<std::string> children = m_parent_store->GetChildOf(WHILE, prev);
-    if(children.find(next_stmt) == children.end()) {
-      return;
-    }
-  }
   if(visited.size() > 0) {
     res.insert(stmt);
   }
@@ -448,7 +477,7 @@ void StmtStmtStore::GetLowerStarOfHelper(StmtType stmt_type,
     for (auto stmt : visited) {
       new_visited.insert(stmt);
     }
-    GetLowerStarOfHelper(stmt_type, next, res, new_visited, prev);
+    GetLowerStarOfHelper(stmt_type, next, res, new_visited, stmt);
   }
 }
 
@@ -462,9 +491,17 @@ IDENT_PAIR_VECTOR StmtStmtStore::GetAllStarPairs() {
 
 
 IDENT_PAIR_VECTOR StmtStmtStore::GetAllNextStarPairs(std::vector<std::string> stmt_list) {
+  if(all_star_pairs.size() > 0) {
+    return all_star_pairs;
+  }
   std::vector<std::pair<std::string, std::string>> res;
   for(auto s : stmt_list) {
     GetLowerStarOf(NEXT, STMT, s);
   }
   return all_star_pairs;
+}
+
+void StmtStmtStore::ClearNextStarCache() {
+  all_star_pairs = IDENT_PAIR_VECTOR();
+  star_type_pair_map = NESTED_TUPLE_MAP();
 }

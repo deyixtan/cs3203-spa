@@ -17,7 +17,7 @@ class NextStore : public StmtStmtStore {
                      std::shared_ptr<ParentStore> parent_store);
   void AddNext(IDENT const &before, IDENT const &next);
   void AddStmtProc(std::string const &proc, std::string const &stmt);
-  void WipeStar();
+  void WipeNextStar();
   [[nodiscard]] bool IsNextPairValid(IDENT_PAIR const &pair);
   [[nodiscard]] bool IsNextStarValid(IDENT_PAIR const &pair);
   [[nodiscard]] IDENT_SET GetBeforeOf(StmtType type, IDENT const &stmt);

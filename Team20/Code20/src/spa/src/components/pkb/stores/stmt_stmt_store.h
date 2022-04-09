@@ -19,6 +19,7 @@ class StmtStmtStore : public Store {
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                                std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
                                std::shared_ptr<ParentStore> parent_store);
+  void ClearNextStarCache();
   void AddUpperLower(StoreType store_type, IDENT const &upper, IDENT const &lower);
   void AddUpperLowerStar(StoreType store_type, IDENT const &upper, IDENT const &lower, IDENT_VECTOR const &visited);
   void AddFollows(bool is_star, StmtType type1, IDENT const &upper, StmtType type2, IDENT const &lower);
