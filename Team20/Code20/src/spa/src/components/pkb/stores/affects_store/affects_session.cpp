@@ -1,114 +1,114 @@
-#include "affect_session.h"
+#include "affects_session.h"
 #include "../../../source_subsystem/types/cfg/cfg_node.h"
 
-AffectSession::AffectSession(std::shared_ptr<AffectStore> affects_store, bool is_affect_star_involved) :
+AffectsSession::AffectsSession(std::shared_ptr<AffectsStore> affects_store, bool is_affects_star_involved) :
     m_affects_store(std::move(affects_store)),
     m_last_modified_star_map(std::unordered_map<std::string, std::unordered_set<std::string>>()),
-    m_is_affect_star_involved(is_affect_star_involved),
+    m_is_affects_star_involved(is_affects_star_involved),
     m_terminating_node_stack(std::stack<std::shared_ptr<source::CfgNode>>()) {
   TraverseCfg();
 }
 
-bool AffectSession::IsAffected(std::string const &stmt) {
+bool AffectsSession::IsAffected(std::string const &stmt) {
   auto predicate = [stmt](const std::pair<std::string, std::string> &pair) {
     return pair.second == stmt;
   };
   return std::any_of(m_all_affects_pairs.begin(), m_all_affects_pairs.end(), predicate);
 }
 
-bool AffectSession::IsAffectedStar(std::string const &stmt) {
+bool AffectsSession::IsAffectedStar(std::string const &stmt) {
   auto predicate = [stmt](const std::pair<std::string, std::string> &pair) {
     return pair.second == stmt;
   };
   return std::any_of(m_all_affects_star_pairs.begin(), m_all_affects_star_pairs.end(), predicate);
 }
 
-bool AffectSession::IsAffecting(std::string const &stmt) {
+bool AffectsSession::IsAffecting(std::string const &stmt) {
   auto predicate = [stmt](const std::pair<std::string, std::string> &pair) {
     return pair.first == stmt;
   };
   return std::any_of(m_all_affects_pairs.begin(), m_all_affects_pairs.end(), predicate);
 }
 
-bool AffectSession::IsAffectingStar(std::string const &stmt) {
+bool AffectsSession::IsAffectingStar(std::string const &stmt) {
   auto predicate = [stmt](const std::pair<std::string, std::string> &pair) {
     return pair.first == stmt;
   };
   return std::any_of(m_all_affects_star_pairs.begin(), m_all_affects_star_pairs.end(), predicate);
 }
 
-bool AffectSession::DoesAffectExists(std::pair<std::string, std::string> const &pair) {
+bool AffectsSession::DoesAffectExists(std::pair<std::string, std::string> const &pair) {
   if (m_all_affects_pairs.find(pair) != m_all_affects_pairs.end()) {
     return true;
   }
   return false;
 }
 
-bool AffectSession::DoesAffectStarExists(std::pair<std::string, std::string> const &pair) {
+bool AffectsSession::DoesAffectStarExists(std::pair<std::string, std::string> const &pair) {
   if (m_all_affects_star_pairs.find(pair) != m_all_affects_star_pairs.end()) {
     return true;
   }
   return false;
 }
 
-std::unordered_set<std::string> AffectSession::GetAffectedOf(std::string const &stmt) {
+std::unordered_set<std::string> AffectsSession::GetAffectedOf(std::string const &stmt) {
   if (m_affects_map.count(stmt) == 0) {
     return {};
   }
   return m_affects_map.at(stmt);
 }
 
-std::unordered_set<std::string> AffectSession::GetAffectedStarOf(std::string const &stmt) {
+std::unordered_set<std::string> AffectsSession::GetAffectedStarOf(std::string const &stmt) {
   if (m_affects_star_map.count(stmt) == 0) {
     return {};
   }
   return m_affects_star_map.at(stmt);
 }
 
-std::unordered_set<std::string> AffectSession::GetAffectsOf(std::string const &stmt) {
+std::unordered_set<std::string> AffectsSession::GetAffectsOf(std::string const &stmt) {
   if (m_affects_reverse_map.count(stmt) == 0) {
     return {};
   }
   return m_affects_reverse_map.at(stmt);
 }
 
-std::unordered_set<std::string> AffectSession::GetAffectsStarOf(std::string const &stmt) {
+std::unordered_set<std::string> AffectsSession::GetAffectsStarOf(std::string const &stmt) {
   if (m_affects_star_reverse_map.count(stmt) == 0) {
     return {};
   }
   return m_affects_star_reverse_map.at(stmt);
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAffectsPairs() {
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectsSession::GetAffectsPairs() {
   return m_all_affects_pairs;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAffectsStarPairs() {
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectsSession::GetAffectsStarPairs() {
   return m_all_affects_star_pairs;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAffectsSameSynPairs() {
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectsSession::GetAffectsSameSynPairs() {
   return m_same_affects_pairs;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectSession::GetAffectsStarSameSynPairs() {
+std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectsSession::GetAffectsStarSameSynPairs() {
   return m_same_affects_star_pairs;
 }
 
 // HELPER METHODS
-std::string AffectSession::GetFollowingOf(std::string &stmt_no) {
+std::string AffectsSession::GetFollowingOf(std::string &stmt_no) {
   return m_affects_store->GetFollowsStore()->GetFollowingOf(STMT, stmt_no);
 }
 
-std::unordered_set<std::string> AffectSession::GetVarModByStmt(std::string &stmt_no) {
+std::unordered_set<std::string> AffectsSession::GetVarModByStmt(std::string &stmt_no) {
   return m_affects_store->GetModifyStore()->GetVarModByStmt(stmt_no);
 }
 
-std::unordered_set<std::string> AffectSession::GetVarUsedByStmt(std::string &stmt_no) {
+std::unordered_set<std::string> AffectsSession::GetVarUsedByStmt(std::string &stmt_no) {
   return m_affects_store->GetUsageStore()->GetVarUsedByStmt(stmt_no);
 }
 
-void AffectSession::TraverseCfg() {
+void AffectsSession::TraverseCfg() {
   std::unordered_map<std::string, std::shared_ptr<source::CfgNode>>
       cfg_map = m_affects_store->GetProgramCfg()->GetCfgMap();
   for (auto const &cfg : cfg_map) {
@@ -127,7 +127,7 @@ void AffectSession::TraverseCfg() {
   }
 }
 
-void AffectSession::TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node) {
+void AffectsSession::TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node) {
   // checks on TraverseCfg from If-statement handler
   if (!cfg_node->GetStatementList().empty() && !m_terminating_node_stack.top()->GetStatementList().empty()) {
     if (cfg_node->GetStatementList().front().stmt_no == m_terminating_node_stack.top()->GetStatementList().front().stmt_no) {
@@ -166,7 +166,7 @@ void AffectSession::TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node) {
   TraverseCfg(next_node);
 }
 
-void AffectSession::HandleAssignStatement(std::string stmt_no) {
+void AffectsSession::HandleAssignStatement(std::string stmt_no) {
   // check variables being used if they are modified
   // add them to affects map
   std::unordered_set<std::string> vars_used = GetVarUsedByStmt(stmt_no);
@@ -192,7 +192,7 @@ void AffectSession::HandleAssignStatement(std::string stmt_no) {
           m_same_affects_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
         }
 
-        if (m_is_affect_star_involved) {
+        if (m_is_affects_star_involved) {
           if (m_affects_star_map.count(last_mod_stmt_no) == 0) {
             m_affects_star_map.insert({last_mod_stmt_no, std::unordered_set<std::string>()});
           }
@@ -250,7 +250,7 @@ void AffectSession::HandleAssignStatement(std::string stmt_no) {
   }
 }
 
-void AffectSession::HandleReadStatement(std::string stmt_no) {
+void AffectsSession::HandleReadStatement(std::string stmt_no) {
   // update modified table
   // since, read is not an assign stmt, we cleared it from the table
   std::unordered_set<std::string> vars_mod = GetVarModByStmt(stmt_no);
@@ -267,7 +267,7 @@ void AffectSession::HandleReadStatement(std::string stmt_no) {
   m_last_modified_map_stack.top()->at(var_mod).clear();
 }
 
-void AffectSession::HandleCallStatement(std::string stmt_no) {
+void AffectsSession::HandleCallStatement(std::string stmt_no) {
   // update modified table
   // since, read is not an assign stmt, we cleared it from the table
   std::unordered_set<std::string> vars_mod = GetVarModByStmt(stmt_no);
@@ -279,7 +279,7 @@ void AffectSession::HandleCallStatement(std::string stmt_no) {
   }
 }
 
-void AffectSession::HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_node) {
+void AffectsSession::HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_node) {
   // create a copy of last_modified_map, to be served to the "else" cfg node
   std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>> last_modified_map_clone = std::make_shared<std::unordered_map<std::string, std::unordered_set<std::string>>>(*(m_last_modified_map_stack.top()));
   std::shared_ptr<source::CfgNode> start_node = cfg_node->GetNextList().front();
@@ -313,7 +313,7 @@ void AffectSession::HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_n
   }
 }
 
-void AffectSession::HandleIfStatement(std::string stmt_no,
+void AffectsSession::HandleIfStatement(std::string stmt_no,
                                       std::shared_ptr<source::CfgNode> &cfg_node) {
   // create a copy of last_modified_map, to be served to the "else" cfg node
   std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>> last_modified_map_clone = std::make_shared<std::unordered_map<std::string, std::unordered_set<std::string>>>(*(m_last_modified_map_stack.top()));

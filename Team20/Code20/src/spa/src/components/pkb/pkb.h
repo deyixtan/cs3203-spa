@@ -12,7 +12,8 @@
 #include "components/pkb/stores/parent_store/parent_store.h"
 #include "components/pkb/stores/call_store/call_store.h"
 #include "components/pkb/stores/pattern_store/pattern_store.h"
-#include "components/pkb/stores/affect_store/affect_store.h"
+#include "components/pkb/stores/next_store/next_store.h"
+#include "components/pkb/stores/affects_store/affects_store.h"
 #include "components/pkb/stores/pattern_store/expression_tree/expression_tree.h"
 #include "../source_subsystem/types/cfg/cfg.h"
 #include "components/pkb/stores/next_store/next_store.h"
@@ -26,7 +27,7 @@ class PKB {
   std::shared_ptr<CallStore> m_call_store;
   std::shared_ptr<PatternStore> m_pattern_store;
   std::shared_ptr<NextStore> m_next_store;
-  std::shared_ptr<AffectStore> m_affect_store;
+  std::shared_ptr<AffectsStore> m_affects_store;
 
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;
   std::shared_ptr<std::unordered_map<std::string, StmtType>> m_stmt_type;
@@ -56,7 +57,7 @@ class PKB {
   [[nodiscard]] std::shared_ptr<UsesStore> GetUsesStore();
   [[nodiscard]] std::shared_ptr<PatternStore> GetPatternStore();
   [[nodiscard]] std::shared_ptr<NextStore> GetNextStore();
-  [[nodiscard]] std::shared_ptr<AffectStore> GetAffectStore();
+  [[nodiscard]] std::shared_ptr<AffectsStore> GetAffectsStore();
   [[nodiscard]] std::shared_ptr<source::Cfg> GetProgCfg();
 };
 
