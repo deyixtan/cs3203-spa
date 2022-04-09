@@ -5,8 +5,8 @@
 
 class StmtStmtStore : public Store {
  private:
-  NESTED_TUPLE_MAP type_pair_map;
-  NESTED_TUPLE_MAP star_type_pair_map;
+  NESTED_RELATIONSHIP_MAP type_pair_map;
+  NESTED_RELATIONSHIP_MAP star_type_pair_map;
   IDENT_PAIR_VECTOR all_pairs;
   IDENT_PAIR_VECTOR all_star_pairs;
 
@@ -19,9 +19,10 @@ class StmtStmtStore : public Store {
   void AddParent(bool is_star, IDENT const &upper, IDENT const &lower, IDENT_VECTOR const &visited);
   void AddCalls(bool is_star, IDENT const &upper, IDENT const &lower);
   void AddNext(bool is_star, StmtType type1, IDENT const &upper, StmtType type2, IDENT const &lower);
-  void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_TUPLE_MAP *pair_map);
+  void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_RELATIONSHIP_MAP *pair_map);
   void ExhaustiveAddAllStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, bool is_star);
-  void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_TUPLE_MAP *pair_map);
+  void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_RELATIONSHIP_MAP *pair_map);
+  void IsMapContains(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_RELATIONSHIP_MAP *pair_map);
   void WipeNextStar();
   [[nodiscard]] bool IsValid(IDENT_PAIR const &pair);
   [[nodiscard]] bool IsStarValid(IDENT_PAIR const &pair);
