@@ -19,12 +19,15 @@
 #include "components/source_subsystem/types/ast/node_boolean_expression.h"
 #include "components/source_subsystem/types/ast/node_relational_expression.h"
 
+#include "components/source_subsystem/exceptions/cyclic_call.h"
 #include "components/source_subsystem/exceptions/empty_statement_list.h"
+#include "components/source_subsystem/exceptions/invalid_call.h"
 #include "components/source_subsystem/exceptions/invalid_parse_condition.h"
 #include "components/source_subsystem/exceptions/invalid_parse_factor.h"
 #include "components/source_subsystem/exceptions/invalid_parse_relation.h"
 #include "components/source_subsystem/exceptions/invalid_parse_statement.h"
 #include "components/source_subsystem/exceptions/mismatch_token.h"
+#include "components/source_subsystem/exceptions/procedure_exist.h"
 #include "components/source_subsystem/exceptions/end_of_stream.h"
 
 using namespace source;
@@ -81,6 +84,19 @@ TEST_CASE("Test one while-statement") {
   REQUIRE_THROWS_WITH(parser.ParseProgram(), MismatchedTokenException().what());
 }
 
+TEST_CASE("Test one call statement") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("call proc;");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+
+  // test
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), MismatchedTokenException().what());
+}
+
 TEST_CASE("Test one assign statement") {
   // set up actual
   std::vector<std::shared_ptr<SourceToken>> token_list;
@@ -120,6 +136,20 @@ TEST_CASE("Test single procedure with no statement") {
   REQUIRE_THROWS_WITH(parser.ParseProgram(), EmptyStatementListException().what());
 }
 
+TEST_CASE("Test two procedures with no statement") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure main { } procedure foo { }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+
+  // test
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), EmptyStatementListException().what());
+}
+
+
 TEST_CASE("Test invalid single procedure with one assign statement") {
   // set up actual
   std::vector<std::shared_ptr<SourceToken>> token_list;
@@ -131,6 +161,45 @@ TEST_CASE("Test invalid single procedure with one assign statement") {
 
   // test
   REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseStatementException().what());
+}
+
+TEST_CASE("Test two procedures with one procedure having one assign statement and the other empty statement list") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure main { a = 1; } procedure foo {}");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+
+  // test
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), EmptyStatementListException().what());
+}
+
+TEST_CASE("Test two procedures with one procedure having one assign statement and the invalid syntax") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure main { a = 1; } procedure foo { a = 1;; }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+
+  // test
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseStatementException().what());
+}
+
+TEST_CASE("Test two duplicated procedures") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure main { a = 1; } procedure main { a = 1; }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+
+  // test
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), ProcedureExistException().what());
 }
 
 TEST_CASE("Test single procedure with one read statement") {
@@ -1015,6 +1084,87 @@ TEST_CASE("Test single procedure with one invalid assign statement 2") {
   // test
   REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseFactorException().what());
 }
+
+TEST_CASE("Test single procedure with one call statement to non-existent procedure") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure main { call foo; }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+
+  // test
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidCallException().what());
+}
+
+TEST_CASE("Test single procedure with one invalid call statement") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure main { call 1; }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+
+  // test
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), InvalidParseStatementException().what());
+}
+
+TEST_CASE("Test two procedure with one call statement") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+  std::shared_ptr<ProgramNode> program_node;
+
+  SourceLexer lexer = SourceLexer("procedure main { call foo; } procedure foo { print x; }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+  program_node = parser.ParseProgram();
+
+  // set up expected
+  // main
+  std::string stmt_no_main = "1";
+  std::string caller_main = "main";
+  std::string callee_main = "foo";
+  std::shared_ptr<CallStatementNode> call_node = std::make_shared<CallStatementNode>(stmt_no_main, caller_main, callee_main);
+
+  std::vector<std::shared_ptr<StatementNode>> statements_main;
+  statements_main.emplace_back(call_node);
+  std::shared_ptr<StatementListNode> stmt_list_main = std::make_shared<StatementListNode>(statements_main);
+  std::shared_ptr<ProcedureNode> procedure_main = std::make_shared<ProcedureNode>("main", stmt_list_main);
+
+  // foo
+  std::string stmt_no_foo = "2";
+  std::shared_ptr<VariableNode> variable_node = std::make_shared<VariableNode>("x");
+  std::shared_ptr<PrintStatementNode>
+      assign_stmt = std::make_shared<PrintStatementNode>(stmt_no_foo, variable_node);
+
+  std::vector<std::shared_ptr<StatementNode>> statements_foo;
+  statements_foo.emplace_back(assign_stmt);
+  std::shared_ptr<StatementListNode> stmt_list_foo = std::make_shared<StatementListNode>(statements_foo);
+  std::shared_ptr<ProcedureNode> procedure_foo = std::make_shared<ProcedureNode>("foo", stmt_list_foo);
+
+  std::vector<std::shared_ptr<ProcedureNode>> procedures;
+  procedures.emplace_back(procedure_main);
+  procedures.emplace_back(procedure_foo);
+  std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
+
+  // test
+  REQUIRE(*program_node == *expected_program_node);
+}
+
+TEST_CASE("Test two procedure with cyclic call statement") {
+  // set up actual
+  std::vector<std::shared_ptr<SourceToken>> token_list;
+
+  SourceLexer lexer = SourceLexer("procedure main { call foo; } procedure foo { call main; }");
+  lexer.Tokenize(token_list);
+  SourceParser parser = SourceParser(token_list);
+
+  // test
+  REQUIRE_THROWS_WITH(parser.ParseProgram(), CyclicCallException().what());
+}
+
 
 TEST_CASE("Test single procedure with one invalid if-statement") {
   // set up actual
