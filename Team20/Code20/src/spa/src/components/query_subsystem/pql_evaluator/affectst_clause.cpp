@@ -1,6 +1,6 @@
 #include "affectst_clause.h"
 #include "clause_util.h"
-#include "components/pkb/stores/affect_store/affect_session.h"
+#include "components/pkb/stores/affects_store/affects_session.h"
 
 namespace pql {
 
@@ -12,8 +12,8 @@ AffectsTClause::AffectsTClause(const PqlToken &first_arg,
     : first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table AffectsTClause::Execute() {
-  if (!pkb->GetAffectStore()->DoesAffectSessionExist()) {
-    pkb->GetAffectStore()->ComputeAffectSession();
+  if (!pkb->GetAffectsStore()->DoesAffectsSessionExist()) {
+    pkb->GetAffectsStore()->ComputeAffectsSession();
   }
 
   if (IsArgSynonym(first_arg) && IsArgSynonym(second_arg)) {
@@ -51,15 +51,15 @@ Table AffectsTClause::Execute() {
 }
 
 Table AffectsTClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarPairs();
+  auto pair_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsStarPairs();
   if (first_arg.value == second_arg.value) {
-    pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarSameSynPairs();
+    pair_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsStarSameSynPairs();
   }
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
 Table AffectsTClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarPairs();
+  auto pair_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsStarPairs();
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.first);
@@ -68,12 +68,12 @@ Table AffectsTClause::HandleSynonymWildcard() {
 }
 
 Table AffectsTClause::HandleSynonymInteger() {
-  auto single_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarOf(second_arg.value);
+  auto single_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsStarOf(second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
 Table AffectsTClause::HandleWildcardSynonym() {
-  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarPairs();
+  auto pair_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsStarPairs();
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.second);
@@ -82,28 +82,28 @@ Table AffectsTClause::HandleWildcardSynonym() {
 }
 
 Table AffectsTClause::HandleWildcardWildcard() {
-  bool is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarPairs().empty();
+  bool is_false_clause = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsStarPairs().empty();
   return ConstructEmptyTable(is_false_clause);
 }
 
 Table AffectsTClause::HandleWildcardInteger() {
-  auto is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectsStarOf(second_arg.value).empty();
+  auto is_false_clause = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsStarOf(second_arg.value).empty();
   return ConstructEmptyTable(is_false_clause);
 }
 
 Table AffectsTClause::HandleIntegerSynonym() {
-  auto single_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectedStarOf(first_arg.value);
+  auto single_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectedStarOf(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table AffectsTClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectedStarOf(first_arg.value).empty();
+  bool is_false_clause = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectedStarOf(first_arg.value).empty();
   return ConstructEmptyTable(is_false_clause);
 }
 
 Table AffectsTClause::HandleIntegerInteger() {
   auto is_false_clause =
-      !pkb->GetAffectStore()->GetAffectSession()->DoesAffectStarExists({first_arg.value, second_arg.value});
+      !pkb->GetAffectsStore()->GetAffectsSession()->DoesAffectStarExists({first_arg.value, second_arg.value});
   return ConstructEmptyTable(is_false_clause);
 }
 
