@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECTS_STORE_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECTS_STORE_H_
+#ifndef AFFECT_STORE_H
+#define AFFECT_STORE_H
 
 #include <memory>
 #include <string>
@@ -39,4 +39,4 @@ class AffectStore : public Store {
   [[nodiscard]] std::shared_ptr<FollowsStore> GetFollowsStore();
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECTS_STORE_H_
+#endif //AFFECT_STORE_H
