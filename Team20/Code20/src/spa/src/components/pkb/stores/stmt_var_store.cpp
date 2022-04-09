@@ -65,8 +65,6 @@ std::unordered_set<std::string> StmtVarStore::GetVarByStmt(std::string const &st
 }
 
 std::unordered_set<std::string> StmtVarStore::GetStmtByVar(StmtType type, std::string const &var) {
-  bool is_present = false;
-
   if (var_stmt_map.find(var) != var_stmt_map.end()) {
     if (var_stmt_map.at(var).find(type) != var_stmt_map.at(var).end()) {
       return var_stmt_map.at(var).at(type);
