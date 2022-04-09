@@ -24,7 +24,7 @@ std::shared_ptr<AffectSession> AffectStore::GetAffectSession() {
 }
 
 void AffectStore::ComputeAffectSession() {
-  m_affect_session = std::make_shared<AffectSession>(std::make_shared<AffectStore>(*this), true);
+  ComputeAffectSession(true);
 }
 
 void AffectStore::ComputeAffectSession(bool is_affect_star_involved) {
