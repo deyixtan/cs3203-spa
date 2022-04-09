@@ -28,9 +28,9 @@ class AffectSession {
   std::unordered_map<std::string, std::unordered_set<std::string>> m_last_modified_star_map;
 
  private:
-  std::unordered_set<std::string> GetVarModByStmt(std::string stmt_no);
-  std::unordered_set<std::string> GetVarUsedByStmt(std::string stmt_no);
-  std::string GetFollowingOf(std::string stmt_no);
+  std::unordered_set<std::string> GetVarModByStmt(std::string &stmt_no);
+  std::unordered_set<std::string> GetVarUsedByStmt(std::string &stmt_no);
+  std::string GetFollowingOf(std::string &stmt_no);
   void TraverseCfg();
   void TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node, std::shared_ptr<source::CfgNode> &terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
   void HandleAssignStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);

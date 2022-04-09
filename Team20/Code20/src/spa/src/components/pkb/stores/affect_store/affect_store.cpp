@@ -7,12 +7,12 @@ AffectStore::AffectStore(std::shared_ptr<std::vector<std::unordered_set<std::str
                          std::shared_ptr<UsesStore> usage_store,
                          std::shared_ptr<FollowsStore> follows_store) :
     Store(move(stmt_vector), move(stmt_type)),
-    m_modify_store(modify_store),
-    m_usage_store(usage_store),
-    m_follows_store(follows_store) {}
+    m_modify_store(std::move(modify_store)),
+    m_usage_store(std::move(usage_store)),
+    m_follows_store(std::move(follows_store)) {}
 
 void AffectStore::AddProgramCfg(std::shared_ptr<source::Cfg> program_cfg) {
-  m_program_cfg = program_cfg;
+  m_program_cfg = std::move(program_cfg);
 }
 
 bool AffectStore::DoesAffectSessionExist() {
