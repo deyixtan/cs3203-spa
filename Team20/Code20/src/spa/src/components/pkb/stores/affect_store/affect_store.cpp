@@ -7,12 +7,12 @@ AffectStore::AffectStore(std::shared_ptr<std::vector<std::unordered_set<std::str
                          std::shared_ptr<UsesStore> usage_store,
                          std::shared_ptr<FollowsStore> follows_store) :
     Store(move(stmt_vector), move(stmt_type)),
-    m_modify_store(modify_store),
-    m_usage_store(usage_store),
-    m_follows_store(follows_store) {}
+    m_modify_store(std::move(modify_store)),
+    m_usage_store(std::move(usage_store)),
+    m_follows_store(std::move(follows_store)) {}
 
 void AffectStore::AddProgramCfg(std::shared_ptr<source::Cfg> program_cfg) {
-  m_program_cfg = program_cfg;
+  m_program_cfg = std::move(program_cfg);
 }
 
 bool AffectStore::DoesAffectSessionExist() {
@@ -24,7 +24,11 @@ std::shared_ptr<AffectSession> AffectStore::GetAffectSession() {
 }
 
 void AffectStore::ComputeAffectSession() {
-  m_affect_session = std::make_shared<AffectSession>(std::make_shared<AffectStore>(*this));
+  ComputeAffectSession(true);
+}
+
+void AffectStore::ComputeAffectSession(bool is_affect_star_involved) {
+  m_affect_session = std::make_shared<AffectSession>(std::make_shared<AffectStore>(*this), is_affect_star_involved);
 }
 
 void AffectStore::ClearAffectSession() {
@@ -46,18 +50,3 @@ std::shared_ptr<UsesStore> AffectStore::GetUsageStore() {
 std::shared_ptr<FollowsStore> AffectStore::GetFollowsStore() {
   return m_follows_store;
 }
-
-//std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectStore::GetAllAffectsStmtHelper(
-//    std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs,
-//    StmtType type) {
-//  std::vector<StmtType> supported_types = {STMT, ASSIGN};
-//  return Store::GetAllStmt(type, supported_types, all_affects_pairs, false);
-//}
-//
-//std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectStore::GetAllAffectsStmtHelper(
-//    std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs,
-//    StmtType type1,
-//    StmtType type2) {
-//  std::vector<StmtType> supported_types = {STMT, ASSIGN};
-//  return Store::GetAllStmt(type1, type2, supported_types, GetAllAffectsStmtHelper(all_affects_pairs, type2), true);
-//}
