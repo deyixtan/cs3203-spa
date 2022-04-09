@@ -166,18 +166,6 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
   }
 }
 
-int StmtStmtStore::IsMapContains(StmtType type1, StmtType type2, NESTED_STMT_STMT_MAP *pair_map) {
-  if (pair_map->find(type1) != pair_map->end()) {
-    if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
-      return 1; // Both types exist
-    } else {
-      return 2; // Only type 1 exists
-    }
-  } else {
-    return 3; // Both types missing
-  }
-}
-
 void StmtStmtStore::PopulatePairMap(StmtType type1,
                                     std::string upper,
                                     StmtType type2,
