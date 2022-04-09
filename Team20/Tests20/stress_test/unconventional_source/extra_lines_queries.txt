@@ -1,17 +1,17 @@
 1 - UsesP clause
 variable v; assign a; procedure p;
 Select v such that Uses (p, v)
-Modifies, verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong, hi, bye, hello, hithisistheverythirdprocedurewithaveryveryveryveryveryveryveryverylongname, Parent, such, that, morning, afternoon, evening, seven, eight, six, three, four, nine
+three,Modifies,bye,six,hello,verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong,Parent,hi,such,hithisistheverythirdprocedurewithaveryveryveryveryveryveryveryverylongname,that,morning,evening,afternoon,seven,eight,four,nine
 5000
 2 - UsesS clause
 variable v; assign a; procedure p;
 Select v such that Uses (a, v)
-Modifies, Parent, such, that, verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong, seven, eight, six, three, four, nine
+six,Modifies,three,verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong,Parent,seven,such,that,eight,four,nine
 5000
 3 - UsesS clause
 variable v; assign a; procedure p; while w;
 Select v such that Uses (w, v)
-verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong, hi, bye, hello, hithisistheverythirdprocedurewithaveryveryveryveryveryveryveryverylongname, Parent, such, that, morning, afternoon, evening, seven, eight, six, three, four, nine
+afternoon,morning,evening,hello,six,three,seven,eight,four,nine,Parent,verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong,hi,bye,such,hithisistheverythirdprocedurewithaveryveryveryveryveryveryveryverylongname,that
 5000
 4 - UsesS clause
 variable v; assign a; procedure p; while w;
@@ -21,95 +21,95 @@ Select w such that Uses (w, "verylonglonglonglongnamedvariablewithverylonglonglo
 5 - ModifiesP clause
 variable v; assign a; procedure p; while w;
 Select v such that Modifies (p, v)
-variable, Uses, Modifies, such, stmt, verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong, Affects, morning, afternoon, evening, one, two, three, four, five, six, seven, ten, first
+variable,four,Uses,verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong,three,Modifies,six,stmt,such,Affects,morning,evening,one,afternoon,two,five,seven,ten,first
 5000
 6 - ModifiesS clause
 variable v; assign a; procedure p; while w;
 Select v such that Modifies (a, v)
-variable, Uses, Modifies, such, stmt, verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong, Affects, morning, afternoon, evening, one, two, three, four, five, six, seven, ten
+four,Uses,variable,five,one,evening,morning,such,seven,three,Modifies,stmt,six,verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong,Affects,ten,afternoon,two
 5000
 7 - ModifiesS clause
 variable v; assign a; procedure p; while w;
 Select v such that Modifies (53, v)
-ten, five
+ten,five
 5000
 8 - Follows clause
 variable v; assign a, a1; procedure p; while w;
 Select a such that Follows (a, a1)
-1, 2, 3, 4, 5, 13, 14, 17, 30, 34, 38, 42, 45, 48
+38,30,45,3,34,48,42,14,1,5,17,13,2,4
 5000
 9 - Follows clause
 variable v; assign a, a1; procedure p; while w;
 Select w such that Follows (a, w)
-7, 16, 19, 21, 23, 25, 27, 53
+19,53,16,27,7,25,23,21
 5000
 10 - FollowsStar clause
 variable v; assign a, a1; if ifs; while w;
 Select ifs such that Follows* (a, ifs)
-29, 33, 37, 41, 44, 47
+29,47,44,33,41,37
 5000
 11 - FollowsStar clause
 variable v; assign a, a1; if ifs; while w;
 Select a such that Follows* (a, a1)
-1, 2, 3, 4, 5, 13, 14, 17, 30, 34, 38, 42, 45, 48
+38,30,45,3,34,48,42,14,1,5,17,13,2,4
 5000
 12 - Parent clause
 variable v; assign a, a1; if ifs; while w;
 Select w such that Parent (w, a)
-12, 16, 19, 21, 23, 25, 27, 53, 57, 61
+25,61,57,53,27,23,21,19,16,12
 5000
 13 - Parent clause
 variable v; assign a, a1; if ifs; while w; read rd;
 Select w such that Parent (w, rd)
-53, 57, 61
+61,57,53
 5000
 14 - ParentStar clause
 variable v; assign a, a1; if ifs; while w; read rd;
 Select w such that Parent* (w, rd)
-7, 12, 16, 19, 21, 23, 25, 27, 53, 57, 61
+27,16,7,23,12,19,21,25,53,57,61
 5000
 15 - ParentStar clause
 variable v; assign a, a1; if ifs; while w; read rd;
 Select w such that Parent* (w, rd)
-7, 12, 16, 19, 21, 23, 25, 27, 53, 57, 61
+27,16,7,23,12,19,21,25,53,57,61
 5000
 16 - Next clause
 variable v; assign a, a1; if ifs; while w;
 Select a such that Next (w, a)
-13, 17, 20, 22, 24, 26, 28, 54, 58, 62
+26,17,20,28,22,13,24,54,58,62
 5000
 17 - Next clause
 variable v; assign a, a1; if ifs; while w;
 Select a such that Next (ifs, a)
-30, 32, 34, 36, 38, 40, 42, 52, 45, 51, 48, 50
+30,38,48,40,50,32,34,36,42,52,45,51
 5000
 18 - NextStar clause
 variable v; assign a, a1; if ifs; while w;
 Select a such that Next* (ifs, a)
-11, 13, 14, 15, 17, 18, 20, 22, 24, 26, 28, 30, 31, 32, 34, 35, 36, 38, 39, 40, 42, 43, 52, 45, 46, 51, 48, 49, 50, 54, 58, 62
+13,14,58,15,17,28,11,54,18,52,62,39,45,48,50,30,26,38,43,46,49,51,24,31,32,35,40,36,34,42,22,20
 5000
 19 - Calls clause
 variable v; assign a, a1; if ifs; while w; procedure p, p1;
 Select p such that Calls (p, p1)
-hithisistheveryfirstprocedurewithaveryveryveryveryveryveryveryverylongname, hithisistheverysecondprocedurewithaveryveryveryveryveryveryveryverylongname
+hithisistheveryfirstprocedurewithaveryveryveryveryveryveryveryverylongname,hithisistheverysecondprocedurewithaveryveryveryveryveryveryveryverylongname
 5000
 20 - CallsStar clause
 variable v; assign a, a1; if ifs; while w; procedure p, p1;
 Select p1 such that Calls* (p, p1)
-hithisistheverythirdprocedurewithaveryveryveryveryveryveryveryverylongname, hithisistheverysecondprocedurewithaveryveryveryveryveryveryveryverylongname
+hithisistheverysecondprocedurewithaveryveryveryveryveryveryveryverylongname,hithisistheverythirdprocedurewithaveryveryveryveryveryveryveryverylongname
 5000
 21 - Affects clause
 variable v; assign a, a1; if ifs; while w; procedure p, p1;
 Select a such that Affects (a, a1)
-6, 30, 34, 38, 42, 45, 48
+3,34,26,31,6,24,4,38,30,42,43,45,46,48,39,35,49
 5000
 22 - Affects clause
 variable v; assign a, a1; if ifs; while w; procedure p, p1;
 Select a such that Affects (a, 11)
-6
+6,4
 5000
 23 - AffectsStar clause
 variable v; assign a, a1; if ifs; while w; procedure p, p1;
 Select a such that Affects* (a, 39)
-38, 24
+34,45,31,24,42,38,30,43,46,48,39,35,49
 5000
