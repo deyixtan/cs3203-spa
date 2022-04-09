@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <stack>
 
 #include "components/source_subsystem/source_declarations.h"
 
@@ -25,6 +26,7 @@ class AffectSession {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_star_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_same_affects_pairs; // for same synonym
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_same_affects_star_pairs; // for same synonym
+  std::stack<std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>>> m_last_modified_star_map_stack;
   std::unordered_map<std::string, std::unordered_set<std::string>> m_last_modified_star_map;
 
  private:
@@ -32,12 +34,12 @@ class AffectSession {
   std::unordered_set<std::string> GetVarUsedByStmt(std::string &stmt_no);
   std::string GetFollowingOf(std::string &stmt_no);
   void TraverseCfg();
-  void TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node, std::shared_ptr<source::CfgNode> &terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
-  void HandleAssignStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
-  void HandleReadStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
-  void HandleCallStatement(std::string stmt_no, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
-  void HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
-  void HandleIfStatement(std::string stmt_no, std::shared_ptr<source::CfgNode> &cfg_node, std::shared_ptr<source::CfgNode> &terminating_node, std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map);
+  void TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node, std::shared_ptr<source::CfgNode> &terminating_node);
+  void HandleAssignStatement(std::string stmt_no);
+  void HandleReadStatement(std::string stmt_no);
+  void HandleCallStatement(std::string stmt_no);
+  void HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_node);
+  void HandleIfStatement(std::string stmt_no, std::shared_ptr<source::CfgNode> &cfg_node, std::shared_ptr<source::CfgNode> &terminating_node);
 
  public:
   explicit AffectSession(std::shared_ptr<AffectStore> affects_store);

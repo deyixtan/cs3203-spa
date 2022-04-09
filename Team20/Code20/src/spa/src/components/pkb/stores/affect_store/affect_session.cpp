@@ -113,13 +113,14 @@ void AffectSession::TraverseCfg() {
     std::shared_ptr<source::CfgNode> proc_head = cfg.second;
     std::shared_ptr<source::CfgNode> tmp = std::make_shared<source::CfgNode>();
     std::unordered_map<std::string, std::unordered_set<std::string>> last_modified_map;
-    TraverseCfg(proc_head, tmp, last_modified_map);
+    m_last_modified_star_map_stack.push(std::make_shared<std::unordered_map<std::string, std::unordered_set<std::string>>>(last_modified_map));
+    TraverseCfg(proc_head, tmp);
+    m_last_modified_star_map_stack.pop();
   }
 }
 
 void AffectSession::TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node,
-                                std::shared_ptr<source::CfgNode> &terminating_node,
-                                std::unordered_map<std::string, std::unordered_set<std::string>> &last_modified_map) {
+                                std::shared_ptr<source::CfgNode> &terminating_node) {
   // checks on TraverseCfg from If-statement handler
   if (!cfg_node->GetStatementList().empty() && !terminating_node->GetStatementList().empty()) {
     if (cfg_node->GetStatementList().front().stmt_no == terminating_node->GetStatementList().front().stmt_no) {
@@ -134,16 +135,16 @@ void AffectSession::TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node,
     std::string stmt_no = stmt.stmt_no;
     StmtType type = stmt.type;
     if (type == ASSIGN) {
-      HandleAssignStatement(stmt_no, last_modified_map);
+      HandleAssignStatement(stmt_no);
     } else if (type == READ) {
-      HandleReadStatement(stmt_no, last_modified_map);
+      HandleReadStatement(stmt_no);
     } else if (type == CALL) {
-      HandleCallStatement(stmt_no, last_modified_map);
+      HandleCallStatement(stmt_no);
     } else if (type == WHILE) {
-      HandleWhileStatement(cfg_node, last_modified_map);
+      HandleWhileStatement(cfg_node);
     } else if (type == IF) {
-      HandleIfStatement(stmt_no, cfg_node, terminating_node, last_modified_map);
-      TraverseCfg(cfg_node, terminating_node, last_modified_map);
+      HandleIfStatement(stmt_no, cfg_node, terminating_node);
+      TraverseCfg(cfg_node, terminating_node);
       return;
     }
   }
@@ -154,19 +155,17 @@ void AffectSession::TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node,
   }
 
   std::shared_ptr<source::CfgNode> next_node = cfg_node->GetNextList().back();
-  TraverseCfg(next_node, terminating_node, last_modified_map);
+  TraverseCfg(next_node, terminating_node);
 }
 
-void AffectSession::HandleAssignStatement(std::string stmt_no,
-                                          std::unordered_map<std::string,
-                                                             std::unordered_set<std::string>> &last_modified_map) {
+void AffectSession::HandleAssignStatement(std::string stmt_no) {
   // check variables being used if they are modified
   // add them to affects map
   std::unordered_set<std::string> vars_used = GetVarUsedByStmt(stmt_no);
   for (auto const &var_used : vars_used) {
     // check if var_used is modified before
-    if (last_modified_map.count(var_used) != 0) {
-      std::unordered_set<std::string> last_mod_stmt_nos = last_modified_map.at(var_used);
+    if (m_last_modified_star_map_stack.top()->count(var_used) != 0) {
+      std::unordered_set<std::string> last_mod_stmt_nos = m_last_modified_star_map_stack.top()->at(var_used);
       for (auto const &last_mod_stmt_no : last_mod_stmt_nos) {
         // update affects (m_affects_map)
         if (m_affects_map.count(last_mod_stmt_no) == 0) {
@@ -234,17 +233,15 @@ void AffectSession::HandleAssignStatement(std::string stmt_no,
   // update modified table
   std::unordered_set<std::string> vars_mod = GetVarModByStmt(stmt_no);
   for (auto const &var_mod : vars_mod) {
-    if (last_modified_map.count(var_mod) == 0) {
-      last_modified_map.insert({var_mod, std::unordered_set<std::string>()});
+    if (m_last_modified_star_map_stack.top()->count(var_mod) == 0) {
+      m_last_modified_star_map_stack.top()->insert({var_mod, std::unordered_set<std::string>()});
     }
-    last_modified_map.at(var_mod).clear();
-    last_modified_map.at(var_mod).insert(stmt_no);
+    m_last_modified_star_map_stack.top()->at(var_mod).clear();
+    m_last_modified_star_map_stack.top()->at(var_mod).insert(stmt_no);
   }
 }
 
-void AffectSession::HandleReadStatement(std::string stmt_no,
-                                        std::unordered_map<std::string,
-                                                           std::unordered_set<std::string>> &last_modified_map) {
+void AffectSession::HandleReadStatement(std::string stmt_no) {
   // update modified table
   // since, read is not an assign stmt, we cleared it from the table
   std::unordered_set<std::string> vars_mod = GetVarModByStmt(stmt_no);
@@ -255,56 +252,52 @@ void AffectSession::HandleReadStatement(std::string stmt_no,
 
   std::string var_mod = *(vars_mod.begin());
 
-  if (last_modified_map.count(var_mod) == 0) {
-    last_modified_map.insert({var_mod, std::unordered_set<std::string>()});
+  if (m_last_modified_star_map_stack.top()->count(var_mod) == 0) {
+    m_last_modified_star_map_stack.top()->insert({var_mod, std::unordered_set<std::string>()});
   }
-  last_modified_map.at(var_mod).clear();
+  m_last_modified_star_map_stack.top()->at(var_mod).clear();
 }
 
-void AffectSession::HandleCallStatement(std::string stmt_no,
-                                        std::unordered_map<std::string,
-                                                           std::unordered_set<std::string>> &last_modified_map) {
+void AffectSession::HandleCallStatement(std::string stmt_no) {
   // update modified table
   // since, read is not an assign stmt, we cleared it from the table
   std::unordered_set<std::string> vars_mod = GetVarModByStmt(stmt_no);
   for (auto const &var_mod : vars_mod) {
-    if (last_modified_map.count(var_mod) == 0) {
-      last_modified_map.insert({var_mod, std::unordered_set<std::string>()});
+    if (m_last_modified_star_map_stack.top()->count(var_mod) == 0) {
+      m_last_modified_star_map_stack.top()->insert({var_mod, std::unordered_set<std::string>()});
     }
-    last_modified_map.at(var_mod).clear();
+    m_last_modified_star_map_stack.top()->at(var_mod).clear();
   }
 }
 
-void AffectSession::HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_node,
-                                         std::unordered_map<std::string,
-                                                            std::unordered_set<std::string>> &last_modified_map) {
+void AffectSession::HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_node) {
   // create a copy of last_modified_map, to be served to the "else" cfg node
-  std::unordered_map<std::string, std::unordered_set<std::string>> last_modified_map_clone = last_modified_map;
+  std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>> last_modified_map_clone = std::make_shared<std::unordered_map<std::string, std::unordered_set<std::string>>>(*(m_last_modified_star_map_stack.top()));
   std::shared_ptr<source::CfgNode> start_node = cfg_node->GetNextList().front();
   std::shared_ptr<source::CfgNode> end_node = cfg_node;
 
   // traverse twice to populate modified table properly
-  TraverseCfg(start_node, end_node, last_modified_map_clone);
-  TraverseCfg(start_node, end_node, last_modified_map_clone);
+  m_last_modified_star_map_stack.push(last_modified_map_clone);
+  TraverseCfg(start_node, end_node);
+  TraverseCfg(start_node, end_node);
+  m_last_modified_star_map_stack.pop();
 
   // merge last_modified_map_clone into last_modified_map
-  for (auto const &last_modified : last_modified_map_clone) {
+  for (auto const &last_modified : *(last_modified_map_clone)) {
     std::string var_name = last_modified.first;
     std::unordered_set<std::string> stmt_nos = last_modified.second;
-    if (last_modified_map.count(var_name) == 0) {
-      last_modified_map.insert({var_name, std::unordered_set<std::string>()});
+    if (m_last_modified_star_map_stack.top()->count(var_name) == 0) {
+      m_last_modified_star_map_stack.top()->insert({var_name, std::unordered_set<std::string>()});
     }
-    last_modified_map.at(var_name).insert(stmt_nos.begin(), stmt_nos.end());
+    m_last_modified_star_map_stack.top()->at(var_name).insert(stmt_nos.begin(), stmt_nos.end());
   }
 }
 
 void AffectSession::HandleIfStatement(std::string stmt_no,
                                       std::shared_ptr<source::CfgNode> &cfg_node,
-                                      std::shared_ptr<source::CfgNode> &terminating_node,
-                                      std::unordered_map<std::string,
-                                                         std::unordered_set<std::string>> &last_modified_map) {
+                                      std::shared_ptr<source::CfgNode> &terminating_node) {
   // create a copy of last_modified_map, to be served to the "else" cfg node
-  std::unordered_map<std::string, std::unordered_set<std::string>> last_modified_map_clone = last_modified_map;
+  std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>> last_modified_map_clone = std::make_shared<std::unordered_map<std::string, std::unordered_set<std::string>>>(*(m_last_modified_star_map_stack.top()));
 
   std::shared_ptr<source::CfgNode> if_cfg_node = cfg_node->GetNextList()[0];
   std::shared_ptr<source::CfgNode> else_cfg_node = cfg_node->GetNextList()[1];
@@ -314,17 +307,20 @@ void AffectSession::HandleIfStatement(std::string stmt_no,
 
   // first TraverseIfCfg (if-block) will process statements and find dummy node
   // for the second TraverseIfCfg (else-block)
-  TraverseCfg(if_cfg_node, end_node, last_modified_map);
-  TraverseCfg(else_cfg_node, end_node, last_modified_map_clone);
+  TraverseCfg(if_cfg_node, end_node);
+
+  m_last_modified_star_map_stack.push(last_modified_map_clone);
+  TraverseCfg(else_cfg_node, end_node);
+  m_last_modified_star_map_stack.pop();
 
   // merge last_modified_map_clone into last_modified_map
-  for (auto const &last_modified : last_modified_map_clone) {
+  for (auto const &last_modified : *(last_modified_map_clone)) {
     std::string var_name = last_modified.first;
     std::unordered_set<std::string> stmt_nos = last_modified.second;
-    if (last_modified_map.count(var_name) == 0) {
-      last_modified_map.insert({var_name, std::unordered_set<std::string>()});
+    if (m_last_modified_star_map_stack.top()->count(var_name) == 0) {
+      m_last_modified_star_map_stack.top()->insert({var_name, std::unordered_set<std::string>()});
     }
-    last_modified_map.at(var_name).insert(stmt_nos.begin(), stmt_nos.end());
+    m_last_modified_star_map_stack.top()->at(var_name).insert(stmt_nos.begin(), stmt_nos.end());
   }
 
   cfg_node = end_node;
