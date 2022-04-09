@@ -7,8 +7,8 @@ class ParentStore;
 
 class StmtStmtStore : public Store {
  protected:
-  NESTED_RELATIONSHIP_MAP type_pair_map;
-  NESTED_RELATIONSHIP_MAP star_type_pair_map;
+  NESTED_STMT_STMT_MAP type_pair_map;
+  NESTED_STMT_STMT_MAP star_type_pair_map;
   std::shared_ptr<ParentStore> m_parent_store;
   IDENT_PAIR_VECTOR all_pairs;
   IDENT_PAIR_VECTOR all_star_pairs;
@@ -22,10 +22,10 @@ class StmtStmtStore : public Store {
   void AddParent(bool is_star, IDENT const &upper, IDENT const &lower, IDENT_VECTOR const &visited);
   void AddCalls(bool is_star, IDENT const &upper, IDENT const &lower);
   void AddNext(bool is_star, StmtType type1, IDENT const &upper, StmtType type2, IDENT const &lower);
-  void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_RELATIONSHIP_MAP *pair_map);
+  void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_STMT_STMT_MAP *pair_map);
   void ExhaustiveAddAllStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, bool is_star);
-  void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_RELATIONSHIP_MAP *pair_map);
-  [[nodiscard]] int IsMapContains(StmtType type1, StmtType type2, NESTED_RELATIONSHIP_MAP *pair_map);
+  void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_STMT_STMT_MAP *pair_map);
+  [[nodiscard]] int IsMapContains(StmtType type1, StmtType type2, NESTED_STMT_STMT_MAP *pair_map);
   [[nodiscard]] bool IsValid(IDENT_PAIR const &pair);
   [[nodiscard]] bool IsStarValid(IDENT_PAIR const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetHelper(StmtType type1, StmtType type2, int index, IDENT const &stmt, bool is_star);

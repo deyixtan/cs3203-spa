@@ -113,7 +113,7 @@ void StmtStmtStore::AddCalls(bool is_star, std::string const &upper, std::string
 
   all_star_pairs.push_back(std::pair<std::string, std::string>(upper, lower));
   ExhaustiveAddAllStmt(PROC, upper, PROC, lower, true);
-  //NESTED_RELATIONSHIP_MAP_PTR pair_map = std::make_shared<NESTED_RELATIONSHIP_MAP>(star_type_pair_map);
+  //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(star_type_pair_map);
 
   if (IsMapContains(PROC, PROC, &star_type_pair_map) == 1) {
     for (auto &pair : star_type_pair_map.at(PROC).at(PROC).GetPairVector()) {
@@ -134,12 +134,12 @@ void StmtStmtStore::ExhaustiveAddAllStmt(StmtType type1,
                                          StmtType type2,
                                          std::string lower,
                                          bool is_star) {
-  NESTED_RELATIONSHIP_MAP *pair_map;
+  NESTED_STMT_STMT_MAP *pair_map;
 
   if (!is_star) {
-    pair_map = &type_pair_map; //std::make_shared<NESTED_RELATIONSHIP_MAP>(type_pair_map);
+    pair_map = &type_pair_map; //std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);
   } else {
-    pair_map = &star_type_pair_map; //std::make_shared<NESTED_RELATIONSHIP_MAP>(star_type_pair_map);
+    pair_map = &star_type_pair_map; //std::make_shared<NESTED_STMT_STMT_MAP>(star_type_pair_map);
   }
 
   ExhaustiveAddSubStmt(type1, upper, type2, lower, pair_map);
@@ -152,7 +152,7 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
                                          std::string upper,
                                          StmtType type2,
                                          std::string lower,
-                                         NESTED_RELATIONSHIP_MAP *pair_map) {
+                                         NESTED_STMT_STMT_MAP *pair_map) {
   switch (IsMapContains(type1, type2, pair_map)) {
     case 1: // Both types exist
       PopulatePairMap(type1, upper, type2, lower, pair_map);
@@ -166,7 +166,7 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
   }
 }
 
-int StmtStmtStore::IsMapContains(StmtType type1, StmtType type2, NESTED_RELATIONSHIP_MAP *pair_map) {
+int StmtStmtStore::IsMapContains(StmtType type1, StmtType type2, NESTED_STMT_STMT_MAP *pair_map) {
   if (pair_map->find(type1) != pair_map->end()) {
     if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
       return 1; // Both types exist
@@ -182,7 +182,7 @@ void StmtStmtStore::PopulatePairMap(StmtType type1,
                                     std::string upper,
                                     StmtType type2,
                                     std::string lower,
-                                    NESTED_RELATIONSHIP_MAP *pair_map) {
+                                    NESTED_STMT_STMT_MAP *pair_map) {
   pair_map->at(type1).at(type2).AddLowerSet(upper, {lower});
   pair_map->at(type1).at(type2).AddUpperSet(lower, {upper});
   pair_map->at(type1).at(type2).AddPair(upper, lower);
@@ -202,7 +202,7 @@ std::unordered_set<std::string> StmtStmtStore::GetHelper(StmtType type1,
                                                          std::string const &stmt,
                                                          bool is_star) {
 
-  NESTED_RELATIONSHIP_MAP *pair_map;
+  NESTED_STMT_STMT_MAP *pair_map;
 
   if (!is_star) {
     pair_map = &type_pair_map;
@@ -225,7 +225,7 @@ std::unordered_set<std::string> StmtStmtStore::GetHelper(StmtType type1,
 }
 
 std::string StmtStmtStore::GetUpperOf(StmtType stmt_type, std::string const &stmt) {
-  //NESTED_RELATIONSHIP_MAP_PTR pair_map = std::make_shared<NESTED_RELATIONSHIP_MAP>(type_pair_map);
+  //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);
 
   if (IsMapContains(stmt_type, STMT, &type_pair_map) == 1) {
     return GetHelper(stmt_type, STMT, 1, stmt, false).empty() ? "0" : *(GetHelper(stmt_type, STMT, 1, stmt, false).begin());
@@ -234,7 +234,7 @@ std::string StmtStmtStore::GetUpperOf(StmtType stmt_type, std::string const &stm
 }
 
 std::string StmtStmtStore::GetLowerOf(StmtType stmt_type, std::string const &stmt) {
-  //NESTED_RELATIONSHIP_MAP_PTR pair_map = std::make_shared<NESTED_RELATIONSHIP_MAP>(type_pair_map);
+  //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);
 
   if (IsMapContains(STMT, stmt_type, &type_pair_map) == 1) {
     return GetHelper(STMT, stmt_type, 0, stmt, false).empty() ? "0" : *(GetHelper(STMT, stmt_type, 0, stmt, false).begin());
@@ -248,7 +248,7 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_typ
     rs_type = STMT;
   }
 
-  //NESTED_RELATIONSHIP_MAP_PTR pair_map = std::make_shared<NESTED_RELATIONSHIP_MAP>(type_pair_map);
+  //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);
 
   if (IsMapContains(stmt_type, rs_type, &type_pair_map) == 1) {
     return GetHelper(stmt_type, rs_type, 1, stmt, false);
@@ -257,7 +257,7 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_typ
 }
 
 std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType store_type, StmtType stmt_type, std::string const &stmt) {
-  //NESTED_RELATIONSHIP_MAP_PTR pair_map = std::make_shared<NESTED_RELATIONSHIP_MAP>(type_pair_map);
+  //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);
 
   if (IsMapContains(STMT, stmt_type, &type_pair_map) == 1) {
     return GetHelper(STMT, stmt_type, 0, stmt, false);
@@ -290,7 +290,7 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StoreType store_ty
 }
 
 IDENT_PAIR_VECTOR StmtStmtStore::GetPairByType(StmtType type1, StmtType type2) {
-  //NESTED_RELATIONSHIP_MAP_PTR pair_map = std::make_shared<NESTED_RELATIONSHIP_MAP>(type_pair_map);
+  //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);
 
   if (IsMapContains(type1, type2, &type_pair_map) == 1) {
     return type_pair_map.at(type1).at(type2).GetPairVector();
@@ -299,7 +299,7 @@ IDENT_PAIR_VECTOR StmtStmtStore::GetPairByType(StmtType type1, StmtType type2) {
 }
 
 IDENT_PAIR_VECTOR StmtStmtStore::GetStarPairByType(StmtType type1, StmtType type2) {
-  //NESTED_RELATIONSHIP_MAP_PTR pair_map = std::make_shared<NESTED_RELATIONSHIP_MAP>(star_type_pair_map);
+  //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(star_type_pair_map);
 
   if (IsMapContains(type1, type2, &star_type_pair_map) == 1) {
     return star_type_pair_map.at(type1).at(type2).GetPairVector();

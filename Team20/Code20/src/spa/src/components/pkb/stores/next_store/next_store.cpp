@@ -211,5 +211,5 @@ IDENT_PAIR_VECTOR NextStore::GetNextStarPairs() {
 
 void NextStore::ClearNextStarCache() {
   all_star_pairs = IDENT_PAIR_VECTOR();
-  star_type_pair_map = NESTED_RELATIONSHIP_MAP();
+  star_type_pair_map = NESTED_STMT_STMT_MAP();
 }
