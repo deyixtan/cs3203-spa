@@ -113,17 +113,15 @@ void StmtStmtStore::AddCalls(bool is_star, std::string const &upper, std::string
   all_star_pairs.push_back(std::pair<std::string, std::string>(upper, lower));
   ExhaustiveAddAllStmt(PROC, upper, PROC, lower, true);
 
-  if (star_type_pair_map.find(PROC) != star_type_pair_map.end()) {
-    if (star_type_pair_map.at(PROC).find(PROC) != star_type_pair_map.at(PROC).end()) {
-      for (auto &pair : star_type_pair_map.at(PROC).at(PROC).GetPairVector()) {
-        if (upper == pair.second) {
-          all_star_pairs.push_back({pair.first, lower});
-          ExhaustiveAddAllStmt(PROC, pair.first, PROC, lower, true);
-        }
-        if (lower == pair.first) {
-          all_star_pairs.push_back({upper, pair.second});
-          ExhaustiveAddAllStmt(PROC, upper, PROC, pair.second, true);
-        }
+  if (IsMapContains(PROC, PROC, &star_type_pair_map) == 1) {
+    for (auto &pair : star_type_pair_map.at(PROC).at(PROC).GetPairVector()) {
+      if (upper == pair.second) {
+        all_star_pairs.push_back({pair.first, lower});
+        ExhaustiveAddAllStmt(PROC, pair.first, PROC, lower, true);
+      }
+      if (lower == pair.first) {
+        all_star_pairs.push_back({upper, pair.second});
+        ExhaustiveAddAllStmt(PROC, upper, PROC, pair.second, true);
       }
     }
   }
@@ -153,22 +151,29 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
                                          StmtType type2,
                                          std::string lower,
                                          NESTED_RELATIONSHIP_MAP *pair_map) {
-  if (pair_map->find(type1) != pair_map->end()) {
-    if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
+  switch (IsMapContains(type1, type2, pair_map)) {
+    case 1: // Both types exist
       PopulatePairMap(type1, upper, type2, lower, pair_map);
-    } else {
+    case 2: // Only type 1 exists
       pair_map->at(type1).insert({type2, PkbRelationship()});
       PopulatePairMap(type1, upper, type2, lower, pair_map);
-    }
-  } else {
-    pair_map->insert({type1, {}});
-    pair_map->at(type1).insert({type2, PkbRelationship()});
-    PopulatePairMap(type1, upper, type2, lower, pair_map);
+    case 3: // Both types missing
+      pair_map->insert({type1, {}});
+      pair_map->at(type1).insert({type2, PkbRelationship()});
+      PopulatePairMap(type1, upper, type2, lower, pair_map);
   }
 }
 
-void StmtStmtStore::IsMapContains(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_RELATIONSHIP_MAP *pair_map) {
-
+int StmtStmtStore::IsMapContains(StmtType type1, StmtType type2, NESTED_RELATIONSHIP_MAP *pair_map) {
+  if (pair_map->find(type1) != pair_map->end()) {
+    if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
+      return 1; // Both types exist
+    } else {
+      return 2; // Only type 1 exists
+    }
+  } else {
+    return 3; // Both types missing
+  }
 }
 
 void StmtStmtStore::PopulatePairMap(StmtType type1,
@@ -232,10 +237,8 @@ std::unordered_set<std::string> StmtStmtStore::GetHelper(StmtType type1,
 }
 
 std::string StmtStmtStore::GetUpperOf(StmtType stmt_type, std::string const &stmt) {
-  if (type_pair_map.find(stmt_type) != type_pair_map.end()) {
-    if (type_pair_map.at(stmt_type).find(STMT) != type_pair_map.at(stmt_type).end()) {
-      return GetHelper(stmt_type, STMT, 1, stmt, false).empty() ? "0" : *(GetHelper(stmt_type, STMT, 1, stmt, false).begin());
-    }
+  if (IsMapContains(stmt_type, STMT, &type_pair_map) == 1) {
+    return GetHelper(stmt_type, STMT, 1, stmt, false).empty() ? "0" : *(GetHelper(stmt_type, STMT, 1, stmt, false).begin());
   }
   return "0";
 }

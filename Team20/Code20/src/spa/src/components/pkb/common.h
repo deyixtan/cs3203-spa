@@ -45,4 +45,9 @@ typedef std::unordered_map<IDENT, IDENT_PAIR> IDENT_PAIR_MAP;
 typedef std::vector<IDENT_PAIR> IDENT_PAIR_VECTOR;
 typedef std::unordered_map<StmtType, std::unordered_map<StmtType, PkbRelationship>> NESTED_RELATIONSHIP_MAP;
 
+template <typename Key, typename T>
+struct Hashmap {
+  typedef std::unordered_map<Key, T> type;
+};
+
 #endif //COMMON_H

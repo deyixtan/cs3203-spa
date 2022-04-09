@@ -22,7 +22,7 @@ class StmtStmtStore : public Store {
   void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_RELATIONSHIP_MAP *pair_map);
   void ExhaustiveAddAllStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, bool is_star);
   void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_RELATIONSHIP_MAP *pair_map);
-  void IsMapContains(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_RELATIONSHIP_MAP *pair_map);
+  int IsMapContains(StmtType type1, StmtType type2, NESTED_RELATIONSHIP_MAP *pair_map);
   void WipeNextStar();
   [[nodiscard]] bool IsValid(IDENT_PAIR const &pair);
   [[nodiscard]] bool IsStarValid(IDENT_PAIR const &pair);
