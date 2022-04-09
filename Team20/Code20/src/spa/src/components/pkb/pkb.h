@@ -40,7 +40,6 @@ class PKB {
   void InitRelationshipStores();
   void AddStmt(std::string const &stmt, StmtType type);
   void AddTypeOfStmt(std::string const &stmt, StmtType type);
-  void AddStmtToProc(std::string const &proc, std::string const &stmt);
   void AddName(std::string const &name, StmtType type);
   void AddNameToStmt(StmtType type, std::string const &name, std::string const &stmt);
   void AddStmtToName(StmtType type, std::string const &stmt, std::string const &name);

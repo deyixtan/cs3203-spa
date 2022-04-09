@@ -12,8 +12,12 @@ void NextStore::AddNext(IDENT const &before, IDENT const &next) {
   AddUpperLower(NEXT, before, next);
 }
 
-void NextStore::AddStmtProc(std::string const &proc, std::string const &stmt) {
-    m_proc_stmt_map.insert({proc, stmt});
+void NextStore::AddFirstStmtProc(std::string const &proc, std::string const &stmt) {
+    m_proc_stmt_map.insert({proc, {stmt}});
+}
+
+void NextStore::AddLastStmtProc(std::string const &proc, std::string const &stmt) {
+  m_proc_stmt_map.at(proc).push_back(stmt);
 }
 
 bool NextStore::IsNextPairValid(IDENT_PAIR const &pair) {
@@ -51,7 +55,7 @@ IDENT_PAIR_VECTOR NextStore::GetNextPairs() {
 IDENT_PAIR_VECTOR NextStore::GetNextStarPairs() {
   std::vector<std::string> stmt_list;
   for (auto p : m_proc_stmt_map) {
-    stmt_list.push_back(p.second);
+    stmt_list.push_back(*p.second.begin());
   }
   return GetAllNextStarPairs(stmt_list);
 }

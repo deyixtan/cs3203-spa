@@ -29,10 +29,6 @@ void PKB::AddTypeOfStmt(std::string const &stmt, StmtType type) {
   m_stmt_type->insert({stmt, type});
 }
 
-void PKB::AddStmtToProc(std::string const &proc, std::string const &stmt) {
-  m_next_store->AddStmtProc(proc,stmt);
-}
-
 void PKB::AddName(std::string const &name, StmtType type) {
   m_name_vector->at(type).insert(name);
 }
