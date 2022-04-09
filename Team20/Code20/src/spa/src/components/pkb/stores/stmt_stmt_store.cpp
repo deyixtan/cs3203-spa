@@ -244,10 +244,8 @@ std::string StmtStmtStore::GetUpperOf(StmtType stmt_type, std::string const &stm
 }
 
 std::string StmtStmtStore::GetLowerOf(StmtType stmt_type, std::string const &stmt) {
-  if (type_pair_map.find(STMT) != type_pair_map.end()) {
-    if (type_pair_map.at(STMT).find(stmt_type) != type_pair_map.at(STMT).end()) {
-      return GetHelper(STMT, stmt_type, 0, stmt, false).empty() ? "0" : *(GetHelper(STMT, stmt_type, 0, stmt, false).begin());
-    }
+  if (IsMapContains(STMT, stmt_type, &type_pair_map) == 1) {
+    return GetHelper(STMT, stmt_type, 0, stmt, false).empty() ? "0" : *(GetHelper(STMT, stmt_type, 0, stmt, false).begin());
   }
   return "0";
 }
@@ -258,23 +256,16 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_typ
     rs_type = STMT;
   }
 
-  if (type_pair_map.find(stmt_type) != type_pair_map.end()) {
-    if (type_pair_map.at(stmt_type).find(rs_type) != type_pair_map.at(rs_type).end()) {
-      return GetHelper(stmt_type, rs_type, 1, stmt, false);
-    }
+  if (IsMapContains(stmt_type, rs_type, &type_pair_map) == 1) {
+    return GetHelper(stmt_type, rs_type, 1, stmt, false);
   }
   return {};
 }
 
 std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType store_type, StmtType stmt_type, std::string const &stmt) {
-  std::unordered_set<std::string> result;
-
-  if (type_pair_map.find(STMT) != type_pair_map.end()) {
-    if (type_pair_map.at(STMT).find(stmt_type) != type_pair_map.at(STMT).end()) {
-      return GetHelper(STMT, stmt_type, 0, stmt, false);
-    }
+  if (IsMapContains(STMT, stmt_type, &type_pair_map) == 1) {
+    return GetHelper(STMT, stmt_type, 0, stmt, false);
   }
-
   return {};
 }
 
@@ -329,19 +320,15 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StoreType store_ty
 }
 
 IDENT_PAIR_VECTOR StmtStmtStore::GetPairByType(StmtType type1, StmtType type2) {
-  if (type_pair_map.find(type1) != type_pair_map.end()) {
-    if (type_pair_map.at(type1).find(type2) != type_pair_map.at(type1).end()) {
-      return type_pair_map.at(type1).at(type2).GetPairVector();
-    }
+  if (IsMapContains(type1, type2, &type_pair_map) == 1) {
+    return type_pair_map.at(type1).at(type2).GetPairVector();
   }
   return {};
 }
 
 IDENT_PAIR_VECTOR StmtStmtStore::GetStarPairByType(StmtType type1, StmtType type2) {
-  if (star_type_pair_map.find(type1) != star_type_pair_map.end()) {
-    if (star_type_pair_map.at(type1).find(type2) != star_type_pair_map.at(type1).end()) {
-      return star_type_pair_map.at(type1).at(type2).GetPairVector();
-    }
+  if (IsMapContains(type1, type2, &star_type_pair_map) == 1) {
+    return star_type_pair_map.at(type1).at(type2).GetPairVector();
   }
   return {};
 }

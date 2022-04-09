@@ -19,17 +19,19 @@ class Store {
  public:
   explicit Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                  std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
-  IDENT_PAIR_VECTOR GetAllStmt(StmtType type,
-                            std::vector<StmtType> &supported_types,
-                            std::vector<std::pair<std::string,
-                                                  std::string>> const &list,
-                            bool checkPairFirst);
-  IDENT_PAIR_VECTOR GetAllStmt(StmtType type1,
-                            StmtType type2,
-                            std::vector<StmtType> &supported_types,
-                            std::vector<std::pair<std::string,
-                                                  std::string>> const &list,
-                            bool checkPairFirst);
+
+  //TODO: Redundant, remove
+//  IDENT_PAIR_VECTOR GetAllStmt(StmtType type,
+//                            std::vector<StmtType> &supported_types,
+//                            std::vector<std::pair<std::string,
+//                                                  std::string>> const &list,
+//                            bool checkPairFirst);
+//  IDENT_PAIR_VECTOR GetAllStmt(StmtType type1,
+//                            StmtType type2,
+//                            std::vector<StmtType> &supported_types,
+//                            std::vector<std::pair<std::string,
+//                                                  std::string>> const &list,
+//                            bool checkPairFirst);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
