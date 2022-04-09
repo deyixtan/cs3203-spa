@@ -50,7 +50,7 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
     }
   }
 
-  pkb->GetAffectStore()->ClearAffectSession();
+  pkb->GetAffectsStore()->ClearAffectsSession();
   pkb->GetNextStore()->WipeStar();
 }
 

@@ -1,5 +1,5 @@
-#ifndef AFFECT_SESSION_H
-#define AFFECT_SESSION_H
+#ifndef AFFECTS_SESSION_H
+#define AFFECTS_SESSION_H
 
 #include <memory>
 #include <string>
@@ -13,11 +13,11 @@
 #include "../../../../utils/pair_hash.h"
 #include "../../pkb.h"
 
-class AffectStore;
+class AffectsStore;
 
-class AffectSession {
+class AffectsSession {
  private:
-  std::shared_ptr<AffectStore> m_affects_store;
+  std::shared_ptr<AffectsStore> m_affects_store;
   std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_map;
   std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_star_map;
   std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_reverse_map;
@@ -28,7 +28,7 @@ class AffectSession {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_same_affects_star_pairs; // for same synonym
   std::stack<std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>>> m_last_modified_map_stack;
   std::unordered_map<std::string, std::unordered_set<std::string>> m_last_modified_star_map;
-  bool m_is_affect_star_involved;
+  bool m_is_affects_star_involved;
   std::stack<std::shared_ptr<source::CfgNode>> m_terminating_node_stack;
 
  private:
@@ -44,7 +44,7 @@ class AffectSession {
   void HandleIfStatement(std::string stmt_no, std::shared_ptr<source::CfgNode> &cfg_node);
 
  public:
-  explicit AffectSession(std::shared_ptr<AffectStore> affects_store, bool is_affect_star_involved);
+  explicit AffectsSession(std::shared_ptr<AffectsStore> affects_store, bool is_affect_star_involved);
   [[nodiscard]] bool IsAffected(std::string const &stmt);
   [[nodiscard]] bool IsAffectedStar(std::string const &stmt);
   [[nodiscard]] bool IsAffecting(std::string const &stmt);
