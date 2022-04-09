@@ -88,7 +88,10 @@ IDENT_PAIR_VECTOR NextStore::GetAllNextStmt(StmtType type1, StmtType type2) {
 }
 
 IDENT_PAIR_VECTOR NextStore::GetAllNextStarStmt(StmtType type1, StmtType type2) {
-  return GetNextStarPairs();
+  if(GetStarPairByType(type1, type2).empty()) {
+    IDENT_PAIR_VECTOR pairs = GetNextStarPairs();
+    return GetStarPairByType(type1, type2);
+  }
 }
 
 void NextStore::GetUpperStarOfHelper(std::string const &stmt,
