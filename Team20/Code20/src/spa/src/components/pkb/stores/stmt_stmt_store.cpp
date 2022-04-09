@@ -158,16 +158,13 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
       PopulatePairMap(type1, upper, type2, lower, pair_map);
     } else {
       pair_map->at(type1).insert({type2, PkbRelationship()});
-      pair_map->at(type1).at(type2).AddLowerSet(upper, {lower});
-      pair_map->at(type1).at(type2).AddUpperSet(lower, {upper});
-      pair_map->at(type1).at(type2).AddPair(upper, lower);
+      PopulatePairMap(type1, upper, type2, lower, pair_map);
+
     }
   } else {
     pair_map->insert({type1, {}});
     pair_map->at(type1).insert({type2, PkbRelationship()});
-    pair_map->at(type1).at(type2).AddLowerSet(upper, {lower});
-    pair_map->at(type1).at(type2).AddUpperSet(lower, {upper});
-    pair_map->at(type1).at(type2).AddPair(upper, lower);
+    PopulatePairMap(type1, upper, type2, lower, pair_map);
   }
 }
 
@@ -176,23 +173,9 @@ void StmtStmtStore::PopulatePairMap(StmtType type1,
                                     StmtType type2,
                                     std::string lower,
                                     NESTED_TUPLE_MAP *pair_map) {
-  if (pair_map->at(type1).at(type2).GetUpperToLowerSet().find(upper)
-      != pair_map->at(type1).at(type2).GetUpperToLowerSet().end()) {
-    pair_map->at(type1).at(type2).GetUpperToLowerSet().at(upper).insert(lower);
-  } else {
-    //pair_map->at(type1).at(type2).AddLowerSet(upper, {lower});
-    pair_map->at(type1).at(type2).GetUpperToLowerSet().insert({upper, {lower}});
-  }
-
-  if (pair_map->at(type1).at(type2).GetLowerToUpperSet().find(lower)
-      != pair_map->at(type1).at(type2).GetLowerToUpperSet().end()) {
-    pair_map->at(type1).at(type2).GetLowerToUpperSet().at(lower).insert(upper);
-  } else {
-    //pair_map->at(type1).at(type2).AddUpperSet(lower, {upper});
-    pair_map->at(type1).at(type2).GetLowerToUpperSet().insert({lower, {upper}});
-  }
-
-  pair_map->at(type1).at(type2).GetPairVector().push_back({upper, lower});
+  pair_map->at(type1).at(type2).AddLowerSet(upper, {lower});
+  pair_map->at(type1).at(type2).AddUpperSet(lower, {upper});
+  pair_map->at(type1).at(type2).AddPair(upper, lower);
 }
 
 void StmtStmtStore::WipeNextStar() {

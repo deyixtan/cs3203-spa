@@ -15,8 +15,8 @@ class PkbRelationship {
 
  public:
   PkbRelationship();
-  void AddLowerSet(IDENT stmt, IDENT_SET set);
-  void AddUpperSet(IDENT stmt, IDENT_SET set);
+  void AddLowerSet(IDENT stmt1, IDENT stmt2);
+  void AddUpperSet(IDENT stmt1, IDENT stmt2);
   void AddPair(IDENT stmt1, IDENT stmt2);
   [[nodiscard]] IDENT_SET_MAP GetUpperToLowerSet();
   [[nodiscard]] IDENT_SET_MAP GetLowerToUpperSet();
