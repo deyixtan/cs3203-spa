@@ -29,18 +29,19 @@ class AffectSession {
   std::stack<std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>>> m_last_modified_map_stack;
   std::unordered_map<std::string, std::unordered_set<std::string>> m_last_modified_star_map;
   bool m_is_affect_star_involved;
+  std::stack<std::shared_ptr<source::CfgNode>> m_terminating_node_stack;
 
  private:
   std::unordered_set<std::string> GetVarModByStmt(std::string &stmt_no);
   std::unordered_set<std::string> GetVarUsedByStmt(std::string &stmt_no);
   std::string GetFollowingOf(std::string &stmt_no);
   void TraverseCfg();
-  void TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node, std::shared_ptr<source::CfgNode> &terminating_node);
+  void TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node);
   void HandleAssignStatement(std::string stmt_no);
   void HandleReadStatement(std::string stmt_no);
   void HandleCallStatement(std::string stmt_no);
   void HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_node);
-  void HandleIfStatement(std::string stmt_no, std::shared_ptr<source::CfgNode> &cfg_node, std::shared_ptr<source::CfgNode> &terminating_node);
+  void HandleIfStatement(std::string stmt_no, std::shared_ptr<source::CfgNode> &cfg_node);
 
  public:
   explicit AffectSession(std::shared_ptr<AffectStore> affects_store, bool is_affect_star_involved);
