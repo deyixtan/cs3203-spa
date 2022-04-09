@@ -1,5 +1,5 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECT_SESSION_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECT_SESSION_H_
+#ifndef AFFECT_SESSION_H
+#define AFFECT_SESSION_H
 
 #include <memory>
 #include <string>
@@ -63,7 +63,7 @@ class AffectSession {
                                                                                                          StmtType type2);
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECT_SESSION_H_
+#endif //AFFECT_SESSION_H
 
 // Notes:
 
