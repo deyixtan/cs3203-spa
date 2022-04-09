@@ -1,5 +1,5 @@
-#ifndef STATEMENT_STORE_H_
-#define STATEMENT_STORE_H_
+#ifndef STMT_VAR_STORE_H
+#define STMT_VAR_STORE_H
 
 #include "store.h"
 
@@ -24,4 +24,4 @@ class StmtVarStore : public Store {
   [[nodiscard]] IDENT_SET GetAllProc();
 };
 
-#endif //STATEMENT_STORE_H_
+#endif //STMT_VAR_STORE_H

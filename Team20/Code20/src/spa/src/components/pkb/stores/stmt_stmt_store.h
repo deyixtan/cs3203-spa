@@ -1,5 +1,5 @@
-#ifndef FOLLOWS_PARENT_STORE_H
-#define FOLLOWS_PARENT_STORE_H
+#ifndef STMT_STMT_STORE_H
+#define STMT_STMT_STORE_H
 
 #include "store.h"
 
@@ -40,4 +40,4 @@ class StmtStmtStore : public Store {
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllStarPairs();
 };
 
-#endif //FOLLOWS_PARENT_STORE_H
+#endif //STMT_STMT_STORE_H
