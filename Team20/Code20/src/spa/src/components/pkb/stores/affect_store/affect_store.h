@@ -1,6 +1,5 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECTS_STORE_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECTS_STORE_H_
-
+#ifndef AFFECT_STORE_H
+#define AFFECT_STORE_H
 
 #include <memory>
 #include <string>
@@ -33,15 +32,12 @@ class AffectStore : public Store {
   [[nodiscard]] bool DoesAffectSessionExist();
   [[nodiscard]] std::shared_ptr<AffectSession> GetAffectSession();
   void ComputeAffectSession();
+  void ComputeAffectSession(bool is_affect_star_involved);
   void ClearAffectSession();
   [[nodiscard]] std::shared_ptr<source::Cfg> GetProgramCfg();
   [[nodiscard]] std::shared_ptr<ModifiesStore> GetModifyStore();
   [[nodiscard]] std::shared_ptr<UsesStore> GetUsageStore();
   [[nodiscard]] std::shared_ptr<FollowsStore> GetFollowsStore();
-//  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmtHelper(
-//      std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs, StmtType type);
-//  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllAffectsStmtHelper(
-//      std::unordered_set<std::pair<std::string, std::string>, pair_hash> all_affects_pairs, StmtType type1, StmtType type2);
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_AFFECTS_STORE_H_
+#endif //AFFECT_STORE_H
