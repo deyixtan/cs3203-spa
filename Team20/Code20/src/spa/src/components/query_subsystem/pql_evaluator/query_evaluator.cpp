@@ -51,7 +51,8 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, std::list<std::string> &result
   }
 
   pkb->GetAffectsStore()->ClearAffectsSession();
-  pkb->GetNextStore()->WipeStar();
+  pkb->GetNextStore()->ClearNextStarCache();
+
 }
 
 std::queue<std::unique_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query) {

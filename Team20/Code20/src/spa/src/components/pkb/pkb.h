@@ -16,6 +16,7 @@
 #include "components/pkb/stores/affects_store/affects_store.h"
 #include "components/pkb/stores/pattern_store/expression_tree/expression_tree.h"
 #include "../source_subsystem/types/cfg/cfg.h"
+#include "components/pkb/stores/next_store/next_store.h"
 
 class PKB {
  private:

@@ -570,15 +570,6 @@ TEST_CASE("Get follows of a stmt") {
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Get follows star of a stmt") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "2");
-  auto expected = follows_rs.at("2").following_star;
-
-  REQUIRE(actual == expected);
-}
-
 /* PARENT STORE */
 TEST_CASE("Checks if a parent-child pair relationship Valid") {
   PKB *pkb = set_up_pkb();

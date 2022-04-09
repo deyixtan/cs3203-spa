@@ -121,6 +121,14 @@ void PkbClient::PopulateProc(String name) {
   m_pkb->AddStmt(name, PROC);
 }
 
+void PkbClient::PopulateProcFirstStmt(std::string proc_name, std::string stmt) {
+  m_pkb->GetNextStore()->AddFirstStmtProc(proc_name, stmt);
+}
+
+void PkbClient::PopulateProcLastStmt(std::string proc_name, std::string stmt) {
+  m_pkb->GetNextStore()->AddLastStmtProc(proc_name, stmt);
+}
+
 void PkbClient::PopulateName(String name, StmtType type) {
   m_pkb->AddName(name, type);
 }
