@@ -30,7 +30,8 @@ void CfgBuilder::IterateCfg() {
   StringToCfgNodePtrMap cfg_map = m_pkb_client->GetProgramCfg()->GetCfgMap();
   for (auto &cfg : cfg_map) {
     CfgNodePtr cfg_head = cfg.second; // root node of cfg
-    CfgProcessHandler(cfg_head, node_stack, prev_stmts, visited, next_map);
+    String proc_name = cfg.first;
+    CfgProcessHandler(cfg_head, node_stack, prev_stmts, visited, next_map, proc_name);
   }
 }
 
@@ -153,8 +154,12 @@ void CfgBuilder::CfgProcessHandler(CfgNodePtr &curr_proc,
                                    CfgNodeStack &node_stack,
                                    CfgNodeStatementStream &prev_stmts,
                                    CfgNodeSet &visited,
-                                   StringToStringSetMap &next_map) {
+                                   StringToStringSetMap &next_map,
+                                   String proc_name) {
   node_stack.push(curr_proc);
+  CfgNodeStatementStream first_block = curr_proc->GetStatementList();
+  m_pkb_client->PopulateProcFirstStmt(proc_name, first_block.begin()->stmt_no);
+  std::string max_stmt_no = "0";
 
   // per cfg logic
   while (!node_stack.empty()) {
@@ -174,7 +179,7 @@ void CfgBuilder::CfgProcessHandler(CfgNodePtr &curr_proc,
     }
 
     // node with more than one statement
-    MultipleStmtsNodeHandler(curr_stmts, next_map);
+    MultipleStmtsNodeHandler(curr_stmts, next_map, max_stmt_no);
 
     // recurse until next_node.front() != dummy node
     while (!next_nodes.empty() && next_nodes.front()->GetStatementList().empty()) {
@@ -182,16 +187,23 @@ void CfgBuilder::CfgProcessHandler(CfgNodePtr &curr_proc,
     }
 
     for (auto &desc : next_nodes) {
-      NextNodeHandler(desc, node_stack, curr_stmts, visited, next_map);
+      NextNodeHandler(desc, node_stack, curr_stmts, visited, next_map, max_stmt_no);
     }
   }
+  m_pkb_client->PopulateProcLastStmt(proc_name, max_stmt_no);
 }
 
-void CfgBuilder::MultipleStmtsNodeHandler(CfgNodeStatementStream &curr_stmts, StringToStringSetMap &next_map) {
+void CfgBuilder::MultipleStmtsNodeHandler(CfgNodeStatementStream &curr_stmts, StringToStringSetMap &next_map, std::string &max_stmt_no) {
   int start = 0;
   int next = 1;
   while (curr_stmts.size() > next) {
     m_pkb_client->PopulateNext(curr_stmts[start].stmt_no, curr_stmts[next].stmt_no);
+    if(stoi(curr_stmts[next].stmt_no) > stoi(max_stmt_no)) {
+      max_stmt_no = curr_stmts[next].stmt_no;
+    }
+    if(stoi(curr_stmts[start].stmt_no) > stoi(max_stmt_no)) {
+      max_stmt_no = curr_stmts[start].stmt_no;
+    }
     start++;
     next++;
   }
@@ -201,7 +213,8 @@ void CfgBuilder::NextNodeHandler(CfgNodePtr &desc,
                                  CfgNodeStack &node_stack,
                                  CfgNodeStatementStream &curr_stmts,
                                  CfgNodeSet &visited,
-                                 StringToStringSetMap &next_map) {
+                                 StringToStringSetMap &next_map,
+                                 std::string &max_stmt_no) {
   if (!curr_stmts.empty()) {
     // force desc to legit node
     while (desc->GetStatementList().empty() && !desc->GetNextList().empty()) {
@@ -211,6 +224,9 @@ void CfgBuilder::NextNodeHandler(CfgNodePtr &desc,
     CfgNodeStatementStream next_stmts = desc->GetStatementList();
     if (!next_stmts.empty()) {
       m_pkb_client->PopulateNext(curr_stmts[curr_stmts.size() - 1].stmt_no, next_stmts.front().stmt_no);
+      if(stoi(next_stmts.front().stmt_no) > stoi(max_stmt_no)) {
+        max_stmt_no = next_stmts.front().stmt_no;
+      }
     }
   }
 
