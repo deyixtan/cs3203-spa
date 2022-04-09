@@ -4,7 +4,7 @@ StmtVarStore::StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::s
                            std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) : Store(
     move(stmt_vector), move(stmt_type)) {}
 
-void StmtVarStore::AddStmtVar(std::string stmt, std::string var) {
+void StmtVarStore::AddStmtVar(IDENT stmt, IDENT var) {
   StmtType type;
 
   if (isalpha(stmt.at(0))) {
@@ -23,7 +23,7 @@ void StmtVarStore::AddStmtVar(std::string stmt, std::string var) {
   AddStmtVarHelper(type, stmt, var);
 }
 
-void StmtVarStore::AddStmtVarHelper(StmtType type, std::string stmt, std::string var) {
+void StmtVarStore::AddStmtVarHelper(StmtType type, IDENT stmt, IDENT var) {
   if (!stmt_var_map.emplace(stmt, std::unordered_set<std::string>{var}).second) {
     stmt_var_map.at(stmt).emplace(var);
   }
@@ -48,7 +48,7 @@ void StmtVarStore::AddStmtVarHelper(StmtType type, std::string stmt, std::string
   }
 }
 
-bool StmtVarStore::IsStmtVarValid(std::pair<std::string, std::string> const &pair) {
+bool StmtVarStore::IsStmtVarValid(IDENT_PAIR const &pair) {
   if (stmt_var_map.find(pair.first) != stmt_var_map.end()) {
     if (stmt_var_map.at(pair.first).find(pair.second) != stmt_var_map.at(pair.first).end()) {
       return true;
@@ -57,14 +57,14 @@ bool StmtVarStore::IsStmtVarValid(std::pair<std::string, std::string> const &pai
   return false;
 }
 
-std::unordered_set<std::string> StmtVarStore::GetVarByStmt(std::string const &stmt) {
+std::unordered_set<std::string> StmtVarStore::GetVarByStmt(IDENT const &stmt) {
   if (stmt_var_map.find(stmt) != stmt_var_map.end()) {
     return stmt_var_map.at(stmt);
   }
   return {};
 }
 
-std::unordered_set<std::string> StmtVarStore::GetStmtByVar(StmtType type, std::string const &var) {
+std::unordered_set<std::string> StmtVarStore::GetStmtByVar(StmtType type, IDENT const &var) {
   if (var_stmt_map.find(var) != var_stmt_map.end()) {
     if (var_stmt_map.at(var).find(type) != var_stmt_map.at(var).end()) {
       return var_stmt_map.at(var).at(type);

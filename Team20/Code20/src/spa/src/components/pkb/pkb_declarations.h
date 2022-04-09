@@ -43,6 +43,8 @@ typedef std::pair<IDENT, IDENT> IDENT_PAIR;
 typedef std::unordered_map<IDENT, IDENT_SET> IDENT_SET_MAP;
 typedef std::unordered_map<IDENT, IDENT_PAIR> IDENT_PAIR_MAP;
 typedef std::vector<IDENT_PAIR> IDENT_PAIR_VECTOR;
+typedef std::unordered_map<StmtType, IDENT_PAIR_VECTOR> IDENT_PAIR_VECTOR_MAP;
+typedef std::unordered_map<std::string, std::unordered_map<StmtType, IDENT_SET>> NESTED_VAR_STMT_MAP;
 typedef std::unordered_map<StmtType, std::unordered_map<StmtType, PkbRelationship>> NESTED_STMT_STMT_MAP;
 typedef std::shared_ptr<NESTED_STMT_STMT_MAP> NESTED_STMT_STMT_MAP_PTR;
 
