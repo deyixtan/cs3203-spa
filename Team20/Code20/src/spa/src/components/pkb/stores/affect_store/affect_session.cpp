@@ -280,10 +280,20 @@ void AffectSession::HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_n
 
   // traverse twice to populate modified table properly
   m_last_modified_star_map_stack.push(last_modified_map_clone);
+
   TraverseCfg(start_node, end_node);
+  int affect_star_pairs_size_prev = GetAffectsStarPairs().size();
   TraverseCfg(start_node, end_node);
+  int affect_star_pairs_size_curr = GetAffectsStarPairs().size();
+
+  while (affect_star_pairs_size_curr != affect_star_pairs_size_prev) {
+    affect_star_pairs_size_prev = affect_star_pairs_size_curr;
+    TraverseCfg(start_node, end_node);
+    affect_star_pairs_size_curr = GetAffectsStarPairs().size();
+  }
   m_last_modified_star_map_stack.pop();
 
+  //
   // merge last_modified_map_clone into last_modified_map
   for (auto const &last_modified : *(last_modified_map_clone)) {
     std::string var_name = last_modified.first;
