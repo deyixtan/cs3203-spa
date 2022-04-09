@@ -1,9 +1,4 @@
 #include "stmt_stmt_store.h"
-#include "components/pkb/stores/follows_store/follows_store.h"
-#include "components/pkb/stores/parent_store/parent_store.h"
-#include <set>
-#include <queue>
-
 
 StmtStmtStore::StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                              std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type)
@@ -69,7 +64,7 @@ void StmtStmtStore::AddFollows(bool is_star,
     all_pairs.push_back({upper, lower});
   } else {
     all_star_pairs.push_back({upper, lower});
-    ExhaustiveAddSubStmt(type1, upper, type2, lower, &star_type_pair_map);
+    ExhaustiveAddAllStmt(type1, upper, type2, lower, true);
   }
 }
 
