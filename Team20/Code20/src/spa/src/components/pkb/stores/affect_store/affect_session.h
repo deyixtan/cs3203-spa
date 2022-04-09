@@ -25,6 +25,7 @@ class AffectSession {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_star_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_same_affects_pairs; // for same synonym
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_same_affects_star_pairs; // for same synonym
+  std::unordered_map<std::string, std::unordered_set<std::string>> m_last_modified_star_map;
 
  private:
   std::unordered_set<std::string> GetVarModByStmt(std::string stmt_no);
