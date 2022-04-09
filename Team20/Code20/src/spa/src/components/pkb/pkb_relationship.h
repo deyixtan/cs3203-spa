@@ -1,7 +1,7 @@
 #ifndef PKB_RELATIONSHIP_H
 #define PKB_RELATIONSHIP_H
 
-#include "common.h"
+#include "pkb_declarations.h"
 
 #include <string>
 #include <unordered_set>

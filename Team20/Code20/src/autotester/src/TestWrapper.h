@@ -7,7 +7,7 @@
 
 // include your other headers here
 #include "AbstractWrapper.h"
-#include "components/pkb/common.h"
+#include "components/pkb/pkb_declarations.h"
 #include "components/query_subsystem/query_controller.h"
 #include "components/source_subsystem/source_controller.h"
 #include "components/source_subsystem/source_declarations.h"

@@ -8,7 +8,7 @@
 #include <memory>
 #include <algorithm>
 
-#include "../common.h"
+#include "../pkb_declarations.h"
 #include "../../../utils/pair_hash.h"
 
 class Store {
