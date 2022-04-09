@@ -1,9 +1,10 @@
 #include "affect_session.h"
 #include "../../../source_subsystem/types/cfg/cfg_node.h"
 
-AffectSession::AffectSession(std::shared_ptr<AffectStore> affects_store) :
+AffectSession::AffectSession(std::shared_ptr<AffectStore> affects_store, bool is_affect_star_involved) :
     m_affects_store(std::move(affects_store)),
-    m_last_modified_star_map(std::unordered_map<std::string, std::unordered_set<std::string>>()) {
+    m_last_modified_star_map(std::unordered_map<std::string, std::unordered_set<std::string>>()),
+    m_is_affect_star_involved(is_affect_star_involved) {
   TraverseCfg();
 }
 
@@ -184,48 +185,49 @@ void AffectSession::HandleAssignStatement(std::string stmt_no) {
           m_same_affects_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
         }
 
-        if (m_affects_star_map.count(last_mod_stmt_no) == 0) {
-          m_affects_star_map.insert({last_mod_stmt_no, std::unordered_set<std::string>()});
-        }
-        m_affects_star_map.at(last_mod_stmt_no).insert(stmt_no);
-        // update affects star (m_affects_star_reverse_map)
-        if (m_affects_star_reverse_map.count(stmt_no) == 0) {
-          m_affects_star_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
-        }
-        m_affects_star_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
-        // update affects star (m_all_affects_star_pairs)
-        m_all_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
-        if (last_mod_stmt_no == stmt_no) {
-          m_same_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
-        }
-
-        if (m_last_modified_star_map.count(stmt_no) == 0) {
-          m_last_modified_star_map.insert({stmt_no, std::unordered_set<std::string>()});
-        }
-        m_last_modified_star_map.at(stmt_no).insert(last_mod_stmt_no);
-
-        for (const auto &p : m_last_modified_star_map[last_mod_stmt_no]) {
-          if (m_affects_star_map.count(p) == 0) {
-            m_affects_star_map.insert({p, std::unordered_set<std::string>()});
+        if (m_is_affect_star_involved) {
+          if (m_affects_star_map.count(last_mod_stmt_no) == 0) {
+            m_affects_star_map.insert({last_mod_stmt_no, std::unordered_set<std::string>()});
           }
-          m_affects_star_map.at(p).insert(stmt_no);
+          m_affects_star_map.at(last_mod_stmt_no).insert(stmt_no);
           // update affects star (m_affects_star_reverse_map)
           if (m_affects_star_reverse_map.count(stmt_no) == 0) {
             m_affects_star_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
           }
-          m_affects_star_reverse_map.at(stmt_no).insert(p);
+          m_affects_star_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
           // update affects star (m_all_affects_star_pairs)
-          m_all_affects_star_pairs.insert(std::make_pair(p, stmt_no));
-          if (p == stmt_no) {
-            m_same_affects_star_pairs.insert(std::make_pair(p, stmt_no));
+          m_all_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
+          if (last_mod_stmt_no == stmt_no) {
+            m_same_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
           }
 
           if (m_last_modified_star_map.count(stmt_no) == 0) {
             m_last_modified_star_map.insert({stmt_no, std::unordered_set<std::string>()});
           }
-          m_last_modified_star_map.at(stmt_no).insert(p);
-        }
+          m_last_modified_star_map.at(stmt_no).insert(last_mod_stmt_no);
 
+          for (const auto &p : m_last_modified_star_map[last_mod_stmt_no]) {
+            if (m_affects_star_map.count(p) == 0) {
+              m_affects_star_map.insert({p, std::unordered_set<std::string>()});
+            }
+            m_affects_star_map.at(p).insert(stmt_no);
+            // update affects star (m_affects_star_reverse_map)
+            if (m_affects_star_reverse_map.count(stmt_no) == 0) {
+              m_affects_star_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
+            }
+            m_affects_star_reverse_map.at(stmt_no).insert(p);
+            // update affects star (m_all_affects_star_pairs)
+            m_all_affects_star_pairs.insert(std::make_pair(p, stmt_no));
+            if (p == stmt_no) {
+              m_same_affects_star_pairs.insert(std::make_pair(p, stmt_no));
+            }
+
+            if (m_last_modified_star_map.count(stmt_no) == 0) {
+              m_last_modified_star_map.insert({stmt_no, std::unordered_set<std::string>()});
+            }
+            m_last_modified_star_map.at(stmt_no).insert(p);
+          }
+        }
       }
     }
   }

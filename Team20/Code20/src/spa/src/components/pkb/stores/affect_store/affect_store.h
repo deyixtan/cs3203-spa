@@ -32,6 +32,7 @@ class AffectStore : public Store {
   [[nodiscard]] bool DoesAffectSessionExist();
   [[nodiscard]] std::shared_ptr<AffectSession> GetAffectSession();
   void ComputeAffectSession();
+  void ComputeAffectSession(bool is_affect_star_involved);
   void ClearAffectSession();
   [[nodiscard]] std::shared_ptr<source::Cfg> GetProgramCfg();
   [[nodiscard]] std::shared_ptr<ModifiesStore> GetModifyStore();

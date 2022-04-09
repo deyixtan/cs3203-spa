@@ -28,6 +28,7 @@ class AffectSession {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_same_affects_star_pairs; // for same synonym
   std::stack<std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>>> m_last_modified_star_map_stack;
   std::unordered_map<std::string, std::unordered_set<std::string>> m_last_modified_star_map;
+  bool m_is_affect_star_involved;
 
  private:
   std::unordered_set<std::string> GetVarModByStmt(std::string &stmt_no);
@@ -42,7 +43,7 @@ class AffectSession {
   void HandleIfStatement(std::string stmt_no, std::shared_ptr<source::CfgNode> &cfg_node, std::shared_ptr<source::CfgNode> &terminating_node);
 
  public:
-  explicit AffectSession(std::shared_ptr<AffectStore> affects_store);
+  explicit AffectSession(std::shared_ptr<AffectStore> affects_store, bool is_affect_star_involved);
   [[nodiscard]] bool IsAffected(std::string const &stmt);
   [[nodiscard]] bool IsAffectedStar(std::string const &stmt);
   [[nodiscard]] bool IsAffecting(std::string const &stmt);
