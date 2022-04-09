@@ -6,14 +6,12 @@
 class ParentStore;
 
 class StmtStmtStore : public Store {
- private:
+ protected:
   NESTED_TUPLE_MAP type_pair_map;
   NESTED_TUPLE_MAP star_type_pair_map;
   std::shared_ptr<ParentStore> m_parent_store;
   IDENT_PAIR_VECTOR all_pairs;
   IDENT_PAIR_VECTOR all_star_pairs;
-  std::string SMALLEST_STMT_NO = "0";
-  std::string LARGEST_STMT_NO = "501";
 
  public:
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
@@ -21,7 +19,6 @@ class StmtStmtStore : public Store {
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                                std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
                                std::shared_ptr<ParentStore> parent_store);
-  void ClearNextStarCache();
   void AddUpperLower(StoreType store_type, IDENT const &upper, IDENT const &lower);
   void AddUpperLowerStar(StoreType store_type, IDENT const &upper, IDENT const &lower, IDENT_VECTOR const &visited);
   void AddFollows(bool is_star, StmtType type1, IDENT const &upper, StmtType type2, IDENT const &lower);
@@ -31,10 +28,8 @@ class StmtStmtStore : public Store {
   void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_TUPLE_MAP *pair_map);
   void ExhaustiveAddAllStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, bool is_star);
   void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_TUPLE_MAP *pair_map);
-  void WipeNextStar();
   [[nodiscard]] bool IsValid(IDENT_PAIR const &pair);
   [[nodiscard]] bool IsStarValid(IDENT_PAIR const &pair);
-  [[nodiscard]] bool IsNextStarPairValid(IDENT_PAIR const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetHelper(StmtType type1, StmtType type2, int index, IDENT const &stmt, bool is_star);
   [[nodiscard]] IDENT GetUpperOf(StmtType stmt_type, IDENT const &stmt);
   [[nodiscard]] IDENT GetLowerOf(StmtType stmt_type, IDENT const &stmt);
@@ -46,9 +41,6 @@ class StmtStmtStore : public Store {
   [[nodiscard]] IDENT_PAIR_VECTOR GetStarPairByType(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllPairs();
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllStarPairs();
-  [[nodiscard]] IDENT_PAIR_VECTOR GetAllNextStarPairs(std::unordered_map<std::string, std::vector<std::string>> stmt_list);
-  void GetLowerStarOfHelper(IDENT const &stmt, IDENT_SET &res, std::unordered_map<std::string, std::vector<std::string>> stmt_list);
-  void GetUpperStarOfHelper(IDENT const &stmt, IDENT_SET &res, std::unordered_map<std::string, std::vector<std::string>> stmt_list);
 };
 
 #endif //FOLLOWS_PARENT_STORE_H
