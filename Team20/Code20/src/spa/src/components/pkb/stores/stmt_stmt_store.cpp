@@ -196,11 +196,11 @@ bool StmtStmtStore::IsStarValid(IDENT_PAIR const &pair) {
   return std::find(all_star_pairs.begin(), all_star_pairs.end(), pair) != all_star_pairs.end();
 }
 
-std::unordered_set<std::string> StmtStmtStore::GetHelper(StmtType type1,
-                                                         StmtType type2,
-                                                         int index,
-                                                         std::string const &stmt,
-                                                         bool is_star) {
+IDENT_SET StmtStmtStore::GetHelper(StmtType type1,
+                                   StmtType type2,
+                                   int index,
+                                   std::string const &stmt,
+                                   bool is_star) {
 
   NESTED_STMT_STMT_MAP *pair_map;
 
@@ -228,7 +228,11 @@ std::string StmtStmtStore::GetUpperOf(StmtType stmt_type, std::string const &stm
   //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);
 
   if (IsMapContains(stmt_type, STMT, &type_pair_map) == 1) {
-    return GetHelper(stmt_type, STMT, 1, stmt, false).empty() ? "0" : *(GetHelper(stmt_type, STMT, 1, stmt, false).begin());
+    return GetHelper(stmt_type, STMT, 1, stmt, false).empty() ? "0" : *(GetHelper(stmt_type,
+                                                                                  STMT,
+                                                                                  1,
+                                                                                  stmt,
+                                                                                  false).begin());
   }
   return "0";
 }
@@ -237,12 +241,18 @@ std::string StmtStmtStore::GetLowerOf(StmtType stmt_type, std::string const &stm
   //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);
 
   if (IsMapContains(STMT, stmt_type, &type_pair_map) == 1) {
-    return GetHelper(STMT, stmt_type, 0, stmt, false).empty() ? "0" : *(GetHelper(STMT, stmt_type, 0, stmt, false).begin());
+    return GetHelper(STMT, stmt_type, 0, stmt, false).empty() ? "0" : *(GetHelper(STMT,
+                                                                                  stmt_type,
+                                                                                  0,
+                                                                                  stmt,
+                                                                                  false).begin());
   }
   return "0";
 }
 
-std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_type, StmtType stmt_type, std::string const &stmt) {
+std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_type,
+                                                             StmtType stmt_type,
+                                                             std::string const &stmt) {
   StmtType rs_type = PROC;
   if (store_type == NEXT) {
     rs_type = STMT;
@@ -256,7 +266,9 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_typ
   return {};
 }
 
-std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType store_type, StmtType stmt_type, std::string const &stmt) {
+std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType store_type,
+                                                             StmtType stmt_type,
+                                                             std::string const &stmt) {
   //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);
 
   if (IsMapContains(STMT, stmt_type, &type_pair_map) == 1) {
@@ -268,7 +280,6 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType store_typ
 std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType store_type,
                                                               StmtType stmt_type,
                                                               std::string const &stmt) {
-
 
   if (star_type_pair_map.find(stmt_type) != star_type_pair_map.end()) {
     if (star_type_pair_map.at(stmt_type).find(STMT) != star_type_pair_map.at(stmt_type).end()) {

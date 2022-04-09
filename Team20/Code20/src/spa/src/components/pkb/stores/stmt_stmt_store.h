@@ -25,11 +25,11 @@ class StmtStmtStore : public Store {
   void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_STMT_STMT_MAP *pair_map);
   void ExhaustiveAddAllStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, bool is_star);
   void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_STMT_STMT_MAP *pair_map);
-  [[nodiscard]] bool IsValid(IDENT_PAIR const &pair); //Affects(1, 2)
-  [[nodiscard]] bool IsStarValid(IDENT_PAIR const &pair); //Affects*(1, 2)
-  [[nodiscard]] std::unordered_set<std::string> GetHelper(StmtType type1, StmtType type2, int index, IDENT const &stmt, bool is_star);
+  [[nodiscard]] bool IsValid(IDENT_PAIR const &pair);
+  [[nodiscard]] bool IsStarValid(IDENT_PAIR const &pair);
   [[nodiscard]] IDENT GetUpperOf(StmtType stmt_type, IDENT const &stmt);
   [[nodiscard]] IDENT GetLowerOf(StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetHelper(StmtType type1, StmtType type2, int index, IDENT const &stmt, bool is_star);
   [[nodiscard]] IDENT_SET GetUpperSetOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetLowerSetOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetUpperStarOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
