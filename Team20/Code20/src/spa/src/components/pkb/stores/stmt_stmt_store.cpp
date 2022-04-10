@@ -32,13 +32,16 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
   switch (IsMapContains(type1, type2, pair_map)) {
     case 1: // Both types exist
       PopulatePairMap(type1, upper, type2, lower, pair_map);
+      break;
     case 2: // Only type 1 exists
       pair_map->at(type1).insert({type2, PkbRelationship()});
       PopulatePairMap(type1, upper, type2, lower, pair_map);
+      break;
     case 3: // Both types missing
       pair_map->insert({type1, {}});
       pair_map->at(type1).insert({type2, PkbRelationship()});
       PopulatePairMap(type1, upper, type2, lower, pair_map);
+      break;
   }
 }
 

@@ -12,6 +12,9 @@ NextTClause::NextTClause(const std::unordered_map<std::string, DesignEntityType>
     : declarations(declarations), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table NextTClause::Execute() {
+  if (!pkb->GetNextStore()->IsNextStoreComputed()) {
+    pkb->GetNextStore()->ComputeNextStore();
+  }
   return (this->*execute_handler.at({first_arg.type, second_arg.type}))();
 }
 
@@ -88,6 +91,9 @@ Table NextTClause::HandleIntegerInteger() {
 }
 
 bool NextTClause::ExecuteBool() {
+  if (!pkb->GetNextStore()->IsNextStoreComputed()) {
+    pkb->GetNextStore()->ComputeNextStore();
+  }
   return (this->*execute_bool_handler.at({first_arg.type, second_arg.type}))();
 }
 
