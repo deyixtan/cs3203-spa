@@ -5,68 +5,6 @@ StmtStmtStore::StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std:
                              std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type)
     : Store(move(stmt_vector), move(stmt_type)) {}
 
-void StmtStmtStore::AddUpperLower(StoreType store_type,
-                                  std::string const &upper,
-                                  std::string const &lower) {
-  StmtType type1 = PROC;
-  StmtType type2 = PROC;
-
-  if (store_type == CALLS) {
-    AddCalls(false, upper, lower);
-  } else {
-    type1 = m_stmt_type->at(upper);
-    type2 = m_stmt_type->at(lower);
-  }
-
-  ExhaustiveAddAllStmt(type1, upper, type2, lower, false);
-}
-
-void StmtStmtStore::AddUpperLowerStar(StoreType store_type,
-                                      std::string const &upper,
-                                      std::string const &lower,
-                                      std::vector<std::string> const &visited) {
-
-  StmtType type1, type2;
-
-  if (store_type == CALLS) {
-    type1 = PROC;
-    type2 = PROC;
-  } else if (store_type == PARENT) {
-    type2 = m_stmt_type->at(lower);
-  } else {
-    type1 = m_stmt_type->at(lower);
-    type2 = m_stmt_type->at(upper);
-  }
-
-  if (store_type == CALLS) {
-    AddCalls(true, upper, lower);
-  }
-}
-
-void StmtStmtStore::AddCalls(bool is_star, std::string const &upper, std::string const &lower) {
-  if (!is_star) {
-    all_pairs.push_back({upper, lower});
-    return;
-  }
-
-  all_star_pairs.push_back(std::pair<std::string, std::string>(upper, lower));
-  ExhaustiveAddAllStmt(PROC, upper, PROC, lower, true);
-  //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(star_type_pair_map);
-
-  if (IsMapContains(PROC, PROC, &star_type_pair_map) == 1) {
-    for (auto &pair : star_type_pair_map.at(PROC).at(PROC).GetPairVector()) {
-      if (upper == pair.second) {
-        all_star_pairs.push_back({pair.first, lower});
-        ExhaustiveAddAllStmt(PROC, pair.first, PROC, lower, true);
-      }
-      if (lower == pair.first) {
-        all_star_pairs.push_back({upper, pair.second});
-        ExhaustiveAddAllStmt(PROC, upper, PROC, pair.second, true);
-      }
-    }
-  }
-}
-
 void StmtStmtStore::ExhaustiveAddAllStmt(StmtType type1,
                                          std::string upper,
                                          StmtType type2,

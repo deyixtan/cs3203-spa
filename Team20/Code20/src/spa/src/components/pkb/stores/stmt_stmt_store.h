@@ -16,9 +16,6 @@ class StmtStmtStore : public Store {
  public:
   explicit StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                          std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
-  void AddUpperLower(StoreType store_type, IDENT const &upper, IDENT const &lower);
-  void AddUpperLowerStar(StoreType store_type, IDENT const &upper, IDENT const &lower, IDENT_VECTOR const &visited);
-  void AddCalls(bool is_star, IDENT const &upper, IDENT const &lower);
   void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_STMT_STMT_MAP *pair_map);
   void ExhaustiveAddAllStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, bool is_star);
   void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_STMT_STMT_MAP *pair_map);
