@@ -51,10 +51,11 @@ Table AffectsTClause::Execute() {
 }
 
 Table AffectsTClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsStarPairs();
   if (first_arg.value == second_arg.value) {
-    pair_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsStarSameSynPairs();
+    auto single_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsStarSameSynSet();
+    return {first_arg.value, single_constraints};
   }
+  auto pair_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsStarPairs();
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 

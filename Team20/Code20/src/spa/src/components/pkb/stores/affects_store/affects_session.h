@@ -10,14 +10,15 @@ class AffectsStore;
 class AffectsSession : StmtStmtStore {
  private:
   AffectsStorePtr m_affects_store;
-  IDENT_PAIR_VECTOR m_same_affects_pairs; // for same synonym
-  IDENT_PAIR_VECTOR m_same_affects_star_pairs; // for same synonym
+  bool m_is_affects_star_involved;
+  IDENT_SET m_same_affects_set; // for same synonym
+  IDENT_SET m_same_affects_star_set; // for same synonym
+  // keeps track of session states
   IDENT_PAIR_SET m_all_affects_pairs; // keeps track of duplication
   IDENT_PAIR_SET m_all_affects_star_pairs; // keeps track of duplication
   IDENT_SET_MAP_PTR_STACK m_last_modified_map_stack;
   IDENT_SET_MAP m_last_modified_star_map;
   std::stack<source::CfgNodePtr> m_terminating_node_stack;
-  bool m_is_affects_star_involved;
 
  private:
   [[nodiscard]] IDENT_SET GetVarModByStmt(IDENT &stmt_no);
@@ -48,8 +49,8 @@ class AffectsSession : StmtStmtStore {
   [[nodiscard]] IDENT_SET GetAffectsStarOf(IDENT const &stmt);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsPairs();
   [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsStarPairs();
-  [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsSameSynPairs();
-  [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsStarSameSynPairs();
+  [[nodiscard]] IDENT_SET GetAffectsSameSynSet();
+  [[nodiscard]] IDENT_SET GetAffectsStarSameSynSet();
 };
 
 #endif //AFFECTS_SESSION_H

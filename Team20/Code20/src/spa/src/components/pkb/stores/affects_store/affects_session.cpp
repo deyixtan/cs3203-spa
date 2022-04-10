@@ -1,5 +1,5 @@
 #include "affects_session.h"
-#include "../../../source_subsystem/types/cfg/cfg_node.h"
+#include "components/source_subsystem/types/cfg/cfg_node.h"
 
 AffectsSession::AffectsSession(IDENT_SET_VECTOR_PTR stmt_vector,
                                IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,
@@ -79,12 +79,12 @@ IDENT_PAIR_VECTOR AffectsSession::GetAffectsStarPairs() {
   return GetAllStarPairs();
 }
 
-IDENT_PAIR_VECTOR AffectsSession::GetAffectsSameSynPairs() {
-  return m_same_affects_pairs;
+IDENT_SET AffectsSession::GetAffectsSameSynSet() {
+  return m_same_affects_set;
 }
 
-IDENT_PAIR_VECTOR AffectsSession::GetAffectsStarSameSynPairs() {
-  return m_same_affects_star_pairs;
+IDENT_SET AffectsSession::GetAffectsStarSameSynSet() {
+  return m_same_affects_star_set;
 }
 
 // HELPER METHODS
@@ -169,7 +169,7 @@ void AffectsSession::HandleAssignStatement(IDENT stmt_no) {
         /////////////////
         // update affects same synonym
         if (last_mod_stmt_no == stmt_no) {
-          m_same_affects_pairs.push_back(std::make_pair(last_mod_stmt_no, stmt_no));
+          m_same_affects_set.insert(last_mod_stmt_no);
         }
 
         auto pair = std::make_pair(last_mod_stmt_no, stmt_no);
@@ -182,7 +182,7 @@ void AffectsSession::HandleAssignStatement(IDENT stmt_no) {
         if (m_is_affects_star_involved) {
           /////////////////
           if (last_mod_stmt_no == stmt_no) {
-            m_same_affects_star_pairs.push_back(std::make_pair(last_mod_stmt_no, stmt_no));
+            m_same_affects_star_set.insert(last_mod_stmt_no);
           }
 
           auto pair = std::make_pair(last_mod_stmt_no, stmt_no);
@@ -199,7 +199,7 @@ void AffectsSession::HandleAssignStatement(IDENT stmt_no) {
           for (const auto &p : m_last_modified_star_map[last_mod_stmt_no]) {
             /////////////////
             if (p == stmt_no) {
-              m_same_affects_star_pairs.push_back(std::make_pair(p, stmt_no));
+              m_same_affects_star_set.insert(p);
             }
 
             auto pair = std::make_pair(p, stmt_no);
