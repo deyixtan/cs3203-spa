@@ -102,7 +102,7 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
   if(ancestor_set.empty()) { // Not in while loop
     std::unordered_set<std::string> if_ancestor = m_parent_store->GetAllAnceOf(IF, stmt);
     if (!if_ancestor.empty()) {
-      InsertUpperResultForIf(first_proc_stmt_no, stmt, res, if_ancestor.size());
+      InsertUpperResultForIf(first_proc_stmt_no, stmt, stmt, res, if_ancestor.size());
     } else {
       InsertPairResultUpper(stoi(first_proc_stmt_no), stoi(stmt) - 1, res, stmt);
     }
@@ -119,7 +119,7 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
   // Check for if container
   std::unordered_set<std::string> if_ancestor = m_parent_store->GetAllAnceOf(IF, start_while_stmt);
   if (!if_ancestor.empty()) {
-    InsertUpperResultForIf(first_proc_stmt_no, start_while_stmt, res, if_ancestor.size());
+    InsertUpperResultForIf(first_proc_stmt_no, stmt, start_while_stmt, res, if_ancestor.size());
   } else {
     InsertPairResultUpper(stoi(first_proc_stmt_no), stoi(start_while_stmt) - 1, res, stmt);
   }
@@ -138,7 +138,7 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
         std::string end_else_stmt = GetEndElseStmt(stmt);
         InsertPairResultLower(stoi(stmt) + 1, stoi(end_else_stmt), res, stmt);
       }
-      InsertLowerResultForIf(last_proc_stmt_no, stmt, res, if_ancestor.size());
+      InsertLowerResultForIf(last_proc_stmt_no, stmt, stmt, LARGEST_STMT_NO, res, if_ancestor.size());
     } else {
       InsertPairResultLower(stoi(stmt) + 1, stoi(last_proc_stmt_no), res, stmt);
     }
@@ -155,42 +155,63 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
   // Check for if container
   std::unordered_set<std::string> if_ancestor = m_parent_store->GetAllAnceOf(IF, start_while_stmt);
   if (!if_ancestor.empty()) {
-    InsertLowerResultForIf(last_proc_stmt_no, start_while_stmt, res, if_ancestor.size());
+    InsertLowerResultForIf(last_proc_stmt_no, stmt, start_while_stmt, LARGEST_STMT_NO + "0", res, if_ancestor.size());
   } else {
     InsertPairResultLower(stoi(end_while_stmt) + 1, stoi(last_proc_stmt_no), res, stmt);
   }
 }
 
-void NextStore::InsertUpperResultForIf(std::string &first_proc_stmt_no, std::string const &stmt, std::unordered_set<std::string> &res, int nesting_level) {
+void NextStore::InsertUpperResultForIf(std::string &first_proc_stmt_no, std::string const &stmt, std::string const &prev_if_stmt, std::unordered_set<std::string> &res, int nesting_level) {
   if (nesting_level == 0) {
     InsertPairResultLower(stoi(first_proc_stmt_no), stoi(stmt) - 1, res, stmt);
   } else {
-    std::string if_stmt = m_parent_store->GetParentOf(IF, stmt);
+    std::string if_stmt = m_parent_store->GetParentOf(IF, prev_if_stmt);
     std::string first_else_stmt = GetFirstElseStmt(if_stmt);
     std::string end_else_stmt = GetEndElseStmt(if_stmt);
-    if (stoi(stmt) < stoi(first_else_stmt)) { // in the if block
-      InsertPairResultUpper(stoi(if_stmt), stoi(stmt) - 1, res, stmt);
+    if (stoi(prev_if_stmt) < stoi(first_else_stmt)) { // in the if block
+      if (prev_if_stmt == stmt) {
+        InsertPairResultUpper(stoi(if_stmt), stoi(stmt) - 1, res, stmt);
+      } else {
+        InsertPairResultUpper(stoi(if_stmt), stoi(prev_if_stmt) - 1, res, stmt);
+      }
     } else { // in the else block
       InsertPairResultLower(stoi(if_stmt), stoi(if_stmt), res, stmt);
-      InsertPairResultLower(stoi(first_else_stmt), stoi(stmt) - 1, res, stmt);
+      if (prev_if_stmt == stmt) {
+        InsertPairResultUpper(stoi(if_stmt), stoi(stmt) - 1, res, stmt);
+      } else {
+        InsertPairResultUpper(stoi(first_else_stmt), stoi(prev_if_stmt) - 1, res, stmt);
+      }
     }
-    InsertUpperResultForIf(first_proc_stmt_no, if_stmt, res, nesting_level - 1);
+    InsertUpperResultForIf(first_proc_stmt_no, stmt, if_stmt, res, nesting_level - 1);
   }
 }
 
-void NextStore::InsertLowerResultForIf(std::string &last_proc_stmt_no, std::string const &stmt, std::unordered_set<std::string> &res, int nesting_level) {
+void NextStore::InsertLowerResultForIf(std::string &last_proc_stmt_no,
+                                       std::string const &stmt,
+                                       std::string const &prev_if_stmt,
+                                       std::string const &prev_end_else_stmt,
+                                       std::unordered_set<std::string> &res,
+                                       int nesting_level) {
   if (nesting_level == 0) {
-    InsertPairResultLower(stoi(stmt) + 1, stoi(last_proc_stmt_no), res, stmt);
+    InsertPairResultLower(stoi(prev_end_else_stmt) + 1, stoi(last_proc_stmt_no), res, stmt);
   } else {
-    std::string if_stmt = m_parent_store->GetParentOf(IF, stmt);
+    std::string if_stmt = m_parent_store->GetParentOf(IF, prev_if_stmt);
     std::string first_else_stmt = GetFirstElseStmt(if_stmt);
     std::string end_else_stmt = GetEndElseStmt(if_stmt);
-    if (stoi(stmt) < stoi(first_else_stmt)) { // in the if block
-      InsertPairResultLower(stoi(stmt) + 1, stoi(first_else_stmt) - 1, res, stmt);
+    if (stoi(prev_if_stmt) < stoi(first_else_stmt)) { // in the if block
+      if (prev_end_else_stmt == LARGEST_STMT_NO) {
+        InsertPairResultLower(stoi(stmt) + 1, stoi(first_else_stmt) - 1, res, stmt);
+      } else {
+        InsertPairResultLower(stoi(prev_end_else_stmt) + 1, stoi(first_else_stmt) - 1, res, stmt);
+      }
     } else { // in the else block
-      InsertPairResultLower(stoi(stmt) + 1, stoi(end_else_stmt), res, stmt);
+      if (prev_end_else_stmt == LARGEST_STMT_NO) {
+        InsertPairResultLower(stoi(stmt) + 1, stoi(end_else_stmt), res, stmt);
+      } else {
+        InsertPairResultLower(stoi(prev_end_else_stmt) + 1, stoi(end_else_stmt), res, stmt);
+      }
     }
-    InsertLowerResultForIf(last_proc_stmt_no, end_else_stmt, res, nesting_level - 1);
+    InsertLowerResultForIf(last_proc_stmt_no, stmt, if_stmt, end_else_stmt, res, nesting_level - 1);
   }
 }
 
