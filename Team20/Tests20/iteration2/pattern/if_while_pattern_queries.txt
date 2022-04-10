@@ -1,7 +1,7 @@
 1 - Wildcard select if
 if ifs;
 Select ifs pattern ifs(_,_,_)
-1,2,3,9
+1,3,9
 5000
 2 - Literal select if
 if ifs;
@@ -21,7 +21,7 @@ a,b,x,y
 5 - Wildcard with random spaces
 if ifs; variable v;
 Select ifs pattern ifs(        _,        _,        _      )
-1,2,3,9
+1,3,9
 5000
 6 - Invalid synonym (negative)
 if ifs; constant v;
