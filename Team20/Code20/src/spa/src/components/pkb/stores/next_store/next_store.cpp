@@ -231,8 +231,9 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
       }
     }
 
-
+    if(stmt != last_stmt_no) {
     InsertPairResultLower(stoi(stmt) + 1, stoi(last_stmt_no), res, stmt);
+    }
     if(end_if_stmt != LARGEST_STMT_NO && stoi(last_stmt_no) + 1 < stoi(end_if_stmt)) {
       InsertPairResultLower(stoi(last_stmt_no) + 1, stoi(if_parent_stmt), res, stmt);
     }
