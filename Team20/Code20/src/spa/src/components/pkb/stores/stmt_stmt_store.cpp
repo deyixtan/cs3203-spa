@@ -153,25 +153,40 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
                                          StmtType type2,
                                          std::string lower,
                                          NESTED_TUPLE_MAP *pair_map) {
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
-  set.insert(std::pair<std::string, std::string>(upper, lower));
+
+  // TODO:
+  if (type1 == STMT && type2 == STMT) {
+
+  } else if (type1 == STMT) {
+
+  } else if (type2 == STMT) {
+
+  } else {
+
+  }
 
   if (pair_map->find(type1) != pair_map->end()) {
     if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
       PopulatePairMap(type1, upper, type2, lower, pair_map);
     } else {
       pair_map->at(type1).insert({type2, {{}, {}, {}}});
-      std::get<0>(pair_map->at(type1).at(type2)).insert({upper, {lower}});
-      std::get<1>(pair_map->at(type1).at(type2)).insert({lower, {upper}});
-      std::get<2>(pair_map->at(type1).at(type2)).push_back({upper, lower});
+      AddToNextMap(type1, upper, type2, lower, pair_map);
     }
   } else {
     pair_map->insert({type1, {}});
     pair_map->at(type1).insert({type2, {{}, {}, {}}});
-    std::get<0>(pair_map->at(type1).at(type2)).insert({upper, {lower}});
-    std::get<1>(pair_map->at(type1).at(type2)).insert({lower, {upper}});
-    std::get<2>(pair_map->at(type1).at(type2)).push_back({upper, lower});
+    AddToNextMap(type1, upper, type2, lower, pair_map);
   }
+}
+
+void StmtStmtStore::AddToNextMap(const StmtType &type1,
+                                 const std::string &upper,
+                                 const StmtType &type2,
+                                 const std::string &lower,
+                                 NESTED_TUPLE_MAP *pair_map) const {
+  std::get<0>(pair_map->at(type1).at(type2)).insert({upper, {lower}});
+  std::get<1>(pair_map->at(type1).at(type2)).insert({lower, {upper}});
+  std::get<2>(pair_map->at(type1).at(type2)).push_back({upper, lower});
 }
 
 void StmtStmtStore::PopulatePairMap(StmtType type1,

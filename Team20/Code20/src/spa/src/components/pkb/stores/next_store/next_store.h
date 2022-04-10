@@ -30,10 +30,15 @@ class NextStore : public StmtStmtStore {
   [[nodiscard]] IDENT_SET GetBeforeStarOf(StmtType type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetNextStarOf(StmtType type, IDENT const &stmt);
   [[nodiscard]] IDENT_PAIR_VECTOR GetNextPairs();
-  [[nodiscard]] IDENT_PAIR_VECTOR GetNextStarPairs();
+  [[nodiscard]] void GetNextStarPairs();
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllNextStmt(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_SET GetNextStarSameStmt(StmtType type);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllNextStarStmt(StmtType type1, StmtType type2);
+  std::string &GetFirstStmtOfProc(const std::string &stmt, std::string &first_stmt_no);
+  std::string &GetLastStmtOfProc(const std::string &stmt, std::string &last_stmt_no);
+  void InsertPairResult(int start, int end, std::unordered_set<std::string> &res, std::string const stmt);
+  std::string GetEndStmtOfWhileLoop(const std::string &smallest_stmt);
+  std::string GetStartStmtOfWhileLoop(std::unordered_set<std::string> &ansc_set) const;
 };
 
 #endif //NEXT_STORE_H

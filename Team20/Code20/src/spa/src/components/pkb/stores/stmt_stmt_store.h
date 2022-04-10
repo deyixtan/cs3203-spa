@@ -38,6 +38,11 @@ class StmtStmtStore : public Store {
   [[nodiscard]] IDENT_PAIR_VECTOR GetStarPairByType(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllPairs();
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllStarPairs();
+  void AddToNextMap(const StmtType &type1,
+                    const std::string &upper,
+                    const StmtType &type2,
+                    const std::string &lower,
+                    NESTED_TUPLE_MAP *pair_map) const;
 };
 
 #endif //FOLLOWS_PARENT_STORE_H
