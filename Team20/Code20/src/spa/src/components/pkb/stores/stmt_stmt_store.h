@@ -38,36 +38,6 @@ class StmtStmtStore : public Store {
   [[nodiscard]] IDENT_PAIR_VECTOR GetStarPairByType(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllPairs();
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllStarPairs();
-  void AddToNextMap(const StmtType &type1,
-                    const std::string &upper,
-                    const StmtType &type2,
-                    const std::string &lower,
-                    NESTED_TUPLE_MAP *pair_map) const;
-  void ExhaustiveAddStmtStmt(StmtType &type1,
-                             std::string &upper,
-                             StmtType &type2,
-                             std::string &lower,
-                             NESTED_TUPLE_MAP *pair_map);
-  void ExhaustiveAddStmtNonStmt(StmtType &type1,
-                                std::string &upper,
-                                StmtType &type2,
-                                std::string &lower,
-                                NESTED_TUPLE_MAP *pair_map);
-  void ExhaustiveAddNonStmtStmt(StmtType &type1,
-                                std::string &upper,
-                                StmtType &type2,
-                                std::string &lower,
-                                NESTED_TUPLE_MAP *pair_map);
-  void ExhaustiveAddNonStmtNonStmt(StmtType &type1,
-                                   std::string &upper,
-                                   StmtType &type2,
-                                   std::string &lower,
-                                   NESTED_TUPLE_MAP *pair_map);
-  void AddType2NonStmt(StmtType &type1,
-                       std::string &upper,
-                       StmtType &type2,
-                       std::string &lower,
-                       NESTED_TUPLE_MAP *pair_map);
 };
 
 #endif //FOLLOWS_PARENT_STORE_H
