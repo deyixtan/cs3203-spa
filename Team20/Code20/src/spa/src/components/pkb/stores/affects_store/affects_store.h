@@ -21,20 +21,20 @@ class AffectsStore : StmtStmtStore {
  private:
   [[nodiscard]] IDENT_SET GetVarModByStmt(IDENT &stmt_no);
   [[nodiscard]] IDENT_SET GetVarUsedByStmt(IDENT &stmt_no);
-  [[nodiscard]] int GetMaxPairSize();
-  void InsertToIdentSetMap(IDENT_SET_MAP &map, IDENT key, IDENT value);
-  void HandleAffectsLastModSet(IDENT stmt_no, IDENT var_used, IDENT_SET_MAP_PTR last_modified_map);
-  void HandleAffectsStarLastModSet(IDENT last_mod_stmt_no, IDENT stmt_no);
-  void HandleAffectsStarLastModStarSet(IDENT last_mod_stmt_no, IDENT stmt_no);
-  void AddAffects(bool is_star, IDENT upper, IDENT lower);
-  void UpdateModifiedTable(IDENT stmt_no, bool is_clear_only);
-  void MergeModifiedTable(IDENT_SET_MAP_PTR table1, IDENT_SET_MAP_PTR table2);
+  [[nodiscard]] unsigned int GetMaxPairSize();
+  static void InsertToIdentSetMap(IDENT_SET_MAP &map, IDENT &key, IDENT &value);
+  static void MergeModifiedTable(IDENT_SET_MAP_PTR &table1, IDENT_SET_MAP_PTR &table2);
+  void UpdateModifiedTable(IDENT &stmt_no, bool is_clear_only);
+  void HandleAffectsLastModSet(IDENT &stmt_no, IDENT &var_used, IDENT_SET_MAP_PTR &last_modified_map);
+  void HandleAffectsStarLastModSet(IDENT &last_mod_stmt_no, IDENT &stmt_no);
+  void HandleAffectsStarLastModStarSet(IDENT &last_mod_stmt_no, IDENT &stmt_no);
+  void AddAffects(bool is_star, IDENT &upper, IDENT &lower);
   void HandleCfg();
   void HandleCfg(source::CfgNodePtr &cfg_node);
-  void HandleAssignStatement(IDENT stmt_no);
-  void HandleModifiableStatement(IDENT stmt_no);
+  void HandleAssignStatement(IDENT &stmt_no);
+  void HandleModifiableStatement(IDENT &stmt_no);
   void HandleWhileStatement(source::CfgNodePtr &cfg_node);
-  void HandleIfStatement(IDENT stmt_no, source::CfgNodePtr &cfg_node);
+  void HandleIfStatement(source::CfgNodePtr &cfg_node);
 
  public:
   explicit AffectsStore(IDENT_SET_VECTOR_PTR stmt_vector,

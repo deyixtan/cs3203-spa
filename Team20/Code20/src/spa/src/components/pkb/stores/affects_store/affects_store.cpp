@@ -95,21 +95,75 @@ IDENT_SET AffectsStore::GetVarUsedByStmt(IDENT &stmt_no) {
   return m_affects_store_factory->GetUsesStore()->GetVarUsedByStmt(stmt_no);
 }
 
-int AffectsStore::GetMaxPairSize() {
+unsigned int AffectsStore::GetMaxPairSize() {
   if (m_is_affects_star_involved) {
     return GetAffectsStarPairs().size();
   }
   return GetAffectsPairs().size();
 }
 
-void AffectsStore::InsertToIdentSetMap(IDENT_SET_MAP &map, IDENT key, IDENT value) {
+void AffectsStore::InsertToIdentSetMap(IDENT_SET_MAP &map, IDENT &key, IDENT &value) {
   if (map.count(key) == 0) {
     map.insert({key, IDENT_SET()});
   }
   map.at(key).insert(value);
 }
 
-void AffectsStore::AddAffects(bool is_star, IDENT upper, IDENT lower) {
+void AffectsStore::MergeModifiedTable(IDENT_SET_MAP_PTR &table1, IDENT_SET_MAP_PTR &table2) {
+  // merge table2 into table1
+  for (auto const &last_modified : *(table2)) {
+    IDENT var_name = last_modified.first;
+    IDENT_SET stmt_nos = last_modified.second;
+    if (table1->count(var_name) == 0) {
+      table1->insert({var_name, IDENT_SET()});
+    }
+    table1->at(var_name).insert(stmt_nos.begin(), stmt_nos.end());
+  }
+}
+
+void AffectsStore::UpdateModifiedTable(IDENT &stmt_no, bool is_clear_only) {
+  IDENT_SET vars_mod = GetVarModByStmt(stmt_no);
+  for (auto const &var_mod : vars_mod) {
+    if (m_last_modified_map_stack.top()->count(var_mod) == 0) {
+      m_last_modified_map_stack.top()->insert({var_mod, IDENT_SET()});
+    }
+    m_last_modified_map_stack.top()->at(var_mod).clear();
+
+    if (!is_clear_only) {
+      m_last_modified_map_stack.top()->at(var_mod).insert(stmt_no);
+    }
+  }
+}
+
+void AffectsStore::HandleAffectsLastModSet(IDENT &var_used, IDENT &stmt_no, IDENT_SET_MAP_PTR &last_modified_map) {
+  IDENT_SET last_mod_set = last_modified_map->at(var_used);
+  for (IDENT last_mod : last_mod_set) {
+    AddAffects(false, last_mod, stmt_no);
+    HandleAffectsStarLastModSet(last_mod, stmt_no);
+  }
+}
+
+void AffectsStore::HandleAffectsStarLastModSet(IDENT &last_mod_stmt_no, IDENT &stmt_no) {
+  if (m_is_affects_star_involved) {
+    AddAffects(true, last_mod_stmt_no, stmt_no);
+    InsertToIdentSetMap(m_last_modified_star_map, stmt_no, last_mod_stmt_no);
+    HandleAffectsStarLastModStarSet(last_mod_stmt_no, stmt_no);
+  }
+}
+
+void AffectsStore::HandleAffectsStarLastModStarSet(IDENT &last_mod_stmt_no, IDENT &stmt_no) {
+  if (m_last_modified_star_map.count(last_mod_stmt_no) == 0) {
+    m_last_modified_star_map.insert({last_mod_stmt_no, IDENT_SET()});
+  }
+
+  IDENT_SET last_mod_star_set = m_last_modified_star_map.at(last_mod_stmt_no);
+  for (IDENT last_mod_star : last_mod_star_set) {
+    AddAffects(true, last_mod_star, stmt_no);
+    InsertToIdentSetMap(m_last_modified_star_map, stmt_no, last_mod_star);
+  }
+}
+
+void AffectsStore::AddAffects(bool is_star, IDENT &upper, IDENT &lower) {
   IDENT_PAIR_SET* pair_set;
   if (is_star) {
     pair_set = &m_all_affects_star_pairs;
@@ -131,55 +185,6 @@ void AffectsStore::AddAffects(bool is_star, IDENT upper, IDENT lower) {
   if (pair_set->find(pair) == pair_set->end())
     StmtStmtStore::AddAffects(is_star, ASSIGN, upper, ASSIGN, lower);
   pair_set->insert(pair);
-}
-
-void AffectsStore::HandleAffectsLastModSet(IDENT var_used, IDENT stmt_no, IDENT_SET_MAP_PTR last_modified_map) {
-  IDENT_SET last_mod_set = last_modified_map->at(var_used);
-  for (auto const &last_mod : last_mod_set) {
-    AddAffects(false, last_mod, stmt_no);
-    HandleAffectsStarLastModSet(last_mod, stmt_no);
-  }
-}
-
-void AffectsStore::HandleAffectsStarLastModSet(IDENT last_mod_stmt_no, IDENT stmt_no) {
-  if (m_is_affects_star_involved) {
-    AddAffects(true, last_mod_stmt_no, stmt_no);
-    InsertToIdentSetMap(m_last_modified_star_map, stmt_no, last_mod_stmt_no);
-    HandleAffectsStarLastModStarSet(last_mod_stmt_no, stmt_no);
-  }
-}
-
-void AffectsStore::HandleAffectsStarLastModStarSet(IDENT last_mod_stmt_no, IDENT stmt_no) {
-  for (const auto &p : m_last_modified_star_map[last_mod_stmt_no]) {
-    AddAffects(true, p, stmt_no);
-    InsertToIdentSetMap(m_last_modified_star_map, stmt_no, p);
-  }
-}
-
-void AffectsStore::UpdateModifiedTable(IDENT stmt_no, bool is_clear_only) {
-  IDENT_SET vars_mod = GetVarModByStmt(stmt_no);
-  for (auto const &var_mod : vars_mod) {
-    if (m_last_modified_map_stack.top()->count(var_mod) == 0) {
-      m_last_modified_map_stack.top()->insert({var_mod, IDENT_SET()});
-    }
-    m_last_modified_map_stack.top()->at(var_mod).clear();
-
-    if (!is_clear_only) {
-      m_last_modified_map_stack.top()->at(var_mod).insert(stmt_no);
-    }
-  }
-}
-
-void AffectsStore::MergeModifiedTable(IDENT_SET_MAP_PTR table1, IDENT_SET_MAP_PTR table2) {
-  // merge table2 into table1
-  for (auto const &last_modified : *(table2)) {
-    IDENT var_name = last_modified.first;
-    IDENT_SET stmt_nos = last_modified.second;
-    if (table1->count(var_name) == 0) {
-      table1->insert({var_name, IDENT_SET()});
-    }
-    table1->at(var_name).insert(stmt_nos.begin(), stmt_nos.end());
-  }
 }
 
 void AffectsStore::HandleCfg() {
@@ -219,7 +224,7 @@ void AffectsStore::HandleCfg(source::CfgNodePtr &cfg_node) {
     } else if (type == WHILE) {
       HandleWhileStatement(cfg_node);
     } else if (type == IF) {
-      HandleIfStatement(stmt_no, cfg_node);
+      HandleIfStatement(cfg_node);
       HandleCfg(cfg_node);
       return;
     }
@@ -233,10 +238,10 @@ void AffectsStore::HandleCfg(source::CfgNodePtr &cfg_node) {
   HandleCfg(next_node);
 }
 
-void AffectsStore::HandleAssignStatement(IDENT stmt_no) {
+void AffectsStore::HandleAssignStatement(IDENT &stmt_no) {
   IDENT_SET_MAP_PTR last_modified_map = m_last_modified_map_stack.top();
   IDENT_SET vars_used = GetVarUsedByStmt(stmt_no);
-  for (auto const &var_used : vars_used) {
+  for (IDENT var_used : vars_used) {
     // check if var_used is modified before
     if (last_modified_map->count(var_used) != 0) {
       HandleAffectsLastModSet(var_used, stmt_no, last_modified_map);
@@ -245,7 +250,7 @@ void AffectsStore::HandleAssignStatement(IDENT stmt_no) {
   UpdateModifiedTable(stmt_no, false);
 }
 
-void AffectsStore::HandleModifiableStatement(IDENT stmt_no) {
+void AffectsStore::HandleModifiableStatement(IDENT &stmt_no) {
   // since, read/call is not an assign stmt, we can clear it from the table
   UpdateModifiedTable(stmt_no, true);
 }
@@ -261,9 +266,9 @@ void AffectsStore::HandleWhileStatement(source::CfgNodePtr &cfg_node) {
   // may need more > 1 traversal around the
   // while-statement scope to properly populate
   // affects/affects* pair
-  int affect_size_prev = GetMaxPairSize();
+  unsigned int affect_size_prev = GetMaxPairSize();
   HandleCfg(first_child_node);
-  int affect_size_curr = GetMaxPairSize();
+  unsigned int affect_size_curr = GetMaxPairSize();
   while (affect_size_curr != affect_size_prev) {
     affect_size_prev = affect_size_curr;
     HandleCfg(first_child_node);
@@ -277,7 +282,7 @@ void AffectsStore::HandleWhileStatement(source::CfgNodePtr &cfg_node) {
   MergeModifiedTable(last_modified_map, last_modified_map_clone);
 }
 
-void AffectsStore::HandleIfStatement(IDENT stmt_no, source::CfgNodePtr &cfg_node) {
+void AffectsStore::HandleIfStatement(source::CfgNodePtr &cfg_node) {
   IDENT_SET_MAP_PTR last_modified_map = m_last_modified_map_stack.top();
   IDENT_SET_MAP_PTR last_modified_map_clone = std::make_shared<IDENT_SET_MAP>(*(last_modified_map));
   source::CfgNodePtr if_cfg_node = cfg_node->GetNextList()[0];
