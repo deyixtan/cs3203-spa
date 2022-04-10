@@ -24,6 +24,7 @@ class AffectsSession : StmtStmtStore {
   [[nodiscard]] IDENT_SET GetVarModByStmt(IDENT &stmt_no);
   [[nodiscard]] IDENT_SET GetVarUsedByStmt(IDENT &stmt_no);
   [[nodiscard]] IDENT GetFollowingOf(IDENT &stmt_no);
+  void AddAffects(bool is_star, IDENT upper, IDENT lower);
   void HandleCfg();
   void HandleCfg(source::CfgNodePtr &cfg_node);
   void HandleAssignStatement(IDENT stmt_no);

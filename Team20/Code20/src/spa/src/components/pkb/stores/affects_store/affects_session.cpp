@@ -100,6 +100,30 @@ IDENT_SET AffectsSession::GetVarUsedByStmt(IDENT &stmt_no) {
   return m_affects_store->GetUsageStore()->GetVarUsedByStmt(stmt_no);
 }
 
+void AffectsSession::AddAffects(bool is_star, IDENT upper, IDENT lower) {
+  IDENT_PAIR_SET* pair_set;
+  if (is_star) {
+    pair_set = &m_all_affects_star_pairs;
+  } else {
+    pair_set = &m_all_affects_pairs;
+  }
+
+  // handle same synonym
+  if (upper == lower) {
+    if (is_star) {
+      m_same_affects_star_set.insert(upper);
+    } else {
+      m_same_affects_set.insert(upper);
+    }
+  }
+
+  // check for duplication before exhaustive add
+  auto pair = std::make_pair(upper, lower);
+  if (pair_set->find(pair) == pair_set->end())
+    StmtStmtStore::AddAffects(is_star, ASSIGN, upper, ASSIGN, lower);
+  pair_set->insert(pair);
+}
+
 void AffectsSession::HandleCfg() {
   auto const &cfg_map = m_affects_store->GetProgramCfg()->GetCfgMap();
   for (auto const &cfg : cfg_map) {
@@ -166,30 +190,11 @@ void AffectsSession::HandleAssignStatement(IDENT stmt_no) {
     if (m_last_modified_map_stack.top()->count(var_used) != 0) {
       IDENT_SET last_mod_stmt_nos = m_last_modified_map_stack.top()->at(var_used);
       for (auto const &last_mod_stmt_no : last_mod_stmt_nos) {
-        /////////////////
-        // update affects same synonym
-        if (last_mod_stmt_no == stmt_no) {
-          m_same_affects_set.insert(last_mod_stmt_no);
-        }
-
-        auto pair = std::make_pair(last_mod_stmt_no, stmt_no);
-        if (m_all_affects_pairs.find(pair) == m_all_affects_pairs.end())
-          AddAffects(false, ASSIGN, last_mod_stmt_no, ASSIGN, stmt_no);
-        m_all_affects_pairs.insert(pair);
-        /////////////////
+        AddAffects(false, last_mod_stmt_no, stmt_no);
 
 
         if (m_is_affects_star_involved) {
-          /////////////////
-          if (last_mod_stmt_no == stmt_no) {
-            m_same_affects_star_set.insert(last_mod_stmt_no);
-          }
-
-          auto pair = std::make_pair(last_mod_stmt_no, stmt_no);
-          if (m_all_affects_star_pairs.find(pair) == m_all_affects_star_pairs.end())
-            AddAffects(true, ASSIGN, last_mod_stmt_no, ASSIGN, stmt_no);
-          m_all_affects_star_pairs.insert(pair);
-          /////////////////
+          AddAffects(true, last_mod_stmt_no, stmt_no);
 
           if (m_last_modified_star_map.count(stmt_no) == 0) {
             m_last_modified_star_map.insert({stmt_no, IDENT_SET()});
@@ -197,16 +202,7 @@ void AffectsSession::HandleAssignStatement(IDENT stmt_no) {
           m_last_modified_star_map.at(stmt_no).insert(last_mod_stmt_no);
 
           for (const auto &p : m_last_modified_star_map[last_mod_stmt_no]) {
-            /////////////////
-            if (p == stmt_no) {
-              m_same_affects_star_set.insert(p);
-            }
-
-            auto pair = std::make_pair(p, stmt_no);
-            if (m_all_affects_star_pairs.find(pair) == m_all_affects_star_pairs.end())
-              AddAffects(true, ASSIGN, p, ASSIGN, stmt_no);
-            m_all_affects_star_pairs.insert(pair);
-            /////////////////
+            AddAffects(true, p, stmt_no);
 
             if (m_last_modified_star_map.count(stmt_no) == 0) {
               m_last_modified_star_map.insert({stmt_no, IDENT_SET()});
