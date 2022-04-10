@@ -13,7 +13,7 @@ void PatternStore::AddWhileWithPattern(std::string const &stmt, std::string cons
   std::string var;
 
   for (char const &c : expr) {
-    if (isalnum(c)) {
+    if (isalpha(c)) {
       var += c;
     } else if (!var.empty()) {
       m_while_pattern_pairs.push_back({stmt, var});
@@ -26,7 +26,7 @@ void PatternStore::AddIfWithPattern(std::string const &stmt, std::string const &
   std::string var;
 
   for (char const &c : expr) {
-    if (isalnum(c)) {
+    if (isalpha(c)) {
       var += c;
     } else if (!var.empty()) {
       m_if_pattern_pairs.push_back({stmt, var});
