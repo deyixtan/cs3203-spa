@@ -15,7 +15,6 @@
 class TestWrapper : public AbstractWrapper {
  private:
   PkbPtr pkb;
-  QueryController *query_controller;
 
  public:
   // default constructor

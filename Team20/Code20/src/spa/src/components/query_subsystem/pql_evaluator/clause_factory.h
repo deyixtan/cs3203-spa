@@ -14,21 +14,21 @@ namespace pql {
 class ClauseFactory {
  public:
   ClauseFactory() = default;
-  static std::unique_ptr<Clause> Create(Relationship relationship,
+  static std::shared_ptr<Clause> Create(Relationship relationship,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                        PKB *pkb);
-  static std::unique_ptr<Clause> Create(Pattern pattern,
+                                        const PkbPtr &pkb);
+  static std::shared_ptr<Clause> Create(Pattern pattern,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                        PKB *pkb);
-  static std::unique_ptr<Clause> Create(const PqlToken &selected_synonym,
+                                        const PkbPtr &pkb);
+  static std::shared_ptr<Clause> Create(const PqlToken &selected_synonym,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                        PKB *pkb);
-  static std::unique_ptr<Clause> Create(With with,
+                                        const PkbPtr &pkb);
+  static std::shared_ptr<Clause> Create(With with,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                        PKB *pkb);
-  static std::unique_ptr<Clause> Create(ResultClause result_clause,
+                                        const PkbPtr &pkb);
+  static std::shared_ptr<Clause> Create(ResultClause result_clause,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                        PKB *pkb);
+                                        const PkbPtr &pkb);
 };
 
 }
