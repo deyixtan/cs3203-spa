@@ -10,29 +10,9 @@ WithClause::WithClause(const std::unordered_map<std::string, DesignEntityType> &
                        const PqlToken &second_arg,
                        const PkbPtr &pkb)
     : declarations(declarations), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
+
 Table WithClause::Execute() {
-  if (IsArgAttribute(first_arg) && IsArgAttribute(second_arg)) {
-    // with s.stmt# = c.value || v.varName = p.procName
-    return HandleAttributeAttribute();
-  } else if (IsArgAttribute(first_arg) && IsArgInteger(second_arg)) {
-    // with s.stmt# = 1
-    return HandleAttributeInteger();
-  } else if (IsArgAttribute(first_arg) && IsArgIdent(second_arg)) {
-    // with v.varName = "x"
-    return HandleAttributeIdent();
-  } else if (IsArgInteger(first_arg) && IsArgAttribute(second_arg)) {
-    // with 1 = s.stmt#
-    return HandleIntegerAttribute();
-  } else if (IsArgInteger(first_arg) && IsArgInteger(second_arg)) {
-    // with 1 = 1
-    return HandleIntegerInteger();
-  } else if (IsArgIdent(first_arg) && IsArgAttribute(second_arg)) {
-    // "x" = v.varName
-    return HandleIdentAttribute();
-  } else if (IsArgIdent(first_arg) && IsArgIdent(second_arg)) {
-    // "x" = "x"
-    return HandleIdentIdent();
-  }
+  return (this->*execute_handler.at({first_arg.type, second_arg.type}))();
 }
 
 Table WithClause::HandleAttributeAttribute() {
@@ -55,7 +35,7 @@ Table WithClause::HandleAttributeAttribute() {
         HandleSetIntersectionSingleColumn(single_constraints_first, single_constraints_second);
     std::unordered_set<std::string> intersection_first;
     std::unordered_set<std::string> intersection_second;
-    for (auto s : single_column_intersection) {
+    for (const auto &s : single_column_intersection) {
       std::unordered_set<std::string> all_stmts_first = pkb->GetStmtByName(GetStmtType(first_attribute.first.first), s);
       std::unordered_set<std::string>
           all_stmts_second = pkb->GetStmtByName(GetStmtType(second_attribute.first.first), s);
@@ -63,8 +43,8 @@ Table WithClause::HandleAttributeAttribute() {
       intersection_second.insert(all_stmts_second.begin(), all_stmts_second.end());
     }
 
-    std::unordered_set<std::string>::iterator it1 = intersection_first.begin();
-    std::unordered_set<std::string>::iterator it2 = intersection_second.begin();
+    auto it1 = intersection_first.begin();
+    auto it2 = intersection_second.begin();
     for (; it1!=intersection_first.end() && it2!=intersection_second.end(); ++it1, ++it2) {
       intersection_pair.insert(std::make_pair(*it1, *it2));
     }
@@ -74,9 +54,9 @@ Table WithClause::HandleAttributeAttribute() {
     std::unordered_set<std::string> single_column_intersection =
         HandleSetIntersectionSingleColumn(single_constraints_first, single_constraints_second);
     std::unordered_set<std::string> intersection_temp;
-    for (auto s : single_column_intersection) {
+    for (const auto &s : single_column_intersection) {
       std::unordered_set<std::string> all_stmts = pkb->GetStmtByName(GetStmtType(first_attribute.first.first), s);
-      for (auto stmt_no : all_stmts) {
+      for (const auto &stmt_no : all_stmts) {
         intersection_pair.insert(std::make_pair(stmt_no, s));
       }
     }
@@ -87,9 +67,9 @@ Table WithClause::HandleAttributeAttribute() {
     std::unordered_set<std::string> single_column_intersection =
         HandleSetIntersectionSingleColumn(single_constraints_first, single_constraints_second);
     std::unordered_set<std::string> intersection_temp;
-    for (auto s : single_column_intersection) {
+    for (const auto &s : single_column_intersection) {
       std::unordered_set<std::string> all_stmts = pkb->GetStmtByName(GetStmtType(second_attribute.first.first), s);
-      for (auto stmt_no : all_stmts) {
+      for (const auto &stmt_no : all_stmts) {
         intersection_pair.insert(std::make_pair(s, stmt_no));
       }
     }
@@ -200,10 +180,149 @@ Table WithClause::HandleIdentIdent() {
   return HandleIntegerInteger();
 }
 
+bool WithClause::ExecuteBool() {
+  return (this->*execute_bool_handler.at({first_arg.type, second_arg.type}))();
+}
+
+bool WithClause::HandleAttributeAttributeBool() {
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName>
+      first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName>
+      second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+
+  std::unordered_set<std::string> single_constraints_first;
+  std::unordered_set<std::string> single_constraints_second;
+
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> intersection_pair;
+  bool is_conversion_needed_first = Utils::IsConversionNeeded(first_attribute.first.first, first_attribute.second);
+  bool is_conversion_needed_second = Utils::IsConversionNeeded(second_attribute.first.first, second_attribute.second);
+
+  if (is_conversion_needed_first && is_conversion_needed_second) {
+    single_constraints_first = pkb->GetName(GetStmtType(first_attribute.first.first));
+    single_constraints_second = pkb->GetName(GetStmtType(second_attribute.first.first));
+    std::unordered_set<std::string> single_column_intersection =
+        HandleSetIntersectionSingleColumn(single_constraints_first, single_constraints_second);
+    std::unordered_set<std::string> intersection_first;
+    std::unordered_set<std::string> intersection_second;
+    for (const auto &s : single_column_intersection) {
+      std::unordered_set<std::string> all_stmts_first = pkb->GetStmtByName(GetStmtType(first_attribute.first.first), s);
+      std::unordered_set<std::string>
+          all_stmts_second = pkb->GetStmtByName(GetStmtType(second_attribute.first.first), s);
+      intersection_first.insert(all_stmts_first.begin(), all_stmts_first.end());
+      intersection_second.insert(all_stmts_second.begin(), all_stmts_second.end());
+    }
+
+    auto it1 = intersection_first.begin();
+    auto it2 = intersection_second.begin();
+    for (; it1!=intersection_first.end() && it2!=intersection_second.end(); ++it1, ++it2) {
+      intersection_pair.insert(std::make_pair(*it1, *it2));
+    }
+  } else if (is_conversion_needed_first) {
+    single_constraints_first = pkb->GetName(GetStmtType(first_attribute.first.first));
+    single_constraints_second = pkb->GetStmt(GetStmtType(second_attribute.first.first));
+    std::unordered_set<std::string> single_column_intersection =
+        HandleSetIntersectionSingleColumn(single_constraints_first, single_constraints_second);
+    std::unordered_set<std::string> intersection_temp;
+    for (const auto &s : single_column_intersection) {
+      std::unordered_set<std::string> all_stmts = pkb->GetStmtByName(GetStmtType(first_attribute.first.first), s);
+      for (const auto &stmt_no : all_stmts) {
+        intersection_pair.insert(std::make_pair(stmt_no, s));
+      }
+    }
+
+  } else if (is_conversion_needed_second) {
+    single_constraints_second = pkb->GetName(GetStmtType(second_attribute.first.first));
+    single_constraints_first = pkb->GetStmt(GetStmtType(first_attribute.first.first));
+    std::unordered_set<std::string> single_column_intersection =
+        HandleSetIntersectionSingleColumn(single_constraints_first, single_constraints_second);
+    std::unordered_set<std::string> intersection_temp;
+    for (const auto &s : single_column_intersection) {
+      std::unordered_set<std::string> all_stmts = pkb->GetStmtByName(GetStmtType(second_attribute.first.first), s);
+      for (const auto &stmt_no : all_stmts) {
+        intersection_pair.insert(std::make_pair(s, stmt_no));
+      }
+    }
+  } else {
+    single_constraints_first = pkb->GetStmt(GetStmtType(first_attribute.first.first));
+    single_constraints_second = pkb->GetStmt(GetStmtType(second_attribute.first.first));
+    intersection_pair = HandleSetIntersection(single_constraints_first, single_constraints_second);
+  }
+
+  return intersection_pair.empty();
+}
+
+bool WithClause::HandleAttributeIdentBool() {
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName>
+      first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+  std::unordered_set<std::string> single_constraints;
+  Table table;
+  bool is_conversion_needed = Utils::IsConversionNeeded(first_attribute.first.first, first_attribute.second);
+  if (is_conversion_needed) {
+    single_constraints = pkb->GetStmtByName(GetStmtType(first_attribute.first.first), second_arg.value);
+    if (single_constraints.empty()) {
+      return true;
+    }
+  } else {
+    single_constraints = pkb->GetStmt(GetStmtType(first_attribute.first.first));
+    if (single_constraints.count(second_arg.value)==0) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool WithClause::HandleAttributeIntegerBool() {
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName>
+      first_attribute = Utils::ParseAttributeRef(first_arg, declarations);
+  auto single_constraints = pkb->GetStmt(GetStmtType(first_attribute.first.first));
+  if (single_constraints.count(second_arg.value)==0) {
+    return true;
+  }
+  return false;
+}
+
+bool WithClause::HandleIntegerAttributeBool() {
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName>
+      second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+  auto single_constraints = pkb->GetStmt(GetStmtType(second_attribute.first.first));
+  if (single_constraints.count(first_arg.value)==0) {
+    return true;
+  }
+  return false;
+}
+
+bool WithClause::HandleIntegerIntegerBool() {
+  bool is_false_clause = first_arg.value!=second_arg.value;
+  return is_false_clause;
+}
+
+bool WithClause::HandleIdentAttributeBool() {
+  std::pair<std::pair<DesignEntityType, std::string>, AttriName>
+      second_attribute = Utils::ParseAttributeRef(second_arg, declarations);
+  std::unordered_set<std::string> single_constraints;
+  bool is_conversion_needed = Utils::IsConversionNeeded(second_attribute.first.first, second_attribute.second);
+  if (is_conversion_needed) {
+    single_constraints = pkb->GetStmtByName(GetStmtType(second_attribute.first.first), first_arg.value);
+    return single_constraints.empty();
+  } else {
+    single_constraints = pkb->GetStmt(GetStmtType(second_attribute.first.first));
+    if (single_constraints.count(first_arg.value)==0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool WithClause::HandleIdentIdentBool() {
+  // same logic as HandleIntegerInteger
+  return HandleIntegerIntegerBool();
+}
+
 std::unordered_set<std::string> WithClause::HandleSetIntersectionSingleColumn(std::unordered_set<std::string> set_one,
                                                                               std::unordered_set<std::string> set_two) {
   std::unordered_set<std::string> intersection_pair;
-  for (auto s : set_one) {
+  for (const auto &s : set_one) {
     if (set_two.count(s)!=0) {
       intersection_pair.insert(s);
     }
@@ -211,16 +330,41 @@ std::unordered_set<std::string> WithClause::HandleSetIntersectionSingleColumn(st
   return intersection_pair;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> WithClause::HandleSetIntersection(std::unordered_set<
-    std::string> set_one, std::unordered_set<std::string> set_two) {
+std::unordered_set<std::pair<std::string, std::string>,
+                   pair_hash> WithClause::HandleSetIntersection(const std::unordered_set<
+    std::string> &set_one, const std::unordered_set<std::string> &set_two) {
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> intersection_pair;
-  for (auto s : set_one) {
+  for (const auto &s : set_one) {
     if (set_two.count(s)!=0) {
       intersection_pair.insert(std::make_pair(s, s));
     }
   }
 
   return intersection_pair;
+}
+
+std::set<std::string> WithClause::GetSynonyms() {
+  std::set<std::string> synonyms;
+  if (IsArgAttribute(first_arg)) {
+    auto attribute = Utils::ParseAttributeRef(first_arg, declarations);
+    synonyms.emplace(attribute.first.second);
+  }
+  if (IsArgAttribute(second_arg)) {
+    auto attribute = Utils::ParseAttributeRef(second_arg, declarations);
+    synonyms.emplace(attribute.first.second);
+  }
+  return synonyms;
+}
+
+size_t WithClause::GetSynonymsSize() {
+  size_t size = 0;
+  if (IsArgAttribute(first_arg)) {
+    size++;
+  }
+  if (IsArgAttribute(second_arg)) {
+    size++;
+  }
+  return size;
 }
 
 }

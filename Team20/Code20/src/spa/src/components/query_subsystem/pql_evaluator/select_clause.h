@@ -12,15 +12,16 @@ namespace pql {
 class SelectClause : public Clause {
  public:
   SelectClause(const PqlToken &result_clause,
-               const std::unordered_map<std::string, DesignEntityType> declarations,
+               const std::unordered_map<std::string, DesignEntityType> &declarations,
                const PkbPtr &pkb);
   Table Execute() override;
+  bool ExecuteBool() override;
+  std::set<std::string> GetSynonyms() override;
+  size_t GetSynonymsSize() override;
  private:
   PqlToken result_clause;
   std::unordered_map<std::string, DesignEntityType> declarations;
   const PkbPtr &pkb;
-  DesignEntityType GetSynonymDesignEntity(const PqlToken &arg);
-
 };
 
 }

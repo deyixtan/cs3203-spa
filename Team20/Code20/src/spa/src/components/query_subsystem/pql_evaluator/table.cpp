@@ -36,7 +36,7 @@ Table::Table(const std::string &first_synonym,
              std::unordered_set<std::pair<std::string, std::string>, pair_hash> &pair_constraints) {
   if (pair_constraints.empty()) {
     ToggleFalseClause();
-  }  else {
+  } else {
     attributes.emplace_back(first_synonym);
     attributes.emplace_back(second_synonym);
   }
@@ -88,6 +88,28 @@ void Table::Merge(Table &other_table) {
     // there are no possible values so we emulate encountering false clause
     ToggleFalseClause();
   }
+}
+
+void Table::Filter(std::set<std::string> &&synonyms) {
+  std::vector<size_t> indices;
+  Attributes new_attributes;
+  for (size_t i = 0; i < attributes.size(); ++i) {
+    if (synonyms.find(attributes.at(i))!=synonyms.end()) {
+      indices.emplace_back(i);
+      new_attributes.emplace_back(attributes.at(i));
+    }
+  }
+
+  Records new_records;
+  for (const auto &record : records) {
+    Record new_record;
+    for (auto idx : indices) {
+      new_record.emplace_back(record.at(idx));
+    }
+  }
+
+  attributes = std::move(new_attributes);
+  records = std::move(new_records);
 }
 
 std::vector<std::pair<size_t, size_t>> Table::GetCommonAttributeIndexPairs(const Table::Attributes &other_attributes) {
@@ -277,7 +299,9 @@ size_t Table::GetAttributeIdxFromElem(PqlToken &elem,
   }
 }
 
-std::string Table::ConvertAttrRef(const DesignEntityType &attr_ref_design_entity, std::string value, const PkbPtr &pkb) {
+std::string Table::ConvertAttrRef(const DesignEntityType &attr_ref_design_entity,
+                                  std::string value,
+                                  const PkbPtr &pkb) {
   auto new_value = pkb->GetNameByStmt(GetStmtType(attr_ref_design_entity), value);
   return new_value;
 }

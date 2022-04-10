@@ -12,38 +12,7 @@ FollowsClause::FollowsClause(const std::unordered_map<std::string, DesignEntityT
     : declarations(declarations), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table FollowsClause::Execute() {
-  if (IsArgSynonym(first_arg) && IsArgSynonym(second_arg)) {
-    // Follows(s1, s2)
-    return HandleSynonymSynonym();
-  } else if (IsArgSynonym(first_arg) && IsArgWildcard(second_arg)) {
-    // Follows(s, _)
-    return HandleSynonymWildcard();
-  } else if (IsArgSynonym(first_arg) && IsArgInteger(second_arg)) {
-    // Follows(s, 2)
-    return HandleSynonymInteger();
-  } else if (IsArgWildcard(first_arg) && IsArgSynonym(second_arg)) {
-    // Follows(_, s)
-    return HandleWildcardSynonym();
-  } else if (IsArgWildcard(first_arg) && IsArgWildcard(second_arg)) {
-    // Follows(_, _)
-    return HandleWildcardWildcard();
-  } else if (IsArgWildcard(first_arg) && IsArgInteger(second_arg)) {
-    // Follows(_, 2)
-    return HandleWildcardInteger();
-  } else if (IsArgInteger(first_arg) && IsArgSynonym(second_arg)) {
-    // Follows(1, s)
-    return HandleIntegerSynonym();
-  } else if (IsArgInteger(first_arg) && IsArgWildcard(second_arg)) {
-    // Follows(1, _)
-    return HandleIntegerWildcard();
-  } else if (IsArgInteger(first_arg) && IsArgInteger(second_arg)) {
-    // Follows(1, 2)
-    return HandleIntegerInteger();
-  } else {
-    // throw exception???
-    // return empty table???
-    return {};
-  }
+  return (this->*execute_handler.at({first_arg.type, second_arg.type}))();
 }
 
 Table FollowsClause::HandleSynonymSynonym() {
@@ -122,6 +91,111 @@ Table FollowsClause::HandleIntegerWildcard() {
 Table FollowsClause::HandleIntegerInteger() {
   bool is_false_clause = !pkb->GetFollowsStore()->IsFollowsPairValid({first_arg.value, second_arg.value});
   return ConstructEmptyTable(is_false_clause);
+}
+
+bool FollowsClause::ExecuteBool() {
+  return (this->*execute_bool_handler.at({first_arg.type, second_arg.type}))();
+}
+
+bool FollowsClause::HandleSynonymSynonymBool() {
+  if (first_arg.value==second_arg.value) {
+    return true;
+  }
+
+  auto pair_constraints = pkb->GetFollowsStore()->GetAllFollowStmt(
+      GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
+  );
+  return pair_constraints.empty();
+}
+
+bool FollowsClause::HandleSynonymWildcardBool() {
+  auto pair_constraints = pkb->GetFollowsStore()->GetAllFollowStmt(
+      GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+      StmtType::STMT
+  );
+  std::unordered_set<std::string> single_constraints;
+  for (const auto &pair_constraint : pair_constraints) {
+    single_constraints.insert(pair_constraint.first);
+  }
+  return single_constraints.empty();
+}
+
+bool FollowsClause::HandleSynonymIntegerBool() {
+  std::unordered_set<std::string> single_constraints;
+  std::string follower =
+      pkb->GetFollowsStore()->GetFollowerOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+                                            second_arg.value);
+  if (follower!="0") {
+    single_constraints.emplace(follower);
+  }
+  return single_constraints.empty();
+}
+
+bool FollowsClause::HandleWildcardSynonymBool() {
+  auto pair_constraints = pkb->GetFollowsStore()->GetAllFollowStmt(
+      StmtType::STMT,
+      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
+  );
+  std::unordered_set<std::string> single_constraints;
+  for (const auto &pair_constraint : pair_constraints) {
+    single_constraints.insert(pair_constraint.second);
+  }
+  return single_constraints.empty();
+}
+
+bool FollowsClause::HandleWildcardWildcardBool() {
+  bool is_false_clause = pkb->GetFollowsStore()->GetAllFollowStmt(StmtType::STMT, StmtType::STMT).empty();
+  return is_false_clause;
+}
+
+bool FollowsClause::HandleWildcardIntegerBool() {
+  bool is_false_clause = pkb->GetFollowsStore()->GetFollowerOf(STMT, second_arg.value)=="0";
+  return is_false_clause;
+}
+
+bool FollowsClause::HandleIntegerSynonymBool() {
+  std::unordered_set<std::string> single_constraints;
+  std::string following =
+      pkb->GetFollowsStore()->GetFollowingOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
+                                             first_arg.value);
+  if (following!="0") {
+    single_constraints.emplace(following);
+  }
+  return single_constraints.empty();
+}
+
+bool FollowsClause::HandleIntegerWildcardBool() {
+  bool is_false_clause = pkb->GetFollowsStore()->GetFollowingOf(STMT, first_arg.value)=="0";
+  return is_false_clause;
+}
+
+bool FollowsClause::HandleIntegerIntegerBool() {
+  bool is_false_clause = !pkb->GetFollowsStore()->IsFollowsPairValid({first_arg.value, second_arg.value});
+  return is_false_clause;
+}
+
+std::set<std::string> FollowsClause::GetSynonyms() {
+  std::set<std::string> synonyms;
+  if (IsArgSynonym(first_arg)) {
+    synonyms.emplace(first_arg.value);
+  }
+  if (IsArgSynonym(second_arg)) {
+    synonyms.emplace(second_arg.value);
+  }
+
+  return synonyms;
+}
+
+size_t FollowsClause::GetSynonymsSize() {
+  size_t size = 0;
+  if (IsArgSynonym(first_arg)) {
+    size++;
+  }
+  if (IsArgSynonym(second_arg)) {
+    size++;
+  }
+  return size;
 }
 
 }

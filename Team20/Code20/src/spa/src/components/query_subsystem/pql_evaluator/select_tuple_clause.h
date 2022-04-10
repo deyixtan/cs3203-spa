@@ -13,6 +13,9 @@ class SelectTupleClause : public Clause {
                     const std::unordered_map<std::string, DesignEntityType> &declarations,
                     const PkbPtr &pkb);
   Table Execute() override;
+  bool ExecuteBool() override;
+  std::set<std::string> GetSynonyms() override;
+  size_t GetSynonymsSize() override;
  private:
   std::vector<PqlToken> tuple;
   std::unordered_map<std::string, DesignEntityType> declarations;

@@ -5,24 +5,12 @@ namespace pql {
 
 using namespace clause_util;
 
-PatternIfClause::PatternIfClause(const std::string &if_synonym, const PqlToken &first_arg, const PkbPtr &pkb) : if_synonym(
+PatternIfClause::PatternIfClause(const std::string &if_synonym, const PqlToken &first_arg, const PkbPtr &pkb)
+    : if_synonym(
     if_synonym), first_arg(first_arg), pkb(pkb) {}
 
 Table PatternIfClause::Execute() {
-  if (IsArgSynonym(first_arg)) {
-    // pattern ifs(v, _, _)
-    return HandleSynonym();
-  } else if (IsArgWildcard(first_arg)) {
-    // pattern ifs(_, _, _)
-    return HandleWildcard();
-  } else if (IsArgIdent(first_arg)) {
-    // pattern ifs("x", _, _)
-    return HandleIdent();
-  } else {
-    // no type safety because of PqlTokenType
-    // should refactor
-    return {};
-  }
+  return (this->*execute_handler.at(first_arg.type))();
 }
 
 Table PatternIfClause::HandleSynonym() {
@@ -38,6 +26,43 @@ Table PatternIfClause::HandleWildcard() {
 Table PatternIfClause::HandleIdent() {
   auto single_constraints = pkb->GetPatternStore()->GetIfWithPattern(first_arg.value);
   return {if_synonym, single_constraints};
+}
+
+bool PatternIfClause::ExecuteBool() {
+  return (this->*execute_bool_handler.at(first_arg.type))();
+}
+
+bool PatternIfClause::HandleSynonymBool() {
+  auto pair_constraints = pkb->GetPatternStore()->GetIfWithPatternSynonym();
+  return pair_constraints.empty();
+}
+
+bool PatternIfClause::HandleWildcardBool() {
+  auto single_constraints = pkb->GetPatternStore()->GetIfWithPattern("_");
+  return single_constraints.empty();
+}
+
+bool PatternIfClause::HandleIdentBool() {
+  auto single_constraints = pkb->GetPatternStore()->GetIfWithPattern(first_arg.value);
+  return single_constraints.empty();
+}
+
+std::set<std::string> PatternIfClause::GetSynonyms() {
+  std::set<std::string> synonyms;
+  synonyms.emplace(if_synonym);
+  if (IsArgSynonym(first_arg)) {
+    synonyms.emplace(first_arg.value);
+  }
+
+  return synonyms;
+}
+
+size_t PatternIfClause::GetSynonymsSize() {
+  size_t size = 1;
+  if (IsArgSynonym(first_arg)) {
+    size++;
+  }
+  return size;
 }
 
 }

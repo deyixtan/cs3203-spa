@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <set>
 
 namespace pql {
 
@@ -40,6 +41,7 @@ class Table {
   Table(const std::string &first_synonym, const std::string &second_synonym,
         std::vector<std::pair<std::string, std::string>> &pair_constraints);
   void Merge(Table &other_table);
+  void Filter(std::set<std::string> &&synonyms);
   void ToggleFalseClause();
   void ToggleBooleanResult();
   void ToggleSynonymResult();

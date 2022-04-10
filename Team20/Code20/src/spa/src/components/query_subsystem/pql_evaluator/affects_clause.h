@@ -13,10 +13,26 @@ class AffectsClause : public Clause {
                 const PqlToken &second_arg,
                 const PkbPtr &pkb);
   Table Execute() override;
+  bool ExecuteBool() override;
+  std::set<std::string> GetSynonyms() override;
+  size_t GetSynonymsSize() override;
  private:
   PqlToken first_arg;
   PqlToken second_arg;
   const PkbPtr &pkb;
+  using handler = Table (AffectsClause::*)();
+  const std::map<std::pair<PqlTokenType, PqlTokenType>, handler> execute_handler{
+      {{PqlTokenType::SYNONYM, PqlTokenType::SYNONYM}, &AffectsClause::HandleSynonymSynonym},
+      {{PqlTokenType::SYNONYM, PqlTokenType::UNDERSCORE}, &AffectsClause::HandleSynonymWildcard},
+      {{PqlTokenType::SYNONYM, PqlTokenType::NUMBER}, &AffectsClause::HandleSynonymInteger},
+      {{PqlTokenType::UNDERSCORE, PqlTokenType::SYNONYM}, &AffectsClause::HandleWildcardSynonym},
+      {{PqlTokenType::UNDERSCORE, PqlTokenType::UNDERSCORE}, &AffectsClause::HandleWildcardWildcard},
+      {{PqlTokenType::UNDERSCORE, PqlTokenType::NUMBER}, &AffectsClause::HandleWildcardInteger},
+      {{PqlTokenType::NUMBER, PqlTokenType::SYNONYM}, &AffectsClause::HandleIntegerSynonym},
+      {{PqlTokenType::NUMBER, PqlTokenType::UNDERSCORE}, &AffectsClause::HandleIntegerWildcard},
+      {{PqlTokenType::NUMBER, PqlTokenType::NUMBER}, &AffectsClause::HandleIntegerInteger},
+
+  };
   Table HandleSynonymSynonym();
   Table HandleSynonymWildcard();
   Table HandleSynonymInteger();
@@ -26,6 +42,28 @@ class AffectsClause : public Clause {
   Table HandleIntegerSynonym();
   Table HandleIntegerWildcard();
   Table HandleIntegerInteger();
+  using bool_handler = bool (AffectsClause::*)();
+  const std::map<std::pair<PqlTokenType, PqlTokenType>, bool_handler> execute_bool_handler{
+      {{PqlTokenType::SYNONYM, PqlTokenType::SYNONYM}, &AffectsClause::HandleSynonymSynonymBool},
+      {{PqlTokenType::SYNONYM, PqlTokenType::UNDERSCORE}, &AffectsClause::HandleSynonymWildcardBool},
+      {{PqlTokenType::SYNONYM, PqlTokenType::NUMBER}, &AffectsClause::HandleSynonymIntegerBool},
+      {{PqlTokenType::UNDERSCORE, PqlTokenType::SYNONYM}, &AffectsClause::HandleWildcardSynonymBool},
+      {{PqlTokenType::UNDERSCORE, PqlTokenType::UNDERSCORE}, &AffectsClause::HandleWildcardWildcardBool},
+      {{PqlTokenType::UNDERSCORE, PqlTokenType::NUMBER}, &AffectsClause::HandleWildcardIntegerBool},
+      {{PqlTokenType::NUMBER, PqlTokenType::SYNONYM}, &AffectsClause::HandleIntegerSynonymBool},
+      {{PqlTokenType::NUMBER, PqlTokenType::UNDERSCORE}, &AffectsClause::HandleIntegerWildcardBool},
+      {{PqlTokenType::NUMBER, PqlTokenType::NUMBER}, &AffectsClause::HandleIntegerIntegerBool},
+
+  };
+  bool HandleSynonymSynonymBool();
+  bool HandleSynonymWildcardBool();
+  bool HandleSynonymIntegerBool();
+  bool HandleWildcardSynonymBool();
+  bool HandleWildcardWildcardBool();
+  bool HandleWildcardIntegerBool();
+  bool HandleIntegerSynonymBool();
+  bool HandleIntegerWildcardBool();
+  bool HandleIntegerIntegerBool();
 };
 
 }

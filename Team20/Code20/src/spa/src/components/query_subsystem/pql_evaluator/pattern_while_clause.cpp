@@ -9,17 +9,7 @@ PatternWhileClause::PatternWhileClause(const std::string &while_synonym, const P
     : while_synonym(while_synonym), first_arg(first_arg), pkb(pkb) {}
 
 Table PatternWhileClause::Execute() {
-  if (IsArgSynonym(first_arg)) {
-    return HandleSynonym();
-  } else if (IsArgWildcard(first_arg)) {
-    return HandleWildcard();
-  } else if (IsArgIdent(first_arg)) {
-    return HandleIdent();
-  } else {
-    // no type safety because of PqlTokenType
-    // should refactor
-    return {};
-  }
+  return (this->*execute_handler.at(first_arg.type))();
 }
 
 Table PatternWhileClause::HandleSynonym() {
@@ -35,6 +25,43 @@ Table PatternWhileClause::HandleWildcard() {
 Table PatternWhileClause::HandleIdent() {
   auto single_constraints = pkb->GetPatternStore()->GetWhileWithPattern(first_arg.value);
   return {while_synonym, single_constraints};
+}
+
+bool PatternWhileClause::ExecuteBool() {
+  return (this->*execute_bool_handler.at(first_arg.type))();
+}
+
+bool PatternWhileClause::HandleSynonymBool() {
+  auto pair_constraints = pkb->GetPatternStore()->GetWhileWithPatternSynonym();
+  return pair_constraints.empty();
+}
+
+bool PatternWhileClause::HandleWildcardBool() {
+  auto single_constraints = pkb->GetPatternStore()->GetWhileWithPattern("_");
+  return single_constraints.empty();
+}
+
+bool PatternWhileClause::HandleIdentBool() {
+  auto single_constraints = pkb->GetPatternStore()->GetWhileWithPattern(first_arg.value);
+  return single_constraints.empty();
+}
+
+std::set<std::string> PatternWhileClause::GetSynonyms() {
+  std::set<std::string> synonyms;
+  synonyms.emplace(while_synonym);
+  if (IsArgSynonym(first_arg)) {
+    synonyms.emplace(first_arg.value);
+  }
+
+  return synonyms;
+}
+
+size_t PatternWhileClause::GetSynonymsSize() {
+  size_t size = 1;
+  if (IsArgSynonym(first_arg)) {
+    size++;
+  }
+  return size;
 }
 
 }

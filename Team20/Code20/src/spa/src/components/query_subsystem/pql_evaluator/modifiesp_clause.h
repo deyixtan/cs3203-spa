@@ -15,17 +15,45 @@ class ModifiesPClause : public Clause {
                   const PqlToken &second_arg,
                   const PkbPtr &pkb);
   Table Execute() override;
+  bool ExecuteBool() override;
+  std::set<std::string> GetSynonyms() override;
+  size_t GetSynonymsSize() override;
  private:
   std::unordered_map<std::string, DesignEntityType> declarations;
   PqlToken first_arg;
   PqlToken second_arg;
   const PkbPtr &pkb;
+  using handler = Table (ModifiesPClause::*)();
+  const std::map<std::pair<PqlTokenType, PqlTokenType>, handler> execute_handler{
+      {{PqlTokenType::SYNONYM, PqlTokenType::SYNONYM}, &ModifiesPClause::HandleSynonymSynonym},
+      {{PqlTokenType::SYNONYM, PqlTokenType::UNDERSCORE}, &ModifiesPClause::HandleSynonymWildcard},
+      {{PqlTokenType::SYNONYM, PqlTokenType::IDENT_WITH_QUOTES}, &ModifiesPClause::HandleSynonymIdent},
+      {{PqlTokenType::IDENT_WITH_QUOTES, PqlTokenType::SYNONYM}, &ModifiesPClause::HandleIdentSynonym},
+      {{PqlTokenType::IDENT_WITH_QUOTES, PqlTokenType::UNDERSCORE}, &ModifiesPClause::HandleIdentWildcard},
+      {{PqlTokenType::IDENT_WITH_QUOTES, PqlTokenType::IDENT_WITH_QUOTES}, &ModifiesPClause::HandleIdentIdent},
+
+  };
   Table HandleSynonymSynonym();
   Table HandleSynonymWildcard();
   Table HandleSynonymIdent();
   Table HandleIdentSynonym();
   Table HandleIdentWildcard();
   Table HandleIdentIdent();
+  using bool_handler = bool (ModifiesPClause::*)();
+  const std::map<std::pair<PqlTokenType, PqlTokenType>, bool_handler> execute_bool_handler{
+      {{PqlTokenType::SYNONYM, PqlTokenType::SYNONYM}, &ModifiesPClause::HandleSynonymSynonymBool},
+      {{PqlTokenType::SYNONYM, PqlTokenType::UNDERSCORE}, &ModifiesPClause::HandleSynonymWildcardBool},
+      {{PqlTokenType::SYNONYM, PqlTokenType::IDENT_WITH_QUOTES}, &ModifiesPClause::HandleSynonymIdentBool},
+      {{PqlTokenType::IDENT_WITH_QUOTES, PqlTokenType::SYNONYM}, &ModifiesPClause::HandleIdentSynonymBool},
+      {{PqlTokenType::IDENT_WITH_QUOTES, PqlTokenType::UNDERSCORE}, &ModifiesPClause::HandleIdentWildcardBool},
+      {{PqlTokenType::IDENT_WITH_QUOTES, PqlTokenType::IDENT_WITH_QUOTES}, &ModifiesPClause::HandleIdentIdentBool},
+  };
+  bool HandleSynonymSynonymBool();
+  bool HandleSynonymWildcardBool();
+  bool HandleSynonymIdentBool();
+  bool HandleIdentSynonymBool();
+  bool HandleIdentWildcardBool();
+  bool HandleIdentIdentBool();
 };
 
 }

@@ -8,4 +8,17 @@ Table SelectBooleanClause::Execute() {
   return table;
 }
 
+bool SelectBooleanClause::ExecuteBool() {
+  return false;
+}
+
+std::set<std::string> SelectBooleanClause::GetSynonyms() {
+  return {};
+}
+
+size_t SelectBooleanClause::GetSynonymsSize() {
+  size_t size = 0;
+  return size;
+}
+
 }
