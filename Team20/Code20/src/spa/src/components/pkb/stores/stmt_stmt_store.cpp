@@ -104,6 +104,24 @@ void StmtStmtStore::AddNext(bool is_star,
   }
 }
 
+void StmtStmtStore::AddAffects(bool is_star,
+                            StmtType type1,
+                            std::string const &upper,
+                            StmtType type2,
+                            std::string const &lower) {
+  if (!is_star) {
+    all_pairs.push_back(std::pair<std::string, std::string>(upper, lower));
+    ExhaustiveAddAllStmt(type1, upper, type2, lower, false);
+    //ExhaustiveAddSubStmt(type1, upper, type2, lower, &type_pair_map);
+
+  } else {
+    all_star_pairs.push_back(std::pair<std::string, std::string>(upper, lower));
+    ExhaustiveAddAllStmt(type1, upper, type2, lower, true);
+    //ExhaustiveAddSubStmt(type1, upper, type2, lower, &star_type_pair_map);
+  }
+}
+
+
 void StmtStmtStore::AddCalls(bool is_star, std::string const &upper, std::string const &lower) {
   if (!is_star) {
     all_pairs.push_back({upper, lower});
@@ -265,6 +283,8 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_typ
   StmtType rs_type = PROC;
   if (store_type == NEXT) {
     rs_type = STMT;
+  } else if (store_type == AFFECTS) {
+    rs_type = ASSIGN;
   }
 
   if (type_pair_map.find(stmt_type) != type_pair_map.end()) {
