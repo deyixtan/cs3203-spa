@@ -44,7 +44,6 @@ namespace source {
   class SourceParserSession;
   class DesignExtractor;
   class CfgBuilder;
-  class PkbClient;
 
   // type definitions
   // ast-related types

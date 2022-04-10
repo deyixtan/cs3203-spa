@@ -1,10 +1,13 @@
+#include "components/pkb/pkb_declarations.h"
 #include "components/pkb/stores/next_store/next_store.h"
 #include "next_store_stub.h"
 #include "../test_util.h"
 #include "catch.hpp"
 #include "components/pkb/pkb.h"
 
-std::shared_ptr<NextStore> set_up_next() {
+using namespace pkb;
+
+std::shared_ptr<pkb::NextStore> set_up_next() {
   PKB *pkb = new PKB();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("2", STMT);

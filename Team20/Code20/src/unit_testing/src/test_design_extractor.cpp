@@ -1,4 +1,5 @@
 #include "catch.hpp"
+#include "components/pkb/pkb_declarations.h"
 #include "components/pkb/pkb.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
 #include "components/pkb/pkb_client/pkb_client.h"
@@ -17,8 +18,14 @@
 #include "components/source_subsystem/types/ast/node_boolean_expression.h"
 #include "components/source_subsystem/types/ast/node_while_statement.h"
 #include "components/source_subsystem/iterator/cfg_builder.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
 
 using namespace source;
+using namespace pkb;
 
 TEST_CASE("Test DE Modify population for single procedure with one read statement") {
   // set up AST for: procedure main { read a; }
@@ -39,10 +46,10 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
 
   // set up expected PKB
   pkb::PkbPtr pkb = std::make_shared<PKB>();
-  pkb->AddStmt("1", pkb::StmtType::STMT);
-  pkb->AddStmt("1", pkb::StmtType::READ);
-  pkb->AddStmt("main", pkb::StmtType::PROC);
-  pkb->AddTypeOfStmt("1", pkb::StmtType::ASSIGN);
+  pkb->AddStmt("1", StmtType::STMT);
+  pkb->AddStmt("1", StmtType::READ);
+  pkb->AddStmt("main", StmtType::PROC);
+  pkb->AddTypeOfStmt("1", StmtType::ASSIGN);
   pkb->GetModifiesStore()->AddStmtVar("1", "a");
 
   // set up actual traverse of DE
@@ -52,12 +59,12 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
   design_extractor->IterateAst(expected_program_node);
 
   // test
-  REQUIRE(test_pkb->GetStmt(pkb::StmtType::STMT) == pkb->GetStmt(pkb::StmtType::STMT));
-  REQUIRE(test_pkb->GetStmt(pkb::StmtType::READ) == pkb->GetStmt(pkb::StmtType::READ));
-  REQUIRE(test_pkb->GetStmt(pkb::StmtType::PROC) == pkb->GetStmt(pkb::StmtType::PROC));
-  REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(pkb::StmtType::STMT) == pkb->GetModifiesStore()->GetAllModStmt(pkb::StmtType::STMT));
+  REQUIRE(test_pkb->GetStmt(StmtType::STMT) == pkb->GetStmt(StmtType::STMT));
+  REQUIRE(test_pkb->GetStmt(StmtType::READ) == pkb->GetStmt(StmtType::READ));
+  REQUIRE(test_pkb->GetStmt(StmtType::PROC) == pkb->GetStmt(StmtType::PROC));
+  REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(StmtType::STMT) == pkb->GetModifiesStore()->GetAllModStmt(StmtType::STMT));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("1") == pkb->GetModifiesStore()->GetVarModByStmt("1"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(pkb::StmtType::STMT, "a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(StmtType::STMT, "a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a"));
   REQUIRE(test_pkb->GetModifiesStore()->GetAllStmtModify() == pkb->GetModifiesStore()->GetAllStmtModify());
 }
 
@@ -86,13 +93,13 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
 
   // set up expected PKB
   pkb::PkbPtr pkb = std::make_shared<PKB>();
-  pkb->AddStmt("1", pkb::StmtType::STMT);
-  pkb->AddStmt("2", pkb::StmtType::STMT);
-  pkb->AddStmt("1", pkb::StmtType::READ);
-  pkb->AddStmt("2", pkb::StmtType::PRINT);
-  pkb->AddStmt("main", pkb::StmtType::PROC);
-  pkb->AddTypeOfStmt("1", pkb::StmtType::READ);
-  pkb->AddTypeOfStmt("2", pkb::StmtType::ASSIGN);
+  pkb->AddStmt("1", StmtType::STMT);
+  pkb->AddStmt("2", StmtType::STMT);
+  pkb->AddStmt("1", StmtType::READ);
+  pkb->AddStmt("2", StmtType::PRINT);
+  pkb->AddStmt("main", StmtType::PROC);
+  pkb->AddTypeOfStmt("1", StmtType::READ);
+  pkb->AddTypeOfStmt("2", StmtType::ASSIGN);
   pkb->GetModifiesStore()->AddStmtVar("1", "a");
   pkb->GetUsesStore()->AddStmtVar("2", "x");
   pkb->GetFollowsStore()->AddFollow("1", "2");
@@ -105,21 +112,21 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
   design_extractor->IterateAst(expected_program_node);
 
   // test
-  REQUIRE(test_pkb->GetStmt(pkb::StmtType::STMT) == pkb->GetStmt(STMT));
-  REQUIRE(test_pkb->GetStmt(pkb::StmtType::READ) == pkb->GetStmt(READ));
-  REQUIRE(test_pkb->GetStmt(pkb::StmtType::PRINT) == pkb->GetStmt(PRINT));
-  REQUIRE(test_pkb->GetStmt(pkb::StmtType::PROC) == pkb->GetStmt(PROC));
+  REQUIRE(test_pkb->GetStmt(StmtType::STMT) == pkb->GetStmt(STMT));
+  REQUIRE(test_pkb->GetStmt(StmtType::READ) == pkb->GetStmt(READ));
+  REQUIRE(test_pkb->GetStmt(StmtType::PRINT) == pkb->GetStmt(PRINT));
+  REQUIRE(test_pkb->GetStmt(StmtType::PROC) == pkb->GetStmt(PROC));
   REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(STMT) == pkb->GetModifiesStore()->GetAllModStmt(STMT));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("1") == pkb->GetModifiesStore()->GetVarModByStmt("1"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(pkb::StmtType::STMT,"a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(pkb::StmtType::STMT, "a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT,"a"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(StmtType::STMT,"a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(StmtType::STMT, "a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT,"a"));
   REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByStmt("2") == pkb->GetUsesStore()->GetVarUsedByStmt("2"));
-  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(pkb::StmtType::STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
-  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(pkb::StmtType::STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
+  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(StmtType::STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
+  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(StmtType::STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
   REQUIRE(test_pkb->GetUsesStore()->GetAllStmtUsing() == pkb->GetUsesStore()->GetAllStmtUsing());
-  REQUIRE(test_pkb->GetUsesStore()->GetAllUsesStmt(pkb::StmtType::STMT) == pkb->GetUsesStore()->GetAllUsesStmt(STMT));
-  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(pkb::StmtType::STMT, pkb::StmtType::STMT) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT));
-  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(pkb::StmtType::STMT, pkb::StmtType::STMT) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT));
+  REQUIRE(test_pkb->GetUsesStore()->GetAllUsesStmt(StmtType::STMT) == pkb->GetUsesStore()->GetAllUsesStmt(STMT));
+  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(StmtType::STMT, StmtType::STMT) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT));
+  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(StmtType::STMT, StmtType::STMT) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT));
 }
 
 TEST_CASE("Test DE population for single procedure with pattern statements") {
