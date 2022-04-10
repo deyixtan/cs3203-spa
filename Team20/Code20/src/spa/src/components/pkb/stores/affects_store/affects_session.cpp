@@ -17,28 +17,28 @@ bool AffectsSession::IsAffected(std::string const &stmt) {
   auto predicate = [stmt](const std::pair<std::string, std::string> &pair) {
     return pair.second == stmt;
   };
-  return std::any_of(m_all_affects_pairs.begin(), m_all_affects_pairs.end(), predicate);
+  return std::any_of(m_all_affects_pairs2.begin(), m_all_affects_pairs2.end(), predicate);
 }
 
 bool AffectsSession::IsAffectedStar(std::string const &stmt) {
   auto predicate = [stmt](const std::pair<std::string, std::string> &pair) {
     return pair.second == stmt;
   };
-  return std::any_of(m_all_affects_star_pairs.begin(), m_all_affects_star_pairs.end(), predicate);
+  return std::any_of(m_all_affects_star_pairs2.begin(), m_all_affects_star_pairs2.end(), predicate);
 }
 
 bool AffectsSession::IsAffecting(std::string const &stmt) {
   auto predicate = [stmt](const std::pair<std::string, std::string> &pair) {
     return pair.first == stmt;
   };
-  return std::any_of(m_all_affects_pairs.begin(), m_all_affects_pairs.end(), predicate);
+  return std::any_of(m_all_affects_pairs2.begin(), m_all_affects_pairs2.end(), predicate);
 }
 
 bool AffectsSession::IsAffectingStar(std::string const &stmt) {
   auto predicate = [stmt](const std::pair<std::string, std::string> &pair) {
     return pair.first == stmt;
   };
-  return std::any_of(m_all_affects_star_pairs.begin(), m_all_affects_star_pairs.end(), predicate);
+  return std::any_of(m_all_affects_star_pairs2.begin(), m_all_affects_star_pairs2.end(), predicate);
 }
 
 bool AffectsSession::DoesAffectExists(IDENT_PAIR const &pair) {

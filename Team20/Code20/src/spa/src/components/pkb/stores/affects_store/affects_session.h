@@ -19,12 +19,6 @@ class AffectsStore;
 class AffectsSession : StmtStmtStore {
  private:
   std::shared_ptr<AffectsStore> m_affects_store;
-  std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_map;
-  std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_star_map;
-  std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_reverse_map;
-  std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_star_reverse_map;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_pairs;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_star_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_pairs2;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_star_pairs2;
   IDENT_PAIR_VECTOR m_same_affects_pairs; // for same synonym
