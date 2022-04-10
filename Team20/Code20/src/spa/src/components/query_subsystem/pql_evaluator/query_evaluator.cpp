@@ -4,7 +4,7 @@ namespace pql {
 
 void QueryEvaluator::Evaluate(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results) {
   EvaluateOptimized(query, pkb, results);
-  pkb->GetAffectsStore()->ClearAffectsSession();
+  pkb->GetAffectsStoreFactory()->ClearAffectsStore();
   pkb->GetNextStore()->ClearNextStarCache();
 }
 
@@ -116,8 +116,7 @@ void QueryEvaluator::ProjectResults(ParsedQuery &query,
   } else if (table.IsAttributeResult()) {
     ResultClause result_clause = query.GetResultClause();
     std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration().GetDeclarations();
-    std::pair<std::pair<DesignEntityType, std::string>, AttriName>
-        attribute = Utils::ParseAttributeRef(result_clause.GetValues().front(), declarations);
+    std::pair<std::pair<DesignEntityType, std::string>, AttriName> attribute = Utils::ParseAttributeRef(result_clause.GetValues().front(), declarations);
     auto projected_results = table.GetResult(attribute.first.second);
     if (Utils::IsConversionNeeded(attribute.first.first, attribute.second)) {
       std::unordered_set<std::string> temp_set;
@@ -138,12 +137,15 @@ void QueryEvaluator::ProjectResults(ParsedQuery &query,
       results.emplace_back(result);
     }
   } else if (table.IsTupleResult()) {
-    auto projected_results =
-        table.GetTupleResult(query.GetResultClause().GetValues(), query.GetDeclaration().GetDeclarations(), pkb);
+    auto projected_results = table.GetTupleResult(query.GetResultClause().GetValues(), query.GetDeclaration().GetDeclarations(), pkb);
     for (auto result : projected_results) {
       results.emplace_back(result);
     }
   }
+
+  pkb->GetAffectsStoreFactory()->ClearAffectsStore();
+  pkb->GetNextStore()->ClearNextStarCache();
+
 }
 
 std::queue<std::shared_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query, const PkbPtr &pkb) {

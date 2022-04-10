@@ -124,6 +124,8 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_typ
 
   if (store_type == NEXT) {
     rs_type = STMT;
+  } else if (store_type == AFFECTS) {
+    rs_type = ASSIGN;
   }
 
   //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);

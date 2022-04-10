@@ -19,8 +19,8 @@ void PKB::InitRelationshipStores() {
   m_pattern_store = std::make_shared<PatternStore>(m_stmt_vector, m_stmt_type);
   m_call_store = std::make_shared<CallStore>(m_stmt_vector, m_stmt_type);
   m_next_store = std::make_shared<NextStore>(m_stmt_vector, m_stmt_type, m_parent_store);
-  m_affects_store = std::make_shared<AffectsStore>(m_stmt_vector, m_stmt_type, m_modify_store, m_usage_store, m_follow_store);
-
+  m_affects_store_factory = std::make_shared<AffectsStoreFactory>(
+      m_stmt_vector, m_stmt_type, m_modify_store, m_usage_store);
 }
 
 void PKB::AddStmt(std::string const &stmt, StmtType type) {
@@ -55,7 +55,7 @@ void PKB::AddStmtToName(StmtType type, std::string const &stmt, std::string cons
 
 void PKB::AddProgramCfg(std::shared_ptr<source::Cfg> program_cfg) {
   m_program_cfg = program_cfg;
-  m_affects_store->AddProgramCfg(program_cfg);
+  m_affects_store_factory->AddProgramCfg(program_cfg);
 }
 
 std::unordered_set<std::string> PKB::GetStmt(StmtType type) {
@@ -119,8 +119,8 @@ std::shared_ptr<NextStore> PKB::GetNextStore() {
   return m_next_store;
 }
 
-std::shared_ptr<AffectsStore> PKB::GetAffectsStore() {
-  return m_affects_store;
+AffectsStoreFactoryPtr PKB::GetAffectsStoreFactory() {
+  return m_affects_store_factory;
 }
 
 std::shared_ptr<source::Cfg> PKB::GetProgCfg() {
