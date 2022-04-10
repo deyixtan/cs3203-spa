@@ -1,9 +1,11 @@
 #ifndef SOURCE_DECLARATIONS_H
 #define SOURCE_DECLARATIONS_H
 
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <queue>
+#include <stack>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -17,10 +19,8 @@ namespace source {
   enum class RelationOperator;
   enum class ArithmeticOperator;
 
-  // token-related types
-  class SourceToken;
-
   // ast-related types
+  class SourceToken;
   class ProgramNode;
   class ProcedureNode;
   class StatementListNode;
@@ -41,8 +41,10 @@ namespace source {
   class ConstantNode;
 
   // cfg-related types
-  class Cfg;
+  class CallGraph;
+  struct CfgNodeStatement;
   class CfgNode;
+  class Cfg;
 
   // components
   class SourceLexer;
@@ -56,16 +58,14 @@ namespace source {
   // general
   typedef std::exception Exception;
   typedef std::string String;
+  typedef std::vector<String> StringStream;
   typedef std::queue<String> StringQueue;
   typedef std::unordered_set<String> StringSet;
   typedef std::unordered_map<std::string, int> StringToIntMap;
   typedef std::unordered_map<String, StringSet> StringToStringSetMap;
 
-  // token-related types
-  typedef std::shared_ptr<SourceToken> TokenPtr;
-  typedef std::vector<TokenPtr> TokenStream;
-
   // ast-related types
+  typedef std::shared_ptr<SourceToken> TokenPtr;
   typedef std::shared_ptr<ProgramNode> ProgramNodePtr;
   typedef std::shared_ptr<ProcedureNode> ProcedureNodePtr;
   typedef std::shared_ptr<StatementListNode> StatementListNodePtr;
@@ -85,11 +85,26 @@ namespace source {
   typedef std::shared_ptr<VariableNode> VariableNodePtr;
   typedef std::shared_ptr<ConstantNode> ConstantNodePtr;
 
-  // ast-related types (stream)
+  // ast-related types (others)
+  typedef std::vector<TokenPtr> TokenStream;
   typedef std::vector<ProcedureNodePtr> ProcedureNodeStream;
   typedef std::vector<StatementNodePtr> StatementNodeStream;
 
+  // cfg-related types
+  typedef std::shared_ptr<CallGraph> CallGraphPtr;
+  typedef std::shared_ptr<CfgNode> CfgNodePtr;
+  typedef std::shared_ptr<Cfg> CfgPtr;
+
+  // cfg-related types (others)
+  typedef std::vector<CfgNodeStatement> CfgNodeStatementStream;
+  typedef std::unordered_set<CfgNodePtr> CfgNodeSet;
+  typedef std::stack<CfgNodePtr> CfgNodeStack;
+  typedef std::vector<CfgNodePtr> CfgNodeStream;
+  typedef std::unordered_map<String , CfgNodePtr> StringToCfgNodePtrMap;
+
   // components
+  typedef std::shared_ptr<CfgBuilder> CfgBuilderPtr;
+  typedef std::shared_ptr<DesignExtractor> DesignExtractorPtr;
   typedef std::shared_ptr<PkbClient> PkbClientPtr;
 }
 

@@ -8,29 +8,11 @@ using namespace clause_util;
 UsesPClause::UsesPClause(const std::unordered_map<std::string, DesignEntityType> &declarations_,
                          const PqlToken &first_arg_,
                          const PqlToken &second_arg_,
-                         PKB *pkb_)
+                         const PkbPtr &pkb_)
     : declarations(declarations_), first_arg(first_arg_), second_arg(second_arg_), pkb(pkb_) {}
 
-Table pql::UsesPClause::Execute() {
-  if (IsArgSynonym(first_arg) && IsArgSynonym(second_arg)) {
-    // UsesP(p, v)
-    return HandleSynonymSynonym();
-  } else if (IsArgSynonym(first_arg) && IsArgWildcard(second_arg)) {
-    // UsesP(p, _)
-    return HandleSynonymWildcard();
-  } else if (IsArgSynonym(first_arg) && IsArgIdent(second_arg)) {
-    // UsesP(p, "x")
-    return HandleSynonymIdent();
-  } else if (IsArgIdent(first_arg) && IsArgSynonym(second_arg)) {
-    // UsesP("main", v)
-    return HandleIdentSynonym();
-  } else if (IsArgIdent(first_arg) && IsArgWildcard(second_arg)) {
-    // UsesP("main", _)
-    return HandleIdentWildcard();
-  } else if (IsArgIdent(first_arg) && IsArgIdent(second_arg)) {
-    // UsesP("main", "x")
-    return HandleIdentIdent();
-  }
+Table UsesPClause::Execute() {
+  return (this->*execute_handler.at({first_arg.type, second_arg.type}))();
 }
 
 Table UsesPClause::HandleSynonymSynonym() {
@@ -61,6 +43,67 @@ Table UsesPClause::HandleIdentWildcard() {
 Table UsesPClause::HandleIdentIdent() {
   bool is_false_clause = !pkb->GetUsesStore()->IsStmtVarValid({first_arg.value, second_arg.value});
   return ConstructEmptyTable(is_false_clause);
+}
+
+bool UsesPClause::ExecuteBool() {
+  return (this->*execute_bool_handler.at({first_arg.type, second_arg.type}))();
+}
+
+bool UsesPClause::HandleSynonymSynonymBool() {
+  auto pair_constraints = pkb->GetUsesStore()->GetAllUsesStmt(PROC);
+  return pair_constraints.empty();
+}
+
+bool UsesPClause::HandleSynonymWildcardBool() {
+  auto single_constraints = pkb->GetUsesStore()->GetAllProcUsing();
+  return single_constraints.empty();
+}
+
+bool UsesPClause::HandleSynonymIdentBool() {
+  auto single_constraints = pkb->GetUsesStore()->GetStmtUsedByVar(PROC, second_arg.value);
+  return single_constraints.empty();
+}
+
+bool UsesPClause::HandleIdentSynonymBool() {
+  auto single_constraints = pkb->GetUsesStore()->GetVarUsedByStmt(first_arg.value);
+  return single_constraints.empty();
+}
+
+bool UsesPClause::HandleIdentWildcardBool() {
+  bool is_false_clause = pkb->GetUsesStore()->GetVarUsedByStmt(first_arg.value).empty();
+  return is_false_clause;
+}
+
+bool UsesPClause::HandleIdentIdentBool() {
+  bool is_false_clause = !pkb->GetUsesStore()->IsStmtVarValid({first_arg.value, second_arg.value});
+  return is_false_clause;
+}
+
+std::set<std::string> UsesPClause::GetSynonyms() {
+  std::set<std::string> synonyms;
+  if (IsArgSynonym(first_arg)) {
+    synonyms.emplace(first_arg.value);
+  }
+  if (IsArgSynonym(second_arg)) {
+    synonyms.emplace(second_arg.value);
+  }
+
+  return synonyms;
+}
+
+size_t UsesPClause::GetSynonymsSize() {
+  size_t size = 0;
+  if (IsArgSynonym(first_arg)) {
+    size++;
+  }
+  if (IsArgSynonym(second_arg)) {
+    size++;
+  }
+  return size;
+}
+
+size_t UsesPClause::GetWeight() {
+  return weight;
 }
 
 }

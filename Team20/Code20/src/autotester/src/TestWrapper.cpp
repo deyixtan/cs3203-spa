@@ -11,8 +11,7 @@ volatile bool AbstractWrapper::GlobalStop = false;
 
 // a default constructor
 TestWrapper::TestWrapper() {
-  pkb = new PKB();
-  query_controller = new QueryController(pkb);
+  pkb = std::make_shared<PKB>();
 }
 
 // method for parsing the SIMPLE source
@@ -26,5 +25,5 @@ void TestWrapper::parse(std::string filename) {
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
-  query_controller->ProcessQuery(query, results);
+  pql::QueryController::ProcessQuery(query, pkb, results);
 }

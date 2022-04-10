@@ -1,27 +1,27 @@
 #include "node_program.h"
-#include "node_procedure.h"
-#include "../cfg/cfg.h"
-#include "../cfg/cfg_node.h"
-#include "../../iterator/design_extractor.h"
-#include "../../iterator/cfg_builder.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
+#include "components/source_subsystem/types/ast/node_procedure.h"
 
 namespace source {
 
-ProgramNode::ProgramNode() {}
+ProgramNode::ProgramNode() = default;
 
-ProgramNode::ProgramNode(std::vector<std::shared_ptr<ProcedureNode>> procedures) :
-    m_procedures(procedures) {}
+ProgramNode::ProgramNode(ProcedureNodeStream procedures) :
+    m_procedures(std::move(procedures)) {}
 
-std::string ProgramNode::ToString() {
-  std::string str = "";
-  for (std::shared_ptr<ProcedureNode> procedure : m_procedures) {
-    str += procedure->ToString() + "\n";
-  }
-  return str;
+ProcedureNodeStream ProgramNode::GetProcedures() {
+  return m_procedures;
 }
 
-std::string ProgramNode::GetPatternFormat() {
-  return "";
+void ProgramNode::Accept(DesignExtractorPtr design_extractor) {
+  ProgramNodePtr derived_ptr = std::dynamic_pointer_cast<ProgramNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
+}
+
+void ProgramNode::Accept(CfgBuilderPtr cfg_builder) {
+  ProgramNodePtr derived_ptr = std::dynamic_pointer_cast<ProgramNode>(shared_from_this());
+  cfg_builder->Visit(derived_ptr);
 }
 
 bool ProgramNode::operator==(const ProgramNode &other) const {
@@ -33,26 +33,6 @@ bool ProgramNode::operator==(const ProgramNode &other) const {
     else { return false; }
   }
   return true;
-}
-
-void ProgramNode::Accept(DesignExtractor *de) {
-  for (auto &procedure : m_procedures) {
-    de->Visit(procedure);
-  }
-}
-
-std::unordered_map<std::string, std::shared_ptr<CfgNode>> ProgramNode::Accept(CfgBuilder *cb) {
-  std::unordered_map<std::string, std::shared_ptr<CfgNode>> heads;
-  for (std::shared_ptr<ProcedureNode> const &procedure : m_procedures) {
-    std::shared_ptr<CfgNode> head = std::make_shared<CfgNode>();
-    std::shared_ptr<CfgNode> tail = cb->Visit(procedure, head);
-    if (tail->GetStatementList().size() != 0) {
-      std::shared_ptr<CfgNode> dummy = std::make_shared<CfgNode>();
-      tail->AddNext(dummy);
-    }
-    heads.insert({procedure->GetIdentifier(), head});
-  }
-  return heads;
 }
 
 }

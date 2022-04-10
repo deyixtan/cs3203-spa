@@ -3,64 +3,66 @@
 
 namespace source {
 
-CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator,
-                                                     std::shared_ptr<ExpressionNode> right_expression)
-    : m_arithmetic_operator(arithmetic_operator), m_left_expression(NULL), m_right_expression(right_expression) {}
+CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator, ExpressionNodePtr rhs)
+    : m_arithmetic_operator(arithmetic_operator), m_lhs(nullptr), m_rhs(std::move(rhs)) {}
 
 CombinationExpressionNode::CombinationExpressionNode(ArithmeticOperator arithmetic_operator,
-                                                     std::shared_ptr<ExpressionNode> left_expression,
-                                                     std::shared_ptr<ExpressionNode> right_expression)
-    : m_arithmetic_operator(arithmetic_operator),
-      m_left_expression(left_expression),
-      m_right_expression(right_expression) {}
+                                                     ExpressionNodePtr lhs,
+                                                     ExpressionNodePtr rhs)
+    : m_arithmetic_operator(arithmetic_operator), m_lhs(std::move(lhs)), m_rhs(std::move(rhs)) {}
 
-std::shared_ptr<ExpressionNode> CombinationExpressionNode::GetLeftExpression() {
-  return m_left_expression;
-}
-
-std::shared_ptr<ExpressionNode> CombinationExpressionNode::GetRightExpression() {
-  return m_right_expression;
-}
-
-ArithmeticOperator CombinationExpressionNode::GetArithmeticOperator() {
+ArithmeticOperator CombinationExpressionNode::GetOperator() {
   return m_arithmetic_operator;
 }
 
-std::string CombinationExpressionNode::GetArithmeticOperatorLabel(ArithmeticOperator arithmetic_operator) {
+String CombinationExpressionNode::GetOperatorLabel(ArithmeticOperator arithmetic_operator) {
   switch (arithmetic_operator) {
-    case ArithmeticOperator::PLUS:return "+";
-    case ArithmeticOperator::MINUS:return "-";
-    case ArithmeticOperator::DIVIDE:return "/";
-    case ArithmeticOperator::MULTIPLY:return "*";
-    case ArithmeticOperator::MOD:return "%";
-    default:return "";
+    case ArithmeticOperator::PLUS: {
+      return "+";
+    }
+    case ArithmeticOperator::MINUS: {
+      return "-";
+    }
+    case ArithmeticOperator::DIVIDE: {
+      return "/";
+    }
+    case ArithmeticOperator::MULTIPLY: {
+      return "*";
+    }
+    case ArithmeticOperator::MOD: {
+      return "%";
+    }
+    default: {
+      return "";
+    }
   }
 }
 
-ExpressionType CombinationExpressionNode::GetExpressionType() {
-  return ExpressionType::COMBINATION;
+ExpressionNodePtr CombinationExpressionNode::GetLhs() {
+  return m_lhs;
 }
 
-std::string CombinationExpressionNode::ToString() {
-  return "(" + m_left_expression->ToString() + " " + GetArithmeticOperatorLabel(m_arithmetic_operator) + " "
-      + m_right_expression->ToString() + ")";
+ExpressionNodePtr CombinationExpressionNode::GetRhs() {
+  return m_rhs;
 }
 
-std::string CombinationExpressionNode::GetPatternFormat() {
-  return "(" + m_left_expression->GetPatternFormat() + GetArithmeticOperatorLabel(m_arithmetic_operator)
-      + m_right_expression->GetPatternFormat() + ")";
+String CombinationExpressionNode::GetPatternFormat() {
+  String arithmetic_operator = GetOperatorLabel(m_arithmetic_operator);
+  String lhs_pattern = m_lhs->GetPatternFormat();
+  String rhs_pattern = m_rhs->GetPatternFormat();
+  return "(" + lhs_pattern + arithmetic_operator + rhs_pattern + ")";
+}
+
+void CombinationExpressionNode::Accept(DesignExtractorPtr design_extractor) {
+  CombinationExpressionNodePtr derived_ptr = std::dynamic_pointer_cast<CombinationExpressionNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
 bool CombinationExpressionNode::operator==(const ExpressionNode &other) const {
   const auto casted_other = dynamic_cast<const CombinationExpressionNode *>(&other);
   return m_arithmetic_operator == casted_other->m_arithmetic_operator
-      && *m_left_expression == *(casted_other->m_left_expression)
-      && *m_right_expression == *(casted_other->m_right_expression);
-}
-
-std::string CombinationExpressionNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
-  return "(" + de->Visit(m_left_expression, proc_name, is_uses) + GetArithmeticOperatorLabel(m_arithmetic_operator)
-      + de->Visit(m_right_expression, proc_name, is_uses) + ")";
+      && *m_lhs == *(casted_other->m_lhs)
+      && *m_rhs == *(casted_other->m_rhs);
 }
 
 }

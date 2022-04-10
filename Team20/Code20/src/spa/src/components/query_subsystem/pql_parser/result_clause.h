@@ -2,6 +2,8 @@
 #define RESULT_CLAUSE_H
 #include "../pql_lexer/pql_token.h"
 
+using namespace pql;
+
 enum class ResultClauseType {
   BOOLEAN,
   TUPLE,

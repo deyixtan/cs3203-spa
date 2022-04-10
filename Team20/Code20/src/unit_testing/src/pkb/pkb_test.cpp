@@ -453,8 +453,8 @@ TEST_CASE("Get stmt modified by var (invalid)") {
 TEST_CASE("Get var modified by proc (correct)") {
   PKB *pkb = set_up_pkb();
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetModifiesStore()->GetAllModStmt(PROC);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected = mod_proc_to_var.at(PROC);
+  std::vector<std::pair<std::string, std::string>> actual = pkb->GetModifiesStore()->GetAllModStmt(PROC);
+  std::vector<std::pair<std::string, std::string>> expected = mod_proc_to_var.at(PROC);
 
   REQUIRE(actual == expected);
 }
@@ -570,15 +570,6 @@ TEST_CASE("Get follows of a stmt") {
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Get follows star of a stmt") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "2");
-  auto expected = follows_rs.at("2").following_star;
-
-  REQUIRE(actual == expected);
-}
-
 /* PARENT STORE */
 TEST_CASE("Checks if a parent-child pair relationship Valid") {
   PKB *pkb = set_up_pkb();
@@ -606,10 +597,6 @@ std::string GetFollowingOf(std::string stmt);
 std::unordered_set<std::string> GetFollowerStarOf(std::string stmt);
 
 std::unordered_set<std::string> GetFollowingStarOf(std::string stmt);
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowPairs();
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowStarPairs();
 
 
 /* PARENT STORE */
@@ -649,18 +636,18 @@ TEST_CASE("Check pattern matching (wrong)") {
 
 TEST_CASE("Check pattern synonym matching exact (correct)") {
   PKB *pkb = set_up_pkb();
-  
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetPatternStore()->GetStmtWithPatternSynonymWildcard();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected = pattern_pairs_synonym;
+
+  std::vector<std::pair<std::string, std::string>> actual = pkb->GetPatternStore()->GetStmtWithPatternSynonymWildcard();
+  std::vector<std::pair<std::string, std::string>> expected = pattern_pairs_synonym;
   REQUIRE(actual == expected);
 }
 
 TEST_CASE("Check pattern synonym matching partial (correct)") {
   PKB *pkb = set_up_pkb();
-  
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
+
+  std::vector<std::pair<std::string, std::string>>
       actual = pkb->GetPatternStore()->GetStmtWithPatternSynonymWildcard();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected = pattern_pairs_synonym;
+  std::vector<std::pair<std::string, std::string>> expected = pattern_pairs_synonym;
 
   REQUIRE(actual == expected);
 }

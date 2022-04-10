@@ -1,42 +1,18 @@
 #include "store.h"
+#include "../pkb_relationship.h"
 
-Store::Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector, std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type)
+Store::Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+             std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type)
     : m_stmt_vector(move(stmt_vector)), m_stmt_type(move(stmt_type)) {}
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> Store::GetAllStmt(StmtType type,
-                                                                                     std::vector<StmtType> &supported_types,
-                                                                                     std::unordered_set<std::pair<std::string,
-                                                                                                                  std::string>,
-                                                                                                        pair_hash> const &list,
-                                                                                     bool checkPairFirst) {
-  return GetAllStmt(type, type, supported_types, list, checkPairFirst);
-}
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> Store::GetAllStmt(StmtType type1,
-                                                                                     StmtType type2,
-                                                                                     std::vector<StmtType> &supported_types,
-                                                                                     std::unordered_set<std::pair<std::string,
-                                                                                                                  std::string>,
-                                                                                                        pair_hash> const &list,
-                                                                                     bool checkPairFirst) {
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> result;
-
-  if (std::find(supported_types.begin(), supported_types.end(), type1) == supported_types.end()) {
-    return result;
-  }
-
-  for (auto const &i : list) {
-    for (auto const &j : m_stmt_vector->at(type1)) {
-      if (checkPairFirst) {
-        if (i.first == j) {
-          result.insert(i);
-        }
-        continue;
-      }
-      if (i.second == j) {
-        result.insert(i);
-      }
+int Store::IsMapContains(StmtType type1, StmtType type2, NESTED_STMT_STMT_MAP *pair_map) {
+  if (pair_map->find(type1) != pair_map->end()) {
+    if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
+      return 1; // Both types exist
+    } else {
+      return 2; // Only type 1 exists
     }
+  } else {
+    return 3; // Both types missing
   }
-  return result;
 }

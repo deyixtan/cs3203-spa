@@ -1,46 +1,30 @@
 #include "node_print_statement.h"
-#include "../../iterator/design_extractor.h"
-#include "../../iterator/cfg_builder.h"
-#include "../cfg/cfg_node.h"
+#include "components/source_subsystem/iterator/cfg_builder.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
+#include "components/source_subsystem/types/ast/node_variable.h"
 
 namespace source {
 
-PrintStatementNode::PrintStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier)
-    : StatementNode(stmt_no), m_identifier(identifier) {}
+PrintStatementNode::PrintStatementNode(String &stmt_no, VariableNodePtr variable)
+    : StatementNode(stmt_no), m_variable(std::move(variable)) {}
 
-std::shared_ptr<VariableNode> PrintStatementNode::GetIdentifier() {
-  return m_identifier;
+VariableNodePtr PrintStatementNode::GetVariable() {
+  return m_variable;
 }
 
-StmtType PrintStatementNode::GetStatementType() {
-  return StmtType::PRINT;
+void PrintStatementNode::Accept(DesignExtractorPtr design_extractor) {
+  PrintStatementNodePtr derived_ptr = std::dynamic_pointer_cast<PrintStatementNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
-std::string PrintStatementNode::ToString() {
-  return StatementNode::ToString() + "print " + m_identifier->ToString() + ";\n";
-}
-
-std::string PrintStatementNode::GetPatternFormat() {
-  return "";
+void PrintStatementNode::Accept(CfgBuilderPtr cfg_builder) {
+  PrintStatementNodePtr derived_ptr = std::dynamic_pointer_cast<PrintStatementNode>(shared_from_this());
+  cfg_builder->Visit(derived_ptr);
 }
 
 bool PrintStatementNode::operator==(const StatementNode &other) const {
   const auto casted_other = dynamic_cast<const PrintStatementNode *>(&other);
-  return m_stmt_no == casted_other->m_stmt_no && *m_identifier == *(casted_other->m_identifier);
-}
-
-void PrintStatementNode::Accept(DesignExtractor *de, std::string proc_name) {
-  std::string stmt_num = std::to_string(GetStatementNumber());
-  std::string var_name = m_identifier->GetIdentifier();
-  de->GetPkbClient()->PopulateTypeOfStmt(stmt_num, PRINT);
-
-  de->Visit(m_identifier, proc_name, true);
-  de->GetPkbClient()->PopulatePrint(de->GetVisited(), stmt_num, var_name);
-}
-
-std::shared_ptr<CfgNode> PrintStatementNode::Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node) {
-  cfg_node->AddStatement(StmtType::PRINT, std::to_string(GetStatementNumber()));
-  return cfg_node;
+  return m_stmt_no == casted_other->m_stmt_no && *m_variable == *(casted_other->m_variable);
 }
 
 }
