@@ -154,7 +154,6 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
       }
       last_stmt_no = std::to_string(stoi(largest_stmt) - 1);
       if(stoi(stmt) > stoi(last_stmt_no)) {
-      if(stoi(stmt) > stoi(last_stmt_no)) {
         res.insert(start_if_stmt);
         first_stmt_no = std::to_string(stoi(last_stmt_no) + 1);
       }
