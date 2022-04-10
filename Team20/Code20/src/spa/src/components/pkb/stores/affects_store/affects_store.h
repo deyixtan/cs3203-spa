@@ -28,6 +28,10 @@ class AffectsStore : StmtStmtStore {
   void HandleAffectsLastModSet(IDENT &stmt_no, IDENT &var_used, IDENT_SET_MAP_PTR &last_modified_map);
   void HandleAffectsStarLastModSet(IDENT &last_mod_stmt_no, IDENT &stmt_no);
   void HandleAffectsStarLastModStarSet(IDENT &last_mod_stmt_no, IDENT &stmt_no);
+  void HandleWhileStatementLoop(source::CfgNodePtr &cfg_node,
+                                  unsigned int &prev_size,
+                                  unsigned int &curr_size,
+                                  bool is_get_current);
   void AddAffects(bool is_star, IDENT &upper, IDENT &lower);
   void HandleCfg();
   void HandleCfg(source::CfgNodePtr &cfg_node);
@@ -38,9 +42,9 @@ class AffectsStore : StmtStmtStore {
 
  public:
   explicit AffectsStore(IDENT_SET_VECTOR_PTR stmt_vector,
-                          IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,
-                          AffectsStoreFactoryPtr affects_store_factory,
-                          bool is_affects_star_involved);
+                        IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,
+                        AffectsStoreFactoryPtr affects_store_factory,
+                        bool is_affects_star_involved);
   [[nodiscard]] bool IsAffected(IDENT const &stmt);
   [[nodiscard]] bool IsAffectedStar(IDENT const &stmt);
   [[nodiscard]] bool IsAffecting(IDENT const &stmt);
