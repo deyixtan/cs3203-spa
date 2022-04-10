@@ -215,15 +215,22 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
         }
       }
 
-      for (int i = stoi(start_if_stmt); i < stoi(end_if_stmt); i++) {
-        std::unordered_set<std::string> next_set = GetNextOf(STMT, std::to_string(i));
-        if (!next_set.count(std::to_string(i + 1))
-            && m_parent_store->GetParentOf(IF, std::to_string(i)) == start_if_stmt) {
-          last_stmt_no = std::to_string(i);
-          break;
+      std::unordered_set<std::string> get_next_of_if = GetNextOf(STMT, if_parent_stmt);
+      std::string last_if_block_stmt = SMALLEST_STMT_NO;
+      for(auto s : get_next_of_if) {
+        if(stoi(s) > stoi(last_if_block_stmt)) {
+          last_if_block_stmt = s;
         }
       }
+      last_if_block_stmt = std::to_string(stoi(last_if_block_stmt) - 1);
+      if (stoi(stmt) <= stoi(last_if_block_stmt)) {
+        if (last_if_block_stmt < last_stmt_no) {
+          InsertPairResultLower(stoi(last_if_block_stmt) + 1, stoi(last_stmt_no), res, stmt);
+        }
+        last_stmt_no = last_if_block_stmt;
+      }
     }
+
 
     InsertPairResultLower(stoi(stmt) + 1, stoi(last_stmt_no), res, stmt);
     if(end_if_stmt != LARGEST_STMT_NO && stoi(last_stmt_no) + 1 < stoi(end_if_stmt)) {
