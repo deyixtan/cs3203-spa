@@ -154,17 +154,102 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
                                          std::string lower,
                                          NESTED_TUPLE_MAP *pair_map) {
 
-  // TODO:
   if (type1 == STMT && type2 == STMT) {
-
+    ExhaustiveAddStmtStmt(type1, upper, type2, lower, pair_map);
   } else if (type1 == STMT) {
-
+    ExhaustiveAddStmtNonStmt(type1, upper, type2, lower, pair_map);
   } else if (type2 == STMT) {
-
+    ExhaustiveAddNonStmtStmt(type1, upper, type2, lower, pair_map);
   } else {
-
+    ExhaustiveAddNonStmtNonStmt(type1, upper, type2, lower, pair_map);
   }
+}
+void StmtStmtStore::ExhaustiveAddNonStmtNonStmt(StmtType &type1,
+                                                std::string &upper,
+                                                StmtType &type2,
+                                                std::string &lower,
+                                                NESTED_TUPLE_MAP *pair_map) {
+  if (pair_map->find(type1) != pair_map->end()) {
+    AddType2NonStmt(type1, upper, type2, lower, pair_map);
+    StmtType temp_type1 = STMT;
+    AddType2NonStmt(temp_type1, upper, type2, lower, pair_map);
+  } else {
+    pair_map->insert({type1, {}});
+    pair_map->at(type1).insert({type2, {{}, {}, {}}});
+    AddToNextMap(type1, upper, type2, lower, pair_map);
+    pair_map->at(type1).insert({STMT, {{}, {}, {}}});
+    AddToNextMap(type1, upper, STMT, lower, pair_map);
 
+    pair_map->insert({STMT, {}});
+    pair_map->at(STMT).insert({type2, {{}, {}, {}}});
+    AddToNextMap(STMT, upper, type2, lower, pair_map);
+    pair_map->at(STMT).insert({STMT, {{}, {}, {}}});
+    AddToNextMap(STMT, upper, STMT, lower, pair_map);
+  }
+}
+void StmtStmtStore::AddType2NonStmt(StmtType &type1,
+                                    std::string &upper,
+                                    StmtType &type2,
+                                    std::string &lower,
+                                    NESTED_TUPLE_MAP *pair_map) {
+  if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
+    PopulatePairMap(type1, upper, type2, lower, pair_map);
+    PopulatePairMap(type1, upper, STMT, lower, pair_map);
+  } else {
+    pair_map->at(type1).insert({type2, {{}, {}, {}}});
+    AddToNextMap(type1, upper, type2, lower, pair_map);
+    pair_map->at(type1).insert({STMT, {{}, {}, {}}});
+    AddToNextMap(type1, upper, STMT, lower, pair_map);
+  }
+}
+void StmtStmtStore::ExhaustiveAddNonStmtStmt(StmtType &type1,
+                                             std::string &upper,
+                                             StmtType &type2,
+                                             std::string &lower,
+                                             NESTED_TUPLE_MAP *pair_map) {
+  if (pair_map->find(type1) != pair_map->end()) {
+    if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
+      PopulatePairMap(type1, upper, type2, lower, pair_map);
+    } else {
+      pair_map->at(type1).insert({type2, {{}, {}, {}}});
+      AddToNextMap(type1, upper, type2, lower, pair_map);
+    }
+    if (pair_map->at(STMT).find(type2) != pair_map->at(type1).end()) {
+      PopulatePairMap(STMT, upper, type2, lower, pair_map);
+    } else {
+      pair_map->at(STMT).insert({type2, {{}, {}, {}}});
+      AddToNextMap(STMT, upper, type2, lower, pair_map);
+    }
+  } else {
+    pair_map->insert({type1, {}});
+    pair_map->at(type1).insert({type2, {{}, {}, {}}});
+    AddToNextMap(type1, upper, type2, lower, pair_map);
+    pair_map->insert({STMT, {}});
+    pair_map->at(STMT).insert({type2, {{}, {}, {}}});
+    AddToNextMap(STMT, upper, type2, lower, pair_map);
+  }
+}
+void StmtStmtStore::ExhaustiveAddStmtNonStmt(StmtType &type1,
+                                             std::string &upper,
+                                             StmtType &type2,
+                                             std::string &lower,
+                                             NESTED_TUPLE_MAP *pair_map) {
+  if (pair_map->find(type1) != pair_map->end()) {
+    AddType2NonStmt(type1, upper, type2, lower, pair_map);
+  } else {
+    pair_map->insert({type1, {}});
+    pair_map->at(type1).insert({type2, {{}, {}, {}}});
+    AddToNextMap(type1, upper, type2, lower, pair_map);
+    pair_map->at(type1).insert({STMT, {{}, {}, {}}});
+    AddToNextMap(type1, upper, STMT, lower, pair_map);
+  }
+}
+
+void StmtStmtStore::ExhaustiveAddStmtStmt(StmtType &type1,
+                                          std::string &upper,
+                                          StmtType &type2,
+                                          std::string &lower,
+                                          NESTED_TUPLE_MAP *pair_map) {
   if (pair_map->find(type1) != pair_map->end()) {
     if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
       PopulatePairMap(type1, upper, type2, lower, pair_map);

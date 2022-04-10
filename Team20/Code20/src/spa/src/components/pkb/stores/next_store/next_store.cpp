@@ -100,7 +100,7 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
   std::string first_stmt_no = GetFirstStmtOfProc(stmt, first_stmt_no);
   std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
   if(ansc_set.empty()) {
-    InsertPairResult(stoi(first_stmt_no), stoi(stmt) - 1, res, stmt);
+    InsertPairResultUpper(stoi(first_stmt_no), stoi(stmt) - 1, res, stmt);
     if(type1 == WHILE) {
       StmtStmtStore::AddNext(true, type1, stmt, type1, stmt);
       res.insert(stmt);
@@ -109,15 +109,24 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
   }
   std::string smallest_stmt = GetStartStmtOfWhileLoop(ansc_set);
   std::string largest_stmt = GetEndStmtOfWhileLoop(smallest_stmt);
-  InsertPairResult(stoi(smallest_stmt), stoi(largest_stmt), res, stmt);
-  InsertPairResult(stoi(first_stmt_no), stoi(smallest_stmt) - 1, res, stmt);
+  InsertPairResultUpper(stoi(smallest_stmt), stoi(largest_stmt), res, stmt);
+  InsertPairResultUpper(stoi(first_stmt_no), stoi(smallest_stmt) - 1, res, stmt);
 }
 
-void NextStore::InsertPairResult(int start, int end, std::unordered_set<std::string> &res, std::string const stmt) {
+void NextStore::InsertPairResultUpper(int start, int end, std::unordered_set<std::string> &res, std::string const stmt) {
   StmtType type1 = m_stmt_type->at(stmt);
   for (int i = start; i <= end; i++) {
     StmtType type2 = m_stmt_type->at(std::to_string(i));
     StmtStmtStore::AddNext(true, type1, std::to_string(i), type2, stmt);
+    res.insert(std::to_string(i));
+  }
+}
+
+void NextStore::InsertPairResultLower(int start, int end, std::unordered_set<std::string> &res, std::string const stmt) {
+  StmtType type1 = m_stmt_type->at(stmt);
+  for (int i = start; i <= end; i++) {
+    StmtType type2 = m_stmt_type->at(std::to_string(i));
+    StmtStmtStore::AddNext(true, type1, stmt, type2, std::to_string(i));
     res.insert(std::to_string(i));
   }
 }
@@ -140,7 +149,7 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
   std::string last_stmt_no = GetLastStmtOfProc(stmt, last_stmt_no);
   std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
   if(ansc_set.empty()) {
-    InsertPairResult(stoi(stmt) + 1, stoi(last_stmt_no), res, stmt);
+    InsertPairResultLower(stoi(stmt) + 1, stoi(last_stmt_no), res, stmt);
     if(type1 == WHILE) {
       StmtStmtStore::AddNext(true, type1, stmt, type1, stmt);
       res.insert(stmt);
@@ -149,8 +158,8 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
   }
   std::string smallest_stmt = GetStartStmtOfWhileLoop(ansc_set);
   std::string largest_stmt = GetEndStmtOfWhileLoop(smallest_stmt);
-  InsertPairResult(stoi(smallest_stmt), stoi(largest_stmt), res, stmt);
-  InsertPairResult(stoi(largest_stmt) + 1, stoi(last_stmt_no), res, stmt);
+  InsertPairResultLower(stoi(smallest_stmt), stoi(largest_stmt), res, stmt);
+  InsertPairResultLower(stoi(largest_stmt) + 1, stoi(last_stmt_no), res, stmt);
 }
 
 std::string NextStore::GetStartStmtOfWhileLoop(std::unordered_set<std::string> &ansc_set) const {
