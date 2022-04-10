@@ -117,7 +117,9 @@ std::string StmtStmtStore::GetLowerOf(StmtType stmt_type, std::string const &stm
 std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_type,
                                                              StmtType stmt_type,
                                                              std::string const &stmt) {
+  //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);
   StmtType rs_type = PROC;
+
   if (store_type == NEXT) {
     rs_type = STMT;
   }
@@ -130,9 +132,7 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperSetOf(StoreType store_typ
   return {};
 }
 
-std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType store_type,
-                                                             StmtType stmt_type,
-                                                             std::string const &stmt) {
+std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StmtType stmt_type, std::string const &stmt) {
   //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(type_pair_map);
 
   if (IsMapContains(STMT, stmt_type, &type_pair_map) == 1) {
@@ -141,9 +141,7 @@ std::unordered_set<std::string> StmtStmtStore::GetLowerSetOf(StoreType store_typ
   return {};
 }
 
-std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType store_type,
-                                                              StmtType stmt_type,
-                                                              std::string const &stmt) {
+std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StmtType stmt_type, std::string const &stmt) {
 
   if (star_type_pair_map.find(stmt_type) != star_type_pair_map.end()) {
     if (star_type_pair_map.at(stmt_type).find(STMT) != star_type_pair_map.at(stmt_type).end()) {
@@ -153,14 +151,10 @@ std::unordered_set<std::string> StmtStmtStore::GetUpperStarOf(StoreType store_ty
   return {};
 }
 
-std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StoreType store_type,
-                                                              StmtType stmt_type,
-                                                              std::string const &stmt) {
-
+std::unordered_set<std::string> StmtStmtStore::GetLowerStarOf(StmtType stmt_type, std::string const &stmt) {
   if (IsMapContains(STMT, stmt_type, &star_type_pair_map) == 1) {
     return GetHelper(STMT, stmt_type, 0, stmt, true);
   }
-
   return {};
 }
 

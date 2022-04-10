@@ -55,15 +55,15 @@ IDENT_SET CallStore::GetCallersOf(IDENT const &proc){
 }
 
 IDENT_SET CallStore::GetCalleesOf(IDENT const &proc) {
-  return GetLowerSetOf(CALLS, PROC, proc);
+  return GetLowerSetOf(PROC, proc);
 }
 
 IDENT_SET CallStore::GetCallersStarOf(IDENT const &proc) {
-  return GetUpperStarOf(CALLS, PROC, proc);
+  return GetUpperStarOf(PROC, proc);
 }
 
 IDENT_SET CallStore::GetCalleesStarOf(IDENT const &proc) {
-  return GetLowerStarOf(CALLS, PROC, proc);
+  return GetLowerStarOf(PROC, proc);
 }
 
 IDENT_PAIR_VECTOR CallStore::GetAllCalls() {

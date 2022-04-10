@@ -44,7 +44,7 @@ IDENT_SET NextStore::GetBeforeOf(StmtType type, IDENT const &stmt) {
 }
 
 IDENT_SET NextStore::GetNextOf(StmtType type, IDENT const &stmt) {
-  return GetLowerSetOf(NEXT, type, stmt);
+  return GetLowerSetOf(type, stmt);
 }
 
 IDENT_SET NextStore::GetBeforeStarOf(StmtType type, IDENT const &stmt) {

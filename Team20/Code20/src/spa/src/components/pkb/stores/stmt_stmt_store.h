@@ -25,9 +25,9 @@ class StmtStmtStore : public Store {
   [[nodiscard]] IDENT GetLowerOf(StmtType stmt_type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetHelper(StmtType type1, StmtType type2, int index, IDENT const &stmt, bool is_star);
   [[nodiscard]] IDENT_SET GetUpperSetOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
-  [[nodiscard]] IDENT_SET GetLowerSetOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
-  [[nodiscard]] IDENT_SET GetUpperStarOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
-  [[nodiscard]] IDENT_SET GetLowerStarOf(StoreType store_type, StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetLowerSetOf(StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetUpperStarOf(StmtType stmt_type, IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetLowerStarOf(StmtType stmt_type, std::string const &stmt);
   [[nodiscard]] IDENT_PAIR_VECTOR GetPairByType(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_PAIR_VECTOR GetStarPairByType(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllPairs();

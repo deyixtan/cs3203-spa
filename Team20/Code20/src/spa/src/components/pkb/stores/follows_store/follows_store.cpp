@@ -34,11 +34,11 @@ IDENT FollowsStore::GetFollowingOf(StmtType type, IDENT const &stmt) {
 }
 
 IDENT_SET FollowsStore::GetFollowerStarOf(StmtType type, IDENT const &stmt) {
-  return GetUpperStarOf(FOLLOWS, type, stmt);
+  return GetUpperStarOf(type, stmt);
 }
 
 IDENT_SET FollowsStore::GetFollowingStarOf(StmtType type, IDENT const &stmt) {
-  return GetLowerStarOf(FOLLOWS, type, stmt);
+  return GetLowerStarOf(type, stmt);
 }
 
 IDENT_PAIR_VECTOR FollowsStore::GetAllFollowStmt(StmtType type1, StmtType type2) {
