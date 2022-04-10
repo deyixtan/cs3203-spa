@@ -11,7 +11,7 @@ class NextStore : public StmtStmtStore {
   std::shared_ptr<ParentStore> m_parent_store;
   std::unordered_map<std::string, std::vector<std::string>> m_proc_stmt_map;
   static const std::string SMALLEST_STMT_NO;
-  static const std::string  LARGEST_STMT_NO;
+  static const std::string LARGEST_STMT_NO;
 
  public:
   explicit NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,

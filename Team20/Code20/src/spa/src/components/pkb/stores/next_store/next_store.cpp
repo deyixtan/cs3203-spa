@@ -14,7 +14,7 @@ NextStore::NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>
     m_proc_stmt_map({}) {}
 
 void NextStore::AddNext(IDENT const &before, IDENT const &next) {
-  all_pairs.push_back(std::pair<std::string, std::string>(before, next));
+  all_pairs.push_back({before, next});
   ExhaustiveAddAllStmt(m_stmt_type->at(before), before, m_stmt_type->at(next), next, false);
 }
 
