@@ -9,7 +9,7 @@ void ClauseGroup::AddClause(const std::shared_ptr<Clause> &clause_ptr) {
   auto other_synonyms = clause_ptr->GetSynonyms();
   synonyms.insert(other_synonyms.begin(), other_synonyms.end());
   clauses.emplace_back(clause_ptr);
-//  weight += clause_ptr->GetWeight();
+  weight += clause_ptr->GetWeight();
 }
 
 bool ClauseGroup::IsEmpty() {
@@ -34,7 +34,7 @@ bool ClauseGroup::IsConnected(const std::shared_ptr<Clause> &clause_ptr) {
 }
 
 Table ClauseGroup::Execute() {
-  // TODO: sort before execution
+  std::sort(clauses.begin(), clauses.end(), ClausePtrComparator());
   Table table;
   for (auto &clause : clauses) {
     Table intermediate_table = clause->Execute();
@@ -48,7 +48,7 @@ Table ClauseGroup::Execute() {
 }
 
 bool ClauseGroup::ExecuteBool() {
-  // TODO: sort before execution
+  std::sort(clauses.begin(), clauses.end(), ClausePtrComparator());
   for (auto &clause : clauses) {
     bool is_false_clause = clause->ExecuteBool();
     if (is_false_clause) {
@@ -56,6 +56,14 @@ bool ClauseGroup::ExecuteBool() {
     }
   }
   return false;
+}
+
+size_t ClauseGroup::GetWeight() const {
+  return weight;
+}
+
+size_t ClauseGroup::GetSynonymsSize() const {
+  return synonyms.size();
 }
 
 }

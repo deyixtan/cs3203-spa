@@ -118,4 +118,8 @@ size_t UsesSClause::GetSynonymsSize() {
   return size;
 }
 
+size_t UsesSClause::GetWeight() {
+  return weight;
+}
+
 }

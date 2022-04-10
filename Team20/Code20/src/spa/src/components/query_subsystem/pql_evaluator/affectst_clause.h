@@ -16,7 +16,9 @@ class AffectsTClause : public Clause {
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
   size_t GetSynonymsSize() override;
+  size_t GetWeight() override;
  private:
+  size_t weight = 28;
   PqlToken first_arg;
   PqlToken second_arg;
   const PkbPtr &pkb;

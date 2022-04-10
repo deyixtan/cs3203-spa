@@ -13,6 +13,7 @@ class SelectBooleanClause : public Clause {
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
   size_t GetSynonymsSize() override;
+  size_t GetWeight() override;
 };
 
 }

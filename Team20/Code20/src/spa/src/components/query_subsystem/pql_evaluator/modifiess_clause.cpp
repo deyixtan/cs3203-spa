@@ -117,4 +117,9 @@ size_t ModifiesSClause::GetSynonymsSize() {
   }
   return size;
 }
+
+size_t ModifiesSClause::GetWeight() {
+  return weight;
+}
+
 }

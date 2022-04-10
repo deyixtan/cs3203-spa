@@ -102,4 +102,8 @@ size_t ModifiesPClause::GetSynonymsSize() {
   return size;
 }
 
+size_t ModifiesPClause::GetWeight() {
+  return weight;
+}
+
 }

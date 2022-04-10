@@ -16,7 +16,9 @@ class PatternIfClause : public Clause {
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
   size_t GetSynonymsSize() override;
+  size_t GetWeight() override;
  private:
+  size_t weight = 2;
   std::string if_synonym;
   PqlToken first_arg;
   const PkbPtr &pkb;

@@ -16,6 +16,7 @@ class SelectTupleClause : public Clause {
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
   size_t GetSynonymsSize() override;
+  size_t GetWeight() override;
  private:
   std::vector<PqlToken> tuple;
   std::unordered_map<std::string, DesignEntityType> declarations;

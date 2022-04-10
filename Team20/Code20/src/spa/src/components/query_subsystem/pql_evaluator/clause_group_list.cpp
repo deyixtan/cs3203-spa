@@ -39,7 +39,8 @@ std::pair<std::vector<ClauseGroup>,
     }
   }
 
-  // TODO: Sort here before returning?
+  std::sort(unrelated_clause_groups.begin(), unrelated_clause_groups.end(), ClauseGroupComparator());
+  std::sort(related_clause_groups.begin(), related_clause_groups.begin(), ClauseGroupComparator());
   return {unrelated_clause_groups, related_clause_groups};
 }
 

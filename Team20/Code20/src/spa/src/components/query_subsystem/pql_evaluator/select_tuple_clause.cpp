@@ -73,4 +73,9 @@ size_t SelectTupleClause::GetSynonymsSize() {
   return size;
 }
 
+size_t SelectTupleClause::GetWeight() {
+  // select clauses never inside any of the groups that require sorting
+  return 0;
+}
+
 }

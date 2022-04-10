@@ -198,5 +198,9 @@ size_t FollowsClause::GetSynonymsSize() {
   return size;
 }
 
+size_t FollowsClause::GetWeight() {
+  return weight;
+}
+
 }
 

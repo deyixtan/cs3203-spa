@@ -14,7 +14,7 @@ class Clause {
   virtual ~Clause() = default;
   virtual std::set<std::string> GetSynonyms() = 0;
   virtual size_t GetSynonymsSize() = 0;
-//  virtual int GetWeight() = 0;
+  virtual size_t GetWeight() = 0;
 };
 
 }

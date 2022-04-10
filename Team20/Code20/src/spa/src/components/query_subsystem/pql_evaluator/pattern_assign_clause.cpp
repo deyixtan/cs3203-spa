@@ -127,4 +127,8 @@ size_t PatternAssignClause::GetSynonymsSize() {
   return size;
 }
 
+size_t PatternAssignClause::GetWeight() {
+  return weight;
+}
+
 }

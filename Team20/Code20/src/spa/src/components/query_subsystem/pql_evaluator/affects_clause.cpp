@@ -165,4 +165,8 @@ size_t AffectsClause::GetSynonymsSize() {
   return size;
 }
 
+size_t AffectsClause::GetWeight() {
+  return weight;
+}
+
 }

@@ -21,4 +21,9 @@ size_t SelectBooleanClause::GetSynonymsSize() {
   return size;
 }
 
+size_t SelectBooleanClause::GetWeight() {
+  // select clauses never inside any of the groups that require sorting
+  return 0;
+}
+
 }

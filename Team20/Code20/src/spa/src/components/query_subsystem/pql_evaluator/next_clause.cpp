@@ -186,4 +186,8 @@ size_t NextClause::GetSynonymsSize() {
   return size;
 }
 
+size_t NextClause::GetWeight() {
+  return weight;
+}
+
 }

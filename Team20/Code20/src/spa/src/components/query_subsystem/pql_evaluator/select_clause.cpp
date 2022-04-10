@@ -56,4 +56,9 @@ size_t SelectClause::GetSynonymsSize() {
   return size;
 }
 
+size_t SelectClause::GetWeight() {
+  // select clauses never inside any of the groups that require sorting
+  return 0;
+}
+
 }

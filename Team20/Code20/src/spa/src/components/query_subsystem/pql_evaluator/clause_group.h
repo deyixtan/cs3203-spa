@@ -17,13 +17,20 @@ class ClauseGroup {
   bool IsConnected(const std::shared_ptr<Clause> &clause_ptr);
   Table Execute();
   bool ExecuteBool();
+  size_t GetWeight() const;
+  size_t GetSynonymsSize() const;
  private:
-//  class ClausePtrComparator {
-//    bool operator() (std::shared_ptr<Clause> clause_ptr, std::shared_ptr<Clause> other_clause_ptr) {
-//      if (clause_ptr.Get)
-//    }
-//  };
-//  int weight = 0;
+  class ClausePtrComparator {
+   public:
+    bool operator()(const std::shared_ptr<Clause> &clause_ptr, const std::shared_ptr<Clause> &other_clause_ptr) {
+      // Compare by number of synonyms in the clause first -> prioritize less synonyms
+      if (clause_ptr->GetSynonymsSize() < other_clause_ptr->GetSynonymsSize()) return true;
+      if (clause_ptr->GetSynonymsSize() > other_clause_ptr->GetSynonymsSize()) return false;
+      // Prioritize clauses with smaller results based on static weight approximation;
+      return clause_ptr->GetWeight() < other_clause_ptr->GetWeight();
+    }
+  };
+  int weight = 0;
   std::set<std::string> synonyms;
   std::vector<std::shared_ptr<Clause>> clauses;
 };

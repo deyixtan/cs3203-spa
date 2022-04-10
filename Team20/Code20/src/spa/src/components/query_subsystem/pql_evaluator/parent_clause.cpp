@@ -206,5 +206,7 @@ size_t ParentClause::GetSynonymsSize() {
   return size;
 }
 
-
+size_t ParentClause::GetWeight() {
+  return weight;
+}
 }

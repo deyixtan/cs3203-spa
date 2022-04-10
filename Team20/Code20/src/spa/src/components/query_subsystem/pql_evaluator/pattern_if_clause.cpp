@@ -65,4 +65,8 @@ size_t PatternIfClause::GetSynonymsSize() {
   return size;
 }
 
+size_t PatternIfClause::GetWeight() {
+  return weight;
+}
+
 }

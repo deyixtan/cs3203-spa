@@ -19,7 +19,9 @@ class ModifiesSClause : public Clause {
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
   size_t GetSynonymsSize() override;
+  size_t GetWeight() override;
  private:
+  size_t weight = 6;
   std::unordered_map<std::string, DesignEntityType> declarations;
   PqlToken first_arg;
   PqlToken second_arg;
