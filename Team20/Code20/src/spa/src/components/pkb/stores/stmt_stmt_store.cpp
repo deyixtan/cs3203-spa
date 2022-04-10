@@ -175,11 +175,3 @@ IDENT_PAIR_VECTOR StmtStmtStore::GetStarPairByType(StmtType type1, StmtType type
   }
   return {};
 }
-
-IDENT_PAIR_VECTOR StmtStmtStore::GetAllPairs() {
-  return all_pairs;
-}
-
-IDENT_PAIR_VECTOR StmtStmtStore::GetAllStarPairs() {
-  return all_star_pairs;
-}
