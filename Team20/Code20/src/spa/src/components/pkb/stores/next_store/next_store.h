@@ -39,7 +39,11 @@ class NextStore : public StmtStmtStore {
   void InsertPairResultUpper(int start, int end, std::unordered_set<std::string> &res, std::string const stmt);
   void InsertPairResultLower(int start, int end, std::unordered_set<std::string> &res, std::string const stmt);
   std::string GetEndStmtOfWhileLoop(const std::string &smallest_stmt);
-  std::string GetStartStmtOfWhileLoop(std::unordered_set<std::string> &ansc_set) const;
+  std::string GetStartStmtOfWhileLoop(std::unordered_set<std::string> &ancestor_set);
+  void InsertLowerResultForIf(std::string &last_proc_stmt_no, std::string const &stmt, std::unordered_set<std::string> &res, int nesting_level);
+  void InsertUpperResultForIf(std::string &first_proc_stmt_no, std::string const &stmt, std::unordered_set<std::string> &res, int nesting_level);
+  std::string GetFirstElseStmt(std::string const &if_stmt);
+  std::string GetEndElseStmt(std::string const &if_stmt);
 };
 
 #endif //NEXT_STORE_H
