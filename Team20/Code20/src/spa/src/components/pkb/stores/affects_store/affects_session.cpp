@@ -7,8 +7,8 @@ AffectsSession::AffectsSession(IDENT_SET_VECTOR_PTR stmt_vector,
                                bool is_affects_star_involved) :
     StmtStmtStore(move(stmt_vector), move(stmt_type)),
     m_affects_store(std::move(affects_store)),
-    m_last_modified_star_map(IDENT_SET_MAP()),
     m_is_affects_star_involved(is_affects_star_involved),
+    m_last_modified_star_map(IDENT_SET_MAP()),
     m_terminating_node_stack(std::stack<source::CfgNodePtr>()) {
   HandleCfg();
 }
@@ -87,17 +87,19 @@ IDENT_SET AffectsSession::GetAffectsStarSameSynSet() {
   return m_same_affects_star_set;
 }
 
-// HELPER METHODS
-IDENT AffectsSession::GetFollowingOf(IDENT &stmt_no) {
-  return m_affects_store->GetFollowsStore()->GetFollowingOf(STMT, stmt_no);
-}
-
 IDENT_SET AffectsSession::GetVarModByStmt(IDENT &stmt_no) {
   return m_affects_store->GetModifyStore()->GetVarModByStmt(stmt_no);
 }
 
 IDENT_SET AffectsSession::GetVarUsedByStmt(IDENT &stmt_no) {
   return m_affects_store->GetUsageStore()->GetVarUsedByStmt(stmt_no);
+}
+
+int AffectsSession::GetMaxPairSize() {
+  if (m_is_affects_star_involved) {
+    return GetAffectsStarPairs().size();
+  }
+  return GetAffectsPairs().size();
 }
 
 void AffectsSession::AddAffects(bool is_star, IDENT upper, IDENT lower) {
@@ -124,26 +126,49 @@ void AffectsSession::AddAffects(bool is_star, IDENT upper, IDENT lower) {
   pair_set->insert(pair);
 }
 
+void AffectsSession::UpdateModifiedTable(IDENT stmt_no, bool is_clear_only) {
+  IDENT_SET vars_mod = GetVarModByStmt(stmt_no);
+  for (auto const &var_mod : vars_mod) {
+    if (m_last_modified_map_stack.top()->count(var_mod) == 0) {
+      m_last_modified_map_stack.top()->insert({var_mod, IDENT_SET()});
+    }
+    m_last_modified_map_stack.top()->at(var_mod).clear();
+
+    if (!is_clear_only) {
+      m_last_modified_map_stack.top()->at(var_mod).insert(stmt_no);
+    }
+  }
+}
+
+void AffectsSession::MergeModifiedTable(IDENT_SET_MAP_PTR table1, IDENT_SET_MAP_PTR table2) {
+  // merge table2 into table1
+  for (auto const &last_modified : *(table2)) {
+    IDENT var_name = last_modified.first;
+    IDENT_SET stmt_nos = last_modified.second;
+    if (table1->count(var_name) == 0) {
+      table1->insert({var_name, IDENT_SET()});
+    }
+    table1->at(var_name).insert(stmt_nos.begin(), stmt_nos.end());
+  }
+}
+
 void AffectsSession::HandleCfg() {
   auto const &cfg_map = m_affects_store->GetProgramCfg()->GetCfgMap();
   for (auto const &cfg : cfg_map) {
     source::CfgNodePtr proc_head = cfg.second;
-    source::CfgNodePtr tmp = std::make_shared<source::CfgNode>();
+    source::CfgNodePtr proc_tail = std::make_shared<source::CfgNode>();
+
+    m_terminating_node_stack.push(proc_tail);
     IDENT_SET_MAP last_modified_map;
-
-
-    m_terminating_node_stack.push(tmp);
-
     m_last_modified_map_stack.push(std::make_shared<IDENT_SET_MAP>(last_modified_map));
     HandleCfg(proc_head);
     m_last_modified_map_stack.pop();
-
     m_terminating_node_stack.pop();
   }
 }
 
 void AffectsSession::HandleCfg(source::CfgNodePtr &cfg_node) {
-  // checks on HandleCfg from If-statement handler
+  // end current recursive call if reaches terminating node
   if (!cfg_node->GetStatementList().empty() && !m_terminating_node_stack.top()->GetStatementList().empty()) {
     if (cfg_node->GetStatementList().front().stmt_no == m_terminating_node_stack.top()->GetStatementList().front().stmt_no) {
       m_terminating_node_stack.pop();
@@ -159,10 +184,8 @@ void AffectsSession::HandleCfg(source::CfgNodePtr &cfg_node) {
     StmtType type = stmt.type;
     if (type == ASSIGN) {
       HandleAssignStatement(stmt_no);
-    } else if (type == READ) {
-      HandleReadStatement(stmt_no);
-    } else if (type == CALL) {
-      HandleCallStatement(stmt_no);
+    } else if (type == READ || type == CALL) {
+      HandleModifiableStatement(stmt_no);
     } else if (type == WHILE) {
       HandleWhileStatement(cfg_node);
     } else if (type == IF) {
@@ -176,7 +199,6 @@ void AffectsSession::HandleCfg(source::CfgNodePtr &cfg_node) {
   if (cfg_node->GetNextList().empty()) {
     return;
   }
-
   source::CfgNodePtr next_node = cfg_node->GetNextList().back();
   HandleCfg(next_node);
 }
@@ -214,125 +236,53 @@ void AffectsSession::HandleAssignStatement(IDENT stmt_no) {
     }
   }
 
-  // update modified table
-  IDENT_SET vars_mod = GetVarModByStmt(stmt_no);
-  for (auto const &var_mod : vars_mod) {
-    if (m_last_modified_map_stack.top()->count(var_mod) == 0) {
-      m_last_modified_map_stack.top()->insert({var_mod, IDENT_SET()});
-    }
-    m_last_modified_map_stack.top()->at(var_mod).clear();
-    m_last_modified_map_stack.top()->at(var_mod).insert(stmt_no);
-  }
+  UpdateModifiedTable(stmt_no, false);
 }
 
-void AffectsSession::HandleReadStatement(IDENT stmt_no) {
-  // update modified table
-  // since, read is not an assign stmt, we cleared it from the table
-  IDENT_SET vars_mod = GetVarModByStmt(stmt_no);
-  if (vars_mod.size() != 1) {
-    // TODO: replace with custom exception
-    throw std::runtime_error("READ SHOULD ONLY HAVE ONE VAR MOD");
-  }
-
-  IDENT var_mod = *(vars_mod.begin());
-
-  if (m_last_modified_map_stack.top()->count(var_mod) == 0) {
-    m_last_modified_map_stack.top()->insert({var_mod, IDENT_SET()});
-  }
-  m_last_modified_map_stack.top()->at(var_mod).clear();
-}
-
-void AffectsSession::HandleCallStatement(IDENT stmt_no) {
-  // update modified table
-  // since, read is not an assign stmt, we cleared it from the table
-  IDENT_SET vars_mod = GetVarModByStmt(stmt_no);
-  for (auto const &var_mod : vars_mod) {
-    if (m_last_modified_map_stack.top()->count(var_mod) == 0) {
-      m_last_modified_map_stack.top()->insert({var_mod, IDENT_SET()});
-    }
-    m_last_modified_map_stack.top()->at(var_mod).clear();
-  }
+void AffectsSession::HandleModifiableStatement(IDENT stmt_no) {
+  // since, read/call is not an assign stmt, we can clear it from the table
+  UpdateModifiedTable(stmt_no, true);
 }
 
 void AffectsSession::HandleWhileStatement(source::CfgNodePtr &cfg_node) {
-  // create a copy of last_modified_map, to be served to the "else" cfg node
-  IDENT_SET_MAP_PTR last_modified_map_clone = std::make_shared<IDENT_SET_MAP>(*(m_last_modified_map_stack.top()));
-  source::CfgNodePtr start_node = cfg_node->GetNextList().front();
-  source::CfgNodePtr end_node = cfg_node;
+  IDENT_SET_MAP_PTR last_modified_map = m_last_modified_map_stack.top();
+  IDENT_SET_MAP_PTR last_modified_map_clone = std::make_shared<IDENT_SET_MAP>(*(last_modified_map));
+  source::CfgNodePtr first_child_node = cfg_node->GetNextList().front();
 
-  // traverse twice to populate modified table properly
   m_last_modified_map_stack.push(last_modified_map_clone);
-
   m_terminating_node_stack.push(cfg_node);
 
-  int affect_size_prev = 0;
-  int affect_size_curr = 0;
-
-  HandleCfg(start_node);
-//  HandleCfg(start_node);
-  if (m_is_affects_star_involved) {
-    affect_size_prev = GetAffectsStarPairs().size();
-  } else {
-    affect_size_prev = GetAffectsPairs().size();
-  }
-  HandleCfg(start_node);
-  if (m_is_affects_star_involved) {
-    affect_size_curr = GetAffectsStarPairs().size();
-  } else {
-    affect_size_curr = GetAffectsPairs().size();
-  }
-
+  // may need more > 1 traversal around the
+  // while-statement scope to properly populate
+  // affects/affects* pair
+  int affect_size_prev = GetMaxPairSize();
+  HandleCfg(first_child_node);
+  int affect_size_curr = GetMaxPairSize();
   while (affect_size_curr != affect_size_prev) {
     affect_size_prev = affect_size_curr;
-    HandleCfg(start_node);
-    if (m_is_affects_star_involved) {
-      affect_size_curr = GetAffectsStarPairs().size();
-    } else {
-      affect_size_curr = GetAffectsPairs().size();
-    }
+    HandleCfg(first_child_node);
+    affect_size_curr = GetMaxPairSize();
   }
+
   m_last_modified_map_stack.pop();
   m_terminating_node_stack.pop();
 
   // merge last_modified_map_clone into last_modified_map
-  for (auto const &last_modified : *(last_modified_map_clone)) {
-    IDENT var_name = last_modified.first;
-    IDENT_SET stmt_nos = last_modified.second;
-    if (m_last_modified_map_stack.top()->count(var_name) == 0) {
-      m_last_modified_map_stack.top()->insert({var_name, IDENT_SET()});
-    }
-    m_last_modified_map_stack.top()->at(var_name).insert(stmt_nos.begin(), stmt_nos.end());
-  }
+  MergeModifiedTable(last_modified_map, last_modified_map_clone);
 }
 
-void AffectsSession::HandleIfStatement(IDENT stmt_no,
-                                      source::CfgNodePtr &cfg_node) {
-  // create a copy of last_modified_map, to be served to the "else" cfg node
-  IDENT_SET_MAP_PTR last_modified_map_clone = std::make_shared<IDENT_SET_MAP>(*(m_last_modified_map_stack.top()));
-
+void AffectsSession::HandleIfStatement(IDENT stmt_no, source::CfgNodePtr &cfg_node) {
+  IDENT_SET_MAP_PTR last_modified_map = m_last_modified_map_stack.top();
+  IDENT_SET_MAP_PTR last_modified_map_clone = std::make_shared<IDENT_SET_MAP>(*(last_modified_map));
   source::CfgNodePtr if_cfg_node = cfg_node->GetNextList()[0];
   source::CfgNodePtr else_cfg_node = cfg_node->GetNextList()[1];
   source::CfgNodePtr end_node = std::make_shared<source::CfgNode>();
-  IDENT end_node_stmt_no = GetFollowingOf(stmt_no);
-  end_node->AddStatement(STMT, end_node_stmt_no);
 
-  // first TraverseIfCfg (if-block) will process statements and find dummy node
-  // for the second TraverseIfCfg (else-block)
   HandleCfg(if_cfg_node);
-
   m_last_modified_map_stack.push(last_modified_map_clone);
   HandleCfg(else_cfg_node);
   m_last_modified_map_stack.pop();
 
-  // merge last_modified_map_clone into last_modified_map
-  for (auto const &last_modified : *(last_modified_map_clone)) {
-    IDENT var_name = last_modified.first;
-    IDENT_SET stmt_nos = last_modified.second;
-    if (m_last_modified_map_stack.top()->count(var_name) == 0) {
-      m_last_modified_map_stack.top()->insert({var_name, IDENT_SET()});
-    }
-    m_last_modified_map_stack.top()->at(var_name).insert(stmt_nos.begin(), stmt_nos.end());
-  }
-
+  MergeModifiedTable(last_modified_map, last_modified_map_clone);
   cfg_node = end_node;
 }
