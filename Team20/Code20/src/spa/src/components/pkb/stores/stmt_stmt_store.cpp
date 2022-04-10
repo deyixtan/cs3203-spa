@@ -100,7 +100,7 @@ void StmtStmtStore::AddNext(bool is_star,
     ExhaustiveAddAllStmt(type1, upper, type2, lower, false);
   } else {
     all_star_pairs.push_back({upper, lower});
-    ExhaustiveAddSubStmt(type1, upper, type2, lower, &star_type_pair_map);
+    ExhaustiveAddAllStmt(type1, upper, type2, lower, true);
   }
 }
 
@@ -171,8 +171,6 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
                                          StmtType type2,
                                          std::string lower,
                                          NESTED_TUPLE_MAP *pair_map) {
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
-  set.insert(std::pair<std::string, std::string>(upper, lower));
 
   if (pair_map->find(type1) != pair_map->end()) {
     if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
