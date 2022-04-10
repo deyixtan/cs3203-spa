@@ -148,7 +148,30 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
   StmtType type1 = m_stmt_type->at(stmt);
   std::string last_stmt_no = GetLastStmtOfProc(stmt, last_stmt_no);
   std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
+  std::unordered_set<std::string> if_set = m_parent_store->GetAllAnceOf(IF, stmt);
   if(ansc_set.empty()) {
+
+    // TODO: If stmt is in a if block, do not add lines from else block
+    if (!if_set.empty()) {
+      std::string start_if_stmt = LARGEST_STMT_NO;
+      for(auto s : if_set) {
+        if(stoi(s) > stoi(start_if_stmt)) {
+          start_if_stmt = s;
+        }
+      }
+
+      std::string end_if_stmt = SMALLEST_STMT_NO;
+      for(auto s : if_set) {
+        if(stoi(s) > stoi(end_if_stmt)) {
+          end_if_stmt = s;
+        }
+      }
+
+      for (int i = stoi(start_if_stmt); i < stoi(end_if_stmt); i++) {
+        // TODO: check if current and next has the Next relationship
+      }
+    }
+
     InsertPairResultLower(stoi(stmt) + 1, stoi(last_stmt_no), res, stmt);
     if(type1 == WHILE) {
       StmtStmtStore::AddNext(true, type1, stmt, type1, stmt);
