@@ -34,7 +34,8 @@ bool NextStore::IsNextPairValid(IDENT_PAIR const &pair) {
 }
 
 bool NextStore::IsNextStarPairValid(IDENT_PAIR const &pair) {
-  if (std::find(GetStarPairByType(STMT, STMT).begin(), GetStarPairByType(STMT, STMT).end(), pair) != GetStarPairByType(STMT, STMT).end()) {
+  IDENT_PAIR_VECTOR test = GetStarPairByType(STMT, STMT);
+  if (std::find(test.begin(), test.end(), pair) != test.end()) {
     return true;
   } else {
     std::unordered_set<std::string> next_star = GetNextStarOf(STMT, pair.first);

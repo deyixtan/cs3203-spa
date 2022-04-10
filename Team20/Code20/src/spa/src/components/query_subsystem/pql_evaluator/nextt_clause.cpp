@@ -91,6 +91,9 @@ Table NextTClause::HandleIntegerInteger() {
 }
 
 bool NextTClause::ExecuteBool() {
+  if (!pkb->GetNextStore()->IsNextStoreComputed()) {
+    pkb->GetNextStore()->ComputeNextStore();
+  }
   return (this->*execute_bool_handler.at({first_arg.type, second_arg.type}))();
 }
 
