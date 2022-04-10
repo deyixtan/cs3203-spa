@@ -1,4 +1,5 @@
 #include "pattern_store.h"
+#include "components/pkb/stores/pattern_store/expression_tree/expression_tree.h"
 
 namespace pkb {
 

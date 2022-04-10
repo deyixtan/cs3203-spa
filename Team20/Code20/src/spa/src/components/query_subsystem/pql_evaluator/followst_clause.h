@@ -1,6 +1,8 @@
 #ifndef FOLLOWST_CLAUSE_H_
 #define FOLLOWST_CLAUSE_H_
 
+#include <map>
+
 #include "clause.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
 #include "components/pkb/pkb.h"

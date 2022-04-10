@@ -1,4 +1,6 @@
 #include "query_evaluator.h"
+#include "components/pkb/stores/affects_store/affect_store_factory.h"
+#include "components/pkb/stores/next_store/next_store.h"
 
 namespace pql {
 

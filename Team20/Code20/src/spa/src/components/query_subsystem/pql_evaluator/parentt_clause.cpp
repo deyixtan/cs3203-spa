@@ -1,5 +1,6 @@
 #include "parentt_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
 
 namespace pql {
 

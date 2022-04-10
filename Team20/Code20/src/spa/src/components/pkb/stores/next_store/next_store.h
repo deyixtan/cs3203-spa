@@ -1,6 +1,7 @@
 #ifndef NEXT_STORE_H
 #define NEXT_STORE_H
 
+#include "components/pkb/pkb_declarations.h"
 #include "components/pkb/stores/stmt_stmt_store.h"
 
 namespace pkb {

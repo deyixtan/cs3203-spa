@@ -1,5 +1,6 @@
 #include "next_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/next_store/next_store.h"
 
 namespace pql {
 

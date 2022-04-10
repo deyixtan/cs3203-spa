@@ -2,6 +2,7 @@
 #define AFFECTS_STORE_H
 
 #include "components/pkb/pkb_declarations.h"
+#include "components/pkb/pkb_relationship.h"
 #include "components/pkb/stores/stmt_stmt_store.h"
 #include "components/source_subsystem/source_declarations.h"
 

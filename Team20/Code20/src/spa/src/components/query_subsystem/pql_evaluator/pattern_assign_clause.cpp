@@ -1,5 +1,6 @@
 #include "pattern_assign_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
 
 namespace pql {
 

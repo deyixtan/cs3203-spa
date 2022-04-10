@@ -1,22 +1,8 @@
 #ifndef PKB_H
 #define PKB_H
 
-#include <map>
-#include <string>
-#include <unordered_set>
-#include <vector>
-
-#include "components/pkb/stores/uses_store/uses_store.h"
-#include "components/pkb/stores/modifies_store/modifies_store.h"
-#include "components/pkb/stores/follows_store/follows_store.h"
-#include "components/pkb/stores/parent_store/parent_store.h"
-#include "components/pkb/stores/call_store/call_store.h"
-#include "components/pkb/stores/pattern_store/pattern_store.h"
-#include "components/pkb/stores/next_store/next_store.h"
-#include "components/pkb/stores/affects_store/affect_store_factory.h"
-#include "components/pkb/stores/pattern_store/expression_tree/expression_tree.h"
-#include "../source_subsystem/types/cfg/cfg.h"
-#include "components/pkb/stores/next_store/next_store.h"
+#include "components/pkb/pkb_declarations.h"
+#include "components/source_subsystem/source_declarations.h"
 
 namespace pkb {
 

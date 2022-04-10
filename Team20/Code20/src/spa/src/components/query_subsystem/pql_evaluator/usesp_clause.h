@@ -1,6 +1,8 @@
 #ifndef USESP_CLAUSE_H_
 #define USESP_CLAUSE_H_
 
+#include <map>
+
 #include "clause.h"
 #include "components/pkb/pkb.h"
 #include "components/query_subsystem/pql_lexer/pql_token.h"

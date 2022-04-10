@@ -1,6 +1,7 @@
 #include "affects_clause.h"
 #include "clause_util.h"
 #include "components/pkb/stores/affects_store/affects_store.h"
+#include "components/pkb/stores/affects_store/affect_store_factory.h"
 
 namespace pql {
 

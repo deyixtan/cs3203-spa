@@ -1,5 +1,6 @@
 #include "modifiess_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
 
 namespace pql {
 

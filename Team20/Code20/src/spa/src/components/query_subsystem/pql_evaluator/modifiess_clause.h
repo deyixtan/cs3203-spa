@@ -1,6 +1,8 @@
 #ifndef MODIFIESS_CLAUSE_H_
 #define MODIFIESS_CLAUSE_H_
 
+#include <map>
+
 #include "clause.h"
 #include "components/query_subsystem/pql_lexer/pql_token.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"

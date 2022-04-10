@@ -2,7 +2,7 @@
 #define PATTERN_STORE_H
 
 #include "components/pkb/stores/store.h"
-#include "components/pkb/stores/pattern_store/expression_tree/expression_tree.h"
+#include "components/pkb/pkb_declarations.h"
 
 namespace pkb {
 

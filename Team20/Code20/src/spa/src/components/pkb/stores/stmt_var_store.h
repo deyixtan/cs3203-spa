@@ -1,6 +1,7 @@
 #ifndef STMT_VAR_STORE_H
 #define STMT_VAR_STORE_H
 
+#include "components/pkb/pkb_declarations.h"
 #include "store.h"
 
 namespace pkb {

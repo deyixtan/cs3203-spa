@@ -1,6 +1,8 @@
 #ifndef WITH_CLAUSE_H
 #define WITH_CLAUSE_H
 
+#include <map>
+
 #include "clause.h"
 #include "components/pkb/pkb.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"

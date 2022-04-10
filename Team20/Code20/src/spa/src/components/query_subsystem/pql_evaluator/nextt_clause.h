@@ -1,6 +1,8 @@
 #ifndef NEXTT_CLAUSE_H_
 #define NEXTT_CLAUSE_H_
 
+#include <map>
+
 #include "clause.h"
 
 namespace pql {

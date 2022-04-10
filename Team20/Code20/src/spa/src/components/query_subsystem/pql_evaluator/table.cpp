@@ -1,6 +1,7 @@
 #include "table.h"
 #include "clause_util.h"
 
+#include <map>
 #include <initializer_list>
 
 namespace pql {

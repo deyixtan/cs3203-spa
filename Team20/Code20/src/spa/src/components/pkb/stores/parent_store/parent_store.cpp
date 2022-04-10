@@ -1,5 +1,4 @@
 #import "parent_store.h"
-#include "../../pkb_relationship.h"
 
 namespace pkb {
 

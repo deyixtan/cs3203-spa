@@ -1,7 +1,6 @@
 #include "next_store.h"
-#include "../../pkb_relationship.h"
-#include "../parent_store/parent_store.h"
-#include <set>
+#include "components/pkb/pkb_relationship.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
 
 namespace pkb {
 

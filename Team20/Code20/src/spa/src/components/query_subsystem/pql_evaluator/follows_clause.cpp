@@ -1,5 +1,6 @@
 #include "follows_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
 
 namespace pql {
 

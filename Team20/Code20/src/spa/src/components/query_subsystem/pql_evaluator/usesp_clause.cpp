@@ -1,5 +1,6 @@
 #include "usesp_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
 
 namespace pql {
 

@@ -1,6 +1,8 @@
 #ifndef NEXT_CLAUSE_H_
 #define NEXT_CLAUSE_H_
 
+#include <map>
+
 #include "clause.h"
 #include "components/query_subsystem/utils.h"
 #include "components/pkb/pkb.h"

@@ -1,9 +1,8 @@
-#ifndef COMMON_H
-#define COMMON_H
-
-#include "../../utils/pair_hash.h"
+#ifndef PKB_DECLARATIONS_H
+#define PKB_DECLARATIONS_H
 
 #include "components/common_declarations.h"
+#include "utils/pair_hash.h"
 
 namespace pkb {
 
@@ -21,6 +20,11 @@ class PKB;
 class PkbClient;
 class ModifiesStore;
 class UsesStore;
+class FollowsStore;
+class PatternStore;
+class ParentStore;
+class CallStore;
+class NextStore;
 class AffectsStore;
 class AffectsStoreFactory;
 class PkbRelationship;
@@ -48,14 +52,8 @@ typedef std::unordered_map<StmtType, IDENT_PAIR_VECTOR> IDENT_PAIR_VECTOR_MAP;
 typedef std::unordered_map<std::string, std::unordered_map<StmtType, IDENT_SET>> NESTED_VAR_STMT_MAP;
 typedef std::unordered_map<StmtType, std::unordered_map<StmtType, PkbRelationship>> NESTED_STMT_STMT_MAP;
 typedef std::shared_ptr<NESTED_STMT_STMT_MAP> NESTED_STMT_STMT_MAP_PTR;
-
-template<typename Key, typename T>
-struct Hashmap {
-  typedef std::unordered_map<Key, T> type;
-};
-
 typedef std::shared_ptr<std::unordered_map<IDENT, StmtType>> IDENT_TO_STMT_TYPE_MAP_PTR;
 
 }
 
-#endif //COMMON_H
+#endif //PKB_DECLARATIONS_H

@@ -1,15 +1,7 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
+#ifndef STORE_H
+#define STORE_H
 
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include <memory>
-#include <algorithm>
-
-#include "../pkb_declarations.h"
-#include "../../../utils/pair_hash.h"
+#include "components/pkb/pkb_declarations.h"
 
 namespace pkb {
 
@@ -26,4 +18,4 @@ class Store {
 
 }
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
+#endif //STORE_H

@@ -1,5 +1,6 @@
 #include "calls_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/call_store/call_store.h"
 
 namespace pql {
 

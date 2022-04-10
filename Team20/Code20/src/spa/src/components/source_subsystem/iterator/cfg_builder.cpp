@@ -9,6 +9,7 @@
 #include "components/source_subsystem/types/ast/node_read_statement.h"
 #include "components/source_subsystem/types/ast/node_statement_list.h"
 #include "components/source_subsystem/types/ast/node_while_statement.h"
+#include "components/source_subsystem/types/cfg/cfg.h"
 #include "components/source_subsystem/types/cfg/cfg_node.h"
 
 namespace source {

@@ -1,6 +1,9 @@
 #include "affects_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/affects_store/affect_store_factory.h"
+#include "components/source_subsystem/types/cfg/cfg.h"
 #include "components/source_subsystem/types/cfg/cfg_node.h"
-#include "../../pkb_relationship.h"
 
 namespace pkb {
 

@@ -1,5 +1,15 @@
 #include "pkb.h"
 #include "pkb_relationship.h"
+#include "components/pkb/stores/affects_store/affects_store.h"
+#include "components/pkb/stores/affects_store/affect_store_factory.h"
+#include "components/pkb/stores/call_store/call_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/next_store/next_store.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/source_subsystem/types/cfg/cfg.h"
 
 namespace pkb {
 
