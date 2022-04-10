@@ -6,11 +6,20 @@ ParentStore::ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::str
     StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
 
 void ParentStore::AddParent(IDENT const &parent, IDENT const &child) {
-  AddUpperLower(PARENT, parent, child);
+  all_pairs.push_back({parent, child});
 }
 
 void ParentStore::AddParentStar(IDENT const &stmt, IDENT_VECTOR const &visited) {
-  AddUpperLowerStar(PARENT, "", stmt, visited);
+  for (std::string const &ance : visited) {
+    if (ance == stmt) {
+      continue;
+    }
+
+    if (ance != "") {
+      all_star_pairs.push_back({ance, stmt});
+      ExhaustiveAddAllStmt(m_stmt_type->at(ance), ance, m_stmt_type->at(stmt), stmt, true);
+    }
+  }
 }
 
 bool ParentStore::IsParentPairValid(IDENT_PAIR const &pair) {

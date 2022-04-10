@@ -16,9 +16,7 @@ void StmtStmtStore::AddUpperLower(StoreType store_type,
   } else {
     type1 = m_stmt_type->at(upper);
     type2 = m_stmt_type->at(lower);
-    if (store_type == PARENT) {
-      AddParent(false, upper, lower, std::vector<std::string>());
-    } else if (store_type == NEXT) {
+    if (store_type == NEXT) {
       AddNext(false, type1, upper, type2, lower);
     }
   }
@@ -43,34 +41,10 @@ void StmtStmtStore::AddUpperLowerStar(StoreType store_type,
     type2 = m_stmt_type->at(upper);
   }
 
-  if (store_type == PARENT) {
-    AddParent(true, upper, lower, visited);
-  } else if (store_type == CALLS) {
+  if (store_type == CALLS) {
     AddCalls(true, upper, lower);
   } else if (store_type == NEXT) {
     AddNext(true, type2, upper, type1, lower);
-  }
-}
-
-void StmtStmtStore::AddParent(bool is_star,
-                              std::string const &upper,
-                              std::string const &lower,
-                              std::vector<std::string> const &visited) {
-
-  if (!is_star) {
-    all_pairs.push_back({upper, lower});
-    return;
-  }
-
-  for (std::string const &ance : visited) {
-    if (ance == lower) {
-      continue;
-    }
-
-    if (ance != "") {
-      all_star_pairs.push_back({ance, lower});
-      ExhaustiveAddAllStmt(m_stmt_type->at(ance), ance, m_stmt_type->at(lower), lower, true);
-    }
   }
 }
 

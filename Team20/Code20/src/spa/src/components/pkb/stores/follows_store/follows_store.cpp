@@ -6,12 +6,10 @@ FollowsStore::FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::s
     StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
 
 void FollowsStore::AddFollow(IDENT const &follower, IDENT const &following) {
-  AddUpperLower(FOLLOWS, follower, following);
   all_pairs.push_back({follower, following});
 }
 
 void FollowsStore::AddFollowStar(IDENT const &follower, IDENT const &following) {
-  AddUpperLowerStar(FOLLOWS, follower, following, std::vector<std::string>());
   all_star_pairs.push_back({follower, following});
   ExhaustiveAddAllStmt(m_stmt_type->at(follower), follower, m_stmt_type->at(following), following, true);
 }
