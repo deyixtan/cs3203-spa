@@ -29,6 +29,10 @@ class ClauseFactory {
   static std::shared_ptr<Clause> Create(ResultClause result_clause,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
                                         const PkbPtr &pkb);
+  static std::shared_ptr<Clause> Create(const std::unordered_set<std::string> &table_synonyms,
+                                        ResultClause result_clause,
+                                        const std::unordered_map<std::string, DesignEntityType> &declarations,
+                                        const PkbPtr &pkb);
 };
 
 }

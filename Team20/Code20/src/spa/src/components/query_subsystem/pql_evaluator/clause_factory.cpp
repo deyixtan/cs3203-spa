@@ -134,15 +134,27 @@ std::shared_ptr<Clause> ClauseFactory::Create(ResultClause result_clause,
     return std::make_shared<SelectBooleanClause>();
   } else if (result_clause_type==ResultClauseType::SYNONYM) {
     return std::make_shared<SelectClause>(result_clause.GetValues().front(), declarations, pkb);
-//    auto selected_synonym = result_clause.GetValues().front();
-//    return std::make_shared<SelectSynonymClause>(selected_synonym, declarations, pkb);
   } else if (result_clause_type==ResultClauseType::ATTRIBUTE) {
     return std::make_shared<SelectClause>(result_clause.GetValues().front(), declarations, pkb);
-//    auto selected_attribute = result_clause.GetValues().front();
-//    return std::make_shared<SelectAttributeClause>(selected_attribute, declarations, pkb);
   } else { // result_clause_type==ResultClauseType::TUPLE
     auto selected_tuple = result_clause.GetValues();
     return std::make_shared<SelectTupleClause>(selected_tuple, declarations, pkb);
+  }
+}
+std::shared_ptr<Clause> ClauseFactory::Create(const std::unordered_set<std::string> &table_synonyms,
+                                              ResultClause result_clause,
+                                              const std::unordered_map<std::string, DesignEntityType> &declarations,
+                                              const PkbPtr &pkb) {
+  ResultClauseType result_clause_type = result_clause.GetType();
+  if (result_clause_type==ResultClauseType::BOOLEAN) {
+    return std::make_shared<SelectBooleanClause>();
+  } else if (result_clause_type==ResultClauseType::SYNONYM) {
+    return std::make_shared<SelectClause>(table_synonyms, result_clause.GetValues().front(), declarations, pkb);
+  } else if (result_clause_type==ResultClauseType::ATTRIBUTE) {
+    return std::make_shared<SelectClause>(table_synonyms, result_clause.GetValues().front(), declarations, pkb);
+  } else { // result_clause_type==ResultClauseType::TUPLE
+    auto selected_tuple = result_clause.GetValues();
+    return std::make_shared<SelectTupleClause>(table_synonyms, selected_tuple, declarations, pkb);
   }
 }
 
