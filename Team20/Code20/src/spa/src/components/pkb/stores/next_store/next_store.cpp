@@ -17,6 +17,10 @@ void NextStore::AddNext(IDENT const &before, IDENT const &next) {
   ExhaustiveAddAllStmt(m_stmt_type->at(before), before, m_stmt_type->at(next), next, false);
 }
 
+void NextStore::AddNextStar(IDENT const &before, IDENT const &next) {
+  ExhaustiveAddAllStmt(m_stmt_type->at(before), before, m_stmt_type->at(next), next, true);
+}
+
 void NextStore::AddFirstStmtProc(std::string const &proc, std::string const &stmt) {
     m_proc_stmt_map.insert({proc, {stmt}});
 }
@@ -105,12 +109,12 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
   std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
   if(ansc_set.empty()) {
     for(int n = stoi(first_stmt_no); n <= stoi(stmt) - 1; n++) {
-      AddNext(std::to_string(n), stmt);
+      AddNextStar(std::to_string(n), stmt);
       res.insert(std::to_string(n));
     }
     std::string parent = m_parent_store->GetParentOf(WHILE, std::to_string(stoi(stmt) + 1));
     if(parent == stmt) {
-      AddNext(stmt, stmt);
+      AddNextStar(stmt, stmt);
       res.insert(stmt);
     }
     return;
@@ -129,11 +133,11 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
     }
   }
   for(int j = stoi(smallest_stmt); j <= stoi(largest_stmt); j++) {
-    AddNext(std::to_string(j), stmt);
+    AddNextStar(std::to_string(j), stmt);
     res.insert(std::to_string(j));
   }
   for(int j = stoi(first_stmt_no); j <= stoi(smallest_stmt) - 1; j++) {
-    AddNext(std::to_string(j), stmt);
+    AddNextStar(std::to_string(j), stmt);
     res.insert(std::to_string(j));
   }
 }
@@ -152,12 +156,12 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
   std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
   if(ansc_set.empty()) {
     for(int n = stoi(stmt) + 1; n <= stoi(last_stmt_no); n++) {
-      AddNext(stmt, std::to_string(n));
+      AddNextStar(stmt, std::to_string(n));
       res.insert(std::to_string(n));
     }
     std::string parent = m_parent_store->GetParentOf(WHILE, std::to_string(stoi(stmt) + 1));
     if(parent == stmt) {
-      AddNext(stmt, stmt);
+      AddNextStar(stmt, stmt);
       res.insert(stmt);
     }
     return;
@@ -176,11 +180,11 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
     }
   }
   for(int j = stoi(smallest_stmt); j <= stoi(largest_stmt); j++) {
-    AddNext(stmt, std::to_string(j));
+    AddNextStar(stmt, std::to_string(j));
     res.insert(std::to_string(j));
   }
   for(int j = stoi(largest_stmt) + 1; j <= stoi(last_stmt_no); j++) {
-    AddNext(stmt, std::to_string(j));
+    AddNextStar(stmt, std::to_string(j));
     res.insert(std::to_string(j));
   }
 }

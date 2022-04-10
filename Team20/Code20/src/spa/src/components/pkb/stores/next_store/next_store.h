@@ -18,6 +18,7 @@ class NextStore : public StmtStmtStore {
                      std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
                      std::shared_ptr<ParentStore> parent_store);
   void AddNext(IDENT const &before, IDENT const &next);
+  void AddNextStar(IDENT const &before, IDENT const &next);
   void AddFirstStmtProc(std::string const &proc, std::string const &stmt);
   void AddLastStmtProc(std::string const &proc, std::string const &stmt);
   void GetUpperStarOfHelper(std::string const &stmt, std::unordered_set<std::string> &res);
