@@ -9,13 +9,14 @@
 #include <stack>
 
 #include "components/source_subsystem/source_declarations.h"
+#include "components/pkb/stores/stmt_stmt_store.h"
 
 #include "../../../../utils/pair_hash.h"
 #include "../../pkb.h"
 
 class AffectsStore;
 
-class AffectsSession {
+class AffectsSession : StmtStmtStore {
  private:
   std::shared_ptr<AffectsStore> m_affects_store;
   std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_map;
@@ -24,8 +25,10 @@ class AffectsSession {
   std::unordered_map<std::string, std::unordered_set<std::string>> m_affects_star_reverse_map;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_pairs;
   std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_star_pairs;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_same_affects_pairs; // for same synonym
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_same_affects_star_pairs; // for same synonym
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_pairs2;
+  std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_star_pairs2;
+  IDENT_PAIR_VECTOR m_same_affects_pairs; // for same synonym
+  IDENT_PAIR_VECTOR m_same_affects_star_pairs; // for same synonym
   std::stack<std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>>> m_last_modified_map_stack;
   std::unordered_map<std::string, std::unordered_set<std::string>> m_last_modified_star_map;
   bool m_is_affects_star_involved;
@@ -44,7 +47,10 @@ class AffectsSession {
   void HandleIfStatement(std::string stmt_no, std::shared_ptr<source::CfgNode> &cfg_node);
 
  public:
-  explicit AffectsSession(std::shared_ptr<AffectsStore> affects_store, bool is_affect_star_involved);
+  explicit AffectsSession(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                          std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
+                          std::shared_ptr<AffectsStore> affects_store,
+                          bool is_affects_star_involved);
   [[nodiscard]] bool IsAffected(std::string const &stmt);
   [[nodiscard]] bool IsAffectedStar(std::string const &stmt);
   [[nodiscard]] bool IsAffecting(std::string const &stmt);
@@ -55,10 +61,10 @@ class AffectsSession {
   [[nodiscard]] std::unordered_set<std::string> GetAffectedStarOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetAffectsOf(std::string const &stmt);
   [[nodiscard]] std::unordered_set<std::string> GetAffectsStarOf(std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAffectsPairs();
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAffectsStarPairs();
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAffectsSameSynPairs();
-  [[nodiscard]] std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAffectsStarSameSynPairs();
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsPairs();
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsStarPairs();
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsSameSynPairs();
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsStarSameSynPairs();
 };
 
 #endif //AFFECT_SESSION_H

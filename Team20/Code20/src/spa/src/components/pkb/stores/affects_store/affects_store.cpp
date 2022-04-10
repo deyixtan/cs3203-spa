@@ -28,7 +28,7 @@ void AffectsStore::ComputeAffectsSession() {
 }
 
 void AffectsStore::ComputeAffectsSession(bool is_affect_star_involved) {
-  m_affects_session = std::make_shared<AffectsSession>(std::make_shared<AffectsStore>(*this), is_affect_star_involved);
+  m_affects_session = std::make_shared<AffectsSession>(m_stmt_vector, m_stmt_type, std::make_shared<AffectsStore>(*this), is_affect_star_involved);
 }
 
 void AffectsStore::ClearAffectsSession() {

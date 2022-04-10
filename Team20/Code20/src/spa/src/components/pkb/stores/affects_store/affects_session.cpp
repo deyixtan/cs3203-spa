@@ -1,7 +1,11 @@
 #include "affects_session.h"
 #include "../../../source_subsystem/types/cfg/cfg_node.h"
 
-AffectsSession::AffectsSession(std::shared_ptr<AffectsStore> affects_store, bool is_affects_star_involved) :
+AffectsSession::AffectsSession(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                               std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
+                               std::shared_ptr<AffectsStore> affects_store,
+                               bool is_affects_star_involved) :
+    StmtStmtStore(move(stmt_vector), move(stmt_type)),
     m_affects_store(std::move(affects_store)),
     m_last_modified_star_map(std::unordered_map<std::string, std::unordered_set<std::string>>()),
     m_is_affects_star_involved(is_affects_star_involved),
@@ -37,61 +41,83 @@ bool AffectsSession::IsAffectingStar(std::string const &stmt) {
   return std::any_of(m_all_affects_star_pairs.begin(), m_all_affects_star_pairs.end(), predicate);
 }
 
-bool AffectsSession::DoesAffectExists(std::pair<std::string, std::string> const &pair) {
-  if (m_all_affects_pairs.find(pair) != m_all_affects_pairs.end()) {
+bool AffectsSession::DoesAffectExists(IDENT_PAIR const &pair) {
+  if (m_all_affects_pairs2.find(pair) != m_all_affects_pairs2.end()) {
     return true;
   }
+//  for(IDENT_PAIR_VECTOR::iterator it = GetAllPairs().begin(); it != GetAllPairs().end(); ++it) {
+//    std::string first = it->first;
+//    std::string second = it->second;
+//    if (first == pair.first && second == pair.second) {
+//      return true;
+//    }
+//  }
   return false;
 }
 
-bool AffectsSession::DoesAffectStarExists(std::pair<std::string, std::string> const &pair) {
-  if (m_all_affects_star_pairs.find(pair) != m_all_affects_star_pairs.end()) {
+bool AffectsSession::DoesAffectStarExists(IDENT_PAIR const &pair) {
+  if (m_all_affects_star_pairs2.find(pair) != m_all_affects_star_pairs2.end()) {
     return true;
   }
+//  for (IDENT_PAIR_VECTOR::iterator it = GetAllStarPairs().begin(); it != GetAllStarPairs().end(); ++it) {
+//    std::string first = it->first;
+//    std::string second = it->second;
+//    if (first == pair.first && second == pair.second) {
+//      return true;
+//    }
+//  }
   return false;
 }
 
 std::unordered_set<std::string> AffectsSession::GetAffectedOf(std::string const &stmt) {
-  if (m_affects_map.count(stmt) == 0) {
-    return {};
-  }
-  return m_affects_map.at(stmt);
+//  if (m_affects_map.count(stmt) == 0) {
+//    return {};
+//  }
+//  return m_affects_map.at(stmt);
+  return GetLowerSetOf(AFFECTS, ASSIGN, stmt);
 }
 
 std::unordered_set<std::string> AffectsSession::GetAffectedStarOf(std::string const &stmt) {
-  if (m_affects_star_map.count(stmt) == 0) {
-    return {};
-  }
-  return m_affects_star_map.at(stmt);
+//  if (m_affects_star_map.count(stmt) == 0) {
+//    return {};
+//  }
+//  return m_affects_star_map.at(stmt);
+  return GetLowerStarOf(AFFECTS, ASSIGN, stmt);
 }
 
 std::unordered_set<std::string> AffectsSession::GetAffectsOf(std::string const &stmt) {
-  if (m_affects_reverse_map.count(stmt) == 0) {
-    return {};
-  }
-  return m_affects_reverse_map.at(stmt);
+//  if (m_affects_reverse_map.count(stmt) == 0) {
+//    return {};
+//  }
+//  return m_affects_reverse_map.at(stmt);
+  return GetUpperSetOf(AFFECTS, ASSIGN, stmt);
 }
 
 std::unordered_set<std::string> AffectsSession::GetAffectsStarOf(std::string const &stmt) {
-  if (m_affects_star_reverse_map.count(stmt) == 0) {
-    return {};
-  }
-  return m_affects_star_reverse_map.at(stmt);
+//  if (m_affects_star_reverse_map.count(stmt) == 0) {
+//    return {};
+//  }
+//  return m_affects_star_reverse_map.at(stmt);
+  return GetUpperStarOf(AFFECTS, ASSIGN, stmt);
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectsSession::GetAffectsPairs() {
-  return m_all_affects_pairs;
+IDENT_PAIR_VECTOR AffectsSession::GetAffectsPairs() {
+  //return m_all_affects_pairs;
+  return GetAllPairs();
+  //return GetPairByType(ASSIGN, ASSIGN);
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectsSession::GetAffectsStarPairs() {
-  return m_all_affects_star_pairs;
+IDENT_PAIR_VECTOR AffectsSession::GetAffectsStarPairs() {
+  //return m_all_affects_star_pairs;
+  return GetAllStarPairs();
+//  return GetPairByType(ASSIGN, ASSIGN);
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectsSession::GetAffectsSameSynPairs() {
+IDENT_PAIR_VECTOR AffectsSession::GetAffectsSameSynPairs() {
   return m_same_affects_pairs;
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> AffectsSession::GetAffectsStarSameSynPairs() {
+IDENT_PAIR_VECTOR AffectsSession::GetAffectsStarSameSynPairs() {
   return m_same_affects_star_pairs;
 }
 
@@ -175,38 +201,53 @@ void AffectsSession::HandleAssignStatement(std::string stmt_no) {
     if (m_last_modified_map_stack.top()->count(var_used) != 0) {
       std::unordered_set<std::string> last_mod_stmt_nos = m_last_modified_map_stack.top()->at(var_used);
       for (auto const &last_mod_stmt_no : last_mod_stmt_nos) {
-        // update affects (m_affects_map)
-        if (m_affects_map.count(last_mod_stmt_no) == 0) {
-          m_affects_map.insert({last_mod_stmt_no, std::unordered_set<std::string>()});
-        }
-        m_affects_map.at(last_mod_stmt_no).insert(stmt_no);
-        // update affects (m_affects_reverse_map)
-        if (m_affects_reverse_map.count(stmt_no) == 0) {
-          m_affects_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
-        }
-        m_affects_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
-        // update affects (m_all_affects_pairs)
-        m_all_affects_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
-        // update affects same synonym
+//        // update affects (m_affects_map)
+//        if (m_affects_map.count(last_mod_stmt_no) == 0) {
+//          m_affects_map.insert({last_mod_stmt_no, std::unordered_set<std::string>()});
+//        }
+//        m_affects_map.at(last_mod_stmt_no).insert(stmt_no);
+//        // update affects (m_affects_reverse_map)
+//        if (m_affects_reverse_map.count(stmt_no) == 0) {
+//          m_affects_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
+//        }
+//        m_affects_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
+//        // update affects (m_all_affects_pairs)
+//        m_all_affects_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
+//        // update affects same synonym
         if (last_mod_stmt_no == stmt_no) {
-          m_same_affects_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
+          m_same_affects_pairs.push_back(std::make_pair(last_mod_stmt_no, stmt_no));
         }
 
+        /////
+        auto pair = std::make_pair(last_mod_stmt_no, stmt_no);
+        if (m_all_affects_pairs2.find(pair) == m_all_affects_pairs2.end())
+          AddAffects(false, ASSIGN, last_mod_stmt_no, ASSIGN, stmt_no);
+        m_all_affects_pairs2.insert(pair);
+        /////
+
+
         if (m_is_affects_star_involved) {
-          if (m_affects_star_map.count(last_mod_stmt_no) == 0) {
-            m_affects_star_map.insert({last_mod_stmt_no, std::unordered_set<std::string>()});
-          }
-          m_affects_star_map.at(last_mod_stmt_no).insert(stmt_no);
-          // update affects star (m_affects_star_reverse_map)
-          if (m_affects_star_reverse_map.count(stmt_no) == 0) {
-            m_affects_star_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
-          }
-          m_affects_star_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
-          // update affects star (m_all_affects_star_pairs)
-          m_all_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
+//          if (m_affects_star_map.count(last_mod_stmt_no) == 0) {
+//            m_affects_star_map.insert({last_mod_stmt_no, std::unordered_set<std::string>()});
+//          }
+//          m_affects_star_map.at(last_mod_stmt_no).insert(stmt_no);
+//          // update affects star (m_affects_star_reverse_map)
+//          if (m_affects_star_reverse_map.count(stmt_no) == 0) {
+//            m_affects_star_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
+//          }
+//          m_affects_star_reverse_map.at(stmt_no).insert(last_mod_stmt_no);
+//          // update affects star (m_all_affects_star_pairs)
+//          m_all_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
           if (last_mod_stmt_no == stmt_no) {
-            m_same_affects_star_pairs.insert(std::make_pair(last_mod_stmt_no, stmt_no));
+            m_same_affects_star_pairs.push_back(std::make_pair(last_mod_stmt_no, stmt_no));
           }
+
+          /////
+          auto pair = std::make_pair(last_mod_stmt_no, stmt_no);
+          if (m_all_affects_star_pairs2.find(pair) == m_all_affects_star_pairs2.end())
+            AddAffects(true, ASSIGN, last_mod_stmt_no, ASSIGN, stmt_no);
+          m_all_affects_star_pairs2.insert(pair);
+          /////
 
           if (m_last_modified_star_map.count(stmt_no) == 0) {
             m_last_modified_star_map.insert({stmt_no, std::unordered_set<std::string>()});
@@ -214,20 +255,27 @@ void AffectsSession::HandleAssignStatement(std::string stmt_no) {
           m_last_modified_star_map.at(stmt_no).insert(last_mod_stmt_no);
 
           for (const auto &p : m_last_modified_star_map[last_mod_stmt_no]) {
-            if (m_affects_star_map.count(p) == 0) {
-              m_affects_star_map.insert({p, std::unordered_set<std::string>()});
-            }
-            m_affects_star_map.at(p).insert(stmt_no);
-            // update affects star (m_affects_star_reverse_map)
-            if (m_affects_star_reverse_map.count(stmt_no) == 0) {
-              m_affects_star_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
-            }
-            m_affects_star_reverse_map.at(stmt_no).insert(p);
-            // update affects star (m_all_affects_star_pairs)
-            m_all_affects_star_pairs.insert(std::make_pair(p, stmt_no));
+//            if (m_affects_star_map.count(p) == 0) {
+//              m_affects_star_map.insert({p, std::unordered_set<std::string>()});
+//            }
+//            m_affects_star_map.at(p).insert(stmt_no);
+//            // update affects star (m_affects_star_reverse_map)
+//            if (m_affects_star_reverse_map.count(stmt_no) == 0) {
+//              m_affects_star_reverse_map.insert({stmt_no, std::unordered_set<std::string>()});
+//            }
+//            m_affects_star_reverse_map.at(stmt_no).insert(p);
+//            // update affects star (m_all_affects_star_pairs)
+//            m_all_affects_star_pairs.insert(std::make_pair(p, stmt_no));
             if (p == stmt_no) {
-              m_same_affects_star_pairs.insert(std::make_pair(p, stmt_no));
+              m_same_affects_star_pairs.push_back(std::make_pair(p, stmt_no));
             }
+
+            /////
+            auto pair = std::make_pair(p, stmt_no);
+            if (m_all_affects_star_pairs2.find(pair) == m_all_affects_star_pairs2.end())
+              AddAffects(true, ASSIGN, p, ASSIGN, stmt_no);
+            m_all_affects_star_pairs2.insert(pair);
+            /////
 
             if (m_last_modified_star_map.count(stmt_no) == 0) {
               m_last_modified_star_map.insert({stmt_no, std::unordered_set<std::string>()});
@@ -289,15 +337,32 @@ void AffectsSession::HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_
   m_last_modified_map_stack.push(last_modified_map_clone);
 
   m_terminating_node_stack.push(cfg_node);
-  TraverseCfg(start_node);
-  int affect_star_pairs_size_prev = GetAffectsStarPairs().size();
-  TraverseCfg(start_node);
-  int affect_star_pairs_size_curr = GetAffectsStarPairs().size();
 
-  while (affect_star_pairs_size_curr != affect_star_pairs_size_prev) {
-    affect_star_pairs_size_prev = affect_star_pairs_size_curr;
+  int affect_size_prev = 0;
+  int affect_size_curr = 0;
+
+  TraverseCfg(start_node);
+//  TraverseCfg(start_node);
+  if (m_is_affects_star_involved) {
+    affect_size_prev = GetAffectsStarPairs().size();
+  } else {
+    affect_size_prev = GetAffectsPairs().size();
+  }
+  TraverseCfg(start_node);
+  if (m_is_affects_star_involved) {
+    affect_size_curr = GetAffectsStarPairs().size();
+  } else {
+    affect_size_curr = GetAffectsPairs().size();
+  }
+
+  while (affect_size_curr != affect_size_prev) {
+    affect_size_prev = affect_size_curr;
     TraverseCfg(start_node);
-    affect_star_pairs_size_curr = GetAffectsStarPairs().size();
+    if (m_is_affects_star_involved) {
+      affect_size_curr = GetAffectsStarPairs().size();
+    } else {
+      affect_size_curr = GetAffectsPairs().size();
+    }
   }
   m_last_modified_map_stack.pop();
   m_terminating_node_stack.pop();
