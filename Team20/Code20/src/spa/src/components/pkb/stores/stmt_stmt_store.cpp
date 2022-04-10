@@ -100,7 +100,7 @@ void StmtStmtStore::AddNext(bool is_star,
     ExhaustiveAddAllStmt(type1, upper, type2, lower, false);
   } else {
     all_star_pairs.push_back({upper, lower});
-    ExhaustiveAddAllStmt(type1, upper, type2, lower, &star_type_pair_map);
+    ExhaustiveAddAllStmt(type1, upper, type2, lower, true);
   }
 }
 
