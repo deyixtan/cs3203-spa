@@ -14,7 +14,8 @@ NextStore::NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>
     m_proc_stmt_map({}) {}
 
 void NextStore::AddNext(IDENT const &before, IDENT const &next) {
-  AddUpperLower(NEXT, before, next);
+  all_pairs.push_back(std::pair<std::string, std::string>(before, next));
+  ExhaustiveAddAllStmt(m_stmt_type->at(before), before, m_stmt_type->at(next), next, false);
 }
 
 void NextStore::AddFirstStmtProc(std::string const &proc, std::string const &stmt) {
@@ -98,7 +99,6 @@ IDENT_PAIR_VECTOR NextStore::GetAllNextStarStmt(StmtType type1, StmtType type2) 
 void NextStore::GetUpperStarOfHelper(std::string const &stmt,
                                          std::unordered_set<std::string> &res) {
   std::string first_stmt_no;
-  StmtType type1 = m_stmt_type->at(stmt);
   for(auto proc : m_proc_stmt_map) {
     std::string first_stmt = proc.second.front();
     std::string last_stmt = proc.second.back();
@@ -110,13 +110,12 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
   std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
   if(ansc_set.empty()) {
     for(int n = stoi(first_stmt_no); n <= stoi(stmt) - 1; n++) {
-      StmtType type2 = m_stmt_type->at(std::to_string(n));
-      StmtStmtStore::AddNext(true, type1, std::to_string(n), type2, stmt);
+      AddNext(std::to_string(n), stmt);
       res.insert(std::to_string(n));
     }
     std::string parent = m_parent_store->GetParentOf(WHILE, std::to_string(stoi(stmt) + 1));
     if(parent == stmt) {
-      StmtStmtStore::AddNext(true, type1, stmt, type1, stmt);
+      AddNext(stmt, stmt);
       res.insert(stmt);
     }
     return;
@@ -135,13 +134,11 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
     }
   }
   for(int j = stoi(smallest_stmt); j <= stoi(largest_stmt); j++) {
-    StmtType type2 = m_stmt_type->at(std::to_string(j));
-    StmtStmtStore::AddNext(true, type1, std::to_string(j), type2, stmt);
+    AddNext(std::to_string(j), stmt);
     res.insert(std::to_string(j));
   }
   for(int j = stoi(first_stmt_no); j <= stoi(smallest_stmt) - 1; j++) {
-    StmtType type2 = m_stmt_type->at(std::to_string(j));
-    StmtStmtStore::AddNext(true, type1, std::to_string(j), type2, stmt);
+    AddNext(std::to_string(j), stmt);
     res.insert(std::to_string(j));
   }
 }
@@ -149,7 +146,6 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
 void NextStore::GetLowerStarOfHelper(std::string const &stmt,
                                          std::unordered_set<std::string> &res) {
   std::string last_stmt_no;
-  StmtType type1 = m_stmt_type->at(stmt);
   for(auto proc : m_proc_stmt_map) {
     std::string first_stmt = proc.second.front();
     std::string last_stmt = proc.second.back();
@@ -161,13 +157,12 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
   std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
   if(ansc_set.empty()) {
     for(int n = stoi(stmt) + 1; n <= stoi(last_stmt_no); n++) {
-      StmtType type2 = m_stmt_type->at(std::to_string(n));
-      StmtStmtStore::AddNext(true, type1, stmt, type2, std::to_string(n));
+      AddNext(stmt, std::to_string(n));
       res.insert(std::to_string(n));
     }
     std::string parent = m_parent_store->GetParentOf(WHILE, std::to_string(stoi(stmt) + 1));
     if(parent == stmt) {
-      StmtStmtStore::AddNext(true, type1, stmt, type1, stmt);
+      AddNext(stmt, stmt);
       res.insert(stmt);
     }
     return;
@@ -186,13 +181,11 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
     }
   }
   for(int j = stoi(smallest_stmt); j <= stoi(largest_stmt); j++) {
-    StmtType type2 = m_stmt_type->at(std::to_string(j));
-    StmtStmtStore::AddNext(true, type1, stmt, type2, std::to_string(j));
+    AddNext(stmt, std::to_string(j));
     res.insert(std::to_string(j));
   }
   for(int j = stoi(largest_stmt) + 1; j <= stoi(last_stmt_no); j++) {
-    StmtType type2 = m_stmt_type->at(std::to_string(j));
-    StmtStmtStore::AddNext(true, type1, stmt, type2, std::to_string(j));
+    AddNext(stmt, std::to_string(j));
     res.insert(std::to_string(j));
   }
 }
