@@ -179,14 +179,14 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
         end_if_stmt = s;
       }
     }
-    for (int i = stoi(start_if_stmt); i < stoi(end_if_stmt); i++) {
-      std::unordered_set<std::string> next_set = GetNextOf(STMT, std::to_string(i));
-      if (!next_set.count(std::to_string(i + 1))
-          && m_parent_store->GetParentOf(IF, smallest_stmt) == start_if_stmt) {
-        last_stmt_no = std::to_string(i);
-        break;
+    std::unordered_set<std::string> get_next_of_if = GetNextOf(STMT, start_if_stmt);
+    std::string largest_stmt = SMALLEST_STMT_NO;
+    for(auto s : get_next_of_if) {
+      if(stoi(s) > stoi(largest_stmt)) {
+        largest_stmt = s;
       }
     }
+    last_stmt_no = std::to_string(stoi(largest_stmt) - 1);
     if(stoi(stmt) > stoi(last_stmt_no)) {
       res.insert(start_if_stmt);
       first_stmt_no = std::to_string(stoi(last_stmt_no) + 1);
@@ -273,7 +273,7 @@ std::string NextStore::GetStartStmtOfWhileLoop(std::unordered_set<std::string> &
 
 std::string NextStore::GetEndStmtOfWhileLoop(const std::string &start_of_while) {
   std::string largest_stmt = SMALLEST_STMT_NO;
-  std::unordered_set<std::string> children_set = m_parent_store->GetChildOf(STMT, start_of_while);
+  std::unordered_set<std::string> children_set = m_parent_store->GetAllDescOf(STMT, start_of_while);
   for(auto s : children_set) {
     if(stoi(s) > stoi(largest_stmt)) {
       largest_stmt = s;
