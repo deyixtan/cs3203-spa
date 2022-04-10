@@ -12,12 +12,17 @@ class SelectTupleClause : public Clause {
   SelectTupleClause(std::vector<PqlToken> &tuple,
                     const std::unordered_map<std::string, DesignEntityType> &declarations,
                     const PkbPtr &pkb);
+  SelectTupleClause(const std::unordered_set<std::string> &table_synonyms,
+                    std::vector<PqlToken> &tuple,
+                    const std::unordered_map<std::string, DesignEntityType> &declarations,
+                    const PkbPtr &pkb);
   Table Execute() override;
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
   size_t GetSynonymsSize() override;
   size_t GetWeight() override;
  private:
+  std::unordered_set<std::string> table_synonyms;
   std::vector<PqlToken> tuple;
   std::unordered_map<std::string, DesignEntityType> declarations;
   const PkbPtr &pkb;
