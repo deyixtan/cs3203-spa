@@ -53,11 +53,13 @@ void StmtStmtStore::PopulatePairMap(StmtType type1,
 }
 
 bool StmtStmtStore::IsValid(IDENT_PAIR const &pair) {
-  return std::find(all_pairs.begin(), all_pairs.end(), pair) != all_pairs.end();
+  IDENT_PAIR_VECTOR vect = GetPairByType(STMT, STMT);
+  return std::find(vect.begin(), vect.end(), pair) != vect.end();
 }
 
 bool StmtStmtStore::IsStarValid(IDENT_PAIR const &pair) {
-  return std::find(all_star_pairs.begin(), all_star_pairs.end(), pair) != all_star_pairs.end();
+  IDENT_PAIR_VECTOR vect = GetStarPairByType(STMT, STMT);
+  return std::find(vect.begin(), vect.end(), pair) != vect.end();
 }
 
 IDENT_SET StmtStmtStore::GetHelper(StmtType type1,

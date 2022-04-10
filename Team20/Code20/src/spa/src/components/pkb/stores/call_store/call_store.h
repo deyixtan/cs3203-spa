@@ -19,8 +19,6 @@ class CallStore : public StmtStmtStore {
   [[nodiscard]] IDENT_SET GetCalleesOf(IDENT const &proc);
   [[nodiscard]] IDENT_SET GetCallersStarOf(IDENT const &proc);
   [[nodiscard]] IDENT_SET GetCalleesStarOf(IDENT const &proc);
-  [[nodiscard]] IDENT_PAIR_VECTOR GetAllCalls();
-  [[nodiscard]] IDENT_PAIR_VECTOR GetAllCallsStar();
 };
 
 #endif //CALLS_STORE_H

@@ -7,13 +7,11 @@ FollowsStore::FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::s
 
 void FollowsStore::AddFollow(IDENT const &follower, IDENT const &following) {
   //AddUpperLower(FOLLOWS, follower, following);
-  all_pairs.push_back({follower, following});
   ExhaustiveAddAllStmt(m_stmt_type->at(follower), follower, m_stmt_type->at(following), following, false);
 }
 
 void FollowsStore::AddFollowStar(IDENT const &follower, IDENT const &following) {
   //AddUpperLowerStar(FOLLOWS, follower, following, std::vector<std::string>());
-  all_star_pairs.push_back({follower, following});
   ExhaustiveAddAllStmt(m_stmt_type->at(follower), follower, m_stmt_type->at(following), following, true);
 }
 

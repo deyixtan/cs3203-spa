@@ -6,7 +6,6 @@ ParentStore::ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::str
     StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
 
 void ParentStore::AddParent(IDENT const &parent, IDENT const &child) {
-  all_pairs.push_back({parent, child});
   ExhaustiveAddAllStmt(m_stmt_type->at(parent), parent, m_stmt_type->at(child), child, false);
 }
 
@@ -17,7 +16,6 @@ void ParentStore::AddParentStar(IDENT const &stmt, IDENT_VECTOR const &visited) 
     }
 
     if (ance != "") {
-      all_star_pairs.push_back({ance, stmt});
       ExhaustiveAddAllStmt(m_stmt_type->at(ance), ance, m_stmt_type->at(stmt), stmt, true);
     }
   }

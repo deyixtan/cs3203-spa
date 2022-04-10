@@ -6,21 +6,17 @@ CallStore::CallStore(std::shared_ptr<std::vector<std::unordered_set<std::string>
     StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
 
 void CallStore::AddCalls(std::string const &caller, std::string const &callee) {
-  all_pairs.push_back({caller, callee});
   ExhaustiveAddAllStmt(PROC, caller, PROC, callee, false);
 
-  all_star_pairs.push_back(std::pair<std::string, std::string>(caller, callee));
   ExhaustiveAddAllStmt(PROC, caller, PROC, callee, true);
   //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(star_type_pair_map);
 
   if (IsMapContains(PROC, PROC, &star_type_pair_map) == 1) {
     for (auto &pair : star_type_pair_map.at(PROC).at(PROC).GetPairVector()) {
       if (caller == pair.second) {
-        all_star_pairs.push_back({pair.first, callee});
         ExhaustiveAddAllStmt(PROC, pair.first, PROC, callee, true);
       }
       if (callee == pair.first) {
-        all_star_pairs.push_back({caller, pair.second});
         ExhaustiveAddAllStmt(PROC, caller, PROC, pair.second, true);
       }
     }
@@ -64,12 +60,4 @@ IDENT_SET CallStore::GetCallersStarOf(IDENT const &proc) {
 
 IDENT_SET CallStore::GetCalleesStarOf(IDENT const &proc) {
   return GetLowerStarOf(PROC, proc);
-}
-
-IDENT_PAIR_VECTOR CallStore::GetAllCalls() {
-  return GetAllPairs();
-}
-
-IDENT_PAIR_VECTOR CallStore::GetAllCallsStar() {
-  return GetAllStarPairs();
 }

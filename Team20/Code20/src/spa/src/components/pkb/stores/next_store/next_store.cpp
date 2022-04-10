@@ -14,7 +14,6 @@ NextStore::NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>
     m_proc_stmt_map({}) {}
 
 void NextStore::AddNext(IDENT const &before, IDENT const &next) {
-  all_pairs.push_back({before, next});
   ExhaustiveAddAllStmt(m_stmt_type->at(before), before, m_stmt_type->at(next), next, false);
 }
 
@@ -31,7 +30,7 @@ bool NextStore::IsNextPairValid(IDENT_PAIR const &pair) {
 }
 
 bool NextStore::IsNextStarPairValid(IDENT_PAIR const &pair) {
-  if (std::find(all_star_pairs.begin(), all_star_pairs.end(), pair) != all_star_pairs.end()) {
+  if (std::find(GetStarPairByType(STMT, STMT).begin(), GetStarPairByType(STMT, STMT).end(), pair) != GetStarPairByType(STMT, STMT).end()) {
     return true;
   } else {
     std::unordered_set<std::string> next_star = GetNextStarOf(STMT, pair.first);
@@ -67,10 +66,6 @@ IDENT_SET NextStore::GetNextStarOf(StmtType type, IDENT const &stmt) {
   }
   GetLowerStarOfHelper(stmt, res);
   return res;
-}
-
-IDENT_PAIR_VECTOR NextStore::GetNextPairs() {
-  return GetAllPairs();
 }
 
 IDENT_SET NextStore::GetNextStarSameStmt(StmtType type) {
@@ -199,10 +194,9 @@ IDENT_PAIR_VECTOR NextStore::GetNextStarPairs() {
       GetLowerStarOfHelper(std::to_string(i), res);
     }
   }
-  return GetAllStarPairs();
+  return GetStarPairByType(STMT, STMT);
 }
 
 void NextStore::ClearNextStarCache() {
-  all_star_pairs = IDENT_PAIR_VECTOR();
   star_type_pair_map = NESTED_STMT_STMT_MAP();
 }
