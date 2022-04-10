@@ -149,18 +149,15 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
   StmtType type1 = m_stmt_type->at(stmt);
   std::string last_stmt_no = GetLastStmtOfProc(stmt);
   std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
-  std::unordered_set<std::string> if_set = m_parent_store->GetAllAnceOf(IF, stmt);
+  std::string if_parent_stmt = m_parent_store->GetParentOf(IF, stmt);
+  std::string end_if_stmt = LARGEST_STMT_NO;
   if(ansc_set.empty()) {
-    if (!if_set.empty()) {
-      std::string start_if_stmt = LARGEST_STMT_NO;
-      for(auto s : if_set) {
-        if(stoi(s) > stoi(start_if_stmt)) {
-          start_if_stmt = s;
-        }
-      }
+    if(if_parent_stmt != SMALLEST_STMT_NO) {
+      std::unordered_set<std::string> if_stmt_block = m_parent_store->GetAllDescOf(STMT, if_parent_stmt);
+      std::string start_if_stmt = if_parent_stmt;
 
-      std::string end_if_stmt = SMALLEST_STMT_NO;
-      for(auto s : if_set) {
+      end_if_stmt = SMALLEST_STMT_NO;
+      for(auto s : if_stmt_block) {
         if(stoi(s) > stoi(end_if_stmt)) {
           end_if_stmt = s;
         }
@@ -168,7 +165,7 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
 
       for (int i = stoi(start_if_stmt); i < stoi(end_if_stmt); i++) {
         std::unordered_set<std::string> next_set = GetNextOf(STMT, std::to_string(i));
-        if(!next_set.count(std::to_string(i + 1))) {
+        if(!next_set.count(std::to_string(i + 1)) && m_parent_store->GetParentOf(IF, std::to_string(i)) == start_if_stmt) {
           last_stmt_no = std::to_string(i);
           break;
         }
@@ -176,6 +173,9 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
     }
 
     InsertPairResultLower(stoi(stmt) + 1, stoi(last_stmt_no), res, stmt);
+    if(end_if_stmt != LARGEST_STMT_NO && stoi(last_stmt_no) + 1 < stoi(end_if_stmt)) {
+      InsertPairResultLower(stoi(last_stmt_no) + 1, stoi(if_parent_stmt), res, stmt);
+    }
     if(type1 == WHILE) {
       StmtStmtStore::AddNext(true, type1, stmt, type1, stmt);
       res.insert(stmt);
