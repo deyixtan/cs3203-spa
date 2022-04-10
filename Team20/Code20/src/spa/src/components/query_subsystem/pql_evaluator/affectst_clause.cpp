@@ -16,38 +16,7 @@ Table AffectsTClause::Execute() {
     pkb->GetAffectsStoreFactory()->ComputeAffectsStore();
   }
 
-  if (IsArgSynonym(first_arg) && IsArgSynonym(second_arg)) {
-    // Affects*(a1, a2)
-    return HandleSynonymSynonym();
-  } else if (IsArgSynonym(first_arg) && IsArgWildcard(second_arg)) {
-    // Affects*(a, _)
-    return HandleSynonymWildcard();
-  } else if (IsArgSynonym(first_arg) && IsArgInteger(second_arg)) {
-    // Affects*(a, 2)
-    return HandleSynonymInteger();
-  } else if (IsArgWildcard(first_arg) && IsArgSynonym(second_arg)) {
-    // Affects*(_, a)
-    return HandleWildcardSynonym();
-  } else if (IsArgWildcard(first_arg) && IsArgWildcard(second_arg)) {
-    // Affects*(_, _)
-    return HandleWildcardWildcard();
-  } else if (IsArgWildcard(first_arg) && IsArgInteger(second_arg)) {
-    // Affects*(_, 2)
-    return HandleWildcardInteger();
-  } else if (IsArgInteger(first_arg) && IsArgSynonym(second_arg)) {
-    // Affects*(1, a)
-    return HandleIntegerSynonym();
-  } else if (IsArgInteger(first_arg) && IsArgWildcard(second_arg)) {
-    // Affects*(1, _)
-    return HandleIntegerWildcard();
-  } else if (IsArgInteger(first_arg) && IsArgInteger(second_arg)) {
-    // Affects*(1, 2)
-    return HandleIntegerInteger();
-  } else {
-    // throw exception???
-    // return empty table???
-    return {};
-  }
+  return (this->*execute_handler.at({first_arg.type, second_arg.type}))();
 }
 
 Table AffectsTClause::HandleSynonymSynonym() {

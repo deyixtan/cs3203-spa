@@ -41,7 +41,8 @@ bool QueryEvaluator::EvaluateUnrelatedClauseGroups(std::vector<ClauseGroup> &cla
   return false;
 }
 
-Table QueryEvaluator::EvaluateRelatedClauseGroups(std::vector<ClauseGroup> &clause_groups, std::shared_ptr<Clause> &select_clause_ptr) {
+Table QueryEvaluator::EvaluateRelatedClauseGroups(std::vector<ClauseGroup> &clause_groups,
+                                                  std::shared_ptr<Clause> &select_clause_ptr) {
   Table table;
   for (auto &clause_group : clause_groups) {
     Table intermediate_table = clause_group.Execute();
@@ -72,7 +73,9 @@ void QueryEvaluator::EvaluateOptimized(ParsedQuery &query, const PkbPtr &pkb, st
     table.ToggleFalseClause();
   }
 
-  Table select_table = select_clause_ptr->Execute();
+  std::unordered_set<std::string> synonyms_in_table{table.attributes.begin(), table.attributes.end()};
+  select_clause_ptr = ClauseFactory::Create(synonyms_in_table, query.GetResultClause(), query.GetDeclaration().GetDeclarations(), pkb);
+  Table select_table = std::move(select_clause_ptr->Execute());
   table.Merge(select_table);
   ProjectResults(query, pkb, table, results);
 }
@@ -113,10 +116,12 @@ void QueryEvaluator::ProjectResults(ParsedQuery &query,
     } else {
       results.emplace_back("TRUE");
     }
-  } else if (table.IsAttributeResult()) {
+  }
+  if (table.IsAttributeResult()) {
     ResultClause result_clause = query.GetResultClause();
     std::unordered_map<std::string, DesignEntityType> declarations = query.GetDeclaration().GetDeclarations();
-    std::pair<std::pair<DesignEntityType, std::string>, AttriName> attribute = Utils::ParseAttributeRef(result_clause.GetValues().front(), declarations);
+    std::pair<std::pair<DesignEntityType, std::string>, AttriName>
+        attribute = Utils::ParseAttributeRef(result_clause.GetValues().front(), declarations);
     auto projected_results = table.GetResult(attribute.first.second);
     if (Utils::IsConversionNeeded(attribute.first.first, attribute.second)) {
       std::unordered_set<std::string> temp_set;
@@ -131,21 +136,20 @@ void QueryEvaluator::ProjectResults(ParsedQuery &query,
         results.emplace_back(result);
       }
     }
-  } else if (table.IsSynonymResult()) {
+  }
+  if (table.IsSynonymResult()) {
     auto projected_results = table.GetResult(query.GetResultClause().GetValues()[0].value);
     for (auto result : projected_results) {
       results.emplace_back(result);
     }
-  } else if (table.IsTupleResult()) {
-    auto projected_results = table.GetTupleResult(query.GetResultClause().GetValues(), query.GetDeclaration().GetDeclarations(), pkb);
+  }
+  if (table.IsTupleResult()) {
+    auto projected_results =
+        table.GetTupleResult(query.GetResultClause().GetValues(), query.GetDeclaration().GetDeclarations(), pkb);
     for (auto result : projected_results) {
       results.emplace_back(result);
     }
   }
-
-  pkb->GetAffectsStoreFactory()->ClearAffectsStore();
-  pkb->GetNextStore()->ClearNextStarCache();
-
 }
 
 std::queue<std::shared_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query, const PkbPtr &pkb) {
