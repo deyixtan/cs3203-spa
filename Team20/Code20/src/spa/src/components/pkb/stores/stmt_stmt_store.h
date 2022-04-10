@@ -22,6 +22,7 @@ class StmtStmtStore : public Store {
   void AddParent(bool is_star, IDENT const &upper, IDENT const &lower, IDENT_VECTOR const &visited);
   void AddCalls(bool is_star, IDENT const &upper, IDENT const &lower);
   void AddNext(bool is_star, StmtType type1, IDENT const &upper, StmtType type2, IDENT const &lower);
+  void AddAffects(bool is_star, StmtType type1, IDENT const &upper, StmtType type2, IDENT const &lower);
   void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_TUPLE_MAP *pair_map);
   void ExhaustiveAddAllStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, bool is_star);
   void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_TUPLE_MAP *pair_map);
