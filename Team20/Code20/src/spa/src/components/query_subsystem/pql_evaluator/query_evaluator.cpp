@@ -4,6 +4,8 @@ namespace pql {
 
 void QueryEvaluator::Evaluate(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results) {
   EvaluateOptimized(query, pkb, results);
+  pkb->GetAffectsStore()->ClearAffectsSession();
+  pkb->GetNextStore()->ClearNextStarCache();
 }
 
 void QueryEvaluator::EvaluateUnoptimized(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results) {
@@ -19,8 +21,6 @@ void QueryEvaluator::EvaluateUnoptimized(ParsedQuery &query, const PkbPtr &pkb, 
   }
 
   ProjectResults(query, pkb, table, results);
-  pkb->GetAffectStore()->ClearAffectSession();
-  pkb->GetNextStore()->WipeStar();
 }
 
 bool QueryEvaluator::EvaluateNoSynonymClauseGroup(ClauseGroup &clause_group) {
@@ -33,7 +33,7 @@ bool QueryEvaluator::EvaluateNoSynonymClauseGroup(ClauseGroup &clause_group) {
 
 bool QueryEvaluator::EvaluateUnrelatedClauseGroups(std::vector<ClauseGroup> &clause_groups) {
   for (auto &clause_group : clause_groups) {
-    bool is_false_clause = clause_group.ExecuteBool();
+    bool is_false_clause = clause_group.Execute().IsFalseClause();
     if (is_false_clause) {
       return true;
     }
@@ -95,6 +95,9 @@ ClauseGroupList QueryEvaluator::ExtractClauseGroups(ParsedQuery &query, const Pk
   }
   for (const auto &with : query.GetWithClause()) {
     auto clause = ClauseFactory::Create(with, declarations, pkb);
+    if (clause) {
+      clause_group_list.AddClause(clause);
+    }
   }
 
   return clause_group_list;

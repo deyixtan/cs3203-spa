@@ -87,6 +87,7 @@ void Table::Merge(Table &other_table) {
     // if merging two tables with attributes causes empty records
     // there are no possible values so we emulate encountering false clause
     ToggleFalseClause();
+    attributes.clear();
   }
 }
 

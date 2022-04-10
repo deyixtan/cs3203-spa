@@ -3,10 +3,13 @@
 
 #include "store.h"
 
+class ParentStore;
+
 class StmtStmtStore : public Store {
- private:
+ protected:
   NESTED_TUPLE_MAP type_pair_map;
   NESTED_TUPLE_MAP star_type_pair_map;
+  std::shared_ptr<ParentStore> m_parent_store;
   IDENT_PAIR_VECTOR all_pairs;
   IDENT_PAIR_VECTOR all_star_pairs;
 
@@ -22,10 +25,8 @@ class StmtStmtStore : public Store {
   void PopulatePairMap(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_TUPLE_MAP *pair_map);
   void ExhaustiveAddAllStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, bool is_star);
   void ExhaustiveAddSubStmt(StmtType type1, IDENT upper, StmtType type2, IDENT lower, NESTED_TUPLE_MAP *pair_map);
-  void WipeNextStar();
   [[nodiscard]] bool IsValid(IDENT_PAIR const &pair);
   [[nodiscard]] bool IsStarValid(IDENT_PAIR const &pair);
-  [[nodiscard]] bool IsNextStarPairValid(IDENT_PAIR const &pair);
   [[nodiscard]] std::unordered_set<std::string> GetHelper(StmtType type1, StmtType type2, int index, IDENT const &stmt, bool is_star);
   [[nodiscard]] IDENT GetUpperOf(StmtType stmt_type, IDENT const &stmt);
   [[nodiscard]] IDENT GetLowerOf(StmtType stmt_type, IDENT const &stmt);
@@ -37,9 +38,6 @@ class StmtStmtStore : public Store {
   [[nodiscard]] IDENT_PAIR_VECTOR GetStarPairByType(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllPairs();
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllStarPairs();
-  [[nodiscard]] IDENT_PAIR_VECTOR GetAllNextStarPairs();
-  void GetLowerStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited);
-  void GetUpperStarOfHelper(StmtType stmt_type, IDENT const &stmt, IDENT_SET &res, IDENT_SET &visited);
 };
 
 #endif //FOLLOWS_PARENT_STORE_H

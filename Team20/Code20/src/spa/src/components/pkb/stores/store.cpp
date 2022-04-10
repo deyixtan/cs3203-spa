@@ -5,19 +5,19 @@ Store::Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_
     : m_stmt_vector(move(stmt_vector)), m_stmt_type(move(stmt_type)) {}
 
 IDENT_PAIR_VECTOR Store::GetAllStmt(StmtType type,
-                                 std::vector<StmtType> &supported_types,
-                                 std::vector<std::pair<std::string,
-                                                       std::string>> const &list,
-                                 bool checkPairFirst) {
+                                    std::vector<StmtType> &supported_types,
+                                    std::vector<std::pair<std::string,
+                                                          std::string>> const &list,
+                                    bool checkPairFirst) {
   return GetAllStmt(type, type, supported_types, list, checkPairFirst);
 }
 
 IDENT_PAIR_VECTOR Store::GetAllStmt(StmtType type1,
-                                 StmtType type2,
-                                 std::vector<StmtType> &supported_types,
-                                 std::vector<std::pair<std::string,
-                                                       std::string>> const &list,
-                                 bool checkPairFirst) {
+                                    StmtType type2,
+                                    std::vector<StmtType> &supported_types,
+                                    std::vector<std::pair<std::string,
+                                                          std::string>> const &list,
+                                    bool checkPairFirst) {
   IDENT_PAIR_VECTOR result;
 
   if (std::find(supported_types.begin(), supported_types.end(), type1) == supported_types.end()) {
