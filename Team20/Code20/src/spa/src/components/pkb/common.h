@@ -38,13 +38,13 @@ class PKB;
 class ModifiesStore;
 class UsesStore;
 class AffectsStore;
-class AffectsSession;
+class AffectsStoreFactory;
 
 typedef std::shared_ptr<PKB> PkbPtr;
 typedef std::shared_ptr<ModifiesStore> ModifiesStorePtr;
 typedef std::shared_ptr<UsesStore> UsesStorePtr;
 typedef std::shared_ptr<AffectsStore> AffectsStorePtr;
-typedef std::shared_ptr<AffectsSession> AffectsSessionPtr;
+typedef std::shared_ptr<AffectsStoreFactory> AffectsStoreFactoryPtr;
 
 typedef std::string IDENT;
 typedef std::vector<IDENT> IDENT_VECTOR;
