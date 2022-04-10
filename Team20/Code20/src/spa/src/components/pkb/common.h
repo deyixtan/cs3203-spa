@@ -35,10 +35,16 @@ enum StoreType {
 
 
 class PKB;
+class ModifiesStore;
+class UsesStore;
 class AffectsStore;
+class AffectsSession;
 
 typedef std::shared_ptr<PKB> PkbPtr;
+typedef std::shared_ptr<ModifiesStore> ModifiesStorePtr;
+typedef std::shared_ptr<UsesStore> UsesStorePtr;
 typedef std::shared_ptr<AffectsStore> AffectsStorePtr;
+typedef std::shared_ptr<AffectsSession> AffectsSessionPtr;
 
 typedef std::string IDENT;
 typedef std::vector<IDENT> IDENT_VECTOR;

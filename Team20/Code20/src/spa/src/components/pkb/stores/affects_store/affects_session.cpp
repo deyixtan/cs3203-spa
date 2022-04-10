@@ -92,7 +92,7 @@ IDENT_SET AffectsSession::GetVarModByStmt(IDENT &stmt_no) {
 }
 
 IDENT_SET AffectsSession::GetVarUsedByStmt(IDENT &stmt_no) {
-  return m_affects_store->GetUsageStore()->GetVarUsedByStmt(stmt_no);
+  return m_affects_store->GetUsesStore()->GetVarUsedByStmt(stmt_no);
 }
 
 int AffectsSession::GetMaxPairSize() {
