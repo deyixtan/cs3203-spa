@@ -106,6 +106,7 @@ void Table::Filter(std::set<std::string> &&synonyms) {
     for (auto idx : indices) {
       new_record.emplace_back(record.at(idx));
     }
+    new_records.emplace_back(new_record);
   }
 
   attributes = std::move(new_attributes);
