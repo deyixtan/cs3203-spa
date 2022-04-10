@@ -102,6 +102,13 @@ int AffectsSession::GetMaxPairSize() {
   return GetAffectsPairs().size();
 }
 
+void AffectsSession::InsertToIdentSetMap(IDENT_SET_MAP &map, IDENT key, IDENT value) {
+  if (map.count(key) == 0) {
+    map.insert({key, IDENT_SET()});
+  }
+  map.at(key).insert(value);
+}
+
 void AffectsSession::AddAffects(bool is_star, IDENT upper, IDENT lower) {
   IDENT_PAIR_SET* pair_set;
   if (is_star) {
@@ -124,6 +131,29 @@ void AffectsSession::AddAffects(bool is_star, IDENT upper, IDENT lower) {
   if (pair_set->find(pair) == pair_set->end())
     StmtStmtStore::AddAffects(is_star, ASSIGN, upper, ASSIGN, lower);
   pair_set->insert(pair);
+}
+
+void AffectsSession::HandleAffectsLastModSet(IDENT var_used, IDENT stmt_no, IDENT_SET_MAP_PTR last_modified_map) {
+  IDENT_SET last_mod_set = last_modified_map->at(var_used);
+  for (auto const &last_mod : last_mod_set) {
+    AddAffects(false, last_mod, stmt_no);
+    HandleAffectsStarLastModSet(last_mod, stmt_no);
+  }
+}
+
+void AffectsSession::HandleAffectsStarLastModSet(IDENT last_mod_stmt_no, IDENT stmt_no) {
+  if (m_is_affects_star_involved) {
+    AddAffects(true, last_mod_stmt_no, stmt_no);
+    InsertToIdentSetMap(m_last_modified_star_map, stmt_no, last_mod_stmt_no);
+    HandleAffectsStarLastModStarSet(last_mod_stmt_no, stmt_no);
+  }
+}
+
+void AffectsSession::HandleAffectsStarLastModStarSet(IDENT last_mod_stmt_no, IDENT stmt_no) {
+  for (const auto &p : m_last_modified_star_map[last_mod_stmt_no]) {
+    AddAffects(true, p, stmt_no);
+    InsertToIdentSetMap(m_last_modified_star_map, stmt_no, p);
+  }
 }
 
 void AffectsSession::UpdateModifiedTable(IDENT stmt_no, bool is_clear_only) {
@@ -204,38 +234,14 @@ void AffectsSession::HandleCfg(source::CfgNodePtr &cfg_node) {
 }
 
 void AffectsSession::HandleAssignStatement(IDENT stmt_no) {
-  // check variables being used if they are modified
-  // add them to affects map
+  IDENT_SET_MAP_PTR last_modified_map = m_last_modified_map_stack.top();
   IDENT_SET vars_used = GetVarUsedByStmt(stmt_no);
   for (auto const &var_used : vars_used) {
     // check if var_used is modified before
-    if (m_last_modified_map_stack.top()->count(var_used) != 0) {
-      IDENT_SET last_mod_stmt_nos = m_last_modified_map_stack.top()->at(var_used);
-      for (auto const &last_mod_stmt_no : last_mod_stmt_nos) {
-        AddAffects(false, last_mod_stmt_no, stmt_no);
-
-
-        if (m_is_affects_star_involved) {
-          AddAffects(true, last_mod_stmt_no, stmt_no);
-
-          if (m_last_modified_star_map.count(stmt_no) == 0) {
-            m_last_modified_star_map.insert({stmt_no, IDENT_SET()});
-          }
-          m_last_modified_star_map.at(stmt_no).insert(last_mod_stmt_no);
-
-          for (const auto &p : m_last_modified_star_map[last_mod_stmt_no]) {
-            AddAffects(true, p, stmt_no);
-
-            if (m_last_modified_star_map.count(stmt_no) == 0) {
-              m_last_modified_star_map.insert({stmt_no, IDENT_SET()});
-            }
-            m_last_modified_star_map.at(stmt_no).insert(p);
-          }
-        }
-      }
+    if (last_modified_map->count(var_used) != 0) {
+      HandleAffectsLastModSet(var_used, stmt_no, last_modified_map);
     }
   }
-
   UpdateModifiedTable(stmt_no, false);
 }
 
