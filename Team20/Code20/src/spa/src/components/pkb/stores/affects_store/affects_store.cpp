@@ -169,6 +169,20 @@ void AffectsStore::HandleAffectsStarLastModStarSet(IDENT &last_mod_stmt_no, IDEN
   }
 }
 
+void AffectsStore::HandleWhileStatementLoop(source::CfgNodePtr &cfg_node,
+                                              unsigned int &prev_size,
+                                              unsigned int &curr_size,
+                                              bool is_get_current) {
+  if (is_get_current) {
+    prev_size = curr_size;
+  } else {
+    prev_size = GetMaxPairSize();
+  }
+  source::CfgNodePtr child_node = cfg_node->GetNextList().front();
+  HandleCfg(child_node);
+  curr_size = GetMaxPairSize();
+}
+
 void AffectsStore::AddAffects(bool is_star, IDENT &upper, IDENT &lower) {
   IDENT_PAIR_SET *pair_set;
   if (is_star) {
@@ -282,13 +296,12 @@ void AffectsStore::HandleWhileStatement(source::CfgNodePtr &cfg_node) {
   // may need more > 1 traversal around the
   // while-statement scope to properly populate
   // affects/affects* pair
-  unsigned int affect_size_prev = GetMaxPairSize();
-  HandleCfg(first_child_node);
-  unsigned int affect_size_curr = GetMaxPairSize();
+  unsigned int affect_size_prev;
+  unsigned int affect_size_curr;
+  HandleWhileStatementLoop(cfg_node, affect_size_prev, affect_size_curr, false);
+  HandleWhileStatementLoop(cfg_node, affect_size_prev, affect_size_curr, false);
   while (affect_size_curr != affect_size_prev) {
-    affect_size_prev = affect_size_curr;
-    HandleCfg(first_child_node);
-    affect_size_curr = GetMaxPairSize();
+    HandleWhileStatementLoop(cfg_node, affect_size_prev, affect_size_curr, true);
   }
 
   m_last_modified_map_stack.pop();
