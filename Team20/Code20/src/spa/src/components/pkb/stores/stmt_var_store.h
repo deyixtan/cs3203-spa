@@ -19,9 +19,9 @@ class StmtVarStore : public Store {
   [[nodiscard]] bool IsStmtVarValid(IDENT_PAIR const &pair);
   [[nodiscard]] IDENT_SET GetVarByStmt(IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetStmtByVar(StmtType type, IDENT const &var);
-  [[nodiscard]] IDENT_PAIR_VECTOR GetPairByType(StmtType type);
   [[nodiscard]] IDENT_SET GetAllStmt();
   [[nodiscard]] IDENT_SET GetAllProc();
+  [[nodiscard]] IDENT_PAIR_VECTOR GetPairByType(StmtType type);
 };
 
 #endif //STMT_VAR_STORE_H
