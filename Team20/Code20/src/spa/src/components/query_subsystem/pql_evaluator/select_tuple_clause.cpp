@@ -11,19 +11,22 @@ SelectTupleClause::SelectTupleClause(std::vector<PqlToken> &tuple,
 
 Table SelectTupleClause::Execute() {
   Table table;
-
+  table.ToggleTupleResult();
   for (auto elem : tuple) {
     Table intermediate_table;
     if (elem.type==PqlTokenType::SYNONYM) {
+      if (table_synonyms.find(elem.value)!=table_synonyms.end()) continue;
       intermediate_table = HandleSynonymElem(elem);
     } else if (elem.type==PqlTokenType::ATTRIBUTE) {
+      auto parsed_attr_ref = Utils::ParseAttributeRef(elem, declarations);
+      auto attr_ref_synonym = parsed_attr_ref.first.second;
+      if (table_synonyms.find(attr_ref_synonym)!=table_synonyms.end()) continue;
       intermediate_table = HandleAttrRefElem(elem);
     }
 
     table.Merge(intermediate_table);
   }
 
-  table.ToggleTupleResult();
   return table;
 }
 
@@ -77,5 +80,11 @@ size_t SelectTupleClause::GetWeight() {
   // select clauses never inside any of the groups that require sorting
   return 0;
 }
+
+SelectTupleClause::SelectTupleClause(const std::unordered_set<std::string> &table_synonyms,
+                                     std::vector<PqlToken> &tuple,
+                                     const std::unordered_map<std::string, DesignEntityType> &declarations,
+                                     const PkbPtr &pkb)
+    : table_synonyms(table_synonyms), tuple(tuple), declarations(declarations), pkb(pkb) {}
 
 }

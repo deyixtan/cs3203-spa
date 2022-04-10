@@ -14,12 +14,17 @@ class SelectClause : public Clause {
   SelectClause(const PqlToken &result_clause,
                const std::unordered_map<std::string, DesignEntityType> &declarations,
                const PkbPtr &pkb);
+  SelectClause(const std::unordered_set<std::string> &table_synonyms,
+               const PqlToken &result_clause,
+               const std::unordered_map<std::string, DesignEntityType> &declarations,
+               const PkbPtr &pkb);
   Table Execute() override;
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
   size_t GetSynonymsSize() override;
   size_t GetWeight() override;
  private:
+  std::unordered_set<std::string> table_synonyms;
   PqlToken result_clause;
   std::unordered_map<std::string, DesignEntityType> declarations;
   const PkbPtr &pkb;
