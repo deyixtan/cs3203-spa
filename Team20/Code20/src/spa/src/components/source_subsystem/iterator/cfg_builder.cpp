@@ -1,5 +1,5 @@
 #include "cfg_builder.h"
-#include "components/source_subsystem/pkb_client/pkb_client.h"
+#include "components/pkb/pkb_client/pkb_client.h"
 #include "components/source_subsystem/types/ast/node_assign_statement.h"
 #include "components/source_subsystem/types/ast/node_call_statement.h"
 #include "components/source_subsystem/types/ast/node_if_statement.h"

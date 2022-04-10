@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "components/pkb/pkb.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
-#include "components/source_subsystem/pkb_client/pkb_client.h"
+#include "components/pkb/pkb_client/pkb_client.h"
 #include "components/source_subsystem/exceptions/unexpected_token.h"
 #include "components/source_subsystem/types/ast/node_program.h"
 #include "components/source_subsystem/types/ast/node_procedure.h"
