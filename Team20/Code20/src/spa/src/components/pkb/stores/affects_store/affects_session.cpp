@@ -10,7 +10,7 @@ AffectsSession::AffectsSession(IDENT_SET_VECTOR_PTR stmt_vector,
     m_last_modified_star_map(IDENT_SET_MAP()),
     m_is_affects_star_involved(is_affects_star_involved),
     m_terminating_node_stack(std::stack<source::CfgNodePtr>()) {
-  TraverseCfg();
+  HandleCfg();
 }
 
 bool AffectsSession::IsAffected(IDENT const &stmt) {
@@ -100,7 +100,7 @@ IDENT_SET AffectsSession::GetVarUsedByStmt(IDENT &stmt_no) {
   return m_affects_store->GetUsageStore()->GetVarUsedByStmt(stmt_no);
 }
 
-void AffectsSession::TraverseCfg() {
+void AffectsSession::HandleCfg() {
   auto const &cfg_map = m_affects_store->GetProgramCfg()->GetCfgMap();
   for (auto const &cfg : cfg_map) {
     source::CfgNodePtr proc_head = cfg.second;
@@ -111,15 +111,15 @@ void AffectsSession::TraverseCfg() {
     m_terminating_node_stack.push(tmp);
 
     m_last_modified_map_stack.push(std::make_shared<IDENT_SET_MAP>(last_modified_map));
-    TraverseCfg(proc_head);
+    HandleCfg(proc_head);
     m_last_modified_map_stack.pop();
 
     m_terminating_node_stack.pop();
   }
 }
 
-void AffectsSession::TraverseCfg(source::CfgNodePtr &cfg_node) {
-  // checks on TraverseCfg from If-statement handler
+void AffectsSession::HandleCfg(source::CfgNodePtr &cfg_node) {
+  // checks on HandleCfg from If-statement handler
   if (!cfg_node->GetStatementList().empty() && !m_terminating_node_stack.top()->GetStatementList().empty()) {
     if (cfg_node->GetStatementList().front().stmt_no == m_terminating_node_stack.top()->GetStatementList().front().stmt_no) {
       m_terminating_node_stack.pop();
@@ -143,7 +143,7 @@ void AffectsSession::TraverseCfg(source::CfgNodePtr &cfg_node) {
       HandleWhileStatement(cfg_node);
     } else if (type == IF) {
       HandleIfStatement(stmt_no, cfg_node);
-      TraverseCfg(cfg_node);
+      HandleCfg(cfg_node);
       return;
     }
   }
@@ -154,7 +154,7 @@ void AffectsSession::TraverseCfg(source::CfgNodePtr &cfg_node) {
   }
 
   source::CfgNodePtr next_node = cfg_node->GetNextList().back();
-  TraverseCfg(next_node);
+  HandleCfg(next_node);
 }
 
 void AffectsSession::HandleAssignStatement(IDENT stmt_no) {
@@ -272,14 +272,14 @@ void AffectsSession::HandleWhileStatement(source::CfgNodePtr &cfg_node) {
   int affect_size_prev = 0;
   int affect_size_curr = 0;
 
-  TraverseCfg(start_node);
-//  TraverseCfg(start_node);
+  HandleCfg(start_node);
+//  HandleCfg(start_node);
   if (m_is_affects_star_involved) {
     affect_size_prev = GetAffectsStarPairs().size();
   } else {
     affect_size_prev = GetAffectsPairs().size();
   }
-  TraverseCfg(start_node);
+  HandleCfg(start_node);
   if (m_is_affects_star_involved) {
     affect_size_curr = GetAffectsStarPairs().size();
   } else {
@@ -288,7 +288,7 @@ void AffectsSession::HandleWhileStatement(source::CfgNodePtr &cfg_node) {
 
   while (affect_size_curr != affect_size_prev) {
     affect_size_prev = affect_size_curr;
-    TraverseCfg(start_node);
+    HandleCfg(start_node);
     if (m_is_affects_star_involved) {
       affect_size_curr = GetAffectsStarPairs().size();
     } else {
@@ -322,10 +322,10 @@ void AffectsSession::HandleIfStatement(IDENT stmt_no,
 
   // first TraverseIfCfg (if-block) will process statements and find dummy node
   // for the second TraverseIfCfg (else-block)
-  TraverseCfg(if_cfg_node);
+  HandleCfg(if_cfg_node);
 
   m_last_modified_map_stack.push(last_modified_map_clone);
-  TraverseCfg(else_cfg_node);
+  HandleCfg(else_cfg_node);
   m_last_modified_map_stack.pop();
 
   // merge last_modified_map_clone into last_modified_map

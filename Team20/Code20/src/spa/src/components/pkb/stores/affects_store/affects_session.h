@@ -11,9 +11,9 @@ class AffectsSession : StmtStmtStore {
  private:
   AffectsStorePtr m_affects_store;
   bool m_is_affects_star_involved;
+  // keeps track of session states
   IDENT_SET m_same_affects_set; // for same synonym
   IDENT_SET m_same_affects_star_set; // for same synonym
-  // keeps track of session states
   IDENT_PAIR_SET m_all_affects_pairs; // keeps track of duplication
   IDENT_PAIR_SET m_all_affects_star_pairs; // keeps track of duplication
   IDENT_SET_MAP_PTR_STACK m_last_modified_map_stack;
@@ -24,8 +24,8 @@ class AffectsSession : StmtStmtStore {
   [[nodiscard]] IDENT_SET GetVarModByStmt(IDENT &stmt_no);
   [[nodiscard]] IDENT_SET GetVarUsedByStmt(IDENT &stmt_no);
   [[nodiscard]] IDENT GetFollowingOf(IDENT &stmt_no);
-  void TraverseCfg();
-  void TraverseCfg(source::CfgNodePtr &cfg_node);
+  void HandleCfg();
+  void HandleCfg(source::CfgNodePtr &cfg_node);
   void HandleAssignStatement(IDENT stmt_no);
   void HandleReadStatement(IDENT stmt_no);
   void HandleCallStatement(IDENT stmt_no);
