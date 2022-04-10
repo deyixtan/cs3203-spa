@@ -40,4 +40,4 @@ class AffectsStore : public Store {
   [[nodiscard]] std::shared_ptr<FollowsStore> GetFollowsStore();
 };
 
-#endif //AFFECT_STORE_H
+#endif //AFFECTS_STORE_H

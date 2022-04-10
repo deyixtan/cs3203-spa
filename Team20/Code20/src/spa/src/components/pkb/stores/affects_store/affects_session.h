@@ -52,4 +52,4 @@ class AffectsSession : StmtStmtStore {
   [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsStarSameSynPairs();
 };
 
-#endif //AFFECT_SESSION_H
+#endif //AFFECTS_SESSION_H
