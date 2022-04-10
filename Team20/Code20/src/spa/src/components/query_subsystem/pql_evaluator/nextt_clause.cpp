@@ -8,42 +8,11 @@ using namespace clause_util;
 NextTClause::NextTClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
                          const PqlToken &first_arg,
                          const PqlToken &second_arg,
-                         PKB *pkb)
+                         const PkbPtr &pkb)
     : declarations(declarations), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table NextTClause::Execute() {
-  if (IsArgSynonym(first_arg) && IsArgSynonym(second_arg)) {
-    // Next(s1, s2)
-    return HandleSynonymSynonym();
-  } else if (IsArgSynonym(first_arg) && IsArgWildcard(second_arg)) {
-    // Next(s, _)
-    return HandleSynonymWildcard();
-  } else if (IsArgSynonym(first_arg) && IsArgInteger(second_arg)) {
-    // Next(s, 2)
-    return HandleSynonymInteger();
-  } else if (IsArgWildcard(first_arg) && IsArgSynonym(second_arg)) {
-    // Next(_, s)
-    return HandleWildcardSynonym();
-  } else if (IsArgWildcard(first_arg) && IsArgWildcard(second_arg)) {
-    // Next(_, _)
-    return HandleWildcardWildcard();
-  } else if (IsArgWildcard(first_arg) && IsArgInteger(second_arg)) {
-    // Next(_, 2)
-    return HandleWildcardInteger();
-  } else if (IsArgInteger(first_arg) && IsArgSynonym(second_arg)) {
-    // Next(1, s)
-    return HandleIntegerSynonym();
-  } else if (IsArgInteger(first_arg) && IsArgWildcard(second_arg)) {
-    // Next(1, _)
-    return HandleIntegerWildcard();
-  } else if (IsArgInteger(first_arg) && IsArgInteger(second_arg)) {
-    // Next(1, 2)
-    return HandleIntegerInteger();
-  } else {
-    // throw exception???
-    // return empty table???
-    return {};
-  }
+  return (this->*execute_handler.at({first_arg.type, second_arg.type}))();
 }
 
 Table NextTClause::HandleSynonymSynonym() {
@@ -116,6 +85,109 @@ Table NextTClause::HandleIntegerWildcard() {
 Table NextTClause::HandleIntegerInteger() {
   bool is_false_clause = !pkb->GetNextStore()->IsNextStarPairValid({first_arg.value, second_arg.value});
   return ConstructEmptyTable(is_false_clause);
+}
+
+bool NextTClause::ExecuteBool() {
+  return (this->*execute_bool_handler.at({first_arg.type, second_arg.type}))();
+}
+
+bool NextTClause::HandleSynonymSynonymBool() {
+  if (first_arg.value==second_arg.value) {
+    auto single_constraints =
+        pkb->GetNextStore()->GetNextStarSameStmt(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)));
+    return single_constraints.empty();
+  }
+
+  auto pair_constraints = pkb->GetNextStore()->GetAllNextStarStmt(
+      GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
+  );
+  return pair_constraints.empty();
+}
+
+bool NextTClause::HandleSynonymWildcardBool() {
+  auto pair_constraints = pkb->GetNextStore()->GetAllNextStarStmt(
+      GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+      StmtType::STMT
+  );
+  std::unordered_set<std::string> single_constraints;
+  for (const auto &pair_constraint : pair_constraints) {
+    single_constraints.insert(pair_constraint.first);
+  }
+  return single_constraints.empty();
+}
+
+bool NextTClause::HandleSynonymIntegerBool() {
+  auto single_constraints =
+      pkb->GetNextStore()->GetBeforeStarOf(GetStmtType(GetSynonymDesignEntity(first_arg, declarations)),
+                                           second_arg.value);
+  return single_constraints.empty();
+}
+
+bool NextTClause::HandleWildcardSynonymBool() {
+  auto pair_constraints = pkb->GetNextStore()->GetAllNextStarStmt(
+      StmtType::STMT,
+      GetStmtType(GetSynonymDesignEntity(second_arg, declarations))
+  );
+  std::unordered_set<std::string> single_constraints;
+  for (const auto &pair_constraint : pair_constraints) {
+    single_constraints.insert(pair_constraint.second);
+  }
+  return single_constraints.empty();
+}
+
+bool NextTClause::HandleWildcardWildcardBool() {
+  bool is_false_clause = pkb->GetNextStore()->GetAllNextStarStmt(StmtType::STMT, StmtType::STMT).empty();
+  return is_false_clause;
+}
+
+bool NextTClause::HandleWildcardIntegerBool() {
+  bool is_false_clause = pkb->GetNextStore()->GetBeforeStarOf(STMT, second_arg.value).empty();
+  return is_false_clause;
+}
+
+bool NextTClause::HandleIntegerSynonymBool() {
+  auto single_constraints =
+      pkb->GetNextStore()->GetNextStarOf(GetStmtType(GetSynonymDesignEntity(second_arg, declarations)),
+                                         first_arg.value);
+  return single_constraints.empty();
+}
+
+bool NextTClause::HandleIntegerWildcardBool() {
+  bool is_false_clause = pkb->GetNextStore()->GetNextStarOf(STMT, first_arg.value).empty();
+  return is_false_clause;
+}
+
+bool NextTClause::HandleIntegerIntegerBool() {
+  bool is_false_clause = !pkb->GetNextStore()->IsNextStarPairValid({first_arg.value, second_arg.value});
+  return is_false_clause;
+}
+
+std::set<std::string> NextTClause::GetSynonyms() {
+  std::set<std::string> synonyms;
+  if (IsArgSynonym(first_arg)) {
+    synonyms.emplace(first_arg.value);
+  }
+  if (IsArgSynonym(second_arg)) {
+    synonyms.emplace(second_arg.value);
+  }
+
+  return synonyms;
+}
+
+size_t NextTClause::GetSynonymsSize() {
+  size_t size = 0;
+  if (IsArgSynonym(first_arg)) {
+    size++;
+  }
+  if (IsArgSynonym(second_arg)) {
+    size++;
+  }
+  return size;
+}
+
+size_t NextTClause::GetWeight() {
+  return weight;
 }
 
 }

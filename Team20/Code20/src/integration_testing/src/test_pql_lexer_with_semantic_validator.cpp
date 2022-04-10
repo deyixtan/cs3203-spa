@@ -10,7 +10,7 @@ TEST_CASE("Test duplicated declarations") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -21,7 +21,7 @@ TEST_CASE("Test query missing declaration in result clause") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -32,7 +32,7 @@ TEST_CASE("Test query missing declaration in relationship clause") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -43,7 +43,7 @@ TEST_CASE("Test query missing declaration in pattern clause") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -54,7 +54,7 @@ TEST_CASE("Test query no missing declaration in pattern clause synonym") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -65,7 +65,7 @@ TEST_CASE("Test query no missing declaration in pattern clause") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == true);
 }
@@ -76,7 +76,7 @@ TEST_CASE("Test query missing declaration in with clause 1") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -87,7 +87,7 @@ TEST_CASE("Test query missing declaration in with clause 2") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -98,7 +98,7 @@ TEST_CASE("Test query missing declaration in with clause 3") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -109,7 +109,7 @@ TEST_CASE("Test query wrong with clause") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -120,7 +120,7 @@ TEST_CASE("Test query correct with clause") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == true);
 }
@@ -131,7 +131,7 @@ TEST_CASE("Test query wrong attribute") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -142,7 +142,7 @@ TEST_CASE("Test query wrong attribute in tuple") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -153,7 +153,7 @@ TEST_CASE("Test query correct attribute in tuple") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == true);
 }
@@ -164,7 +164,7 @@ TEST_CASE("Test query wrong attribute in with clause") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -175,7 +175,7 @@ TEST_CASE("Test query correct multi with clause") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == true);
 }
@@ -186,7 +186,7 @@ TEST_CASE("Test query wrong with clause 1") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -197,7 +197,7 @@ TEST_CASE("Test query wrong with clause 2") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -208,7 +208,7 @@ TEST_CASE("Test query wrong with clause 3") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -219,7 +219,7 @@ TEST_CASE("Test query wrong Uses clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -230,7 +230,7 @@ TEST_CASE("Test query wrong multi Uses clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -241,7 +241,7 @@ TEST_CASE("Test query correct Uses clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == true);
 }
@@ -252,7 +252,7 @@ TEST_CASE("Test query wrong modifies clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -263,7 +263,7 @@ TEST_CASE("Test query wrong multi modifies clause argument 1") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -274,7 +274,7 @@ TEST_CASE("Test query wrong multi modifies clause argument 2") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -285,7 +285,7 @@ TEST_CASE("Test query correct modifies clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == true);
 }
@@ -296,7 +296,7 @@ TEST_CASE("Test query wrong parent clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -307,7 +307,7 @@ TEST_CASE("Test query wrong next clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -318,7 +318,7 @@ TEST_CASE("Test query correct next and affects clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == true);
 }
@@ -329,7 +329,7 @@ TEST_CASE("Test query correct assign pattern clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == true);
 }
@@ -340,7 +340,7 @@ TEST_CASE("Test query wrong assign pattern clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -351,7 +351,7 @@ TEST_CASE("Test query correct while pattern clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == true);
 }
@@ -362,7 +362,7 @@ TEST_CASE("Test query wrong while pattern clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -373,7 +373,7 @@ TEST_CASE("Test query correct while and if pattern clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == true);
 }
@@ -384,7 +384,7 @@ TEST_CASE("Test query wrong if pattern clause argument") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -395,7 +395,7 @@ TEST_CASE("Test query wrong multi clause") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == false);
 }
@@ -406,7 +406,7 @@ TEST_CASE("Test query correct multi clause") {
   std::vector<PqlToken> test_token_vect = pql_lexer.Lex();
   PqlParser pql_parser = PqlParser(test_token_vect);
   ParsedQuery parsed_query = pql_parser.ParseQuery();
-  pql_validator::ParsedQueryValidator pqv = pql_validator::ParsedQueryValidator();
+  pql::ParsedQueryValidator pqv = pql::ParsedQueryValidator();
   bool is_query_valid = pqv.IsQuerySemanticallyValid(parsed_query);
   REQUIRE(is_query_valid == true);
 }
