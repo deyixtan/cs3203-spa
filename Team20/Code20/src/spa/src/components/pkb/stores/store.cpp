@@ -1,4 +1,5 @@
 #include "store.h"
+#include "../pkb_relationship.h"
 
 Store::Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
              std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type)
