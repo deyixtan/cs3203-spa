@@ -7,6 +7,7 @@ ParentStore::ParentStore(std::shared_ptr<std::vector<std::unordered_set<std::str
 
 void ParentStore::AddParent(IDENT const &parent, IDENT const &child) {
   all_pairs.push_back({parent, child});
+  ExhaustiveAddAllStmt(m_stmt_type->at(parent), parent, m_stmt_type->at(child), child, false);
 }
 
 void ParentStore::AddParentStar(IDENT const &stmt, IDENT_VECTOR const &visited) {
