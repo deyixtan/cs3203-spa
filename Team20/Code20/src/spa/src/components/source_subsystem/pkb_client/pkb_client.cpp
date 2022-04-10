@@ -228,7 +228,7 @@ void PkbClient::PopulateParentStar(String stmt, StringStream visited) {
 }
 
 void PkbClient::PopulateCalls(String caller, String callee) {
-  m_pkb->GetCallStore()->AddCallerHelper(caller, callee);
+  m_pkb->GetCallStore()->AddCalls(caller, callee);
 }
 
 void PkbClient::UpdateCallUsesModifies(String &proc) {

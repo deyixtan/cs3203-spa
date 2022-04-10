@@ -1,7 +1,7 @@
 #ifndef SOURCE_CONTROLLER_H
 #define SOURCE_CONTROLLER_H
 
-#include "components/pkb/common.h"
+#include "components/pkb/pkb_declarations.h"
 #include "components/source_subsystem/source_declarations.h"
 
 class PKB;

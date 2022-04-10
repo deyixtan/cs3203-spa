@@ -8,7 +8,7 @@
 #include <memory>
 #include <algorithm>
 
-#include "../common.h"
+#include "../pkb_declarations.h"
 #include "../../../utils/pair_hash.h"
 
 class Store {
@@ -19,17 +19,7 @@ class Store {
  public:
   explicit Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                  std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
-  IDENT_PAIR_VECTOR GetAllStmt(StmtType type,
-                            std::vector<StmtType> &supported_types,
-                            std::vector<std::pair<std::string,
-                                                  std::string>> const &list,
-                            bool checkPairFirst);
-  IDENT_PAIR_VECTOR GetAllStmt(StmtType type1,
-                            StmtType type2,
-                            std::vector<StmtType> &supported_types,
-                            std::vector<std::pair<std::string,
-                                                  std::string>> const &list,
-                            bool checkPairFirst);
+  [[nodiscard]] int IsMapContains(StmtType type1, StmtType type2, NESTED_STMT_STMT_MAP *pair_map);
 };
 
 #endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_

@@ -10,7 +10,7 @@ class CallStore : public StmtStmtStore {
  public:
   explicit CallStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                      std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
-  void AddCallerHelper(IDENT const &caller, IDENT const &callee);
+  void AddCalls(IDENT const &caller, IDENT const &callee);
   [[nodiscard]] bool IsCallsPairValid(IDENT_PAIR const &pair);
   [[nodiscard]] bool IsCallsStarPairValid(IDENT_PAIR const &pair);
   void AddCallStmtMap(IDENT proc, IDENT stmt);
@@ -19,8 +19,6 @@ class CallStore : public StmtStmtStore {
   [[nodiscard]] IDENT_SET GetCalleesOf(IDENT const &proc);
   [[nodiscard]] IDENT_SET GetCallersStarOf(IDENT const &proc);
   [[nodiscard]] IDENT_SET GetCalleesStarOf(IDENT const &proc);
-  [[nodiscard]] IDENT_PAIR_VECTOR GetAllCalls();
-  [[nodiscard]] IDENT_PAIR_VECTOR GetAllCallsStar();
 };
 
 #endif //CALLS_STORE_H

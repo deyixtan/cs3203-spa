@@ -1,4 +1,5 @@
 #include "next_store.h"
+#include "../../pkb_relationship.h"
 #include "../parent_store/parent_store.h"
 #include <set>
 
@@ -13,7 +14,11 @@ NextStore::NextStore(std::shared_ptr<std::vector<std::unordered_set<std::string>
     m_proc_stmt_map({}) {}
 
 void NextStore::AddNext(IDENT const &before, IDENT const &next) {
-  AddUpperLower(NEXT, before, next);
+  ExhaustiveAddAllStmt(m_stmt_type->at(before), before, m_stmt_type->at(next), next, false);
+}
+
+void NextStore::AddNextStar(IDENT const &before, IDENT const &next) {
+  ExhaustiveAddAllStmt(m_stmt_type->at(before), before, m_stmt_type->at(next), next, true);
 }
 
 void NextStore::AddFirstStmtProc(std::string const &proc, std::string const &stmt) {
@@ -29,7 +34,7 @@ bool NextStore::IsNextPairValid(IDENT_PAIR const &pair) {
 }
 
 bool NextStore::IsNextStarPairValid(IDENT_PAIR const &pair) {
-  if (std::find(all_star_pairs.begin(), all_star_pairs.end(), pair) != all_star_pairs.end()) {
+  if (std::find(GetStarPairByType(STMT, STMT).begin(), GetStarPairByType(STMT, STMT).end(), pair) != GetStarPairByType(STMT, STMT).end()) {
     return true;
   } else {
     std::unordered_set<std::string> next_star = GetNextStarOf(STMT, pair.first);
@@ -42,7 +47,7 @@ IDENT_SET NextStore::GetBeforeOf(StmtType type, IDENT const &stmt) {
 }
 
 IDENT_SET NextStore::GetNextOf(StmtType type, IDENT const &stmt) {
-  return GetLowerSetOf(NEXT, type, stmt);
+  return GetLowerSetOf(type, stmt);
 }
 
 IDENT_SET NextStore::GetBeforeStarOf(StmtType type, IDENT const &stmt) {
@@ -65,10 +70,6 @@ IDENT_SET NextStore::GetNextStarOf(StmtType type, IDENT const &stmt) {
   }
   GetLowerStarOfHelper(stmt, res);
   return res;
-}
-
-IDENT_PAIR_VECTOR NextStore::GetNextPairs() {
-  return GetAllPairs();
 }
 
 IDENT_SET NextStore::GetNextStarSameStmt(StmtType type) {
@@ -143,7 +144,7 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
       InsertPairResultLower(stoi(stmt) + 1, stoi(last_proc_stmt_no), res, stmt);
     }
     if(type1 == WHILE) {
-      StmtStmtStore::AddNext(true, type1, stmt, type1, stmt);
+      AddNextStar(stmt, stmt);
       res.insert(stmt);
     }
     return;
@@ -243,7 +244,7 @@ void NextStore::InsertPairResultUpper(int start, int end, std::unordered_set<std
   StmtType type1 = m_stmt_type->at(stmt);
   for (int i = start; i <= end; i++) {
     StmtType type2 = m_stmt_type->at(std::to_string(i));
-    StmtStmtStore::AddNext(true, type1, std::to_string(i), type2, stmt);
+    AddNextStar(std::to_string(i), stmt);
     res.insert(std::to_string(i));
   }
 }
@@ -252,7 +253,7 @@ void NextStore::InsertPairResultLower(int start, int end, std::unordered_set<std
   StmtType type1 = m_stmt_type->at(stmt);
   for (int i = start; i <= end; i++) {
     StmtType type2 = m_stmt_type->at(std::to_string(i));
-    StmtStmtStore::AddNext(true, type1, stmt, type2, std::to_string(i));
+    AddNextStar(stmt, std::to_string(i));
     res.insert(std::to_string(i));
   }
 }
@@ -316,6 +317,5 @@ void NextStore::GetNextStarPairs() {
 }
 
 void NextStore::ClearNextStarCache() {
-  all_star_pairs = IDENT_PAIR_VECTOR();
-  star_type_pair_map = NESTED_TUPLE_MAP();
+  star_type_pair_map = NESTED_STMT_STMT_MAP();
 }

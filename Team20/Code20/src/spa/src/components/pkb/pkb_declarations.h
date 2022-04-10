@@ -8,6 +8,8 @@
 #include <unordered_set>
 #include "../../utils/pair_hash.h"
 
+class PkbRelationship;
+
 enum StmtType {
   STMT,
   READ,
@@ -58,11 +60,15 @@ typedef std::vector<IDENT_SET> IDENT_SET_VECTOR;
 typedef std::shared_ptr<IDENT_SET_VECTOR> IDENT_SET_VECTOR_PTR;
 typedef std::unordered_map<IDENT, IDENT_PAIR> IDENT_PAIR_MAP;
 typedef std::vector<IDENT_PAIR> IDENT_PAIR_VECTOR;
-typedef std::unordered_map<StmtType,
-                           std::unordered_map<StmtType,
-                                              std::tuple<IDENT_SET_MAP,
-                                                         IDENT_SET_MAP,
-                                                         IDENT_PAIR_VECTOR>>> NESTED_TUPLE_MAP;
+typedef std::unordered_map<StmtType, IDENT_PAIR_VECTOR> IDENT_PAIR_VECTOR_MAP;
+typedef std::unordered_map<std::string, std::unordered_map<StmtType, IDENT_SET>> NESTED_VAR_STMT_MAP;
+typedef std::unordered_map<StmtType, std::unordered_map<StmtType, PkbRelationship>> NESTED_STMT_STMT_MAP;
+typedef std::shared_ptr<NESTED_STMT_STMT_MAP> NESTED_STMT_STMT_MAP_PTR;
+
+template <typename Key, typename T>
+struct Hashmap {
+  typedef std::unordered_map<Key, T> type;
+};
 
 typedef std::shared_ptr<std::unordered_map<IDENT, StmtType>> IDENT_TO_STMT_TYPE_MAP_PTR;
 

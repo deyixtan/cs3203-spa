@@ -1,5 +1,6 @@
 #include "affect_store_factory.h"
 #include "affects_store.h"
+#include "../../pkb_relationship.h"
 
 AffectsStoreFactory::AffectsStoreFactory(IDENT_SET_VECTOR_PTR stmt_vector,
                            IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,

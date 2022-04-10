@@ -1,5 +1,6 @@
 #include "affects_store.h"
 #include "components/source_subsystem/types/cfg/cfg_node.h"
+#include "../../pkb_relationship.h"
 
 AffectsStore::AffectsStore(IDENT_SET_VECTOR_PTR stmt_vector,
                                IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,
@@ -56,11 +57,11 @@ bool AffectsStore::DoesAffectStarExists(IDENT_PAIR const &pair) {
 }
 
 IDENT_SET AffectsStore::GetAffectedOf(IDENT const &stmt) {
-  return GetLowerSetOf(AFFECTS, ASSIGN, stmt);
+  return GetLowerSetOf(ASSIGN, stmt);
 }
 
 IDENT_SET AffectsStore::GetAffectedStarOf(IDENT const &stmt) {
-  return GetLowerStarOf(AFFECTS, ASSIGN, stmt);
+  return GetLowerStarOf(ASSIGN, stmt);
 }
 
 IDENT_SET AffectsStore::GetAffectsOf(IDENT const &stmt) {
@@ -68,15 +69,15 @@ IDENT_SET AffectsStore::GetAffectsOf(IDENT const &stmt) {
 }
 
 IDENT_SET AffectsStore::GetAffectsStarOf(IDENT const &stmt) {
-  return GetUpperStarOf(AFFECTS, ASSIGN, stmt);
+  return GetUpperStarOf(ASSIGN, stmt);
 }
 
 IDENT_PAIR_VECTOR AffectsStore::GetAffectsPairs() {
-  return GetAllPairs();
+  return GetPairByType(STMT, STMT);
 }
 
 IDENT_PAIR_VECTOR AffectsStore::GetAffectsStarPairs() {
-  return GetAllStarPairs();
+  return GetStarPairByType(STMT, STMT);
 }
 
 IDENT_SET AffectsStore::GetAffectsSameSynSet() {
@@ -182,8 +183,17 @@ void AffectsStore::AddAffects(bool is_star, IDENT &upper, IDENT &lower) {
 
   // check for duplication before exhaustive add
   auto pair = std::make_pair(upper, lower);
-  if (pair_set->find(pair) == pair_set->end())
-    StmtStmtStore::AddAffects(is_star, ASSIGN, upper, ASSIGN, lower);
+  if (pair_set->find(pair) == pair_set->end()) {
+    //StmtStmtStore::AddAffects(is_star, ASSIGN, upper, ASSIGN, lower);
+    if (!is_star) {
+      ExhaustiveAddAllStmt(ASSIGN, upper, ASSIGN, lower, false);
+      //ExhaustiveAddSubStmt(type1, upper, type2, lower, &type_pair_map);
+
+    } else {
+      ExhaustiveAddAllStmt(ASSIGN, upper, ASSIGN, lower, true);
+      //ExhaustiveAddSubStmt(type1, upper, type2, lower, &star_type_pair_map);
+    }
+  }
   pair_set->insert(pair);
 }
 

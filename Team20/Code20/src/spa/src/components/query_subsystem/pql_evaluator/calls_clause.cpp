@@ -17,12 +17,12 @@ Table CallsClause::HandleSynonymSynonym() {
     return ConstructEmptyTable();
   }
 
-  auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
+  auto pair_constraints = pkb->GetCallStore()->GetPairByType(PROC, PROC);
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
 Table CallsClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
+  auto pair_constraints = pkb->GetCallStore()->GetPairByType(PROC, PROC);
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.first);
@@ -37,7 +37,7 @@ Table CallsClause::HandleSynonymIdent() {
 }
 
 Table CallsClause::HandleWildcardSynonym() {
-  auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
+  auto pair_constraints = pkb->GetCallStore()->GetPairByType(PROC, PROC);
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.second);
@@ -47,7 +47,7 @@ Table CallsClause::HandleWildcardSynonym() {
 }
 
 Table CallsClause::HandleWildcardWildcard() {
-  bool is_false_clause = pkb->GetCallStore()->GetAllCalls().empty();
+  bool is_false_clause = pkb->GetCallStore()->GetPairByType(PROC, PROC).empty();
   return ConstructEmptyTable(is_false_clause);
 }
 
@@ -81,12 +81,12 @@ bool CallsClause::HandleSynonymSynonymBool() {
     return true;
   }
 
-  auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
+  auto pair_constraints = pkb->GetCallStore()->GetPairByType(PROC, PROC);
   return pair_constraints.empty();
 }
 
 bool CallsClause::HandleSynonymWildcardBool() {
-  auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
+  auto pair_constraints = pkb->GetCallStore()->GetPairByType(PROC, PROC);
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.first);
@@ -101,7 +101,7 @@ bool CallsClause::HandleSynonymIdentBool() {
 }
 
 bool CallsClause::HandleWildcardSynonymBool() {
-  auto pair_constraints = pkb->GetCallStore()->GetAllCalls();
+  auto pair_constraints = pkb->GetCallStore()->GetPairByType(PROC, PROC);
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.second);
@@ -111,7 +111,7 @@ bool CallsClause::HandleWildcardSynonymBool() {
 }
 
 bool CallsClause::HandleWildcardWildcardBool() {
-  bool is_false_clause = pkb->GetCallStore()->GetAllCalls().empty();
+  bool is_false_clause = pkb->GetCallStore()->GetPairByType(PROC, PROC).empty();
   return is_false_clause;
 }
 
