@@ -305,7 +305,15 @@ std::string NextStore::GetEndStmtOfWhileLoop(const std::string &start_of_while) 
   return end_stmt;
 }
 
-void NextStore::GetNextStarPairs() {
+IDENT_PAIR_VECTOR NextStore::GetNextStarPairs() {
+  return GetStarPairByType(STMT, STMT);
+}
+
+void NextStore::ClearNextStarCache() {
+  star_type_pair_map = NESTED_STMT_STMT_MAP();
+}
+
+void NextStore::ComputeNextStore() {
   std::unordered_set<std::string> res;
   for(auto proc : m_proc_stmt_map) {
     int last_stmt = stoi(proc.second.back());
@@ -316,6 +324,6 @@ void NextStore::GetNextStarPairs() {
   }
 }
 
-void NextStore::ClearNextStarCache() {
-  star_type_pair_map = NESTED_STMT_STMT_MAP();
+bool NextStore::IsNextStoreComputed() {
+  return !GetStarPairByType(STMT, STMT).empty();
 }
