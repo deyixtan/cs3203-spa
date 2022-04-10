@@ -1,60 +1,51 @@
 #ifndef AFFECTS_SESSION_H
 #define AFFECTS_SESSION_H
 
-#include <memory>
-#include <string>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
-#include <stack>
-
-#include "components/source_subsystem/source_declarations.h"
+#include "components/pkb/common.h"
 #include "components/pkb/stores/stmt_stmt_store.h"
-
-#include "../../../../utils/pair_hash.h"
-#include "../../pkb.h"
+#include "components/source_subsystem/source_declarations.h"
 
 class AffectsStore;
 
 class AffectsSession : StmtStmtStore {
  private:
-  std::shared_ptr<AffectsStore> m_affects_store;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_pairs2;
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> m_all_affects_star_pairs2;
+  AffectsStorePtr m_affects_store;
   IDENT_PAIR_VECTOR m_same_affects_pairs; // for same synonym
   IDENT_PAIR_VECTOR m_same_affects_star_pairs; // for same synonym
-  std::stack<std::shared_ptr<std::unordered_map<std::string, std::unordered_set<std::string>>>> m_last_modified_map_stack;
-  std::unordered_map<std::string, std::unordered_set<std::string>> m_last_modified_star_map;
+  IDENT_PAIR_SET m_all_affects_pairs; // keeps track of duplication
+  IDENT_PAIR_SET m_all_affects_star_pairs; // keeps track of duplication
+  IDENT_SET_MAP_PTR_STACK m_last_modified_map_stack;
+  IDENT_SET_MAP m_last_modified_star_map;
+  std::stack<source::CfgNodePtr> m_terminating_node_stack;
   bool m_is_affects_star_involved;
-  std::stack<std::shared_ptr<source::CfgNode>> m_terminating_node_stack;
 
  private:
-  std::unordered_set<std::string> GetVarModByStmt(std::string &stmt_no);
-  std::unordered_set<std::string> GetVarUsedByStmt(std::string &stmt_no);
-  std::string GetFollowingOf(std::string &stmt_no);
+  [[nodiscard]] IDENT_SET GetVarModByStmt(IDENT &stmt_no);
+  [[nodiscard]] IDENT_SET GetVarUsedByStmt(IDENT &stmt_no);
+  [[nodiscard]] IDENT GetFollowingOf(IDENT &stmt_no);
   void TraverseCfg();
-  void TraverseCfg(std::shared_ptr<source::CfgNode> &cfg_node);
-  void HandleAssignStatement(std::string stmt_no);
-  void HandleReadStatement(std::string stmt_no);
-  void HandleCallStatement(std::string stmt_no);
-  void HandleWhileStatement(std::shared_ptr<source::CfgNode> &cfg_node);
-  void HandleIfStatement(std::string stmt_no, std::shared_ptr<source::CfgNode> &cfg_node);
+  void TraverseCfg(source::CfgNodePtr &cfg_node);
+  void HandleAssignStatement(IDENT stmt_no);
+  void HandleReadStatement(IDENT stmt_no);
+  void HandleCallStatement(IDENT stmt_no);
+  void HandleWhileStatement(source::CfgNodePtr &cfg_node);
+  void HandleIfStatement(IDENT stmt_no, source::CfgNodePtr &cfg_node);
 
  public:
-  explicit AffectsSession(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
-                          std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type,
-                          std::shared_ptr<AffectsStore> affects_store,
+  explicit AffectsSession(IDENT_SET_VECTOR_PTR stmt_vector,
+                          IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,
+                          AffectsStorePtr affects_store,
                           bool is_affects_star_involved);
-  [[nodiscard]] bool IsAffected(std::string const &stmt);
-  [[nodiscard]] bool IsAffectedStar(std::string const &stmt);
-  [[nodiscard]] bool IsAffecting(std::string const &stmt);
-  [[nodiscard]] bool IsAffectingStar(std::string const &stmt);
-  [[nodiscard]] bool DoesAffectExists(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] bool DoesAffectStarExists(std::pair<std::string, std::string> const &pair);
-  [[nodiscard]] std::unordered_set<std::string> GetAffectedOf(std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetAffectedStarOf(std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetAffectsOf(std::string const &stmt);
-  [[nodiscard]] std::unordered_set<std::string> GetAffectsStarOf(std::string const &stmt);
+  [[nodiscard]] bool IsAffected(IDENT const &stmt);
+  [[nodiscard]] bool IsAffectedStar(IDENT const &stmt);
+  [[nodiscard]] bool IsAffecting(IDENT const &stmt);
+  [[nodiscard]] bool IsAffectingStar(IDENT const &stmt);
+  [[nodiscard]] bool DoesAffectExists(IDENT_PAIR const &pair);
+  [[nodiscard]] bool DoesAffectStarExists(IDENT_PAIR const &pair);
+  [[nodiscard]] IDENT_SET GetAffectedOf(IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetAffectedStarOf(IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetAffectsOf(IDENT const &stmt);
+  [[nodiscard]] IDENT_SET GetAffectsStarOf(IDENT const &stmt);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsPairs();
   [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsStarPairs();
   [[nodiscard]] IDENT_PAIR_VECTOR GetAffectsSameSynPairs();
