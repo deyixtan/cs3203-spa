@@ -18,6 +18,8 @@
 #include "../source_subsystem/types/cfg/cfg.h"
 #include "components/pkb/stores/next_store/next_store.h"
 
+namespace pkb {
+
 class PKB {
  private:
   std::shared_ptr<FollowsStore> m_follow_store;
@@ -60,5 +62,7 @@ class PKB {
   [[nodiscard]] std::shared_ptr<AffectsStoreFactory> GetAffectsStoreFactory();
   [[nodiscard]] std::shared_ptr<source::Cfg> GetProgCfg();
 };
+
+}
 
 #endif //PKB_H

@@ -2,10 +2,12 @@
 #include "components/source_subsystem/types/cfg/cfg_node.h"
 #include "../../pkb_relationship.h"
 
+namespace pkb {
+
 AffectsStore::AffectsStore(IDENT_SET_VECTOR_PTR stmt_vector,
-                               IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,
-                               AffectsStoreFactoryPtr affects_store_factory,
-                               bool is_affects_star_involved) :
+                           IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,
+                           AffectsStoreFactoryPtr affects_store_factory,
+                           bool is_affects_star_involved) :
     StmtStmtStore(move(stmt_vector), move(stmt_type)),
     m_affects_store_factory(std::move(affects_store_factory)),
     m_is_affects_star_involved(is_affects_star_involved),
@@ -165,7 +167,7 @@ void AffectsStore::HandleAffectsStarLastModStarSet(IDENT &last_mod_stmt_no, IDEN
 }
 
 void AffectsStore::AddAffects(bool is_star, IDENT &upper, IDENT &lower) {
-  IDENT_PAIR_SET* pair_set;
+  IDENT_PAIR_SET *pair_set;
   if (is_star) {
     pair_set = &m_all_affects_star_pairs;
   } else {
@@ -215,7 +217,8 @@ void AffectsStore::HandleCfg() {
 void AffectsStore::HandleCfg(source::CfgNodePtr &cfg_node) {
   // end current recursive call if reaches terminating node
   if (!cfg_node->GetStatementList().empty() && !m_terminating_node_stack.top()->GetStatementList().empty()) {
-    if (cfg_node->GetStatementList().front().stmt_no == m_terminating_node_stack.top()->GetStatementList().front().stmt_no) {
+    if (cfg_node->GetStatementList().front().stmt_no
+        == m_terminating_node_stack.top()->GetStatementList().front().stmt_no) {
       m_terminating_node_stack.pop();
       m_terminating_node_stack.push(cfg_node);
       return;
@@ -306,4 +309,6 @@ void AffectsStore::HandleIfStatement(source::CfgNodePtr &cfg_node) {
 
   MergeModifiedTable(last_modified_map, last_modified_map_clone);
   cfg_node = end_node;
+}
+
 }

@@ -3,6 +3,8 @@
 
 #include "components/pkb/stores/stmt_stmt_store.h"
 
+namespace pkb {
+
 // A store class that maintains all Parent APIs and relationships
 class FollowsStore : public StmtStmtStore {
  private:
@@ -21,5 +23,7 @@ class FollowsStore : public StmtStmtStore {
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllFollowStmt(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllFollowStarStmt(StmtType type1, StmtType type2);
 };
+
+}
 
 #endif //FOLLOW_STORE_H

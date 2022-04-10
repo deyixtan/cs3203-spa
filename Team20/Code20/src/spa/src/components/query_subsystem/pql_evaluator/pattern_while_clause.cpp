@@ -5,7 +5,7 @@ namespace pql {
 
 using namespace clause_util;
 
-PatternWhileClause::PatternWhileClause(const std::string &while_synonym, const PqlToken &first_arg, const PkbPtr &pkb)
+PatternWhileClause::PatternWhileClause(const std::string &while_synonym, const PqlToken &first_arg, const pkb::PkbPtr &pkb)
     : while_synonym(while_synonym), first_arg(first_arg), pkb(pkb) {}
 
 Table PatternWhileClause::Execute() {

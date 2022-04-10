@@ -30,7 +30,7 @@ std::shared_ptr<ProgramNode> GenerateAbstractSyntaxTree(std::string source) {
   return ast;
 }
 
-PkbPtr GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
+pkb::PkbPtr GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
   PkbPtr pkb = std::make_shared<PKB>();
 
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);

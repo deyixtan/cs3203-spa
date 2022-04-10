@@ -3,6 +3,8 @@
 
 #include "store.h"
 
+namespace pkb {
+
 class StmtVarStore : public Store {
  private:
   IDENT_SET_MAP stmt_var_map;
@@ -23,5 +25,7 @@ class StmtVarStore : public Store {
   [[nodiscard]] IDENT_SET GetAllProc();
   [[nodiscard]] IDENT_PAIR_VECTOR GetPairByType(StmtType type);
 };
+
+}
 
 #endif //STMT_VAR_STORE_H

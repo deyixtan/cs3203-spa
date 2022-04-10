@@ -35,8 +35,8 @@ ProgramNodePtr SourceController::ParseTokenStream(TokenStream &token_stream) {
   return program_node;
 }
 
-void SourceController::PopulatePKB(PkbPtr &pkb, ProgramNodePtr &ast) {
-  PkbClientPtr pkb_client = std::make_shared<PkbClient>(pkb);
+void SourceController::PopulatePKB(pkb::PkbPtr &pkb, ProgramNodePtr &ast) {
+  pkb::PkbClientPtr pkb_client = std::make_shared<pkb::PkbClient>(pkb);
 
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(ast);

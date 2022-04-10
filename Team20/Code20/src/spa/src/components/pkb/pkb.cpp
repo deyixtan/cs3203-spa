@@ -1,6 +1,8 @@
 #include "pkb.h"
 #include "pkb_relationship.h"
 
+namespace pkb {
+
 PKB::PKB()
     : m_stmt_vector(std::make_shared<std::vector<std::unordered_set<std::string>>>(COUNT)),
       m_stmt_type(std::make_shared<std::unordered_map<std::string, StmtType>>()),
@@ -39,7 +41,7 @@ void PKB::AddNameToStmt(StmtType type, std::string const &name, std::string cons
   std::unordered_map<std::string, std::unordered_set<std::string>> ref_map = m_name_to_stmt->at(type);
   if (ref_map.find(name) != ref_map.end()) {
     m_name_to_stmt->at(type).at(name).insert(stmt);
-  } else{
+  } else {
     m_name_to_stmt->at(type).insert({name, {stmt}});
   }
 }
@@ -125,4 +127,6 @@ AffectsStoreFactoryPtr PKB::GetAffectsStoreFactory() {
 
 std::shared_ptr<source::Cfg> PKB::GetProgCfg() {
   return m_program_cfg;
+}
+
 }

@@ -1,28 +1,11 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <stack>
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
 #include "../../utils/pair_hash.h"
 
-class PkbRelationship;
+#include "components/common_declarations.h"
 
-enum StmtType {
-  STMT,
-  READ,
-  PRINT,
-  WHILE,
-  IF,
-  ASSIGN,
-  VARS,
-  CONSTS,
-  PROC,
-  CALL,
-  COUNT = CALL + 1 // get max value of StmtType
-};
+namespace pkb {
 
 enum StoreType {
   USES,
@@ -34,15 +17,16 @@ enum StoreType {
   AFFECTS
 };
 
-
-
 class PKB;
+class PkbClient;
 class ModifiesStore;
 class UsesStore;
 class AffectsStore;
 class AffectsStoreFactory;
+class PkbRelationship;
 
 typedef std::shared_ptr<PKB> PkbPtr;
+typedef std::shared_ptr<PkbClient> PkbClientPtr;
 typedef std::shared_ptr<ModifiesStore> ModifiesStorePtr;
 typedef std::shared_ptr<UsesStore> UsesStorePtr;
 typedef std::shared_ptr<AffectsStore> AffectsStorePtr;
@@ -65,11 +49,13 @@ typedef std::unordered_map<std::string, std::unordered_map<StmtType, IDENT_SET>>
 typedef std::unordered_map<StmtType, std::unordered_map<StmtType, PkbRelationship>> NESTED_STMT_STMT_MAP;
 typedef std::shared_ptr<NESTED_STMT_STMT_MAP> NESTED_STMT_STMT_MAP_PTR;
 
-template <typename Key, typename T>
+template<typename Key, typename T>
 struct Hashmap {
   typedef std::unordered_map<Key, T> type;
 };
 
 typedef std::shared_ptr<std::unordered_map<IDENT, StmtType>> IDENT_TO_STMT_TYPE_MAP_PTR;
+
+}
 
 #endif //COMMON_H

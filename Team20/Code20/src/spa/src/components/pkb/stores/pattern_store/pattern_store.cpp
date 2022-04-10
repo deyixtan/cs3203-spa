@@ -1,5 +1,7 @@
 #include "pattern_store.h"
 
+namespace pkb {
+
 PatternStore::PatternStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                            std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
     Store(move(stmt_vector), move(stmt_type)) {}
@@ -178,4 +180,6 @@ IDENT_PAIR_VECTOR PatternStore::GetIfWithPatternSynonym() {
 
 IDENT_PAIR_VECTOR PatternStore::GetWhileWithPatternSynonym() {
   return m_while_pattern_pairs;
+}
+
 }

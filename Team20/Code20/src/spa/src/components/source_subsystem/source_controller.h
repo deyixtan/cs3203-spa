@@ -13,7 +13,7 @@ class SourceController {
   [[nodiscard]] static String RetrieveFileContent(String &file_path);
   static void Tokenize(String &source, TokenStream &token_stream);
   [[nodiscard]] static ProgramNodePtr ParseTokenStream(TokenStream &token_stream);
-  static void PopulatePKB(PkbPtr &pkb, ProgramNodePtr &ast);
+  static void PopulatePKB(pkb::PkbPtr &pkb, ProgramNodePtr &ast);
 };
 
 }

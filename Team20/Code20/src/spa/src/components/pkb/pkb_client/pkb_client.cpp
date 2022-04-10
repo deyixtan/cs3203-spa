@@ -1,9 +1,13 @@
 #include "pkb_client.h"
 #include "components/pkb/pkb.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
 
-namespace source {
+namespace pkb {
 
-PkbClient::PkbClient(PkbPtr pkb) : m_pkb(pkb) {}
+PkbClient::PkbClient(pkb::PkbPtr pkb) : m_pkb(pkb) {}
 
 void PkbClient::ReadHelper(StringStream &visited, String &curr_stmt, String &var_name) {
   PopulateStmt(curr_stmt);
@@ -85,7 +89,7 @@ void PkbClient::VarsHelper(StringStream &visited,
   }
 }
 
-CfgPtr PkbClient::GetProgramCfg() {
+source::CfgPtr PkbClient::GetProgramCfg() {
   return m_pkb->GetProgCfg();
 }
 
@@ -113,7 +117,7 @@ StringSet PkbClient::GetAllAnceOf(String stmt) {
   return m_pkb->GetParentStore()->GetAllAnceOf(STMT, stmt);
 }
 
-void PkbClient::PopulateCfg(CfgPtr cfg) {
+void PkbClient::PopulateCfg(source::CfgPtr cfg) {
   m_pkb->AddProgramCfg(cfg);
 }
 

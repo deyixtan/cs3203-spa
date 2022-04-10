@@ -11,7 +11,7 @@ class PatternWhileClause : public Clause {
  public:
   PatternWhileClause(const std::string &while_synonym,
                      const PqlToken &first_arg,
-                     const PkbPtr &pkb);
+                     const pkb::PkbPtr &pkb);
 
   Table Execute() override;
   bool ExecuteBool() override;
@@ -22,7 +22,7 @@ class PatternWhileClause : public Clause {
   size_t weight = 2;
   std::string while_synonym;
   PqlToken first_arg;
-  const PkbPtr &pkb;
+  const pkb::PkbPtr &pkb;
   using handler = Table (PatternWhileClause::*)();
   const std::map<PqlTokenType, handler> execute_handler{
       {PqlTokenType::SYNONYM, &PatternWhileClause::HandleSynonym},

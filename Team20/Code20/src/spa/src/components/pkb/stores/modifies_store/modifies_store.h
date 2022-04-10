@@ -3,6 +3,8 @@
 
 #include "components/pkb/stores/stmt_var_store.h"
 
+namespace pkb {
+
 // proxy class
 class ModifiesStore : public StmtVarStore {
  public:
@@ -14,5 +16,7 @@ class ModifiesStore : public StmtVarStore {
   [[nodiscard]] IDENT_SET GetAllProcModify();
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllModStmt(StmtType type);
 };
+
+}
 
 #endif //MODIFY_STORE_H

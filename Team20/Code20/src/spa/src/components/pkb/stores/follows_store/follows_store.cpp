@@ -1,6 +1,8 @@
 #include "follows_store.h"
 #include "../../pkb_relationship.h"
 
+namespace pkb {
+
 FollowsStore::FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                            std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
     StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
@@ -45,4 +47,6 @@ IDENT_PAIR_VECTOR FollowsStore::GetAllFollowStmt(StmtType type1, StmtType type2)
 
 IDENT_PAIR_VECTOR FollowsStore::GetAllFollowStarStmt(StmtType type1, StmtType type2) {
   return GetStarPairByType(type1, type2);
+}
+
 }

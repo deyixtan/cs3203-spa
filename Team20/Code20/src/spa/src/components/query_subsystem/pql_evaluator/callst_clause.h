@@ -11,7 +11,7 @@ class CallsTClause : public Clause {
  public:
   CallsTClause(const PqlToken &first_arg,
                const PqlToken &second_arg,
-               const PkbPtr &pkb);
+               const pkb::PkbPtr &pkb);
   Table Execute() override;
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
@@ -21,7 +21,7 @@ class CallsTClause : public Clause {
   size_t weight = 11;
   PqlToken first_arg;
   PqlToken second_arg;
-  const PkbPtr &pkb;
+  const pkb::PkbPtr &pkb;
   using handler = Table (CallsTClause::*)();
   const std::map<std::pair<PqlTokenType, PqlTokenType>, handler> execute_handler{
       {{PqlTokenType::SYNONYM, PqlTokenType::SYNONYM}, &CallsTClause::HandleSynonymSynonym},

@@ -5,7 +5,7 @@ namespace pql {
 
 using namespace clause_util;
 
-CallsTClause::CallsTClause(const PqlToken &first_arg, const PqlToken &second_arg, const PkbPtr &pkb)
+CallsTClause::CallsTClause(const PqlToken &first_arg, const PqlToken &second_arg, const pkb::PkbPtr &pkb)
     : first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table CallsTClause::Execute() {

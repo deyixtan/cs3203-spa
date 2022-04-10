@@ -1,6 +1,9 @@
 #include "uses_store.h"
 
-UsesStore::UsesStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector, std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
+namespace pkb {
+
+UsesStore::UsesStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                     std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
     StmtVarStore(move(stmt_vector), move(stmt_type)) {}
 
 IDENT_SET UsesStore::GetVarUsedByStmt(std::string const &stmt) {
@@ -21,4 +24,6 @@ IDENT_SET UsesStore::GetAllProcUsing() {
 
 IDENT_PAIR_VECTOR UsesStore::GetAllUsesStmt(StmtType type) {
   return GetPairByType(type);
+}
+
 }

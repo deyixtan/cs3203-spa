@@ -5,6 +5,8 @@
 #include "components/pkb/stores/stmt_stmt_store.h"
 #include "components/source_subsystem/source_declarations.h"
 
+namespace pkb {
+
 class AffectsStore : StmtStmtStore {
  private:
   AffectsStoreFactoryPtr m_affects_store_factory;
@@ -56,5 +58,7 @@ class AffectsStore : StmtStmtStore {
   [[nodiscard]] IDENT_SET GetAffectsSameSynSet();
   [[nodiscard]] IDENT_SET GetAffectsStarSameSynSet();
 };
+
+}
 
 #endif //AFFECTS_STORE_H

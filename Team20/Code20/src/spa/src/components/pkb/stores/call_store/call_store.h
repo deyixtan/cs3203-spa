@@ -3,6 +3,8 @@
 
 #include "components/pkb/stores/stmt_stmt_store.h"
 
+namespace pkb {
+
 class CallStore : public StmtStmtStore {
  private:
   IDENT_SET_MAP call_stmt_map;
@@ -20,5 +22,7 @@ class CallStore : public StmtStmtStore {
   [[nodiscard]] IDENT_SET GetCallersStarOf(IDENT const &proc);
   [[nodiscard]] IDENT_SET GetCalleesStarOf(IDENT const &proc);
 };
+
+}
 
 #endif //CALLS_STORE_H

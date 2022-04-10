@@ -4,11 +4,11 @@
 #include "components/pkb/pkb_declarations.h"
 #include "components/source_subsystem/source_declarations.h"
 
-namespace source {
+namespace pkb {
 
 class PkbClient {
  private:
-  PkbPtr m_pkb;
+  pkb::PkbPtr m_pkb;
 
  private:
   void ReadHelper(StringStream &visited, String &curr_stmt, String &var_name);
@@ -22,10 +22,10 @@ class PkbClient {
   void VarsHelper(StringStream &visited, String &curr_stmt, String &proc_name, String &var_name, bool is_uses);
 
  public:
-  explicit PkbClient(PkbPtr pkb);
+  explicit PkbClient(pkb::PkbPtr pkb);
 
   // getters
-  [[nodiscard]] CfgPtr GetProgramCfg();
+  [[nodiscard]] source::CfgPtr GetProgramCfg();
   [[nodiscard]] StmtType GetTypeOfStmt(String stmt);
   [[nodiscard]] StringSet GetVarUsedByStmt(String stmt);
   [[nodiscard]] StringSet GetVarModByStmt(String stmt);
@@ -34,7 +34,7 @@ class PkbClient {
   [[nodiscard]] StringSet GetAllAnceOf(String stmt);
 
   // setters
-  void PopulateCfg(CfgPtr cfg);
+  void PopulateCfg(source::CfgPtr cfg);
   void PopulateProc(String name);
   void PopulateName(String name, StmtType type);
   void PopulateTypeOfStmt(String stmt, StmtType type);

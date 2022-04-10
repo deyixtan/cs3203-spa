@@ -11,7 +11,7 @@ class PatternIfClause : public Clause {
  public:
   PatternIfClause(const std::string &if_synonym,
                   const PqlToken &first_arg,
-                  const PkbPtr &pkb);
+                  const pkb::PkbPtr &pkb);
   Table Execute() override;
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
@@ -21,7 +21,7 @@ class PatternIfClause : public Clause {
   size_t weight = 2;
   std::string if_synonym;
   PqlToken first_arg;
-  const PkbPtr &pkb;
+  const pkb::PkbPtr &pkb;
   using handler = Table (PatternIfClause::*)();
   const std::map<PqlTokenType, handler> execute_handler{
       {PqlTokenType::SYNONYM, &PatternIfClause::HandleSynonym},

@@ -1,6 +1,8 @@
 #include "stmt_stmt_store.h"
 #include "../pkb_relationship.h"
 
+namespace pkb {
+
 StmtStmtStore::StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                              std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type)
     : Store(move(stmt_vector), move(stmt_type)) {}
@@ -181,4 +183,6 @@ IDENT_PAIR_VECTOR StmtStmtStore::GetStarPairByType(StmtType type1, StmtType type
     return star_type_pair_map.at(type1).at(type2).GetPairVector();
   }
   return {};
+}
+
 }

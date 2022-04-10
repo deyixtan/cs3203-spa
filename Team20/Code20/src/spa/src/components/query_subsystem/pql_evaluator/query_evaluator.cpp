@@ -2,13 +2,13 @@
 
 namespace pql {
 
-void QueryEvaluator::Evaluate(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results) {
+void QueryEvaluator::Evaluate(ParsedQuery &query, const pkb::PkbPtr &pkb, std::list<std::string> &results) {
   EvaluateOptimized(query, pkb, results);
   pkb->GetAffectsStoreFactory()->ClearAffectsStore();
   pkb->GetNextStore()->ClearNextStarCache();
 }
 
-void QueryEvaluator::EvaluateUnoptimized(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results) {
+void QueryEvaluator::EvaluateUnoptimized(ParsedQuery &query, const pkb::PkbPtr &pkb, std::list<std::string> &results) {
   pql::Table table;
   auto clauses = ExtractClauses(query, pkb);
   // extract clause -> optimizer -> sort clauses?
@@ -56,7 +56,7 @@ Table QueryEvaluator::EvaluateRelatedClauseGroups(std::vector<ClauseGroup> &clau
   return table;
 }
 
-void QueryEvaluator::EvaluateOptimized(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results) {
+void QueryEvaluator::EvaluateOptimized(ParsedQuery &query, const pkb::PkbPtr &pkb, std::list<std::string> &results) {
   auto clause_group_list = ExtractClauseGroups(query, pkb);
   auto no_synonyms_clause_group = clause_group_list.GetNoSynonymsClauseGroup();
   auto select_clause_ptr = ClauseFactory::Create(query.GetResultClause(), query.GetDeclaration().GetDeclarations(), pkb);
@@ -80,7 +80,7 @@ void QueryEvaluator::EvaluateOptimized(ParsedQuery &query, const PkbPtr &pkb, st
   ProjectResults(query, pkb, table, results);
 }
 
-ClauseGroupList QueryEvaluator::ExtractClauseGroups(ParsedQuery &query, const PkbPtr &pkb) {
+ClauseGroupList QueryEvaluator::ExtractClauseGroups(ParsedQuery &query, const pkb::PkbPtr &pkb) {
   ClauseGroupList clause_group_list;
 
   auto declarations = query.GetDeclaration().GetDeclarations();
@@ -107,7 +107,7 @@ ClauseGroupList QueryEvaluator::ExtractClauseGroups(ParsedQuery &query, const Pk
 }
 
 void QueryEvaluator::ProjectResults(ParsedQuery &query,
-                                    const PkbPtr &pkb,
+                                    const pkb::PkbPtr &pkb,
                                     Table &table,
                                     std::list<std::string> &results) {
   if (table.IsBooleanResult()) {
@@ -152,7 +152,7 @@ void QueryEvaluator::ProjectResults(ParsedQuery &query,
   }
 }
 
-std::queue<std::shared_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query, const PkbPtr &pkb) {
+std::queue<std::shared_ptr<pql::Clause> > QueryEvaluator::ExtractClauses(ParsedQuery &query, const pkb::PkbPtr &pkb) {
   std::queue<std::shared_ptr<pql::Clause> > clauses;
   for (const auto &relationship : query.GetRelationships()) {
     auto clause = pql::ClauseFactory::Create(relationship, query.GetDeclaration().GetDeclarations(), pkb);

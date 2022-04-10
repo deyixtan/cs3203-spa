@@ -13,7 +13,7 @@
 
 namespace source {
 
-CfgBuilder::CfgBuilder(PkbClientPtr pkb_client)
+CfgBuilder::CfgBuilder(pkb::PkbClientPtr pkb_client)
     : m_pkb_client(std::move(pkb_client)), m_cfg_map(StringToCfgNodePtrMap()) {}
 
 void CfgBuilder::IterateAst(ProgramNodePtr &program_node) {

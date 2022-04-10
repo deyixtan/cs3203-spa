@@ -4,6 +4,8 @@
 #include "components/pkb/stores/store.h"
 #include "components/pkb/stores/pattern_store/expression_tree/expression_tree.h"
 
+namespace pkb {
+
 class PatternStore : Store {
  private:
   IDENT_PAIR_VECTOR m_stmt_pattern_pairs;
@@ -27,5 +29,7 @@ class PatternStore : Store {
   [[nodiscard]] IDENT_PAIR_VECTOR GetIfWithPatternSynonym();
   [[nodiscard]] IDENT_PAIR_VECTOR GetWhileWithPatternSynonym();
 };
+
+}
 
 #endif //PATTERN_STORE_H

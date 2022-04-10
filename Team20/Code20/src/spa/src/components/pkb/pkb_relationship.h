@@ -7,6 +7,8 @@
 #include <unordered_set>
 #include <unordered_map>
 
+namespace pkb {
+
 class PkbRelationship {
  private:
   IDENT_SET_MAP upper_to_lower_set;
@@ -22,5 +24,7 @@ class PkbRelationship {
   [[nodiscard]] IDENT_SET_MAP GetLowerToUpperSet();
   [[nodiscard]] IDENT_PAIR_VECTOR GetPairVector();
 };
+
+}
 
 #endif //PKB_RELATIONSHIP_H
