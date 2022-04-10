@@ -41,6 +41,8 @@ class PkbClient {
   void PopulateStmt(String stmt);
   void PopulateRead(StringStream &visited, String &curr_stmt, String &var_name);
   void PopulatePrint(StringStream &visited, String &curr_stmt, String &var_name);
+  void PopulateProcFirstStmt(String proc_name, String stmt);
+  void PopulateProcLastStmt(String proc_name, String stmt);
   void PopulateAssign(StringStream &visited, String &proc_name, String &curr_stmt, String &var_name, String &rhs_expr);
   void PopulateCall(StringStream &visited, String &curr_stmt, String &proc_name, String &callee_name);
   void PopulateWhile(StringStream &visited, String &curr_stmt, String cond_expr);

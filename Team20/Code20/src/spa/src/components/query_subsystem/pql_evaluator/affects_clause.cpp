@@ -1,6 +1,6 @@
 #include "affects_clause.h"
 #include "clause_util.h"
-#include "components/pkb/stores/affect_store/affect_session.h"
+#include "components/pkb/stores/affects_store/affects_session.h"
 
 namespace pql {
 
@@ -12,8 +12,8 @@ AffectsClause::AffectsClause(const PqlToken &first_arg,
     : first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table AffectsClause::Execute() {
-  if (!pkb->GetAffectStore()->DoesAffectSessionExist()) {
-    pkb->GetAffectStore()->ComputeAffectSession();
+  if (!pkb->GetAffectsStore()->DoesAffectsSessionExist()) {
+    pkb->GetAffectsStore()->ComputeAffectsSession();
   }
 
   if (IsArgSynonym(first_arg) && IsArgSynonym(second_arg)) {
@@ -51,15 +51,15 @@ Table AffectsClause::Execute() {
 }
 
 Table AffectsClause::HandleSynonymSynonym() {
-  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsPairs();
+  auto pair_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsPairs();
   if (first_arg.value == second_arg.value) {
-    pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsSameSynPairs();
+    pair_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsSameSynPairs();
   }
   return {first_arg.value, second_arg.value, pair_constraints};
 }
 
 Table AffectsClause::HandleSynonymWildcard() {
-  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsPairs();
+  auto pair_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsPairs();
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.first);
@@ -68,12 +68,12 @@ Table AffectsClause::HandleSynonymWildcard() {
 }
 
 Table AffectsClause::HandleSynonymInteger() {
-  auto single_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsOf(second_arg.value);
+  auto single_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsOf(second_arg.value);
   return {first_arg.value, single_constraints};
 }
 
 Table AffectsClause::HandleWildcardSynonym() {
-  auto pair_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectsPairs();
+  auto pair_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsPairs();
   std::unordered_set<std::string> single_constraints;
   for (const auto &pair_constraint : pair_constraints) {
     single_constraints.insert(pair_constraint.second);
@@ -82,28 +82,28 @@ Table AffectsClause::HandleWildcardSynonym() {
 }
 
 Table AffectsClause::HandleWildcardWildcard() {
-  bool is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectsPairs().empty();
+  bool is_false_clause = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsPairs().empty();
   return ConstructEmptyTable(is_false_clause);
 }
 
 Table AffectsClause::HandleWildcardInteger() {
-  auto is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectsOf(second_arg.value).empty();
+  auto is_false_clause = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectsOf(second_arg.value).empty();
   return ConstructEmptyTable(is_false_clause);
 }
 
 Table AffectsClause::HandleIntegerSynonym() {
-  auto single_constraints = pkb->GetAffectStore()->GetAffectSession()->GetAffectedOf(first_arg.value);
+  auto single_constraints = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectedOf(first_arg.value);
   return {second_arg.value, single_constraints};
 }
 
 Table AffectsClause::HandleIntegerWildcard() {
-  bool is_false_clause = pkb->GetAffectStore()->GetAffectSession()->GetAffectedOf(first_arg.value).empty();
+  bool is_false_clause = pkb->GetAffectsStore()->GetAffectsSession()->GetAffectedOf(first_arg.value).empty();
   return ConstructEmptyTable(is_false_clause);
 }
 
 Table AffectsClause::HandleIntegerInteger() {
   auto is_false_clause =
-      !pkb->GetAffectStore()->GetAffectSession()->DoesAffectExists({first_arg.value, second_arg.value});
+      !pkb->GetAffectsStore()->GetAffectsSession()->DoesAffectExists({first_arg.value, second_arg.value});
   return ConstructEmptyTable(is_false_clause);
 }
 
