@@ -34,8 +34,8 @@ class NextStore : public StmtStmtStore {
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllNextStmt(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_SET GetNextStarSameStmt(StmtType type);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllNextStarStmt(StmtType type1, StmtType type2);
-  std::string &GetFirstStmtOfProc(const std::string &stmt, std::string &first_stmt_no);
-  std::string &GetLastStmtOfProc(const std::string &stmt, std::string &last_stmt_no);
+  std::string GetFirstStmtOfProc(const std::string &stmt);
+  std::string GetLastStmtOfProc(const std::string &stmt);
   void InsertPairResultUpper(int start, int end, std::unordered_set<std::string> &res, std::string const stmt);
   void InsertPairResultLower(int start, int end, std::unordered_set<std::string> &res, std::string const stmt);
   std::string GetEndStmtOfWhileLoop(const std::string &smallest_stmt);

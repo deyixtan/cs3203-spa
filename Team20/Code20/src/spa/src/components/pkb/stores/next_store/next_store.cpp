@@ -97,7 +97,7 @@ IDENT_PAIR_VECTOR NextStore::GetAllNextStarStmt(StmtType type1, StmtType type2) 
 void NextStore::GetUpperStarOfHelper(std::string const &stmt,
                                          std::unordered_set<std::string> &res) {
   StmtType type1 = m_stmt_type->at(stmt);
-  std::string first_stmt_no = GetFirstStmtOfProc(stmt, first_stmt_no);
+  std::string first_stmt_no = GetFirstStmtOfProc(stmt);
   std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
   if(ansc_set.empty()) {
     InsertPairResultUpper(stoi(first_stmt_no), stoi(stmt) - 1, res, stmt);
@@ -131,7 +131,8 @@ void NextStore::InsertPairResultLower(int start, int end, std::unordered_set<std
   }
 }
 
-std::string &NextStore::GetFirstStmtOfProc(const std::string &stmt, std::string &first_stmt_no) {
+std::string NextStore::GetFirstStmtOfProc(const std::string &stmt) {
+  std::string first_stmt_no;
   for(auto proc : m_proc_stmt_map) {
     std::string first_stmt = proc.second.front();
     std::string last_stmt = proc.second.back();
@@ -146,12 +147,10 @@ std::string &NextStore::GetFirstStmtOfProc(const std::string &stmt, std::string 
 void NextStore::GetLowerStarOfHelper(std::string const &stmt,
                                          std::unordered_set<std::string> &res) {
   StmtType type1 = m_stmt_type->at(stmt);
-  std::string last_stmt_no = GetLastStmtOfProc(stmt, last_stmt_no);
+  std::string last_stmt_no = GetLastStmtOfProc(stmt);
   std::unordered_set<std::string> ansc_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
   std::unordered_set<std::string> if_set = m_parent_store->GetAllAnceOf(IF, stmt);
   if(ansc_set.empty()) {
-
-    // TODO: If stmt is in a if block, do not add lines from else block
     if (!if_set.empty()) {
       std::string start_if_stmt = LARGEST_STMT_NO;
       for(auto s : if_set) {
@@ -168,7 +167,11 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
       }
 
       for (int i = stoi(start_if_stmt); i < stoi(end_if_stmt); i++) {
-        // TODO: check if current and next has the Next relationship
+        std::unordered_set<std::string> next_set = GetNextOf(STMT, std::to_string(i));
+        if(!next_set.count(std::to_string(i + 1))) {
+          last_stmt_no = std::to_string(i);
+          break;
+        }
       }
     }
 
@@ -206,7 +209,8 @@ std::string NextStore::GetEndStmtOfWhileLoop(const std::string &start_of_while) 
   return largest_stmt;
 }
 
-std::string &NextStore::GetLastStmtOfProc(const std::string &stmt, std::string &last_stmt_no) {
+std::string NextStore::GetLastStmtOfProc(const std::string &stmt) {
+  std::string last_stmt_no;
   for(auto proc : m_proc_stmt_map) {
     std::string first_stmt = proc.second.front();
     std::string last_stmt = proc.second.back();

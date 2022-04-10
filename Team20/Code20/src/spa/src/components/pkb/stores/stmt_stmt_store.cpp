@@ -154,8 +154,22 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
                                          std::string lower,
                                          NESTED_TUPLE_MAP *pair_map) {
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
-  set.insert(std::pair<std::string, std::string>(upper, lower));
+  if (pair_map->find(type1) != pair_map->end()) {
+    if (pair_map->at(type1).find(type2) != pair_map->at(type1).end()) {
+      PopulatePairMap(type1, upper, type2, lower, pair_map);
+    } else {
+      pair_map->at(type1).insert({type2, {{}, {}, {}}});
+      std::get<0>(pair_map->at(type1).at(type2)).insert({upper, {lower}});
+      std::get<1>(pair_map->at(type1).at(type2)).insert({lower, {upper}});
+      std::get<2>(pair_map->at(type1).at(type2)).push_back({upper, lower});
+    }
+  } else {
+    pair_map->insert({type1, {}});
+    pair_map->at(type1).insert({type2, {{}, {}, {}}});
+    std::get<0>(pair_map->at(type1).at(type2)).insert({upper, {lower}});
+    std::get<1>(pair_map->at(type1).at(type2)).insert({lower, {upper}});
+    std::get<2>(pair_map->at(type1).at(type2)).push_back({upper, lower});
+  }
 }
 
 void StmtStmtStore::PopulatePairMap(StmtType type1,
