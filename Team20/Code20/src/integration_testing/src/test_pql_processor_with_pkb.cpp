@@ -5,8 +5,8 @@
 #include "components/query_subsystem/pql_parser/pql_parser.h"
 #include "components/query_subsystem/pql_evaluator/query_evaluator.h"
 
-PKB *set_up_pkb() {
-  PKB *pkb = new PKB();
+PkbPtr set_up_pkb() {
+  PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("main", PROC);
   pkb->AddStmt("foo", PROC);
   pkb->AddStmt("bar", PROC);
@@ -144,8 +144,7 @@ PKB *set_up_pkb() {
 }
 
 TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
-  PKB *pkb = set_up_pkb();
-  pql_evaluator::QueryEvaluator *evaluator = new pql_evaluator::QueryEvaluator(pkb);
+  PkbPtr pkb = set_up_pkb();
 
   SECTION("Test if-statement count and their statement number") {
     PqlLexer lexer{"if ifs; Select ifs"};
@@ -153,7 +152,7 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
     PqlParser pql_parser = PqlParser(tokens);
     ParsedQuery parsed_query = pql_parser.ParseQuery();
     std::list<std::string> results;
-    evaluator->Evaluate(parsed_query, results);
+    pql::QueryEvaluator::Evaluate(parsed_query, pkb, results);
     std::string result = results.front();
     std::string expected_result = "5";
 
@@ -166,7 +165,7 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
     PqlParser pql_parser = PqlParser(tokens);
     ParsedQuery parsed_query = pql_parser.ParseQuery();
     std::list<std::string> results;
-    evaluator->Evaluate(parsed_query, results);
+    pql::QueryEvaluator::Evaluate(parsed_query, pkb, results);
     std::list<std::string> expected_result = {"15", "10", "8", "7", "4"};
 
     REQUIRE(results.size() == 5);
@@ -182,7 +181,7 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
       PqlParser pql_parser = PqlParser(tokens);
       ParsedQuery parsed_query = pql_parser.ParseQuery();
       std::list<std::string> results;
-      evaluator->Evaluate(parsed_query, results);
+      pql::QueryEvaluator::Evaluate(parsed_query, pkb, results);
       REQUIRE(results.front() == expected_result[i - 1]);
     }
   }
@@ -198,7 +197,7 @@ TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
       PqlParser pql_parser = PqlParser(tokens);
       ParsedQuery parsed_query = pql_parser.ParseQuery();
       std::list<std::string> results;
-      evaluator->Evaluate(parsed_query, results);
+      pql::QueryEvaluator::Evaluate(parsed_query, pkb, results);
       REQUIRE(results == expected_result[i - 1]);
     }
   }

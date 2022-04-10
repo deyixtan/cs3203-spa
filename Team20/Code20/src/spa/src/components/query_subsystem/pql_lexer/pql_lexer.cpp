@@ -381,7 +381,9 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
         break;
       case '_':is_subExpr = !is_subExpr;
         break;
-      case '<':is_tuple = !is_tuple;
+      case '<':
+        is_tuple = !is_tuple;
+        char_arr.push_back(delimiter);
         break;
       case '>':is_tuple = !is_tuple;
         break;

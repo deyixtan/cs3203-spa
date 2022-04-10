@@ -8,41 +8,11 @@ using namespace clause_util;
 PatternAssignClause::PatternAssignClause(const std::string &assign_synonym,
                                          const PqlToken &first_arg,
                                          const PqlToken &second_arg,
-                                         PKB *pkb)
+                                         const PkbPtr &pkb)
     : assign_synonym(assign_synonym), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table PatternAssignClause::Execute() {
-  if (IsArgSynonym(first_arg) && IsArgWildcard(second_arg)) {
-    // pattern a(v, _)
-    return HandleSynonymWildcard();
-  } else if (IsArgSynonym(first_arg) && IsArgExactMatch(second_arg)) {
-    // pattern a(v, "x")
-    return HandleSynonymExact();
-  } else if (IsArgSynonym(first_arg) && IsArgPartialMatch(second_arg)) {
-    // pattern a(v, _"x"_)
-    return HandleSynonymPartial();
-  } else if (IsArgWildcard(first_arg) && IsArgWildcard(second_arg)) {
-    // pattern a(_, _)
-    return HandleWildcardWildcard();
-  } else if (IsArgWildcard(first_arg) && IsArgExactMatch(second_arg)) {
-    // pattern a(_, "x")
-    return HandleWildcardExact();
-  } else if (IsArgWildcard(first_arg) && IsArgPartialMatch(second_arg)) {
-    // pattern a(_, _"x"_)
-    return HandleWildcardPartial();
-  } else if (IsArgIdent(first_arg) && IsArgWildcard(second_arg)) {
-    // pattern a("x", _)
-    return HandleIdentWildcard();
-  } else if (IsArgIdent(first_arg) && IsArgExactMatch(second_arg)) {
-    // pattern a("x", "y")
-    return HandleIdentExact();
-  } else if (IsArgIdent(first_arg) && IsArgPartialMatch(second_arg)) {
-    // pattern a("x", _"y"_)
-    return HandleIdentPartial();
-  } else {
-    // no type safety because of PqlTokenType
-    return {};
-  }
+  return (this->*execute_handler.at({first_arg.type, second_arg.type}))();
 }
 
 Table PatternAssignClause::HandleSynonymWildcard() {
@@ -88,6 +58,77 @@ Table PatternAssignClause::HandleIdentExact() {
 Table PatternAssignClause::HandleIdentPartial() {
   auto single_constraints = pkb->GetPatternStore()->GetStmtWithPatternPartial(first_arg.value, second_arg.value);
   return {assign_synonym, single_constraints};
+}
+
+bool PatternAssignClause::ExecuteBool() {
+  return (this->*execute_bool_handler.at({first_arg.type, second_arg.type}))();
+}
+
+bool PatternAssignClause::HandleSynonymWildcardBool() {
+  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonymWildcard();
+  return pair_constraints.empty();
+}
+
+bool PatternAssignClause::HandleSynonymExactBool() {
+  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonymExact(second_arg.value);
+  return pair_constraints.empty();
+}
+
+bool PatternAssignClause::HandleSynonymPartialBool() {
+  auto pair_constraints = pkb->GetPatternStore()->GetStmtWithPatternSynonymPartial(second_arg.value);
+  return pair_constraints.empty();
+}
+
+bool PatternAssignClause::HandleWildcardWildcardBool() {
+  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPatternWildcard("_");
+  return single_constraints.empty();
+}
+
+bool PatternAssignClause::HandleWildcardExactBool() {
+  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPatternExact("_", second_arg.value);
+  return single_constraints.empty();
+}
+
+bool PatternAssignClause::HandleWildcardPartialBool() {
+  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPatternPartial("_", second_arg.value);
+  return single_constraints.empty();
+}
+
+bool PatternAssignClause::HandleIdentWildcardBool() {
+  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPatternWildcard(first_arg.value);
+  return single_constraints.empty();
+}
+
+bool PatternAssignClause::HandleIdentExactBool() {
+  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPatternExact(first_arg.value, second_arg.value);
+  return single_constraints.empty();
+}
+
+bool PatternAssignClause::HandleIdentPartialBool() {
+  auto single_constraints = pkb->GetPatternStore()->GetStmtWithPatternPartial(first_arg.value, second_arg.value);
+  return single_constraints.empty();
+}
+
+std::set<std::string> PatternAssignClause::GetSynonyms() {
+  std::set<std::string> synonyms;
+  synonyms.emplace(assign_synonym);
+  if (IsArgSynonym(first_arg)) {
+    synonyms.emplace(first_arg.value);
+  }
+
+  return synonyms;
+}
+
+size_t PatternAssignClause::GetSynonymsSize() {
+  size_t size = 1;
+  if (IsArgSynonym(first_arg)) {
+    size++;
+  }
+  return size;
+}
+
+size_t PatternAssignClause::GetWeight() {
+  return weight;
 }
 
 }

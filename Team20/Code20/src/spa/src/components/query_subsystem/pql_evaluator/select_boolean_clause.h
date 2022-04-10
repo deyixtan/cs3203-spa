@@ -10,6 +10,10 @@ class SelectBooleanClause : public Clause {
  public:
   SelectBooleanClause() = default;;
   Table Execute() override;
+  bool ExecuteBool() override;
+  std::set<std::string> GetSynonyms() override;
+  size_t GetSynonymsSize() override;
+  size_t GetWeight() override;
 };
 
 }
