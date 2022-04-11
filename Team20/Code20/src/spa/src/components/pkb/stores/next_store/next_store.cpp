@@ -314,10 +314,6 @@ std::string NextStore::GetEndStmtOfWhileLoop(const std::string &start_of_while) 
   return end_stmt;
 }
 
-IDENT_PAIR_VECTOR NextStore::GetNextStarPairs() {
-  return GetStarPairByType(STMT, STMT);
-}
-
 void NextStore::ClearNextStarCache() {
   star_type_pair_map = NESTED_STMT_STMT_MAP();
 }

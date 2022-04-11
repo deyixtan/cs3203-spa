@@ -32,8 +32,6 @@ class NextStore : public StmtStmtStore {
   [[nodiscard]] IDENT_SET GetNextOf(StmtType type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetBeforeStarOf(StmtType type, IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetNextStarOf(StmtType type, IDENT const &stmt);
-  [[nodiscard]] IDENT_PAIR_VECTOR GetNextPairs();
-  [[nodiscard]] IDENT_PAIR_VECTOR GetNextStarPairs();
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllNextStmt(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_SET GetNextStarSameStmt(StmtType type);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllNextStarStmt(StmtType type1, StmtType type2);
