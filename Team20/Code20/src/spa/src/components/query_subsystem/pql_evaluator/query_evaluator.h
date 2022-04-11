@@ -3,10 +3,10 @@
 
 #include "../pql_parser/parsed_query.h"
 #include "../../pkb/pkb.h"
-#include "clause.h"
-#include "clause_factory.h"
+#include "components/query_subsystem/pql_evaluator/clauses/clause.h"
+#include "components/query_subsystem/pql_evaluator/clauses/clause_factory.h"
 #include "clause_util.h"
-#include "clause_group_list.h"
+#include "components/query_subsystem/pql_evaluator/clauses/clause_group_list.h"
 
 #include <string>
 #include <unordered_set>
