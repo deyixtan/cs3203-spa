@@ -105,7 +105,7 @@ none
 5000
 22. Overloaded clause of one type (Valid)
 stmt s, s1, s2, s3, s4, s5; procedure p; assign a, a1, a2; print pn, pn2; read r, r1, r2, r3; if ifs, ifs1; while w, w1, w2; constant c; call cl; variable v;
-Select ifs1 such that Next(s, w) and Next(w, a2) and Next(r, w1) and Next(w1, r1) and Next(r1, a) and Next(a,s4) and Next(ifs, s1) and Next(s1, r2) and Next(s3, cl) and Next(17, r3)  and Next(ifs, pn) and Next(pn, s3) and Next(r3, ifs1) and Next(ifs1, w2) and Next(w2, 21) and Next(21, w2) and Next(w2, s5) and Next(ifs1, _) and Next(ifs1, pn2)
+Select ifs1 such that Next(s, w) and Next(w, a2) and Next(r, w1) and Next(w1, r1) and Next(r1, a) and Next(a,s4) and Next(ifs, s1) and Next(s1, r2) and Next(s3, cl) and Next(17, r3) and Next(ifs, pn) and Next(r3, ifs1) and Next(ifs1, w2) and Next(w2, 21) and Next(21, w2) and Next(w2, s5) and Next(ifs1, _) and Next(ifs1, a1)
 19
 5000
 23. Overloaded clauses (Valid)
