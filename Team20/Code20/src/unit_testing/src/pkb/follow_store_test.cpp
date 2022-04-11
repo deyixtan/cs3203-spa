@@ -4,6 +4,8 @@
 #include "catch.hpp"
 #include "components/pkb/pkb.h"
 
+using namespace pkb;
+
 std::shared_ptr<FollowsStore> set_up_follow() {
   PKB *pkb = new PKB();
   pkb->AddStmt("1", STMT);

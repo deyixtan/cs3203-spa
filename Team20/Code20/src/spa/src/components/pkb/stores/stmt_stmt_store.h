@@ -1,7 +1,10 @@
 #ifndef STMT_STMT_STORE_H
 #define STMT_STMT_STORE_H
 
+#include "components/pkb/pkb_declarations.h"
 #include "store.h"
+
+namespace pkb {
 
 class ParentStore;
 
@@ -29,5 +32,7 @@ class StmtStmtStore : public Store {
   [[nodiscard]] IDENT_PAIR_VECTOR GetPairByType(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_PAIR_VECTOR GetStarPairByType(StmtType type1, StmtType type2);
 };
+
+}
 
 #endif //STMT_STMT_STORE_H

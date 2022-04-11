@@ -1,5 +1,5 @@
 #include "design_extractor.h"
-#include "components/source_subsystem/pkb_client/pkb_client.h"
+#include "components/pkb/pkb_client/pkb_client.h"
 #include "components/source_subsystem/types/ast/node_assign_statement.h"
 #include "components/source_subsystem/types/ast/node_boolean_expression.h"
 #include "components/source_subsystem/types/ast/node_call_statement.h"
@@ -19,7 +19,7 @@
 
 namespace source {
 
-DesignExtractor::DesignExtractor(PkbClientPtr pkb_client) :
+DesignExtractor::DesignExtractor(pkb::PkbClientPtr pkb_client) :
     m_pkb_client(std::move(pkb_client)),
     m_call_graph(std::make_shared<CallGraph>()),
     m_visited(StringStream()),

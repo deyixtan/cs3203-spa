@@ -1,5 +1,6 @@
 #include "nextt_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/next_store/next_store.h"
 
 namespace pql {
 
@@ -8,7 +9,7 @@ using namespace clause_util;
 NextTClause::NextTClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
                          const PqlToken &first_arg,
                          const PqlToken &second_arg,
-                         const PkbPtr &pkb)
+                         const pkb::PkbPtr &pkb)
     : declarations(declarations), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table NextTClause::Execute() {

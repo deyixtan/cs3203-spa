@@ -5,6 +5,8 @@
 #include "components/pkb/stores/store.h"
 #include "components/source_subsystem/source_declarations.h"
 
+namespace pkb {
+
 class AffectsStoreFactory : public Store {
  private:
   ModifiesStorePtr m_modify_store;
@@ -27,5 +29,7 @@ class AffectsStoreFactory : public Store {
   void ComputeAffectsStore(bool is_affects_star_involved);
   void ClearAffectsStore();
 };
+
+}
 
 #endif //AFFECTS_STORE_FACTORY_H

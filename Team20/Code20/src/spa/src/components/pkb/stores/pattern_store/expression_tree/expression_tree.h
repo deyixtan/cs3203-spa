@@ -7,23 +7,26 @@
 #include <sstream>
 #include <vector>
 
+namespace pkb {
+
 // Tree Structure
 typedef struct node {
   std::string data;
   struct node *left, *right;
-} * nptr;
+} *nptr;
 
-class ExpressionTree
-{
+class ExpressionTree {
  public:
   ExpressionTree();
   nptr newNode(std::string c);
-  nptr build(std::string& s);
+  nptr build(std::string &s);
   void postorder(nptr root);
   nptr GetRoot();
   std::string GetPattern(nptr root);
  private:
   nptr root;
 };
+
+}
 
 #endif //EXPRESSION_TREE_H

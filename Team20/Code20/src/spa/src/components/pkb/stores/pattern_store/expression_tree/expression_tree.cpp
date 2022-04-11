@@ -1,5 +1,7 @@
 #include "expression_tree.h"
 
+namespace pkb {
+
 ExpressionTree::ExpressionTree() {}
 
 // Function to create new node
@@ -11,7 +13,7 @@ nptr ExpressionTree::newNode(std::string c) {
 }
 
 // Function to build Expression Tree
-nptr ExpressionTree::build(std::string& s) {
+nptr ExpressionTree::build(std::string &s) {
   // Stack to hold nodes
   std::stack<nptr> node_stack;
   std::string data = "";
@@ -22,14 +24,14 @@ nptr ExpressionTree::build(std::string& s) {
   nptr tree, tree1, tree2;
 
   // Prioritising the operators
-  int p[123] = { 0 };
+  int p[123] = {0};
   p['+'] = p['-'] = 1, p['/'] = p['*'] = p['%'] = 2,
   p[')'] = 0;
 
   for (int i = 0; i < s.length(); i++) {
     std::string str;
     str.push_back(s[i]);
-    
+
     if (str == "(") {
       // Push '(' in char stack
       str_stack.push(str);
@@ -49,8 +51,8 @@ nptr ExpressionTree::build(std::string& s) {
       }
 
       while (!str_stack.empty()
-              && str_stack.top() != "("
-              && p[str_stack.top()[0]] >= p[s[i]]) {
+          && str_stack.top() != "("
+          && p[str_stack.top()[0]] >= p[s[i]]) {
 
         // Get and remove the top element
         // from the character stack
@@ -128,4 +130,6 @@ std::string ExpressionTree::GetPattern(nptr root) {
   }
 
   return pattern;
+}
+
 }

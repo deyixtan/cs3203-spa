@@ -1,5 +1,7 @@
 #include "stmt_var_store.h"
 
+namespace pkb {
+
 StmtVarStore::StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                            std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) : Store(
     move(stmt_vector), move(stmt_type)) {}
@@ -87,4 +89,6 @@ std::unordered_set<std::string> StmtVarStore::GetAllStmt() {
 
 std::unordered_set<std::string> StmtVarStore::GetAllProc() {
   return all_proc;
+}
+
 }

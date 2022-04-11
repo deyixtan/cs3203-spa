@@ -1,13 +1,14 @@
 #ifndef DESIGN_EXTRACTOR_H
 #define DESIGN_EXTRACTOR_H
 
+#include "components/pkb/pkb_declarations.h"
 #include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
 class DesignExtractor : public std::enable_shared_from_this<DesignExtractor> {
  private:
-  PkbClientPtr m_pkb_client;
+  pkb::PkbClientPtr m_pkb_client;
   CallGraphPtr m_call_graph;
   // used to maintain state
   // while visiting AST nodes
@@ -23,7 +24,7 @@ class DesignExtractor : public std::enable_shared_from_this<DesignExtractor> {
   void PopulateParentHelper(String &stmt_no);
 
  public:
-  explicit DesignExtractor(PkbClientPtr pkb_client);
+  explicit DesignExtractor(pkb::PkbClientPtr pkb_client);
   void IterateAst(ProgramNodePtr &program_node);
   void Visit(ProgramNodePtr &program_node);
   void Visit(ProcedureNodePtr &procedure_node);

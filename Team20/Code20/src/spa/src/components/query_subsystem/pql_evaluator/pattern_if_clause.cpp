@@ -1,11 +1,12 @@
 #include "pattern_if_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
 
 namespace pql {
 
 using namespace clause_util;
 
-PatternIfClause::PatternIfClause(const std::string &if_synonym, const PqlToken &first_arg, const PkbPtr &pkb)
+PatternIfClause::PatternIfClause(const std::string &if_synonym, const PqlToken &first_arg, const pkb::PkbPtr &pkb)
     : if_synonym(
     if_synonym), first_arg(first_arg), pkb(pkb) {}
 

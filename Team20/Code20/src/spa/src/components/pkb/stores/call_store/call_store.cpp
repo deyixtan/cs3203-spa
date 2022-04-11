@@ -1,5 +1,7 @@
 #include "call_store.h"
-#include "../../pkb_relationship.h"
+#include "components/pkb/pkb_relationship.h"
+
+namespace pkb {
 
 CallStore::CallStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                      std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
@@ -46,7 +48,7 @@ void CallStore::AddCallStmtMap(IDENT proc, IDENT stmt) {
   }
 }
 
-IDENT_SET CallStore::GetCallersOf(IDENT const &proc){
+IDENT_SET CallStore::GetCallersOf(IDENT const &proc) {
   return GetUpperSetOf(CALLS, PROC, proc);
 }
 
@@ -60,4 +62,6 @@ IDENT_SET CallStore::GetCallersStarOf(IDENT const &proc) {
 
 IDENT_SET CallStore::GetCalleesStarOf(IDENT const &proc) {
   return GetLowerStarOf(PROC, proc);
+}
+
 }

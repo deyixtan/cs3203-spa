@@ -1,6 +1,8 @@
 #ifndef MODIFIESS_CLAUSE_H_
 #define MODIFIESS_CLAUSE_H_
 
+#include <map>
+
 #include "clause.h"
 #include "components/query_subsystem/pql_lexer/pql_token.h"
 #include "components/query_subsystem/pql_parser/parsed_query.h"
@@ -14,7 +16,7 @@ class ModifiesSClause : public Clause {
   ModifiesSClause(const std::unordered_map<std::string, DesignEntityType> &declarations,
                   const PqlToken &first_arg,
                   const PqlToken &second_arg,
-                  const PkbPtr &pkb);
+                  const pkb::PkbPtr &pkb);
   Table Execute() override;
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
@@ -25,7 +27,7 @@ class ModifiesSClause : public Clause {
   std::unordered_map<std::string, DesignEntityType> declarations;
   PqlToken first_arg;
   PqlToken second_arg;
-  const PkbPtr &pkb;
+  const pkb::PkbPtr &pkb;
   using handler = Table (ModifiesSClause::*)();
   const std::map<std::pair<PqlTokenType, PqlTokenType>, handler> execute_handler{
       {{PqlTokenType::SYNONYM, PqlTokenType::SYNONYM}, &ModifiesSClause::HandleSynonymSynonym},

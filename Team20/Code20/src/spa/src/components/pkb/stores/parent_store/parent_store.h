@@ -1,7 +1,11 @@
 #ifndef PARENT_STORE_H
 #define PARENT_STORE_H
 
+#include "components/pkb/pkb_declarations.h"
+#include "components/pkb/pkb_relationship.h"
 #include "components/pkb/stores/stmt_stmt_store.h"
+
+namespace pkb {
 
 // A store class that maintains all Parent APIs and relationships
 class ParentStore : public StmtStmtStore {
@@ -21,5 +25,7 @@ class ParentStore : public StmtStmtStore {
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllParentStmt(StmtType type1, StmtType type2);
   [[nodiscard]] IDENT_PAIR_VECTOR GetAllParentStarStmt(StmtType type1, StmtType type2);
 };
+
+}
 
 #endif //PARENT_STORE_H

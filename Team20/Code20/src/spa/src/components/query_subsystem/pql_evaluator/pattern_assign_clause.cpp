@@ -1,5 +1,6 @@
 #include "pattern_assign_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
 
 namespace pql {
 
@@ -8,7 +9,7 @@ using namespace clause_util;
 PatternAssignClause::PatternAssignClause(const std::string &assign_synonym,
                                          const PqlToken &first_arg,
                                          const PqlToken &second_arg,
-                                         const PkbPtr &pkb)
+                                         const pkb::PkbPtr &pkb)
     : assign_synonym(assign_synonym), first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table PatternAssignClause::Execute() {

@@ -7,7 +7,7 @@ using namespace clause_util;
 
 SelectTupleClause::SelectTupleClause(std::vector<PqlToken> &tuple,
                                      const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                     const PkbPtr &pkb) : tuple(tuple), declarations(declarations), pkb(pkb) {}
+                                     const pkb::PkbPtr &pkb) : tuple(tuple), declarations(declarations), pkb(pkb) {}
 
 Table SelectTupleClause::Execute() {
   Table table;
@@ -84,7 +84,7 @@ size_t SelectTupleClause::GetWeight() {
 SelectTupleClause::SelectTupleClause(const std::unordered_set<std::string> &table_synonyms,
                                      std::vector<PqlToken> &tuple,
                                      const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                     const PkbPtr &pkb)
+                                     const pkb::PkbPtr &pkb)
     : table_synonyms(table_synonyms), tuple(tuple), declarations(declarations), pkb(pkb) {}
 
 }

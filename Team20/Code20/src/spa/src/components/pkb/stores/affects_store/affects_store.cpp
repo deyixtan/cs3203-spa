@@ -1,6 +1,11 @@
 #include "affects_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/affects_store/affect_store_factory.h"
+#include "components/source_subsystem/types/cfg/cfg.h"
 #include "components/source_subsystem/types/cfg/cfg_node.h"
-#include "../../pkb_relationship.h"
+
+namespace pkb {
 
 AffectsStore::AffectsStore(IDENT_SET_VECTOR_PTR stmt_vector,
                            IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,
@@ -320,4 +325,6 @@ void AffectsStore::HandleIfStatement(source::CfgNodePtr &cfg_node) {
 
   MergeModifiedTable(last_modified_map, last_modified_map_clone);
   cfg_node = end_node;
+}
+
 }

@@ -1,6 +1,7 @@
 #include "affectst_clause.h"
 #include "clause_util.h"
 #include "components/pkb/stores/affects_store/affects_store.h"
+#include "components/pkb/stores/affects_store/affect_store_factory.h"
 
 namespace pql {
 
@@ -8,7 +9,7 @@ using namespace clause_util;
 
 AffectsTClause::AffectsTClause(const PqlToken &first_arg,
                                const PqlToken &second_arg,
-                               const PkbPtr &pkb)
+                               const pkb::PkbPtr &pkb)
     : first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table AffectsTClause::Execute() {

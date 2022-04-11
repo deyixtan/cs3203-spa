@@ -1,6 +1,8 @@
 #ifndef PATTERN_ASSIGN_CLAUSE_H_
 #define PATTERN_ASSIGN_CLAUSE_H_
 
+#include <map>
+
 #include "clause.h"
 #include "components/query_subsystem/pql_lexer/pql_token.h"
 #include "components/pkb/pkb.h"
@@ -12,7 +14,7 @@ class PatternAssignClause : public Clause {
   PatternAssignClause(const std::string &assign_synonym,
                       const PqlToken &first_arg,
                       const PqlToken &second_arg,
-                      const PkbPtr &pkb);
+                      const pkb::PkbPtr &pkb);
 
   Table Execute() override;
   bool ExecuteBool() override;
@@ -24,7 +26,7 @@ class PatternAssignClause : public Clause {
   std::string assign_synonym;
   PqlToken first_arg;
   PqlToken second_arg;
-  const PkbPtr &pkb;
+  const pkb::PkbPtr &pkb;
   using handler = Table (PatternAssignClause::*)();
   const std::map<std::pair<PqlTokenType, PqlTokenType>, handler> execute_handler{
       {{PqlTokenType::SYNONYM, PqlTokenType::UNDERSCORE}, &PatternAssignClause::HandleSynonymWildcard},

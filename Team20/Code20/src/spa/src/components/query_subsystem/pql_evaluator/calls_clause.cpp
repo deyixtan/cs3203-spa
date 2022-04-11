@@ -1,11 +1,12 @@
 #include "calls_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/call_store/call_store.h"
 
 namespace pql {
 
 using namespace clause_util;
 
-CallsClause::CallsClause(const PqlToken &first_arg, const PqlToken &second_arg, const PkbPtr &pkb)
+CallsClause::CallsClause(const PqlToken &first_arg, const PqlToken &second_arg, const pkb::PkbPtr &pkb)
     : first_arg(first_arg), second_arg(second_arg), pkb(pkb) {}
 
 Table CallsClause::Execute() {
