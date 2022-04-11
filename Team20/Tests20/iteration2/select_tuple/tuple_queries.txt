@@ -638,3 +638,43 @@ assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; proce
 Select <w.  stmt#,v.  varName> such that Modifies (w, v) and Uses (w, v)
 2 a, 2 b, 2 c, 2 d, 15 c
 5000
+129 - triple tuple with no overlaps
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v.varName, rd> such that Follows* (a, a1) and Affects (a, a1) such that Next*(a, a1)
+none
+5000
+130 - triple tuple with 1 overlap
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v.varName, a> such that Follows* (a, a1) and Affects (a, a1) such that Next*(a, a1)
+none
+5000
+131 - triple tuple with 2 overlaps
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v.varName, a> such that Follows* (a, a1) and Modifies (a, v) such that Affects(a, a1)
+none
+5000
+132 - triple tuple with 2 overlaps
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v.varName, a> such that Uses (ifs, v) and Modifies (a, v) such that Affects(a, a1)
+15 c 16, 17 c 16, 2 c 16, 2 d 5, 15 d 5, 17 d 5, 15 a 1, 17 a 1, 2 a 1
+5000
+133 - triple tuple with 3 overlaps
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v.varName, a> such that Uses (w, v) and Uses (pn, v) such that Affects(a, a1)
+2 a 5, 2 a 1, 2 a 16
+5000
+134 - triple tuple with 3 overlaps - negative
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v.varName, a> such that Uses (w, v) and Follows(a, a1) such that Affects(a, a1)
+none
+5000
+135 - 4 tuple
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v.varName, a, a1> such that Uses (w, v) and Uses (pn, v) such that Affects(a, a1)
+2 a 1 6, 2 a 5 5, 2 a 16 16, 2 a 16 18
+5000
+136 - 4 tuple
+assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
+Select <w.stmt#, v.varName, a, a1> such that Uses (w, v) and Next*(a, a1) such that Affects(a, a1)
+17 c 5 5, 17 c 16 18, 17 c 1 6, 15 c 1 6, 2 d 5 5, 15 b 16 16, 15 c 16 16, 2 a 16 16, 2 a 16 18, 15 c 5 5, 15 b 1 6, 2 a 1 6, 2 d 16 16, 15 b 16 18, 2 c 5 5, 15 c 16 18, 2 b 5 5, 2 b 16 18, 15 b 5 5, 2 d 16 18, 2 c 16 16, 2 b 16 16, 17 c 16 16, 2 a 5 5, 2 b 1 6, 2 c 16 18, 2 c 1 6, 2 d 1 6
+5000
