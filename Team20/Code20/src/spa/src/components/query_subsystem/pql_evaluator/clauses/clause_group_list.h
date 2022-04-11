@@ -25,6 +25,7 @@ class ClauseGroupList {
   };
   ClauseGroup no_synonyms_clause_group;
   std::vector<ClauseGroup> connected_synonyms_clause_groups;
+  void UpdateConnectedSynonymGroups();
 };
 
 }
