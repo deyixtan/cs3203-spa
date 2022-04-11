@@ -1,23 +1,19 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_END_OF_STREAM_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_END_OF_STREAM_H_
+#ifndef END_OF_STREAM_H
+#define END_OF_STREAM_H
 
-#include <exception>
-#include <string>
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
-class EndOfStreamException : public std::exception {
+class EndOfStreamException : public Exception {
  private:
-  std::string m_msg;
-
- public:
-  static std::string MESSAGE;
+  String m_msg;
 
  public:
   EndOfStreamException();
-  [[nodiscard]] virtual const char *what() const noexcept override;
+  [[nodiscard]] const char *what() const noexcept override;
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_END_OF_STREAM_H_
+#endif //END_OF_STREAM_H

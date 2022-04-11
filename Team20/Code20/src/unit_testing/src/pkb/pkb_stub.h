@@ -32,6 +32,20 @@
 	}
 */
 
+struct FollowsNode {
+  std::string follower;
+  std::string following;
+  std::unordered_set<std::string> follower_star;
+  std::unordered_set<std::string> following_star;
+};
+
+struct ParentChildNode {
+  std::string parent;
+  std::unordered_set<std::string> child;
+  std::unordered_set<std::string> ance;
+  std::unordered_set<std::string> desc;
+};
+
 std::unordered_set<std::string>
     stmt_list = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
 
@@ -113,6 +127,8 @@ std::unordered_map<std::string, std::unordered_set<std::string>> uses_var_to_stm
         {"mouse", {"4", "6", "8"}},
         {"dragon", {"4", "8"}},
         {"ox", {"7"}},
+        {"dog", {"4", "5", "8", "10", "15"}},
+
     };
 
 std::unordered_set<std::pair<std::string, std::string>, pair_hash> uses_proc_var_pairs =
@@ -168,11 +184,9 @@ std::unordered_set<std::string> all_proc_using = {"main", "foo", "bar", "func"};
 
 /* MODIFY STORE */
 
-std::unordered_map<std::string, std::unordered_set<std::string>> mod_proc_to_var =
+std::unordered_map<StmtType, std::vector<std::pair<std::string, std::string>>> mod_proc_to_var =
     {
-        {"main", {"dog", "pig", "dragon"}},
-        {"foo", {"snake"}},
-        {"func", {"monkey"}}
+        {PROC, {{"main", "dog"}, {"main", "pig"}, {"main", "dragon"}, {"main", "snake"}, {"main", "monkey"}, {"foo", "snake"}, {"foo", "monkey"}, {"func", "monkey"}, {"bar", "monkey"}}},
     };
 
 std::unordered_map<std::string, std::unordered_set<std::string>> mod_var_to_proc =
@@ -223,11 +237,11 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> mod_stmt_var_
     };
 
 std::unordered_set<std::string> all_stmt_mod = {"1", "4", "7", "8", "10", "15"};
-std::unordered_set<std::string> all_proc_mod = {"main", "foo", "func"};
+std::unordered_set<std::string> all_proc_mod = {"main", "foo", "func", "bar"};
 
 /* FOLLOW STORE */
 
-std::unordered_map<std::string, FollowNode> follows_rs =
+std::unordered_map<std::string, FollowsNode> follows_rs =
     {
         {"1", {"0", "2", {}, {"2", "3", "4", "5"}}},
         {"2", {"1", "3", {"1"}, {"3", "4", "5"}}},
@@ -375,7 +389,7 @@ std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_pairs
         {"monkey", "((tiger)+(dog))"}
     };
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> pattern_pairs_synonym =
+std::vector<std::pair<std::string, std::string>> pattern_pairs_synonym =
     {
         {"4", "dog"},
         {"7", "pig"},

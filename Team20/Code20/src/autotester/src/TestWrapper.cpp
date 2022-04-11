@@ -11,37 +11,19 @@ volatile bool AbstractWrapper::GlobalStop = false;
 
 // a default constructor
 TestWrapper::TestWrapper() {
-  std::cout << "TestWrapper::TestWrapper() Start" << std::endl;
-  pkb = new PKB();
-  source_controller = new source::SourceController();
-  query_controller = new QueryController(pkb);
-  std::cout << "TestWrapper::TestWrapper() End" << std::endl;
+  pkb = std::make_shared<pkb::PKB>();
 }
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
-  std::cout << "TestWrapper::parse() Start" << std::endl;
-  std::string simple_source = source_controller->RetrieveFileContent(filename);
-  std::vector<std::shared_ptr<source::SourceToken>> tokens_ptr;
-  source_controller->Tokenize(simple_source, tokens_ptr);
-
-  // // Print tokens
-  // std::vector<SourceToken *>::iterator it;
-  // for (it = tokens_ptr.begin(); it != tokens_ptr.end(); ++it) {
-  //  std::cout << (*it)->GetTypeStr() << " " << (*it)->GetValue() << std::endl;
-  // }
-
-  std::shared_ptr<ProgramNode> ast = source_controller->ParseTokenStream(tokens_ptr);
-  source_controller->PopulatePKB(pkb, ast);
-
-  //std::cout << "RESULT: " << pkb->GetStmt(STMT).size() << std::endl;
-
-  std::cout << "TestWrapper::parse() End" << std::endl;
+  source::TokenStream token_stream;
+  String source = source::SourceController::RetrieveFileContent(filename);
+  source::SourceController::Tokenize(source, token_stream);
+  source::ProgramNodePtr ast = source::SourceController::ParseTokenStream(token_stream);
+  source::SourceController::PopulatePKB(pkb, ast);
 }
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
-  std::cout << "TestWrapper::evaluate() Start" << std::endl;
-  query_controller->ProcessQuery(query, results);
-  std::cout << "TestWrapper::evaluate() End" << std::endl;
+  pql::QueryController::ProcessQuery(query, pkb, results);
 }

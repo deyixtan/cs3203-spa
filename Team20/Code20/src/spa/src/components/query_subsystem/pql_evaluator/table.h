@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <set>
 
 namespace pql {
 
@@ -33,10 +34,14 @@ class Table {
   Records records;
 
   Table();
-  Table(const std::string &synonym, std::unordered_set<std::string> &single_constraint);
+  Table(const std::string &synonym, std::unordered_set<std::string> &single_constraints);
+  Table(const std::string &synonym, std::vector<std::string> &single_constraints);
   Table(const std::string &first_synonym, const std::string &second_synonym,
         std::unordered_set<std::pair<std::string, std::string>, pair_hash> &pair_constraints);
+  Table(const std::string &first_synonym, const std::string &second_synonym,
+        std::vector<std::pair<std::string, std::string>> &pair_constraints);
   void Merge(Table &other_table);
+  void Filter(std::set<std::string> &&synonyms);
   void ToggleFalseClause();
   void ToggleBooleanResult();
   void ToggleSynonymResult();
@@ -52,7 +57,7 @@ class Table {
   std::unordered_set<std::string> GetResult(const std::string &select_synonym);
   std::unordered_set<std::string> GetTupleResult(const std::vector<PqlToken> &tuple,
                                                  const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                                 PKB *pkb);
+                                                 const pkb::PkbPtr &pkb);
   friend std::ostream &operator<<(std::ostream &os, const Table &table);
 
  private:
@@ -64,11 +69,13 @@ class Table {
   std::vector<std::pair<size_t, size_t>> GetCommonAttributeIndexPairs(const Attributes &other_attributes);
   std::vector<size_t> GetOtherAttributeIndices(const Attributes &other_attributes);
   void NaturalJoin(Table &other_table, std::vector<std::pair<size_t, size_t>> &common_attribute_index_pairs);
+  void HashJoin(Table &other_table, std::vector<std::pair<size_t, size_t>> &common_attribute_index_pairs);
+  void NestedLoopJoin(Table &other_table, std::vector<std::pair<size_t, size_t>> &common_attribute_index_pairs);
   void CrossJoin(Table &other_table);
   void UpdateResultType(const Table &other_table);
   static std::string JoinRecordBy(const Record &record, const std::string &delimiter);
   size_t GetAttributeIdxFromElem(PqlToken &elem, const std::unordered_map<std::string, DesignEntityType> &declarations);
-  static std::string ConvertAttrRef(const DesignEntityType &attr_ref, std::string value, PKB *pkb);
+  static std::string ConvertAttrRef(const DesignEntityType &attr_ref, std::string value, const pkb::PkbPtr &pkb);
 };
 
 }

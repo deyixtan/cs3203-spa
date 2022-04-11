@@ -1,31 +1,47 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_CFG_BUILDER_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_CFG_BUILDER_H_
+#ifndef CFG_BUILDER_H
+#define CFG_BUILDER_H
 
-#include <memory>
-#include <string>
-#include <unordered_map>
+#include "components/pkb/pkb_declarations.h"
+#include "components/source_subsystem/source_declarations.h"
 
-class PkbClient;
-class ProgramNode;
-class ProcedureNode;
-class StatementListNode;
-class StatementNode;
-class Cfg;
-class CfgNode;
+namespace source {
 
-class CfgBuilder {
+class CfgBuilder : public std::enable_shared_from_this<CfgBuilder> {
  private:
-  std::shared_ptr<PkbClient> m_pkb_client;
+  pkb::PkbClientPtr m_pkb_client;
+  StringToCfgNodePtrMap m_cfg_map;
+  CfgNodePtr m_curr_cfg_node;
+
+ private:
+  void CfgProcessHandler(CfgNodePtr &curr_proc,
+                         CfgNodeStack &node_stack,
+                         CfgNodeStatementStream &prev_stmts,
+                         CfgNodeSet &visited,
+                         StringToStringSetMap &next_map,
+                         String proc_name);
+  void MultipleStmtsNodeHandler(CfgNodeStatementStream &curr_stmts, StringToStringSetMap &next_map, std::string &max_stmt_no);
+  void NextNodeHandler(CfgNodePtr &desc,
+                       CfgNodeStack &node_stack,
+                       CfgNodeStatementStream &curr_stmts,
+                       CfgNodeSet &visited,
+                       StringToStringSetMap &next_map,
+                       std::string &max_stmt_no);
 
  public:
-  explicit CfgBuilder(std::shared_ptr<PkbClient> m_pkb_client);
-  [[nodiscard]] std::shared_ptr<PkbClient> GetPkbClient();
-  void IterateAstAndPopulatePkb(std::shared_ptr<ProgramNode> node);
-  [[nodiscard]] std::unordered_map<std::string, std::shared_ptr<CfgNode>> Visit(std::shared_ptr<ProgramNode> node);
-  [[nodiscard]] std::shared_ptr<CfgNode> Visit(std::shared_ptr<ProcedureNode> node, std::shared_ptr<CfgNode> cfg_node);
-  [[nodiscard]] std::shared_ptr<CfgNode> Visit(std::shared_ptr<StatementListNode> node,
-                                               std::shared_ptr<CfgNode> cfg_node);
-  [[nodiscard]] std::shared_ptr<CfgNode> Visit(std::shared_ptr<StatementNode> node, std::shared_ptr<CfgNode> cfg_node);
+  explicit CfgBuilder(pkb::PkbClientPtr m_pkb_client);
+  void IterateAst(ProgramNodePtr &program_node);
+  void IterateCfg();
+  void Visit(ProgramNodePtr &program_node);
+  void Visit(ProcedureNodePtr &procedure_node);
+  void Visit(StatementListNodePtr &stmt_list_node);
+  void Visit(ReadStatementNodePtr &read_stmt);
+  void Visit(PrintStatementNodePtr &print_stmt);
+  void Visit(AssignStatementNodePtr &assign_stmt);
+  void Visit(CallStatementNodePtr &call_stmt);
+  void Visit(WhileStatementNodePtr &while_stmt);
+  void Visit(IfStatementNodePtr &if_stmt);
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_ITERATOR_CFG_BUILDER_H_
+}
+
+#endif //CFG_BUILDER_H

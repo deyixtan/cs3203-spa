@@ -41,8 +41,7 @@ DesignEntityType clause_util::GetSynonymDesignEntity(const PqlToken &arg,
 bool clause_util::IsFirstArgProcRelationship(const PqlToken &first_arg,
                                              const std::unordered_map<std::string, DesignEntityType> &declarations) {
   return IsArgSynonym(first_arg) &&
-      (GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::PROCEDURE ||
-          GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::CALL);
+      GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::PROCEDURE;
 }
 
 bool clause_util::IsFirstArgStmtRelationship(const PqlToken &first_arg,
@@ -53,19 +52,8 @@ bool clause_util::IsFirstArgStmtRelationship(const PqlToken &first_arg,
           GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::READ ||
           GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::PRINT ||
           GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::WHILE ||
-          GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::IF);
-}
-
-bool clause_util::IsArgStmtSynonym(const PqlToken &arg,
-                                   const std::unordered_map<std::string, DesignEntityType> &declarations) {
-  return IsArgSynonym(arg) &&
-      (GetSynonymDesignEntity(arg, declarations)==DesignEntityType::STMT ||
-          GetSynonymDesignEntity(arg, declarations)==DesignEntityType::ASSIGN ||
-          GetSynonymDesignEntity(arg, declarations)==DesignEntityType::CALL ||
-          GetSynonymDesignEntity(arg, declarations)==DesignEntityType::READ ||
-          GetSynonymDesignEntity(arg, declarations)==DesignEntityType::PRINT ||
-          GetSynonymDesignEntity(arg, declarations)==DesignEntityType::WHILE ||
-          GetSynonymDesignEntity(arg, declarations)==DesignEntityType::IF);
+          GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::IF ||
+          GetSynonymDesignEntity(first_arg, declarations)==DesignEntityType::CALL);
 }
 
 StmtType clause_util::GetStmtType(const DesignEntityType &design_entity) {
@@ -105,3 +93,20 @@ StmtType clause_util::GetStmtType(const DesignEntityType &design_entity) {
     }
   }
 }
+
+pql::Table clause_util::ConstructEmptyTable(bool is_false_clause) {
+  pql::Table table;
+  if (is_false_clause) {
+    table.ToggleFalseClause();
+  }
+  return table;
+}
+
+pql::Table clause_util::ConstructEmptyTable() {
+    pql::Table table;
+    table.ToggleFalseClause();
+    return table;
+}
+
+
+

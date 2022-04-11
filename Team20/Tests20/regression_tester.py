@@ -34,39 +34,55 @@ def analyse():
 
     correct_list = []
     wrong_list = []
+    timeout_list = []
     for query in queries:
         query_id = query[0].text
-        is_exception_tag = query[2].tag
+        tag_type = query[2].tag
 
-        if is_exception_tag == "exception":
+        # check for errors
+        if tag_type == "exception":
             wrong_list.append(query_id)
             continue
+        elif tag_type == "timeout":
+            timeout_list.append(query_id)
+            continue
+
         is_result_tag = query[5].tag
         if is_result_tag == "failed":
             wrong_list.append(query_id)
             continue
         correct_list.append(query_id)
 
-    return correct_list, wrong_list
+    return correct_list, wrong_list, timeout_list
 
 
 def execute_tests(autotester_path, test_files):
     total_correct_count = 0
     total_wrong_count = 0
+    total_timeout_count = 0
 
     for source_path, query_path in test_files:
         subprocess.run([autotester_path, source_path, query_path, "out.xml"], stdout=subprocess.DEVNULL)
-        correct_list, wrong_list = analyse()
+        
+        try:
+            correct_list, wrong_list, timeout_list = analyse()
+        except ET.ParseError:
+            raise RuntimeError(f"[{source_path[source_path.rfind('/') + 1:-11]}] Unable to analyse test results.")
+
         correct_count = len(correct_list)
         wrong_count = len(wrong_list)
-        total = correct_count + wrong_count
+        timeout_count = len(timeout_list)
+        total = correct_count + wrong_count + timeout_count
         total_correct_count += correct_count
         total_wrong_count += wrong_count
+        total_timeout_count += timeout_count
         print(f"[{source_path[source_path.rfind('/') + 1:-11]}] {correct_count}/{total} test cases.")
         if wrong_count > 0:
             print(f"\tWrong cases: {wrong_list}")
+        if timeout_count > 0:
+            print(f"\tTimeout cases: {timeout_list}")
 
-    return total_correct_count, total_wrong_count
+    return total_correct_count, total_wrong_count, total_timeout_count
 
 
 if __name__ == "__main__":
@@ -74,13 +90,17 @@ if __name__ == "__main__":
         print("Environment not set up properly.")
         sys.exit(1)
 
-    test_files = find_tests()
-    correct_count, wrong_count = execute_tests(sys.argv[1], test_files)
-    total = correct_count + wrong_count
+    try:
+        test_files = find_tests()
+        correct_count, wrong_count, timeout_count = execute_tests(sys.argv[1], test_files)
+        total = correct_count + wrong_count + timeout_count
 
-    print(f"Correct test cases: {correct_count}/{total}.")
-    print(f"Wrong test cases: {wrong_count}/{total}.")
+        print(f"Correct test cases: {correct_count}/{total}.")
+        print(f"Wrong test cases: {wrong_count + timeout_count}/{total}.")
 
-    if (wrong_count > 0):
+        if (wrong_count > 0) or (timeout_count > 0):
+            sys.exit(1)
+        sys.exit(0)
+    except Exception as e:
+        print(e)
         sys.exit(1)
-    sys.exit(0)

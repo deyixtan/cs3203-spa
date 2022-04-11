@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "components/source_subsystem/lexer/source_lexer.h"
+#include "components/source_subsystem/types/source_token/source_token.h"
 #include "components/source_subsystem/exceptions/unexpected_token.h"
 
 using namespace source;
@@ -26,6 +27,7 @@ SourceToken source_semicolon_token = SourceToken(TokenType::SEMI_COLON, "");
 SourceToken source_subtract_token = SourceToken(TokenType::SUBTRACTION, "");
 SourceToken source_lesser_token = SourceToken(TokenType::IS_LESSER, "");
 SourceToken source_equal_token = SourceToken(TokenType::EQUAL, "");
+SourceToken source_call_token = SourceToken(TokenType::CALL, "");
 
 TEST_CASE("Test empty source") {
   SourceLexer lexer = SourceLexer("");
@@ -395,6 +397,48 @@ TEST_CASE("Test simple assign statement") {
   }
 }
 
+TEST_CASE("Test simple call statement") {
+  SourceLexer lexer = SourceLexer("call callee;");
+
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
+  lexer.Tokenize(tokens_ptr);
+
+  std::vector<std::shared_ptr<SourceToken>> expected_tokens_ptr;
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::CALL, ""));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::NAME, "callee"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::SEMI_COLON, ""));
+
+  REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
+
+  for (int i = 0; i < tokens_ptr.size(); i++) {
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
+    REQUIRE(token->GetValue() == expected_token->GetValue());
+    REQUIRE(token->GetType() == expected_token->GetType());
+  }
+}
+
+TEST_CASE("Test simple invalid call statement") {
+  SourceLexer lexer = SourceLexer("call 1;");
+
+  std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
+  lexer.Tokenize(tokens_ptr);
+
+  std::vector<std::shared_ptr<SourceToken>> expected_tokens_ptr;
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::NAME, "call"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::INTEGER, "1"));
+  expected_tokens_ptr.push_back(std::make_shared<SourceToken>(TokenType::SEMI_COLON, ""));
+
+  REQUIRE(tokens_ptr.size() == expected_tokens_ptr.size());
+
+  for (int i = 0; i < tokens_ptr.size(); i++) {
+    std::shared_ptr<SourceToken> token = tokens_ptr.at(i);
+    std::shared_ptr<SourceToken> expected_token = expected_tokens_ptr.at(i);
+    REQUIRE(token->GetValue() == expected_token->GetValue());
+    REQUIRE(token->GetType() == expected_token->GetType());
+  }
+}
+
 TEST_CASE("Test simple procedure (before stmt_list") {
   SourceLexer lexer = SourceLexer("procedure main {");
 
@@ -519,7 +563,7 @@ TEST_CASE("Test source lexer with if-else") {
 }
 
 TEST_CASE("Test source lexer with while loop") {
-  std::string program_source = "procedure p { x = 2; while(x < 5) { y = z - 2; } }";
+  std::string program_source = "procedure p { x = 2; while(x < 5) { y = z - 2; call p; } }";
   SourceLexer lexer = SourceLexer(program_source);
   std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
   lexer.Tokenize(tokens_ptr);
@@ -543,6 +587,9 @@ TEST_CASE("Test source lexer with while loop") {
   expected_tokens.push_back(z_val_token);
   expected_tokens.push_back(source_subtract_token);
   expected_tokens.push_back(digit_token);
+  expected_tokens.push_back(source_semicolon_token);
+  expected_tokens.push_back(source_call_token);
+  expected_tokens.push_back(p_val_token);
   expected_tokens.push_back(source_semicolon_token);
   expected_tokens.push_back(close_brace_token);
   expected_tokens.push_back(close_brace_token);

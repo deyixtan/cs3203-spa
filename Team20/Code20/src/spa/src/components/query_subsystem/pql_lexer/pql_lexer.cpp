@@ -6,8 +6,59 @@
 #include <stack>
 #include <sstream>
 #include "../utils.h"
+#include "../exceptions/unrecognised_token.h"
+
+using namespace pql;
+
 // public
-PqlLexer::PqlLexer(std::string query) { this->query = query; }
+PqlLexer::PqlLexer(std::string query) : query(query) {
+  string_token_map = {
+      {";", PqlTokenType::SEMICOLON},
+      {",", PqlTokenType::COMMA},
+      {"(", PqlTokenType::OPEN_PARENTHESIS},
+      {")", PqlTokenType::CLOSED_PARENTHESIS},
+      {"_", PqlTokenType::UNDERSCORE},
+      {"+", PqlTokenType::PLUS},
+      {"-", PqlTokenType::MINUS},
+      {"*", PqlTokenType::MULTIPLY},
+      {"/", PqlTokenType::DIVIDE},
+      {"=", PqlTokenType::EQUAL},
+      {"\"", PqlTokenType::DOUBLE_QUOTE},
+
+      {"stmt", PqlTokenType::STMT},
+      {"read", PqlTokenType::READ},
+      {"print", PqlTokenType::PRINT},
+      {"call", PqlTokenType::CALL},
+      {"while", PqlTokenType::WHILE},
+      {"if", PqlTokenType::IF},
+      {"else", PqlTokenType::ELSE},
+      {"assign", PqlTokenType::ASSIGN},
+      {"variable", PqlTokenType::VARIABLE},
+      {"constant", PqlTokenType::CONSTANT},
+      {"procedure", PqlTokenType::PROCEDURE},
+
+      {"Select", PqlTokenType::SELECT},
+      {"such", PqlTokenType::SUCH},
+      {"that", PqlTokenType::THAT},
+      {"with", PqlTokenType::WITH},
+      {"and", PqlTokenType::AND},
+      {"BOOLEAN", PqlTokenType::BOOLEAN},
+
+      {"Follows", PqlTokenType::FOLLOWS},
+      {"Follows*", PqlTokenType::FOLLOWS_T},
+      {"Parent", PqlTokenType::PARENT},
+      {"Parent*", PqlTokenType::PARENT_T},
+      {"Uses", PqlTokenType::USES},
+      {"Modifies", PqlTokenType::MODIFIES},
+      {"Next", PqlTokenType::NEXT},
+      {"Next*", PqlTokenType::NEXT_T},
+      {"Calls", PqlTokenType::CALLS},
+      {"Calls*", PqlTokenType::CALLS_T},
+      {"Affects", PqlTokenType::AFFECTS},
+      {"Affects*", PqlTokenType::AFFECTS_T},
+      {"pattern", PqlTokenType::PATTERN}
+  };
+}
 
 std::vector<PqlToken> PqlLexer::Lex() {
   std::vector<std::string> raw_tokens = Split(query);
@@ -40,7 +91,7 @@ std::vector<PqlToken> PqlLexer::Lex() {
       std::string no_space_token = Utils::RemoveSpace(token);
       tokens.push_back(PqlToken{PqlTokenType::SUB_EXPRESSION, Utils::TrimUnderscoreAndQuotes(no_space_token)});
     } else {
-      throw std::runtime_error("ERROR: Unrecognised token! \n");
+      throw UnrecognisedTokenException();
     }
   }
   return tokens;
@@ -251,6 +302,9 @@ bool PqlLexer::IsValidString(const std::string &s) {
         }
       }
     } else {
+      if(!IsValidSynonym(str)) {
+        return false;
+      }
       if (str == "(") {
         stack.push("(");
         prev = "(";
@@ -293,6 +347,9 @@ bool PqlLexer::IsValidString(const std::string &s) {
       }
     }
   }
+  if(stack.size() > 0) {
+    return false;
+  }
   return true;
 }
 
@@ -327,7 +384,9 @@ std::vector<std::string> PqlLexer::Split(std::string s) {
         break;
       case '_':is_subExpr = !is_subExpr;
         break;
-      case '<':is_tuple = !is_tuple;
+      case '<':
+        is_tuple = !is_tuple;
+        char_arr.push_back(delimiter);
         break;
       case '>':is_tuple = !is_tuple;
         break;

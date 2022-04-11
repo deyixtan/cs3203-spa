@@ -1,0 +1,410 @@
+1 - All Affects (First arg)
+stmt s1, s2;
+Select s1 such that Affects*(s1, s2)
+23,12,3,16,7,10,9,19,21,25,26,31,40,43,44,48
+5000
+2 - All Affects (Second arg)
+stmt s1, s2;
+Select s2 such that Affects*(s1, s2)
+6,31,17,16,7,30,25,28,10,12,21,43,45,39
+5000
+3 - All Affects (tuple)
+stmt s1, s2;
+Select <s1, s2> such that Affects*(s1, s2)
+3 6,48 39,43 45,23 25,3 7,23 30,9 10,12 30,12 16,12 17,23 28,23 31,44 45,7 6,19 28,10 12,7 7,16 17,16 30,9 12,9 30,9 16,9 17,10 30,10 16,10 17,19 21,31 30,19 25,21 25,21 28,25 28,26 30,31 31,40 43,40 45
+5000
+4 - Double nested if stmt
+stmt s1, s2; procedure p;
+Select p such that Affects*(23, 28)
+city,europe,country,singapore
+5000
+5 - While loop affecting itself
+stmt s1, s2; procedure p;
+Select p such that Affects*(40, 40)
+none
+5000
+6 - While loop affecting itself
+stmt s1, s2; procedure p;
+Select p such that Affects*(31, 31)
+city,europe,country,singapore
+5000
+7 - Basic affects
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(s1, 30)
+23,12,16,10,9,26,31
+5000
+8 - Basic affects
+stmt s1; procedure p; assign a; while w;
+Select p such that Affects*(23, 31)
+city,europe,country,singapore
+5000
+9 - Basic affects while loop
+stmt s1; procedure p; assign a; while w;
+Select p such that Affects*(7, 6)
+city,europe,country,singapore
+5000
+10 - Stmt affecting itself in while loop
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(s1, s1)
+7,31
+5000
+11 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(19, a)
+21,25,28
+5000
+12 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(3, a)
+6,7
+5000
+13 - Basic affects* one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(9, a)
+10,12,16,30,17
+5000
+14 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(16, a)
+17,30
+5000
+15 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(25, a)
+28
+5000
+16 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(26, a)
+30
+5000
+17 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(44, a)
+45
+5000
+18 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(43, a)
+45
+5000
+19 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(7, a)
+6,7
+5000
+20 - Basic affects* one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select s2 such that Affects*(23, s2)
+25,28,30,31
+5000
+21 - Basic affects* one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(a, 30)
+23,12,16,10,9,26,31
+5000
+22 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(a, 39)
+48
+5000
+23 - Basic affects* one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(a, 25)
+23,19,21
+5000
+24 - Basic affects* one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(a, 28)
+23,19,21,25
+5000
+25 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(a, 40)
+none
+5000
+26 - Basic affects* one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(a, 12)
+10,9
+5000
+27 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(a, 6)
+3,7
+5000
+28 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(a, 17)
+12,16,10,9
+5000
+29 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(a, 10)
+9
+5000
+30 - Basic affects one synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select a such that Affects*(a, 7)
+3,7
+5000
+31 - Basic affects* no synonym
+stmt s1, s2; procedure p; assign a; while w; if ifs;
+Select ifs such that Affects*(21, 28)
+41,27,24,11,1
+5000
+32 - Basic affects* no synonym
+stmt s1, s2; procedure p; assign a; while w; if ifs;
+Select ifs such that Affects*(19, 21)
+41,27,24,11,1
+5000
+33 - Basic affects* no synonym
+stmt s1, s2; procedure p; assign a; while w; if ifs;
+Select ifs such that Affects*(21, 25)
+41,27,24,11,1
+5000
+34 - Basic affects* no synonym
+stmt s1, s2; procedure p; assign a; while w; if ifs;
+Select ifs such that Affects*(26, 30)
+41,27,24,11,1
+5000
+35 - Basic affects* no synonym
+stmt s1, s2; procedure p; assign a; while w; if ifs;
+Select ifs such that Affects*(48, 39)
+41,27,24,11,1
+5000
+36 - Basic affects* no synonym
+stmt s1, s2; procedure p; assign a; while w;
+Select w such that Affects*(9, 12)
+38,29,14,4
+5000
+37 - No affects for read
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(8,9)
+none
+5000
+38 - No affects for read
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(13,37)
+none
+5000
+39 - No affects after if-else
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(40, 45)
+49,27,52,46,32,5,1,36,24,51,48,47,45,44,43,42,40,39,37,11,28,53,26,50,25,23,22,18,54,21,20,19,9,29,10,30,7,16,31,6,17,34,3,12,15,4,33,8,13,2,35,41,38,14
+5000
+40 - No affects for inter-procedure
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(52, 47)
+none
+5000
+41 - No affects for print
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(3, 5)
+none
+5000
+42 - Modifies in between
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(45, 47)
+none
+5000
+43 - Modifies in between
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(43, 48)
+none
+5000
+44 - Modifies in between
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(44, 48)
+none
+5000
+45 - No Affects one synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(1, s1)
+none
+5000
+46 - No Affects one synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(2, s1)
+none
+5000
+47 - No Affects one synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(s1, 4)
+none
+5000
+48 - No Affects one synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(s1, 50)
+none
+5000
+49 - No Affects one synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(s1, 52)
+none
+5000
+50 - No Affects one synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(s1, 37)
+none
+5000
+51 - No Affects one synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(s1, 19)
+none
+5000
+52 - No Affects one synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(s1, 23)
+none
+5000
+53 - No Affects one synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(s1, 42)
+none
+5000
+54 - No Affects one synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(s1, 34)
+none
+5000
+55 - No Affects no synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(49, 50)
+none
+5000
+56 - No Affects no synonym
+stmt s1; procedure p; assign a; while w;
+Select s1 such that Affects*(49, 52)
+none
+5000
+57 - Assign statements affecting itself
+stmt s1; procedure p; assign a; while w;
+Select a such that Affects*(a, a)
+7,31
+5000
+58 - Synonym and wildcard
+stmt s1; procedure p; assign a; while w;
+Select p such that Affects*(_, a)
+city,europe,country,singapore
+5000
+59 - Synonym and wildcard
+stmt s1; procedure p; assign a; while w;
+Select p such that Affects*(_, s1)
+city,europe,country,singapore
+5000
+60 - Synonym and wildcard
+stmt s1; procedure p; assign a; while w;
+Select p such that Affects*(_, 6)
+city,europe,country,singapore
+5000
+61 - Synonym and wildcard
+stmt s1; procedure p; assign a; while w;
+Select p such that Affects*(9, _)
+city,europe,country,singapore
+5000
+62 - Synonym and wildcard
+stmt s1; procedure p; assign a; while w;
+Select p such that Affects*(s1, _)
+city,europe,country,singapore
+5000
+63 - Wildcard and wildcard
+stmt s1; procedure p; assign a; while w;
+Select p such that Affects*(_, _)
+city,europe,country,singapore
+5000
+64 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w;
+Select p such that Affects*(a, w)
+none
+5000
+65 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; if ifs;
+Select p such that Affects*(a, ifs)
+none
+5000
+66 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl;
+Select p such that Affects*(a, cl)
+none
+5000
+67 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl;
+Select p such that Affects*(a, p)
+none
+5000
+68 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(a, pn)
+none
+5000
+69 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(a, rd)
+none
+5000
+70 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(rd, s1)
+none
+5000
+71 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(rd, a)
+none
+5000
+72 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(1, pn)
+none
+5000
+73 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(3, w)
+none
+5000
+74 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(3, rd)
+none
+5000
+75 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(rd, 5)
+none
+5000
+76 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(7, cl)
+none
+5000
+77 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(cl, 10)
+none
+5000
+78 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(cl, _)
+none
+5000
+79 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(rd, _)
+none
+5000
+80 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; read rd;
+Select p such that Affects*(_, pn)
+none
+5000
+81 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; if ifs;
+Select p such that Affects*(_, ifs)
+none
+5000
+82 - Invalid stmt refs
+stmt s1; procedure p; assign a; while w; call cl; print pn; if ifs;
+Select p such that Affects*(_, w)
+none
+5000
