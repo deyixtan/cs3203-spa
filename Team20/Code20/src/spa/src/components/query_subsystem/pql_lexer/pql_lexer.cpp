@@ -302,6 +302,9 @@ bool PqlLexer::IsValidString(const std::string &s) {
         }
       }
     } else {
+      if(!IsValidSynonym(str)) {
+        return false;
+      }
       if (str == "(") {
         stack.push("(");
         prev = "(";
