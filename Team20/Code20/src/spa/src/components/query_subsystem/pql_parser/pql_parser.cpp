@@ -135,6 +135,26 @@ PqlParser::PqlParser(std::vector<PqlToken> tokens) : tokens(tokens), cursor(0), 
       {PqlTokenType::AFFECTS, std::make_pair(stmt_ref, stmt_ref)},
       {PqlTokenType::AFFECTS_T, std::make_pair(stmt_ref, stmt_ref)}
   };
+
+  token_design_map = {
+      {PqlTokenType::STMT, DesignEntityType::STMT},
+      {PqlTokenType::ASSIGN, DesignEntityType::ASSIGN},
+      {PqlTokenType::PRINT, DesignEntityType::PRINT},
+      {PqlTokenType::PROCEDURE, DesignEntityType::PROCEDURE},
+      {PqlTokenType::READ, DesignEntityType::READ},
+      {PqlTokenType::CALL, DesignEntityType::CALL},
+      {PqlTokenType::WHILE, DesignEntityType::WHILE},
+      {PqlTokenType::IF, DesignEntityType::IF},
+      {PqlTokenType::VARIABLE, DesignEntityType::VARIABLE},
+      {PqlTokenType::CONSTANT, DesignEntityType::CONSTANT},
+  };
+
+  token_result_map = {
+      {PqlTokenType::SYNONYM, ResultClauseType::SYNONYM},
+      {PqlTokenType::ATTRIBUTE, ResultClauseType::ATTRIBUTE},
+      {PqlTokenType::BOOLEAN, ResultClauseType::BOOLEAN},
+      {PqlTokenType::TUPLE, ResultClauseType::TUPLE},
+  };
 }
 
 std::string BOOLEAN_SYNONYM_VALUE = "BOOLEAN";
@@ -247,6 +267,10 @@ void PqlParser::ParseSelectClause() {
 
 void PqlParser::ParseResultClause() {
   PqlToken result_clause_token = ValidateToken(result_cl);
+  std::unordered_map<std::string, DesignEntityType> declarations = pq.GetDeclaration().GetDeclarations();
+  if (declarations.count(result_clause_token.value)) {
+    result_clause_token.type = PqlTokenType::SYNONYM;
+  }
   ResultClause result_clause = ResultClause(token_result_map[result_clause_token.type]);
   if (result_clause_token.type == PqlTokenType::TUPLE) {
     ParseTupleResultClause(result_clause, result_clause_token);
