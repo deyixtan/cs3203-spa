@@ -1,13 +1,16 @@
-#ifndef STATEMENT_STORE_H_
-#define STATEMENT_STORE_H_
+#ifndef STMT_VAR_STORE_H
+#define STMT_VAR_STORE_H
 
+#include "components/pkb/pkb_declarations.h"
 #include "store.h"
+
+namespace pkb {
 
 class StmtVarStore : public Store {
  private:
   IDENT_SET_MAP stmt_var_map;
-  std::unordered_map<std::string, std::unordered_map<StmtType, std::unordered_set<std::string>>> var_stmt_map;
-  std::unordered_map<StmtType, std::unordered_set<std::pair<std::string, std::string>, pair_hash>> type_pair_map;
+  NESTED_VAR_STMT_MAP var_stmt_map;
+  IDENT_PAIR_VECTOR_MAP type_pair_map;
   IDENT_SET all_stmt;
   IDENT_SET all_proc;
 
@@ -19,9 +22,11 @@ class StmtVarStore : public Store {
   [[nodiscard]] bool IsStmtVarValid(IDENT_PAIR const &pair);
   [[nodiscard]] IDENT_SET GetVarByStmt(IDENT const &stmt);
   [[nodiscard]] IDENT_SET GetStmtByVar(StmtType type, IDENT const &var);
-  [[nodiscard]] IDENT_PAIR_SET GetPairByType(StmtType type);
   [[nodiscard]] IDENT_SET GetAllStmt();
   [[nodiscard]] IDENT_SET GetAllProc();
+  [[nodiscard]] IDENT_PAIR_VECTOR GetPairByType(StmtType type);
 };
 
-#endif //STATEMENT_STORE_H_
+}
+
+#endif //STMT_VAR_STORE_H

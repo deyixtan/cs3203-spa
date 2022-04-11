@@ -1,12 +1,28 @@
 #include "call_store.h"
+#include "components/pkb/pkb_relationship.h"
+
+namespace pkb {
 
 CallStore::CallStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                      std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
     StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
 
-void CallStore::AddCallerHelper(std::string const &caller, std::string const &callee) {
-  AddUpperLower(CALLS, caller, callee);
-  AddUpperLowerStar(CALLS, caller, callee, std::vector<std::string>());
+void CallStore::AddCalls(std::string const &caller, std::string const &callee) {
+  ExhaustiveAddAllStmt(PROC, caller, PROC, callee, false);
+
+  ExhaustiveAddAllStmt(PROC, caller, PROC, callee, true);
+  //NESTED_STMT_STMT_MAP_PTR pair_map = std::make_shared<NESTED_STMT_STMT_MAP>(star_type_pair_map);
+
+  if (IsMapContains(PROC, PROC, &star_type_pair_map) == 1) {
+    for (auto &pair : star_type_pair_map.at(PROC).at(PROC).GetPairVector()) {
+      if (caller == pair.second) {
+        ExhaustiveAddAllStmt(PROC, pair.first, PROC, callee, true);
+      }
+      if (callee == pair.first) {
+        ExhaustiveAddAllStmt(PROC, caller, PROC, pair.second, true);
+      }
+    }
+  }
 }
 
 bool CallStore::IsCallsPairValid(IDENT_PAIR const &pair) {
@@ -32,26 +48,20 @@ void CallStore::AddCallStmtMap(IDENT proc, IDENT stmt) {
   }
 }
 
-IDENT_SET CallStore::GetCallersOf(IDENT const &proc){
+IDENT_SET CallStore::GetCallersOf(IDENT const &proc) {
   return GetUpperSetOf(CALLS, PROC, proc);
 }
 
 IDENT_SET CallStore::GetCalleesOf(IDENT const &proc) {
-  return GetLowerSetOf(CALLS, PROC, proc);
+  return GetLowerSetOf(PROC, proc);
 }
 
 IDENT_SET CallStore::GetCallersStarOf(IDENT const &proc) {
-  return GetUpperStarOf(CALLS, PROC, proc);
+  return GetUpperStarOf(PROC, proc);
 }
 
 IDENT_SET CallStore::GetCalleesStarOf(IDENT const &proc) {
-  return GetLowerStarOf(CALLS, PROC, proc);
+  return GetLowerStarOf(PROC, proc);
 }
 
-IDENT_PAIR_SET CallStore::GetAllCalls() {
-  return GetAllPairs();
-}
-
-IDENT_PAIR_SET CallStore::GetAllCallsStar() {
-  return GetAllStarPairs();
 }

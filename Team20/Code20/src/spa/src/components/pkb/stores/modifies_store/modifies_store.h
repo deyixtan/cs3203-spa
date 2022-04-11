@@ -1,7 +1,10 @@
 #ifndef MODIFY_STORE_H
 #define MODIFY_STORE_H
 
+#include "components/pkb/pkb_declarations.h"
 #include "components/pkb/stores/stmt_var_store.h"
+
+namespace pkb {
 
 // proxy class
 class ModifiesStore : public StmtVarStore {
@@ -12,7 +15,9 @@ class ModifiesStore : public StmtVarStore {
   [[nodiscard]] IDENT_SET GetStmtModByVar(StmtType type, IDENT const &var);
   [[nodiscard]] IDENT_SET GetAllStmtModify();
   [[nodiscard]] IDENT_SET GetAllProcModify();
-  [[nodiscard]] IDENT_PAIR_SET GetAllModStmt(StmtType type);
+  [[nodiscard]] IDENT_PAIR_VECTOR GetAllModStmt(StmtType type);
 };
+
+}
 
 #endif //MODIFY_STORE_H

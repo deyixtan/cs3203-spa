@@ -1,15 +1,20 @@
 #include "follows_store.h"
+#include "components/pkb/pkb_relationship.h"
+
+namespace pkb {
 
 FollowsStore::FollowsStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                            std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
     StmtStmtStore(move(stmt_vector), move(stmt_type)) {}
 
 void FollowsStore::AddFollow(IDENT const &follower, IDENT const &following) {
-  AddUpperLower(FOLLOWS, follower, following);
+  //AddUpperLower(FOLLOWS, follower, following);
+  ExhaustiveAddAllStmt(m_stmt_type->at(follower), follower, m_stmt_type->at(following), following, false);
 }
 
 void FollowsStore::AddFollowStar(IDENT const &follower, IDENT const &following) {
-  AddUpperLowerStar(FOLLOWS, follower, following, std::vector<std::string>());
+  //AddUpperLowerStar(FOLLOWS, follower, following, std::vector<std::string>());
+  ExhaustiveAddAllStmt(m_stmt_type->at(follower), follower, m_stmt_type->at(following), following, true);
 }
 
 bool FollowsStore::IsFollowsPairValid(IDENT_PAIR const &pair) {
@@ -29,25 +34,19 @@ IDENT FollowsStore::GetFollowingOf(StmtType type, IDENT const &stmt) {
 }
 
 IDENT_SET FollowsStore::GetFollowerStarOf(StmtType type, IDENT const &stmt) {
-  return GetUpperStarOf(FOLLOWS, type, stmt);
+  return GetUpperStarOf(type, stmt);
 }
 
 IDENT_SET FollowsStore::GetFollowingStarOf(StmtType type, IDENT const &stmt) {
-  return GetLowerStarOf(FOLLOWS, type, stmt);
+  return GetLowerStarOf(type, stmt);
 }
 
-IDENT_PAIR_SET FollowsStore::GetFollowPairs() {
-  return GetAllPairs();
-}
-
-IDENT_PAIR_SET FollowsStore::GetFollowStarPairs() {
-  return GetAllStarPairs();
-}
-
-IDENT_PAIR_SET FollowsStore::GetAllFollowStmt(StmtType type1, StmtType type2) {
+IDENT_PAIR_VECTOR FollowsStore::GetAllFollowStmt(StmtType type1, StmtType type2) {
   return GetPairByType(type1, type2);
 }
 
-IDENT_PAIR_SET FollowsStore::GetAllFollowStarStmt(StmtType type1, StmtType type2) {
+IDENT_PAIR_VECTOR FollowsStore::GetAllFollowStarStmt(StmtType type1, StmtType type2) {
   return GetStarPairByType(type1, type2);
+}
+
 }

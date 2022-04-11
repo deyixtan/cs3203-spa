@@ -1,10 +1,12 @@
 #include "stmt_var_store.h"
 
+namespace pkb {
+
 StmtVarStore::StmtVarStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                            std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) : Store(
     move(stmt_vector), move(stmt_type)) {}
 
-void StmtVarStore::AddStmtVar(std::string stmt, std::string var) {
+void StmtVarStore::AddStmtVar(IDENT stmt, IDENT var) {
   StmtType type;
 
   if (isalpha(stmt.at(0))) {
@@ -23,16 +25,16 @@ void StmtVarStore::AddStmtVar(std::string stmt, std::string var) {
   AddStmtVarHelper(type, stmt, var);
 }
 
-void StmtVarStore::AddStmtVarHelper(StmtType type, std::string stmt, std::string var) {
+void StmtVarStore::AddStmtVarHelper(StmtType type, IDENT stmt, IDENT var) {
   if (!stmt_var_map.emplace(stmt, std::unordered_set<std::string>{var}).second) {
     stmt_var_map.at(stmt).emplace(var);
   }
 
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> set = {};
+  IDENT_PAIR_VECTOR set = {};
   if (type_pair_map.find(type) != type_pair_map.end()) {
-    type_pair_map.at(type).emplace(std::pair<std::string, std::string>(stmt, var));
+    type_pair_map.at(type).push_back({stmt, var});
   } else {
-    set.insert(std::pair<std::string, std::string>(stmt, var));
+    set.push_back({stmt, var});
     type_pair_map.insert({type, set});
   }
 
@@ -48,7 +50,7 @@ void StmtVarStore::AddStmtVarHelper(StmtType type, std::string stmt, std::string
   }
 }
 
-bool StmtVarStore::IsStmtVarValid(std::pair<std::string, std::string> const &pair) {
+bool StmtVarStore::IsStmtVarValid(IDENT_PAIR const &pair) {
   if (stmt_var_map.find(pair.first) != stmt_var_map.end()) {
     if (stmt_var_map.at(pair.first).find(pair.second) != stmt_var_map.at(pair.first).end()) {
       return true;
@@ -57,16 +59,14 @@ bool StmtVarStore::IsStmtVarValid(std::pair<std::string, std::string> const &pai
   return false;
 }
 
-std::unordered_set<std::string> StmtVarStore::GetVarByStmt(std::string const &stmt) {
+std::unordered_set<std::string> StmtVarStore::GetVarByStmt(IDENT const &stmt) {
   if (stmt_var_map.find(stmt) != stmt_var_map.end()) {
     return stmt_var_map.at(stmt);
   }
   return {};
 }
 
-std::unordered_set<std::string> StmtVarStore::GetStmtByVar(StmtType type, std::string const &var) {
-  bool is_present = false;
-
+std::unordered_set<std::string> StmtVarStore::GetStmtByVar(StmtType type, IDENT const &var) {
   if (var_stmt_map.find(var) != var_stmt_map.end()) {
     if (var_stmt_map.at(var).find(type) != var_stmt_map.at(var).end()) {
       return var_stmt_map.at(var).at(type);
@@ -76,7 +76,7 @@ std::unordered_set<std::string> StmtVarStore::GetStmtByVar(StmtType type, std::s
   return {};
 }
 
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> StmtVarStore::GetPairByType(StmtType type) {
+IDENT_PAIR_VECTOR StmtVarStore::GetPairByType(StmtType type) {
   if (type_pair_map.find(type) != type_pair_map.end()) {
     return type_pair_map.at(type);
   }
@@ -89,4 +89,6 @@ std::unordered_set<std::string> StmtVarStore::GetAllStmt() {
 
 std::unordered_set<std::string> StmtVarStore::GetAllProc() {
   return all_proc;
+}
+
 }

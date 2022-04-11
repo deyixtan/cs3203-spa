@@ -1,6 +1,7 @@
 #include "table.h"
 #include "clause_util.h"
 
+#include <map>
 #include <initializer_list>
 
 namespace pql {
@@ -10,25 +11,53 @@ using namespace clause_util;
 Table::Table() : attributes({}), records({}) {}
 
 Table::Table(const std::string &synonym, std::unordered_set<std::string> &single_constraints) {
-  attributes.emplace_back(synonym);
+  if (single_constraints.empty()) {
+    ToggleFalseClause();
+  } else {
+    attributes.emplace_back(synonym);
+  }
   for (const auto &single_constraint : single_constraints) {
     records.emplace_back(std::initializer_list<std::string>{single_constraint});
   }
+}
+
+Table::Table(const std::string &synonym, std::vector<std::string> &single_constraints) {
   if (single_constraints.empty()) {
     ToggleFalseClause();
+  } else {
+    attributes.emplace_back(synonym);
+  }
+  for (const auto &single_constraint : single_constraints) {
+    records.emplace_back(std::initializer_list<std::string>{single_constraint});
   }
 }
 
 Table::Table(const std::string &first_synonym,
              const std::string &second_synonym,
              std::unordered_set<std::pair<std::string, std::string>, pair_hash> &pair_constraints) {
-  attributes.emplace_back(first_synonym);
-  attributes.emplace_back(second_synonym);
+  if (pair_constraints.empty()) {
+    ToggleFalseClause();
+  } else {
+    attributes.emplace_back(first_synonym);
+    attributes.emplace_back(second_synonym);
+  }
   for (const auto &pair_constraint : pair_constraints) {
     records.emplace_back(std::initializer_list<std::string>{pair_constraint.first, pair_constraint.second});
   }
+
+}
+
+Table::Table(const std::string &first_synonym,
+             const std::string &second_synonym,
+             std::vector<std::pair<std::string, std::string>> &pair_constraints) {
   if (pair_constraints.empty()) {
     ToggleFalseClause();
+  } else {
+    attributes.emplace_back(first_synonym);
+    attributes.emplace_back(second_synonym);
+  }
+  for (const auto &pair_constraint : pair_constraints) {
+    records.emplace_back(std::initializer_list<std::string>{pair_constraint.first, pair_constraint.second});
   }
 }
 
@@ -59,14 +88,38 @@ void Table::Merge(Table &other_table) {
     // if merging two tables with attributes causes empty records
     // there are no possible values so we emulate encountering false clause
     ToggleFalseClause();
+    attributes.clear();
   }
+}
+
+void Table::Filter(std::set<std::string> &&synonyms) {
+  std::vector<size_t> indices;
+  Attributes new_attributes;
+  for (size_t i = 0; i < attributes.size(); ++i) {
+    if (synonyms.find(attributes.at(i))!=synonyms.end()) {
+      indices.emplace_back(i);
+      new_attributes.emplace_back(attributes.at(i));
+    }
+  }
+
+  Records new_records;
+  for (const auto &record : records) {
+    Record new_record;
+    for (auto idx : indices) {
+      new_record.emplace_back(record.at(idx));
+    }
+    new_records.emplace_back(new_record);
+  }
+
+  attributes = std::move(new_attributes);
+  records = std::move(new_records);
 }
 
 std::vector<std::pair<size_t, size_t>> Table::GetCommonAttributeIndexPairs(const Table::Attributes &other_attributes) {
   std::vector<std::pair<size_t, size_t>> common_attribute_index_pairs;
   std::unordered_map<std::string, size_t> attributes_to_index;
   for (size_t i = 0; i < attributes.size(); ++i) {
-    attributes_to_index.insert({attributes.at(i), i});
+    attributes_to_index.emplace(attributes.at(i), i);
   }
   for (size_t i = 0; i < other_attributes.size(); ++i) {
     auto it = attributes_to_index.find(other_attributes.at(i));
@@ -81,7 +134,7 @@ std::vector<size_t> Table::GetOtherAttributeIndices(const Attributes &other_attr
   std::vector<size_t> other_attribute_indices;
   std::unordered_map<std::string, size_t> attributes_to_index;
   for (size_t i = 0; i < attributes.size(); ++i) {
-    attributes_to_index.insert({attributes.at(i), i});
+    attributes_to_index.emplace(attributes.at(i), i);
   }
   for (size_t i = 0; i < other_attributes.size(); ++i) {
     auto it = attributes_to_index.find(other_attributes.at(i));
@@ -207,7 +260,7 @@ std::unordered_set<std::string> Table::GetResult(const std::string &select_synon
 std::unordered_set<std::string> Table::GetTupleResult(const std::vector<PqlToken> &tuple,
                                                       const std::unordered_map<std::string,
                                                                                DesignEntityType> &declarations,
-                                                      PKB *pkb) {
+                                                      const pkb::PkbPtr &pkb) {
   std::unordered_set<std::string> result;
   const std::string WHITESPACE = " ";
 
@@ -249,7 +302,9 @@ size_t Table::GetAttributeIdxFromElem(PqlToken &elem,
   }
 }
 
-std::string Table::ConvertAttrRef(const DesignEntityType &attr_ref_design_entity, std::string value, PKB *pkb) {
+std::string Table::ConvertAttrRef(const DesignEntityType &attr_ref_design_entity,
+                                  std::string value,
+                                  const pkb::PkbPtr &pkb) {
   auto new_value = pkb->GetNameByStmt(GetStmtType(attr_ref_design_entity), value);
   return new_value;
 }

@@ -1,14 +1,7 @@
 #ifndef SOURCE_DECLARATIONS_H
 #define SOURCE_DECLARATIONS_H
 
-#include <algorithm>
-#include <iostream>
-#include <memory>
-#include <queue>
-#include <string>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
+#include "components/common_declarations.h"
 
 namespace source {
   // forward-declarations
@@ -51,18 +44,8 @@ namespace source {
   class SourceParserSession;
   class DesignExtractor;
   class CfgBuilder;
-  class PkbClient;
 
   // type definitions
-  // general
-  typedef std::exception Exception;
-  typedef std::string String;
-  typedef std::vector<String> StringStream;
-  typedef std::queue<String> StringQueue;
-  typedef std::unordered_set<String> StringSet;
-  typedef std::unordered_map<std::string, int> StringToIntMap;
-  typedef std::unordered_map<String, StringSet> StringToStringSetMap;
-
   // ast-related types
   typedef std::shared_ptr<SourceToken> TokenPtr;
   typedef std::shared_ptr<ProgramNode> ProgramNodePtr;
@@ -96,13 +79,14 @@ namespace source {
 
   // cfg-related types (others)
   typedef std::vector<CfgNodeStatement> CfgNodeStatementStream;
+  typedef std::unordered_set<CfgNodePtr> CfgNodeSet;
+  typedef std::stack<CfgNodePtr> CfgNodeStack;
   typedef std::vector<CfgNodePtr> CfgNodeStream;
   typedef std::unordered_map<String , CfgNodePtr> StringToCfgNodePtrMap;
 
   // components
   typedef std::shared_ptr<CfgBuilder> CfgBuilderPtr;
   typedef std::shared_ptr<DesignExtractor> DesignExtractorPtr;
-  typedef std::shared_ptr<PkbClient> PkbClientPtr;
 }
 
 #endif //SOURCE_DECLARATIONS_H

@@ -11,14 +11,13 @@ volatile bool AbstractWrapper::GlobalStop = false;
 
 // a default constructor
 TestWrapper::TestWrapper() {
-  pkb = new PKB();
-  query_controller = new QueryController(pkb);
+  pkb = std::make_shared<pkb::PKB>();
 }
 
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
   source::TokenStream token_stream;
-  source::String source = source::SourceController::RetrieveFileContent(filename);
+  String source = source::SourceController::RetrieveFileContent(filename);
   source::SourceController::Tokenize(source, token_stream);
   source::ProgramNodePtr ast = source::SourceController::ParseTokenStream(token_stream);
   source::SourceController::PopulatePKB(pkb, ast);
@@ -26,5 +25,5 @@ void TestWrapper::parse(std::string filename) {
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
-  query_controller->ProcessQuery(query, results);
+  pql::QueryController::ProcessQuery(query, pkb, results);
 }

@@ -1,11 +1,14 @@
 #include "pattern_store.h"
+#include "components/pkb/stores/pattern_store/expression_tree/expression_tree.h"
+
+namespace pkb {
 
 PatternStore::PatternStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                            std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type) :
     Store(move(stmt_vector), move(stmt_type)) {}
 
 void PatternStore::AddStmtWithPattern(std::string const &stmt, std::string const &lhs, std::string const &rhs) {
-  m_stmt_pattern_pairs.insert({stmt, lhs});
+  m_stmt_pattern_pairs.push_back({stmt, lhs});
   m_stmt_pattern_map[stmt] = {lhs, rhs};
 }
 
@@ -13,10 +16,10 @@ void PatternStore::AddWhileWithPattern(std::string const &stmt, std::string cons
   std::string var;
 
   for (char const &c : expr) {
-    if (isalnum(c)) {
+    if (isalpha(c)) {
       var += c;
     } else if (!var.empty()) {
-      m_while_pattern_pairs.insert({stmt, var});
+      m_while_pattern_pairs.push_back({stmt, var});
       var.clear();
     }
   }
@@ -26,10 +29,10 @@ void PatternStore::AddIfWithPattern(std::string const &stmt, std::string const &
   std::string var;
 
   for (char const &c : expr) {
-    if (isalnum(c)) {
+    if (isalpha(c)) {
       var += c;
     } else if (!var.empty()) {
-      m_if_pattern_pairs.insert({stmt, var});
+      m_if_pattern_pairs.push_back({stmt, var});
       var.clear();
     }
   }
@@ -100,8 +103,8 @@ IDENT_SET PatternStore::GetStmtWithPatternWildcard(std::string lhs) {
   return result;
 }
 
-IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
-  IDENT_PAIR_SET result = {};
+IDENT_PAIR_VECTOR PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
+  IDENT_PAIR_VECTOR result = {};
   expr = "(" + expr + ")";
 
   ExpressionTree expr_tree = ExpressionTree();
@@ -111,14 +114,14 @@ IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymExact(std::string expr) {
   for (auto const&[key, val] : m_stmt_pattern_map) {
     //EXACT MATCH RHS: pattern a(v, "x+1")
     if (val.second == sub_pattern) {
-      result.insert({key, val.first});
+      result.push_back({key, val.first});
     }
   }
   return result;
 }
 
-IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) {
-  IDENT_PAIR_SET result = {};
+IDENT_PAIR_VECTOR PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) {
+  IDENT_PAIR_VECTOR result = {};
   expr = "(" + expr + ")";
 
   ExpressionTree expr_tree = ExpressionTree();
@@ -128,13 +131,13 @@ IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymPartial(std::string expr) 
   for (auto const&[key, val] : m_stmt_pattern_map) {
     //PARTIAL MATCH RHS: pattern a(v, _"x+1"_)
     if (val.second.find(sub_pattern) != std::string::npos) {
-      result.insert({key, val.first});
+      result.push_back({key, val.first});
     }
   }
   return result;
 }
 
-IDENT_PAIR_SET PatternStore::GetStmtWithPatternSynonymWildcard() {
+IDENT_PAIR_VECTOR PatternStore::GetStmtWithPatternSynonymWildcard() {
   return m_stmt_pattern_pairs;
 }
 
@@ -172,10 +175,12 @@ IDENT_SET PatternStore::GetWhileWithPattern(std::string var) {
   return result;
 }
 
-IDENT_PAIR_SET PatternStore::GetIfWithPatternSynonym() {
+IDENT_PAIR_VECTOR PatternStore::GetIfWithPatternSynonym() {
   return m_if_pattern_pairs;
 }
 
-IDENT_PAIR_SET PatternStore::GetWhileWithPatternSynonym() {
+IDENT_PAIR_VECTOR PatternStore::GetWhileWithPatternSynonym() {
   return m_while_pattern_pairs;
+}
+
 }

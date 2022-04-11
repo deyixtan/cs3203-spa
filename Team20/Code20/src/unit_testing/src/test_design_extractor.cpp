@@ -1,7 +1,8 @@
 #include "catch.hpp"
+#include "components/pkb/pkb_declarations.h"
 #include "components/pkb/pkb.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
-#include "components/source_subsystem/pkb_client.h"
+#include "components/pkb/pkb_client/pkb_client.h"
 #include "components/source_subsystem/exceptions/unexpected_token.h"
 #include "components/source_subsystem/types/ast/node_program.h"
 #include "components/source_subsystem/types/ast/node_procedure.h"
@@ -17,8 +18,14 @@
 #include "components/source_subsystem/types/ast/node_boolean_expression.h"
 #include "components/source_subsystem/types/ast/node_while_statement.h"
 #include "components/source_subsystem/iterator/cfg_builder.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
 
 using namespace source;
+using namespace pkb;
 
 TEST_CASE("Test DE Modify population for single procedure with one read statement") {
   // set up AST for: procedure main { read a; }
@@ -38,26 +45,26 @@ TEST_CASE("Test DE Modify population for single procedure with one read statemen
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
-  pkb->AddStmt("1", STMT);
-  pkb->AddStmt("1", READ);
-  pkb->AddStmt("main", PROC);
-  pkb->AddTypeOfStmt("1", ASSIGN);
+  pkb::PkbPtr pkb = std::make_shared<PKB>();
+  pkb->AddStmt("1", StmtType::STMT);
+  pkb->AddStmt("1", StmtType::READ);
+  pkb->AddStmt("main", StmtType::PROC);
+  pkb->AddTypeOfStmt("1", StmtType::ASSIGN);
   pkb->GetModifiesStore()->AddStmtVar("1", "a");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  pkb::PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(expected_program_node);
 
   // test
-  REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
-  REQUIRE(test_pkb->GetStmt(READ) == pkb->GetStmt(READ));
-  REQUIRE(test_pkb->GetStmt(PROC) == pkb->GetStmt(PROC));
-  REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(STMT) == pkb->GetModifiesStore()->GetAllModStmt(STMT));
+  REQUIRE(test_pkb->GetStmt(StmtType::STMT) == pkb->GetStmt(StmtType::STMT));
+  REQUIRE(test_pkb->GetStmt(StmtType::READ) == pkb->GetStmt(StmtType::READ));
+  REQUIRE(test_pkb->GetStmt(StmtType::PROC) == pkb->GetStmt(StmtType::PROC));
+  REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(StmtType::STMT) == pkb->GetModifiesStore()->GetAllModStmt(StmtType::STMT));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("1") == pkb->GetModifiesStore()->GetVarModByStmt("1"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(StmtType::STMT, "a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a"));
   REQUIRE(test_pkb->GetModifiesStore()->GetAllStmtModify() == pkb->GetModifiesStore()->GetAllStmtModify());
 }
 
@@ -85,41 +92,41 @@ TEST_CASE("Test DE population for single procedure with multiple statements") {
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
-  pkb->AddStmt("1", STMT);
-  pkb->AddStmt("2", STMT);
-  pkb->AddStmt("1", READ);
-  pkb->AddStmt("2", PRINT);
-  pkb->AddStmt("main", PROC);
-  pkb->AddTypeOfStmt("1", READ);
-  pkb->AddTypeOfStmt("2", ASSIGN);
+  pkb::PkbPtr pkb = std::make_shared<PKB>();
+  pkb->AddStmt("1", StmtType::STMT);
+  pkb->AddStmt("2", StmtType::STMT);
+  pkb->AddStmt("1", StmtType::READ);
+  pkb->AddStmt("2", StmtType::PRINT);
+  pkb->AddStmt("main", StmtType::PROC);
+  pkb->AddTypeOfStmt("1", StmtType::READ);
+  pkb->AddTypeOfStmt("2", StmtType::ASSIGN);
   pkb->GetModifiesStore()->AddStmtVar("1", "a");
   pkb->GetUsesStore()->AddStmtVar("2", "x");
   pkb->GetFollowsStore()->AddFollow("1", "2");
   pkb->GetFollowsStore()->AddFollowStar("1", "2");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  pkb::PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(expected_program_node);
 
   // test
-  REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
-  REQUIRE(test_pkb->GetStmt(READ) == pkb->GetStmt(READ));
-  REQUIRE(test_pkb->GetStmt(PRINT) == pkb->GetStmt(PRINT));
-  REQUIRE(test_pkb->GetStmt(PROC) == pkb->GetStmt(PROC));
+  REQUIRE(test_pkb->GetStmt(StmtType::STMT) == pkb->GetStmt(STMT));
+  REQUIRE(test_pkb->GetStmt(StmtType::READ) == pkb->GetStmt(READ));
+  REQUIRE(test_pkb->GetStmt(StmtType::PRINT) == pkb->GetStmt(PRINT));
+  REQUIRE(test_pkb->GetStmt(StmtType::PROC) == pkb->GetStmt(PROC));
   REQUIRE(test_pkb->GetModifiesStore()->GetAllModStmt(STMT) == pkb->GetModifiesStore()->GetAllModStmt(STMT));
   REQUIRE(test_pkb->GetModifiesStore()->GetVarModByStmt("1") == pkb->GetModifiesStore()->GetVarModByStmt("1"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(STMT,"a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a"));
-  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT,"a"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(StmtType::STMT,"a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT, "a"));
+  REQUIRE(test_pkb->GetModifiesStore()->GetStmtModByVar(StmtType::STMT, "a") == pkb->GetModifiesStore()->GetStmtModByVar(STMT,"a"));
   REQUIRE(test_pkb->GetUsesStore()->GetVarUsedByStmt("2") == pkb->GetUsesStore()->GetVarUsedByStmt("2"));
-  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
-  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
+  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(StmtType::STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
+  REQUIRE(test_pkb->GetUsesStore()->GetStmtUsedByVar(StmtType::STMT, "x") == pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "x"));
   REQUIRE(test_pkb->GetUsesStore()->GetAllStmtUsing() == pkb->GetUsesStore()->GetAllStmtUsing());
-  REQUIRE(test_pkb->GetUsesStore()->GetAllUsesStmt(STMT) == pkb->GetUsesStore()->GetAllUsesStmt(STMT));
-  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT));
-  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT));
+  REQUIRE(test_pkb->GetUsesStore()->GetAllUsesStmt(StmtType::STMT) == pkb->GetUsesStore()->GetAllUsesStmt(STMT));
+  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(StmtType::STMT, StmtType::STMT) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT));
+  REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(StmtType::STMT, StmtType::STMT) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT));
 }
 
 TEST_CASE("Test DE population for single procedure with pattern statements") {
@@ -145,7 +152,7 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  pkb::PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", ASSIGN);
   pkb->AddStmt("main", PROC);
@@ -155,7 +162,7 @@ TEST_CASE("Test DE population for single procedure with pattern statements") {
   pkb->GetPatternStore()->AddStmtWithPattern("1", "x", "((x)+(1))");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  pkb::PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(expected_program_node);
@@ -223,7 +230,7 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  pkb::PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", IF);
   pkb->AddStmt("2", STMT);
@@ -242,13 +249,13 @@ TEST_CASE("Test DE population for single procedure with one if statement (simple
   pkb->GetPatternStore()->AddStmtWithPattern("3", "a", "(3)");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  pkb::PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
-  cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
+  cfg_builder->IterateAst(expected_program_node);
   design_extractor->IterateAst(expected_program_node);
-  cfg_builder->IterateCfgAndPopulatePkb();
+  cfg_builder->IterateCfg();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -312,7 +319,7 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  pkb::PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", WHILE);
   pkb->AddStmt("2", STMT);
@@ -325,7 +332,7 @@ TEST_CASE("Test DE population for single procedure with one while statement") {
   pkb->GetModifiesStore()->AddStmtVar("1", "a");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  pkb::PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(expected_program_node);
@@ -432,7 +439,7 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  pkb::PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", WHILE);
   pkb->AddStmt("2", STMT);
@@ -456,13 +463,13 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   pkb->GetParentStore()->AddParentStar("2", parent_star_2);
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  pkb::PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
-  cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
+  cfg_builder->IterateAst(expected_program_node);
   design_extractor->IterateAst(expected_program_node);
-  cfg_builder->IterateCfgAndPopulatePkb();
+  cfg_builder->IterateCfg();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -487,8 +494,6 @@ TEST_CASE("Test DE parent population for single procedure with nested while and 
   REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(WHILE, STMT) == pkb->GetParentStore()->GetAllParentStarStmt(WHILE, STMT));
   REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(IF, ASSIGN) == pkb->GetParentStore()->GetAllParentStarStmt(IF, ASSIGN));
   REQUIRE(test_pkb->GetParentStore()->GetAllParentStarStmt(WHILE, ASSIGN) == pkb->GetParentStore()->GetAllParentStarStmt(WHILE, ASSIGN));
-  REQUIRE(test_pkb->GetParentStore()->GetParentChildPairs() == pkb->GetParentStore()->GetParentChildPairs());
-  REQUIRE(test_pkb->GetParentStore()->GetAnceDescPairs() == pkb->GetParentStore()->GetAnceDescPairs());
 }
 
 TEST_CASE("Test DE follows population for single procedure with multiple assign statements") {
@@ -547,7 +552,7 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   std::shared_ptr<ProgramNode> expected_program_node = std::make_shared<ProgramNode>(procedures);
 
   // set up expected PKB
-  PKB *pkb = new PKB();
+  pkb::PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("1", STMT);
   pkb->AddStmt("1", ASSIGN);
   pkb->AddStmt("2", STMT);
@@ -569,24 +574,24 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   pkb->GetFollowsStore()->AddFollow("3", "4");
   pkb->GetFollowsStore()->AddFollow("4", "5");
   pkb->GetFollowsStore()->AddFollowStar("1", "2");
-  pkb->GetFollowsStore()->AddFollowStar("1", "3");
-  pkb->GetFollowsStore()->AddFollowStar("1", "4");
-  pkb->GetFollowsStore()->AddFollowStar("1", "5");
   pkb->GetFollowsStore()->AddFollowStar("2", "3");
-  pkb->GetFollowsStore()->AddFollowStar("2", "4");
-  pkb->GetFollowsStore()->AddFollowStar("2", "5");
+  pkb->GetFollowsStore()->AddFollowStar("1", "3");
   pkb->GetFollowsStore()->AddFollowStar("3", "4");
-  pkb->GetFollowsStore()->AddFollowStar("3", "5");
+  pkb->GetFollowsStore()->AddFollowStar("2", "4");
+  pkb->GetFollowsStore()->AddFollowStar("1", "4");
   pkb->GetFollowsStore()->AddFollowStar("4", "5");
+  pkb->GetFollowsStore()->AddFollowStar("3", "5");
+  pkb->GetFollowsStore()->AddFollowStar("2", "5");
+  pkb->GetFollowsStore()->AddFollowStar("1", "5");
 
   // set up actual traverse of DE
-  PKB *test_pkb = new PKB();
+  pkb::PkbPtr test_pkb = std::make_shared<PKB>();
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(test_pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
-  cfg_builder->IterateAstAndPopulatePkb(expected_program_node);
+  cfg_builder->IterateAst(expected_program_node);
   design_extractor->IterateAst(expected_program_node);
-  cfg_builder->IterateCfgAndPopulatePkb();
+  cfg_builder->IterateCfg();
 
   // test
   REQUIRE(test_pkb->GetStmt(STMT) == pkb->GetStmt(STMT));
@@ -615,12 +620,8 @@ TEST_CASE("Test DE follows population for single procedure with multiple assign 
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "4") == pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "4"));
   REQUIRE(test_pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "5") == pkb->GetFollowsStore()->GetFollowingStarOf(STMT, "5"));
 
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowPairs() == pkb->GetFollowsStore()->GetFollowPairs());
-  REQUIRE(test_pkb->GetFollowsStore()->GetFollowStarPairs() == pkb->GetFollowsStore()->GetFollowStarPairs());
-
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(STMT, ASSIGN) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, ASSIGN));
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStmt(STMT, STMT));
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, ASSIGN) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, ASSIGN));
   REQUIRE(test_pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT) == pkb->GetFollowsStore()->GetAllFollowStarStmt(STMT, STMT));
 }
-

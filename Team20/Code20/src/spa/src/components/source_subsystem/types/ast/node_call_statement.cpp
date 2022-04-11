@@ -20,9 +20,9 @@ void CallStatementNode::Accept(DesignExtractorPtr design_extractor) {
   design_extractor->Visit(derived_ptr);
 }
 
-CfgNodePtr CallStatementNode::Accept(CfgBuilderPtr cfg_builder, CfgNodePtr cfg_node) {
+void CallStatementNode::Accept(CfgBuilderPtr cfg_builder) {
   CallStatementNodePtr derived_ptr = std::dynamic_pointer_cast<CallStatementNode>(shared_from_this());
-  return cfg_builder->Visit(derived_ptr, cfg_node);
+  cfg_builder->Visit(derived_ptr);
 }
 
 bool CallStatementNode::operator==(const StatementNode &other) const {

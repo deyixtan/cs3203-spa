@@ -5,16 +5,27 @@
 #include "components/source_subsystem/parser/source_parser.h"
 #include "components/source_subsystem/exceptions/empty_statement_list.h"
 #include "components/source_subsystem/iterator/cfg_builder.h"
-#include "components/source_subsystem/pkb_client.h"
+#include "components/pkb/pkb_client/pkb_client.h"
+#include "components/source_subsystem/exceptions/cyclic_call.h"
+#include "components/source_subsystem/exceptions/invalid_call.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
+#include "components/pkb/stores/call_store/call_store.h"
+#include "components/pkb/stores/next_store/next_store.h"
 
 using namespace source;
+using namespace pkb;
 
 extern std::string sample_source1;
 extern std::string sample_source2;
 extern std::string sample_source3;
 extern std::string sample_source4;
 extern std::string sample_source5;
-
+extern std::string sample_source6;
+extern std::string sample_source7;
 
 std::shared_ptr<ProgramNode> GenerateAbstractSyntaxTree(std::string source) {
   std::vector<std::shared_ptr<SourceToken>> tokens_ptr;
@@ -27,32 +38,32 @@ std::shared_ptr<ProgramNode> GenerateAbstractSyntaxTree(std::string source) {
   return ast;
 }
 
-PKB *GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
-  PKB *pkb = new PKB();
+pkb::PkbPtr GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
+  PkbPtr pkb = std::make_shared<PKB>();
 
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(ast);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
-  cfg_builder->IterateAstAndPopulatePkb(ast);
+  cfg_builder->IterateAst(ast);
   return pkb;
 }
 
-PKB *GetCfgPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
-  PKB *pkb = new PKB();
+PkbPtr GetCfgPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
+  PkbPtr pkb = std::make_shared<PKB>();
 
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   CfgBuilderPtr cfg_builder = std::make_shared<CfgBuilder>(pkb_client);
-  cfg_builder->IterateAstAndPopulatePkb(ast);
+  cfg_builder->IterateAst(ast);
   design_extractor->IterateAst(ast);
-  cfg_builder->IterateCfgAndPopulatePkb();
+  cfg_builder->IterateCfg();
   return pkb;
 }
 
 TEST_CASE("Test components between Source and PKB (Sample source 1)") {
   std::shared_ptr<ProgramNode> ast = GenerateAbstractSyntaxTree(sample_source1);
-  PKB *pkb = GetPopulatedPkbInstance(ast);
+  PkbPtr pkb = GetPopulatedPkbInstance(ast);
 
   SECTION("Test read statement count and their statement number") {
     std::unordered_set<std::string> result = pkb->GetStmt(StmtType::READ);
@@ -473,7 +484,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 1)") {
 
 TEST_CASE("Test components between Source and PKB (Sample source 2)") {
   std::shared_ptr<ProgramNode> ast = GenerateAbstractSyntaxTree(sample_source2);
-  PKB *pkb = GetPopulatedPkbInstance(ast);
+  PkbPtr pkb = GetPopulatedPkbInstance(ast);
 
   SECTION("Test read statement count and their statement number") {
     std::unordered_set<std::string> result = pkb->GetStmt(StmtType::READ);
@@ -961,7 +972,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 2)") {
 
 TEST_CASE("Test components between Source and PKB (Sample source 3)") {
   std::shared_ptr<ProgramNode> ast = GenerateAbstractSyntaxTree(sample_source3);
-  PKB *pkb = GetPopulatedPkbInstance(ast);
+  PkbPtr pkb = GetPopulatedPkbInstance(ast);
 
   SECTION("Test Calls") {
     std::unordered_set<std::string> result1 = pkb->GetCallStore()->GetCallersOf("fizz");
@@ -992,7 +1003,7 @@ TEST_CASE("Test components between Source and PKB (Sample source 3)") {
 
 TEST_CASE("Test components between Source and PKB for Next (Sample source 5)") {
   std::shared_ptr<ProgramNode> ast = GenerateAbstractSyntaxTree(sample_source5);
-  PKB *pkb = GetCfgPopulatedPkbInstance(ast);
+  PkbPtr pkb = GetCfgPopulatedPkbInstance(ast);
   SECTION("Test Next") {
     std::unordered_set<std::string> result1 = pkb->GetNextStore()->GetNextOf(STMT, "13");
     std::unordered_set<std::string> result2 = pkb->GetNextStore()->GetNextOf(STMT, "2");
@@ -1019,5 +1030,43 @@ TEST_CASE("Test components between Source and PKB for Next (Sample source 5)") {
     REQUIRE(result5 == expected_result5);
     REQUIRE(result6 == expected_result6);
     REQUIRE(result7 == expected_result7);
+  }
+}
+
+TEST_CASE("Test components between Source and PKB for Next (Sample source 6)") {
+  SECTION("Test cyclic call (invalid AST - non-initialised PKB)") {
+    std::shared_ptr<ProgramNode> ast;
+    PkbPtr pkb;
+    try {
+      ast = GenerateAbstractSyntaxTree(sample_source6);
+      pkb = GetCfgPopulatedPkbInstance(ast);
+    } catch (std::exception &e) {
+      // catch-all, do nothing
+    }
+
+    // sample choice, no pkb population = no cfg
+    REQUIRE(pkb == nullptr);
+
+    // to double confirm it should throw an exception
+    REQUIRE_THROWS_WITH(GenerateAbstractSyntaxTree(sample_source6), CyclicCallException().what());
+  }
+}
+
+TEST_CASE("Test components between Source and PKB for Next (Sample source 7)") {
+  SECTION("Test invalid call (invalid AST - non-initialised PKB)") {
+    std::shared_ptr<ProgramNode> ast;
+    PkbPtr pkb;
+    try {
+      ast = GenerateAbstractSyntaxTree(sample_source7);
+      pkb = GetCfgPopulatedPkbInstance(ast);
+    } catch (std::exception &e) {
+      // catch-all, do nothing
+    }
+
+    // sample choice, no pkb population = no cfg
+    REQUIRE(pkb == nullptr);
+
+    // to double confirm it should throw an exception
+    REQUIRE_THROWS_WITH(GenerateAbstractSyntaxTree(sample_source7), InvalidCallException().what());
   }
 }
