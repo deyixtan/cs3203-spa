@@ -8,9 +8,6 @@ namespace pkb {
 
 enum StoreType {
   USES,
-  MODIFIES,
-  FOLLOWS,
-  PARENT,
   CALLS,
   NEXT,
   AFFECTS

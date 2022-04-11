@@ -10,21 +10,6 @@ void QueryEvaluator::Evaluate(ParsedQuery &query, const pkb::PkbPtr &pkb, std::l
   pkb->GetNextStore()->ClearNextStarCache();
 }
 
-void QueryEvaluator::EvaluateUnoptimized(ParsedQuery &query, const pkb::PkbPtr &pkb, std::list<std::string> &results) {
-  pql::Table table;
-  auto clauses = ExtractClauses(query, pkb);
-  // extract clause -> optimizer -> sort clauses?
-  // or insert a new sorter in here after extracting?
-  while (!clauses.empty()) {
-    auto clause = std::move(clauses.front());
-    auto intermediate_table = clause->Execute();
-    table.Merge(intermediate_table);
-    clauses.pop();
-  }
-
-  ProjectResults(query, pkb, table, results);
-}
-
 bool QueryEvaluator::EvaluateNoSynonymClauseGroup(ClauseGroup &clause_group) {
   if (!clause_group.IsEmpty()) {
     bool is_false_clause_encountered = clause_group.ExecuteBool();

@@ -20,7 +20,6 @@ class QueryEvaluator {
  public:
   static void Evaluate(ParsedQuery &query, const pkb::PkbPtr &pkb, std::list<std::string> &results);
  private:
-  static void EvaluateUnoptimized(ParsedQuery &query, const pkb::PkbPtr &pkb, std::list<std::string> &results);
   static void EvaluateOptimized(ParsedQuery &query, const pkb::PkbPtr &pkb, std::list<std::string> &results);
   static ClauseGroupList ExtractClauseGroups(ParsedQuery &query, const pkb::PkbPtr &pkb);
   static void ProjectResults(ParsedQuery &query, const pkb::PkbPtr &pkb, Table &table, std::list<std::string> &results);

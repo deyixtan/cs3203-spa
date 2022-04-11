@@ -10,11 +10,8 @@
 namespace clause_util {
 
 bool IsArgSynonym(const PqlToken &arg);
-bool IsArgWildcard(const PqlToken &arg);
 bool IsArgIdent(const PqlToken &arg);
 bool IsArgInteger(const PqlToken &arg);
-bool IsArgPartialMatch(const PqlToken &arg);
-bool IsArgExactMatch(const PqlToken &arg);
 bool IsArgAttribute(const PqlToken &arg);
 DesignEntityType GetSynonymDesignEntity(const PqlToken &arg,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations);
@@ -25,8 +22,6 @@ bool IsFirstArgStmtRelationship(const PqlToken &first_arg,
                                 const std::unordered_map<std::string, DesignEntityType> &declarations);
 pql::Table ConstructEmptyTable(bool is_false_clause);
 pql::Table ConstructEmptyTable();
-//std::set<std::string> GetSynonymsFromClause(const std::shared_ptr<Clause> &clause_ptr);
-//int GetSynonymsSizeFromClause(const std::shared_ptr<Clause> &clause_ptr);
 
 }
 
