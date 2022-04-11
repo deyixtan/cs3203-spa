@@ -31,6 +31,16 @@ std::pair<std::vector<ClauseGroup>,
   std::vector<ClauseGroup> unrelated_clause_groups;
   std::vector<ClauseGroup> related_clause_groups;
 
+  for (auto i = connected_synonyms_clause_groups.size() - 1; i > 0; --i) {
+    for (auto j = i - 1; j >= 0; --j) {
+      if (connected_synonyms_clause_groups.at(j).IsConnected(connected_synonyms_clause_groups.at(i))) {
+        connected_synonyms_clause_groups.at(j).MergeClauseGroup(connected_synonyms_clause_groups.at(i));
+        connected_synonyms_clause_groups.erase(connected_synonyms_clause_groups.begin() + i);
+        break;
+      }
+    }
+  }
+
   for (auto &clause_group : connected_synonyms_clause_groups) {
     if (clause_group.IsConnected(select_clause_ptr)) {
       related_clause_groups.emplace_back(clause_group);
