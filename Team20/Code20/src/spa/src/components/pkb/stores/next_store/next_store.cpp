@@ -1,7 +1,8 @@
 #include "next_store.h"
-#include "../../pkb_relationship.h"
-#include "../parent_store/parent_store.h"
-#include <set>
+#include "components/pkb/pkb_relationship.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
+
+namespace pkb {
 
 const std::string NextStore::SMALLEST_STMT_NO = "0";
 const std::string NextStore::LARGEST_STMT_NO = "501";
@@ -22,7 +23,7 @@ void NextStore::AddNextStar(IDENT const &before, IDENT const &next) {
 }
 
 void NextStore::AddFirstStmtProc(std::string const &proc, std::string const &stmt) {
-    m_proc_stmt_map.insert({proc, {stmt}});
+  m_proc_stmt_map.insert({proc, {stmt}});
 }
 
 void NextStore::AddLastStmtProc(std::string const &proc, std::string const &stmt) {
@@ -34,7 +35,8 @@ bool NextStore::IsNextPairValid(IDENT_PAIR const &pair) {
 }
 
 bool NextStore::IsNextStarPairValid(IDENT_PAIR const &pair) {
-  if (std::find(GetStarPairByType(STMT, STMT).begin(), GetStarPairByType(STMT, STMT).end(), pair) != GetStarPairByType(STMT, STMT).end()) {
+  IDENT_PAIR_VECTOR test = GetStarPairByType(STMT, STMT);
+  if (std::find(test.begin(), test.end(), pair) != test.end()) {
     return true;
   } else {
     std::unordered_set<std::string> next_star = GetNextStarOf(STMT, pair.first);
@@ -89,7 +91,7 @@ IDENT_PAIR_VECTOR NextStore::GetAllNextStmt(StmtType type1, StmtType type2) {
 }
 
 IDENT_PAIR_VECTOR NextStore::GetAllNextStarStmt(StmtType type1, StmtType type2) {
-  if(GetStarPairByType(type1, type2).empty()) {
+  if (GetStarPairByType(type1, type2).empty()) {
     GetNextStarPairs();
   }
   return GetStarPairByType(type1, type2);
@@ -100,14 +102,14 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
   StmtType type1 = m_stmt_type->at(stmt);
   std::string first_proc_stmt_no = GetFirstStmtOfProc(stmt);
   std::unordered_set<std::string> ancestor_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
-  if(ancestor_set.empty()) { // Not in while loop
+  if (ancestor_set.empty()) { // Not in while loop
     std::unordered_set<std::string> if_ancestor = m_parent_store->GetAllAnceOf(IF, stmt);
     if (!if_ancestor.empty()) {
       InsertUpperResultForIf(first_proc_stmt_no, stmt, stmt, res, if_ancestor.size());
     } else {
       InsertPairResultUpper(stoi(first_proc_stmt_no), stoi(stmt) - 1, res, stmt);
     }
-    if(type1 == WHILE) {
+    if (type1 == WHILE) {
       std::string end_while_stmt = GetEndStmtOfWhileLoop(stmt);
       InsertPairResultLower(stoi(stmt), stoi(end_while_stmt), res, stmt);
     }
@@ -127,11 +129,11 @@ void NextStore::GetUpperStarOfHelper(std::string const &stmt,
 }
 
 void NextStore::GetLowerStarOfHelper(std::string const &stmt,
-                                         std::unordered_set<std::string> &res) {
+                                     std::unordered_set<std::string> &res) {
   StmtType type1 = m_stmt_type->at(stmt);
   std::string last_proc_stmt_no = GetLastStmtOfProc(stmt);
   std::unordered_set<std::string> ancestor_set = m_parent_store->GetAllAnceOf(WHILE, stmt);
-  if(ancestor_set.empty()) { // Not in a while loop
+  if (ancestor_set.empty()) { // Not in a while loop
     std::unordered_set<std::string> if_ancestor = m_parent_store->GetAllAnceOf(IF, stmt);
     if (!if_ancestor.empty()) {
       StmtType type = m_stmt_type->at(stmt);
@@ -143,7 +145,7 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
     } else {
       InsertPairResultLower(stoi(stmt) + 1, stoi(last_proc_stmt_no), res, stmt);
     }
-    if(type1 == WHILE) {
+    if (type1 == WHILE) {
       AddNextStar(stmt, stmt);
       res.insert(stmt);
     }
@@ -162,7 +164,11 @@ void NextStore::GetLowerStarOfHelper(std::string const &stmt,
   }
 }
 
-void NextStore::InsertUpperResultForIf(std::string &first_proc_stmt_no, std::string const &stmt, std::string const &prev_if_stmt, std::unordered_set<std::string> &res, int nesting_level) {
+void NextStore::InsertUpperResultForIf(std::string &first_proc_stmt_no,
+                                       std::string const &stmt,
+                                       std::string const &prev_if_stmt,
+                                       std::unordered_set<std::string> &res,
+                                       int nesting_level) {
   if (nesting_level == 0) {
     InsertPairResultLower(stoi(first_proc_stmt_no), stoi(stmt) - 1, res, stmt);
   } else {
@@ -219,8 +225,8 @@ void NextStore::InsertLowerResultForIf(std::string &last_proc_stmt_no,
 std::string NextStore::GetEndElseStmt(std::string const &if_stmt) {
   std::unordered_set<std::string> if_descendant = m_parent_store->GetAllDescOf(STMT, if_stmt);
   std::string end_else_stmt = SMALLEST_STMT_NO;
-  for(auto stmt : if_descendant) {
-    if(stoi(stmt) > stoi(end_else_stmt)) {
+  for (auto stmt : if_descendant) {
+    if (stoi(stmt) > stoi(end_else_stmt)) {
       end_else_stmt = stmt;
     }
   }
@@ -231,8 +237,8 @@ std::string NextStore::GetEndElseStmt(std::string const &if_stmt) {
 std::string NextStore::GetFirstElseStmt(std::string const &if_stmt) {
   std::unordered_set<std::string> next_of_if = GetNextOf(STMT, if_stmt);
   std::string first_else_stmt = SMALLEST_STMT_NO;
-  for(auto stmt : next_of_if) {
-    if(stoi(stmt) > stoi(first_else_stmt)) {
+  for (auto stmt : next_of_if) {
+    if (stoi(stmt) > stoi(first_else_stmt)) {
       first_else_stmt = stmt;
     }
   }
@@ -240,7 +246,10 @@ std::string NextStore::GetFirstElseStmt(std::string const &if_stmt) {
   return first_else_stmt;
 }
 
-void NextStore::InsertPairResultUpper(int start, int end, std::unordered_set<std::string> &res, std::string const stmt) {
+void NextStore::InsertPairResultUpper(int start,
+                                      int end,
+                                      std::unordered_set<std::string> &res,
+                                      std::string const stmt) {
   StmtType type1 = m_stmt_type->at(stmt);
   for (int i = start; i <= end; i++) {
     StmtType type2 = m_stmt_type->at(std::to_string(i));
@@ -249,7 +258,10 @@ void NextStore::InsertPairResultUpper(int start, int end, std::unordered_set<std
   }
 }
 
-void NextStore::InsertPairResultLower(int start, int end, std::unordered_set<std::string> &res, std::string const stmt) {
+void NextStore::InsertPairResultLower(int start,
+                                      int end,
+                                      std::unordered_set<std::string> &res,
+                                      std::string const stmt) {
   StmtType type1 = m_stmt_type->at(stmt);
   for (int i = start; i <= end; i++) {
     StmtType type2 = m_stmt_type->at(std::to_string(i));
@@ -260,10 +272,10 @@ void NextStore::InsertPairResultLower(int start, int end, std::unordered_set<std
 
 std::string NextStore::GetFirstStmtOfProc(const std::string &stmt) {
   std::string first_stmt_no;
-  for(auto proc : m_proc_stmt_map) {
+  for (auto proc : m_proc_stmt_map) {
     std::string first_stmt = proc.second.front();
     std::string last_stmt = proc.second.back();
-    if(stoi(stmt) <= stoi(last_stmt) && stoi(stmt) >= stoi(first_stmt)) {
+    if (stoi(stmt) <= stoi(last_stmt) && stoi(stmt) >= stoi(first_stmt)) {
       first_stmt_no = first_stmt;
       break;
     }
@@ -273,10 +285,10 @@ std::string NextStore::GetFirstStmtOfProc(const std::string &stmt) {
 
 std::string NextStore::GetLastStmtOfProc(const std::string &stmt) {
   std::string last_stmt_no;
-  for(auto proc : m_proc_stmt_map) {
+  for (auto proc : m_proc_stmt_map) {
     std::string first_stmt = proc.second.front();
     std::string last_stmt = proc.second.back();
-    if(stoi(stmt) <= stoi(last_stmt) && stoi(stmt) >= stoi(first_stmt)) {
+    if (stoi(stmt) <= stoi(last_stmt) && stoi(stmt) >= stoi(first_stmt)) {
       last_stmt_no = last_stmt;
       break;
     }
@@ -286,8 +298,8 @@ std::string NextStore::GetLastStmtOfProc(const std::string &stmt) {
 
 std::string NextStore::GetStartStmtOfWhileLoop(std::unordered_set<std::string> &ansc_set) {
   std::string start_stmt = LARGEST_STMT_NO;
-  for(auto stmt : ansc_set) {
-    if(stoi(stmt) < stoi(start_stmt)) {
+  for (auto stmt : ansc_set) {
+    if (stoi(stmt) < stoi(start_stmt)) {
       start_stmt = stmt;
     }
   }
@@ -297,25 +309,35 @@ std::string NextStore::GetStartStmtOfWhileLoop(std::unordered_set<std::string> &
 std::string NextStore::GetEndStmtOfWhileLoop(const std::string &start_of_while) {
   std::string end_stmt = SMALLEST_STMT_NO;
   std::unordered_set<std::string> children_set = m_parent_store->GetAllDescOf(STMT, start_of_while);
-  for(auto stmt : children_set) {
-    if(stoi(stmt) > stoi(end_stmt)) {
+  for (auto stmt : children_set) {
+    if (stoi(stmt) > stoi(end_stmt)) {
       end_stmt = stmt;
     }
   }
   return end_stmt;
 }
 
-void NextStore::GetNextStarPairs() {
+IDENT_PAIR_VECTOR NextStore::GetNextStarPairs() {
+  return GetStarPairByType(STMT, STMT);
+}
+
+void NextStore::ClearNextStarCache() {
+  star_type_pair_map = NESTED_STMT_STMT_MAP();
+}
+
+void NextStore::ComputeNextStore() {
   std::unordered_set<std::string> res;
-  for(auto proc : m_proc_stmt_map) {
+  for (auto proc : m_proc_stmt_map) {
     int last_stmt = stoi(proc.second.back());
     int first_stmt = stoi(proc.second.front());
-    for(int i = first_stmt; i <= last_stmt; i++) {
+    for (int i = first_stmt; i <= last_stmt; i++) {
       GetLowerStarOfHelper(std::to_string(i), res);
     }
   }
 }
 
-void NextStore::ClearNextStarCache() {
-  star_type_pair_map = NESTED_STMT_STMT_MAP();
+bool NextStore::IsNextStoreComputed() {
+  return !GetStarPairByType(STMT, STMT).empty();
+}
+
 }

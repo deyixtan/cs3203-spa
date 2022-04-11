@@ -13,11 +13,11 @@ class SelectClause : public Clause {
  public:
   SelectClause(const PqlToken &result_clause,
                const std::unordered_map<std::string, DesignEntityType> &declarations,
-               const PkbPtr &pkb);
+               const pkb::PkbPtr &pkb);
   SelectClause(const std::unordered_set<std::string> &table_synonyms,
                const PqlToken &result_clause,
                const std::unordered_map<std::string, DesignEntityType> &declarations,
-               const PkbPtr &pkb);
+               const pkb::PkbPtr &pkb);
   Table Execute() override;
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
@@ -27,7 +27,7 @@ class SelectClause : public Clause {
   std::unordered_set<std::string> table_synonyms;
   PqlToken result_clause;
   std::unordered_map<std::string, DesignEntityType> declarations;
-  const PkbPtr &pkb;
+  const pkb::PkbPtr &pkb;
 };
 
 }

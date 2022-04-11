@@ -11,11 +11,11 @@ class SelectTupleClause : public Clause {
  public:
   SelectTupleClause(std::vector<PqlToken> &tuple,
                     const std::unordered_map<std::string, DesignEntityType> &declarations,
-                    const PkbPtr &pkb);
+                    const pkb::PkbPtr &pkb);
   SelectTupleClause(const std::unordered_set<std::string> &table_synonyms,
                     std::vector<PqlToken> &tuple,
                     const std::unordered_map<std::string, DesignEntityType> &declarations,
-                    const PkbPtr &pkb);
+                    const pkb::PkbPtr &pkb);
   Table Execute() override;
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
@@ -25,7 +25,7 @@ class SelectTupleClause : public Clause {
   std::unordered_set<std::string> table_synonyms;
   std::vector<PqlToken> tuple;
   std::unordered_map<std::string, DesignEntityType> declarations;
-  const PkbPtr &pkb;
+  const pkb::PkbPtr &pkb;
   Table HandleSynonymElem(const PqlToken &synonym);
   Table HandleAttrRefElem(PqlToken &attr_ref);
 };

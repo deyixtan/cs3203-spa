@@ -1,5 +1,7 @@
 #include "stmt_stmt_store.h"
-#include "../pkb_relationship.h"
+#include "components/pkb/pkb_relationship.h"
+
+namespace pkb {
 
 StmtStmtStore::StmtStmtStore(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
                              std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type)
@@ -32,13 +34,16 @@ void StmtStmtStore::ExhaustiveAddSubStmt(StmtType type1,
   switch (IsMapContains(type1, type2, pair_map)) {
     case 1: // Both types exist
       PopulatePairMap(type1, upper, type2, lower, pair_map);
+      break;
     case 2: // Only type 1 exists
       pair_map->at(type1).insert({type2, PkbRelationship()});
       PopulatePairMap(type1, upper, type2, lower, pair_map);
+      break;
     case 3: // Both types missing
       pair_map->insert({type1, {}});
       pair_map->at(type1).insert({type2, PkbRelationship()});
       PopulatePairMap(type1, upper, type2, lower, pair_map);
+      break;
   }
 }
 
@@ -178,4 +183,6 @@ IDENT_PAIR_VECTOR StmtStmtStore::GetStarPairByType(StmtType type1, StmtType type
     return star_type_pair_map.at(type1).at(type2).GetPairVector();
   }
   return {};
+}
+
 }

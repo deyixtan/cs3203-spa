@@ -1,6 +1,8 @@
 #ifndef AFFECTS_CLAUSE_H_
 #define AFFECTS_CLAUSE_H_
 
+#include <map>
+
 #include "clause.h"
 #include "components/query_subsystem/utils.h"
 #include "components/pkb/pkb.h"
@@ -11,7 +13,7 @@ class AffectsClause : public Clause {
  public:
   AffectsClause(const PqlToken &first_arg,
                 const PqlToken &second_arg,
-                const PkbPtr &pkb);
+                const pkb::PkbPtr &pkb);
   Table Execute() override;
   bool ExecuteBool() override;
   std::set<std::string> GetSynonyms() override;
@@ -21,7 +23,7 @@ class AffectsClause : public Clause {
   size_t weight = 27;
   PqlToken first_arg;
   PqlToken second_arg;
-  const PkbPtr &pkb;
+  const pkb::PkbPtr &pkb;
   using handler = Table (AffectsClause::*)();
   const std::map<std::pair<PqlTokenType, PqlTokenType>, handler> execute_handler{
       {{PqlTokenType::SYNONYM, PqlTokenType::SYNONYM}, &AffectsClause::HandleSynonymSynonym},

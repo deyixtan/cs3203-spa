@@ -1,7 +1,10 @@
 #ifndef CALLS_STORE_H
 #define CALLS_STORE_H
 
+#include "components/pkb/pkb_declarations.h"
 #include "components/pkb/stores/stmt_stmt_store.h"
+
+namespace pkb {
 
 class CallStore : public StmtStmtStore {
  private:
@@ -20,5 +23,7 @@ class CallStore : public StmtStmtStore {
   [[nodiscard]] IDENT_SET GetCallersStarOf(IDENT const &proc);
   [[nodiscard]] IDENT_SET GetCalleesStarOf(IDENT const &proc);
 };
+
+}
 
 #endif //CALLS_STORE_H

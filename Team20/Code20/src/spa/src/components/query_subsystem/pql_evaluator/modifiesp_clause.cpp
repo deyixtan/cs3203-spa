@@ -1,5 +1,6 @@
 #include "modifiesp_clause.h"
 #include "clause_util.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
 
 namespace pql {
 
@@ -8,7 +9,7 @@ using namespace clause_util;
 ModifiesPClause::ModifiesPClause(const std::unordered_map<std::string, DesignEntityType> &declarations_,
                                  const PqlToken &first_arg_,
                                  const PqlToken &second_arg_,
-                                 const PkbPtr &pkb_)
+                                 const pkb::PkbPtr &pkb_)
     : declarations(declarations_), first_arg(first_arg_), second_arg(second_arg_), pkb(pkb_) {}
 
 Table pql::ModifiesPClause::Execute() {

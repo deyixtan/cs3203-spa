@@ -16,23 +16,23 @@ class ClauseFactory {
   ClauseFactory() = default;
   static std::shared_ptr<Clause> Create(Relationship relationship,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                        const PkbPtr &pkb);
+                                        const pkb::PkbPtr &pkb);
   static std::shared_ptr<Clause> Create(Pattern pattern,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                        const PkbPtr &pkb);
+                                        const pkb::PkbPtr &pkb);
   static std::shared_ptr<Clause> Create(const PqlToken &selected_synonym,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                        const PkbPtr &pkb);
+                                        const pkb::PkbPtr &pkb);
   static std::shared_ptr<Clause> Create(With with,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                        const PkbPtr &pkb);
+                                        const pkb::PkbPtr &pkb);
   static std::shared_ptr<Clause> Create(ResultClause result_clause,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                        const PkbPtr &pkb);
+                                        const pkb::PkbPtr &pkb);
   static std::shared_ptr<Clause> Create(const std::unordered_set<std::string> &table_synonyms,
                                         ResultClause result_clause,
                                         const std::unordered_map<std::string, DesignEntityType> &declarations,
-                                        const PkbPtr &pkb);
+                                        const pkb::PkbPtr &pkb);
 };
 
 }

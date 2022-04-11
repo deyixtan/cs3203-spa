@@ -6,7 +6,7 @@ using namespace clause_util;
 
 SelectClause::SelectClause(const PqlToken &result_clause,
                            const std::unordered_map<std::string, DesignEntityType> &declarations,
-                           const PkbPtr &pkb)
+                           const pkb::PkbPtr &pkb)
     : result_clause(result_clause), declarations(declarations), pkb(pkb) {}
 
 Table SelectClause::Execute() {
@@ -74,7 +74,7 @@ size_t SelectClause::GetWeight() {
 SelectClause::SelectClause(const std::unordered_set<std::string> &table_synonyms,
                            const PqlToken &result_clause,
                            const std::unordered_map<std::string, DesignEntityType> &declarations,
-                           const PkbPtr &pkb)
+                           const pkb::PkbPtr &pkb)
     : table_synonyms(table_synonyms), result_clause(result_clause), declarations(declarations), pkb(pkb) {}
 
 }
