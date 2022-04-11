@@ -14,7 +14,7 @@ class SourceParserSession {
 
  private:
   [[nodiscard]] StringToIntMap GetInitKahnInDegreeMap();
-  [[nodisacrd]] StringQueue GetInitKahnQueue(StringToIntMap &in_degree_map);
+  [[nodiscard]] StringQueue GetInitKahnQueue(StringToIntMap &in_degree_map);
   void ProcessKahnQueue(StringToIntMap &in_degree_map, StringQueue &queue, int &processed);
 
  public:

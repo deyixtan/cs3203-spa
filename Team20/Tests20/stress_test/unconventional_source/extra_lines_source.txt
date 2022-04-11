@@ -1,0 +1,257 @@
+procedure
+
+                    hithisistheveryfirstprocedurewithaveryveryveryveryveryveryveryverylongname
+     {
+
+
+    variable
+                            =                                              1
+
+;Uses
+
+
+
+                = 1
+
+                                    ;
+    Modifies
+
+                    =
+
+
+
+
+                                                                        1
+
+                                            ;
+    such
+                        =
+
+
+
+
+
+                                                1
+
+
+
+
+
+
+                                                                    ;stmt
+                =
+
+
+
+
+
+
+                                1;
+
+
+
+
+    verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong =
+
+
+
+                    Modifies +
+
+
+
+
+                            1;while
+
+
+
+                                    (
+verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong ==
+
+
+
+
+                1) {
+        if ((
+
+
+
+                        (
+
+
+
+                            ((
+
+                                    hi
+
+
+                                            == bye)
+
+
+                                                    && (                hi
+
+
+
+                                                            % 2 == 3)
+
+
+
+                                                                    ) ||
+
+
+
+                                                                                (
+
+
+
+                                                                                    (
+
+
+                        bye
+
+
+        > hi
+
+
+                                    ) && (
+
+
+                hello
+
+
+
+
+                            == bye)
+
+                )) || (
+
+
+
+                            hi < bye
+
+
+
+                                        )) || (
+
+
+
+                                                    hi +
+
+
+
+            2 + hi + 3 + hi
+
+
+
+                        > 3)
+
+
+                                ) then {
+
+
+
+            call hithisistheverysecondprocedurewithaveryveryveryveryveryveryveryverylongname
+
+
+                    ;
+            print hithisistheverythirdprocedurewithaveryveryveryveryveryveryveryverylongname;
+            Affects = 1 + (
+
+
+                    (((
+
+
+                            (((2 + 3)))))
+
+        )) + 4 + (5 + (((6 + 7)) + 8)
+
+        ) * 1 * 2 * 3 * 4 * (((5 *
+
+
+
+                    6 * 7) + Parent) + such) + that + 1 - 2 - 3 - 4 - 5 - 6
+
+
+                        + verylonglonglonglongnamedvariablewithverylonglonglonglongnameanditisreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallyreallysuperlong;
+        } else {
+            while(morning == 1) {
+                morning
+
+
+
+                 = 2;
+                morning = 3;
+                morning
+
+
+
+                = 4;
+                while (afternoon == 1) {afternoon = 2;evening = 3;while(evening == 3) {one = 4;while (evening == 3) {two = 4;while (evening == 3) {three = 4;while (evening == 3) {four = 4;while (evening == 3) {five = 4;if (six == 3) then {six = seven + eight;seven = 2 + six + three;} else {five = four;
+
+
+
+                                            if (six == 3) then {
+                                                six =
+
+
+
+
+
+                                                            seven + eight;
+                                                seven = 2 + six + three;
+                                            }
+
+        else {
+                                                five = four;
+                                                if (six
+
+
+
+
+                                                                == 3)
+
+
+                                                            then {
+
+
+                    six =
+
+                                        seven + eight;
+    seven = 2 + six + three;
+                                                } else {
+                                                    five = four;
+                        if (six
+
+
+
+                == 3) then {
+                                                        six = seven
+
+
+
+                                                                    + eight;
+                                                        seven = 2 + six + three;
+
+
+
+
+
+
+                                                        if (six == 3) then {six = seven + eight;seven = 2 + six + three;if (six == 3) then {six = seven + eight;seven = 2 + six + three;} else {five = four;}} else {five = four;}} else {five = four;while (nine > 1) {ten = nine;print nine;read five;while (nine > 1) {ten = nine;print nine;read five;while (nine > 1) {ten = nine;print nine;read five;}}}}}}}}}}}}}}}}}
+procedure
+
+
+hithisistheverysecondprocedurewithaveryveryveryveryveryveryveryverylongname {
+                call
+
+                        hithisistheverythirdprocedurewithaveryveryveryveryveryveryveryverylongname;
+}
+
+procedure
+
+
+
+hithisistheverythirdprocedurewithaveryveryveryveryveryveryveryverylongname {
+    read first
+
+
+            ;}

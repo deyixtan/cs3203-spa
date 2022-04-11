@@ -1,0 +1,38 @@
+procedure multi {
+  read many;
+  print many;
+  while (many > clauses) {
+    read super;
+    while (super > many) {
+      read add;
+      add = 3 + super;
+      more = clauses + clauses + 50 + clauses;
+   }
+  }
+  if (many > super) then {
+    if(many > clauses) then {
+      read long;
+    } else {
+      long = add + many + super;
+      long = super + more + many;
+    }
+  } else {
+   print many;
+  }
+  long = 2;
+  call manymany;
+}
+
+procedure manymany {
+  print more;
+  read i;
+  if (clauses < 50) then {
+    while(more < 1000) {
+      clauses = more + 100 + 1000 + 10000;
+    }
+    print more;
+  } else {
+	  clauses = more + 100;
+  }
+  print clauses;
+}

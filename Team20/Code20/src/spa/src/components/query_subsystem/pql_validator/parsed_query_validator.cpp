@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace pql_validator {
+namespace pql {
 std::unordered_set<AttriName> procedure_attribute_names = {
     AttriName::PROCNAME
 };

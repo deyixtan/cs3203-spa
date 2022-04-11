@@ -2,9 +2,7 @@
 
 namespace source {
 
-std::string InvalidParseStatementException::MESSAGE = "Unable to parse statement.";
-
-InvalidParseStatementException::InvalidParseStatementException() : m_msg(MESSAGE) {}
+InvalidParseStatementException::InvalidParseStatementException() : m_msg("Unable to parse statement.") {}
 
 const char *InvalidParseStatementException::what() const noexcept {
   return m_msg.c_str();

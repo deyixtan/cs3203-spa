@@ -2,9 +2,8 @@
 
 namespace source {
 
-std::string InvalidTermOperatorException::MESSAGE = "Invalid term operator. Expected '*', '/' or '%' operator.";
-
-InvalidTermOperatorException::InvalidTermOperatorException() : m_msg(MESSAGE) {}
+InvalidTermOperatorException::InvalidTermOperatorException() :
+    m_msg("Invalid term operator. Expected '*', '/' or '%' operator.") {}
 
 const char *InvalidTermOperatorException::what() const noexcept {
   return m_msg.c_str();

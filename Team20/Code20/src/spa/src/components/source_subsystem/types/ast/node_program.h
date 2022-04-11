@@ -1,24 +1,24 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROGRAM_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROGRAM_H_
+#ifndef NODE_PROGRAM_H
+#define NODE_PROGRAM_H
 
-#include "node.h"
+#include "components/source_subsystem/source_declarations.h"
+#include "components/source_subsystem/types/ast/node.h"
 
 namespace source {
 
 class ProgramNode : public Node {
  private:
-  std::vector<std::shared_ptr<ProcedureNode>> m_procedures;
+  ProcedureNodeStream m_procedures;
 
  public:
   ProgramNode();
-  ProgramNode(std::vector<std::shared_ptr<ProcedureNode>> procedures);
-  [[nodiscard]] std::string ToString() override;
-  [[nodiscard]] std::string GetPatternFormat() override;
+  explicit ProgramNode(ProcedureNodeStream procedures);
+  [[nodiscard]] ProcedureNodeStream GetProcedures();
+  void Accept(DesignExtractorPtr design_extractor) override;
+  void Accept(CfgBuilderPtr cfg_builder) override;
   [[nodiscard]] bool operator==(const ProgramNode &other) const;
-  void Accept(DesignExtractor *de);
-  std::unordered_map<std::string, std::shared_ptr<CfgNode>> Accept(CfgBuilder *cb);
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PROGRAM_H_
+#endif //NODE_PROGRAM_H
