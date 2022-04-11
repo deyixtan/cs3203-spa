@@ -1,13 +1,14 @@
 #ifndef CFG_BUILDER_H
 #define CFG_BUILDER_H
 
+#include "components/pkb/pkb_declarations.h"
 #include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
 class CfgBuilder : public std::enable_shared_from_this<CfgBuilder> {
  private:
-  PkbClientPtr m_pkb_client;
+  pkb::PkbClientPtr m_pkb_client;
   StringToCfgNodePtrMap m_cfg_map;
   CfgNodePtr m_curr_cfg_node;
 
@@ -27,7 +28,7 @@ class CfgBuilder : public std::enable_shared_from_this<CfgBuilder> {
                        std::string &max_stmt_no);
 
  public:
-  explicit CfgBuilder(PkbClientPtr m_pkb_client);
+  explicit CfgBuilder(pkb::PkbClientPtr m_pkb_client);
   void IterateAst(ProgramNodePtr &program_node);
   void IterateCfg();
   void Visit(ProgramNodePtr &program_node);

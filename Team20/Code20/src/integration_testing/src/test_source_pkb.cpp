@@ -5,11 +5,19 @@
 #include "components/source_subsystem/parser/source_parser.h"
 #include "components/source_subsystem/exceptions/empty_statement_list.h"
 #include "components/source_subsystem/iterator/cfg_builder.h"
-#include "components/source_subsystem/pkb_client/pkb_client.h"
+#include "components/pkb/pkb_client/pkb_client.h"
 #include "components/source_subsystem/exceptions/cyclic_call.h"
 #include "components/source_subsystem/exceptions/invalid_call.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
+#include "components/pkb/stores/call_store/call_store.h"
+#include "components/pkb/stores/next_store/next_store.h"
 
 using namespace source;
+using namespace pkb;
 
 extern std::string sample_source1;
 extern std::string sample_source2;
@@ -30,7 +38,7 @@ std::shared_ptr<ProgramNode> GenerateAbstractSyntaxTree(std::string source) {
   return ast;
 }
 
-PkbPtr GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
+pkb::PkbPtr GetPopulatedPkbInstance(std::shared_ptr<ProgramNode> ast) {
   PkbPtr pkb = std::make_shared<PKB>();
 
   std::shared_ptr<PkbClient> pkb_client = std::make_shared<PkbClient>(pkb);

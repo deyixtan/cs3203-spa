@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include "tree_node.h"
 
+namespace pkb {
+
 class StackNode {
  public:
   TreeNode *treeNode;
@@ -15,5 +17,7 @@ class StackNode {
     next = nullptr;
   }
 };
+
+}
 
 #endif //STACK_NODE_H

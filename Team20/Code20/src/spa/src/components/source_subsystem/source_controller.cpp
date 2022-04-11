@@ -1,9 +1,9 @@
 #include "source_controller.h"
+#include "components/pkb/pkb_client/pkb_client.h"
 #include "components/source_subsystem/iterator/cfg_builder.h"
 #include "components/source_subsystem/iterator/design_extractor.h"
 #include "components/source_subsystem/lexer/source_lexer.h"
 #include "components/source_subsystem/parser/source_parser.h"
-#include "components/source_subsystem/pkb_client/pkb_client.h"
 #include "components/source_subsystem/types/ast/node_program.h"
 #include "utils/file_util.h"
 
@@ -35,8 +35,8 @@ ProgramNodePtr SourceController::ParseTokenStream(TokenStream &token_stream) {
   return program_node;
 }
 
-void SourceController::PopulatePKB(PkbPtr &pkb, ProgramNodePtr &ast) {
-  PkbClientPtr pkb_client = std::make_shared<PkbClient>(pkb);
+void SourceController::PopulatePKB(pkb::PkbPtr &pkb, ProgramNodePtr &ast) {
+  pkb::PkbClientPtr pkb_client = std::make_shared<pkb::PkbClient>(pkb);
 
   DesignExtractorPtr design_extractor = std::make_shared<DesignExtractor>(pkb_client);
   design_extractor->IterateAst(ast);

@@ -1,5 +1,5 @@
 #include "cfg_builder.h"
-#include "components/source_subsystem/pkb_client/pkb_client.h"
+#include "components/pkb/pkb_client/pkb_client.h"
 #include "components/source_subsystem/types/ast/node_assign_statement.h"
 #include "components/source_subsystem/types/ast/node_call_statement.h"
 #include "components/source_subsystem/types/ast/node_if_statement.h"
@@ -9,11 +9,12 @@
 #include "components/source_subsystem/types/ast/node_read_statement.h"
 #include "components/source_subsystem/types/ast/node_statement_list.h"
 #include "components/source_subsystem/types/ast/node_while_statement.h"
+#include "components/source_subsystem/types/cfg/cfg.h"
 #include "components/source_subsystem/types/cfg/cfg_node.h"
 
 namespace source {
 
-CfgBuilder::CfgBuilder(PkbClientPtr pkb_client)
+CfgBuilder::CfgBuilder(pkb::PkbClientPtr pkb_client)
     : m_pkb_client(std::move(pkb_client)), m_cfg_map(StringToCfgNodePtrMap()) {}
 
 void CfgBuilder::IterateAst(ProgramNodePtr &program_node) {

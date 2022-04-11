@@ -1,6 +1,13 @@
 #include "pkb_stub.h"
 #include "components/pkb/pkb.h"
 #include "catch.hpp"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
+
+using namespace pkb;
 
 /*
 	procedure main {
@@ -213,7 +220,7 @@ TEST_CASE("PKB instance") {
 TEST_CASE("proc p; select p") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetStmt(PROC);
+  auto actual = pkb->GetStmt(StmtType::PROC);
   auto expected = proc_list;
 
   REQUIRE(actual == expected);
@@ -471,7 +478,7 @@ TEST_CASE("Get var modified by proc (invalid)") {
 TEST_CASE("Get proc modified by var (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(PROC, "dog");
+  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(StmtType::PROC, "dog");
   auto expected = mod_var_to_proc.at("dog");
 
   REQUIRE(actual == expected);
@@ -480,7 +487,7 @@ TEST_CASE("Get proc modified by var (correct)") {
 TEST_CASE("Get proc modified by var (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(PROC, "horse");
+  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(StmtType::PROC, "horse");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);

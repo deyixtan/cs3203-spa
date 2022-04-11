@@ -1,5 +1,7 @@
 #include "pkb_relationship.h"
 
+namespace pkb {
+
 PkbRelationship::PkbRelationship() {}
 
 void PkbRelationship::AddLowerSet(IDENT stmt1, IDENT stmt2) {
@@ -32,4 +34,6 @@ IDENT_SET_MAP PkbRelationship::GetLowerToUpperSet() {
 
 IDENT_PAIR_VECTOR PkbRelationship::GetPairVector() {
   return pair_vector;
+}
+
 }

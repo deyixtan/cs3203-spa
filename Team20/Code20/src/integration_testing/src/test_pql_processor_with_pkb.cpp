@@ -4,9 +4,16 @@
 #include "components/query_subsystem/pql_lexer/pql_lexer.h"
 #include "components/query_subsystem/pql_parser/pql_parser.h"
 #include "components/query_subsystem/pql_evaluator/query_evaluator.h"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
 
-PkbPtr set_up_pkb() {
-  PkbPtr pkb = std::make_shared<PKB>();
+using namespace pkb;
+
+pkb::PkbPtr set_up_pkb() {
+  pkb::PkbPtr pkb = std::make_shared<PKB>();
   pkb->AddStmt("main", PROC);
   pkb->AddStmt("foo", PROC);
   pkb->AddStmt("bar", PROC);
@@ -144,7 +151,7 @@ PkbPtr set_up_pkb() {
 }
 
 TEST_CASE("Test components between pql processor and PKB (Sample source 1)") {
-  PkbPtr pkb = set_up_pkb();
+  pkb::PkbPtr pkb = set_up_pkb();
 
   SECTION("Test if-statement count and their statement number") {
     PqlLexer lexer{"if ifs; Select ifs"};

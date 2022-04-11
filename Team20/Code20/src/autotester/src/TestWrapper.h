@@ -14,7 +14,7 @@
 
 class TestWrapper : public AbstractWrapper {
  private:
-  PkbPtr pkb;
+  pkb::PkbPtr pkb;
 
  public:
   // default constructor

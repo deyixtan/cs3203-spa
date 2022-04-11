@@ -1,11 +1,13 @@
 #include "affect_store_factory.h"
 #include "affects_store.h"
-#include "../../pkb_relationship.h"
+#include "components/pkb/pkb_relationship.h"
+
+namespace pkb {
 
 AffectsStoreFactory::AffectsStoreFactory(IDENT_SET_VECTOR_PTR stmt_vector,
-                           IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,
-                           ModifiesStorePtr modify_store,
-                           UsesStorePtr uses_store) :
+                                         IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,
+                                         ModifiesStorePtr modify_store,
+                                         UsesStorePtr uses_store) :
     Store(move(stmt_vector), move(stmt_type)),
     m_modify_store(std::move(modify_store)),
     m_uses_store(std::move(uses_store)) {}
@@ -46,4 +48,6 @@ void AffectsStoreFactory::ComputeAffectsStore(bool is_affect_star_involved) {
 
 void AffectsStoreFactory::ClearAffectsStore() {
   m_affects_store = nullptr;
+}
+
 }

@@ -1,15 +1,9 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
+#ifndef STORE_H
+#define STORE_H
 
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include <memory>
-#include <algorithm>
+#include "components/pkb/pkb_declarations.h"
 
-#include "../pkb_declarations.h"
-#include "../../../utils/pair_hash.h"
+namespace pkb {
 
 class Store {
  protected:
@@ -22,4 +16,6 @@ class Store {
   [[nodiscard]] int IsMapContains(StmtType type1, StmtType type2, NESTED_STMT_STMT_MAP *pair_map);
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
+}
+
+#endif //STORE_H

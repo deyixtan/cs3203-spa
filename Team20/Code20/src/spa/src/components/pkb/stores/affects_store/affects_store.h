@@ -2,8 +2,11 @@
 #define AFFECTS_STORE_H
 
 #include "components/pkb/pkb_declarations.h"
+#include "components/pkb/pkb_relationship.h"
 #include "components/pkb/stores/stmt_stmt_store.h"
 #include "components/source_subsystem/source_declarations.h"
+
+namespace pkb {
 
 class AffectsStore : StmtStmtStore {
  private:
@@ -60,5 +63,7 @@ class AffectsStore : StmtStmtStore {
   [[nodiscard]] IDENT_SET GetAffectsSameSynSet();
   [[nodiscard]] IDENT_SET GetAffectsStarSameSynSet();
 };
+
+}
 
 #endif //AFFECTS_STORE_H

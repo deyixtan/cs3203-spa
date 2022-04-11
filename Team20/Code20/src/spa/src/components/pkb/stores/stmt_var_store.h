@@ -1,7 +1,10 @@
 #ifndef STMT_VAR_STORE_H
 #define STMT_VAR_STORE_H
 
+#include "components/pkb/pkb_declarations.h"
 #include "store.h"
+
+namespace pkb {
 
 class StmtVarStore : public Store {
  private:
@@ -23,5 +26,7 @@ class StmtVarStore : public Store {
   [[nodiscard]] IDENT_SET GetAllProc();
   [[nodiscard]] IDENT_PAIR_VECTOR GetPairByType(StmtType type);
 };
+
+}
 
 #endif //STMT_VAR_STORE_H

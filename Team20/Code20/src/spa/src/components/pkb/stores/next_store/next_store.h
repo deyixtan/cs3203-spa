@@ -1,7 +1,10 @@
 #ifndef NEXT_STORE_H
 #define NEXT_STORE_H
 
+#include "components/pkb/pkb_declarations.h"
 #include "components/pkb/stores/stmt_stmt_store.h"
+
+namespace pkb {
 
 class ParentStore;
 class FollowsStore;
@@ -40,13 +43,24 @@ class NextStore : public StmtStmtStore {
   void InsertPairResultLower(int start, int end, std::unordered_set<std::string> &res, std::string const stmt);
   std::string GetEndStmtOfWhileLoop(const std::string &smallest_stmt);
   std::string GetStartStmtOfWhileLoop(std::unordered_set<std::string> &ancestor_set);
-  void InsertLowerResultForIf(std::string &last_proc_stmt_no, std::string const &stmt, std::string const &prev_if_stmt, std::string const &prev_end_else_stmt, std::unordered_set<std::string> &res, int nesting_level);
-  void InsertUpperResultForIf(std::string &first_proc_stmt_no, std::string const &stmt, std::string const &prev_if_stmt, std::unordered_set<std::string> &res, int nesting_level);
+  void InsertLowerResultForIf(std::string &last_proc_stmt_no,
+                              std::string const &stmt,
+                              std::string const &prev_if_stmt,
+                              std::string const &prev_end_else_stmt,
+                              std::unordered_set<std::string> &res,
+                              int nesting_level);
+  void InsertUpperResultForIf(std::string &first_proc_stmt_no,
+                              std::string const &stmt,
+                              std::string const &prev_if_stmt,
+                              std::unordered_set<std::string> &res,
+                              int nesting_level);
   std::string GetFirstElseStmt(std::string const &if_stmt);
   std::string GetEndElseStmt(std::string const &if_stmt);
   void ClearNextStarCache();
   void ComputeNextStore();
   bool IsNextStoreComputed();
 };
+
+}
 
 #endif //NEXT_STORE_H

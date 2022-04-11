@@ -3,10 +3,10 @@
 
 #include "../pql_parser/parsed_query.h"
 #include "../../pkb/pkb.h"
-#include "clause.h"
-#include "clause_factory.h"
+#include "components/query_subsystem/pql_evaluator/clauses/clause.h"
+#include "components/query_subsystem/pql_evaluator/clauses/clause_factory.h"
 #include "clause_util.h"
-#include "clause_group_list.h"
+#include "components/query_subsystem/pql_evaluator/clauses/clause_group_list.h"
 
 #include <string>
 #include <unordered_set>
@@ -18,13 +18,13 @@ namespace pql {
 
 class QueryEvaluator {
  public:
-  static void Evaluate(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results);
+  static void Evaluate(ParsedQuery &query, const pkb::PkbPtr &pkb, std::list<std::string> &results);
  private:
-  static void EvaluateUnoptimized(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results);
-  static void EvaluateOptimized(ParsedQuery &query, const PkbPtr &pkb, std::list<std::string> &results);
-  static ClauseGroupList ExtractClauseGroups(ParsedQuery &query, const PkbPtr &pkb);
-  static void ProjectResults(ParsedQuery &query, const PkbPtr &pkb, Table &table, std::list<std::string> &results);
-  static std::queue<std::shared_ptr<pql::Clause> > ExtractClauses(ParsedQuery &query, const PkbPtr &pkb);
+  static void EvaluateUnoptimized(ParsedQuery &query, const pkb::PkbPtr &pkb, std::list<std::string> &results);
+  static void EvaluateOptimized(ParsedQuery &query, const pkb::PkbPtr &pkb, std::list<std::string> &results);
+  static ClauseGroupList ExtractClauseGroups(ParsedQuery &query, const pkb::PkbPtr &pkb);
+  static void ProjectResults(ParsedQuery &query, const pkb::PkbPtr &pkb, Table &table, std::list<std::string> &results);
+  static std::queue<std::shared_ptr<pql::Clause> > ExtractClauses(ParsedQuery &query, const pkb::PkbPtr &pkb);
   static bool EvaluateNoSynonymClauseGroup(ClauseGroup &clause_group);
   static bool EvaluateUnrelatedClauseGroups(std::vector<ClauseGroup> &clause_groups);
   static Table EvaluateRelatedClauseGroups(std::vector<ClauseGroup> &clause_groups,

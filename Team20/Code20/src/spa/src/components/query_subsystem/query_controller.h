@@ -14,7 +14,7 @@ namespace pql {
 
 class QueryController {
  public:
-  static void ProcessQuery(std::string query, const PkbPtr &pkb, std::list<std::string> &results);
+  static void ProcessQuery(std::string query, const pkb::PkbPtr &pkb, std::list<std::string> &results);
 };
 
 }
