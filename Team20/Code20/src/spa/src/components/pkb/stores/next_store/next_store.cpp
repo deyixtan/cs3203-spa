@@ -54,9 +54,9 @@ IDENT_SET NextStore::GetNextOf(StmtType type, IDENT const &stmt) {
 
 IDENT_SET NextStore::GetBeforeStarOf(StmtType type, IDENT const &stmt) {
   std::unordered_set<std::string> res;
-  if (star_type_pair_map.find(STMT) != type_pair_map.end()) {
-    if (star_type_pair_map.at(STMT).find(type) != type_pair_map.at(type).end()) {
-      return GetHelper(STMT, type, 1, stmt, true);
+  if (star_type_pair_map.find(type) != star_type_pair_map.end()) {
+    if (star_type_pair_map.at(type).find(STMT) != star_type_pair_map.at(type).end()) {
+      return GetHelper(type, STMT, 1, stmt, true);
     }
   }
   GetUpperStarOfHelper(stmt, res);
@@ -65,8 +65,8 @@ IDENT_SET NextStore::GetBeforeStarOf(StmtType type, IDENT const &stmt) {
 
 IDENT_SET NextStore::GetNextStarOf(StmtType type, IDENT const &stmt) {
   std::unordered_set<std::string> res;
-  if (star_type_pair_map.find(STMT) != type_pair_map.end()) {
-    if (star_type_pair_map.at(STMT).find(type) != type_pair_map.at(type).end()) {
+  if (star_type_pair_map.find(STMT) != star_type_pair_map.end()) {
+    if (star_type_pair_map.at(STMT).find(type) != star_type_pair_map.at(STMT).end()) {
       return GetHelper(STMT, type, 0, stmt, true);
     }
   }
