@@ -422,7 +422,6 @@ none
 if ifs; assign a;
 Select a such that Next*(ifs, a)
 13,14,15,16,17
-none
 5000
 86 - Next*(IF, CALL)
 if ifs; call cl;
