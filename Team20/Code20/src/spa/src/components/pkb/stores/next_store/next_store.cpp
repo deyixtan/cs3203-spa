@@ -92,7 +92,7 @@ IDENT_PAIR_VECTOR NextStore::GetAllNextStmt(StmtType type1, StmtType type2) {
 
 IDENT_PAIR_VECTOR NextStore::GetAllNextStarStmt(StmtType type1, StmtType type2) {
   if (GetStarPairByType(type1, type2).empty()) {
-    GetNextStarPairs();
+    return GetNextStarPairs();
   }
   return GetStarPairByType(type1, type2);
 }
