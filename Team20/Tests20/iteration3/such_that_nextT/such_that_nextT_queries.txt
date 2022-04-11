@@ -356,7 +356,7 @@ Select a such that Next*(cl, a)
 72 - Next*(CALL, CALL)
 call cl1, cl2;
 Select cl2 such that Next*(cl1, cl2)
-none
+10
 5000
 73 - Next*(CALL, WHILE)
 call cl; while w;
