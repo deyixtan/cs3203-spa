@@ -26,19 +26,25 @@ ClauseGroup ClauseGroupList::GetNoSynonymsClauseGroup() {
   return no_synonyms_clause_group;
 }
 
-std::pair<std::vector<ClauseGroup>,
-          std::vector<ClauseGroup>> ClauseGroupList::SeparateSynonymsClauseGroups(const std::shared_ptr<Clause> &select_clause_ptr) {
-  std::vector<ClauseGroup> unrelated_clause_groups;
-  std::vector<ClauseGroup> related_clause_groups;
-
-  for (auto i = connected_synonyms_clause_groups.size() - 1; i > 0; --i) {
-    for (auto j = i - 1; j >= 0; --j) {
+void ClauseGroupList::UpdateConnectedSynonymGroups() {
+  for (int i = connected_synonyms_clause_groups.size() - 1; i > 0; --i) {
+    for (int j = i - 1; j >= 0; --j) {
       if (connected_synonyms_clause_groups.at(j).IsConnected(connected_synonyms_clause_groups.at(i))) {
         connected_synonyms_clause_groups.at(j).MergeClauseGroup(connected_synonyms_clause_groups.at(i));
         connected_synonyms_clause_groups.erase(connected_synonyms_clause_groups.begin() + i);
         break;
       }
     }
+  }
+}
+
+std::pair<std::vector<ClauseGroup>,
+          std::vector<ClauseGroup>> ClauseGroupList::SeparateSynonymsClauseGroups(const std::shared_ptr<Clause> &select_clause_ptr) {
+  std::vector<ClauseGroup> unrelated_clause_groups;
+  std::vector<ClauseGroup> related_clause_groups;
+
+  if (!connected_synonyms_clause_groups.empty()) {
+    UpdateConnectedSynonymGroups();
   }
 
   for (auto &clause_group : connected_synonyms_clause_groups) {
