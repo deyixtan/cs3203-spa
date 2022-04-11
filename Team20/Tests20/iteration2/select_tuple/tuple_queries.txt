@@ -641,27 +641,27 @@ Select <w.  stmt#,v.  varName> such that Modifies (w, v) and Uses (w, v)
 129 - triple tuple with no overlaps
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <w.stmt#, v.varName, rd> such that Follows* (a, a1) and Affects (a, a1) such that Next*(a, a1)
-2 a 7, 2 b 7, 2 c 7, 2 d 7, 2 e 7, 15 a 7, 15 b 7, 15 c 7, 15 d 7, 15 e 7, 17 a 7, 17 b 7, 17 c 7, 17 d 7, 17 e 7
+none
 5000
 130 - triple tuple with 1 overlap
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <w.stmt#, v.varName, a> such that Follows* (a, a1) and Affects (a, a1) such that Next*(a, a1)
-2 a 3, 2 b 3, 2 c 3, 2 d 3, 2 e 3, 15 a 3, 15 b 3, 15 c 3, 15 d 3, 15 e 3, 17 a 3, 17 b 3, 17 c 3, 17 d 3, 17 e 3
+none
 5000
 131 - triple tuple with 2 overlaps
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <w.stmt#, v.varName, a> such that Follows* (a, a1) and Modifies (a, v) such that Affects(a, a1)
-2 c 3, 15 c 3, 17 c 3
+none
 5000
 132 - triple tuple with 2 overlaps
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <w.stmt#, v.varName, a> such that Uses (ifs, v) and Modifies (a, v) such that Affects(a, a1)
-2 c 3, 15 c 3, 17 c 3
+15 c 16, 17 c 16, 2 c 16, 2 d 5, 15 d 5, 17 d 5, 15 a 1, 17 a 1, 2 a 1
 5000
 133 - triple tuple with 3 overlaps
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <w.stmt#, v.varName, a> such that Uses (w, v) and Uses (pn, v) such that Affects(a, a1)
-2 a 3
+2 a 5, 2 a 1, 2 a 16
 5000
 134 - triple tuple with 3 overlaps - negative
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
@@ -671,10 +671,10 @@ none
 135 - 4 tuple
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <w.stmt#, v.varName, a, a1> such that Uses (w, v) and Uses (pn, v) such that Affects(a, a1)
-2 a 3 8
+2 a 1 6, 2 a 5 5, 2 a 16 16, 2 a 16 18
 5000
 136 - 4 tuple
 assign a, a1; variable v, v1; print pn; read rd; call cl; if ifs; while w; procedure p, p1;
 Select <w.stmt#, v.varName, a, a1> such that Uses (w, v) and Next*(a, a1) such that Affects(a, a1)
-2 a 3 8, 2 b 3 8, 2 c 3 8, 2 d 3 8, 15 b 3 8, 15 c 3 8, 17 c 3 8
+17 c 5 5, 17 c 16 18, 17 c 1 6, 15 c 1 6, 2 d 5 5, 15 b 16 16, 15 c 16 16, 2 a 16 16, 2 a 16 18, 15 c 5 5, 15 b 1 6, 2 a 1 6, 2 d 16 16, 15 b 16 18, 2 c 5 5, 15 c 16 18, 2 b 5 5, 2 b 16 18, 15 b 5 5, 2 d 16 18, 2 c 16 16, 2 b 16 16, 17 c 16 16, 2 a 5 5, 2 b 1 6, 2 c 16 18, 2 c 1 6, 2 d 1 6
 5000
