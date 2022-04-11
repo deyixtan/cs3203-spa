@@ -176,7 +176,7 @@ Select pn such that Next*(pn, _)
 36 - Next*(ASSIGN, _)
 assign a;
 Select a such that Next*(a, _)
-4, 6, 9, 11, 13, 14, 15, 16
+4, 6, 9, 11, 13, 14, 15, 16, 18, 19
 5000
 37 - Next*(CALL, _)
 call cl;
