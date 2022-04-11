@@ -2,9 +2,10 @@
 #define PARSER_PARSED_QUERY_H
 
 #include "../pql_lexer/pql_token.h"
+#include "declaration.h"
 #include "relationship.h"
 #include "pattern.h"
-#include "with_clause.h"
+#include "with.h"
 #include "result_clause.h"
 #include "../utils.h"
 
@@ -13,7 +14,7 @@
 class ParsedQuery {
  private:
   ResultClause result_clause;
-  std::unordered_map<std::string, DesignEntityType> declarations;
+  Declaration declarations;
   std::vector<Relationship> relationships;
   std::vector<Pattern> patterns;
   std::vector<With> withs;
@@ -24,14 +25,12 @@ class ParsedQuery {
   void AddPattern(Pattern);
   void AddRelationship(Relationship);
   void AddWithClause(With);
-  void SetDeclarations(std::unordered_map<std::string, DesignEntityType>);
+  void SetDeclarations(Declaration &parsed_declarations);
   ResultClause GetResultClause();
-  std::unordered_map<std::string, DesignEntityType> GetDeclaration();
+  Declaration GetDeclaration();
   std::vector<Relationship> GetRelationships();
   std::vector<Pattern> GetPatterns();
   std::vector<With> GetWithClause();
 };
-
-extern std::unordered_map<PqlTokenType, DesignEntityType> token_design_map;
 
 #endif

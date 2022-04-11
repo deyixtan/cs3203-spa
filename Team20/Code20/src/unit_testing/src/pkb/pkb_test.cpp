@@ -1,6 +1,13 @@
 #include "pkb_stub.h"
 #include "components/pkb/pkb.h"
 #include "catch.hpp"
+#include "components/pkb/stores/uses_store/uses_store.h"
+#include "components/pkb/stores/modifies_store/modifies_store.h"
+#include "components/pkb/stores/follows_store/follows_store.h"
+#include "components/pkb/stores/parent_store/parent_store.h"
+#include "components/pkb/stores/pattern_store/pattern_store.h"
+
+using namespace pkb;
 
 /*
 	procedure main {
@@ -84,83 +91,103 @@ PKB *set_up_pkb() {
 
   pkb->AddStmt("3", PRINT);
   pkb->AddStmt("13", PRINT);
-  
-  pkb->GetUsageStore()->AddProcVar("main", "dog");
-  pkb->GetUsageStore()->AddProcVar("main", "cat");
-  pkb->GetUsageStore()->AddProcVar("main", "mouse");
-  pkb->GetUsageStore()->AddProcVar("main", "pig");
-  pkb->GetUsageStore()->AddProcVar("main", "ox");
-  pkb->GetUsageStore()->AddProcVar("main", "dragon");
-  pkb->GetUsageStore()->AddProcVar("main", "rabbit");
-  pkb->GetUsageStore()->AddProcVar("foo", "snake");
-  pkb->GetUsageStore()->AddProcVar("foo", "dog");
-  pkb->GetUsageStore()->AddProcVar("foo", "rabbit");
-  pkb->GetUsageStore()->AddProcVar("foo", "cat");
-  pkb->GetUsageStore()->AddProcVar("bar", "rabbit");
-  pkb->GetUsageStore()->AddProcVar("func", "monkey");
-  pkb->GetUsageStore()->AddProcVar("func", "tiger");
-  pkb->GetUsageStore()->AddProcVar("func", "dog");
-  
-  pkb->GetUsageStore()->AddStmtVar("3", "cat");
-  pkb->GetUsageStore()->AddStmtVar("4", "dog");
-  pkb->GetUsageStore()->AddStmtVar("4", "mouse");
-  pkb->GetUsageStore()->AddStmtVar("4", "cat");
-  pkb->GetUsageStore()->AddStmtVar("4", "dragon");
-  pkb->GetUsageStore()->AddStmtVar("4", "rabbit");
-  pkb->GetUsageStore()->AddStmtVar("5", "dog");
-  pkb->GetUsageStore()->AddStmtVar("6", "pig");
-  pkb->GetUsageStore()->AddStmtVar("6", "mouse");
-  pkb->GetUsageStore()->AddStmtVar("7", "pig");
-  pkb->GetUsageStore()->AddStmtVar("7", "ox");
-  pkb->GetUsageStore()->AddStmtVar("7", "cat");
-  pkb->GetUsageStore()->AddStmtVar("8", "dragon");
-  pkb->GetUsageStore()->AddStmtVar("8", "dog");
-  pkb->GetUsageStore()->AddStmtVar("8", "rabbit");
-  pkb->GetUsageStore()->AddStmtVar("8", "mouse");
-  pkb->GetUsageStore()->AddStmtVar("10", "snake");
-  pkb->GetUsageStore()->AddStmtVar("10", "dog");
-  pkb->GetUsageStore()->AddStmtVar("10", "rabbit");
-  pkb->GetUsageStore()->AddStmtVar("11", "cat");
-  pkb->GetUsageStore()->AddStmtVar("13", "rabbit");
-  pkb->GetUsageStore()->AddStmtVar("15", "monkey");
-  pkb->GetUsageStore()->AddStmtVar("15", "tiger");
-  pkb->GetUsageStore()->AddStmtVar("15", "dog");
 
-  pkb->GetModifyStore()->AddProcVar("main", "dog");
-  pkb->GetModifyStore()->AddProcVar("main", "pig");
-  pkb->GetModifyStore()->AddProcVar("main", "dragon");
-  pkb->GetModifyStore()->AddProcVar("foo", "snake");
-  pkb->GetModifyStore()->AddProcVar("func", "monkey");
+  pkb->AddTypeOfStmt("1", READ);
+  pkb->AddTypeOfStmt("2", STMT);
+  pkb->AddTypeOfStmt("3", PRINT);
+  pkb->AddTypeOfStmt("4", ASSIGN);
+  pkb->AddTypeOfStmt("5", STMT);
+  pkb->AddTypeOfStmt("6", STMT);
+  pkb->AddTypeOfStmt("7", ASSIGN);
+  pkb->AddTypeOfStmt("8", ASSIGN);
+  pkb->AddTypeOfStmt("9", STMT);
+  pkb->AddTypeOfStmt("10", ASSIGN);
+  pkb->AddTypeOfStmt("11", STMT);
+  pkb->AddTypeOfStmt("12", STMT);
+  pkb->AddTypeOfStmt("13", PRINT);
+  pkb->AddTypeOfStmt("14", STMT);
+  pkb->AddTypeOfStmt("15", ASSIGN);
 
-  pkb->GetModifyStore()->AddStmtVar("1", "dog");
-  pkb->GetModifyStore()->AddStmtVar("4", "dog");
-  pkb->GetModifyStore()->AddStmtVar("7", "pig");
-  pkb->GetModifyStore()->AddStmtVar("8", "dragon");
-  pkb->GetModifyStore()->AddStmtVar("10", "snake");
-  pkb->GetModifyStore()->AddStmtVar("15", "monkey");
+  pkb->GetUsesStore()->AddStmtVar("3", "cat");
+  pkb->GetUsesStore()->AddStmtVar("4", "dog");
+  pkb->GetUsesStore()->AddStmtVar("4", "mouse");
+  pkb->GetUsesStore()->AddStmtVar("4", "cat");
+  pkb->GetUsesStore()->AddStmtVar("4", "dragon");
+  pkb->GetUsesStore()->AddStmtVar("4", "rabbit");
+  pkb->GetUsesStore()->AddStmtVar("5", "dog");
+  pkb->GetUsesStore()->AddStmtVar("6", "pig");
+  pkb->GetUsesStore()->AddStmtVar("6", "mouse");
+  pkb->GetUsesStore()->AddStmtVar("7", "pig");
+  pkb->GetUsesStore()->AddStmtVar("7", "ox");
+  pkb->GetUsesStore()->AddStmtVar("7", "cat");
+  pkb->GetUsesStore()->AddStmtVar("8", "dragon");
+  pkb->GetUsesStore()->AddStmtVar("8", "dog");
+  pkb->GetUsesStore()->AddStmtVar("8", "rabbit");
+  pkb->GetUsesStore()->AddStmtVar("8", "mouse");
+  pkb->GetUsesStore()->AddStmtVar("10", "snake");
+  pkb->GetUsesStore()->AddStmtVar("10", "dog");
+  pkb->GetUsesStore()->AddStmtVar("10", "rabbit");
+  pkb->GetUsesStore()->AddStmtVar("11", "cat");
+  pkb->GetUsesStore()->AddStmtVar("13", "rabbit");
+  pkb->GetUsesStore()->AddStmtVar("15", "monkey");
+  pkb->GetUsesStore()->AddStmtVar("15", "tiger");
+  pkb->GetUsesStore()->AddStmtVar("15", "dog");
+  pkb->GetUsesStore()->AddStmtVar("main", "cat");
+  pkb->GetUsesStore()->AddStmtVar("main", "dog");
+  pkb->GetUsesStore()->AddStmtVar("main", "mouse");
+  pkb->GetUsesStore()->AddStmtVar("main", "dragon");
+  pkb->GetUsesStore()->AddStmtVar("main", "rabbit");
+  pkb->GetUsesStore()->AddStmtVar("main", "pig");
+  pkb->GetUsesStore()->AddStmtVar("main", "ox");
+  pkb->GetUsesStore()->AddStmtVar("foo", "cat");
+  pkb->GetUsesStore()->AddStmtVar("foo", "dog");
+  pkb->GetUsesStore()->AddStmtVar("foo", "rabbit");
+  pkb->GetUsesStore()->AddStmtVar("foo", "monkey");
+  pkb->GetUsesStore()->AddStmtVar("foo", "tiger");
+  pkb->GetUsesStore()->AddStmtVar("bar", "dog");
+  pkb->GetUsesStore()->AddStmtVar("bar", "rabbit");
+  pkb->GetUsesStore()->AddStmtVar("bar", "tiger");
+  pkb->GetUsesStore()->AddStmtVar("func", "tiger");
+  pkb->GetUsesStore()->AddStmtVar("func", "dog");
 
-  pkb->GetFollowStore()->AddFollow("1", "2");
-  pkb->GetFollowStore()->AddFollow("2", "3");
-  pkb->GetFollowStore()->AddFollow("3", "4");
-  pkb->GetFollowStore()->AddFollow("4", "5");
-  pkb->GetFollowStore()->AddFollow("8", "9");
-  pkb->GetFollowStore()->AddFollow("10", "11");
-  pkb->GetFollowStore()->AddFollow("13", "14");
+  pkb->GetModifiesStore()->AddStmtVar("1", "dog");
+  pkb->GetModifiesStore()->AddStmtVar("4", "dog");
+  pkb->GetModifiesStore()->AddStmtVar("7", "pig");
+  pkb->GetModifiesStore()->AddStmtVar("8", "dragon");
+  pkb->GetModifiesStore()->AddStmtVar("10", "snake");
+  pkb->GetModifiesStore()->AddStmtVar("15", "monkey");
+  pkb->GetModifiesStore()->AddStmtVar("main", "dog");
+  pkb->GetModifiesStore()->AddStmtVar("main", "pig");
+  pkb->GetModifiesStore()->AddStmtVar("main", "dragon");
+  pkb->GetModifiesStore()->AddStmtVar("main", "snake");
+  pkb->GetModifiesStore()->AddStmtVar("main", "monkey");
+  pkb->GetModifiesStore()->AddStmtVar("foo", "snake");
+  pkb->GetModifiesStore()->AddStmtVar("foo", "monkey");
+  pkb->GetModifiesStore()->AddStmtVar("func", "monkey");
+  pkb->GetModifiesStore()->AddStmtVar("bar", "monkey");
 
-  pkb->GetFollowStore()->AddFollowStar("1", "2");
-  pkb->GetFollowStore()->AddFollowStar("1", "3");
-  pkb->GetFollowStore()->AddFollowStar("1", "4");
-  pkb->GetFollowStore()->AddFollowStar("1", "5");
-  pkb->GetFollowStore()->AddFollowStar("2", "3");
-  pkb->GetFollowStore()->AddFollowStar("2", "4");
-  pkb->GetFollowStore()->AddFollowStar("2", "5");
-  pkb->GetFollowStore()->AddFollowStar("3", "4");
-  pkb->GetFollowStore()->AddFollowStar("3", "5");
-  pkb->GetFollowStore()->AddFollowStar("4", "5");
-  pkb->GetFollowStore()->AddFollowStar("8", "9");
-  pkb->GetFollowStore()->AddFollowStar("8", "9");
-  pkb->GetFollowStore()->AddFollowStar("10", "11");
-  pkb->GetFollowStore()->AddFollowStar("13", "14");
+  pkb->GetFollowsStore()->AddFollow("1", "2");
+  pkb->GetFollowsStore()->AddFollow("2", "3");
+  pkb->GetFollowsStore()->AddFollow("3", "4");
+  pkb->GetFollowsStore()->AddFollow("4", "5");
+  pkb->GetFollowsStore()->AddFollow("8", "9");
+  pkb->GetFollowsStore()->AddFollow("10", "11");
+  pkb->GetFollowsStore()->AddFollow("13", "14");
+
+  pkb->GetFollowsStore()->AddFollowStar("1", "2");
+  pkb->GetFollowsStore()->AddFollowStar("1", "3");
+  pkb->GetFollowsStore()->AddFollowStar("1", "4");
+  pkb->GetFollowsStore()->AddFollowStar("1", "5");
+  pkb->GetFollowsStore()->AddFollowStar("2", "3");
+  pkb->GetFollowsStore()->AddFollowStar("2", "4");
+  pkb->GetFollowsStore()->AddFollowStar("2", "5");
+  pkb->GetFollowsStore()->AddFollowStar("3", "4");
+  pkb->GetFollowsStore()->AddFollowStar("3", "5");
+  pkb->GetFollowsStore()->AddFollowStar("4", "5");
+  pkb->GetFollowsStore()->AddFollowStar("8", "9");
+  pkb->GetFollowsStore()->AddFollowStar("8", "9");
+  pkb->GetFollowsStore()->AddFollowStar("10", "11");
+  pkb->GetFollowsStore()->AddFollowStar("13", "14");
 
   pkb->GetParentStore()->AddParent("5", "6");
   pkb->GetParentStore()->AddParent("5", "8");
@@ -174,6 +201,12 @@ PKB *set_up_pkb() {
   pkb->GetPatternStore()->AddStmtWithPattern("10", "snake", "((dog)+(rabbit))");
   pkb->GetPatternStore()->AddStmtWithPattern("15", "monkey", "((tiger)+(dog))");
 
+  pkb->AddStmtToName(PRINT, "3", "cat");
+  pkb->AddNameToStmt(PRINT, "cat", "3");
+  pkb->AddStmtToName(PRINT, "13", "rabbit");
+  pkb->AddNameToStmt(PRINT, "rabbit", "13");
+  pkb->AddStmtToName(READ, "1", "dog");
+  pkb->AddNameToStmt(READ, "dog", "1");
   return pkb;
 }
 
@@ -187,7 +220,7 @@ TEST_CASE("PKB instance") {
 TEST_CASE("proc p; select p") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetStmt(PROC);
+  auto actual = pkb->GetStmt(StmtType::PROC);
   auto expected = proc_list;
 
   REQUIRE(actual == expected);
@@ -270,7 +303,7 @@ TEST_CASE("print p; select p") {
 TEST_CASE("Get var used by stmt (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->GetVarUsedByStmt("7");
+  auto actual = pkb->GetUsesStore()->GetVarUsedByStmt("7");
   auto expected = uses_stmt_to_var.at("7");
 
   REQUIRE(actual == expected);
@@ -279,7 +312,7 @@ TEST_CASE("Get var used by stmt (correct)") {
 TEST_CASE("Get var used by stmt (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->GetVarUsedByStmt("20");
+  auto actual = pkb->GetUsesStore()->GetVarUsedByStmt("20");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);
@@ -288,7 +321,7 @@ TEST_CASE("Get var used by stmt (invalid)") {
 TEST_CASE("Get stmt used by var (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->GetStmtUsedByVar("rabbit");
+  auto actual = pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "rabbit");
   auto expected = uses_var_to_stmt.at("rabbit");
 
   REQUIRE(actual == expected);
@@ -297,7 +330,7 @@ TEST_CASE("Get stmt used by var (correct)") {
 TEST_CASE("Get stmt used by var (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->GetStmtUsedByVar("horse");
+  auto actual = pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "horse");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);
@@ -306,7 +339,7 @@ TEST_CASE("Get stmt used by var (invalid)") {
 TEST_CASE("Get var used by proc (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->GetVarUsedByProc("main");
+  auto actual = pkb->GetUsesStore()->GetVarUsedByStmt("main");
   auto expected = uses_proc_to_var.at("main");
 
   REQUIRE(actual == expected);
@@ -315,7 +348,7 @@ TEST_CASE("Get var used by proc (correct)") {
 TEST_CASE("Get var used by proc (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->GetVarUsedByProc("foobar");
+  auto actual = pkb->GetUsesStore()->GetVarUsedByStmt("foobar");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);
@@ -324,8 +357,8 @@ TEST_CASE("Get var used by proc (invalid)") {
 TEST_CASE("Get proc used by var (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->GetProcUsedByVar("dog");
-  auto expected = uses_var_to_proc.at("dog");
+  auto actual = pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "dog");
+  auto expected = uses_var_to_stmt.at("dog");
 
   REQUIRE(actual == expected);
 }
@@ -333,26 +366,8 @@ TEST_CASE("Get proc used by var (correct)") {
 TEST_CASE("Get proc used by var (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->GetProcUsedByVar("horse");
+  auto actual = pkb->GetUsesStore()->GetStmtUsedByVar(STMT, "horse");
   std::unordered_set<std::string> expected = {};
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Get all usage proc-var pairs") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetUsageStore()->GetAllProcVar();
-  auto expected = uses_proc_var_pairs;
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Get all usage stmt-var pairs") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetUsageStore()->GetAllStmtVar();
-  auto expected = uses_stmt_var_pairs;
 
   REQUIRE(actual == expected);
 }
@@ -360,53 +375,44 @@ TEST_CASE("Get all usage stmt-var pairs") {
 TEST_CASE("Get all stmt using (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->GetAllStmtUsing();
+  auto actual = pkb->GetUsesStore()->GetAllStmtUsing();
   auto expected = all_stmt_using;
 
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Get all proc using (correct)") {
+TEST_CASE("Check if usage proc-var pair Valid (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->GetAllProcUsing();
-  auto expected = all_proc_using;
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Check if usage proc-var pair exists (correct)") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetUsageStore()->ProcVarExists({"funcX", "c"});
+  auto actual = pkb->GetUsesStore()->IsStmtVarValid({"funcX", "c"});
   auto expected = uses_proc_var_pairs.find({"funcX", "c"}) != uses_proc_var_pairs.end();
 
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Check if usage proc-var pair exists (wrong)") {
+TEST_CASE("Check if usage proc-var pair Valid (wrong)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->ProcVarExists({"funcA", "2"});
+  auto actual = pkb->GetUsesStore()->IsStmtVarValid({"funcA", "2"});
   auto expected = uses_proc_var_pairs.find({"funcA", "2"}) != uses_proc_var_pairs.end();
 
   REQUIRE(actual == false);
   REQUIRE(expected == false);
 }
 
-TEST_CASE("Check if usage stmt-var pair exists (correct)") {
+TEST_CASE("Check if usage stmt-var pair Valid (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->StmtVarExists({"4", "k"});
+  auto actual = pkb->GetUsesStore()->IsStmtVarValid({"4", "k"});
   auto expected = uses_stmt_var_pairs.find({"4", "k"}) != uses_stmt_var_pairs.end();
 
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Check if usage stmt-var pair exists (wrong)") {
+TEST_CASE("Check if usage stmt-var pair Valid (wrong)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetUsageStore()->StmtVarExists({"5", "j"});
+  auto actual = pkb->GetUsesStore()->IsStmtVarValid({"5", "j"});
   auto expected = uses_stmt_var_pairs.find({"5", "j"}) != uses_stmt_var_pairs.end();
 
   REQUIRE(actual == false);
@@ -418,7 +424,7 @@ TEST_CASE("Check if usage stmt-var pair exists (wrong)") {
 TEST_CASE("Get var modified by stmt (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->GetVarModByStmt("7");
+  auto actual = pkb->GetModifiesStore()->GetVarModByStmt("7");
   auto expected = mod_stmt_to_var.at("7");
 
   REQUIRE(actual == expected);
@@ -427,7 +433,7 @@ TEST_CASE("Get var modified by stmt (correct)") {
 TEST_CASE("Get var modified by stmt (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->GetVarModByStmt("20");
+  auto actual = pkb->GetModifiesStore()->GetVarModByStmt("20");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);
@@ -436,7 +442,7 @@ TEST_CASE("Get var modified by stmt (invalid)") {
 TEST_CASE("Get stmt modified by var (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->GetStmtModByVar("dog");
+  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(STMT, "dog");
   auto expected = mod_var_to_stmt.at("dog");
 
   REQUIRE(actual == expected);
@@ -445,7 +451,7 @@ TEST_CASE("Get stmt modified by var (correct)") {
 TEST_CASE("Get stmt modified by var (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->GetStmtModByVar("horse");
+  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(STMT, "horse");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);
@@ -453,9 +459,9 @@ TEST_CASE("Get stmt modified by var (invalid)") {
 
 TEST_CASE("Get var modified by proc (correct)") {
   PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetModifyStore()->GetVarModByProc("main");
-  auto expected = mod_proc_to_var.at("main");
+
+  std::vector<std::pair<std::string, std::string>> actual = pkb->GetModifiesStore()->GetAllModStmt(PROC);
+  std::vector<std::pair<std::string, std::string>> expected = mod_proc_to_var.at(PROC);
 
   REQUIRE(actual == expected);
 }
@@ -463,7 +469,7 @@ TEST_CASE("Get var modified by proc (correct)") {
 TEST_CASE("Get var modified by proc (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->GetVarModByProc("foobar");
+  auto actual = pkb->GetModifiesStore()->GetVarModByStmt("foobar");
   std::unordered_set<std::string> expected = {};
 
   REQUIRE(actual == expected);
@@ -472,7 +478,7 @@ TEST_CASE("Get var modified by proc (invalid)") {
 TEST_CASE("Get proc modified by var (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->GetProcModByVar("dog");
+  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(StmtType::PROC, "dog");
   auto expected = mod_var_to_proc.at("dog");
 
   REQUIRE(actual == expected);
@@ -481,26 +487,8 @@ TEST_CASE("Get proc modified by var (correct)") {
 TEST_CASE("Get proc modified by var (invalid)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->GetProcModByVar("horse");
+  auto actual = pkb->GetModifiesStore()->GetStmtModByVar(StmtType::PROC, "horse");
   std::unordered_set<std::string> expected = {};
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Get all modifies proc-var pairs") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetModifyStore()->GetAllProcVar();
-  auto expected = mod_proc_var_pairs;
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Get all modifies stmt-var pairs") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetModifyStore()->GetAllStmtVar();
-  auto expected = mod_stmt_var_pairs;
 
   REQUIRE(actual == expected);
 }
@@ -508,7 +496,7 @@ TEST_CASE("Get all modifies stmt-var pairs") {
 TEST_CASE("Get all stmt modifies (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->GetAllStmtModify();
+  auto actual = pkb->GetModifiesStore()->GetAllStmtModify();
   auto expected = all_stmt_mod;
 
   REQUIRE(actual == expected);
@@ -517,44 +505,44 @@ TEST_CASE("Get all stmt modifies (correct)") {
 TEST_CASE("Get all proc modifies (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->GetAllProcModify();
+  auto actual = pkb->GetModifiesStore()->GetAllProcModify();
   auto expected = all_proc_mod;
 
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Check if modifies proc-var pair exists (correct)") {
+TEST_CASE("Check if modifies proc-var pair Valid (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->ProcVarExists({"main", "dragon"});
+  auto actual = pkb->GetModifiesStore()->IsStmtVarValid({"main", "dragon"});
   auto expected = mod_proc_var_pairs.find({"main", "dragon"}) != mod_proc_var_pairs.end();
 
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Check if modifies proc-var pair exists (wrong)") {
+TEST_CASE("Check if modifies proc-var pair Valid (wrong)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->ProcVarExists({"funcA", "2"});
+  auto actual = pkb->GetModifiesStore()->IsStmtVarValid({"funcA", "2"});
   auto expected = mod_proc_var_pairs.find({"funcA", "2"}) != mod_proc_var_pairs.end();
 
   REQUIRE(actual == false);
   REQUIRE(expected == false);
 }
 
-TEST_CASE("Check if modifies stmt-var pair exists (correct)") {
+TEST_CASE("Check if modifies stmt-var pair Valid (correct)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->StmtVarExists({"15", "monkey"});
+  auto actual = pkb->GetModifiesStore()->IsStmtVarValid({"15", "monkey"});
   auto expected = mod_stmt_var_pairs.find({"15", "monkey"}) != mod_stmt_var_pairs.end();
 
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Check if modifies stmt-var pair exists (wrong)") {
+TEST_CASE("Check if modifies stmt-var pair Valid (wrong)") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetModifyStore()->StmtVarExists({"5", "cat"});
+  auto actual = pkb->GetModifiesStore()->IsStmtVarValid({"5", "cat"});
   auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
 
   REQUIRE(actual == false);
@@ -562,56 +550,19 @@ TEST_CASE("Check if modifies stmt-var pair exists (wrong)") {
 }
 
 /* FOLLOW STORE */
-
-TEST_CASE("Check if stmt is a follower") {
+TEST_CASE("Check if follow pair Valid") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetFollowStore()->IsFollower("4");
-  auto expected = followers.find("4") != followers.end();
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Check if stmt is a following") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetFollowStore()->IsFollowing("4");
-  auto expected = followings.find("4") != followings.end();
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Check if stmt is a follower star") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetFollowStore()->IsFollowerStar("4");
-  auto expected = follower_stars.find("4") != follower_stars.end();
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Check if stmt is a following star") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetFollowStore()->IsFollowingStar("4");
-  auto expected = following_stars.find("4") != following_stars.end();
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Check if follow pair exists") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetFollowStore()->FollowExists({"8", "9"});
+  auto actual = pkb->GetFollowsStore()->IsFollowsPairValid({"8", "9"});
   auto expected = follow_pairs.find({"8", "9"}) != follow_pairs.end();
 
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Check if follow star pair exists") {
+TEST_CASE("Check if follow star pair Valid") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetFollowStore()->FollowStarExists({"1", "4"});
+  auto actual = pkb->GetFollowsStore()->IsFollowsStarPairValid({"1", "4"});
   auto expected = follow_star_pairs.find({"1", "4"}) != follow_star_pairs.end();
 
   REQUIRE(actual == expected);
@@ -620,96 +571,21 @@ TEST_CASE("Check if follow star pair exists") {
 TEST_CASE("Get follows of a stmt") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetFollowStore()->GetFollowingOf("2");
+  auto actual = pkb->GetFollowsStore()->GetFollowingOf(STMT, "2");
   auto expected = follows_rs.at("2").following;
 
   REQUIRE(actual == expected);
 }
 
-TEST_CASE("Get follows star of a stmt") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetFollowStore()->GetFollowingStarOf("2");
-  auto expected = follows_rs.at("2").following_star;
-
-  REQUIRE(actual == expected);
-}
-
-//TEST_CASE("Get all follow statements") {
-//  PKB *pkb = set_up_pkb();
-//  
-//  auto actual = pkb->GetAllFollowStmt(STMT);
-//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
-//
-//  REQUIRE(actual == false);
-//  REQUIRE(expected == false);
-//}
-//
-//TEST_CASE("Get all follow star statements") {
-//  PKB *pkb = set_up_pkb();
-//  
-//  auto actual = pkb->GetAllFollowStarStmt(STMT);
-//  auto expected = mod_stmt_var_pairs.find({"5", "cat"}) != mod_stmt_var_pairs.end();
-//
-//  REQUIRE(actual == false);
-//  REQUIRE(expected == false);
-//}
-
 /* PARENT STORE */
-
-TEST_CASE("Checks if a stmt is a parent") {
+TEST_CASE("Checks if a parent-child pair relationship Valid") {
   PKB *pkb = set_up_pkb();
   
-  auto actual = pkb->GetParentStore()->IsParent("5");
-  auto expected = parents.find("5") != parents.end();
-
-  REQUIRE(actual == expected);
-}
-
-TEST_CASE("Checks if a stmt is a child") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetParentStore()->IsChild("7");
-  auto expected = children.find("7") != children.end();
-
-  REQUIRE(actual == expected);
-}
-
-//TEST_CASE("Checks if a stmt is an ancestor") {
-//  PKB *pkb = set_up_pkb();
-//
-//  auto actual = pkb->GetParentStore()->IsAnce("5");
-//  auto expected = ancestors.find("5") != ancestors.end();
-//
-//  REQUIRE(actual == expected);
-//}
-
-//TEST_CASE("Checks if a stmt is a descendent") {
-//  PKB *pkb = set_up_pkb();
-//  
-//  auto actual = pkb->GetParentStore()->IsDesc("7");
-//  auto expected = descendants.find("7") != descendants.end();
-//
-//  REQUIRE(actual == expected);
-//}
-
-TEST_CASE("Checks if a parent-child pair relationship exists") {
-  PKB *pkb = set_up_pkb();
-  
-  auto actual = pkb->GetParentStore()->ParentChildExists("5", "9");
+  auto actual = pkb->GetParentStore()->IsParentPairValid({"5", "9"});
   auto expected = parent_child_pairs.find({"5", "9"}) != parent_child_pairs.end();
 
   REQUIRE(actual == expected);
 }
-
-//TEST_CASE("Checks if a ance-desc pair relationship exists") {
-//  PKB *pkb = set_up_pkb();
-//  
-//  auto actual = pkb->GetParentStore()->AnceExists("5", "9");
-//  auto expected = ance_desc_pairs.find({"5", "9"}) != ance_desc_pairs.end();
-//
-//  REQUIRE(actual == expected);
-//}
 
 /* GENERAL */
 
@@ -728,10 +604,6 @@ std::string GetFollowingOf(std::string stmt);
 std::unordered_set<std::string> GetFollowerStarOf(std::string stmt);
 
 std::unordered_set<std::string> GetFollowingStarOf(std::string stmt);
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowPairs();
-
-std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetFollowStarPairs();
 
 
 /* PARENT STORE */
@@ -771,18 +643,18 @@ TEST_CASE("Check pattern matching (wrong)") {
 
 TEST_CASE("Check pattern synonym matching exact (correct)") {
   PKB *pkb = set_up_pkb();
-  
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> actual = pkb->GetPatternStore()->GetStmtWithPatternSynonymWildcard();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected = pattern_pairs_synonym;
+
+  std::vector<std::pair<std::string, std::string>> actual = pkb->GetPatternStore()->GetStmtWithPatternSynonymWildcard();
+  std::vector<std::pair<std::string, std::string>> expected = pattern_pairs_synonym;
   REQUIRE(actual == expected);
 }
 
 TEST_CASE("Check pattern synonym matching partial (correct)") {
   PKB *pkb = set_up_pkb();
-  
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash>
+
+  std::vector<std::pair<std::string, std::string>>
       actual = pkb->GetPatternStore()->GetStmtWithPatternSynonymWildcard();
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> expected = pattern_pairs_synonym;
+  std::vector<std::pair<std::string, std::string>> expected = pattern_pairs_synonym;
 
   REQUIRE(actual == expected);
 }

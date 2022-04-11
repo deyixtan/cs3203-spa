@@ -1,6 +1,8 @@
 #include "sample_token.h"
 #include "components/query_subsystem/pql_lexer/pql_token.h"
 
+using namespace pql;
+
 PqlToken comma_token = PqlToken(PqlTokenType::COMMA, ",");
 PqlToken semicolon_token = PqlToken(PqlTokenType::SEMICOLON, ";");
 PqlToken open_parenthesis_token = PqlToken(PqlTokenType::OPEN_PARENTHESIS, "(");
@@ -79,5 +81,6 @@ PqlToken affects_t_token = PqlToken(PqlTokenType::AFFECTS_T, "Affects*");
 PqlToken next_token = PqlToken(PqlTokenType::NEXT, "Next");
 PqlToken next_t_token = PqlToken(PqlTokenType::NEXT_T, "Next*");
 PqlToken pattern_token = PqlToken(PqlTokenType::PATTERN, "pattern");
-
 PqlToken with_token = PqlToken(PqlTokenType::WITH, "with");
+
+PqlToken v_value_token = PqlToken(PqlTokenType::IDENT_WITH_QUOTES, "\"v\"");

@@ -1,22 +1,23 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PRINT_STATEMENT_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PRINT_STATEMENT_H_
+#ifndef NODE_PRINT_STATEMENT_H
+#define NODE_PRINT_STATEMENT_H
 
-#include "node_statement.h"
-#include "node_variable.h"
+#include "components/source_subsystem/source_declarations.h"
+#include "components/source_subsystem/types/ast/node_statement.h"
+
+namespace source {
 
 class PrintStatementNode : public StatementNode {
  private:
-  std::shared_ptr<VariableNode> m_identifier;
+  VariableNodePtr m_variable;
 
  public:
-  PrintStatementNode(int stmt_no, std::shared_ptr<VariableNode> identifier);
-  [[nodiscard]] std::shared_ptr<VariableNode> GetIdentifier();
-  [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] std::string ToString() override;
-  [[nodiscard]] std::string GetPatternFormat() override;
+  PrintStatementNode(String &stmt_no, VariableNodePtr variable);
+  [[nodiscard]] VariableNodePtr GetVariable();
+  void Accept(DesignExtractorPtr design_extractor) override;
+  void Accept(CfgBuilderPtr cfg_builder) override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
-  void Accept(DesignExtractor *de, std::string proc_name);
-  std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_PRINT_STATEMENT_H_
+}
+
+#endif //NODE_PRINT_STATEMENT_H

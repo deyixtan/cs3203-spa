@@ -1,21 +1,25 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CALL_STATEMENT_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CALL_STATEMENT_H_
+#ifndef NODE_CALL_STATEMENT_H
+#define NODE_CALL_STATEMENT_H
 
-#include "node_statement.h"
+#include "components/source_subsystem/source_declarations.h"
+#include "components/source_subsystem/types/ast/node_statement.h"
+
+namespace source {
 
 class CallStatementNode : public StatementNode {
  private:
-  std::string m_identifier;
-  std::string proc_name;
+  String m_caller_name;
+  String m_callee_name;
 
  public:
-  CallStatementNode(int stmt_no, std::string proc_name, std::string m_identifier);
-  [[nodiscard]] std::string GetIdentifier();
-  [[nodiscard]] StmtType GetStatementType() override;
-  [[nodiscard]] std::string ToString() override;
+  CallStatementNode(String &stmt_no, String caller_name, String callee_name);
+  [[nodiscard]] String GetCallerName();
+  [[nodiscard]] String GetCalleeName();
+  void Accept(DesignExtractorPtr design_extractor) override;
+  void Accept(CfgBuilderPtr cfg_builder) override;
   [[nodiscard]] bool operator==(const StatementNode &other) const override;
-  void Accept(DesignExtractor *de, std::string proc_name);
-  std::shared_ptr<CfgNode> Accept(CfgBuilder *cb, std::shared_ptr<CfgNode> cfg_node);
 };
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_AST_NODE_CALL_STATEMENT_H_
+}
+
+#endif //NODE_CALL_STATEMENT_H

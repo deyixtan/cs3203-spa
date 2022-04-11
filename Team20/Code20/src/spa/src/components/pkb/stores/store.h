@@ -1,46 +1,21 @@
-#ifndef SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
-#define SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
+#ifndef STORE_H
+#define STORE_H
 
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
+#include "components/pkb/pkb_declarations.h"
 
-#include "../../../utils/pair_hash.h"
-
-enum StmtType {
-  STMT,
-  READ,
-  PRINT,
-  WHILE,
-  IF,
-  ASSIGN,
-  VARS,
-  CONSTS,
-  PROC,
-  CALL,
-  COUNT = CALL + 1 // get max value of StmtType
-};
+namespace pkb {
 
 class Store {
  protected:
   std::shared_ptr<std::vector<std::unordered_set<std::string>>> m_stmt_vector;
+  std::shared_ptr<std::unordered_map<std::string, StmtType>> m_stmt_type;
 
  public:
-  explicit Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStmt(StmtType type,
-                                                                                std::vector<StmtType> &supported_types,
-                                                                                std::unordered_set<std::pair<std::string,
-                                                                                                             std::string>,
-                                                                                                   pair_hash> const &list,
-                                                                                bool checkPairFirst);
-  std::unordered_set<std::pair<std::string, std::string>, pair_hash> GetAllStmt(StmtType type1,
-                                                                                StmtType type2,
-                                                                                std::vector<StmtType> &supported_types,
-                                                                                std::unordered_set<std::pair<std::string,
-                                                                                                             std::string>,
-                                                                                                   pair_hash> const &list,
-                                                                                bool checkPairFirst);
+  explicit Store(std::shared_ptr<std::vector<std::unordered_set<std::string>>> stmt_vector,
+                 std::shared_ptr<std::unordered_map<std::string, StmtType>> stmt_type);
+  [[nodiscard]] int IsMapContains(StmtType type1, StmtType type2, NESTED_STMT_STMT_MAP *pair_map);
 };
 
-#endif //SPA_SRC_SPA_SRC_COMPONENTS_PKB_STORES_STORE_H_
+}
+
+#endif //STORE_H

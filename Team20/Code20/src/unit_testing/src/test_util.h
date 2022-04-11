@@ -13,6 +13,12 @@ static const std::string LINE_7 = "7";
 static const std::string LINE_8 = "8";
 static const std::string LINE_9 = "9";
 static const std::string LINE_10 = "10";
+static const std::string LINE_11 = "11";
+static const std::string LINE_12 = "12";
+static const std::string LINE_13 = "13";
+static const std::string LINE_14 = "14";
+static const std::string LINE_15 = "15";
+static const std::string LINE_16 = "16";
 
 static const std::string VAR_A = "a";
 static const std::string VAR_B = "b";

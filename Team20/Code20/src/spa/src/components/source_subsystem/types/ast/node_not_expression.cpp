@@ -1,23 +1,18 @@
 #include "node_not_expression.h"
-#include "../../iterator/design_extractor.h"
+#include "components/source_subsystem/iterator/design_extractor.h"
 
-NotExpressionNode::NotExpressionNode(std::shared_ptr<ConditionalExpressionNode> expression)
-    : m_expression(expression) {}
+namespace source {
 
-std::shared_ptr<ConditionalExpressionNode> NotExpressionNode::GetExpression() {
+NotExpressionNode::NotExpressionNode(ConditionalExpressionNodePtr expression)
+    : m_expression(std::move(expression)) {}
+
+ConditionalExpressionNodePtr NotExpressionNode::GetExpression() {
   return m_expression;
 }
 
-ConditionalType NotExpressionNode::GetConditionalType() {
-  return ConditionalType::NOT;
-}
-
-std::string NotExpressionNode::ToString() {
-  return "(!" + m_expression->ToString() + ")";
-}
-
-std::string NotExpressionNode::GetPatternFormat() {
-  return "";
+void NotExpressionNode::Accept(DesignExtractorPtr design_extractor) {
+  NotExpressionNodePtr derived_ptr = std::dynamic_pointer_cast<NotExpressionNode>(shared_from_this());
+  design_extractor->Visit(derived_ptr);
 }
 
 bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const {
@@ -25,6 +20,4 @@ bool NotExpressionNode::operator==(const ConditionalExpressionNode &other) const
   return *m_expression == *(casted_other->m_expression);
 }
 
-std::string NotExpressionNode::Accept(DesignExtractor *de, std::string proc_name, bool is_uses) {
-  return de->Visit(m_expression, proc_name, is_uses);
 }

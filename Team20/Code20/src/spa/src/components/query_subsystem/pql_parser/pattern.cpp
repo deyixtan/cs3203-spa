@@ -1,28 +1,28 @@
 #include "pattern.h"
 
 Pattern::Pattern() {}
-Pattern::Pattern(PqlToken syn_assign, PqlToken first, PqlToken second)
-    : synonym_(syn_assign),
-      first_(first),
-      second_(second) {}
-Pattern::Pattern(PqlToken syn_assign, PqlToken first, PqlToken second, PqlToken third)
-    : synonym_(syn_assign),
-      first_(first),
-      second_(second),
-      third_(third) {}
+Pattern::Pattern(PqlToken synonym, PqlToken first, PqlToken second)
+    : synonym(synonym),
+      first(first),
+      second(second) {}
+Pattern::Pattern(PqlToken synonym, PqlToken first, PqlToken second, PqlToken third)
+    : synonym(synonym),
+      first(first),
+      second(second),
+      third(third) {}
 
 PqlToken Pattern::GetSynonym() {
-  return synonym_;
+  return synonym;
 }
 
 PqlToken Pattern::GetFirst() {
-  return first_;
+  return first;
 }
 
 PqlToken Pattern::GetSecond() {
-  return second_;
+  return second;
 }
 
 PqlToken Pattern::GetThird() {
-  return third_;
+  return third;
 }

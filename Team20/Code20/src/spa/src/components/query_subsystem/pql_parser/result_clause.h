@@ -2,6 +2,8 @@
 #define RESULT_CLAUSE_H
 #include "../pql_lexer/pql_token.h"
 
+using namespace pql;
+
 enum class ResultClauseType {
   BOOLEAN,
   TUPLE,
@@ -15,9 +17,12 @@ class ResultClause {
   std::vector<PqlToken> values;
  public:
   ResultClause();
+  ResultClause(ResultClauseType);
   ResultClause(ResultClauseType, std::vector<PqlToken>);
   ResultClauseType GetType();
   std::vector<PqlToken> GetValues();
+  void AddValue(PqlToken);
+  void ModifyType(ResultClauseType);
 };
 
 #endif //RESULT_CLAUSE_H

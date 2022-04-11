@@ -1,16 +1,15 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_INVALID_PARSE_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_INVALID_PARSE_H_
+#ifndef INVALID_PARSE_H
+#define INVALID_PARSE_H
 
-#include <exception>
-#include <string>
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
-class InvalidParseException : public std::exception {
+class InvalidParseException : public Exception {
  public:
-  [[nodiscard]] virtual const char *what() const noexcept = 0;
+  [[nodiscard]] const char *what() const noexcept override = 0;
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_EXCEPTIONS_INVALID_PARSE_H_
+#endif //INVALID_PARSE_H

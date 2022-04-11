@@ -1,33 +1,33 @@
-#ifndef SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_TOKEN_H_
-#define SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_TOKEN_H_
+#ifndef SOURCE_TOKEN_H
+#define SOURCE_TOKEN_H
 
-#include <string>
+#include "components/source_subsystem/source_declarations.h"
 
 namespace source {
 
 enum class TokenType {
-  WHITE_SPACE, NEW_LINE, TAB, INTEGER, NAME,
+  UNKNOWN, WHITE_SPACE, NEW_LINE, TAB,
+  INTEGER, NAME,
   OPENED_BRACES, CLOSED_BRACES, OPENED_PARENTHESIS, CLOSED_PARENTHESIS,
   NOT, AND, OR,
-  IS_GREATER, IS_GREATER_EQUAL, IS_LESSER, IS_LESSER_EQUAL, IS_EQUAL, IS_NOT_EQUAL,
-  ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, MODULUS,
-  EQUAL, SEMI_COLON,
-  READ, PRINT, WHILE, IF, THEN, ELSE, CALL, PROCEDURE,
-  UNKNOWN
+  IS_EQUAL, IS_NOT_EQUAL, IS_GREATER_EQUAL, IS_LESSER_EQUAL, IS_GREATER, IS_LESSER,
+  ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, MODULUS, EQUAL, SEMI_COLON,
+  // Specialised statement tokens
+  PROCEDURE, READ, PRINT, CALL, WHILE, IF, THEN, ELSE
 };
 
 class SourceToken {
  private:
   TokenType m_type;
-  std::string m_value;
+  String m_value;
 
  public:
-  SourceToken(TokenType type, std::string value);
+  SourceToken();
+  SourceToken(TokenType type, String value);
   [[nodiscard]] TokenType GetType();
-  [[nodiscard]] std::string GetValue();
-  [[nodiscard]] std::string ToString();
+  [[nodiscard]] String GetValue();
 };
 
 }
 
-#endif //SPA_SRC_COMPONENTS_SOURCE_SUBSYSTEM_SOURCE_TOKEN_H_
+#endif //SOURCE_TOKEN_H
