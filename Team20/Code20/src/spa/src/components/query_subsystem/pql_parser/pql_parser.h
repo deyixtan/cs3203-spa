@@ -22,6 +22,8 @@ class PqlParser {
   std::unordered_set<PqlTokenType> allowed_synonyms;
   std::unordered_set<PqlTokenType> result_cl;
   std::unordered_set<PqlTokenType> with_clause_ref;
+  std::unordered_map<PqlTokenType, DesignEntityType> token_design_map;
+  std::unordered_map<PqlTokenType, ResultClauseType> token_result_map;
   void MoveCursor(int);
   PqlToken FetchToken();
   PqlToken ValidateToken(std::unordered_set<PqlTokenType>);

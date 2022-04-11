@@ -49,22 +49,3 @@ std::vector<With> ParsedQuery::GetWithClause() {
   return withs;
 }
 
-std::unordered_map<PqlTokenType, DesignEntityType> token_design_map{
-    {PqlTokenType::STMT, DesignEntityType::STMT},
-    {PqlTokenType::ASSIGN, DesignEntityType::ASSIGN},
-    {PqlTokenType::PRINT, DesignEntityType::PRINT},
-    {PqlTokenType::PROCEDURE, DesignEntityType::PROCEDURE},
-    {PqlTokenType::READ, DesignEntityType::READ},
-    {PqlTokenType::CALL, DesignEntityType::CALL},
-    {PqlTokenType::WHILE, DesignEntityType::WHILE},
-    {PqlTokenType::IF, DesignEntityType::IF},
-    {PqlTokenType::VARIABLE, DesignEntityType::VARIABLE},
-    {PqlTokenType::CONSTANT, DesignEntityType::CONSTANT},
-};
-
-std::unordered_map<PqlTokenType, ResultClauseType> token_result_map{
-    {PqlTokenType::SYNONYM, ResultClauseType::SYNONYM},
-    {PqlTokenType::ATTRIBUTE, ResultClauseType::ATTRIBUTE},
-    {PqlTokenType::BOOLEAN, ResultClauseType::BOOLEAN},
-    {PqlTokenType::TUPLE, ResultClauseType::TUPLE},
-};
