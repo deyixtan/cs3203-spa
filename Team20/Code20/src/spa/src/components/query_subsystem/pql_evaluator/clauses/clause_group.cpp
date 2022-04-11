@@ -33,6 +33,23 @@ bool ClauseGroup::IsConnected(const std::shared_ptr<Clause> &clause_ptr) {
   return false;
 }
 
+bool ClauseGroup::IsConnected(ClauseGroup &clause_group) {
+  // find common element
+  auto other_synonyms = clause_group.GetSynonyms();
+  auto synonyms_it = synonyms.begin();
+  auto other_it = other_synonyms.begin();
+  while (synonyms_it!=synonyms.end() && other_it!=other_synonyms.end()) {
+    if (*synonyms_it < *other_it) {
+      ++synonyms_it;
+    } else if (*other_it < *synonyms_it) {
+      ++other_it;
+    } else {
+      return true;
+    }
+  }
+  return false;
+}
+
 Table ClauseGroup::Execute() {
   std::sort(clauses.begin(), clauses.end(), ClausePtrComparator());
   Table table;
@@ -64,6 +81,24 @@ size_t ClauseGroup::GetWeight() const {
 
 size_t ClauseGroup::GetSynonymsSize() const {
   return synonyms.size();
+}
+
+std::vector<std::shared_ptr<Clause>> ClauseGroup::GetClauses() {
+  return clauses;
+}
+
+std::set<std::string> ClauseGroup::GetSynonyms() {
+  return synonyms;
+}
+
+void ClauseGroup::MergeClauseGroup(ClauseGroup &clause_group) {
+  size_t other_weight = clause_group.GetWeight();
+  auto other_synonyms = clause_group.GetSynonyms();
+  auto other_clauses = clause_group.GetClauses();
+
+  weight += other_weight;
+  synonyms.insert(other_synonyms.begin(), other_synonyms.end());
+  clauses.insert(clauses.end(), other_clauses.begin(), other_clauses.end());
 }
 
 }

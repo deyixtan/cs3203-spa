@@ -15,10 +15,14 @@ class ClauseGroup {
   void AddClause(const std::shared_ptr<Clause> &clause_ptr);
   bool IsEmpty();
   bool IsConnected(const std::shared_ptr<Clause> &clause_ptr);
+  bool IsConnected(ClauseGroup &clause_group);
+  void MergeClauseGroup(ClauseGroup &clause_group);
   Table Execute();
   bool ExecuteBool();
-  size_t GetWeight() const;
-  size_t GetSynonymsSize() const;
+  [[nodiscard]] size_t GetWeight() const;
+  [[nodiscard]] size_t GetSynonymsSize() const;
+  std::vector<std::shared_ptr<Clause>> GetClauses();
+  std::set<std::string> GetSynonyms();
  private:
   class ClausePtrComparator {
    public:
@@ -30,9 +34,9 @@ class ClauseGroup {
       return clause_ptr->GetWeight() < other_clause_ptr->GetWeight();
     }
   };
-  int weight = 0;
-  std::set<std::string> synonyms;
+  size_t weight = 0;
   std::vector<std::shared_ptr<Clause>> clauses;
+  std::set<std::string> synonyms;
 };
 
 }
