@@ -4,24 +4,12 @@ bool clause_util::IsArgSynonym(const PqlToken &arg) {
   return arg.type==PqlTokenType::SYNONYM;
 }
 
-bool clause_util::IsArgWildcard(const PqlToken &arg) {
-  return arg.type==PqlTokenType::UNDERSCORE;
-}
-
 bool clause_util::IsArgIdent(const PqlToken &arg) {
   return arg.type==PqlTokenType::IDENT_WITH_QUOTES;
 }
 
 bool clause_util::IsArgInteger(const PqlToken &arg) {
   return arg.type==PqlTokenType::NUMBER;
-}
-
-bool clause_util::IsArgPartialMatch(const PqlToken &arg) {
-  return arg.type==PqlTokenType::SUB_EXPRESSION;
-}
-
-bool clause_util::IsArgExactMatch(const PqlToken &arg) {
-  return arg.type==PqlTokenType::EXPR || arg.type==PqlTokenType::IDENT_WITH_QUOTES;
 }
 
 bool clause_util::IsArgAttribute(const PqlToken &arg) {
