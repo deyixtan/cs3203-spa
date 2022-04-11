@@ -19,34 +19,6 @@ AffectsStore::AffectsStore(IDENT_SET_VECTOR_PTR stmt_vector,
   HandleCfg();
 }
 
-bool AffectsStore::IsAffected(IDENT const &stmt) {
-  auto predicate = [stmt](const IDENT_PAIR &pair) {
-    return pair.second == stmt;
-  };
-  return std::any_of(m_all_affects_pairs.begin(), m_all_affects_pairs.end(), predicate);
-}
-
-bool AffectsStore::IsAffectedStar(IDENT const &stmt) {
-  auto predicate = [stmt](const IDENT_PAIR &pair) {
-    return pair.second == stmt;
-  };
-  return std::any_of(m_all_affects_star_pairs.begin(), m_all_affects_star_pairs.end(), predicate);
-}
-
-bool AffectsStore::IsAffecting(IDENT const &stmt) {
-  auto predicate = [stmt](const IDENT_PAIR &pair) {
-    return pair.first == stmt;
-  };
-  return std::any_of(m_all_affects_pairs.begin(), m_all_affects_pairs.end(), predicate);
-}
-
-bool AffectsStore::IsAffectingStar(IDENT const &stmt) {
-  auto predicate = [stmt](const IDENT_PAIR &pair) {
-    return pair.first == stmt;
-  };
-  return std::any_of(m_all_affects_star_pairs.begin(), m_all_affects_star_pairs.end(), predicate);
-}
-
 bool AffectsStore::DoesAffectExists(IDENT_PAIR const &pair) {
   if (m_all_affects_pairs.find(pair) != m_all_affects_pairs.end()) {
     return true;
