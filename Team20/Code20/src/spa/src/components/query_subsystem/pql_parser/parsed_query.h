@@ -33,6 +33,4 @@ class ParsedQuery {
   std::vector<With> GetWithClause();
 };
 
-extern std::unordered_map<PqlTokenType, DesignEntityType> token_design_map;
-extern std::unordered_map<PqlTokenType, ResultClauseType> token_result_map;
 #endif
