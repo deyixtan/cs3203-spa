@@ -48,10 +48,6 @@ class AffectsStore : StmtStmtStore {
                         IDENT_TO_STMT_TYPE_MAP_PTR stmt_type,
                         AffectsStoreFactoryPtr affects_store_factory,
                         bool is_affects_star_involved);
-  [[nodiscard]] bool IsAffected(IDENT const &stmt);
-  [[nodiscard]] bool IsAffectedStar(IDENT const &stmt);
-  [[nodiscard]] bool IsAffecting(IDENT const &stmt);
-  [[nodiscard]] bool IsAffectingStar(IDENT const &stmt);
   [[nodiscard]] bool DoesAffectExists(IDENT_PAIR const &pair);
   [[nodiscard]] bool DoesAffectStarExists(IDENT_PAIR const &pair);
   [[nodiscard]] IDENT_SET GetAffectedOf(IDENT const &stmt);
